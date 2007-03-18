@@ -2,39 +2,40 @@
 <project name="TimeJuggler" default="all" basedir=".">
     <property name="application" value="timejuggler"/>
     <property name="version" value="${application}-0.1"/>
+    <property name="jarfile" value="tj.jar"/>
 
     <!-- output data directories -->
-    <property name="build" location="build"/>
-    <property name="classes" location="_classes"/>
-    <property name="dist" location="dist"/>
+    <property name="build" value="build"/>
+    <property name="classes" value="_classes"/>
+    <property name="dist" value="dist"/>
 
     <!-- input data directories -->
-    <property name="src" location="src"/>
-    <property name="etc" location="etc"/>
-    <property name="lib" location="lib"/>
-    <property name="dev" location="dev"/>
+    <property name="src" value="src"/>
+    <property name="etc" value="etc"/>
+    <property name="doc" value="doc"/>
+    <property name="lib" value="lib"/>
+    <property name="dev" value="dev"/>
     <!--<property name="help" location="help"/>-->
-    <property name="libDirectory" value="lib"/>
     <property name="resources" value="cz/cvut/felk/timejuggler/core/resources/"/>
     <property name="mainclass" value="cz.cvut.felk.timejuggler.core.MainApp"/>
-    <property name="jarfile" value="tj.jar"/>
+
+    <fileset id="jars" dir="${lib}" includes="**/*"/>
 
     <path id="cp">
         <fileset refid="jars"/>
     </path>
 
     <pathconvert property="classpath" refid="cp" pathsep=" " dirsep="/">
-        <map from="${lib}" to="${libDirectory}"/>
+        <map from="./${lib}" to="${lib}"/>
     </pathconvert>
 
     <target name="build" depends="compile" description="building TimeJuggler">
-        <fileset id="jars" dir="${lib}" includes="**/*"/>
-        <!-- //TODO kopie resourcu, neni to prilis ciste  -->
+
+        <!-- //TODO kopie resourcu, neni to prilis ciste, ale asi je to takhle spravne  -->
         <mkdir dir="${classes}/${resources}"/>
         <copy todir="${classes}/${resources}">
             <fileset dir="${src}/${resources}" includes="**/*"></fileset>
         </copy>
-
 
         <jar jarfile="${build}/${jarfile}" compress="false">
             <manifest>
@@ -44,7 +45,7 @@
             </manifest>
             <fileset dir="${classes}" includes="**/*"/>
         </jar>
-        <mkdir dir="${build}/${libDirectory}"/>
+        <mkdir dir="${build}/${lib}"/>
         <!--<mkdir dir="${build}/help"/>-->
         <copy todir="${build}">
             <fileset dir="${etc}" includes="**/*"></fileset>
@@ -52,7 +53,7 @@
         <!--<copy todir="${build}/help">-->
         <!--<fileset dir="${help}" includes="**/*"></fileset>-->
         <!--</copy>-->
-        <copy todir="${build}/${libDirectory}">
+        <copy todir="${build}/${lib}">
             <fileset dir="${lib}" includes="**/*"></fileset>
         </copy>
     </target>
@@ -83,17 +84,21 @@
         <java fork="true" jar="${build}/${jarfile}"/>
     </target>
 
-    <target name="dist" depends="build">
+    <target name="dist" depends="build" description="creating release">
         <zip zipfile="${dist}/${version}.zip">
-            <fileset dir="${build}"/>
+            <fileset dir=".">
+                <include name="${build}/"/>
+            </fileset>
         </zip>
         <zip destfile="${dist}/${version}-src.zip">
-            <fileset dir="${lib}">
-                <include name="**/*"></include>
+            <fileset dir=".">
+                <include name="${lib}/"/>
+                <include name="${etc}/"/>
+                <include name="${src}/"/>
+                <include name="${dev}/"/>
+                <include name="${doc}/"/>
+                <include name="build.xml"/>
             </fileset>
-            <fileset dir="${etc}"/>
-            <fileset dir="${src}"/>
-            <fileset dir="${dev}"/>
         </zip>
     </target>
 
