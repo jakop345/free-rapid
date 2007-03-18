@@ -10,8 +10,7 @@ import javax.swing.plaf.metal.MetalTheme;
 import java.util.logging.Logger;
 
 /**
- * Pomocna trida pro caste volani nekterych metod.
- * Nastavuje vychozi Look&Feel.
+ * Pomocna trida pro caste volani nekterych metod. Nastavuje vychozi Look&Feel.
  * @author Vity
  */
 public class Swinger {
@@ -31,7 +30,7 @@ public class Swinger {
     /**
      * Nastavi look&feel jako aktivni
      * @param lookAndFeelClassName jmeno tridy look&feelu
-     * @param metalTheme theme pro MetalLook pokud existuje
+     * @param metalTheme           theme pro MetalLook pokud existuje
      */
     private static void initLafWithTheme(final String lookAndFeelClassName, final MetalTheme metalTheme) {
 
@@ -50,8 +49,8 @@ public class Swinger {
     }
 
     /**
-     * Vrati obrazek podle key property v resourcu
-     * Nenajde-li se obrazek pod danym kodem, vraci NullPointerException
+     * Vrati obrazek podle key property v resourcu Nenajde-li se obrazek pod danym kodem, vypise WARNING pokud neni
+     * obrazek nalezen
      * @param imagePropertyCode kod obrazku
      * @return obrazek
      */
@@ -59,10 +58,9 @@ public class Swinger {
         final ResourceMap map = getResourceMap();
         final ImageIcon imageIcon = map.getImageIcon(imagePropertyCode);
         if (imageIcon == null)
-            throw new NullPointerException("Invalid image property code, Image cannot be null");
+            logger.warning("Invalid image property code:" + imagePropertyCode);
         return imageIcon;
     }
-
 
     public static ResourceMap getResourceMap() {
         final ApplicationContext ac = ApplicationContext.getInstance();
