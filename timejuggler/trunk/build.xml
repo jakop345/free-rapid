@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="TimeJuggler" default="all" basedir=".">
+    <property name="application" value="timejuggler" />
+    <property name="version" value="${application}-0.1" />
+
+    <!-- output data directories -->
+    <property name="build" location="build"/>
+    <property name="classes" location="classes"/>
+    <property name="dist" location="dist"/>
+
+    <!-- input data directories -->
+    <property name="src" location="src"/>
+    <property name="etc" location="etc"/>
+    <property name="lib" location="lib"/>
+    <property name="dev" location="dev"/>
+    <!--<property name="help" location="help"/>-->
+    <property name="libDirectory" value="lib" />
+   <!--<property name="resources" value="resources"/>-->
+    <property name="mainclass" value="cz.cvut.felk.timejuggler.core.MainApp"/>
+    <property name="jarfile" value="tj.jar"/>
+
+    <path id="cp">
+        <fileset refid="jars"/>
+    </path>
+
+    <pathconvert property="classpath" refid="cp" pathsep=" " dirsep="/" >
+        <map from="${lib}" to="${libDirectory}"/>
+    </pathconvert>
+    
+    <target name="build" depends="compile" description="building TimeJuggler">
+        <fileset id="jars" dir="${lib}" includes="**/*" />
+
+
+        <jar jarfile="${build}/${jarfile}" compress="false">
+            <manifest>
+                <attribute name="Build-Date" value="${TODAY}"/>
+                <attribute name="Class-Path" value="${classpath}"/>
+                <attribute name="Main-Class" value="${mainclass}"/>
+            </manifest>
+            <fileset dir="${classes}" includes="**/*"/>
+<!--           <fileset dir="${resources}" includes="**/*"/> -->
+        </jar>
+        <mkdir dir="${build}/${libDirectory}"/>
+        <!--<mkdir dir="${build}/help"/>-->
+        <copy todir="${build}">
+            <fileset dir="${etc}" includes="**/*"></fileset>
+        </copy>
+        <!--<copy todir="${build}/help">-->
+            <!--<fileset dir="${help}" includes="**/*"></fileset>-->
+        <!--</copy>-->
+        <copy todir="${build}/${libDirectory}">
+            <fileset dir="${lib}" includes="**/*"></fileset>
+        </copy>
+    </target>
+
+    <target name="compile" description="compiling source codes">
+        <javac srcdir="${src}" destdir="${classes}" classpathref="cp" optimize="on">            
+        </javac>
+    </target>
+
+    <target name="init" description="initialization">
+        <tstamp/>
+        <mkdir dir="${classes}"/>
+        <mkdir dir="${build}"/>
+        <mkdir dir="${dist}"/>
+    </target>
+
+    <target name="clean" description="clean up">
+        <delete dir="${build}"/>
+        <delete dir="${classes}"/>
+        <delete dir="${dist}"/>
+    </target>
+
+    <target name="all" depends="clean,init,compile, build, dist" description="build all"/>
+
+    <!-- run TimeJuggler -->
+
+    <target name="run">
+        <java fork="true" jar="${build}/${application}.jar"/>
+    </target>
+
+    <target name="dist" depends="build">
+        <zip zipfile="${dist}/${version}.zip">
+            <fileset dir="${build}" />
+        </zip>
+        <zip destfile="${dist}/${version}-src.zip">
+            <fileset dir="${lib}" >
+                <include name="**/*"></include>
+            </fileset>
+            <fileset dir="${etc}" />
+            <fileset dir="${src}" />
+            <fileset dir="${dev}" />
+        </zip>
+    </target>
+
+</project>
