@@ -55,18 +55,15 @@ public class TaskListManager {
         labelTask.setName("labelTask");
         final JCheckBox checkTask = new JCheckBox();
         checkTask.setName("checkTask");
-
+        final JXTable table = new JXTable();
         final DefaultTableModel tableModel = new DefaultTableModel(new Object[]{"Done", "Priority", "Completed", "Title", "Calendar Name"}, 0) {
             public Class<?> getColumnClass(int columnIndex) {
-                switch (columnIndex) {
-                    case COLUMN_DONE_INDEX:
-                        return Boolean.class;
-                    case COLUMN_PRIORITY_INDEX:
-                        return Integer.class;
-                    default:
-                        return super.getColumnClass(columnIndex);
-
-                }
+                final String name = this.getColumnName(columnIndex);
+                if (name.equals("Done"))
+                    return Boolean.class;
+                if (name.equals("Priority"))
+                    return Integer.class;
+                return super.getColumnClass(columnIndex);
             }
 
             public boolean isCellEditable(int row, int column) {
@@ -79,7 +76,8 @@ public class TaskListManager {
         tableModel.addRow(new Object[]{Boolean.TRUE, 2, "test", "testX", "testY"});
         tableModel.addRow(new Object[]{Boolean.TRUE, 1, "test", "testX", "testY"});
 
-        final JXTable table = new JXTable(tableModel);
+
+        table.setModel(tableModel);
 
         table.getColumnExt("Completed").setVisible(false);
         table.setColumnControlVisible(true);
@@ -88,7 +86,7 @@ public class TaskListManager {
         priorityColumn.setHeaderRenderer(new HeaderIconRenderer(Swinger.getIconImage("iconPriorityTask")));
         priorityColumn.setCellRenderer(new PriorityCellRenderer());
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        table.setDefaultRenderer(Object.class, new DefaultStringCellRenderer());        
+        table.setDefaultRenderer(Object.class, new DefaultStringCellRenderer());
         table.packAll();
         table.setPreferredSize(new Dimension(100, -1));
         panelMain.add(labelTask, new CustomLayoutConstraints(0, 0));
@@ -171,7 +169,7 @@ public class TaskListManager {
 
         public final Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             if (value instanceof String) {
-                final boolean isDone = (Boolean) table.getValueAt(row, COLUMN_DONE_INDEX);
+                final boolean isDone = (Boolean) table.getModel().getValueAt(row, COLUMN_DONE_INDEX);
                 final String s = String.format(FORMAT_STRING, value);
                 return super.getTableCellRendererComponent(table, (isDone) ? s : value, isSelected, hasFocus, row, column);
             }
