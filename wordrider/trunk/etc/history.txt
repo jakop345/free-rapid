@@ -1,0 +1,149 @@
+*********************************************************
+*   History of changes for WordRider Text Editor        *
+*   WebSite: http://wordrider.net                       *
+*   Mail: info@wordrider.net                            *
+*********************************************************
+Thanks to all people who reported bugs.
+
+Legend :
+Added - indicates new functionality or new part of distribution
+Changed - indicates a change in using/behavior WordRider
+Fixed - indicates a bug fix
+
+25th February - Wordrider 0.8 released
+   Fixed : sometimes searching stopped to respond in 'Find All' functionality
+
+21st December 2006 - WordRider 0.8beta - for testing purposes
+   Added : new Rusttaf's icons
+	 Changed : language files updated 
+	 Added : added Polish translation thanks to Kuba Koscielniak	 
+	 Changed: smaller wordrider.exe on Windows (from 33kB to 12kB)
+
+11th November 2006 - WordRider 0.8alpha 3 preview - for testing purposes
+   Added : viewing editor identification in main frame title (text is optionable - Options->Misc)
+   Added : NoteFolio import - option to put breakpoint on the first line of every note (Options->Misc)
+   Changed : status bar source code was changed ->faster switching between editors
+   Added : support for importing plain text files   
+   Added : ability to open more than 1 file at once from console (command line)
+
+4th November 2006 - WordRider 0.8alpha 2 preview - for testing purposes
+   Changed: updated documentation in PDF
+   Added : new links to documentation and WordRider's website in WordRider main menu
+   Added : graphic welcome menu when no editor is opened
+   Added : importing TI NoteFolio™ Creator files (*.89y, *.9xy) + option for note separator (Options->Misc)
+   Changed : faster reading of text files (aprox. 15%)
+
+23rd October 2006 - WordRider 0.8alpha preview - for testing purposes
+   Added : new format functions (To Upper Case, To LowerCase, Capitalize, Invert Case, Trim Trailing Spaces)
+   Added : popup menu on right click on tabulator name - more possibilities how to close opened editors
+   Changed : improved bug error reporting/logging mechanism - fatal errors are logged to file (wordrider.log)
+   Changed : 'Image import dialog - importing image' - selection in the  is moveable and blinks
+   Changed : 'Image import dialog - importing image' - key '+' for zooming in, key '-' for zooming out
+   Added : 'Find all' functionality - optionable searching over (all) opened documents
+   Added : Dialog and user options for sending files directly to calculator via TI Connect (TISendTo.exe)
+           or TiLP utility
+   Changed : 'Close All' renamed to 'Close All Editors'
+   Added : tooltip (hint) for items in Close/Sending files dialog
+   Added : support for Nimrod Look&Feel
+   Changed : code upgrade to Java 1.5 (Java 1.4 is no longer supported!) -> faster application
+   Changed : better conversion of unsupported characters into editor (eg. when you paste text from PDF)
+
+26th October 2005 - WordRider 0.75 - 'bug fix release' - stable
+   Added : Jakarta Ant's build.xml in the WordRider's sources - you can now easily build WordRider on your OS
+   Fixed : inserting of the Line Separator was not interpreted as only one action for undo functionality
+   Fixed : margin X combobox(located in toolbar) wasn't disabled while editing math expression
+   Fixed : selecting picture and drag&drop is more intuitive
+   Fixed : dots indicating new paragraph(textarea's left border) are not visible on JRE 1.5.0_05
+   Fixed : generating useless tags into output document(#W and others)[reported by Agnus, thanks!]
+
+18th September 2005 - German localization update
+
+13th  September 2005 - WordRider 0.74 released
+   Added : new icons for image import and options dialog by Rusttaf!
+   Fixed : invalid count of characters for TI92/V200 emulation [reported by MxRider, thanks!]
+   Fixed : output document contains unwanted alignment style tags(eg. &L, &C etc.)
+   Added : support for Substance Look and Feel (JRE 1.5 only!)
+   Added : new image processing filters (algorithm Stucki, Burke...)- see http://wordrider.net/filters.html
+           for more details
+   Added : Image properties dialog - image editing - folder/variable name/comment
+   Added : new shortcuts - Ctrl+W(select word/line/document); Alt+Shift+8(minus infinity) and shortcuts for new styles
+           for a complete list of shortcuts see the documentation section on the homepage
+   Added : improved Hibview support - styles "conjugate", "suffix",  "variable margin"
+   Changed : save properties dialogs - option for output format(Hibview vs TxtRider/uView)
+   Added : enhanced scrolling with a middle mouse button
+   Added : bracket matching - highlight (optionable)
+   Added : line highlighting (optionable)
+   Added : Ti92 support - creating Ti92 pictures(92i, 9xi), working with ti92 documents(92t,9xt)
+
+21st May 2005 - WordRider 0.7 released
+   Changed : - it's possible to open more than one file at once
+
+14th May 2005 - WordRider 0.7beta released
+   Changed : changed an order of Math symbols #1 [wanted by Sislik]
+   Added : Image importer plugin - easy converting JPG, GIF, PNG, BMP (+ WBMP on JDK 1.5 only) into 89i
+   Fixed : folder name and variable name can contain an underscore '_' [reported by Sislik]
+   Added : new shortcuts for special characters eg. Alt+/ for Sqrt etc.; check shortcuts.pdf for more details
+   Changed : improved file export - better compatibility to Hibview file format[thanks to H_aldnoer]
+   Fixed : spaces at the beginning of lines were cut off[reported by Nicolas Safranez-thanks!]
+   Changed : loading files should be faster(significantly for longer files) [0.7 version todo plan]
+   Added : user language autodetection when WordRider starts for the first time
+   Added : added SHIFT+TAB functionality(removes spaces/depends on the tab size/ from the beginning of lines),
+           enhanced TAB function(also applying on the selected text)
+   Changed : key ENTER(in any modal dialog) activates default 'OK' action, key ESCAPE activates
+            default 'CANCEL' action
+   Fixed : applying styles(eg.indent, alignment) change the math style
+   Added : support for PgsLookAndFeel (my new favorite addition ;-) ) and InfoNode Look&Feel
+   Changed : Look and Feel settings were moved from main menu to the options dialog (Appearance tab)
+   Added : Allow only one instance of WordRider (can be changed in the Options)
+   Added : Options - many user settings for all functionalities (eg. colors) [0.6 version todo plan]
+   Added : automatic checking for new version when WordRider starts
+   Fixed : missing language label for message "picture crc error"
+   Added : confirm dialog if inserting picture's file name differs from its variable value
+   Fixed : paste was not interpreted as only one action for undo functionality
+   Fixed : copying unselected text deletes the clipboard
+   Added : new functionality for shortcuts - ctrl+left arrow(move caret left),ctrl+right arrow(move caret right)
+           ctrl+delete(delete next word), ctrl+backspace(delete previous word)
+   Fixed : selected text is not replaced by inserted character [reported by Rusttaf]
+   Changed : Loading file status is indicated by progress bar
+
+28th January 2005 - WordRider 0.55 released
+   Fixed : characters at the Characters table weren't displayed in the proper font on Java 1.5
+   Fixed : WordRider doesn't work on Mac OS X [thanks to TheWolf]
+   Added : support for Spanish language
+   Fixed : some incorrect English and Czech words 
+
+29th December 2004 - WordRider 0.54 released
+   Added : icon at left side indicates a line with math expression
+   Added : new shortcut for "minus" in calculator (alt-minus(-))
+   Fixed : shortcut for "derive" character(alt-apostroph) doesn't work
+   Added : (-) math character minus added to Math1 symbols [wanted by Sislik]
+   Added : show shortcut for characters with code <255(eg. alt-0128 for alfa char.) as a tooltip in Character List
+           - for Windows Platform only [wanted by Sislik]
+   Fixed : find/replace cannot open when editor has no focus
+   Fixed : close dialog - many items are not visible - scrollbar is missing [reported by Sislik]
+   Added : support for XP look&feel(works only with WindowsXP(tm))
+   Added : support for Oyoaha look&feel
+   Added : checking for new version [0.7 version todo plan] 
+   Fixed : bad generated checksum for 89t files(with length of content >>251 chars) [reported by Sapharic]
+   Added : new shortcut for changing alignment to left - alt+0 (ctrl+L still works)
+   Added : French translation of WordRider editor [thanks to Moumou and FpgForce]
+   Changed: asterisk at file tab indicates a text file modification
+   Changed: comboboxes in Find/Replace dialog with a history
+            of last used phrases [0.6 version todo plan]
+   Changed: very long file paths are truncated to more readable form
+          (statusbar, recent files)
+   Added: Recent Files in File menu [0.6 version todo plan]
+#WordRider 0.5 final - for internal testing only   
+   Fixed: Drag&Drop must be used as one action for undomanager
+   Fixed: improved compatibility HibView/TxtRider with reading generated
+          document - eg. normal font/exponent/normal font [reported by Sislik]
+   Fixed: LookAndFeel without theme cannot be loaded after restart
+   Fixed: anti-aliasing doesn't work on the every line while editing [reported by Pollux]
+
+28th November 2004 - WordRider 0.5 beta2 released
+   Fixed: strange behaviour with 'é' and 'è' [reported by Hibou]
+   Added: sample text file for viewing
+   Added: readme.txt, history.txt file to distribution
+   
+3rd November 2004 - WordRider 0.5 beta released
+   first public beta version of WordRider 0.5
