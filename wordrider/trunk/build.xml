@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="Revize" default="all" basedir=".">
+    <property name="application" value="wordrider"/>
+    <property name="version" value="${application}-0.8"/>
+    <property name="jarfile" value="${application}.jar"/>
+
+    <!-- input data directories -->
+    <property name="src" value="src"/>
+    <property name="etc" value="etc"/>
+    <property name="doc" value="doc"/>
+    <property name="lib" value="lib"/>
+    <property name="dev" value="dev"/>
+    <property name="help" location="${doc}"/>
+    <property name="resources" value="${src}/resources/"/>
+    <property name="mainclass" value="net.wordrider.core.MainAppSplash"/>
+    <property name="langs" value="${resources}languages"/>
+
+    <!-- output data directories -->
+    <property name="build" value="${version}"/>
+    <property name="classes" value="_classes"/>
+    <property name="dist" value="dist"/>
+
+    <fileset id="jars" dir="${lib}" includes="*"/>
+
+    <path id="cp">
+        <fileset refid="jars"/>
+    </path>
+
+    <pathconvert property="lib.prefix" pathsep=" ">
+        <path location="${lib}"/>
+    </pathconvert>
+
+    <pathconvert property="classpath" refid="jars" pathsep=" " dirsep="/">
+        <map from="${lib.prefix}" to="${lib}"/>
+    </pathconvert>
+
+    <target name="build" depends="compile" description="building Revize">
+
+        <mkdir dir="${classes}/${resources}"/>
+        <copy todir="${classes}/resources">
+            <fileset dir="${resources}" includes="**/*"></fileset>
+        </copy>
+
+        <jar jarfile="${build}/${jarfile}" compress="false">
+            <manifest>
+                <attribute name="Build-Date" value="${TODAY}"/>
+                <!--            <attribute name="Class-Path" value="${classpath}"/> -->
+                <attribute name="Main-Class" value="${mainclass}"/>
+            </manifest>
+            <fileset dir="${classes}" includes="**/*"/>
+        </jar>
+        <mkdir dir="${build}/${lib}"/>
+        <!--<mkdir dir="${build}/help"/>-->
+        <copy todir="${build}">
+            <fileset dir="${etc}" includes="**/*"></fileset>
+        </copy>
+        <copy todir="${build}/help">
+            <fileset dir="${help}" includes="**/*"></fileset>
+        </copy>
+        <copy todir="${build}/${lib}">
+            <fileset dir="${lib}" includes="**/*"></fileset>
+        </copy>
+    </target>
+
+    <target name="languages" description="generating languages">
+        <delete>
+            <fileset dir="${langs}" includes="*.properties"></fileset>
+        </delete>
+        <copy todir="${langs}" overwrite="true" encoding="utf-8">
+            <filterchain>
+                <ignoreblank byline="true"/>
+                <striplinecomments>
+                    <comment value="#"/>
+                </striplinecomments>
+            </filterchain>
+            <fileset dir="${langs}/native" includes="*.properties"/>
+            <mapper type="glob" from="*.properties" to="*.stripped">
+            </mapper>
+        </copy>
+        <native2ascii src="${langs}" encoding="utf-8" includes="*.stripped" dest="${langs}" ext=".properties">
+        </native2ascii>
+
+        <delete>
+            <fileset dir="${langs}" includes="*.stripped"/>
+        </delete>
+    </target>
+
+    <target name="compile" depends="clean, init, languages" description="compiling source codes">
+        <javac srcdir="${src}" destdir="${classes}" classpathref="cp" optimize="on" target="1.5">
+        </javac>
+    </target>
+
+    <target name="init" description="initialization">
+        <tstamp/>
+        <mkdir dir="${classes}"/>
+        <mkdir dir="${build}"/>
+        <mkdir dir="${dist}"/>
+    </target>
+
+    <target name="clean" description="clean up">
+        <delete dir="${build}"/>
+        <delete dir="${classes}"/>
+        <delete dir="${dist}"/>
+    </target>
+
+    <target name="all" depends="clean,init,compile, build, dist" description="build all"/>
+
+    <!-- run application -->
+
+    <target name="run">
+        <java fork="true" jar="${build}/${jarfile}"/>
+    </target>
+
+    <target name="dist" depends="build" description="creating release">
+        <zip zipfile="${dist}/${version}.zip">
+            <fileset dir=".">
+                <include name="${build}/"/>
+            </fileset>
+        </zip>
+        <zip destfile="${dist}/${version}-src.zip">
+            <fileset dir=".">
+                <include name="${lib}/"/>
+                <include name="${etc}/"/>
+                <include name="${src}/"/>
+                <include name="${dev}/"/>
+                <include name="${doc}/"/>
+                <include name="build.xml"/>
+            </fileset>
+        </zip>
+    </target>
+
+</project>
