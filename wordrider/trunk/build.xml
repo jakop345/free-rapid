@@ -124,7 +124,7 @@
                 <include name="${src}/"/>
                 <include name="${dev}/"/>
                 <include name="${doc}/"/>
-                <include name="build.xml"/>
+                <include name="build.xml,build.txt"/>
             </fileset>
         </zip>
     </target>
