@@ -38,15 +38,10 @@ public class CalendarGrid extends JComponent {
 		this.calendarEventDAO = calendarEventDAO;
 		this.calendarConfig = calendarConfig;
 	}
-	
-	private boolean firstHack = true;
-	
+		
 	@Override
 	protected void paintComponent(Graphics g) {
-		if (firstHack) {
-			refreshCalendarEvents();
-			firstHack = false;
-		}
+		recountCalendarEvents();
 		switch (calendarView) {
 			case DAY:
 				paintCalendarDay(g);
@@ -142,18 +137,18 @@ public class CalendarGrid extends JComponent {
 	 */
 	protected boolean recountCalendarEventDay(CalendarGridEvent event) {
 		int hoursCount = calendarConfig.getDayEndTime() - calendarConfig.getDayStartTime();
-		float minuteSize = new Float(this.getHeight()-1) / new Float(hoursCount*60);
-		int topTime = (event.getCalendarEvent().getStartDate().getHours()-calendarConfig.getDayStartTime())*60+event.getCalendarEvent().getStartDate().getMinutes();
-		int bottomTime = (event.getCalendarEvent().getEndDate().getHours()-calendarConfig.getDayStartTime())*60+event.getCalendarEvent().getEndDate().getMinutes();
-		int top = Math.round(topTime*minuteSize);
-		int bottom = Math.round(bottomTime*minuteSize);
+		float minuteSize = new Float(this.getHeight()-1) / (hoursCount*60);
+		float hourSize = new Float(this.getHeight()-1) / hoursCount;
+		int topTime = (event.getCalendarEvent().getStartDate().getHours()-calendarConfig.getDayStartTime());
+		int bottomTime = (event.getCalendarEvent().getEndDate().getHours()-event.getCalendarEvent().getStartDate().getHours());
+		int top = Math.round(topTime*hourSize+event.getCalendarEvent().getStartDate().getMinutes()*minuteSize);
+		int bottom = Math.round(bottomTime*hourSize+(event.getCalendarEvent().getEndDate().getMinutes()-event.getCalendarEvent().getStartDate().getMinutes())*minuteSize);
 		
 		boolean result = false;
 		if (event.getY() != top)
 			result = true || result;
 		if (event.getHeight() != bottom)
 			result = true || result;
-		System.out.printf("Top> %d Bottom> %d%n",top,bottom);
 		if (result) {
 			event.setLocation(50,top); //event.getX()
 			event.setSize(50, bottom); //event.getWidth() jak to bude se sirkou pri vice udalostech ?
@@ -200,7 +195,7 @@ public class CalendarGrid extends JComponent {
 		
 		for (int i=0; i<hoursCount; i++) {
 			int p = Math.round(i*hourSize);
-			g.drawString(Integer.toString((i+calendarConfig.getDayStartTime())) ,0, Math.round((i+1)*hourSize));
+			g.drawString(Integer.toString((i+calendarConfig.getDayStartTime())) ,0, p + g.getFont().getSize());
 			g.drawLine(0, p, this.getWidth(), p);
 		}
 	}
