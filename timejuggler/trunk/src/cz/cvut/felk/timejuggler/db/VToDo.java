@@ -8,93 +8,83 @@ import java.sql.Timestamp;
  */
 public class VToDo extends CalComponent {
 
-	private Timestamp due;
-	private String geo="";
-	private String location="";
-	private int priority=0;
-	private int percentcomplete=0;
-	private Timestamp completed;
-	//public Alarms m_Alarms;
-	//public Categories m_Categories;
+    private Timestamp due;
+    private String geo = "";
+    private String location = "";
+    private int priority = 0;
+    private int percentcomplete = 0;
+    private Timestamp completed;
+    //public Alarms m_Alarms;
+    //public Categories m_Categories;
 
-	public VToDo(){
+    public VToDo() {
 
-	}
+    }
 
-	public void finalize() throws Throwable {
-		super.finalize();
-	}
+    public Timestamp getDue() {
+        return due;
+    }
 
-	public Timestamp getdue(){
-		return due;
-	}
+    /**
+     * @param newVal
+     */
+    public void setDue(Timestamp newVal) {
+        due = newVal;
+    }
 
-	/**
-	 * 
-	 * @param newVal
-	 */
-	public void setdue(Timestamp newVal){
-		due = newVal;
-	}
+    public String getGeo() {
+        return geo;
+    }
 
-	public String getgeo(){
-		return geo;
-	}
+    /**
+     * @param newVal
+     */
+    public void setGeo(String newVal) {
+        geo = newVal;
+    }
 
-	/**
-	 * 
-	 * @param newVal
-	 */
-	public void setgeo(String newVal){
-		geo = newVal;
-	}
+    public String getLocation() {
+        return location;
+    }
 
-	public String getlocation(){
-		return location;
-	}
+    /**
+     * @param newVal
+     */
+    public void setLocation(String newVal) {
+        location = newVal;
+    }
 
-	/**
-	 * 
-	 * @param newVal
-	 */
-	public void setlocation(String newVal){
-		location = newVal;
-	}
+    public int getPriority() {
+        return priority;
+    }
 
-	public int getpriority(){
-		return priority;
-	}
+    /**
+     * @param newVal
+     */
+    public void setPriority(int newVal) {
+        priority = newVal;
+    }
 
-	/**
-	 * 
-	 * @param newVal
-	 */
-	public void setpriority(int newVal){
-		priority = newVal;
-	}
+    public int getPercentComplete() {
+        return percentcomplete;
+    }
 
-	public int getpercentcomplete(){
-		return percentcomplete;
-	}
+    /**
+     * @param newVal
+     */
+    public void setPercentComplete(int newVal) {
+        percentcomplete = newVal;
+    }
 
-	/**
-	 * 
-	 * @param newVal
-	 */
-	public void setpercentcomplete(int newVal){
-		percentcomplete = newVal;
-	}
+    public Timestamp getCompleted() {
+        return completed;
+    }
 
-	public Timestamp getcompleted(){
-		return completed;
-	}
-
-	/**
-	 * 
-	 * @param newVal
-	 */
-	public void setcompleted(Timestamp newVal){
-		completed = newVal;
-	}
+    /**
+     * @param newVal
+     */
+    public void setCompleted(Timestamp newVal) {
+        completed = newVal;
+    }
 
 }

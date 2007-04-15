@@ -6,91 +6,81 @@ package cz.cvut.felk.timejuggler.db;
  */
 public class VCalendar extends DbElement {
 
-	private String prodid = "-//CVUT //TimeJuggler Calendar 0.1//CZ";
-	private String version = "2.0";
-	private String calscale = "GREGORIAN";
-	private String method = "PUBLISH";
-	private String name = "";
-	
+    private String productId = "-//CVUT //TimeJuggler Calendar 0.1//CZ";
+    private String version = "2.0";
+    private String calendarScale = "GREGORIAN";
+    private String method = "PUBLISH";
+    private String name = "";
+
 //	private Vector events;
 
-	public VCalendar(){
+    public VCalendar() {
 
-	}
-	public VCalendar(int id){
-		super(id);
-	}
-	public VCalendar(String name){
-		this.name = name;
-	}
+    }
+
+    public VCalendar(int id) {
+        super(id);
+    }
+
+    public VCalendar(String name) {
+        this.name = name;
+    }
+
+    public void store() {
+
+    }
 
 
-	public void finalize() throws Throwable {
-		super.finalize();
-	}
+    public String getProductId() {
+        return productId;
+    }
 
-	public String getprodid(){
-		return prodid;
-	}
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
 
-	public void store(){
+    public String getVersion() {
+        return version;
+    }
 
-	}
+    /**
+     * @param newVal
+     */
+    public void setVersion(String newVal) {
+        version = newVal;
+    }
 
-	/**
-	 * 
-	 * @param newVal
-	 */
-	public void setprodid(String newVal){
-		prodid = newVal;
-	}
+    public String getCalendarScale() {
+        return calendarScale;
+    }
 
-	public String getversion(){
-		return version;
-	}
+    /**
+     * @param newVal
+     */
+    public void setCalendarScale(String newVal) {
+        calendarScale = newVal;
+    }
 
-	/**
-	 * 
-	 * @param newVal
-	 */
-	public void setversion(String newVal){
-		version = newVal;
-	}
+    public String getMethod() {
+        return method;
+    }
 
-	public String getcalscale(){
-		return calscale;
-	}
+    /**
+     * @param newVal
+     */
+    public void setMethod(String newVal) {
+        method = newVal;
+    }
 
-	/**
-	 * 
-	 * @param newVal
-	 */
-	public void setcalscale(String newVal){
-		calscale = newVal;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getmethod(){
-		return method;
-	}
-
-	/**
-	 * 
-	 * @param newVal
-	 */
-	public void setmethod(String newVal){
-		method = newVal;
-	}
-
-	public String getname(){
-		return name;
-	}
-
-	/**
-	 * 
-	 * @param newVal
-	 */
-	public void setname(String newVal){
-		name = newVal;
-	}
+    /**
+     * @param newVal
+     */
+    public void setName(String newVal) {
+        name = newVal;
+    }
 
 }

@@ -7,25 +7,24 @@ package cz.cvut.felk.timejuggler.db;
  */
 public abstract class DbElement {
 
-	private int id = -1;
+    private int id = -1;
 
-	public DbElement(){
+    public DbElement() {
 
-	}
-	public DbElement(int id){
-		this.id=id;
-	}
-	public void finalize() throws Throwable {
+    }
 
-	}
-	
-	public int getid(){
-		return id;
-	}
-	public void setid(int newVal){
-		id = newVal;
-	}
+    public DbElement(int id) {
+        this.id = id;
+    }
 
-	public abstract void store();
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int newVal) {
+        id = newVal;
+    }
+
+    public abstract void store();
 
 }

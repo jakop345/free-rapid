@@ -1,177 +1,167 @@
 package cz.cvut.felk.timejuggler.db;
-import java.sql.*;
+
+import java.sql.Timestamp;
+
 /**
  * @version 0.1
  * @created 14-IV-2007 17:18:43
  */
-public class CalComponent extends DbElement{
+public class CalComponent extends DbElement {
 
-	/**
-	 * povinny parametr! (globalne unikatni (MAILTO://email@...))
-	 */
-	private String uid="";
-	private String url="";
-	/**
-	 * klasifikace (PUBLIC/PRIVATE...)
-	 */
-	private String clazz="";
-	/**
-	 * popis komponenty
-	 */
-	private String description="";
-	private String organizer="";
-	private int sequence=0;
-	private String status="";
-	private String summary="";
-	private Timestamp recurrenceid;
-	private Timestamp dtstamp;
-	/*public DateTime m_DateTime; not implemented */
-	/*public VCalendar m_VCalendar; not implemented */ 
+    /**
+     * povinny parametr! (globalne unikatni (MAILTO://email@...))
+     */
+    private String uid = "";
+    private String url = "";
+    /**
+     * klasifikace (PUBLIC/PRIVATE...)
+     */
+    private String clazz = "";
+    /**
+     * popis komponenty
+     */
+    private String description = "";
+    private String organizer = "";
+    private int sequence = 0;
+    private String status = "";
+    private String summary = "";
+    private Timestamp recurrenceid;
+    private Timestamp dtstamp;
+    /*public DateTime m_DateTime; not implemented */
+    /*public VCalendar m_VCalendar; not implemented */
 
-	public CalComponent(){
+    public CalComponent() {
 
-	}
-	public CalComponent(int id){
-		super(id);
-	}
-	public void finalize() throws Throwable {
+    }
 
-	}
+    public CalComponent(int id) {
+        super(id);
+    }
 
-	/**
-	 * povinny parametr! (globalne unikatni (MAILTO://email@...))
-	 */
-	public String getuid(){
-		return uid;
-	}
+    /**
+     * povinny parametr! (globalne unikatni (MAILTO://email@...))
+     */
+    public String getUid() {
+        return uid;
+    }
 
-	/**
-	 * povinny parametr! (globalne unikatni (MAILTO://email@...))
-	 * 
-	 * @param newVal
-	 */
-	public void setuid(String newVal){
-		uid = newVal;
-	}
+    /**
+     * povinny parametr! (globalne unikatni (MAILTO://email@...))
+     * @param newVal
+     */
+    public void setUid(String newVal) {
+        uid = newVal;
+    }
 
-	public String geturl(){
-		return url;
-	}
+    public String getUrl() {
+        return url;
+    }
 
-	/**
-	 * 
-	 * @param newVal
-	 */
-	public void seturl(String newVal){
-		url = newVal;
-	}
+    /**
+     * @param newVal
+     */
+    public void setUrl(String newVal) {
+        url = newVal;
+    }
 
-	/**
-	 * klasifikace (PUBLIC/PRIVATE...)
-	 */
-	public String getclazz(){
-		return clazz;
-	}
+    /**
+     * klasifikace (PUBLIC/PRIVATE...)
+     */
+    public String getClazz() {
+        return clazz;
+    }
 
-	/**
-	 * klasifikace (PUBLIC/PRIVATE...)
-	 * 
-	 * @param newVal
-	 */
-	public void setclazz(String newVal){
-		clazz = newVal;
-	}
+    /**
+     * klasifikace (PUBLIC/PRIVATE...)
+     * @param newVal
+     */
+    public void setClazz(String newVal) {
+        clazz = newVal;
+    }
 
-	/**
-	 * popis komponenty
-	 */
-	public String getdescription(){
-		return description;
-	}
+    /**
+     * popis komponenty
+     */
+    public String getDescription() {
+        return description;
+    }
 
-	/**
-	 * popis komponenty
-	 * 
-	 * @param newVal
-	 */
-	public void setdescription(String newVal){
-		description = newVal;
-	}
+    /**
+     * popis komponenty
+     * @param newVal
+     */
+    public void setDescription(String newVal) {
+        description = newVal;
+    }
 
-	public String getorganizer(){
-		return organizer;
-	}
+    public String getOrganizer() {
+        return organizer;
+    }
 
-	/**
-	 * 
-	 * @param newVal
-	 */
-	public void setorganizer(String newVal){
-		organizer = newVal;
-	}
+    /**
+     * @param newVal
+     */
+    public void setOrganizer(String newVal) {
+        organizer = newVal;
+    }
 
-	public int getsequence(){
-		return sequence;
-	}
+    public int getSequence() {
+        return sequence;
+    }
 
-	/**
-	 * 
-	 * @param newVal
-	 */
-	public void setsequence(int newVal){
-		sequence = newVal;
-	}
+    /**
+     * @param newVal
+     */
+    public void setSequence(int newVal) {
+        sequence = newVal;
+    }
 
-	public String getstatus(){
-		return status;
-	}
+    public String getStatus() {
+        return status;
+    }
 
-	/**
-	 * 
-	 * @param newVal
-	 */
-	public void setstatus(String newVal){
-		status = newVal;
-	}
+    /**
+     * @param newVal
+     */
+    public void setStatus(String newVal) {
+        status = newVal;
+    }
 
-	public String getsummary(){
-		return summary;
-	}
+    public String getSummary() {
+        return summary;
+    }
 
-	/**
-	 * 
-	 * @param newVal
-	 */
-	public void setsummary(String newVal){
-		summary = newVal;
-	}
+    /**
+     * @param newVal
+     */
+    public void setSummary(String newVal) {
+        summary = newVal;
+    }
 
-	public Timestamp getrecurrenceid(){
-		return recurrenceid;
-	}
+    public Timestamp getRecurrenceId() {
+        return recurrenceid;
+    }
 
-	/**
-	 * 
-	 * @param newVal
-	 */
-	public void setrecurrenceid(Timestamp newVal){
-		recurrenceid = newVal;
-	}
+    /**
+     * @param newVal
+     */
+    public void setRecurrenceId(Timestamp newVal) {
+        recurrenceid = newVal;
+    }
 
-	public Timestamp getdtstamp(){
-		return dtstamp;
-	}
+    public Timestamp getDTimestamp() {
+        return dtstamp;
+    }
 
-	/**
-	 * 
-	 * @param newVal
-	 */
-	public void setdtstamp(Timestamp newVal){
-		dtstamp = newVal;
-	}
-	
-	public void store(){
-		
-	}
+    /**
+     * @param newVal
+     */
+    public void setDTimestamp(Timestamp newVal) {
+        dtstamp = newVal;
+    }
+
+    public void store() {
+
+    }
 
 }

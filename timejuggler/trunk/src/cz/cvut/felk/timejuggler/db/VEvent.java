@@ -6,69 +6,61 @@ package cz.cvut.felk.timejuggler.db;
  */
 public class VEvent extends CalComponent {
 
-	private String geo="";
-	private String location="";
-	private int priority=0;
-	private String transp="";
-	//public Categories m_Categories;
-	//public Alarms m_Alarms;
-	//public ComponentDetails m_ComponentDetails;
-	//public CalComponent m_CalComponent;
+    private String geoGPS = "";
+    private String location = "";
+    private int priority = 0;
+    private String transparency = "";
+    //public Categories m_Categories;
+    //public Alarms m_Alarms;
+    //public ComponentDetails m_ComponentDetails;
+    //public CalComponent m_CalComponent;
 
-	public VEvent(){
+    public VEvent() {
 
-	}
+    }
 
-	public void finalize() throws Throwable {
-		super.finalize();
-	}
+    public String getGeoGPS() {
+        return geoGPS;
+    }
 
-	public String getgeo(){
-		return geo;
-	}
+    /**
+     * @param newVal
+     */
+    public void setGeoGPS(String newVal) {
+        geoGPS = newVal;
+    }
 
-	/**
-	 * 
-	 * @param newVal
-	 */
-	public void setgeo(String newVal){
-		geo = newVal;
-	}
+    public String getLocation() {
+        return location;
+    }
 
-	public String getlocation(){
-		return location;
-	}
+    /**
+     * @param newVal
+     */
+    public void setLocation(String newVal) {
+        location = newVal;
+    }
 
-	/**
-	 * 
-	 * @param newVal
-	 */
-	public void setlocation(String newVal){
-		location = newVal;
-	}
+    public int getPriority() {
+        return priority;
+    }
 
-	public int getpriority(){
-		return priority;
-	}
+    /**
+     * @param newVal
+     */
+    public void setPriority(int newVal) {
+        priority = newVal;
+    }
 
-	/**
-	 * 
-	 * @param newVal
-	 */
-	public void setpriority(int newVal){
-		priority = newVal;
-	}
+    public String getTransparency() {
+        return transparency;
+    }
 
-	public String gettransp(){
-		return transp;
-	}
-
-	/**
-	 * 
-	 * @param newVal
-	 */
-	public void settransp(String newVal){
-		transp = newVal;
-	}
+    /**
+     * @param newVal
+     */
+    public void setTransparency(String newVal) {
+        transparency = newVal;
+    }
 
 }
