@@ -36,7 +36,7 @@ public final class AppPrefs {
 
     /**
      * Vrati nastaveni z properties fajlu
-     * @param key klic property
+     * @param key          klic property
      * @param defaultValue defaultni hodnota, ktera se pouzije pokud neni hodnota nalezena
      * @return hodnota uzivatelskeho nastaveni
      */
@@ -50,7 +50,7 @@ public final class AppPrefs {
 
     /**
      * Vrati nastaveni z properties fajlu
-     * @param key klic property
+     * @param key          klic property
      * @param defaultValue defaultni hodnota, ktera se pouzije pokud neni hodnota nalezena
      * @return hodnota uzivatelskeho nastaveni
      */
@@ -70,7 +70,7 @@ public final class AppPrefs {
 
     /**
      * Provede ulozeni uzivatelskeho nastaveni do Properties
-     * @param key hodnota klice
+     * @param key   hodnota klice
      * @param value hodnota uzivatelskeho nastaveni
      */
     public static void storeProperty(final String key, final boolean value) {
@@ -79,7 +79,7 @@ public final class AppPrefs {
 
     /**
      * Provede ulozeni uzivatelskeho nastaveni do Properties
-     * @param key hodnota klice
+     * @param key   hodnota klice
      * @param value hodnota uzivatelskeho nastaveni
      * @store je-li hodnota true, provede se okamzite ulozeni do souboru
      */
@@ -89,9 +89,9 @@ public final class AppPrefs {
             store();
     }
 
-     /**
+    /**
      * Provede ulozeni uzivatelskeho nastaveni do Properties
-     * @param key hodnota klice
+     * @param key   hodnota klice
      * @param value hodnota uzivatelskeho nastaveni
      */
     public static void storeProperty(final String key, final String value) {
@@ -100,7 +100,7 @@ public final class AppPrefs {
 
     /**
      * Provede ulozeni uzivatelskeho nastaveni do Properties
-     * @param key hodnota klice
+     * @param key   hodnota klice
      * @param value hodnota uzivatelskeho nastaveni
      */
     public static void storeProperty(final String key, final int value) {
@@ -109,7 +109,7 @@ public final class AppPrefs {
 
     /**
      * Provede ulozeni uzivatelskeho nastaveni do Properties
-     * @param key hodnota klice
+     * @param key   hodnota klice
      * @param value hodnota uzivatelskeho nastaveni
      */
     public static String getProperty(final String key, final String defaultValue) {
@@ -126,8 +126,7 @@ public final class AppPrefs {
     }
 
     /**
-     * Provede ulozeni properties do souboru definovaneho systemem.
-     * Uklada se do XML.
+     * Provede ulozeni properties do souboru definovaneho systemem. Uklada se do XML.
      * @see application.LocalStorage
      * @see loadProperties
      */
@@ -159,8 +158,7 @@ public final class AppPrefs {
     }
 
     /**
-     * Provede nacteni properties ze souboru definovaneho systemem.
-     * Pokud nacteni selze, vraci prazdne properties.
+     * Provede nacteni properties ze souboru definovaneho systemem. Pokud nacteni selze, vraci prazdne properties.
      * Properties se nacitaji z XML.
      * @see application.LocalStorage
      * @see store
@@ -177,7 +175,7 @@ public final class AppPrefs {
         } catch (IOException e) {
             try {
                 if (inputStream != null)
-                        inputStream.close();
+                    inputStream.close();
             } catch (IOException ex) {
                 logger.log(Level.SEVERE, ex.getMessage(), ex);
             }
@@ -186,5 +184,7 @@ public final class AppPrefs {
         }
     }
 
-
+    public static String getAppPath() {
+        return "";
+    }
 }
