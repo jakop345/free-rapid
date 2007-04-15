@@ -1,10 +1,25 @@
 package cz.cvut.felk.timejuggler.gui;
 
+import java.awt.BorderLayout;
+
+import java.util.Date;
+
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+
 import org.jdesktop.swingx.JXMultiSplitPane;
 import org.jdesktop.swingx.MultiSplitLayout;
 
-import javax.swing.*;
-import java.awt.*;
+
+import cz.cvut.felk.timejuggler.dao.CalendarEventDAO;
+import cz.cvut.felk.timejuggler.dao.CalendarEventDAO_DummyImpl;
+
+import cz.cvut.felk.timejuggler.entity.CalendarEvent;
+
+import cz.cvut.felk.timejuggler.swing.calendar.CalendarConfig;
+import cz.cvut.felk.timejuggler.swing.calendar.CalendarGrid;
+import cz.cvut.felk.timejuggler.swing.calendar.CalendarGridEvent;
+import cz.cvut.felk.timejuggler.swing.calendar.CalendarView;
 
 /**
  * Sprava a vytvoreni hlavniho panelu
@@ -39,7 +54,40 @@ public class MainPanelManager {
         multiSplitPane.add(new SmallCalendarManager().getComponent(), LEFT_TOP);
         multiSplitPane.add(getTaskList(), LEFT_BOTTOM);
         multiSplitPane.add(new EventsListManager().getComponent(), RIGHT_TOP);
-        multiSplitPane.add(new JButton("Right Bottom"), RIGHT_BOTTOM);
+        
+        // testovaci blok
+        Date startDate = new Date(0);
+        startDate.setHours(9);
+        startDate.setMinutes(15);
+
+        Date endDate = new Date(0);
+        endDate.setHours(13);
+        endDate.setMinutes(30);
+        
+        Date todayDate = new Date(0);
+
+        CalendarConfig calendarConfig = new CalendarConfig();        
+        
+        CalendarEventDAO_DummyImpl calendarEventDAO = new CalendarEventDAO_DummyImpl();
+        CalendarGrid gr = new CalendarGrid(calendarEventDAO, calendarConfig);
+        gr.setStartDate(todayDate);
+        
+        CalendarEvent ce = new CalendarEvent();
+        ce.setName("Test udalost");
+        
+        
+        ce.setStartDate(startDate);
+        ce.setEndDate(endDate);
+        
+        calendarEventDAO.saveCalendarEvent(ce);
+
+        gr.refreshCalendarEvents();
+        
+        // testovaci blok
+        
+        
+        multiSplitPane.add(gr, RIGHT_BOTTOM);
+        
         contentPanel.add(getToolbarManager().getComponent(), BorderLayout.NORTH);
         contentPanel.add(multiSplitPane, BorderLayout.CENTER);
         contentPanel.add(getStatusBarManager().getStatusBar(), BorderLayout.SOUTH);
