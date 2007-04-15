@@ -1,8 +1,9 @@
 package cz.cvut.felk.timejuggler.core;
 
-import application.*;
-import cz.cvut.felk.timejuggler.swing.Swinger;
+import application.Application;
+import application.SingleFrameApplication;
 import cz.cvut.felk.timejuggler.gui.MainPanelManager;
+import cz.cvut.felk.timejuggler.swing.Swinger;
 
 import javax.swing.*;
 import java.util.EventObject;
@@ -20,6 +21,7 @@ public class MainApp extends SingleFrameApplication {
         mainPanel = new MainPanelManager();
         //final ApplicationContext appContext = ApplicationContext.getInstance();
         //ResourceMap resourceMap = appContext.getResourceMap(getClass());
+
         final JFrame frame = getMainFrame();
         frame.setIconImage(Swinger.getIconImage("iconMainFrame").getImage());
         getMainFrame().setJMenuBar(mainPanel.getMenuManager().getMenuBar());
@@ -55,8 +57,7 @@ public class MainApp extends SingleFrameApplication {
     }
 
     /**
-     * Exit listener.
-     * Pri ukoncovani provede ulozeni uzivatelskych properties.
+     * Exit listener. Pri ukoncovani provede ulozeni uzivatelskych properties.
      */
     private static class MainAppExitListener implements Application.ExitListener {
 
