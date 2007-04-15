@@ -1,10 +1,14 @@
 package cz.cvut.felk.timejuggler.core;
 
 import application.ApplicationContext;
+import cz.cvut.felk.timejuggler.utilities.Utils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLDecoder;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,6 +19,16 @@ import java.util.logging.Logger;
  */
 public final class AppPrefs {
     private final static Logger logger = Logger.getLogger(AppPrefs.class.getName());
+
+    //pomocne konstanty pro rozparsovani cesty aplikace
+    private static final String CLASS_EXT = ".class";
+    private static final String JAR_SEPARATOR = ".jar!/";
+    private static final String URL_SEPARATOR = "/";
+    private static final String CLASS_SEPARATOR = ".";
+    private static final String FILE_PREFIX = "file:";
+
+    private static volatile String appPath = null;
+
     /**
      * Soubor pod kterym jsou polozky ulozeny
      */
@@ -184,7 +198,59 @@ public final class AppPrefs {
         }
     }
 
+    /**
+     * Vraci aktualni cestu k adresari programu ve kterem je jar spusten
+     * @return cesta do adresare
+     */
     public static String getAppPath() {
+        if (appPath != null)
+            return appPath;
+        final int end;
+        String urlStr;
+        String clsName = Utils.class.getName();
+        final int clsNameLen = clsName.length() + CLASS_EXT.length();
+        int pos = clsName.lastIndexOf(CLASS_SEPARATOR);
+        final boolean debug = logger.isLoggable(Level.INFO);
+        //final boolean debug = true;
+        if (pos > -1) {
+            clsName = clsName.substring(pos + 1);
+        }
+        if (debug)
+            logger.info("ClassName " + clsName + CLASS_EXT);
+        final URL url = Utils.class.getResource(clsName + CLASS_EXT);
+        if (debug)
+            logger.info("URL " + url);
+        if (url != null) {
+            urlStr = url.toString();
+            if (debug)
+                logger.info("Url string1 " + urlStr);
+            if (urlStr.startsWith("jar:") && (pos = urlStr.lastIndexOf(JAR_SEPARATOR)) > -1) {
+                urlStr = urlStr.substring(0, pos);
+                if (debug)
+                    logger.info("URL String2 " + urlStr);
+                end = urlStr.lastIndexOf(URL_SEPARATOR) + 1;
+            } else {
+                end = urlStr.length() - clsNameLen;
+            }
+            pos = urlStr.lastIndexOf(FILE_PREFIX);
+            if (pos > -1) {
+                pos += FILE_PREFIX.length() + (Utils.isWindows() ? 1 : 0);
+            } else {
+                pos = 0;
+            }
+            urlStr = urlStr.substring(pos, end);
+            if (logger.isLoggable(Level.INFO))
+                logger.info("App Path is " + urlStr);
+            String decoded = "";
+
+            try {
+                decoded = URLDecoder.decode(urlStr, "ISO-8859-1");
+            } catch (UnsupportedEncodingException e) {
+                logger.severe("Unsupported encoding ISO-8859-1");
+            }
+            return appPath = decoded;
+        }
         return "";
+
     }
 }
