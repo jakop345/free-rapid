@@ -2,7 +2,6 @@ package cz.cvut.felk.timejuggler.db;
 
 import java.io.File;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
@@ -22,13 +21,13 @@ public class TimeJugglerJDBCTemplate extends JDBCTemplate {
         /* Funguje "jdbc:derby:jar:(celacesta/soubor.jar)jmenodb" .. ale pouze read-only */
         final File homePath = new File("c:/temp/outdb");
         //final File homePath = ApplicationContext.getInstance().getLocalStorage().getDirectory();
-        logger.fine("homePath = " + homePath);        
+        logger.fine("homePath = " + homePath);
 
-       	this.items = new Vector<Object>();
+        this.items = new Vector<Object>();
     }
 
     protected Connection getConnection() throws SQLException {
-		return ConnectionManager.getInstance().getConnection();
+        return ConnectionManager.getInstance().getConnection();
     }
 
     /**
@@ -51,22 +50,22 @@ public class TimeJugglerJDBCTemplate extends JDBCTemplate {
     }
 
     protected void commit() throws SQLException {
-    	try {
-    		ConnectionManager.getInstance().getConnection().commit();
-	    }
-	    catch (Exception ex) {
-	    	throw new DatabaseException("Selhání transakce: " + ex.getMessage(),ex);
-	    }
-		
+        try {
+            getConnection().commit();
+        }
+        catch (SQLException ex) {//vzdycky handlovat 'nejnizsi' moznou vyjimku
+            throw new DatabaseException("Selhání transakce: " + ex.getMessage(), ex);
+        }
+
     }
 
     protected void rollback() throws SQLException {
-    	try {
-    		ConnectionManager.getInstance().getConnection().rollback();
-	    }
-	    catch (Exception ex) {
-	    	throw new DatabaseException("Selhání rollback: " + ex.getMessage(),ex);
-	    }
+        try {
+            getConnection().rollback();
+        }
+        catch (SQLException ex) {
+            throw new DatabaseException("Selhání rollback: " + ex.getMessage(), ex);
+        }
     }
 
 }

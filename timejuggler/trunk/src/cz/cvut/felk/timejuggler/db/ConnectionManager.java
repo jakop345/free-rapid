@@ -63,7 +63,7 @@ public class ConnectionManager {
             try {
                 connection = DriverManager.getConnection(url, db_user, db_pass);
             }
-            catch (Exception ex) {//tohle neni moc cisty
+            catch (Exception ex) {//tohle neni moc cisty, spis SQLException a ani mozna taky ne...
                 connection = DriverManager.getConnection(url + create_url, db_user, db_pass);
             }
             connection.setAutoCommit(false); // Vypnuti automatickeho commit pro kazdy dotaz
