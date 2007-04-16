@@ -9,10 +9,10 @@ import java.sql.Timestamp;
 public class VToDo extends CalComponent {
 
     private Timestamp due;
-    private String geo = "";
-    private String location = "";
-    private int priority = 0;
-    private int percentcomplete = 0;
+    private String geoGPS;
+    private String location;
+    private int priority = 0; // 0 = undefined
+    private int percentcomplete;
     private Timestamp completed;
     //public Alarms m_Alarms;
     //public Categories m_Categories;
@@ -32,15 +32,15 @@ public class VToDo extends CalComponent {
         due = newVal;
     }
 
-    public String getGeo() {
-        return geo;
+    public String getGeoGPS() {
+        return geoGPS;
     }
 
     /**
      * @param newVal
      */
-    public void setGeo(String newVal) {
-        geo = newVal;
+    public void setGeoGPS(String newVal) {
+        geoGPS = newVal;
     }
 
     public String getLocation() {

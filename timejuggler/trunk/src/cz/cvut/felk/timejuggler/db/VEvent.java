@@ -6,10 +6,10 @@ package cz.cvut.felk.timejuggler.db;
  */
 public class VEvent extends CalComponent {
 
-    private String geoGPS = "";
-    private String location = "";
-    private int priority = 0;
-    private String transparency = "";
+    private String geoGPS;
+    private String location;
+    private int priority = 0; // 0 = undefined
+    private String transparency;
     //public Categories m_Categories;
     //public Alarms m_Alarms;
     //public ComponentDetails m_ComponentDetails;

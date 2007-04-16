@@ -14,7 +14,10 @@ public class DbDataStore {
      */
     public static void main(String[] args) {
         // Testing
-        DbDataStore db = new DbDataStore();
+        DbDataStore db = new DbDataStore();       
+		
+//		VCalendar calendar1 = new VCalendar("Hlavni kalendar");
+//		db.store(calendar1);
 
         /* Pridavani kalendare */
         /*
@@ -24,25 +27,28 @@ public class DbDataStore {
           db.store(calendar2);
           */
 
+//		VEvent event = new VEvent();
+//		event.setDescription("Muj event 1");
+//		db.store(calendar1,event);
+		
         /* Pridavani Eventu */
         /*
           VEvent event = new VEvent();
-          event.setuid("01234568-012144");
-          event.setdescription("Muj event 1");
-          event.setsummary("Toto je prvni event ulozeny do databaze!");
+          event.setUid("01234568-012144");
+          event.setDescription("Muj event 1");
+          event.setSummary("Toto je prvni event ulozeny do databaze!");
           db.store(calendar1,event);
           */
-
         /* Pridavani ToDo */
         /*
           VToDo todo = new VToDo();
           Date deadline= new Date();
           deadline.setMonth(5);
           deadline.setDate(20);
-          todo.setuid("123456-7898");
-          todo.setdescription("Napsat ukoly!");
-          todo.setsummary("Museji se napsat vsechny ukoly do skoly! :)");
-          todo.setdue(new Timestamp(deadline.getTime()));
+          todo.setUid("123456-7898");
+          todo.setDescription("Napsat ukoly!");
+          todo.setSummary("Museji se napsat vsechny ukoly do skoly! :)");
+          todo.setDue(new Timestamp(deadline.getTime()));
           db.store(calendar1,todo);
           */
 
@@ -56,28 +62,25 @@ public class DbDataStore {
             System.out.println("Kalendare:" + cals.size());
             for (Object i : cals) {
                 System.out.println(((VCalendar) i).getName());
+	            /* Nacteni ukolu v kalendari  */
+	            todos = db.getToDosByCalendar((VCalendar) i);
+	            /* Nacteni eventu v kalendari  */
+	            events = db.getEventsByCalendar((VCalendar) i);
+	            System.out.println("+ Udalosti:" + events.size());
+	            for (Object e : events) {
+	                System.out.println(((VEvent) e).getDescription());
+	            }
+	            System.out.println("+ Ukoly:" + todos.size());
+	            for (Object t : todos) {
+	                System.out.println(((VToDo) t).getDescription());
+	            }
+	            //todos.clear();
+	            //events.clear();
             }
-            /* Nacteni eventu v kalendari  */
-            events = db.getEventsByCalendar((VCalendar) cals.elementAt(0));
-
-            /* Nacteni ukolu v kalendari  */
-            todos = db.getToDosByCalendar((VCalendar) cals.elementAt(0));
-
-            System.out.println("Udalosti:" + events.size());
-            for (Object i : events) {
-                System.out.println(((VEvent) i).getDescription());
-
-            }
-            System.out.println("Ukoly:" + todos.size());
-            for (Object i : todos) {
-                System.out.println(((VToDo) i).getDescription());
-
-            }
-
         } else {
             System.out.println("Zadne kalendare v databazi!");
-            System.exit(0);
         }
+        ConnectionManager.getInstance().shutdown();
 
     }
 
@@ -149,7 +152,7 @@ public class DbDataStore {
                 todo.setLocation(rs.getString("location"));
                 todo.setPercentComplete(rs.getInt("percentcomplete"));
                 todo.setPriority(rs.getInt("priority"));
-                todo.setGeo(rs.getString("geo"));
+                todo.setGeoGPS(rs.getString("geo"));
                 todo.setDue(rs.getTimestamp("due"));
                 todo.setCompleted(rs.getTimestamp("completed"));
                 //cast calcomponent
@@ -172,12 +175,13 @@ public class DbDataStore {
     /**
      * Method store
      */
-    public void store(VCalendar cal) {
+    public void store(VCalendar cal) throws SQLException {
         // Pridani noveho kalendare do databaze
         Object params[] = {cal.getProductId(), cal.getVersion(), cal.getCalendarScale(), cal.getMethod(), cal.getName()};
         String insertQuery = "INSERT INTO VCalendar (prodid,version,calscale,method,name) VALUES (?,?,?,?,?)";
         TimeJugglerJDBCTemplate template = new TimeJugglerJDBCTemplate();
         int rowsAffected = template.executeUpdate(insertQuery, params);
+        template.commit();
         // nastaveni klice objektu VCalendar
         cal.setId(template.getGeneratedId());
     }
@@ -185,7 +189,7 @@ public class DbDataStore {
     /**
      * Method store
      */
-    public void store(VCalendar cal, VEvent event) {
+    public void store(VCalendar cal, VEvent event) throws SQLException{
         // Pridani noveho Eventu do kalendare
         Object[] params1 = {
                 event.getUid(), cal.getId(), event.getUrl(), event.getClazz(),
@@ -203,6 +207,7 @@ public class DbDataStore {
         String insertQuery2 = "INSERT INTO VEvent (calComponentID,geo,location,priority,transp) VALUES (?,?,?,?,?)";
         TimeJugglerJDBCTemplate template2 = new TimeJugglerJDBCTemplate();
         template2.executeUpdate(insertQuery2, params2);
+        template2.commit();
         event.setId(template2.getGeneratedId());
 
     }
@@ -210,7 +215,7 @@ public class DbDataStore {
     /**
      * Method store
      */
-    public void store(VCalendar cal, VToDo todo) {
+    public void store(VCalendar cal, VToDo todo) throws SQLException {
         // Pridani noveho Ukolu do kalendare
         Object[] params1 = {
                 todo.getUid(), cal.getId(), todo.getUrl(), todo.getClazz(),
@@ -222,12 +227,14 @@ public class DbDataStore {
         template.executeUpdate(insertQuery1, params1);
 
         Object[] params2 = {
-                template.getGeneratedId(), todo.getGeo(),
+                template.getGeneratedId(), todo.getGeoGPS(),
                 todo.getLocation(), todo.getPriority(), todo.getPercentComplete(), todo.getDue()
         };
         String insertQuery2 = "INSERT INTO VToDo (calComponentID,geo,location,priority,percentcomplete,due) VALUES (?,?,?,?,?,?)";
         TimeJugglerJDBCTemplate template2 = new TimeJugglerJDBCTemplate();
         template2.executeUpdate(insertQuery2, params2);
+       	template2.commit();
+        
         todo.setId(template2.getGeneratedId());
 
     }

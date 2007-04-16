@@ -99,8 +99,8 @@ public abstract class JDBCTemplate {
         for (int i = 0; i < params.length;) {
             paramValue = params[i];
             if (paramValue == null) {
-                throw new UnsupportedOperationException("Nastavení hodnoty null není podporováno");
-                //ps.setNull(++i,java.sql.Types.va);
+                ++i;
+                ps.setNull(i,ps.getParameterMetaData().getParameterType(i));
             } else if (paramValue instanceof BigDecimal) {
                 ps.setBigDecimal(++i, (BigDecimal) paramValue);
             } else if (paramValue instanceof Date) {
@@ -156,9 +156,11 @@ public abstract class JDBCTemplate {
                     ps.close();
                 }
             } finally {
+            	/* nezavirat spojeni, pouzijeme jej znovu!
                 if (con != null){
           			con.close();
         		}
+        		*/
       		}
     	}
 	}

@@ -14,41 +14,21 @@ import java.util.logging.Logger;
  */
 public class TimeJugglerJDBCTemplate extends JDBCTemplate {
     private final static Logger logger = Logger.getLogger(TimeJugglerJDBCTemplate.class.getName());
-    private String url;
-    private String db_user;
-    private String db_pass;
 
     protected Vector<Object> items;
-    private Connection con;
 
     public TimeJugglerJDBCTemplate() {
         /* Funguje pouze createFrom=adresar , nefunguje createFrom=jar:(soubor.jar)jmenodb*/
         /* Funguje "jdbc:derby:jar:(celacesta/soubor.jar)jmenodb" .. ale pouze read-only */
         final File homePath = new File("c:/temp/outdb");
         //final File homePath = ApplicationContext.getInstance().getLocalStorage().getDirectory();
-        logger.fine("homePath = " + homePath);
-        this.url = "jdbc:derby:" + "timejuggler" + ";createFrom=jar:(c:/temp/db/database_init.jar)/timejuggler";
+        logger.fine("homePath = " + homePath);        
 
-        //this.url = "jdbc:derby:/timejuggler;createFrom=jar:database_init.jar" ; // nefunkcni
-
-        //this.url = "jdbc:derby:jar:(database_init.jar)timejuggler" ; // nefunkcni
-
-        /* funkcni, vytvori databazi v rootu aktualniho disku podle prazdne databaze */
-        //this.url = "jdbc:derby:/timejuggler;createFrom=G:/pokus/derbydb/timejuggler" ;
-
-        //this.url = "jdbc:derby:/timejuggler;createFrom=G:/pokus/derbydb/timejuggler" ;
-
-        this.db_user = "timejuggler";
-        this.db_pass = "timejuggler";
-        this.items = new Vector<Object>();
-        //org.apache.derby.tools.ij.
+       	this.items = new Vector<Object>();
     }
 
     protected Connection getConnection() throws SQLException {
-        if (con == null)
-            con = DriverManager.getConnection(url, db_user, db_pass);
-        //System.out.println ("URL:" + con.getMetaData().getURL());
-        return con;
+		return ConnectionManager.getInstance().getConnection();
     }
 
     /**
@@ -70,16 +50,23 @@ public class TimeJugglerJDBCTemplate extends JDBCTemplate {
         return ((Integer) items.firstElement()).intValue();
     }
 
-    protected void begin() {
-
+    protected void commit() throws SQLException {
+    	try {
+    		ConnectionManager.getInstance().getConnection().commit();
+	    }
+	    catch (Exception ex) {
+	    	throw new DatabaseException("Selhání transakce: " + ex.getMessage(),ex);
+	    }
+		
     }
 
-    protected void commit() {
-
-    }
-
-    protected void rollback() {
-
+    protected void rollback() throws SQLException {
+    	try {
+    		ConnectionManager.getInstance().getConnection().rollback();
+	    }
+	    catch (Exception ex) {
+	    	throw new DatabaseException("Selhání rollback: " + ex.getMessage(),ex);
+	    }
     }
 
 }
