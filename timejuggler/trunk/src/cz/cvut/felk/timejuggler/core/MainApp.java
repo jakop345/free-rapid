@@ -16,21 +16,15 @@ public class MainApp extends SingleFrameApplication {
 
     private MainPanelManager mainPanel;
 
-    @Override
-    protected void startup(String[] args) {
+    protected void startup() {
         mainPanel = new MainPanelManager();
-        //final ApplicationContext appContext = ApplicationContext.getInstance();
-        //ResourceMap resourceMap = appContext.getResourceMap(getClass());
-
         final JFrame frame = getMainFrame();
-        frame.setIconImage(Swinger.getIconImage("iconMainFrame").getImage());
-        getMainFrame().setJMenuBar(mainPanel.getMenuManager().getMenuBar());
+        frame.setJMenuBar(mainPanel.getMenuManager().getMenuBar());
         frame.getContentPane().add(getMainPanelComponent());
         //resourceMap.injectComponents(frame);
         this.addExitListener(new MainAppExitListener());
         frame.pack();
         show(frame);
-
     }
 
     private JComponent getMainPanelComponent() {
