@@ -11,10 +11,11 @@ import java.util.logging.Logger;
  * @version 0.1
  * @created 14-IV-2007 15:34:14
  */
-public class TimeJugglerJDBCTemplate extends JDBCTemplate {
+public class TimeJugglerJDBCTemplate<E> extends JDBCTemplate {
     private final static Logger logger = Logger.getLogger(TimeJugglerJDBCTemplate.class.getName());
 
-    protected Vector<Object> items;
+    protected Vector<E> items;
+    private int last_id = -1;
 
     public TimeJugglerJDBCTemplate() {
         /* Funguje pouze createFrom=adresar , nefunguje createFrom=jar:(soubor.jar)jmenodb*/
@@ -23,7 +24,7 @@ public class TimeJugglerJDBCTemplate extends JDBCTemplate {
         //final File homePath = ApplicationContext.getInstance().getLocalStorage().getDirectory();
         logger.fine("homePath = " + homePath);
 
-        this.items = new Vector<Object>();
+        this.items = new Vector<E>();
     }
 
     protected Connection getConnection() throws SQLException {
@@ -38,18 +39,20 @@ public class TimeJugglerJDBCTemplate extends JDBCTemplate {
     }
 
     protected void handleGeneratedKeys(ResultSet rs) throws SQLException {
-        items.add(rs.getInt(1));    // Uklada id jako Integer
+        //ids.add(Integer.valueOf(rs.getInt(1)));    // Uklada id jako Integer
+        last_id = rs.getInt(1);
     }
 
-    public Vector getItems() {
+    public Vector<E> getItems() {
         return items;
     }
-
+    
     public int getGeneratedId() {
-        return ((Integer) items.firstElement()).intValue();
+        //return (ids.firstElement().intValue());
+        return last_id;
     }
 
-    protected void commit() throws SQLException {
+    protected void commit() throws DatabaseException {
         try {
             getConnection().commit();
         }
@@ -59,7 +62,7 @@ public class TimeJugglerJDBCTemplate extends JDBCTemplate {
 
     }
 
-    protected void rollback() throws SQLException {
+    protected void rollback() throws DatabaseException {
         try {
             getConnection().rollback();
         }

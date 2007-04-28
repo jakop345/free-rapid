@@ -15,10 +15,22 @@ public class VToDo extends CalComponent {
     private int percentcomplete;
     private Timestamp completed;
     //public Alarms m_Alarms;
-    //public Categories m_Categories;
 
     public VToDo() {
-
+		super();
+    }
+    
+    public void store (TimeJugglerJDBCTemplate template){
+    	super.store(template);
+        
+        Object params[] = {
+                getComponentId(), getGeoGPS(),
+                getLocation(), getPriority(), getPercentComplete(), getDue()
+        };
+        System.out.println ("Storing VToDo, comp_id = " + getComponentId());
+        String insertQuery = "INSERT INTO VToDo (calComponentID,geo,location,priority,percentcomplete,due) VALUES (?,?,?,?,?,?)";        
+        template.executeUpdate(insertQuery, params);
+       	setId(template.getGeneratedId());
     }
 
     public Timestamp getDue() {

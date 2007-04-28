@@ -103,8 +103,10 @@ public abstract class JDBCTemplate {
                 ps.setNull(i,ps.getParameterMetaData().getParameterType(i));
             } else if (paramValue instanceof BigDecimal) {
                 ps.setBigDecimal(++i, (BigDecimal) paramValue);
-            } else if (paramValue instanceof Date) {
+            } else if (paramValue instanceof java.sql.Date) {
                 ps.setDate(++i, (Date) paramValue);
+            } else if (paramValue instanceof java.util.Date) {
+                ps.setDate(++i, new Date(((java.util.Date)paramValue).getTime()));
             } else if (paramValue instanceof InputStream) {
                 try {
                     InputStream is = (InputStream) paramValue;
