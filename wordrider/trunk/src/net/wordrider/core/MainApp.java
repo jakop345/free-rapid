@@ -68,7 +68,6 @@ public final class MainApp {
         LogUtils.initLogging(debug);
         logger = Logger.getLogger(MainApp.class.getName());
         if (OneInstanceClient.checkInstance(files)) return;
-        System.out.println("Test1");
         try {
             getInstance().start(files);
         } catch (Exception e) {
@@ -95,7 +94,7 @@ public final class MainApp {
 //            }
 //        });
         if (AppPrefs.getProperty(AppPrefs.NEW_VERSION, false))
-            startCheckNewVersion();        
+            startCheckNewVersion();
     }
 
     private void startCheckNewVersion() {
