@@ -1,9 +1,9 @@
 package net.wordrider.files.ti68kformat;
 
-import net.wordrider.utilities.LogUtils;
 import net.wordrider.files.ImportableFileReader;
 import net.wordrider.files.InvalidDataTypeException;
 import net.wordrider.files.NotSupportedFileException;
+import net.wordrider.utilities.LogUtils;
 
 import java.io.*;
 import java.util.logging.Logger;
@@ -71,8 +71,10 @@ public abstract class TIFileReader extends TIFile implements ImportableFileReade
         stream.readFully(tempArray = new byte[8]);
         fileInfo.setVarName(getString(tempArray)); // variable name //writeString(stream,varName,8);
         final int dType = stream.readUnsignedByte();
-        if (dType != getDataType())
+        if (dType != getDataType()) {
+            logger.warning("Invalid data type for file. Found:" + Integer.toHexString(dType) + " , but expected:" + Integer.toHexString(getDataType()));
             throw new InvalidDataTypeException();
+        }
         fileInfo.setStoreType(stream.readUnsignedByte(), true);//attribute
         stream.skipBytes(8);//0xFF | 00 | 4 bytes file size | 0xA5 | 0x5A
     }
@@ -96,6 +98,6 @@ public abstract class TIFileReader extends TIFile implements ImportableFileReade
 
     protected abstract byte getDataType();
 
-    protected abstract char getCheckSum();        
-    
+    protected abstract char getCheckSum();
+
 }

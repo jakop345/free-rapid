@@ -9,7 +9,7 @@ public final class Utils {
 //    public static final int INFO_LOG = 1;
 //    public static final int WARN_LOG = 2;
 //    public static final int ERROR_LOG = 3;
-//
+    //
     //    private static final String[] INFO = {"-[DEBUG]-", "-[INFO ]-", "-[WARN ]-", "-[ERROR]-"};
     //  private static final char[] WORD_SEPARATORS = {' ', '.', ',', '+', '-', '!', '?', ';', '/', '*', '@'};
     //private static final Hashtable resources = new Hashtable(1);
@@ -154,6 +154,8 @@ public final class Utils {
         InputStream inputStream = null;
         try {
             inputStream = (!isResource) ? new FileInputStream(propertiesFile) : Utils.class.getClassLoader().getResourceAsStream(propertiesFile);
+            if (inputStream == null)
+                throw new IOException("Couldn't read Properties file");
             props.load(inputStream);
             inputStream.close();
             return props;
@@ -164,9 +166,9 @@ public final class Utils {
             } catch (IOException ex) {
                 LogUtils.processException(logger, ex);
             }
-            if (isWindows())
-                logger.severe("Couldn't load properties:" + propertiesFile + " This is fatal error. Reinstal application may fix this problem.");
-            LogUtils.processException(logger, e);
+//            if (isWindows())
+            logger.warning("Couldn't load properties:" + propertiesFile);
+//            LogUtils.processException(logger, e);
             return props;
         }
     }

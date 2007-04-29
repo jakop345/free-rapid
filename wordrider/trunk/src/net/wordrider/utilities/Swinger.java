@@ -178,7 +178,7 @@ public final class Swinger {
 
     public static Image loadPicture(final File f) throws IOException, InvalidDataTypeException, NotSupportedFileException {
         final String extension = Utils.getExtension(f);
-        if (extension.equals("jpg") || extension.equals("jpeg") || extension.equals("bmp") || extension.equals("png") || extension.equals("gif") || (extension.equals("wbmp"))) {
+        if (isStandardImageExtension(extension)) {
             final Image origImage;
             origImage = ImageIO.read(f);
             return origImage;
@@ -195,10 +195,13 @@ public final class Swinger {
         return null;
     }
 
-    public static boolean isImageExtension(String extension) {
+    public static boolean isImageExtension(final String extension) {
         return extension.equals("89i") || extension.equals("92i") || extension.equals("9xi");
     }
 
+    public static boolean isStandardImageExtension(final String extension) {
+        return extension.equals("jpg") || extension.equals("jpeg") || extension.equals("bmp") || extension.equals("png") || extension.equals("gif") || (extension.equals("wbmp"));
+    }
 
     public static void addKeyActions(final JComponent component) {
         final InputMap map = component.getInputMap();

@@ -9,6 +9,7 @@ import net.wordrider.core.AppPrefs;
 import net.wordrider.core.actions.BatchPureTextReader;
 import net.wordrider.core.actions.ChangeImagePropertiesAction;
 import net.wordrider.core.swing.AutoscrollSupport;
+import net.wordrider.core.swing.FileTransferHandlerImpl;
 import net.wordrider.utilities.LogUtils;
 import net.wordrider.utilities.Swinger;
 
@@ -120,6 +121,7 @@ public final class RiderArea extends JTextPane implements DropTargetListener, Dr
 
     private void init() {
         new DropTarget(this, this);
+        this.setTransferHandler(new FileTransferHandlerImpl());
         if (maxTI89FontWidth == 0)
             maxTI89FontWidth = this.getFontMetrics(RiderStyles.getAreaFont()).stringWidth(RiderStyles.TI89MAXLENGTHSTRING) + 1;
         if (maxTI92FontWidth == 0)
@@ -670,7 +672,7 @@ java.lang.NullPointerException
     }
 
     private void areaMouseMoved(final MouseEvent e) {
-         final RiderArea area = (RiderArea) e.getSource();
+        final RiderArea area = (RiderArea) e.getSource();
         if (isInLeftBorder(e)) {
             final int position = area.viewToModel(e.getPoint());
             if (area.getBookmarkElement(e, position) != null) {
@@ -804,6 +806,12 @@ java.lang.NullPointerException
     }
 
     public void drop(final DropTargetDropEvent event) {
+        if (this.getTransferHandler().canImport(this, event.getCurrentDataFlavors())) {
+            event.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
+            this.getTransferHandler().importData(this, event.getTransferable());
+            return;
+        }
+
         dndEventLocation = viewToModel(event.getLocation());
         if ((dndEventLocation >= lastSelStart) &&
                 (dndEventLocation <= lastSelEnd)) {

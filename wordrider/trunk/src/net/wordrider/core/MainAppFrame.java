@@ -5,6 +5,7 @@ import net.wordrider.core.actions.ExitAction;
 import net.wordrider.core.actions.OpenFileAction;
 import net.wordrider.core.managers.ManagerDirector;
 import net.wordrider.core.managers.PluginToolsManager;
+import net.wordrider.core.swing.FileTransferHandlerImpl;
 import net.wordrider.core.swing.TextComponentContextMenuListener;
 import net.wordrider.gui.LookAndFeels;
 import net.wordrider.plugintools.BreakpointList;
@@ -81,6 +82,7 @@ public final class MainAppFrame extends JFrame {
             }
         };
         final JRootPane rootPane = new JRootPane();
+        rootPane.setTransferHandler(new FileTransferHandlerImpl());
         KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_NUM_LOCK, 0);
         rootPane.registerKeyboardAction(actionListener, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
         stroke = KeyStroke.getKeyStroke(KeyEvent.VK_CAPS_LOCK, 0);

@@ -7,6 +7,8 @@ import net.wordrider.core.AppPrefs;
 import net.wordrider.core.Lng;
 import net.wordrider.core.MainApp;
 import net.wordrider.core.MainAppFrame;
+import net.wordrider.core.managers.AreaManager;
+import net.wordrider.core.managers.FileInstance;
 import net.wordrider.dialogs.ChooseFormatDialog;
 import net.wordrider.dialogs.PictureDialog;
 import net.wordrider.dialogs.RiderFileFilter;
@@ -131,6 +133,17 @@ public final class InsertPictureAction extends TextAreaAction {
         }
     }
 
+    public final void insertImage(File f) {
+        final AreaManager areaManager = getAreaManager();
+        if (areaManager.hasOpenedInstance()) {
+            final FileInstance activeInstance = areaManager.getActiveInstance();
+            final MainAppFrame frame = MainApp.getInstance().getMainAppFrame();
+            final RiderArea riderArea = activeInstance.getRiderArea();
+            insertImage(riderArea, frame, f);
+        }
+    }
+
+
     public final void actionPerformed(final ActionEvent e) {
         final RiderArea area = getRiderArea(e);
         if (area == null)
@@ -156,6 +169,10 @@ public final class InsertPictureAction extends TextAreaAction {
             }
         }
         AppPrefs.storeProperty(key, f.getAbsolutePath());
+        insertImage(area, frame, f);
+    }
+
+    private void insertImage(RiderArea area, MainAppFrame frame, File f) {
         final String extension = Utils.getExtension(f);
         if (extension != null && Swinger.isImageExtension(extension)) {
             insertTI89ImageFile(frame, area, f);
@@ -179,6 +196,5 @@ public final class InsertPictureAction extends TextAreaAction {
                 inputImage.flush();
             }
         }
-
     }
 }
