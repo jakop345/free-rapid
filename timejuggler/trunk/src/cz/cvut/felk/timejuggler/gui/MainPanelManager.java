@@ -34,6 +34,7 @@ public class MainPanelManager {
     private final MenuManager menuManager = new MenuManager();
     private StatusBarManager statusBarManager;
     private ToolbarManager toolbarManager;
+    private CalendarGrid calendarGrid;
 
 
     public JXMultiSplitPane getMultiSplitPane() {
@@ -69,24 +70,55 @@ public class MainPanelManager {
         CalendarConfig calendarConfig = new CalendarConfig();        
         
         CalendarEventDAO_DummyImpl calendarEventDAO = new CalendarEventDAO_DummyImpl();
-        CalendarGrid gr = new CalendarGrid(calendarEventDAO, calendarConfig);
-        gr.setStartDate(todayDate);
+        calendarGrid = new CalendarGrid(calendarEventDAO, calendarConfig);
+        calendarGrid.setStartDate(todayDate);
+        
+        calendarGrid.setCalendarView(CalendarView.WEEK);
         
         CalendarEvent ce = new CalendarEvent();
-        ce.setName("Test udalost");
-        
-        
+        ce.setName("Test udalost");        
         ce.setStartDate(startDate);
         ce.setEndDate(endDate);
+        calendarEventDAO.saveCalendarEvent(ce);
         
+        startDate = new Date(0);
+        startDate.setHours(13);
+        startDate.setMinutes(15);
+
+        endDate = new Date(0);
+        endDate.setHours(14);
+        endDate.setMinutes(38);
+        ce = new CalendarEvent();
+        ce.setName("Test udalost 2");
+        ce.setStartDate(startDate);
+        ce.setEndDate(endDate);
+
         calendarEventDAO.saveCalendarEvent(ce);
 
-        gr.refreshCalendarEvents();
+        startDate = new Date(0);
+        startDate.setHours(11);
+        startDate.setMinutes(15);
+        startDate.setDate(2);
+
+        endDate = new Date(0);
+        endDate.setHours(14);
+        endDate.setMinutes(55);
+        endDate.setDate(2);
+     
+        ce = new CalendarEvent();
+        ce.setName("Dalsi den");
+        ce.setStartDate(startDate);
+        ce.setEndDate(endDate);
+
+        calendarEventDAO.saveCalendarEvent(ce);
+
+        calendarGrid.refreshCalendarEvents();
         
+
         // testovaci blok
         
         
-        multiSplitPane.add(gr, RIGHT_BOTTOM);
+        multiSplitPane.add(calendarGrid, RIGHT_BOTTOM);
         
         contentPanel.add(getToolbarManager().getComponent(), BorderLayout.NORTH);
         contentPanel.add(multiSplitPane, BorderLayout.CENTER);
@@ -133,4 +165,8 @@ public class MainPanelManager {
     public MenuManager getMenuManager() {
         return menuManager;
     }
+
+	public CalendarGrid getCalendarGrid() {
+		return calendarGrid;
+	}
 }
