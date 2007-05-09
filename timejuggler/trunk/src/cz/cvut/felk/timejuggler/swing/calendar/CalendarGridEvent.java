@@ -1,6 +1,7 @@
 package cz.cvut.felk.timejuggler.swing.calendar;
 
 import java.awt.Graphics;
+import java.awt.Color;
 
 import javax.swing.JComponent;
 
@@ -27,9 +28,13 @@ public class CalendarGridEvent extends JComponent {
 	@Override
 	public void paint(Graphics g) {
 		//TODO jak budem kreslit? Zatim udelej obdelnicek Jerry!
+		g.setColor(Color.YELLOW);
+		g.fillRect(0,0,this.getWidth()-1,this.getHeight()-1);
+		g.setColor(Color.BLACK);
 		g.drawRect(0,0,this.getWidth()-1,this.getHeight()-1);
-		g.drawLine(0,0,this.getWidth()-1,this.getHeight()-1);
-		g.drawLine(0,this.getHeight()-1,this.getWidth()-1,0);
+		g.drawString(calendarEvent.getName(),5,g.getFont().getSize());
+		g.drawString(calendarEvent.getStartDate().toString(),5,g.getFont().getSize()*2);
+		g.drawString(calendarEvent.getEndDate().toString(),5,g.getFont().getSize()*3);
 		super.paint(g);
 	}
 
