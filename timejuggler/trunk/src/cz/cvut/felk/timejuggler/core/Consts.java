@@ -29,6 +29,10 @@ public class Consts {
      */
     public static final String LOGDEFAULT = "logdefault.properties";
 
+    /**
+     * relativni cesta k souboru v adresari aplikace, kde lze nalezt default databazi
+     */
+    public static final String DB_DEFAULT = "db_init/db.zip";
 
     /**
      * Od teto tridy se nebudou delat zadne instance
