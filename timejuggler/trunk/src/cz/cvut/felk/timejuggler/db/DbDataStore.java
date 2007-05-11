@@ -1,25 +1,29 @@
 package cz.cvut.felk.timejuggler.db;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.io.IOException;
-import java.io.*;
-import java.sql.Timestamp;
-import java.util.Date;
-import java.util.Vector;
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import net.fortuna.ical4j.util.Calendars;
+import cz.cvut.felk.timejuggler.utilities.LogUtils;
+import net.fortuna.ical4j.data.CalendarOutputter;
+import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.property.*;
-import net.fortuna.ical4j.data.ParserException;
-import net.fortuna.ical4j.data.*;
+import net.fortuna.ical4j.util.Calendars;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.Vector;
+import java.util.logging.Logger;
 
 
 public class DbDataStore {
-
+    private final static Logger logger = Logger.getLogger(DbDataStore.class.getName());
     /**
      * Method main
      * @param args
@@ -290,7 +294,7 @@ public class DbDataStore {
     			if (value != null) propList.add(new Organizer(value));
 		    }
 		    catch (URISyntaxException ex) {
-		    	ex.printStackTrace();
+		    	LogUtils.processException(logger, ex);
 		    }
     		
     		
@@ -308,7 +312,7 @@ public class DbDataStore {
     			if (value != null) propList.add(new Url(new URI(value)));
 		    }
 		    catch (URISyntaxException ex) {
-		    	ex.printStackTrace();
+		    	LogUtils.processException(logger, ex);
 		    }
     		//propList.add(new RecurrenceId());
     		//propList.add(new DtEnd());
@@ -330,19 +334,26 @@ public class DbDataStore {
     	ComponentList compList = new ComponentList();
     	ical = new Calendar(compList);
     	CalendarOutputter exporter = new CalendarOutputter(true);
-    	OutputStream outStream;
+    	OutputStream outStream = null;
     	try {
 	    	outStream = new FileOutputStream(new File(filename));   	
 	    	exporter.output(ical, outStream);
-	    	outStream.close();
 	    }
 	    catch (IOException ex) {
 	    	// Chyba IO pri zapisu
-	    	ex.printStackTrace();
+	    	LogUtils.processException(logger, ex);
 	    }
 	    catch(ValidationException ex){
 	    	// Chyba - Nevalidni ical
-	    	ex.printStackTrace();
+	    	LogUtils.processException(logger, ex);
 	    }
-	}
+        finally {
+            if (outStream != null)
+                try {
+                    outStream.close();
+                } catch (IOException e) {
+                    LogUtils.processException(logger, e);
+                }
+        }
+    }
 }
