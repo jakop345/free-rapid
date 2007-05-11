@@ -94,8 +94,16 @@ public class DbDataStore {
         for (VCalendar cal: cals) {
         	System.out.println ("Calendar name:" + cal.getName());
         	System.out.println ("+--Events:");
-        	db.exportICS(cal, "vystup.ics");
-        	Vector<VEvent> events = cal.getEvents();
+            try {
+                db.exportICS(cal, new File("vystup.ics"));
+            } catch (URISyntaxException e) {
+                LogUtils.processException(logger, e);
+            } catch (ValidationException e) {
+                LogUtils.processException(logger, e);
+            } catch (IOException e) {
+                LogUtils.processException(logger, e);
+            }
+            Vector<VEvent> events = cal.getEvents();
         	for (VEvent e: events) {
         		System.out.println ("event.description: " + e.getDescription());
         		System.out.println ("event.summary: " + e.getSummary());
@@ -228,7 +236,7 @@ public class DbDataStore {
 			prop = comp.getProperty(Property.DTSTART);
 				event.setStartDate(prop == null ? null : (((DtStart)prop).getDate()));
 			prop = comp.getProperty(Property.GEO);
-				event.setGeoGPS(prop == null ? null : (((Geo)prop).getValue()));
+				event.setGeoGPS(prop == null ? null : ((prop).getValue()));
 			prop = comp.getProperty(Property.LAST_MODIFIED);
 				event.setLastModified(prop == null ? null : new Timestamp(((LastModified)prop).getDateTime().getTime()));
 			prop = comp.getProperty(Property.LOCATION);
@@ -242,30 +250,33 @@ public class DbDataStore {
 			prop = comp.getProperty(Property.SEQUENCE);
 				event.setSequence(prop == null ? 0 : ((Sequence)prop).getSequenceNo());
 			prop = comp.getProperty(Property.STATUS);
-				event.setStatus(prop == null ? null : ((Status)prop).getValue());
+				event.setStatus(prop == null ? null : (prop).getValue());
 			prop = comp.getProperty(Property.SUMMARY);
-				event.setSummary(prop == null ? null : ((Summary)prop).getValue());
+				event.setSummary(prop == null ? null : (prop).getValue());
 			prop = comp.getProperty(Property.TRANSP);
-				event.setTransparency(prop == null ? null : ((Transp)prop).getValue());
+				event.setTransparency(prop == null ? null : (prop).getValue());
 			prop = comp.getProperty(Property.URL);
 				event.setUrl(prop == null ? null : prop.getValue());
 			prop = comp.getProperty(Property.RECURRENCE_ID);
 				event.setRecurrenceId(prop == null ? null : new Timestamp(((RecurrenceId)prop).getDate().getTime()));
 			/* TODO: + end date ? , duration, Alarms */
 			prop = comp.getProperty(Property.UID);
-				event.setUid(prop == null ? null : ((Uid)prop).getValue());
+				event.setUid(prop == null ? null : (prop).getValue());
 			store(newcal, event);
 		}
 		
 		return newcal;
 	}
 
-	/**
-	 * Method exportICS
-	 *
-	 *
-	 */
-	public void exportICS(VCalendar calendar, String filename) {
+    /**
+     * Export ICS dat do souboru
+     * @param calendar ????
+     * @param outputFile vystupni soubor pro ulozeni dat
+     * @throws URISyntaxException ????
+     * @throws ValidationException Chyba - Nevalidni ical
+     * @throws IOException Chyba IO pri zapisu
+     */
+	public void exportICS(VCalendar calendar, File outputFile) throws URISyntaxException, ValidationException, IOException {
 		// TODO: Period property - nutne alespon jedna
 		// zatim nefunkcni
 		Calendar ical;
@@ -289,14 +300,11 @@ public class DbDataStore {
     		value = e.getLocation();
     		if (value != null) propList.add(new Location(value));
     		
-    		try {
-    			value = e.getOrganizer();
-    			if (value != null) propList.add(new Organizer(value));
-		    }
-		    catch (URISyntaxException ex) {
-		    	LogUtils.processException(logger, ex);
-		    }
-    		
+
+  			value = e.getOrganizer();
+  			if (value != null) propList.add(new Organizer(value));
+
+
     		
     		propList.add(new Priority(e.getPriority()));
     		//propList.add(new DtStamp());
@@ -336,24 +344,20 @@ public class DbDataStore {
     	CalendarOutputter exporter = new CalendarOutputter(true);
     	OutputStream outStream = null;
     	try {
-	    	outStream = new FileOutputStream(new File(filename));   	
+	    	outStream = new FileOutputStream(outputFile);
 	    	exporter.output(ical, outStream);
 	    }
-	    catch (IOException ex) {
-	    	// Chyba IO pri zapisu
-	    	LogUtils.processException(logger, ex);
-	    }
-	    catch(ValidationException ex){
-	    	// Chyba - Nevalidni ical
-	    	LogUtils.processException(logger, ex);
-	    }
+//	    catch (IOException ex) {
+//	    	// Chyba IO pri zapisu
+//	    	LogUtils.processException(logger, ex);
+//	    }
+//	    catch(ValidationException ex){
+//	    	// Chyba - Nevalidni ical
+//	    	LogUtils.processException(logger, ex);
+//	    }
         finally {
             if (outStream != null)
-                try {
-                    outStream.close();
-                } catch (IOException e) {
-                    LogUtils.processException(logger, e);
-                }
+               outStream.close();
         }
     }
 }
