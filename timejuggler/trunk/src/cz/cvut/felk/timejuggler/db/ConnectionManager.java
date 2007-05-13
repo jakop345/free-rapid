@@ -29,9 +29,10 @@ public class ConnectionManager {
      * Singleton - privatni konstruktor
      */
     private ConnectionManager() {
-        final ApplicationContext appContext = ApplicationContext.getInstance();
+    	/* deployment ready code */
+        //final ApplicationContext appContext = ApplicationContext.getInstance();
 
-        //TODO nevyuzijeme radeji derby.properties ?
+        //TODO nevyuzijeme radeji derby.properties ? jsem pro
         this.db_user = Consts.DB_USERNAME;
         this.db_pass = Consts.DB_PASSWORD;
 
@@ -41,8 +42,13 @@ public class ConnectionManager {
         /* funkcni, vytvori databazi v rootu aktualniho disku podle prazdne databaze */
         //this.url = "jdbc:derby:/timejuggler;createFrom=G:/pokus/derbydb/timejuggler" ;        
 
-        this.url = "jdbc:derby:" + appContext.getLocalStorage().getDirectory() + "/db";
-        this.create_url = ";createFrom=" + AppPrefs.getAppPath() + "/defaultdb/db";
+        
+        this.url = "jdbc:derby:G:/pokus/db";
+        this.create_url = ";createFrom=G:/cygwin/home/Honza/kalendar/timejuggler/trunk/build/defaultdb/db";
+        
+        /* deployment ready code */
+        //this.url = "jdbc:derby:" + appContext.getLocalStorage().getDirectory() + "/db";
+        //this.create_url = ";createFrom=" + AppPrefs.getAppPath() + "/defaultdb/db";
     }
 
     /**
@@ -63,7 +69,7 @@ public class ConnectionManager {
             try {
                 connection = DriverManager.getConnection(url, db_user, db_pass);
             }
-            catch (Exception ex) {//tohle neni moc cisty, spis SQLException a ani mozna taky ne...
+            catch (SQLException ex) {//tohle neni moc cisty, spis SQLException a ani mozna taky ne...
                 connection = DriverManager.getConnection(url + create_url, db_user, db_pass);
             }
             connection.setAutoCommit(false); // Vypnuti automatickeho commit pro kazdy dotaz

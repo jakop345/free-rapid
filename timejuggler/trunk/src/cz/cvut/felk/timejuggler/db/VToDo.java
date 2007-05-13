@@ -7,7 +7,7 @@ import java.sql.Timestamp;
  * @created 14-IV-2007 21:47:56
  */
 public class VToDo extends CalComponent {
-
+	//TODO : Logging
     private Timestamp due;
     private String geoGPS;
     private String location;
@@ -19,15 +19,20 @@ public class VToDo extends CalComponent {
     public VToDo() {
 		super();
     }
-    
-    public void store (TimeJugglerJDBCTemplate template){
-    	super.store(template);
+
+	/**
+     * Method saveOrUpdate
+     * @param template
+     */
+    public void saveOrUpdate (TimeJugglerJDBCTemplate template){
+    	//TODO : Update
+    	super.saveOrUpdate(template);
         
         Object params[] = {
                 getComponentId(), getGeoGPS(),
                 getLocation(), getPriority(), getPercentComplete(), getDue()
         };
-        System.out.println ("Storing VToDo, comp_id = " + getComponentId());
+
         String insertQuery = "INSERT INTO VToDo (calComponentID,geo,location,priority,percentcomplete,due) VALUES (?,?,?,?,?,?)";        
         template.executeUpdate(insertQuery, params);
        	setId(template.getGeneratedId());

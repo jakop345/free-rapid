@@ -5,27 +5,28 @@ package cz.cvut.felk.timejuggler.db;
  * @created 14-IV-2007 17:18:35
  */
 public class VEvent extends CalComponent {
-
+	//TODO : Logging
     private String geoGPS;
     private String location;
     private int priority = 0; // 0 = undefined
     private String transparency;
 
-    //public Alarms m_Alarms;
-    //public ComponentDetails m_ComponentDetails;
-
     public VEvent() {
 		super();
     }
-    
-    public void store(TimeJugglerJDBCTemplate template) {
-    	super.store(template);		
+   
+	/**
+     * Method saveOrUpdate
+     * @param template
+     */
+    public void saveOrUpdate(TimeJugglerJDBCTemplate template) {
+    	//TODO : Update
+    	super.saveOrUpdate(template);		
 		
         Object params[] = {
-                getComponentId(), getGeoGPS(),
-                getLocation(), getPriority(), getTransparency()
+                getComponentId(), geoGPS,
+                location, priority, transparency
         };
-        System.out.println ("Storing VEvent, comp_id = " + template.getGeneratedId());
         String insertQuery = "INSERT INTO VEvent (calComponentID,geo,location,priority,transp) VALUES (?,?,?,?,?)";
         template.executeUpdate(insertQuery, params);        
         setId(template.getGeneratedId());

@@ -4,9 +4,10 @@ package cz.cvut.felk.timejuggler.db;
  * @author Jan Struz
  * @version 0.1
  * @created 27-IV-2007 22:45:50
+ * Hotovo
  */
 public class Duration extends DbElement {
-
+	//TODO : Logging
 	private boolean negative = false;
 	private int days;
 	private int weeks;
@@ -22,11 +23,35 @@ public class Duration extends DbElement {
 		
 		
 	}
-	public void store(TimeJugglerJDBCTemplate template) {
-		Object params[] = { (negative ? 1 : 0), days, weeks, hours, minutes, seconds };
-		String insertQuery = "INSERT INTO Duration (negative,days,weeks,hours,minutes,seconds) VALUES (?,?,?,?,?,?)";
-		template.executeUpdate(insertQuery, params);
-		setId(template.getGeneratedId());
+
+	 /**
+     * Method saveOrUpdate
+     * @param template
+     */
+	public void saveOrUpdate(TimeJugglerJDBCTemplate template) {
+		if (getId() < 0) {
+			Object params[] = { (negative ? 1 : 0), days, weeks, hours, minutes, seconds, getId() };
+			String updateQuery = "UPDATE Duration SET negative=?,days=?,weeks=?,hours=?,minutes=?,seconds=?) WHERE durationID = ? ";
+			template.executeUpdate(updateQuery, params);
+		}else{
+			Object params[] = { (negative ? 1 : 0), days, weeks, hours, minutes, seconds };
+			String insertQuery = "INSERT INTO Duration (negative,days,weeks,hours,minutes,seconds) VALUES (?,?,?,?,?,?) ";
+			template.executeUpdate(insertQuery, params);
+			setId(template.getGeneratedId());
+		}
+	}
+	
+	 /**
+     * Method delete
+     * @param template
+     */
+	public void delete(TimeJugglerJDBCTemplate template) {
+		if (getId() > 0) {
+			String deleteQuery = "DELETE FROM Duration WHERE durationID = ? ";		
+			Object params[] = { getId() };
+			template.executeUpdate(deleteQuery, params);
+			setId(-1);
+		}
 	}
 	
 	public void setNegative(boolean negative) {

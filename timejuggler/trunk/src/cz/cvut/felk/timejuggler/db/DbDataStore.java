@@ -24,6 +24,8 @@ import java.util.logging.Logger;
 
 public class DbDataStore {
     private final static Logger logger = Logger.getLogger(DbDataStore.class.getName());
+    //TODO : dopsat ICS export/import, + jako transakce
+    //TODO : upravit ukazkovy kod
     /**
      * Method main
      * @param args
@@ -32,7 +34,7 @@ public class DbDataStore {
         // Testing
         DbDataStore db = new DbDataStore();
         
-        /* ICS import (uklada se do db automaticky)*/
+        /* ICS import (uklada se do db (saveOrUpdate) automaticky)*/
         /*
         try {
         	VCalendar imported = db.importICS("/path/svatky.ics");
@@ -49,14 +51,14 @@ public class DbDataStore {
         
 		
 		//VCalendar calendar1 = new VCalendar("Testovaci 1");
-		//db.store(calendar1);
+		//db.saveOrUpdate(calendar1);
 
         /* Pridavani kalendare */
         /*
           VCalendar calendar1 = new VCalendar("Hlavni kalendar");
           VCalendar calendar2 = new VCalendar("Svatky");
-          db.store(calendar1);
-          db.store(calendar2);
+          db.saveOrUpdate(calendar1);
+          db.saveOrUpdate(calendar2);
           */
 		
 		/* Pridavani Eventu */		
@@ -71,10 +73,10 @@ public class DbDataStore {
 		dt.setYear(2007);
 		event.setStartDate(dt);
 		
-		db.store(calendar1,event);
+		db.saveOrUpdate(calendar1,event);
 		*/
                   
-        /* Pridavani ToDo */
+        /* Pridavani Ukolu */
         /*
           VToDo todo = new VToDo();
           Date deadline = new Date();
@@ -84,7 +86,7 @@ public class DbDataStore {
           todo.setDescription("Napsat ukoly!");
           todo.setSummary("Museji se napsat vsechny ukoly do skoly! :)");
           todo.setDue(new Timestamp(deadline.getTime()));
-          db.store(calendar1,todo);
+          db.saveOrUpdate(calendar1,todo);
           */
 
 		/* Vypis */
@@ -158,9 +160,9 @@ public class DbDataStore {
     /**
      * Method store
      */
-    public void store(VCalendar cal) throws DatabaseException {
+    public void saveOrUpdate(VCalendar cal) throws DatabaseException {
     	TimeJugglerJDBCTemplate template = new TimeJugglerJDBCTemplate();
-    	cal.store(template);
+    	cal.saveOrUpdate(template);
     	template.commit();
     }
     /**
@@ -174,11 +176,11 @@ public class DbDataStore {
     /**
      * Method store
      */
-    public <C extends CalComponent> void store (VCalendar cal,C component) throws DatabaseException {
+    public <C extends CalComponent> void saveOrUpdate (VCalendar cal,C component) throws DatabaseException {
         // Pridani noveho Eventu nebo Ukolu do kalendare
         TimeJugglerJDBCTemplate template = new TimeJugglerJDBCTemplate();
         component.setCalendarId(cal.getId());
-        component.store(template);
+        component.saveOrUpdate(template);
         template.commit();        
     }
     /**
@@ -216,7 +218,7 @@ public class DbDataStore {
 		prop = calendar.getVersion();
 			newcal.setVersion(prop == null ? null :prop.getValue());
 		newcal.setName(filename);
-		store(newcal);
+		saveOrUpdate(newcal);
 		
 		ComponentList complist = calendar.getComponents(Component.VEVENT);
 		
@@ -262,7 +264,7 @@ public class DbDataStore {
 			/* TODO: + end date ? , duration, Alarms */
 			prop = comp.getProperty(Property.UID);
 				event.setUid(prop == null ? null : (prop).getValue());
-			store(newcal, event);
+			saveOrUpdate(newcal, event);
 		}
 		
 		return newcal;
