@@ -1,11 +1,13 @@
 package cz.cvut.felk.timejuggler.db;
 
+import java.util.logging.Logger;
 /**
  * @version 0.1
  * @created 14-IV-2007 17:18:35
  */
 public class VEvent extends CalComponent {
-	//TODO : Logging
+	private final static Logger logger = Logger.getLogger(VEvent.class.getName());
+	
     private String geoGPS;
     private String location;
     private int priority = 0; // 0 = undefined
@@ -20,17 +22,41 @@ public class VEvent extends CalComponent {
      * @param template
      */
     public void saveOrUpdate(TimeJugglerJDBCTemplate template) {
-    	//TODO : Update
-    	super.saveOrUpdate(template);		
+    	super.saveOrUpdate(template);
 		
-        Object params[] = {
-                getComponentId(), geoGPS,
-                location, priority, transparency
-        };
-        String insertQuery = "INSERT INTO VEvent (calComponentID,geo,location,priority,transp) VALUES (?,?,?,?,?)";
-        template.executeUpdate(insertQuery, params);        
-        setId(template.getGeneratedId());
+		if (getId() > 0) {
+			logger.info("Database - Update: VEvent[" + getId() + "]...");
+	        Object params[] = {
+	                getComponentId(), geoGPS,
+	                location, priority, transparency, getId() };
+			String updateQuery = "UPDATE VEvent SET calComponentID=?,geo=?,location=?,priority=?,transp=?) WHERE vEventID = ? ";
+			template.executeUpdate(updateQuery, params);
+		}else{
+			logger.info("Database - Insert: VEvent[]...");
+	        Object params[] = {
+	                getComponentId(), geoGPS,
+	                location, priority, transparency
+	        };
+	        String insertQuery = "INSERT INTO VEvent (calComponentID,geo,location,priority,transp) VALUES (?,?,?,?,?) ";
+	        template.executeUpdate(insertQuery, params);
+	        setId(template.getGeneratedId());
+	        logger.info("Database - VEvent new ID=" + getId());
+		}
     }
+    
+    /**
+     * Method delete
+     * @param template
+     */
+	public void delete(TimeJugglerJDBCTemplate template){
+		if (getId() > 0) {
+			Object params[] = {	getId() };		
+			String deleteQuery = "DELETE FROM VEvent WHERE vEventID = ?";
+			template.executeUpdate(deleteQuery, params);
+			setId(-1);
+			super.delete(template);
+		}
+	}
 
     public String getGeoGPS() {
         return geoGPS;

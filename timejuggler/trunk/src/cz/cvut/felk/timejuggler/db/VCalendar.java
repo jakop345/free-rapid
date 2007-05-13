@@ -4,12 +4,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
 import java.util.Date;
+
+import java.util.logging.Logger;
 /**
  * @version 0.1
  * @created 14-IV-2007 16:38:21
  */
 public class VCalendar extends DbElement {
-	//TODO : Logging
+	private final static Logger logger = Logger.getLogger(VCalendar.class.getName());
+	
     private String productId = "-//CVUT //TimeJuggler Calendar 0.1//CZ";
     private String version = "2.0";
     private String calendarScale = "GREGORIAN";
@@ -38,16 +41,19 @@ public class VCalendar extends DbElement {
      */
 	public void saveOrUpdate(TimeJugglerJDBCTemplate template){
 		if (getId() > 0) {
+			logger.info("Database - Update: VCalendar[" + getId() + "]:" + name + "...");
 			Object params[] = { productId, version, calendarScale, method, name, getId() };
 			String updateQuery = "UPDATE VCalendar SET prodid=?,version=?,calscale=?,method=?,name=? WHERE vCalendarID = ? ";
 			template.executeUpdate(updateQuery, params);
 		}else{
 			// Pridani noveho kalendare do databaze
+			logger.info("Database - Insert: VCalendar[]:" + name + "...");
 	        Object params[] = { productId, version, calendarScale, method, name };
 	        String insertQuery = "INSERT INTO VCalendar (prodid,version,calscale,method,name) VALUES (?,?,?,?,?)";
 	        template.executeUpdate(insertQuery, params);
 	        // nastaveni klice objektu VCalendar
 	        setId(template.getGeneratedId());
+	        logger.info("Database - VCalendar new ID=" + getId());
 		}
 	}
 	
@@ -56,22 +62,23 @@ public class VCalendar extends DbElement {
      * @param template
      */
 	public void delete(TimeJugglerJDBCTemplate template){
-		
-		Vector<VEvent> events = getEvents();
-		for (VEvent event : events) {
-			event.delete(template);
+		if (getId() > 0) {
+			logger.info("Database - DELETE: VCalendar[" + getId() + "]:" + name + "...");
+			Vector<VEvent> events = getEvents();
+			for (VEvent event : events) {
+				event.delete(template);
+			}
+	
+			Vector<VToDo> todos = getToDos();
+			for (VToDo todo : todos) {
+				todo.delete(template);
+			}
+			
+			Object params[] = {	getId() };		
+			String deleteQuery = "DELETE FROM VCalendar WHERE vCalendarID = ?";
+			template.executeUpdate(deleteQuery, params);
+			setId(-1);
 		}
-
-		Vector<VToDo> todos = getToDos();
-		for (VToDo todo : todos) {
-			todo.delete(template);
-		}
-		//TODO : if getId>0
-		
-		Object params[] = {	getId() };		
-		String deleteQuery = "DELETE FROM VCalendar WHERE vCalendarID = ?";
-		template.executeUpdate(deleteQuery, params);
-		setId(-1);
 	}
 
     public String getProductId() {

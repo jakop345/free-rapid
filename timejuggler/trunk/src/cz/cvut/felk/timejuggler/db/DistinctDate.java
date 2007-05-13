@@ -16,6 +16,10 @@ public class DistinctDate extends DbElement {
 
 	}
 	
+	public DistinctDate(Date date){
+		this.date = date;
+	}
+	
 	public void store(){
 	}
 

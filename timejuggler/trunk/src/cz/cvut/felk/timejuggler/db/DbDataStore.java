@@ -112,7 +112,7 @@ public class DbDataStore {
         		System.out.println ("+-startDate: " + e.getStartDate());
         		System.out.println ("+-created: " + e.getCreated());
         		System.out.println ("++++++++++++++++++++++++++++++++++");
-        		Vector<Period> periods = e.getPeriods();
+        		Vector<Period> periods = e.getPeriods().getPeriods();
         		if (periods != null) {
 	        		for (Period p:periods) {
 	        			System.out.println ("+-period " + p.getStartDate() + " ... " + p.getEndDate());
@@ -261,9 +261,63 @@ public class DbDataStore {
 				event.setUrl(prop == null ? null : prop.getValue());
 			prop = comp.getProperty(Property.RECURRENCE_ID);
 				event.setRecurrenceId(prop == null ? null : new Timestamp(((RecurrenceId)prop).getDate().getTime()));
-			/* TODO: + end date ? , duration, Alarms */
+			prop = comp.getProperty(Property.DTEND);
+				event.setEndDate(((DtEnd)prop).getDate());
+			
+			/* Cast Periods + Recurrence Dates */
+			/* priprava */
+			cz.cvut.felk.timejuggler.db.DateTime dateTime = event.getDateTime();
+			cz.cvut.felk.timejuggler.db.Periods eventPeriods = dateTime.getPeriods();
+			ICalTransformer transformer = ICalTransformer.getInstance();
+			
+			prop = comp.getProperty(Property.RDATE);
+				RDate rdate = (RDate)prop;
+				//TODO : DbDataStore - Periods
+				//TODO : DbDataStore - Dates
+				//TODO : DbDataStore - Rules
+				
+				
+				PeriodList plist = rdate.getPeriods();
+
+				/*
+				
+				//TODO : tohle moc nefunguje
+				for (net.fortuna.ical4j.model.Period p : plist) {
+					cz.cvut.felk.timejuggler.db.Period newPeriod = transformer.makePeriod(p);
+					
+					// TODO
+					//newPeriod.setDuration()
+						//p.getDuration()	//Dur
+					//newPeriod.setStartDate();
+						//p.getStart()	//DateTime
+					//newPeriod.setEndDate();
+						//p.getEnd()		//DateTime		
+					
+
+				}
+				*/
+				
+				//TODO : dates
+/*				DateList dlist = rdate.getDates();
+				DistinctDates ds = new DistinctDates();
+				for (Date d : dlist) {		
+					ds.addDate(new DistinctDate(d));
+				}
+*/
+				//eventPeriods.
+				
+
+			prop = comp.getProperty(Property.DURATION);
+				cz.cvut.felk.timejuggler.db.Duration duration = transformer.makeDuration(prop);				
+				cz.cvut.felk.timejuggler.db.Period period = dateTime.getPeriods().getPeriods().get(0);
+				//priradit duration
+				period.setDuration(duration);
+				
+			/* TODO: + ? , Alarms */
 			prop = comp.getProperty(Property.UID);
 				event.setUid(prop == null ? null : (prop).getValue());
+
+			//Ulozeni eventu do kalendare
 			saveOrUpdate(newcal, event);
 		}
 		

@@ -6,12 +6,14 @@ import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.util.Date;
 
+import java.util.logging.Logger;
 /**
  * @version 0.1
  * @created 14-IV-2007 17:18:43
  */
 public class CalComponent extends DbElement {
-
+	private final static Logger logger = Logger.getLogger(CalComponent.class.getName());
+	
     /**
      * povinny parametr! (globalne unikatni (MAILTO://email@...))
      */
@@ -38,7 +40,7 @@ public class CalComponent extends DbElement {
     private DateTime dateTime;
 
     public CalComponent() {
-
+		dateTime = new DateTime();
     }
 
 	public void setComponentId(int componentId) {
@@ -179,27 +181,28 @@ public class CalComponent extends DbElement {
      * @param template
      */	
     public void saveOrUpdate(TimeJugglerJDBCTemplate template) {
+    	
     	if (dateTime != null) {
     		dateTime.saveOrUpdate(template);
     	}
 
     	if (getComponentId() > 0) {
+    		logger.info("Database - Update: CalComponent[" + getId() + "]...");
     		//TODO : increment sequence
 			Object params[] = {
 	                dateTime.getId(), uid, calendarId, url, clazz,
 	                description, organizer, sequence,
-	                status, summary, dtstamp, getComponentId())
-	        };
+	                status, summary, dtstamp, getComponentId()};
 	        String updateQuery = "UPDATE CalComponent SET dateTimeID=?,uid=?,vCalendarID=?,url=?,clazz=?,description=?,organizer=?,sequence=?,status=?,summary=?,dtstamp=?) WHERE calComponentID = ? ";
 	        template.executeUpdate(updateQuery, params);
-    	}else{	    	
+    	}else{
 	    	if (alarms != null) {
 	    		for (VAlarm alarm : alarms) {
 	    			alarm.setComponentId(componentId);
 	    			alarm.saveOrUpdate(template);
 	    		}
 	    	}
-	    	
+	    	logger.info("Database - Insert: CalComponent[]...");
 			Object params[] = {
 	                dateTime.getId(), uid, calendarId, url, clazz,
 	                description, organizer, sequence,
@@ -208,6 +211,7 @@ public class CalComponent extends DbElement {
 	        String insertQuery = "INSERT INTO CalComponent (dateTimeID,uid,vCalendarID,url,clazz,description,organizer,sequence,status,summary,dtstamp) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
 	        template.executeUpdate(insertQuery, params);
 	        setComponentId(template.getGeneratedId()) ;
+	        logger.info("Database - CalComponent new ID=" + getComponentId());
     	}
     }
     
@@ -216,21 +220,20 @@ public class CalComponent extends DbElement {
      * @param template
      */
     public void delete(TimeJugglerJDBCTemplate template) {
-    	if (dateTime != null) {
-    		dateTime.delete(template);
-    	}
-		if (alarms != null) {
-			for (VAlarm alarm : alarms) {
-				alarm.delete(template);
-			}
-		}
-		    	    	
     	if (getId() > 0) {
+	      	if (dateTime != null) {
+	    		dateTime.delete(template);
+	    	}
+			if (alarms != null) {
+				for (VAlarm alarm : alarms) {
+					alarm.delete(template);
+				}
+			}
+    		logger.info("Database - DELETE: CalComponent[" + getId() + "]...");
 			String deleteQuery = "DELETE FROM CalComponent WHERE calComponentID = ?";
 			Object params[] = {	getId() };
 			template.executeUpdate(deleteQuery, params);
     	}
-    	
 		setComponentId(-1);
     }
 	/**

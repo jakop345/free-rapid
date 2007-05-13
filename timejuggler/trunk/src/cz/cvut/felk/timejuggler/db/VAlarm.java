@@ -27,24 +27,25 @@ public class VAlarm extends DbElement {
 	public void store (){
 	}
 
-	public void store (TimeJugglerJDBCTemplate template){
-		Integer durationId = null;
+	public void saveOrUpdate (TimeJugglerJDBCTemplate template){
+		//TODO : Update
 		if (duration != null) {
-			duration.store(template);
-			durationId = duration.getId();
+			duration.saveOrUpdate(template);
 		}
 		
-		Object params[] = { componentId, description, durationId, summary, action, repeat, null, attachment, null };
+		Object params[] = { componentId, description, duration.getId(), summary, action, repeat, null, attachment, null };
 		String insertQuery = "INSERT INTO VAlarm (calComponentID,description,durationID,summary,action,repeat,trigg,attach,attendee) VALUES (?,?,?,?,?,?,?,?,?)";
 		template.executeUpdate(insertQuery, params);
 		setId(template.getGeneratedId());
 	}
 	
 	public void delete(TimeJugglerJDBCTemplate template){
-		String deleteQuery = "DELETE FROM VAlarm WHERE vAlarmID=?";
-		Object params[] = {	getId() };
-		template.executeUpdate(deleteQuery, params);
-		setId(-1);
+		if (getId() > 0) {
+			Object params[] = {	getId() };
+			String deleteQuery = "DELETE FROM VAlarm WHERE vAlarmID=?";
+			template.executeUpdate(deleteQuery, params);
+			setId(-1);
+		}
 	}
 	public String getDescription(){
 		return description;
