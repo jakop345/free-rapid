@@ -43,12 +43,12 @@ public class ConnectionManager {
         //this.url = "jdbc:derby:/timejuggler;createFrom=G:/pokus/derbydb/timejuggler" ;        
 
         
-        this.url = "jdbc:derby:G:/pokus/db";
-        this.create_url = ";createFrom=G:/cygwin/home/Honza/kalendar/timejuggler/trunk/build/defaultdb/db";
+        //this.url = "jdbc:derby:G:/pokus/db";
+        //this.create_url = ";createFrom=G:/cygwin/home/Honza/kalendar/timejuggler/trunk/build/defaultdb/db";
         
         /* deployment ready code */
-        //this.url = "jdbc:derby:" + appContext.getLocalStorage().getDirectory() + "/db";
-        //this.create_url = ";createFrom=" + AppPrefs.getAppPath() + "/defaultdb/db";
+        this.url = "jdbc:derby:" + appContext.getLocalStorage().getDirectory() + "/db";
+        this.create_url = ";createFrom=" + AppPrefs.getAppPath() + "/defaultdb/db";
     }
 
     /**
