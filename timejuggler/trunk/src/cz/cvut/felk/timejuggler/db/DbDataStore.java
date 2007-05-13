@@ -275,6 +275,7 @@ public class DbDataStore {
 				//TODO : DbDataStore - Periods
 				//TODO : DbDataStore - Dates
 				//TODO : DbDataStore - Rules
+				//TODO : DbDataStore - categories ...
 				
 				
 				PeriodList plist = rdate.getPeriods();

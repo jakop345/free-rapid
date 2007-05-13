@@ -176,7 +176,7 @@ public class CalComponent extends DbElement {
 	public void store() {
 	}
 
-	 /**
+	/**
      * Method saveOrUpdate
      * @param template
      */	

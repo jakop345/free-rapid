@@ -1,5 +1,6 @@
 package cz.cvut.felk.timejuggler.db;
 
+import java.util.logging.Logger;
 /**
  * @author Jan Struz
  * @version 0.1
@@ -7,7 +8,8 @@ package cz.cvut.felk.timejuggler.db;
  * Hotovo
  */
 public class Category extends DbElement{
-	//TODO : Logging
+	private final static Logger logger = Logger.getLogger(Category.class.getName());
+	
 	private String name;
 	
 	private int componentId;
@@ -30,10 +32,12 @@ public class Category extends DbElement{
      */
 	public void saveOrUpdate(TimeJugglerJDBCTemplate template) {
 		if (getId() > 0) {
+			logger.info("Database - Update: Category[" + getId() + "]:" + name + "...");
 			Object params[] = { name, componentId, getId() };
 			String updateQuery = "UPDATE Category SET name=?,calComponentID=? WHERE categoryID = ? ";
 			template.executeUpdate(updateQuery, params);
 		}else{
+			logger.info("Database - Insert: Category[]:" + name + "...");
 	        Object params[] = { name, componentId  };
 	        String insertQuery = "INSERT INTO Category (name,calComponentID) VALUES (?,?) ";
 	        template.executeUpdate(insertQuery, params);

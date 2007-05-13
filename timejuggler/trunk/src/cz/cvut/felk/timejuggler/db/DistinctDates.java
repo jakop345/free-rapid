@@ -1,14 +1,17 @@
 package cz.cvut.felk.timejuggler.db;
 
 import java.util.Vector;
+import java.util.Iterator;
+import java.util.logging.Logger;
 /**
  * @author Jan Struz
  * @version 0.1
  * @created 12-V-2007 18:46:34
  * Hotovo
  */
-public class DistinctDates extends DbElement {
-	//TODO : Logging
+public class DistinctDates extends DbElement implements Iterable {
+	private final static Logger logger = Logger.getLogger(DistinctDates.class.getName());
+	
 	private Vector<DistinctDate> distinctDates;
 	private int distinctDatesId;
 	
@@ -19,7 +22,7 @@ public class DistinctDates extends DbElement {
 	public void store(){
 	}
 
-	 /**
+	/**
      * Method saveOrUpdate
      * @param template
      */
@@ -27,6 +30,7 @@ public class DistinctDates extends DbElement {
 		if (getId() > 0) {
 			//bez Update
 		}else{
+			logger.info("Database - Insert: DistinctDates[]...");
 			String insertQuery = "INSERT INTO DistinctDates";
 			template.executeUpdate(insertQuery, null);
 			setId(template.getGeneratedId());
@@ -38,7 +42,7 @@ public class DistinctDates extends DbElement {
 		}
 	}
 
-	 /**
+	/**
      * Method delete
      * @param template
      */
@@ -58,20 +62,32 @@ public class DistinctDates extends DbElement {
 		distinctDates.add(date);
 	}
 	
-	public void setDistinctDates(Vector<DistinctDate> distinctDates) {
-		this.distinctDates = distinctDates; 
-	}
-
 	public void setDistinctDatesId(int distinctDatesId) {
 		this.distinctDatesId = distinctDatesId; 
 	}
 
-	public Vector<DistinctDate> getDistinctDates() {
-		return (this.distinctDates); 
-	}
-
 	public int getDistinctDatesId() {
 		return (this.distinctDatesId); 
+	}
+
+	/**
+	 * Method iterator
+	 *
+	 *
+	 * @return
+	 *
+	 */
+	public Iterator iterator() {
+		return distinctDates.iterator();
+	}
+
+	/**
+	 * Method addDistinctDate
+	 *
+	 *
+	 */
+	public void addDistinctDate(DistinctDate date) {
+		distinctDates.add(date);
 	}
 
 }

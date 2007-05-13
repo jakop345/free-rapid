@@ -1,14 +1,17 @@
 package cz.cvut.felk.timejuggler.db;
 
 import java.util.Vector;
+import java.util.Iterator;
+import java.util.logging.Logger;
 /**
  * @author Jan Struz
  * @version 0.1
  * @created 12-V-2007 18:40:08
  * Hotovo
  */
-public class RepetitionRules extends DbElement {
-	//TODO : Logging
+public class RepetitionRules extends DbElement implements Iterable {
+	private final static Logger logger = Logger.getLogger(RepetitionRules.class.getName());
+	
 	private Vector<RepetitionRule> repetitionRules;
 	private int repetitionRulesId;
 	
@@ -19,7 +22,7 @@ public class RepetitionRules extends DbElement {
 	public void store(){
 	}
 
-	 /**
+	/**
      * Method saveOrUpdate
      * @param template
      */
@@ -27,6 +30,7 @@ public class RepetitionRules extends DbElement {
 		if (getId() > 0) {
 			//bez update
 		}else{
+			logger.info("Database - Insert: RepetitionRules[]...");
 			String insertQuery = "INSERT INTO RepetitionRules";
 			template.executeUpdate(insertQuery, null);
 			setId(template.getGeneratedId());			
@@ -38,7 +42,7 @@ public class RepetitionRules extends DbElement {
 		}
 	}
 
-	 /**
+	/**
      * Method delete
      * @param template
      */
@@ -66,12 +70,14 @@ public class RepetitionRules extends DbElement {
 		return (this.repetitionRulesId); 
 	}
 
-	
-	public void setRepetitionRules(Vector<RepetitionRule> repetitionRules) {
-		this.repetitionRules = repetitionRules; 
-	}
-
-	public Vector<RepetitionRule> getRepetitionRules() {
-		return (this.repetitionRules); 
+	/**
+	 * Method iterator
+	 *
+	 *
+	 * @return
+	 *
+	 */
+	public Iterator iterator() {
+		return repetitionRules.iterator();
 	}
 }
