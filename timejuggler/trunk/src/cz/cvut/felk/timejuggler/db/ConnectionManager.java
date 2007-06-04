@@ -29,8 +29,8 @@ public class ConnectionManager {
      * Singleton - privatni konstruktor
      */
     private ConnectionManager() {
-    	/* deployment ready code */
-        //final ApplicationContext appContext = ApplicationContext.getInstance();
+        /* deployment ready code */
+        final ApplicationContext appContext = ApplicationContext.getInstance();
 
         //TODO nevyuzijeme radeji derby.properties ? jsem pro
         this.db_user = Consts.DB_USERNAME;
@@ -42,10 +42,9 @@ public class ConnectionManager {
         /* funkcni, vytvori databazi v rootu aktualniho disku podle prazdne databaze */
         //this.url = "jdbc:derby:/timejuggler;createFrom=G:/pokus/derbydb/timejuggler" ;        
 
-        
         //this.url = "jdbc:derby:G:/pokus/db";
         //this.create_url = ";createFrom=G:/cygwin/home/Honza/kalendar/timejuggler/trunk/build/defaultdb/db";
-        
+
         /* deployment ready code */
         this.url = "jdbc:derby:" + appContext.getLocalStorage().getDirectory() + "/db";
         this.create_url = ";createFrom=" + AppPrefs.getAppPath() + "/defaultdb/db";
