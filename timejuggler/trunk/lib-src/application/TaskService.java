@@ -10,6 +10,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import javax.swing.SwingUtilities;
 
 
 public class TaskService extends AbstractBean {
@@ -67,16 +68,44 @@ public class TaskService extends AbstractBean {
 			task.removePropertyChangeListener(taskPCL);
 			newTaskList = copyTasksList();
 		    }
-		    firePropertyChange("tasks", oldTaskList, newTaskList);			
+		    firePropertyChange("tasks", oldTaskList, newTaskList);
+                    Task.InputBlocker inputBlocker = task.getInputBlocker();
+                    if (inputBlocker != null) {
+                        inputBlocker.unblock();
+                    }
 		}
 	    }
 	}
     }
 
+    private void maybeBlockTask(Task task) {
+        final Task.InputBlocker inputBlocker = task.getInputBlocker();
+        if (inputBlocker == null) {
+            return;
+        }
+        if (inputBlocker.getScope() != Task.BlockingScope.NONE) {
+            if (SwingUtilities.isEventDispatchThread()) {
+		inputBlocker.block();
+	    } 
+	    else {
+		Runnable doBlockTask = new Runnable() {
+		    public void run() {
+                        inputBlocker.block();
+		    }
+		};
+		SwingUtilities.invokeLater(doBlockTask);
+	    }
+        }
+    }
+
     public void execute(Task task) {
-	if (!task.isPending()) {
+	if (task == null) {
+	    throw new IllegalArgumentException("null task");
+	}
+	if (!task.isPending() || (task.getTaskService() != null)) {
 	    throw new IllegalArgumentException("task has already been executed");
 	}
+	task.setTaskService(this);
 	// TBD: what if task has already been submitted?
 	List<Task> oldTaskList, newTaskList;
 	synchronized(tasks) {
@@ -86,6 +115,7 @@ public class TaskService extends AbstractBean {
 	    task.addPropertyChangeListener(taskPCL);
 	}
 	firePropertyChange("tasks", oldTaskList, newTaskList);
+        maybeBlockTask(task);
 	executorService.execute(task);
     }
 

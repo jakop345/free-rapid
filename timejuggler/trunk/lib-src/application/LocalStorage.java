@@ -15,6 +15,7 @@ import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
@@ -87,8 +88,12 @@ public class LocalStorage extends AbstractBean {
     public void save(Object bean, final String fileName) throws IOException {
 	AbortExceptionListener el = new AbortExceptionListener();
 	XMLEncoder e = null;
+	/* Buffer the XMLEncoder's output so that decoding errors don't
+	 * cause us to trash the current version of the specified file.
+	 */
+	ByteArrayOutputStream bst = new ByteArrayOutputStream();
 	try {
-	    e = new XMLEncoder(openOutputFile(fileName));
+	    e = new XMLEncoder(bst);
 	    e.setExceptionListener(el);
 	    e.setPersistenceDelegate(Rectangle.class, new RectanglePD());
 	    e.writeObject(bean);
@@ -98,6 +103,14 @@ public class LocalStorage extends AbstractBean {
 	}
 	if (el.exception != null) {
 	    throw new LSException("save failed \"" + fileName + "\"", el.exception);
+	}
+	OutputStream ost = null;
+	try {
+	    ost = openOutputFile(fileName);
+	    ost.write(bst.toByteArray());
+	}
+	finally {
+	    if (ost != null) { ost.close(); }
 	}
     }
 

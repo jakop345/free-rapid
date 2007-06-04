@@ -34,7 +34,7 @@ public class ActionManager extends AbstractBean {
     private final WeakHashMap<Object, WeakReference<ApplicationActionMap>> actionMaps;
     private ApplicationActionMap globalActionMap = null;
 
-    public ActionManager() {
+    protected ActionManager() {
 	actionMaps = new WeakHashMap<Object, WeakReference<ApplicationActionMap>>();
     }
 

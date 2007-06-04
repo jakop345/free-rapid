@@ -6,16 +6,16 @@
 
 package application;
 
-import application.Action.Block;
+import application.Task.InputBlocker;
 import java.awt.Component;
 import java.awt.EventQueue;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.Icon;
@@ -23,10 +23,6 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-
-
 
 /**
  * The {@link javax.swing.Action} class used to implement the
@@ -82,8 +78,8 @@ import javax.swing.UIManager;
  * <p>
  * ApplicationActions can automatically <tt>block</tt> the GUI while the 
  * <tt>actionPerformed</tt> method is running, depending on the value of
- * block property.  For example, if the value of block is 
- * <tt>Block.ACTION</tt>, then the action will be disabled while
+ * block annotation parameter.  For example, if the value of block is 
+ * <tt>Task.BlockingScope.ACTION</tt>, then the action will be disabled while
  * the actionPerformed method runs.
  * 
  * <p> 
@@ -114,6 +110,7 @@ import javax.swing.UIManager;
  * @see ResourceMap
  */
 public class ApplicationAction extends AbstractAction {
+    private static final Logger logger = Logger.getLogger(ApplicationAction.class.getName());
     private final ApplicationActionMap appAM;
     private final ResourceMap resourceMap;
     private final String actionName;       // see getName()
@@ -122,8 +119,7 @@ public class ApplicationAction extends AbstractAction {
     private final Method isEnabledMethod;  // Method object for is/getEnabledProperty
     private final Method setEnabledMethod; // Method object for setEnabledProperty
     private final String selectedProperty; // TBD...
-    private final Action.Block block;
-    private boolean blocking = false;
+    private final Task.BlockingScope block;
     private javax.swing.Action proxy = null;
     private Object proxySource = null;
     private PropertyChangeListener proxyPCL = null;
@@ -204,7 +200,7 @@ public class ApplicationAction extends AbstractAction {
 			     Method actionMethod, 
 			     String enabledProperty, 
 			     String selectedProperty,
-			     Action.Block block) {
+			     Task.BlockingScope block) {
 	if (appAM == null) {
 	    throw new IllegalArgumentException("null appAM");
 	}
@@ -241,20 +237,6 @@ public class ApplicationAction extends AbstractAction {
 
 	if (resourceMap != null) {
 	    initActionProperties(resourceMap, baseName);
-	    if (block != Action.Block.NONE) {
-		String title = resourceMap.getString(baseName + ".Action.BlockingDialog.title");
-		if (title != null) {
-		    putValue("BlockingDialog.title", title);
-		}
-		String message = resourceMap.getString(baseName + ".Action.BlockingDialog.message");
-		if (message != null) {
-		    putValue("BlockingDialog.message", message);
-		}
-		Icon icon = resourceMap.getIcon(baseName + ".Action.BlockingDialog.icon");
-		if (icon != null) {
-		    putValue("BlockingDialog.icon", icon);
-		}
-	    }
 	}
     }
 
@@ -262,7 +244,7 @@ public class ApplicationAction extends AbstractAction {
      * see ApplicationActionMap.addProxyAction().
      */
     ApplicationAction(ApplicationActionMap appAM, ResourceMap resourceMap, String actionName) {
-	this(appAM, resourceMap, actionName, null, null, null, Action.Block.NONE);
+	this(appAM, resourceMap, actionName, null, null, null, Task.BlockingScope.NONE);
     }
 
 
@@ -418,19 +400,7 @@ public class ApplicationAction extends AbstractAction {
 	// Action.text => Action.NAME,MNEMONIC_KEY,DISPLAYED_MNEMONIC_INDEX_KEY
 	String text = resourceMap.getString(baseName + ".Action.text");
 	if (text != null) {
-	    int mnemonicIndex = text.indexOf("&");
-	    if (mnemonicIndex == -1) {
-		mnemonicIndex = text.indexOf("_");
-	    }
-	    if ((mnemonicIndex != -1) && ((mnemonicIndex + 1) < text.length())) {
-		text = text.substring(0, mnemonicIndex) + text.substring(mnemonicIndex + 1);
-		putValue(javax.swing.Action.NAME, text);
-		putValue(javax.swing.Action.MNEMONIC_KEY, new Integer(text.charAt(mnemonicIndex)));
-		putValue(DISPLAYED_MNEMONIC_INDEX_KEY, mnemonicIndex);
-	    }
-	    else {
-		putValue(javax.swing.Action.NAME, text);
-	    }
+            MnemonicText.configure(this, text);
 	    iconOrNameSpecified = true;
 	}
 	// Action.mnemonic => Action.MNEMONIC_KEY
@@ -615,123 +585,138 @@ public class ApplicationAction extends AbstractAction {
 	return argument;
     }
 
-    private JDialog getBlockingDialog(final Task task, ActionEvent event) {
-	String dialogTitle = (String)(getValue("BlockingDialog.title"));
-	String message = (String)(getValue("BlockingDialog.message"));
-	Icon icon = (Icon)(getValue("BlockingDialog.icon"));
-	String cancelButtonText = UIManager.getString("OptionPane.cancelButtonText");
-	JOptionPane optionPane = new JOptionPane(message, JOptionPane.PLAIN_MESSAGE);
-	if (task.getUserCanCancel()) {
-	    JButton cancelButton = new JButton(cancelButtonText);
-	    ActionListener doCancelTask = new ActionListener() {
-		    public void actionPerformed(ActionEvent ignore) {
-			task.cancel(true);
-		    }
-		};
-	    cancelButton.addActionListener(doCancelTask);
-	    optionPane.setOptions(new Object[]{cancelButton});
-	}
-	if (icon != null) {
-	    optionPane.setIcon(icon);
-	}
-	// TBD get window
-	Component dialogOwner = (Component)(event.getSource());
-	if (dialogOwner != null) {
-	    Window w = SwingUtilities.getWindowAncestor(dialogOwner);
-	    if (w != null) {
-		dialogOwner = w;
-	    }
-	}
-	JDialog dialog = optionPane.createDialog(dialogOwner, dialogTitle);
-	dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-	return dialog;
-    }
     
+    private static class DefaultInputBlocker extends InputBlocker {
+        private JDialog modalDialog = null;
 
-    private class BlockPCL implements PropertyChangeListener {
-	private final Task task;
-	private final ActionEvent event;
-	private Component component = null;
-	private JDialog dialog = null;
+        DefaultInputBlocker(Task task, Task.BlockingScope scope, Object target) {
+            super(task, scope, target);
+            switch (scope) {
+            case ACTION: 
+                if (!(target instanceof javax.swing.Action)) {
+                    throw new IllegalArgumentException("target not an Action");
+                }
+                break;
+            case COMPONENT:
+            case WINDOW:
+                if (!(target instanceof Component)) {
+                    throw new IllegalArgumentException("target not a Component");
+                }
+                break;
+            }
+        }
 
-	BlockPCL(Task task, ActionEvent event) {
-	    this.task = task;
-	    this.event = event;
-	}
+        private void setActionTargetBlocked(boolean f) {
+            javax.swing.Action action = (javax.swing.Action)getTarget();
+            action.setEnabled(!f);
+        }
 
-	private void showDialog() {
-	    dialog = getBlockingDialog(task, event);
+        private void setComponentTargetBlocked(boolean f) {
+            Component component = (Component)getTarget();
+            component.setEnabled(!f);
+        }
+
+        /* Creates a dialog whose visuals are initialized from the 
+         * following task resources:
+         * BlockingDialog.title
+         * BlockingDialog.optionPane.icon
+         * BlockingDialog.optionPane.message
+         * BlockingDialog.cancelButton.text
+         */
+        private JDialog createBlockingDialog() {
+            JOptionPane optionPane = new JOptionPane();
+            if (getTask().getUserCanCancel()) {
+                JButton cancelButton = new JButton();
+                cancelButton.setName("BlockingDialog.cancelButton");
+                ActionListener doCancelTask = new ActionListener() {
+                        public void actionPerformed(ActionEvent ignore) {
+                            getTask().cancel(true);
+                        }
+                    };
+                cancelButton.addActionListener(doCancelTask);
+                optionPane.setOptions(new Object[]{cancelButton});
+            }
+            Component dialogOwner = (Component)getTarget();
+            JDialog dialog = optionPane.createDialog(dialogOwner, "BlockingDialog");
 	    dialog.setModal(true);
-	    // dialog.setModalityType(ModalityType.APPLICATION_MODAL);
-	    dialog.pack();
-	    /* The Task may have already fired some
-	     * PropertyChange events, give them a chance
-	     * to be handled first.
-	     */
-	    Runnable doShowDialog = new Runnable() {
-		public void run() {
-		    dialog.setVisible(true);
-		}
-	    };
-	    EventQueue.invokeLater(doShowDialog);
-	}
+            dialog.setName("BlockingDialog");
+            optionPane.setName("BlockingDialog.optionPane");
+            ResourceMap resourceMap = getTask().getResourceMap();
+            if (resourceMap != null) {
+                resourceMap.injectComponents(dialog);
+            }
+            dialog.pack();
+            return dialog;
+        }
 
-	public void propertyChange(PropertyChangeEvent e) {
-	    String propertyName = e.getPropertyName();
-	    if ("started".equals(propertyName)) {
-		// TBD dialog cancel button (if any) should be enabled here
-		if (block != Block.NONE) {
-		    blocking = true;
-		}
-		switch(block) {
-		case ACTION:
-		    ApplicationAction.this.setEnabled(false);
-		    break;
-		case COMPONENT: 
-		    component = (Component)(event.getSource());
-		    if (component != null) {
-			component.setEnabled(false);
-		    }
-		    break;
-		case WINDOW:
-		case APPLICATION: 
-		    showDialog();
-		    break;
-		}
-	    }
-	    else if ("done".equals(propertyName)) {
-		blocking = false;
-		switch(block) {
-		case ACTION: 
-		    ApplicationAction.this.setEnabled(true);
-		    break;
-		case COMPONENT:
-		    if (component != null) {
-			component.setEnabled(true);
-		    }
-		    break;
-		case WINDOW:
-		case APPLICATION:
-		    if (dialog != null) {
-			dialog.setVisible(false);
-		    }
-		    break;
-		}
-	    }
-	}
+        private void showBlockingDialog(boolean f) {
+            if (f) {
+                if (modalDialog != null) {
+                    String msg = String.format("unexepected InputBlocker state [%s] %s", f, this);
+                    logger.warning(msg);
+                    modalDialog.dispose();
+                }
+                modalDialog = createBlockingDialog();
+                Runnable doShowDialog = new Runnable() {
+                    public void run() {
+                        modalDialog.setVisible(true);
+                    }
+                };
+                EventQueue.invokeLater(doShowDialog);
+            }
+            else {
+                if (modalDialog != null) {
+                    modalDialog.dispose();
+                    modalDialog = null;
+                }
+                else {
+                    String msg = String.format("unexepected InputBlocker state [%s] %s", f, this);
+                    logger.warning(msg);
+                }
+            }
+        }
+
+        protected void block() {
+            switch (getScope()) {
+            case ACTION:      
+                setActionTargetBlocked(true); 
+                break;
+            case COMPONENT:   
+                setComponentTargetBlocked(true); 
+                break;
+            case WINDOW:      
+            case APPLICATION: 
+                showBlockingDialog(true); 
+                break;
+            }
+        }
+
+        protected void unblock() {
+            switch (getScope()) {
+            case ACTION:      
+                setActionTargetBlocked(false); 
+                break;
+            case COMPONENT:   
+                setComponentTargetBlocked(false); 
+                break;
+            case WINDOW:      
+            case APPLICATION: 
+                showBlockingDialog(false);
+                break;
+            }
+        }
+    }
+
+    private Task.InputBlocker createInputBlocker(Task task, ActionEvent event) {
+        Object target = event.getSource();
+        if (block == Task.BlockingScope.ACTION) {
+            target = this;
+        }
+        return new DefaultInputBlocker(task, block, target);
     }
 
     private void noProxyActionPerformed(ActionEvent actionEvent) {
 	Object taskObject = null;
-
-	/* Before the background task starts and its PCL (see BlockPCL)
-	 * triggers the blocking action (like popping up a modal dialog)
-	 * there's chance to handle another input event and get another 
-	 * actionPerformed started.  We prevent that here.
-	 */
-	if (blocking) {
-	    return;
-	}
 
 	/* Create the arguments array for actionMethod by 
 	 * calling getActionArgument() for each parameter.
@@ -763,9 +748,11 @@ public class ApplicationAction extends AbstractAction {
 
 	if (taskObject instanceof Task) {
 	    Task task = (Task)taskObject;
-	    task.addPropertyChangeListener(new BlockPCL(task, actionEvent));
-	    ApplicationContext appContext = ApplicationContext.getInstance();
-	    appContext.getTaskService().execute(task);
+            if (task.getInputBlocker() == null) {
+                task.setInputBlocker(createInputBlocker(task, actionEvent));
+            }
+	    ApplicationContext ctx = ApplicationContext.getInstance();
+	    ctx.getTaskService().execute(task);
 	}
     }
 
@@ -906,7 +893,7 @@ public class ApplicationAction extends AbstractAction {
 	if (!enabled) { sb.append(")");	}
 	Object nameValue = getValue(javax.swing.Action.NAME); // [getName()].Action.text
 	if (nameValue instanceof String) {
-	    sb.append("\"");
+	    sb.append(" \"");
 	    sb.append((String)nameValue);
 	    sb.append("\"");
 	}

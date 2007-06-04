@@ -12,6 +12,7 @@ import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.PaintEvent;
+import java.lang.reflect.Constructor;
 import java.util.EventListener;
 import java.util.EventObject;
 import java.util.List;
@@ -82,6 +83,10 @@ import javax.swing.UIManager;
  * more easily with the {@link SingleFrameApplication
  * SingleFrameApplication} {@code Application} subclass.
  * 
+ * <p> 
+ * All of the Application's methods are called (must be called) on
+ * the EDT.
+ * 
  * <p>
  * All but the most trivial applications should define a ResourceBundle
  * in the resources subpackage with the same name as the application class (like {@code
@@ -129,7 +134,7 @@ public abstract class Application extends AbstractBean {
      * public API, should be done in the {@link #startup startup}
      * method.  
      */
-    public Application() {
+    protected Application() {
 	exitListeners = new CopyOnWriteArrayList<ExitListener>();
     }
 
@@ -152,21 +157,36 @@ public abstract class Application extends AbstractBean {
      * @see #shutdown
      * @see ApplicationContext#getApplication
      */
-    public static synchronized void launch(final Class<? extends Application> applicationClass, final String[] args) {
+    public static synchronized <T extends Application> void launch(final Class<T> applicationClass, final String[] args) {
 	Runnable doCreateAndShowGUI = new Runnable() {
 	    public void run() {
 		try {
 		    ApplicationContext ac = ApplicationContext.getInstance(); 
 		    ac.setApplicationClass(applicationClass);
 		    initBeforeApplicationConstructed();
-		    Application application = applicationClass.newInstance();
+                    /* The following complications, relative to just calling 
+                     * applicationClass.newInstance(), allow a privileged
+                     * app to have a private static inner Application subclass.
+                     */
+                    Constructor<T> ctor = applicationClass.getDeclaredConstructor();
+                    if (!ctor.isAccessible()) {
+                        try {
+                            ctor.setAccessible(true);
+                        }
+                        catch (SecurityException ignore) {
+                            // newInstance() call will throw an IllegalAccessException
+                        }
+                    }
+		    Application application = ctor.newInstance();
 		    ac.setApplication(application);
                     application.initialize(args);
 		    application.startup();
 		    application.new DoWaitForEmptyEventQ().execute();
 		}
 		catch (Exception e) {
-		    logger.log(Level.SEVERE, "Application failed to launch", e);
+                    String msg = String.format("Application %s failed to launch", applicationClass);
+		    logger.log(Level.SEVERE, msg, e);
+                    throw(new Error(msg, e));
 		}
 	    }
 	};

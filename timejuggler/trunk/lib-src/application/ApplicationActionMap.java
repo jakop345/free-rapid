@@ -134,7 +134,7 @@ public class ApplicationActionMap extends ActionMap {
 		String enabledProperty = aString(action.enabledProperty(), null);
 		String selectedProperty = aString(action.selectedProperty(), null);
 		String actionName = aString(action.name(), methodName);
-		Action.Block block = action.block();
+		Task.BlockingScope block = action.block();
 		ApplicationAction appAction = 
 		    new ApplicationAction(this, resourceMap, actionName, m, enabledProperty, selectedProperty, block);
 		putAction(actionName, appAction);

@@ -9,19 +9,23 @@ import java.util.List;
 
 
 /**
- * Listener used for observing {@code Task} execution.  The three
- * methods here correspond to the same {@code javax.swing.SwingWorker} methods
- * inherited by the Task class.  A {@code TaskListener} is particularly 
+ * Listener used for observing {@code Task} execution.  
+ * A {@code TaskListener} is particularly 
  * useful for monitoring the the intermediate results 
  * {@link Task#publish published} by a Task in situations
  * where it's not practical to override the Task's 
- * {@link Task#process process} method.
+ * {@link Task#process process} method.  Note that if 
+ * what you really want to do is monitor a Task's state 
+ * and progress, a PropertyChangeListener is probably more
+ * appropriate.
  * <p>
  * The Task class runs all TaskListener methods on the event dispatching
- * thread.  Similarly source all TaskEvents is the Task object.
+ * thread and the source of all TaskEvents is the Task object.
  * 
  * @see Task#addTaskListener
  * @see Task#removeTaskListener
+ * @see Task#addPropertyChangeListener
+ * 
  * @author Hans Muller (Hans.Muller@Sun.COM)
  */
 public interface TaskListener<T, V> {

@@ -160,7 +160,7 @@ public class ApplicationContext extends AbstractBean {
      * {@link ResourceMap ResourceMap} class.
      * 
      * @return this application's ResourceManager.
-     * @see #getResourceMap(Class)
+     * @see #getResourceMap(Class, Class)
      */
     public final ResourceManager getResourceManager() {
 	return resourceManager;
@@ -175,7 +175,7 @@ public class ApplicationContext extends AbstractBean {
      * Throws an IllegalArgumentException if resourceManager is null.
      * 
      * @param resourceManager the new value of the resourceManager property. 
-     * @see #getResourceMap(Class)
+     * @see #getResourceMap(Class, Class)
      * @see #getResourceManager
      */
     protected void setResourceManager(ResourceManager resourceManager) {
@@ -188,16 +188,16 @@ public class ApplicationContext extends AbstractBean {
     }
 
     /**
-     * Returns a {@link ResourceMap#getParent chain} of four
-     * or more {@code ResourceMaps} beginning with one that
-     * encapsulates the {@code ResourceBundles} for the specified
-     * class.  
+     * Returns a {@link ResourceMap#getParent chain} of two or
+     * more ResourceMaps.  The first encapsulates the ResourceBundles
+     * defined for the specified class, and its parent 
+     * encapsulates the ResourceBundles defined for the entire application.
      * <p>
      *  This is just a convenience method that calls
-     * {@link ResourceManager#getResourceMap(Class)
+     * {@link ResourceManager#getResourceMap(Class, Class)
      * ResourceManager.getResourceMap()}.  It's defined as:
      * <pre>
-     * return getResourceManager().getResourceMap(cls);
+     * return getResourceManager().getResourceMap(cls, cls);
      * </pre>
      * 
      * @param cls the class that defines the location of ResourceBundles
@@ -207,7 +207,32 @@ public class ApplicationContext extends AbstractBean {
      * @see ResourceManager#getResourceMap(Class)
      */
     public final ResourceMap getResourceMap(Class cls) {
-        return getResourceManager().getResourceMap(cls);
+        return getResourceManager().getResourceMap(cls, cls);
+    }
+
+    /**
+     * Returns a {@link ResourceMap#getParent chain} of two or more
+     * ResourceMaps.  The first encapsulates the ResourceBundles
+     * defined for the all of the classes between {@code startClass}
+     * and {@code stopClass} inclusive.  It's parent encapsulates the
+     * ResourceBundles defined for the entire application.
+     * <p>
+     *  This is just a convenience method that calls
+     * {@link ResourceManager#getResourceMap(Class, Class)
+     * ResourceManager.getResourceMap()}.  It's defined as:
+     * <pre>
+     * return getResourceManager().getResourceMap(startClass, stopClass);
+     * </pre>
+     * 
+     * @param startClass the first class whose ResourceBundles will be included
+     * @param stopClass the last class whose ResourceBundles will be included
+     * @return a {@code ResourceMap} that contains resources loaded from 
+     *   {@code ResourceBundles}  found in the resources subpackage of the 
+     *   specified class's package.
+     * @see ResourceManager#getResourceMap(Class, Class)
+     */
+    public final ResourceMap getResourceMap(Class startClass, Class stopClass) {
+        return getResourceManager().getResourceMap(startClass, stopClass);
     }
 
     /**

@@ -6,15 +6,14 @@
 
 package application;
 
-import java.awt.Color;
-import java.awt.Font;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import javax.swing.Icon;
-import javax.swing.KeyStroke;
 
 /**
  * A base class for converting arbitrary types to and from Strings, as well as 
@@ -42,6 +41,8 @@ import javax.swing.KeyStroke;
  * <li><tt>Short</tt></li>
  * <li><tt>Byte</tt></li>
  * <li><tt>MessageFormat</tt></li>
+ * <li><tt>URL</tt></li>
+ * <li><tt>URI</tt></li>
  * </ul>
  * <p>
  * The Boolean ResourceConverter returns true for "true", "on", "yes",
@@ -49,7 +50,8 @@ import javax.swing.KeyStroke;
  * the corresponding static parse<i>Type</i> method,
  * e.g. <tt>Integer.parseInt()</tt>.  The MessageFormat
  * ResourceConverter just creates MessageFormat object with the string
- * as its constructor argument.
+ * as its constructor argument.  The URL/URI converters just apply
+ * the corresponding constructor to the resource string.
  * 
  * @author Hans Muller (Hans.Muller@Sun.COM)
  * @see ResourceMap
@@ -130,7 +132,9 @@ public abstract class ResourceConverter {
 	new DoubleResourceConverter(),
 	new LongResourceConverter(),
 	new ShortResourceConverter(),
-	new ByteResourceConverter()
+	new ByteResourceConverter(),
+	new URLResourceConverter(),
+	new URIResourceConverter()
     };
     private static List<ResourceConverter> resourceConverters = 
 	new ArrayList<ResourceConverter>(Arrays.asList(resourceConvertersArray));
@@ -248,6 +252,36 @@ public abstract class ResourceConverter {
 	@Override
 	public Object parseString(String s, ResourceMap ignore) {
 	    return new MessageFormat(s);
+	}
+    }
+
+    private static class URLResourceConverter extends ResourceConverter {
+	URLResourceConverter() {
+	    super(URL.class);
+	}
+	@Override
+	public Object parseString(String s, ResourceMap ignore) throws ResourceConverterException {
+            try {
+                return new URL(s);
+            }
+            catch(MalformedURLException e) {
+		throw new ResourceConverterException("invalid URL", s, e);
+            }
+	}
+    }
+
+    private static class URIResourceConverter extends ResourceConverter {
+	URIResourceConverter() {
+	    super(URI.class);
+	}
+	@Override
+	public Object parseString(String s, ResourceMap ignore) throws ResourceConverterException {
+            try {
+                return new URI(s);
+            }
+            catch(URISyntaxException e) {
+		throw new ResourceConverterException("invalid URI", s, e);
+            }
 	}
     }
 }

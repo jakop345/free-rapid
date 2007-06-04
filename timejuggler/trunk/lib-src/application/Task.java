@@ -18,7 +18,7 @@ import org.jdesktop.swingworker.SwingWorker.StateValue;
 
 
 /**
- * A subclass of {@link SwingWorker} that represents an application
+ * A type of {@link SwingWorker} that represents an application
  * background task.  Tasks add descriptive properties that can 
  * be shown to the user, a new set of methods for customizing
  * task completion, and a {@code TaskListener} that
@@ -34,20 +34,19 @@ import org.jdesktop.swingworker.SwingWorker.StateValue;
  * 
  * <p> 
  * Tasks should provide localized values for the {@code title},
- * {@code description}, and {@code message} properties.  This can be
- * done by specifying a {@code resourceClass} constructor parameter
- * whose {@code ResourceMap} contains their initial values.
- * The ResourceMap is also used to look up format strings used in
- * calls to {@link #message message} which is used to set the {@code
- * message} property.
+ * {@code description}, and {@code message} properties in a 
+ * ResourceBundle for the Task subclass.  A 
+ * {@link ResourceMap} is 
+ * loaded automatically using the Task subclass as the 
+ * {@code startClass} and Task.class the {@code stopClass}.
+ * This ResourceMap is also used to look up format strings used in
+ * calls to {@link #message message}, which is used to set 
+ * the {@code message} property.
  * 
  * <p>
  * For example: given a Task called {@code MyTask} defined like this:
  * <pre> 
  * class MyTask extends Task<MyResultType, Void> { 
- *     MyTask() {
- *         super(MyTask.class); // initialize title/description/message 
- *     }
  *     public MyResultType doInBackground() { 
  *         message("startMessage", getPlannedSubtaskCount()); 
  *         // do the work ... if an error is encountered:
@@ -60,18 +59,24 @@ import org.jdesktop.swingworker.SwingWorker.StateValue;
  * Typically the resources for this class would be defined in the
  * MyTask ResourceBundle, @{code resources/MyTask.properties}:
  * <pre>
- * MyTask.title = My Task 
- * MyTask.description = A task of mine for my own purposes.   
- * MyTask.message = Not started yet 
- * MyTask.startMessage = Starting: working on {0} subtasks...  
- * MyTask.errorMessage = An unexpected error occurred, skipping subtask
- * MyTask.finishedMessage = Finished: completed {0} subtasks, {1} failures 
+ * title = My Task 
+ * description = A task of mine for my own purposes.   
+ * message = Not started yet 
+ * startMessage = Starting: working on %s subtasks...  
+ * errorMessage = An unexpected error occurred, skipping subtask
+ * finishedMessage = Finished: completed %1$s subtasks, %2$s failures 
  * </pre>
  * 
  * <p>
- * The simple name of the {@code resourceClass} is used as the prefix
- * ({@code "MyTask."} in this case) for resource names, so that
- * resources for multiple tasks can be stored in a shared ResourceMap.
+ * Task subclasses can override resource values in their own ResourceBundles:
+ * <pre>
+ * class MyTaskSubclass extends MyTask {
+ * }
+ * # resources/MyTaskSubclass.properties
+ * title = My Task Subclass 
+ * description = An appropriate description
+ * # ... all other resources are inherited
+ * </pre>
  * 
  * <p>
  * All of the settable properties in this class are bound, i.e. a 
@@ -93,9 +98,11 @@ import org.jdesktop.swingworker.SwingWorker.StateValue;
  */
 public abstract class Task<T, V> extends SwingWorker<T, V> {
     private static final Logger logger = Logger.getLogger(Task.class.getName());
-    private final String resourcePrefix;
-    private final ResourceMap resourceMap;
-    private final List<TaskListener<T, V>> taskListeners;
+    public enum BlockingScope {NONE, ACTION, COMPONENT, ANCESTOR, WINDOW, APPLICATION};
+    private String resourcePrefix;
+    private ResourceMap resourceMap;
+    private List<TaskListener<T, V>> taskListeners;
+    private InputBlocker inputBlocker;  
     private String title = null;
     private String description = null;
     private long messageTime = -1L;
@@ -104,62 +111,119 @@ public abstract class Task<T, V> extends SwingWorker<T, V> {
     private long doneTime = -1L;
     private boolean userCanCancel = true;
     private boolean progressPropertyIsValid = false;
+    private TaskService taskService = null;
 
-    /**
-     * Construct a {@code Task}.  If the {@code resourceClass} parameter is
-     * not null, then the {@code title}, {@code description}, and 
-     * {@code message} properties are initialized with resources from the 
-     * corresponding {@code resourceMap}, i.e. the value of:
-     * <pre>
-     * ApplicationContext.getInstance().getResourceMap(resourceClass)
-     * </pre>
-     * This {@code ResourceMap} is also used to lookup localized
-     * messages defined with the {@link #message message} method.
-     * In both cases, resource names must have the name of the 
-     * {@code resourceClass} parameter, followed by a ".", as a prefix.
-     * 
-     * 
-     * @param resourceClass specifies the ResourceMap for the @{code, title, description, message} properties.
-     * @see #getResourceMap
-     * @see #setTitle
-     * @see #setDescription
-     * @see #setMessage
-     * @see ApplicationContext#getResourceMap
-     */
-    public Task(Class resourceClass) {
-	// implementation note: no overridable methods called from the ctor
-	if (resourceClass != null) {
-	    resourceMap = ApplicationContext.getInstance().getResourceMap(resourceClass);
-	    resourcePrefix = resourceClass.getSimpleName() + ".";
-	    title = resourceMap.getString(resourceName("title"));
-	    description = resourceMap.getString(resourceName("description"));
-	    message = resourceMap.getString(resourceName("message"));
-	    if (message != null) {
-		messageTime = System.currentTimeMillis();
-	    }
-	}
-	else {
-	    resourcePrefix = "";
-	    resourceMap = null;
-	}
+    private void initTask(ResourceMap resourceMap, String prefix) {
+        this.resourceMap = resourceMap;
+        if ((prefix == null) || (prefix.length() == 0)) {
+            resourcePrefix = "";
+        }
+        else if (prefix.endsWith(".")) {
+            resourcePrefix = prefix;
+        }
+        else {
+            resourcePrefix = prefix + ".";
+        }
+        if (resourceMap != null) {
+            title = resourceMap.getString(resourceName("title"));
+            description = resourceMap.getString(resourceName("description"));
+            message = resourceMap.getString(resourceName("message"));
+            if (message != null) {
+                messageTime = System.currentTimeMillis();
+            }
+        }
 	addPropertyChangeListener(new StatePCL());
 	taskListeners = new CopyOnWriteArrayList<TaskListener<T, V>>();
     }
 
-    /** 
-     * Construct a {@code Task} with null {@code resourceClass}.  In this case,
-     * the value of {@link #getResourceMap getResourceMap} will be null, and
-     * the {@code title}, {@code description}, and {@code message} properties 
-     * will not be initialized.  Subclasses can still do so by calling the
-     * {@code set} methods directly.
+    private ResourceMap defaultResourceMap() {
+        return ApplicationContext.getInstance().getResourceMap(getClass(), Task.class);
+    }
+
+    /**
+     * Construct a {@code Task}.  If the {@code resourceMap} parameter
+     * is not null, then the {@code title}, {@code description}, and
+     * {@code message} properties are initialized from resources.  The
+     * {@code resourceMap} is also used to lookup localized messages
+     * defined with the {@link #message message} method.  In both
+     * cases, if the value of {@code resourcePrefix} is not null or an
+     * empty string {@code ""}, resource names must have the name of
+     * the {@code resourcePrefix} parameter, followed by a ".", as a
+     * prefix
      * 
+     * @param resourceMap the ResourceMap for the Task's user properties, can be null
+     * @param resourcePrefix prefix for resource names, can be null
      * @see #getResourceMap
      * @see #setTitle
      * @see #setDescription
      * @see #setMessage
+     * @see #resourceName
+     * @see ApplicationContext#getResourceMap
+     */
+    public Task(ResourceMap resourceMap, String resourcePrefix) {
+        initTask(resourceMap, resourcePrefix);
+    }
+
+    /**
+     * Construct a {@code Task} with the specified resource name
+     * prefix, whose ResourceMap is the value of
+     * <code>ApplicationContext.getInstance().getResourceMap(this.getClass(),
+     * Task.class)</code>.  The {@code resourcePrefix} is used to construct
+     * the resource names for the intial values of the 
+     *  {@code title}, {@code description}, and {@code message} Task properties
+     * and for message {@link java.util.Formatter format} strings.
+     * 
+     * @param resourcePrefix prefix for resource names, can be null
+     * @see #getResourceMap
+     * @see #setTitle
+     * @see #setDescription
+     * @see #setMessage
+     * @see #resourceName
+     * @see ApplicationContext#getResourceMap
+     */
+    public Task(String resourcePrefix) {
+        initTask(defaultResourceMap(), resourcePrefix);
+    }
+
+    /**
+     * Construct a {@code Task} with an empty (<code>""</code>) resource name
+     * prefix, whose ResourceMap is the value of
+     * <code>ApplicationContext.getInstance().getResourceMap(this.getClass(),
+     * Task.class)</code>.
      */
     public Task() {
-	this(null);
+        initTask(defaultResourceMap(), "");
+    }
+
+
+    /**
+     * Returns the TaskService that this Task has been submitted to,
+     * or null.  This property is set when a task is executed by a
+     * TaskService, cleared when the task is done and all of its
+     * completion methods have run.  
+     * <p> 
+     * This is a read-only bound property.
+     * 
+     * @return the value of the taskService property.
+     * @see TaskService#execute
+     * @see #done
+     */
+    public synchronized TaskService getTaskService() {
+	return taskService;
+    }
+
+    /**
+     * Set when a task is executed by a TaskService, cleared when 
+     * the task is done and all of its completion methods have run.
+     */
+    synchronized void setTaskService(TaskService taskService) {
+	TaskService oldTaskService, newTaskService;
+	synchronized(this) {
+	    oldTaskService = this.taskService;
+	    this.taskService = taskService;
+	    newTaskService = this.taskService;
+	}
+	firePropertyChange("taskService", oldTaskService, newTaskService);
     }
 
     /**
@@ -198,7 +262,8 @@ public abstract class Task<T, V> extends SwingWorker<T, V> {
 
     /**
      * Return the value of the {@code title} property.
-     * The default value of this property is null.
+     * The default value of this property is the value of the 
+     * {@link #getResourceMap resourceMap's} {@code title} resource.
      * <p>
      * Returns a brief one-line description of the this Task that would
      * be useful for describing this task to the user.  The default
@@ -215,7 +280,8 @@ public abstract class Task<T, V> extends SwingWorker<T, V> {
 
     /**
      * Set the {@code title} property.  
-     * The default value of this property is null.
+     * The default value of this property is the value of the 
+     * {@link #getResourceMap resourceMap's} {@code title} resource.
      * <p>
      * The title is a brief one-line description of the this Task that
      * would be useful for describing it to the user.  The {@code
@@ -242,7 +308,8 @@ public abstract class Task<T, V> extends SwingWorker<T, V> {
 
     /**
      * Return the value of the {@code description} property.
-     * The default value of this property is null.
+     * The default value of this property is the value of the 
+     * {@link #getResourceMap resourceMap's} {@code description} resource.
      * <p>
      * A longer version of the Task's title; a few sentences that 
      * describe what the Task is for in terms that an application 
@@ -259,7 +326,8 @@ public abstract class Task<T, V> extends SwingWorker<T, V> {
 
     /**
      * Set the {@code description} property.
-     * The default value of this property is null.
+     * The default value of this property is the value of the 
+     * {@link #getResourceMap resourceMap's} {@code description} resource.
      * <p> 
      * The description is a longer version of the Task's title.
      * It should be a few sentences that describe what the Task is for,
@@ -315,7 +383,8 @@ public abstract class Task<T, V> extends SwingWorker<T, V> {
 
     /**
      * Return the value of the {@code message} property.  
-     * The default value of this property is null.
+     * The default value of this property is the value of the 
+     * {@link #getResourceMap resourceMap's} {@code message} resource.
      * <p>
      * Returns a short, one-line, message that explains what the task
      * is up to in terms appropriate for an application user.
@@ -330,7 +399,8 @@ public abstract class Task<T, V> extends SwingWorker<T, V> {
 
     /**
      * Set the {@code message} property.  
-     * The default value of this property is null.
+     * The default value of this property is the value of the 
+     * {@link #getResourceMap resourceMap's} {@code message} resource.
      * <p>
      * Returns a short, one-line, message that explains what the task is 
      * up to in terms appropriate for an application user.  This message 
@@ -377,26 +447,22 @@ public abstract class Task<T, V> extends SwingWorker<T, V> {
     }
 
     /**
-     * If the Task {@code resourceClass} constructor parameter was not
-     * null, this method sets the message property to a string
-     * generated with {@code MessageFormat} and the specified
-     * arguments.  The {@code formatResourceKey} names a resource
-     * whose value is a format string.  The name of that resource
-     * must be the simple name of the {@code resourceClass} parameter, 
-     * followed by a ".", followed by {@code formatResourceKey}.  
-     * See the Task class javadoc for an example.
+     * Set the message property to a string generated with {@code
+     * String.format} and the specified arguments.  The {@code
+     * formatResourceKey} names a resource whose value is a format
+     * string.  See the Task class javadoc for an example.
      * <p>
      * Note that if the no arguments are specified, this method is 
      * comparable to:
      *<pre>
      * setMessage(getResourceMap().getString(resourceName(formatResourceKey)));
      *</pre>
-     * <p>
-     * If a {@code resourceClass} was not specified, then set the {@code message}
-     * property to {@code formatResourceKey}.
+     * <p> 
+     * If a {@code ResourceMap} was not specified for this Task,
+     * then set the {@code message} property to {@code formatResourceKey}.
      * 
      * @param formatResourceKey the suffix of the format string's resource name.
-     * @param args the arguments referred to by the "{N}" placeholders in the format string
+     * @param args the arguments referred to by the placeholders in the format string
      * @see #setMessage
      * @see ResourceMap#getString(String, Object...)
      * @see java.text.MessageFormat
@@ -605,7 +671,12 @@ public abstract class Task<T, V> extends SwingWorker<T, V> {
 	    }
 	}
 	finally {
-	    finished();
+	    try {
+		finished();
+	    }
+	    finally {
+		setTaskService(null);
+	    }
 	}
     }
 
@@ -856,4 +927,153 @@ public abstract class Task<T, V> extends SwingWorker<T, V> {
 	}
     }
 
+    /**
+     * Return this task's InputBlocker.
+     * <p> 
+     * This is a bound property.
+     * 
+     * @see #setInputBlocker
+     */
+    public final InputBlocker getInputBlocker() {
+        return inputBlocker;
+    }
+
+    /**
+     * Set this task's InputBlocker.  The InputBlocker defines 
+     * to what extent the GUI should be blocked while the Task 
+     * is executed by a TaskService.  It is not used by the Task
+     * directly, it's used by the TaskService that executes the Task.
+     * <p>
+     * This property may only be set before the Task is 
+     * {@link TaskService#execute submitted} to a TaskService for
+     * execution.  If it's called afterwards, an IllegalStateException
+     * is thrown.
+     * <p> 
+     * This is a bound property.
+     * 
+     * @see #getInputBlocker
+     */
+    public final void setInputBlocker(InputBlocker inputBlocker) {
+        if (getTaskService() != null) {
+            throw new IllegalStateException("task already being executed");
+        }
+        InputBlocker oldInputBlocker, newInputBlocker;
+	synchronized(this) {
+            oldInputBlocker = this.inputBlocker;
+            this.inputBlocker = inputBlocker;
+            newInputBlocker = this.inputBlocker;
+	}
+        firePropertyChange("inputBlocker", oldInputBlocker, newInputBlocker);
+    }
+
+    /**
+     * Specifies to what extent input to the Application's GUI should
+     * be blocked while this Task is being executed and provides 
+     * a pair of methods, {@code block} and {@code unblock} that 
+     * do the work of blocking the GUI.  For the sake of input blocking,
+     * a Task begins executing when it's {@link TaskService#execute submitted}
+     * to a {@code TaskService}, and it finishes executing after
+     * the Task's completion methods have been called.
+     * <p>
+     * The InputBlocker's {@code BlockingScope} and the blocking
+     * {@code target} object define what part of the GUI's input 
+     * will be blocked:
+     * <dl>
+     * <dt><code>NONE</code><dt>Don't block input.  The blocking
+     * target is ignored in this case.
+     * <dt><code>ACTION</code><dt>Disable the target 
+     * {@link javax.swing.Action Action} while the Task is executing.  
+     * <dt><code>COMPONENT</code><dt>Disable the target 
+     * {@link java.awt.Component} Component while the Task is executing.  
+     * <dt><code>WINDOW</code><dt> Block the Window ancestor of the
+     * target Component while the Task is executing.
+     * <dt><code>Application</code><dt> Block the entire Application
+     * while the Task is executing.  The blocking target is ignored
+     * in this case.
+     * </dl>
+     * <p>
+     * Input blocking begins when the {@code block} method is called and
+     * ends when {@code unblock} is called.  Each method is only
+     * called once, typically by the {@code TaskService}.
+     * 
+     * @see Task#getInputBlocker
+     * @see Task#setInputBlocker
+     * @see TaskService
+     */
+    public static abstract class InputBlocker extends AbstractBean {
+        private final Task task;
+        private final BlockingScope scope;
+        private final Object target;
+
+        /**
+         * Construct an InputBlocker with three immutable properties.  If
+         * the {@code task} is null or if the Task has already been 
+         * executed by a TaskService, then an exception is thrown.
+         * 
+         * @param task block input while this Task is executing
+         * @param scope how much of the GUI will be blocked
+         * @param target the GUI element that will be blocked
+         * @see TaskService#execute
+         */
+        InputBlocker(Task task, BlockingScope scope, Object target) {
+            if (task == null) {
+                throw new IllegalArgumentException("null task");
+            }
+            if (task.getTaskService() != null) {
+                throw new IllegalStateException("task already being executed");
+            }
+            this.task = task;
+            this.scope = scope;
+            this.target = target;
+        }
+
+        /**
+         * The {@code block} method will block input while this Task
+         * is being executed by a TaskService.
+         * 
+         * @return the value of the read-only Task property
+         * @see #block
+         * @see #unblock
+         */
+        public final Task getTask() { return task; } 
+
+        /**
+         * Defines the extent to which the GUI is blocked while 
+         * the task is being executed.
+         * 
+         * @return the value of the read-only blockingScope  property
+         * @see #block
+         * @see #unblock
+         */
+        public final BlockingScope getScope() { return scope; }
+
+        /**
+         * Specifies the GUI element that will be blocked while 
+         * the task is being executed.  
+         * 
+         * @return the value of the read-only target  property
+         * @see #getScope
+         * @see #block
+         * @see #unblock
+         */
+        public final Object getTarget() { return target; }
+
+        /**
+         * Block input to the GUI per the {@code scope} and {@code target}
+         * properties.  This method will only be called once.
+         * 
+         * @see #unblock
+         * @see TaskService#execute
+         */
+        protected abstract void block();
+
+        /**
+         * Unblock input to the GUI by undoing whatever the {@code block}
+         * method did.  This method will only be called once.
+         * 
+         * @see #block
+         * @see TaskService#execute
+         */
+        protected abstract void unblock();
+    }
 }

@@ -63,11 +63,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Action {
-    public enum Block {NONE, ACTION, COMPONENT, WINDOW, APPLICATION};
     String name() default "";
     String enabledProperty() default "";
     String selectedProperty() default  "";
-    Block block() default Block.NONE;
+    Task.BlockingScope block() default Task.BlockingScope.NONE;
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.PARAMETER)
