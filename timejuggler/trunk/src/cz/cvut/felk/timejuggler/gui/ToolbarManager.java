@@ -1,21 +1,20 @@
 package cz.cvut.felk.timejuggler.gui;
 
-import cz.cvut.felk.timejuggler.swing.ToolbarSeparator;
+import application.ApplicationContext;
 import cz.cvut.felk.timejuggler.core.AppPrefs;
+import cz.cvut.felk.timejuggler.swing.Swinger;
+import cz.cvut.felk.timejuggler.swing.ToolbarSeparator;
 
 import javax.swing.*;
 import java.awt.*;
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
-
-import application.ApplicationContext;
+import java.beans.PropertyChangeListener;
 
 /**
- * Sprava toolbaru
- * Vytvari a ovlada cely toolbar
+ * Sprava toolbaru Vytvari a ovlada cely toolbar
  * @author Vity
  */
-public class ToolbarManager  {
+public class ToolbarManager {
     /**
      * hlavni panel v kterem je toolbar umisten
      */
@@ -37,9 +36,10 @@ public class ToolbarManager  {
     /**
      * Konstruktor - naplni toolbar buttony
      */
-    public ToolbarManager() {
+
+    public ToolbarManager(ApplicationContext context) {
         toolbarPanel.setBorder(BorderFactory.createEmptyBorder(0, 4, 0, 0));
-        final Action action = ApplicationContext.getInstance().getActionMap().get("showToolbar");
+        final Action action = context.getActionMap().get("showToolbar");
         //odchyt udalosti z akce pro zmenu viditelnosti toolbaru
         action.addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
@@ -57,25 +57,25 @@ public class ToolbarManager  {
         toolbarPanel.setPreferredSize(new Dimension(400, 56));
         toolbar.setFocusable(false);
         toolbar.setFloatable(false);
-        toolbar.add(getButton(MenuManager.getAction("newEvent")));
-        toolbar.add(getButton(MenuManager.getAction("newTask")));
+        toolbar.add(getButton(Swinger.getAction("newEvent")));
+        toolbar.add(getButton(Swinger.getAction("newTask")));
         toolbar.add(Box.createHorizontalStrut(STRUT_SIZE));
-        toolbar.add(getButton(MenuManager.getAction("editEventOrTask")));
-        toolbar.add(getButton(MenuManager.getAction("deleteEventOrTask")));
+        toolbar.add(getButton(Swinger.getAction("editEventOrTask")));
+        toolbar.add(getButton(Swinger.getAction("deleteEventOrTask")));
         toolbar.add(new ToolbarSeparator());
-        toolbar.add(getButton(MenuManager.getAction("goToday")));
+        toolbar.add(getButton(Swinger.getAction("goToday")));
         toolbar.add(new ToolbarSeparator());
-        AbstractButton comp = getToggleButton(MenuManager.getAction("dayView"));
+        AbstractButton comp = getToggleButton(Swinger.getAction("dayView"));
         final ButtonGroup buttonGroup = new ButtonGroup();
         buttonGroup.add(comp);
         toolbar.add(comp);
-        comp = getToggleButton(MenuManager.getAction("weekView"));
+        comp = getToggleButton(Swinger.getAction("weekView"));
         buttonGroup.add(comp);
         toolbar.add(comp);
-        comp = getToggleButton(MenuManager.getAction("multiWeekView"));
+        comp = getToggleButton(Swinger.getAction("multiWeekView"));
         buttonGroup.add(comp);
         toolbar.add(comp);
-        comp = getToggleButton(MenuManager.getAction("monthView"));
+        comp = getToggleButton(Swinger.getAction("monthView"));
         buttonGroup.add(comp);
         toolbar.add(comp);
     }

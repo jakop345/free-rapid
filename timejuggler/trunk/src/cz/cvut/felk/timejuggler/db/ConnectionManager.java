@@ -3,6 +3,7 @@ package cz.cvut.felk.timejuggler.db;
 import application.ApplicationContext;
 import cz.cvut.felk.timejuggler.core.AppPrefs;
 import cz.cvut.felk.timejuggler.core.Consts;
+import cz.cvut.felk.timejuggler.core.MainApp;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -30,7 +31,7 @@ public class ConnectionManager {
      */
     private ConnectionManager() {
         /* deployment ready code */
-        final ApplicationContext appContext = ApplicationContext.getInstance();
+        final ApplicationContext appContext = MainApp.getInstance(MainApp.class).getContext();
 
         //TODO nevyuzijeme radeji derby.properties ? jsem pro
         this.db_user = Consts.DB_USERNAME;

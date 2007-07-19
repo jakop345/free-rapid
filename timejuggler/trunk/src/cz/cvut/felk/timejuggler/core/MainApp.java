@@ -1,6 +1,7 @@
 package cz.cvut.felk.timejuggler.core;
 
 import application.Application;
+import application.ApplicationContext;
 import application.SingleFrameApplication;
 import cz.cvut.felk.timejuggler.gui.MainPanelManager;
 import cz.cvut.felk.timejuggler.swing.Swinger;
@@ -75,7 +76,7 @@ public class MainApp extends SingleFrameApplication {
     }
 
     protected void startup() {
-        mainPanel = new MainPanelManager();
+        mainPanel = new MainPanelManager(getContext());
         final JFrame frame = getMainFrame();
         frame.setJMenuBar(mainPanel.getMenuManager().getMenuBar());
         frame.getContentPane().add(getMainPanelComponent());
@@ -105,6 +106,10 @@ public class MainApp extends SingleFrameApplication {
     public static void main(String[] args) {
         //zde prijde overovani vstupnich pridavnych parametru
         Application.launch(MainApp.class, args); //spusteni
+    }
+
+    public static ApplicationContext getAContext() {
+        return Application.getInstance(MainApp.class).getContext();
     }
 
     /**

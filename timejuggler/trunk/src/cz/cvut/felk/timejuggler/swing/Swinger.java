@@ -3,6 +3,7 @@ package cz.cvut.felk.timejuggler.swing;
 import application.ApplicationContext;
 import application.ResourceManager;
 import application.ResourceMap;
+import cz.cvut.felk.timejuggler.core.MainApp;
 
 import javax.swing.*;
 import javax.swing.plaf.metal.MetalLookAndFeel;
@@ -63,8 +64,14 @@ public class Swinger {
     }
 
     public static ResourceMap getResourceMap() {
-        final ApplicationContext ac = ApplicationContext.getInstance();
+        final ApplicationContext ac = MainApp.getInstance(MainApp.class).getContext();
         final ResourceManager rm = ac.getResourceManager();
         return rm.getResourceMap();
+    }
+
+    public static Action getAction(Object actionName) {
+        final Action action = MainApp.getAContext().getActionMap().get(actionName);
+        assert action != null;
+        return action;
     }
 }

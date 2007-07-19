@@ -1,10 +1,10 @@
 package cz.cvut.felk.timejuggler.gui;
 
-import application.ResourceMap;
 import application.ApplicationContext;
+import application.ResourceMap;
+import cz.cvut.felk.timejuggler.core.AppPrefs;
 import cz.cvut.felk.timejuggler.swing.CustomLayoutConstraints;
 import cz.cvut.felk.timejuggler.swing.Swinger;
-import cz.cvut.felk.timejuggler.core.AppPrefs;
 import info.clearthought.layout.TableLayout;
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.FilterPipeline;
@@ -15,11 +15,11 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.BadLocationException;
+import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
-import java.awt.*;
 
 /**
  * Sprava a vytvoreni seznamu udalosti
@@ -34,8 +34,8 @@ public class EventsListManager {
      * Zalozi, vytvorena komponenta je dostupna pres getComponent
      * @see getComponent
      */
-    public EventsListManager() {
-        final Action action = ApplicationContext.getInstance().getActionMap().get("showSearchBar");
+    public EventsListManager(final ApplicationContext context) {
+        final Action action = context.getActionMap().get("showSearchBar");
         action.addPropertyChangeListener(new PropertyChangeListener() {
 
             public void propertyChange(PropertyChangeEvent evt) {
@@ -119,8 +119,8 @@ public class EventsListManager {
     }
 
     /**
-     * Filtr pro redukci seznamu podle inputu.
-     * Prohledava pres vsechny sloupce (defaultne se prohledava jen pevne urceny).
+     * Filtr pro redukci seznamu podle inputu. Prohledava pres vsechny sloupce (defaultne se prohledava jen pevne
+     * urceny).
      */
     private static class AllPatternFilter extends PatternFilter {
 

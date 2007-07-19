@@ -1,6 +1,5 @@
 package cz.cvut.felk.timejuggler.core;
 
-import application.ApplicationContext;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
 
 import java.io.File;
@@ -90,17 +89,17 @@ public final class AppPrefs {
         properties.setProperty(key, String.valueOf(value));
     }
 
-    /**
-     * Provede ulozeni uzivatelskeho nastaveni do Properties
-     * @param key   hodnota klice
-     * @param value hodnota uzivatelskeho nastaveni
-     * @store je-li hodnota true, provede se okamzite ulozeni do souboru
-     */
-    public static void storeProperty(final String key, final String value, final boolean store) {
-        properties.setProperty(key, value);
-        if (store)
-            store();
-    }
+//    /**
+//     * Provede ulozeni uzivatelskeho nastaveni do Properties
+//     * @param key   hodnota klice
+//     * @param value hodnota uzivatelskeho nastaveni
+//     * @store je-li hodnota true, provede se okamzite ulozeni do souboru
+//     */
+//    public static void storeProperty(final String key, final String value, final boolean store) {
+//        properties.setProperty(key, value);
+//        if (store)
+//            store();
+//    }
 
     /**
      * Provede ulozeni uzivatelskeho nastaveni do Properties
@@ -153,7 +152,7 @@ public final class AppPrefs {
 //                    parentFile.mkdirs();
 //            }
 //
-            outputStream = ApplicationContext.getInstance().getLocalStorage().openOutputFile(DEFAULT_PROPERTIES);
+            outputStream = MainApp.getAContext().getLocalStorage().openOutputFile(DEFAULT_PROPERTIES);
             properties.storeToXML(outputStream, "#Application properties. Only for experienced users.");
             outputStream.close();
         } catch (IOException e) {
@@ -181,7 +180,7 @@ public final class AppPrefs {
         final Properties props = new Properties();
         InputStream inputStream = null;
         try {
-            inputStream = ApplicationContext.getInstance().getLocalStorage().openInputFile(DEFAULT_PROPERTIES);
+            inputStream = MainApp.getAContext().getLocalStorage().openInputFile(DEFAULT_PROPERTIES);
             props.loadFromXML(inputStream);
             inputStream.close();
             return props;

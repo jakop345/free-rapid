@@ -4,6 +4,7 @@ import application.ApplicationActionMap;
 import application.ApplicationContext;
 import cz.cvut.felk.timejuggler.core.AppPrefs;
 import cz.cvut.felk.timejuggler.gui.actions.*;
+import cz.cvut.felk.timejuggler.swing.Swinger;
 
 import javax.swing.*;
 
@@ -14,9 +15,11 @@ import javax.swing.*;
  */
 public class MenuManager {
     private JMenuBar menuBar;
+    private final ApplicationContext context;
 
-    public MenuManager() {
+    public MenuManager(final ApplicationContext context) {
         super();
+        this.context = context;
         initActions(new FileActions());
         initActions(new EditActions());
         initActions(new ViewActions());
@@ -72,8 +75,8 @@ public class MenuManager {
     }
 
     private void initActions(Object actionsObject) {
-        final ApplicationActionMap globalMap = ApplicationContext.getInstance().getActionMap();
-        final ApplicationActionMap actionMap = ApplicationContext.getInstance().getActionMap(actionsObject);
+        final ApplicationActionMap globalMap = context.getActionMap();
+        final ApplicationActionMap actionMap = context.getActionMap(actionsObject);
         for (Object key : actionMap.keys()) {
             globalMap.put(key, actionMap.get(key));
         }
@@ -82,21 +85,21 @@ public class MenuManager {
     private JMenu createViewMenu() {
         final JMenu jMenu = new JMenu();
         jMenu.setName("viewMenu");
-        jMenu.add(new JCheckBoxMenuItem(getAction("showToolbar")));
-        jMenu.add(new JCheckBoxMenuItem(getAction("showSearchBar")));
-        jMenu.add(new JCheckBoxMenuItem(getAction("showStatusBar")));
+        jMenu.add(new JCheckBoxMenuItem(Swinger.getAction("showToolbar")));
+        jMenu.add(new JCheckBoxMenuItem(Swinger.getAction("showSearchBar")));
+        jMenu.add(new JCheckBoxMenuItem(Swinger.getAction("showStatusBar")));
         jMenu.addSeparator();
         final ButtonGroup buttonGroup = new ButtonGroup();
-        JRadioButtonMenuItem item = new JRadioButtonMenuItem(getAction("dayView"));
+        JRadioButtonMenuItem item = new JRadioButtonMenuItem(Swinger.getAction("dayView"));
         buttonGroup.add(item);
         jMenu.add(item);
-        item = new JRadioButtonMenuItem(getAction("weekView"));
+        item = new JRadioButtonMenuItem(Swinger.getAction("weekView"));
         buttonGroup.add(item);
         jMenu.add(item);
-        item = new JRadioButtonMenuItem(getAction("multiWeekView"));
+        item = new JRadioButtonMenuItem(Swinger.getAction("multiWeekView"));
         buttonGroup.add(item);
         jMenu.add(item);
-        item = new JRadioButtonMenuItem(getAction("monthView"));
+        item = new JRadioButtonMenuItem(Swinger.getAction("monthView"));
         buttonGroup.add(item);
         jMenu.add(item);
         setDefaultCalendarView(); // prozatim tady
@@ -123,25 +126,18 @@ public class MenuManager {
                 menu.addSeparator();
             } else {
                 JMenuItem menuItem = new JMenuItem();
-                menuItem.setAction(getAction(actionName));
+                menuItem.setAction(Swinger.getAction(actionName));
                 menu.add(menuItem);
             }
         }
         return menu;
     }
 
-    public static javax.swing.Action getAction(Object actionName) {
-        final ApplicationContext ac = ApplicationContext.getInstance();
-        final Action action = ac.getActionMap().get(actionName);
-        assert action != null;
-        return action;
-    }
-
     private void setDefaultCalendarView() {
         final int selectedView = AppPrefs.getProperty(AppPrefs.CALENDAR_VIEW, ViewActions.DAY_VIEW);
-        getAction("dayView").putValue(Action.SELECTED_KEY, selectedView == ViewActions.DAY_VIEW);
-        getAction("weekView").putValue(Action.SELECTED_KEY, selectedView == ViewActions.WEEK_VIEW);
-        getAction("multiWeekView").putValue(Action.SELECTED_KEY, selectedView == ViewActions.MULTIWEEK_VIEW);
-        getAction("monthView").putValue(Action.SELECTED_KEY, selectedView == ViewActions.MONTH_VIEW);
+        Swinger.getAction("dayView").putValue(Action.SELECTED_KEY, selectedView == ViewActions.DAY_VIEW);
+        Swinger.getAction("weekView").putValue(Action.SELECTED_KEY, selectedView == ViewActions.WEEK_VIEW);
+        Swinger.getAction("multiWeekView").putValue(Action.SELECTED_KEY, selectedView == ViewActions.MULTIWEEK_VIEW);
+        Swinger.getAction("monthView").putValue(Action.SELECTED_KEY, selectedView == ViewActions.MONTH_VIEW);
     }
 }

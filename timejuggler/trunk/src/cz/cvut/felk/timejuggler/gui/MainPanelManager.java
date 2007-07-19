@@ -1,25 +1,17 @@
 package cz.cvut.felk.timejuggler.gui;
 
-import java.awt.BorderLayout;
-
-import java.util.Date;
-
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-
+import application.ApplicationContext;
+import cz.cvut.felk.timejuggler.dao.CalendarEventDAO_DummyImpl;
+import cz.cvut.felk.timejuggler.entity.CalendarEvent;
+import cz.cvut.felk.timejuggler.swing.calendar.CalendarConfig;
+import cz.cvut.felk.timejuggler.swing.calendar.CalendarGrid;
+import cz.cvut.felk.timejuggler.swing.calendar.CalendarView;
 import org.jdesktop.swingx.JXMultiSplitPane;
 import org.jdesktop.swingx.MultiSplitLayout;
 
-
-import cz.cvut.felk.timejuggler.dao.CalendarEventDAO;
-import cz.cvut.felk.timejuggler.dao.CalendarEventDAO_DummyImpl;
-
-import cz.cvut.felk.timejuggler.entity.CalendarEvent;
-
-import cz.cvut.felk.timejuggler.swing.calendar.CalendarConfig;
-import cz.cvut.felk.timejuggler.swing.calendar.CalendarGrid;
-import cz.cvut.felk.timejuggler.swing.calendar.CalendarGridEvent;
-import cz.cvut.felk.timejuggler.swing.calendar.CalendarView;
+import javax.swing.*;
+import java.awt.*;
+import java.util.Date;
 
 /**
  * Sprava a vytvoreni hlavniho panelu
@@ -31,10 +23,17 @@ public class MainPanelManager {
     private static final String RIGHT_TOP = "right.top";
     private static final String LEFT_BOTTOM = "left.bottom";
     private static final String RIGHT_BOTTOM = "right.bottom";
-    private final MenuManager menuManager = new MenuManager();
+    private final MenuManager menuManager;
     private StatusBarManager statusBarManager;
     private ToolbarManager toolbarManager;
     private CalendarGrid calendarGrid;
+    private final ApplicationContext context;
+
+    public MainPanelManager(ApplicationContext context) {
+        this.context = context;
+        this.menuManager = new MenuManager(context);
+        initComponents();
+    }
 
 
     public JXMultiSplitPane getMultiSplitPane() {
@@ -43,9 +42,6 @@ public class MainPanelManager {
 
     private JXMultiSplitPane multiSplitPane;
 
-    public MainPanelManager() {
-        initComponents();
-    }
 
     private void initComponents() {
         multiSplitPane = new JXMultiSplitPane();
@@ -54,8 +50,8 @@ public class MainPanelManager {
         multiSplitPane.getMultiSplitLayout().setModel(new DefaultSplitPaneModel());
         multiSplitPane.add(new SmallCalendarManager().getComponent(), LEFT_TOP);
         multiSplitPane.add(getTaskList(), LEFT_BOTTOM);
-        multiSplitPane.add(new EventsListManager().getComponent(), RIGHT_TOP);
-        
+        multiSplitPane.add(new EventsListManager(context).getComponent(), RIGHT_TOP);
+
         // testovaci blok
         Date startDate = new Date(0);
         startDate.setHours(9);
@@ -64,23 +60,23 @@ public class MainPanelManager {
         Date endDate = new Date(0);
         endDate.setHours(13);
         endDate.setMinutes(30);
-        
+
         Date todayDate = new Date(0);
 
-        CalendarConfig calendarConfig = new CalendarConfig();        
-        
+        CalendarConfig calendarConfig = new CalendarConfig();
+
         CalendarEventDAO_DummyImpl calendarEventDAO = new CalendarEventDAO_DummyImpl();
         calendarGrid = new CalendarGrid(calendarEventDAO, calendarConfig);
         calendarGrid.setStartDate(todayDate);
-        
+
         calendarGrid.setCalendarView(CalendarView.WEEK);
-        
+
         CalendarEvent ce = new CalendarEvent();
-        ce.setName("Test udalost");        
+        ce.setName("Test udalost");
         ce.setStartDate(startDate);
         ce.setEndDate(endDate);
         calendarEventDAO.saveCalendarEvent(ce);
-        
+
         startDate = new Date(0);
         startDate.setHours(13);
         startDate.setMinutes(15);
@@ -104,7 +100,7 @@ public class MainPanelManager {
         endDate.setHours(14);
         endDate.setMinutes(55);
         endDate.setDate(2);
-     
+
         ce = new CalendarEvent();
         ce.setName("Dalsi den");
         ce.setStartDate(startDate);
@@ -113,13 +109,12 @@ public class MainPanelManager {
         calendarEventDAO.saveCalendarEvent(ce);
 
         calendarGrid.refreshCalendarEvents();
-        
 
         // testovaci blok
-        
-        
+
+
         multiSplitPane.add(calendarGrid, RIGHT_BOTTOM);
-        
+
         contentPanel.add(getToolbarManager().getComponent(), BorderLayout.NORTH);
         contentPanel.add(multiSplitPane, BorderLayout.CENTER);
         contentPanel.add(getStatusBarManager().getStatusBar(), BorderLayout.SOUTH);
@@ -127,7 +122,7 @@ public class MainPanelManager {
 
     private StatusBarManager getStatusBarManager() {
         if (statusBarManager == null)
-            statusBarManager = new StatusBarManager();
+            statusBarManager = new StatusBarManager(context);
         return statusBarManager;
     }
 
@@ -141,7 +136,7 @@ public class MainPanelManager {
 
     public ToolbarManager getToolbarManager() {
         if (toolbarManager == null)
-            toolbarManager = new ToolbarManager();
+            toolbarManager = new ToolbarManager(context);
         return toolbarManager;
 
     }
@@ -166,7 +161,7 @@ public class MainPanelManager {
         return menuManager;
     }
 
-	public CalendarGrid getCalendarGrid() {
-		return calendarGrid;
-	}
+    public CalendarGrid getCalendarGrid() {
+        return calendarGrid;
+    }
 }
