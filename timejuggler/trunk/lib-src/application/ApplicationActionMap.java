@@ -54,12 +54,16 @@ import javax.swing.ActionMap;
  */
 
 public class ApplicationActionMap extends ActionMap {
+    private final ApplicationContext context;
     private final ResourceMap resourceMap;
     private final Class actionsClass;
     private final Object actionsObject;
     private final List<ApplicationAction> proxyActions;
 
-    public ApplicationActionMap(Class actionsClass, Object actionsObject, ResourceMap resourceMap) {
+    public ApplicationActionMap(ApplicationContext context, Class actionsClass, Object actionsObject, ResourceMap resourceMap) {
+        if (context == null) {
+            throw new IllegalArgumentException("null context");
+        }
 	if (actionsClass == null) {
 	    throw new IllegalArgumentException("null actionsClass");
 	}
@@ -69,12 +73,17 @@ public class ApplicationActionMap extends ActionMap {
 	if (!(actionsClass.isInstance(actionsObject))) {
 	    throw new IllegalArgumentException("actionsObject not an instanceof actionsClass");
 	}
+        this.context = context;
 	this.actionsClass = actionsClass;
 	this.actionsObject = actionsObject;
 	this.resourceMap = resourceMap;
 	this.proxyActions = new ArrayList<ApplicationAction>();
 	addAnnotationActions(resourceMap);
 	maybeAddActionsPCL();
+    }
+
+    public final ApplicationContext getContext() {
+        return context;
     }
 
     public final Class getActionsClass() { 
@@ -187,6 +196,10 @@ public class ApplicationActionMap extends ActionMap {
 	}
     }
 
+    /* When the value of an actionsClass @Action enabledProperty or 
+     * selectedProperty changes, forward the PropertyChangeEvent to 
+     * the ApplicationAction object itself.
+     */
     private class ActionsPCL implements PropertyChangeListener {
 	public void propertyChange(PropertyChangeEvent event) {
 	    String propertyName = event.getPropertyName();
@@ -195,11 +208,13 @@ public class ApplicationActionMap extends ActionMap {
 		for (Object key : keys) {
 		    javax.swing.Action value = get(key);
 		    if (value instanceof ApplicationAction) {
-			ApplicationAction actionAdapter = (ApplicationAction)value;
-			if (propertyName.equals(actionAdapter.getEnabledProperty())) {
-			    actionAdapter.forwardPropertyChangeEvent(event, "enabled");
+			ApplicationAction appAction = (ApplicationAction)value;
+			if (propertyName.equals(appAction.getEnabledProperty())) {
+			    appAction.forwardPropertyChangeEvent(event, "enabled");
 			}
-			// TBD selected property support
+                        else if (propertyName.equals(appAction.getSelectedProperty())) {
+			    appAction.forwardPropertyChangeEvent(event, "selected");
+                        }
 		    }
 		}
 	    }

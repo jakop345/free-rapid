@@ -45,6 +45,7 @@ import javax.swing.text.JTextComponent;
  * @author Scott Violet (Scott.Violet@Sun.COM)
  */
 class TextActions extends AbstractBean {
+    private final ApplicationContext context;
     private final CaretListener textComponentCaretListener;
     private final PropertyChangeListener textComponentPCL;
     private final String markerActionKey = "TextActions.markerAction";
@@ -54,7 +55,8 @@ class TextActions extends AbstractBean {
     private boolean pasteEnabled = false;   // see setPasteEnabled
     private boolean deleteEnabled = false;  // see setDeleteEnabled
 
-    public TextActions() {
+    public TextActions(ApplicationContext context) {
+        this.context = context;
 	markerAction = new javax.swing.AbstractAction() { 
 	    public void actionPerformed(ActionEvent e) { } 
         };
@@ -63,12 +65,16 @@ class TextActions extends AbstractBean {
 	getClipboard().addFlavorListener(new ClipboardListener());
     }
 
+    private ApplicationContext getContext() {
+        return context;
+    }
+
     private JComponent getFocusOwner() {
-	return 	ApplicationContext.getInstance().getFocusOwner();
+	return 	getContext().getFocusOwner();
     }
 
     private Clipboard getClipboard() {
-	return ApplicationContext.getInstance().getClipboard();
+	return getContext().getClipboard();
     }
 
     /* Called by the KeyboardFocus PropertyChangeListener in ApplicationContext,
@@ -135,7 +141,7 @@ class TextActions extends AbstractBean {
 	ActionMap actionMap = text.getActionMap();
 	if (actionMap.get(markerActionKey) == null) {
 	    actionMap.put(markerActionKey, markerAction);
-	    ActionMap textActions = ApplicationContext.getInstance().getActionMap(getClass(), this);
+	    ActionMap textActions = getContext().getActionMap(getClass(), this);
 	    for(Object key : textActions.keys()) {
 		actionMap.put(key, textActions.get(key));
 	    }

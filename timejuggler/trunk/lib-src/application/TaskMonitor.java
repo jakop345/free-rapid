@@ -76,14 +76,13 @@ public class TaskMonitor extends AbstractBean {
     /**
      * Construct a TaskMonitor.
      */
-    public TaskMonitor() {
+    public TaskMonitor(ApplicationContext context) {
 	applicationPCL = new ApplicationPCL();
 	taskServicePCL = new TaskServicePCL();
 	taskPCL = new TaskPCL();
 	taskQueue = new LinkedList<Task>();
-        ApplicationContext app = ApplicationContext.getInstance();
-	app.addPropertyChangeListener(applicationPCL);
-	for(TaskService taskService : app.getTaskServices()) {
+	context.addPropertyChangeListener(applicationPCL);
+	for(TaskService taskService : context.getTaskServices()) {
 	    taskService.addPropertyChangeListener(taskServicePCL);
 	}
     }

@@ -46,7 +46,6 @@ import javax.swing.UIManager;
  */
 public class ApplicationContext extends AbstractBean {
     private static final Logger logger = Logger.getLogger(ApplicationContext.class.getName());
-    private static ApplicationContext applicationContext = null;
     private final List<TaskService> taskServices;
     private final List<TaskService> taskServicesReadOnly;
     private ResourceManager resourceManager;
@@ -61,32 +60,11 @@ public class ApplicationContext extends AbstractBean {
     private TaskMonitor taskMonitor = null;
     
 
-    /**
-     * ApplicationContext is a singleton that's lazily constructed
-     * when this method is called.  Typically it's constructed as a
-     * side effect of calling {@link Application#launch Application.launch()}.
-     * 
-     * @return the ApplicationContext singleton
-     * @see Application#launch
-     */
-    public static synchronized ApplicationContext getInstance() { 
-	if (applicationContext == null) {
-	    applicationContext = new ApplicationContext();
-	}
-	return applicationContext;
-    }
-
-    /**
-     * ApplicationContext is a singleton that's lazily constructed
-     * by {@code getInstance()}.  
-     * 
-     * @see #getInstance
-     */
     protected ApplicationContext() { 
-	resourceManager = new ResourceManager();
-	actionManager = new ActionManager();
-	localStorage = new LocalStorage();
-	sessionStorage = new SessionStorage();
+	resourceManager = new ResourceManager(this);
+	actionManager = new ActionManager(this);
+	localStorage = new LocalStorage(this);
+	sessionStorage = new SessionStorage(this);
 	taskServices = new CopyOnWriteArrayList<TaskService>();
 	taskServices.add(new TaskService("default"));
 	taskServicesReadOnly = Collections.unmodifiableList(taskServices);
@@ -118,20 +96,10 @@ public class ApplicationContext extends AbstractBean {
      * @see #getApplicationClass
      */
     public final synchronized void setApplicationClass(Class applicationClass) {
-	if (this.application != null) {
+        if (this.application != null) {
 	    throw new IllegalStateException("application has been launched");
 	}
 	this.applicationClass = applicationClass;
-    }
-
-    // TBD should be unified with the copy in ResourceManager.java?
-    List<Class> getApplicationClasses(Class appClass) {
-	List<Class> appClasses = new ArrayList<Class>();
-	Class stopClass = Application.class.getSuperclass();
-	for(Class c = appClass; !c.equals(stopClass); c = c.getSuperclass()) {
-	    appClasses.add(c);
-	}
-        return appClasses;
     }
 
     /**
@@ -500,7 +468,7 @@ public class ApplicationContext extends AbstractBean {
      */
     public final TaskMonitor getTaskMonitor() {
 	if (taskMonitor == null) {
-	    taskMonitor = new TaskMonitor();
+	    taskMonitor = new TaskMonitor(this);
 	}
 	return taskMonitor;
     }

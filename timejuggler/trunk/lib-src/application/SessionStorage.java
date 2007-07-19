@@ -49,11 +49,10 @@ import javax.swing.table.TableColumn;
  * <pre>
  * public class MyApplication extends Application {
  *     &#064;Override protected void shutdown() {
- *         ApplicationContext appContext = ApplicationContext.getInstance();
- *         appContext.getSessionStorage().<b>save</b>(mainFrame, "session.xml");
+ *         getContext().getSessionStorage().<b>save</b>(mainFrame, "session.xml");
  *     }
  *     &#064;Override protected void startup() {
- *         ApplicationContext appContext = ApplicationContext.getInstance();
+ *         ApplicationContext appContext = getContext();
  *         appContext.setVendorId("Sun");
  *         appContext.setApplicationId("SessionStorage1");
  *         // ... create the GUI rooted by JFrame mainFrame
@@ -75,8 +74,8 @@ import javax.swing.table.TableColumn;
  * {@code ApplicationContext} {@code vendorId} and {@code applicationId} 
  * properties to ensure that the correct 
  * {@link LocalStorage#getDirectory local directory} is selected on 
- * all platforms.  For example, on Windows, the full pathname 
- * for filename {@code "session.xml"} is:
+ * all platforms.  For example, on Windows XP, the full pathname 
+ * for filename {@code "session.xml"} is typically:
  * <pre>
  * ${userHome}\Application Data\${vendorId}\${applicationId}\session.xml
  * </pre>
@@ -97,6 +96,7 @@ import javax.swing.table.TableColumn;
 public class SessionStorage {
     private static Logger logger = Logger.getLogger(SessionStorage.class.getName());
     private final Map<Class, Property> propertyMap;
+    private final ApplicationContext context;
 
     /**
      * Constructs a SessionStorage object.  The following {@link
@@ -133,19 +133,30 @@ public class SessionStorage {
      * Applications typically would not create a {@code SessionStorage}
      * object directly, they'd use the shared ApplicationContext value:
      * <pre>
+     * ApplicationContext ctx = Application.getInstance(MyApplication.class).getContext();
+     * SessionStorage ss = ctx.getSesssionStorage();
      * </pre>
-     * SessionStorage ss = ApplicationContext.getInstance().getSesssionStorage();
      * 
+     * FIXME - @param javadoc
      * @see ApplicationContext#getSessionStorage
      * @see #getProperty(Class)
      * @see #getProperty(Component)
      */
-    public SessionStorage() {
+    protected SessionStorage(ApplicationContext context) {
+        if (context == null) {
+            throw new IllegalArgumentException("null context");
+        }
+        this.context = context;
 	propertyMap = new HashMap<Class, Property>();
 	propertyMap.put(Window.class, new WindowProperty());
 	propertyMap.put(JTabbedPane.class, new TabbedPaneProperty());
 	propertyMap.put(JSplitPane.class, new SplitPaneProperty());
 	propertyMap.put(JTable.class, new TableProperty());
+    }
+
+    // FIXME - documentation
+    protected final ApplicationContext getContext() {
+        return context;
     }
 
     private void checkSaveRestoreArgs(Component root, String fileName) {
@@ -304,7 +315,7 @@ public class SessionStorage {
 	checkSaveRestoreArgs(root, fileName);
 	Map<String, Object> stateMap = new HashMap<String, Object>();
 	saveTree(Collections.singletonList(root), stateMap);
-	LocalStorage lst = ApplicationContext.getInstance().getLocalStorage();
+	LocalStorage lst = getContext().getLocalStorage();
 	lst.save(stateMap, fileName);
     }
 
@@ -364,7 +375,7 @@ public class SessionStorage {
      */
     public void restore(Component root, String fileName) throws IOException {
 	checkSaveRestoreArgs(root, fileName);
-	LocalStorage lst = ApplicationContext.getInstance().getLocalStorage();
+	LocalStorage lst = getContext().getLocalStorage();
 	Map<String, Object> stateMap = (Map<String, Object>)(lst.load(fileName));
 	if (stateMap != null) {
 	    restoreTree(Collections.singletonList(root), stateMap);

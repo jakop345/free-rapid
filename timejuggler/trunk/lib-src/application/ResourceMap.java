@@ -11,11 +11,13 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Event;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -1466,6 +1468,10 @@ public class ResourceMap {
 	}
 	@Override
 	public Object parseString(String s, ResourceMap ignore) {
+            if (s.contains("shortcut")) {
+                int k = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+                s = s.replaceAll("shortcut", (k == Event.META_MASK) ? "meta" : "control");
+            }
 	    return KeyStroke.getKeyStroke(s);
 	}
     }

@@ -106,19 +106,19 @@ class MnemonicText {
 
     private static void configureAction(javax.swing.Action target, String text, int key, int index) {
         target.putValue(javax.swing.Action.NAME, text);
-        target.putValue(javax.swing.Action.MNEMONIC_KEY, key);
-        target.putValue(DISPLAYED_MNEMONIC_INDEX_KEY, index);
+        if (key != KeyEvent.VK_UNDEFINED) { target.putValue(javax.swing.Action.MNEMONIC_KEY, key); }
+        if (index != -1) { target.putValue(DISPLAYED_MNEMONIC_INDEX_KEY, index); }
     }
 
     private static void configureButton(AbstractButton target, String text, int key, int index) {
         target.setText(text);
-        target.setMnemonic(key);
-        target.setDisplayedMnemonicIndex(index);
+        if (key != KeyEvent.VK_UNDEFINED) { target.setMnemonic(key); }
+        if (index != -1) { target.setDisplayedMnemonicIndex(index); }
     }
 
     private static void configureLabel(JLabel target, String text, int key, int index) {
         target.setText(text);
-        target.setDisplayedMnemonic(key);
-        target.setDisplayedMnemonicIndex(index);
+        if (key != KeyEvent.VK_UNDEFINED) { target.setDisplayedMnemonic(key); }
+        if (index != -1) { target.setDisplayedMnemonicIndex(index); }
     }
 }

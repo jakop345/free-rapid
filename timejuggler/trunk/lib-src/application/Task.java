@@ -21,7 +21,8 @@ import org.jdesktop.swingworker.SwingWorker.StateValue;
  * A type of {@link SwingWorker} that represents an application
  * background task.  Tasks add descriptive properties that can 
  * be shown to the user, a new set of methods for customizing
- * task completion, and a {@code TaskListener} that
+ * task completion, support for blocking input to the GUI while 
+ * the Task is executing, and a {@code TaskListener} that
  * enables one to monitor the three key SwingWorker methods: {@code
  * doInBackground}, {@code process} and {@code done}.
  * 
@@ -47,7 +48,7 @@ import org.jdesktop.swingworker.SwingWorker.StateValue;
  * For example: given a Task called {@code MyTask} defined like this:
  * <pre> 
  * class MyTask extends Task<MyResultType, Void> { 
- *     public MyResultType doInBackground() { 
+ *     protected MyResultType doInBackground() { 
  *         message("startMessage", getPlannedSubtaskCount()); 
  *         // do the work ... if an error is encountered:
  *             message("errorMessage");
@@ -79,6 +80,32 @@ import org.jdesktop.swingworker.SwingWorker.StateValue;
  * </pre>
  * 
  * <p>
+ * Tasks can specify that input to the GUI is to be blocked while
+ * they're being executed.  The {@code inputBlocker} property specifies
+ * what part of the GUI is to be blocked and how that's accomplished.
+ * The  {@code inputBlocker} is set automatically when an {@code @Action} 
+ * method that returns a Task specifies a {@link BlockingScope} value
+ * for the {@code block} annotation parameter.  To customize the way 
+ * blocking is implemented you can define your own {@code Task.InputBlocker}.
+ * For example, assume that {@code busyGlassPane} is a component
+ * that consumes (and ignores) keyboard and mouse input:
+ * <pre>
+ * class MyInputBlocker extends InputBlocker {
+ *     BusyIndicatorInputBlocker(Task task) {
+ *         super(task, Task.BlockingScope.WINDOW, myGlassPane);
+ *     }
+ *     protected void block() {
+ *         myFrame.setGlassPane(myGlassPane);
+ *         busyGlassPane.setVisible(true);
+ *     }
+ *     protected void unblock() {
+ *       busyGlassPane.setVisible(false);
+ *     }
+ * }
+ * // ...
+ * myTask.setInputBlocker(new MyInputBlocker(myTask));
+ * </pre>
+ * <p>
  * All of the settable properties in this class are bound, i.e. a 
  * PropertyChangeEvent is fired when the value of the property changes.
  * As with the {@code SwingWorker} superclass, all 
@@ -98,7 +125,7 @@ import org.jdesktop.swingworker.SwingWorker.StateValue;
  */
 public abstract class Task<T, V> extends SwingWorker<T, V> {
     private static final Logger logger = Logger.getLogger(Task.class.getName());
-    public enum BlockingScope {NONE, ACTION, COMPONENT, ANCESTOR, WINDOW, APPLICATION};
+    private final Application application;
     private String resourcePrefix;
     private ResourceMap resourceMap;
     private List<TaskListener<T, V>> taskListeners;
@@ -112,6 +139,41 @@ public abstract class Task<T, V> extends SwingWorker<T, V> {
     private boolean userCanCancel = true;
     private boolean progressPropertyIsValid = false;
     private TaskService taskService = null;
+
+    /**
+     * Specifies to what extent the GUI should be blocked a Task 
+     * is executed by a TaskService.  Input blocking is carried
+     * out by the Task's {@link #getInputBlocker inputBlocker}.
+     * 
+     * @see Task.InputBlocker
+     * @see Action#block
+     */
+    public enum BlockingScope {
+       /** 
+        * Don't block the GUI while this Task is executing.
+        */
+       NONE, 
+       /** 
+        * Block an {@link ApplicationAction Action} while the 
+        * task is executing, typically by temporarily disabling it.
+        */
+       ACTION, 
+       /** 
+        * Block a component while the 
+        * task is executing, typically by temporarily disabling it.
+        */
+       COMPONENT, 
+       /** 
+        * Block a top level window while the task is executing,
+        * typically by showing a window-modal dialog.
+        */
+       WINDOW, 
+       /** 
+        * Block all of the application's top level windows, 
+        * typically by showing a application-modal dialog.
+        */
+       APPLICATION
+    };
 
     private void initTask(ResourceMap resourceMap, String prefix) {
         this.resourceMap = resourceMap;
@@ -136,8 +198,8 @@ public abstract class Task<T, V> extends SwingWorker<T, V> {
 	taskListeners = new CopyOnWriteArrayList<TaskListener<T, V>>();
     }
 
-    private ResourceMap defaultResourceMap() {
-        return ApplicationContext.getInstance().getResourceMap(getClass(), Task.class);
+    private ResourceMap defaultResourceMap(Application application) {
+        return application.getContext().getResourceMap(getClass(), Task.class);
     }
 
     /**
@@ -160,14 +222,16 @@ public abstract class Task<T, V> extends SwingWorker<T, V> {
      * @see #resourceName
      * @see ApplicationContext#getResourceMap
      */
-    public Task(ResourceMap resourceMap, String resourcePrefix) {
+    public Task(Application application, ResourceMap resourceMap, String resourcePrefix) {
+        this.application = application;
         initTask(resourceMap, resourcePrefix);
     }
 
     /**
      * Construct a {@code Task} with the specified resource name
      * prefix, whose ResourceMap is the value of
-     * <code>ApplicationContext.getInstance().getResourceMap(this.getClass(),
+     * <code>ApplicationContext
+.getInstance().getResourceMap(this.getClass(),
      * Task.class)</code>.  The {@code resourcePrefix} is used to construct
      * the resource names for the intial values of the 
      *  {@code title}, {@code description}, and {@code message} Task properties
@@ -181,8 +245,9 @@ public abstract class Task<T, V> extends SwingWorker<T, V> {
      * @see #resourceName
      * @see ApplicationContext#getResourceMap
      */
-    public Task(String resourcePrefix) {
-        initTask(defaultResourceMap(), resourcePrefix);
+    public Task(Application application, String resourcePrefix) {
+        this.application = application;
+        initTask(defaultResourceMap(application), resourcePrefix);
     }
 
     /**
@@ -191,10 +256,19 @@ public abstract class Task<T, V> extends SwingWorker<T, V> {
      * <code>ApplicationContext.getInstance().getResourceMap(this.getClass(),
      * Task.class)</code>.
      */
-    public Task() {
-        initTask(defaultResourceMap(), "");
+    public Task(Application application) {
+        this.application = application;
+        initTask(defaultResourceMap(application), "");
     }
 
+
+    public final Application getApplication() {
+        return application;
+    }
+
+    public final ApplicationContext getContext() {
+        return getApplication().getContext();
+    }
 
     /**
      * Returns the TaskService that this Task has been submitted to,
@@ -695,7 +769,8 @@ public abstract class Task<T, V> extends SwingWorker<T, V> {
      * its {@code get} method returns a value.  Tasks that compute
      * a value should override this method.
      * <p>
-     * Does nothing by default.
+     * <p>
+     * This method runs on the EDT.  It does nothing by default.
      *
      * @param result the value returned by the {@code get} method
      * @see #done
@@ -742,7 +817,7 @@ public abstract class Task<T, V> extends SwingWorker<T, V> {
      * can override this method to cleanup before the {@code done}
      * method returns.
      * <p>
-     *  Does nothing by default.
+     * This method runs on the EDT.  It does nothing by default.
      *
      * @see #done
      * @see #get
@@ -974,22 +1049,22 @@ public abstract class Task<T, V> extends SwingWorker<T, V> {
      * a Task begins executing when it's {@link TaskService#execute submitted}
      * to a {@code TaskService}, and it finishes executing after
      * the Task's completion methods have been called.
-     * <p>
-     * The InputBlocker's {@code BlockingScope} and the blocking
-     * {@code target} object define what part of the GUI's input 
-     * will be blocked:
+     * <p> 
+     * The InputBlocker's {@link Task.BlockingScope
+     * BlockingScope} and the blocking {@code target} object define
+     * what part of the GUI's input will be blocked:
      * <dl>
-     * <dt><code>NONE</code><dt>Don't block input.  The blocking
-     * target is ignored in this case.
-     * <dt><code>ACTION</code><dt>Disable the target 
-     * {@link javax.swing.Action Action} while the Task is executing.  
-     * <dt><code>COMPONENT</code><dt>Disable the target 
-     * {@link java.awt.Component} Component while the Task is executing.  
-     * <dt><code>WINDOW</code><dt> Block the Window ancestor of the
-     * target Component while the Task is executing.
-     * <dt><code>Application</code><dt> Block the entire Application
+     * <dt><b><code>Task.BlockingScope.NONE</code></b><dt>Don't block input.  The blocking
+     * target is ignored in this case.<p></p>
+     * <dt><b><code>Task.BlockingScope.ACTION</code></b><dt>Disable the target 
+     * {@link javax.swing.Action Action} while the Task is executing.<p></p>
+     * <dt><b><code>Task.BlockingScope.COMPONENT</code></b><dt>Disable the target 
+     * {@link java.awt.Component} Component while the Task is executing. <p></p>
+     * <dt><b><code>Task.BlockingScope.WINDOW</code></b><dt> Block the Window ancestor of the
+     * target Component while the Task is executing.<p></p>
+     * <dt><b><code>task.BlockingScope.Application</code></b><dt> Block the entire Application
      * while the Task is executing.  The blocking target is ignored
-     * in this case.
+     * in this case.<p></p>
      * </dl>
      * <p>
      * Input blocking begins when the {@code block} method is called and
@@ -999,6 +1074,7 @@ public abstract class Task<T, V> extends SwingWorker<T, V> {
      * @see Task#getInputBlocker
      * @see Task#setInputBlocker
      * @see TaskService
+     * @see Action
      */
     public static abstract class InputBlocker extends AbstractBean {
         private final Task task;
@@ -1007,7 +1083,7 @@ public abstract class Task<T, V> extends SwingWorker<T, V> {
 
         /**
          * Construct an InputBlocker with three immutable properties.  If
-         * the {@code task} is null or if the Task has already been 
+         * the Task is null or if the Task has already been 
          * executed by a TaskService, then an exception is thrown.
          * 
          * @param task block input while this Task is executing
@@ -1015,7 +1091,7 @@ public abstract class Task<T, V> extends SwingWorker<T, V> {
          * @param target the GUI element that will be blocked
          * @see TaskService#execute
          */
-        InputBlocker(Task task, BlockingScope scope, Object target) {
+        public InputBlocker(Task task, BlockingScope scope, Object target) {
             if (task == null) {
                 throw new IllegalArgumentException("null task");
             }

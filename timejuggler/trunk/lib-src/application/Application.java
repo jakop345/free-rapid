@@ -10,16 +10,21 @@ import java.awt.ActiveEvent;
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.PaintEvent;
 import java.lang.reflect.Constructor;
 import java.util.EventListener;
 import java.util.EventObject;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JRootPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
@@ -123,7 +128,9 @@ import javax.swing.UIManager;
 
 public abstract class Application extends AbstractBean {
     private static final Logger logger = Logger.getLogger(Application.class.getName());
+    private static Application application = null;
     private final List<ExitListener> exitListeners;
+    private final ApplicationContext context;
 
     /**
      * Not to be called directly, see {@link #launch launch}.
@@ -136,6 +143,7 @@ public abstract class Application extends AbstractBean {
      */
     protected Application() {
 	exitListeners = new CopyOnWriteArrayList<ExitListener>();
+        context = new ApplicationContext();
     }
 
     /**
@@ -161,27 +169,10 @@ public abstract class Application extends AbstractBean {
 	Runnable doCreateAndShowGUI = new Runnable() {
 	    public void run() {
 		try {
-		    ApplicationContext ac = ApplicationContext.getInstance(); 
-		    ac.setApplicationClass(applicationClass);
-		    initBeforeApplicationConstructed();
-                    /* The following complications, relative to just calling 
-                     * applicationClass.newInstance(), allow a privileged
-                     * app to have a private static inner Application subclass.
-                     */
-                    Constructor<T> ctor = applicationClass.getDeclaredConstructor();
-                    if (!ctor.isAccessible()) {
-                        try {
-                            ctor.setAccessible(true);
-                        }
-                        catch (SecurityException ignore) {
-                            // newInstance() call will throw an IllegalAccessException
-                        }
-                    }
-		    Application application = ctor.newInstance();
-		    ac.setApplication(application);
+		    application = create(applicationClass);
                     application.initialize(args);
 		    application.startup();
-		    application.new DoWaitForEmptyEventQ().execute();
+                    application.waitForReady();
 		}
 		catch (Exception e) {
                     String msg = String.format("Application %s failed to launch", applicationClass);
@@ -193,11 +184,8 @@ public abstract class Application extends AbstractBean {
 	SwingUtilities.invokeLater(doCreateAndShowGUI);
     }
 
-    /* Initializations that should occur before the Application has
-     * been constructed or class-loaded, but after the
-     * ApplicationContext singleton has been constructed.  This method
-     * also assumes that the ApplicationContext applicationClass
-     * property has been set.
+    /* Initializes the ApplicationContext applicationClass and application
+     * properties.  
      * 
      * Note that, as of Java SE 5, referring to a class literal
      * doesn't force the class to be loaded.  More info:
@@ -205,7 +193,8 @@ public abstract class Application extends AbstractBean {
      * It's important to perform these initializations early, so that
      * Application static blocks/initializers happen afterwards.
      */
-    private static void initBeforeApplicationConstructed() {
+    static <T extends Application> T create(Class<T> applicationClass) throws Exception {
+
 	/* A common mistake for privileged applications that make
 	 * network requests (and aren't applets or web started) is to
 	 * not configure the http.proxyHost/Port system properties.
@@ -218,11 +207,46 @@ public abstract class Application extends AbstractBean {
 	    // Unsigned apps can't set this property. 
 	}
 
+        /* Construct the Application object.  The following
+         * complications, relative to just calling
+         * applicationClass.newInstance(), allow a privileged app to
+         * have a private static inner Application subclass.
+         */
+        Constructor<T> ctor = applicationClass.getDeclaredConstructor();
+        if (!ctor.isAccessible()) {
+            try {
+                ctor.setAccessible(true);
+            }
+            catch (SecurityException ignore) {
+                // ctor.newInstance() will throw an IllegalAccessException
+            }
+        }
+        T application = ctor.newInstance();
+
+        /* Initialize the ApplicationContext application properties
+         */
+        ApplicationContext ctx = application.getContext();
+        ctx.setApplicationClass(applicationClass);
+        ctx.setApplication(application);
+
 	/* Load the application resource map, notably the 
 	 * Application.* properties.
 	 */
-	ApplicationContext ac = ApplicationContext.getInstance();
-	ResourceMap appResourceMap = ac.getResourceMap();
+	ResourceMap appResourceMap = ctx.getResourceMap();
+
+        /* Define a default value for the platform resource, 
+         * either "osx" or "default".
+         */
+        String platform = "default";
+        try {
+            String osName = System.getProperty("os.name");
+            if ((osName != null) && osName.toLowerCase().startsWith("mac os x")) {
+                platform = "osx";
+            }
+        }
+        catch (SecurityException ignore) {
+        }
+        appResourceMap.putResource("platform", platform);
 
 	/* Initialize the UIManager lookAndFeel property with the
 	 * Application.lookAndFeel resource.  If the the resource
@@ -244,6 +268,15 @@ public abstract class Application extends AbstractBean {
 	    String s = "Couldn't set LookandFeel " + key + " = \"" + lnfResource + "\"";
 	    logger.log(Level.WARNING, s, e);
 	}
+
+        return application;
+    }
+
+
+    /* Call the ready method when the eventQ is quiet.
+     */
+    void waitForReady() {
+        new DoWaitForEmptyEventQ().execute();
     }
 
     /**
@@ -363,6 +396,7 @@ public abstract class Application extends AbstractBean {
      * something, now that the GUI is "ready".
      */
     private class DoWaitForEmptyEventQ extends Task<Void, Void> {
+        DoWaitForEmptyEventQ() { super(Application.this); }
 	@Override protected Void doInBackground() {
 	    waitForEmptyEventQ();
 	    return null;
@@ -512,5 +546,36 @@ public abstract class Application extends AbstractBean {
      */
     @Action public void quit(ActionEvent e) {
 	exit(e);
+    }
+
+    /* Prototype support for the Application singleton */
+
+    public final ApplicationContext getContext() {
+        return context;
+    }
+
+    /**
+     * The {@code Application} singleton, or null if {@code launch} hasn't
+     * been called yet.
+     * 
+     * @return the launched Application singleton.
+     * @see Application#launch
+     */
+    public static synchronized <T extends Application> T getInstance(Class<T> applicationType) {
+	return applicationType.cast(application);
+    }
+
+    /* Prototype support for the View type */
+
+    public void show(View view) {
+        Window window = (Window)view.getRootPane().getParent();
+        if (window != null) {
+            window.pack();
+            window.setVisible(true);
+        }
+    }
+
+    public void hide(View view) {
+        view.getRootPane().getParent().setVisible(false);
     }
 }

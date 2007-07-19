@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JRootPane;
 import javax.swing.JWindow;
 import javax.swing.RootPaneContainer;
 
@@ -92,7 +93,6 @@ import javax.swing.RootPaneContainer;
 public abstract class SingleFrameApplication extends Application {
     private static final Logger logger = Logger.getLogger(SingleFrameApplication.class.getName());
     private ResourceMap appResources = null;
-    private JFrame mainFrame = null;
 
     /**
      * Return the JFrame used to show this application.  
@@ -120,13 +120,7 @@ public abstract class SingleFrameApplication extends Application {
      * @see JFrame#addWindowListener
      */
     public final JFrame getMainFrame() {
-	if (mainFrame == null) {
-	    ApplicationContext ac = ApplicationContext.getInstance();
-	    String title = ac.getResourceMap().getString("Application.title");
-	    mainFrame = new JFrame(title);
-	    mainFrame.setName("mainFrame");
-	}
-	return mainFrame;
+        return getMainView().getFrame();
     }
 
     /**
@@ -150,14 +144,7 @@ public abstract class SingleFrameApplication extends Application {
      * @see #getMainFrame
      */
     protected final void setMainFrame(JFrame mainFrame) {
-	if (mainFrame == null) {
-	    throw new IllegalArgumentException("null JFrame");
-	}
-	if (this.mainFrame != null) {
-	    throw new IllegalStateException("mainFrame already set");
-	}
-	this.mainFrame = mainFrame;
-	firePropertyChange("mainFrame", null, this.mainFrame);
+        getMainView().setFrame(mainFrame);
     }
 
     private String sessionFilename(Window window) {
@@ -190,8 +177,7 @@ public abstract class SingleFrameApplication extends Application {
      * @see #show(JDialog)
      */
     protected void configureWindow(Window root) {
-	ApplicationContext ac = ApplicationContext.getInstance();
-	ac.getResourceMap().injectComponents(root);
+	getContext().getResourceMap().injectComponents(root);
     }
 
     private void initRootPaneContainer(RootPaneContainer c) {
@@ -208,6 +194,7 @@ public abstract class SingleFrameApplication extends Application {
 	    configureWindow((Window)root);
 	}
 	// If this is the mainFrame, then close == exit
+        JFrame mainFrame = getMainFrame();
 	if (c == mainFrame) {
 	    mainFrame.addWindowListener(new MainFrameListener());
 	    mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -230,8 +217,7 @@ public abstract class SingleFrameApplication extends Application {
 	    String filename = sessionFilename((Window)root);
 	    if (filename != null) {
 		try {
-		    ApplicationContext ac = ApplicationContext.getInstance();
-		    ac.getSessionStorage().restore(root, filename);
+		    getContext().getSessionStorage().restore(root, filename);
 		}
 		catch (Exception e) {
 		    logger.log(Level.WARNING, "couldn't restore sesssion", e);
@@ -326,9 +312,8 @@ public abstract class SingleFrameApplication extends Application {
     private void saveSession(Window window) {
 	String filename = sessionFilename(window);
 	if (filename != null) {
-	    ApplicationContext appContext = ApplicationContext.getInstance();
 	    try {
-		appContext.getSessionStorage().save(window, filename);
+		getContext().getSessionStorage().save(window, filename);
 	    }
 	    catch (IOException e) {
 		logger.log(Level.WARNING, "couldn't save sesssion", e);
@@ -389,7 +374,7 @@ public abstract class SingleFrameApplication extends Application {
      * shutdown need to remember call {@code super.shutdown()}.
      */
     @Override protected void shutdown() {
-	saveSession(mainFrame);
+	saveSession(getMainFrame());
 	for(Window window : getVisibleSecondaryWindows()) {
 	    saveSession(window);
 	}
@@ -421,4 +406,23 @@ public abstract class SingleFrameApplication extends Application {
 	    }
 	}
     }
+
+
+    /* Prototype support for the View type */
+    
+    private FrameView mainView = null;
+
+    public FrameView getMainView() {
+        if (mainView == null) {
+            mainView = new FrameView(this);
+        }
+        return mainView;
+    }
+
+    public void show(View view) {
+        RootPaneContainer c = (RootPaneContainer)view.getRootPane().getParent();
+        initRootPaneContainer(c);
+	((Window)c).setVisible(true);
+    }
+
 }

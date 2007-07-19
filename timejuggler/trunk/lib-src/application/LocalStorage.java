@@ -47,10 +47,23 @@ import javax.jnlp.UnavailableServiceException;
  */
 public class LocalStorage extends AbstractBean {
     private static Logger logger = Logger.getLogger(LocalStorage.class.getName());
+    private final ApplicationContext context;    
     private long storageLimit = -1L;
     private LocalIO localIO = null;
     private final File unspecifiedFile = new File("unspecified");
     private File directory = unspecifiedFile;
+
+    protected LocalStorage(ApplicationContext context) {
+        if (context == null) {
+            throw new IllegalArgumentException("null context");
+        }
+        this.context = context;
+    }
+
+    // FIXME - documentation
+    protected final ApplicationContext getContext() {
+        return context;
+    }
 
     private void checkFileName(String fileName) {
 	if (fileName == null) {
@@ -161,8 +174,7 @@ public class LocalStorage extends AbstractBean {
     }
 
     private String getId(String key, String def) {
-	ApplicationContext ac = ApplicationContext.getInstance();
-	ResourceMap appResourceMap = ac.getResourceMap();
+	ResourceMap appResourceMap = getContext().getResourceMap();
 	String id = appResourceMap.getString(key);
 	if (id == null) {
 	    logger.log(Level.WARNING, "unspecified resource "+key+" using "+def);
@@ -175,8 +187,7 @@ public class LocalStorage extends AbstractBean {
 	return id;
     }
     private String getApplicationId() { 
-	ApplicationContext ac = ApplicationContext.getInstance();
-	return getId("Application.id", ac.getApplicationClass().getSimpleName()); 
+	return getId("Application.id", getContext().getApplicationClass().getSimpleName()); 
     }
     private String getVendorId() { 
 	return getId("Application.vendorId", "UnknownApplicationVendor"); 

@@ -22,7 +22,7 @@ import java.util.logging.Logger;
  * property of the {@code ApplicationContext} and most applications
  * look up resources relative to it, like this:
  * <pre>
- * ApplicationContext appContext = ApplicationContext.getInstance();
+ * ApplicationContext appContext = Application.getInstance().getContext();
  * ResourceMap resourceMap = appContext.getResourceMap(MyClass.class);
  * String msg = resourceMap.getString("msg");
  * Icon icon = resourceMap.getIcon("icon");
@@ -31,8 +31,7 @@ import java.util.logging.Logger;
  * {@link ApplicationContext#getResourceMap(Class) ApplicationContext.getResourceMap()}
  * just delegates to its {@code ResourceManager}.  The {@code ResourceMap}
  * in this example contains resources from the ResourceBundle named
- * {@code MyClass}, its {@link ResourceMap#getParent parent} contains
- * resources shared by {@code MyClass's} package, and the rest of the 
+ * {@code MyClass}, and the rest of the 
  * chain contains resources shared by the entire application.
  * <p>
  * Resources for a class are defined by an eponymous {@code ResourceBundle}
@@ -56,6 +55,7 @@ import java.util.logging.Logger;
 public class ResourceManager extends AbstractBean {
     private static final Logger logger = Logger.getLogger(ResourceManager.class.getName());
     private final Map<String, ResourceMap> resourceMaps;
+    private final ApplicationContext context;
     private List<String> applicationBundleNames = null;
     private ResourceMap appResourceMap = null;
 
@@ -64,19 +64,29 @@ public class ResourceManager extends AbstractBean {
      * will not create a ResourceManager directly, they'll retrieve
      * the shared one from the {@code ApplicationContext} with:
      * <pre>
-     * ApplicationContext.getInstance().getResourceManager()
+     * Application.getInstance().getContext().getResourceManager()
      * </pre>
      * Or just look up {@code ResourceMaps} with the ApplicationContext
      * convenience method:
      * <pre>
-     * ApplicationContext.getInstance().getResourceMap(MyClass.class)
+     * Application.getInstance().getContext().getResourceMap(MyClass.class)
      * </pre>
      * 
+     * FIXME - @param javadoc
      * @see ApplicationContext#getResourceManager
      * @see ApplicationContext#getResourceMap
      */
-    protected ResourceManager() {
+    protected ResourceManager(ApplicationContext context) {
+        if (context == null) {
+            throw new IllegalArgumentException("null context");
+        }
+        this.context = context;
 	resourceMaps = new ConcurrentHashMap<String, ResourceMap>();
+    }
+
+    // FIXME - documentation
+    protected final ApplicationContext getContext() {
+        return context;
     }
 
     /* Returns a read-only list of the ResourceBundle names for all of
@@ -139,7 +149,7 @@ public class ResourceManager extends AbstractBean {
     private ResourceMap getApplicationResourceMap() {
 	if (appResourceMap == null) {
             List<String> appBundleNames = getApplicationBundleNames();
-	    Class appClass = ApplicationContext.getInstance().getApplicationClass();
+	    Class appClass = getContext().getApplicationClass();
 	    if (appClass == null) {
 		logger.warning("getApplicationResourceMap(): no Application class");
 		appClass = Application.class;
@@ -314,7 +324,7 @@ public class ResourceManager extends AbstractBean {
 	 * we just return a placeholder based on Application.class.
 	 */
 	if (applicationBundleNames == null) {
-	    Class appClass = ApplicationContext.getInstance().getApplicationClass();
+	    Class appClass = getContext().getApplicationClass();
 	    if (appClass == null) {
 		return allBundleNames(Application.class, Application.class); // placeholder
 	    }
@@ -424,5 +434,47 @@ public class ResourceManager extends AbstractBean {
      */
     protected ResourceMap createResourceMap(ClassLoader classLoader, ResourceMap parent, List<String> bundleNames) {
 	return new ResourceMap(parent, classLoader, bundleNames);
+    }
+
+    /**
+     * The value of the special Application ResourceMap resource
+     * named "platform".  By default the value of this resource
+     * is "osx" if the underlying operating environment is Apple
+     * OSX or "default".
+     *
+     * @return the value of the platform resource
+     * @see #setPlatform
+     */
+    public String getPlatform() {
+        return getResourceMap().getString("platform");
+    }
+
+    /**
+     * Defines the value of the special Application ResourceMap resource
+     * named "platform".  This resource can be used to define platform
+     * specific resources.  For example:
+     * <pre>
+     * myLabel.text.osx = A value that's appropriate for OSX
+     * myLabel.text.default = A value for other platforms
+     * myLabel.text = myLabel.text.${platform}
+     * </pre>
+     * <p> 
+     * By default the value of this resource is "osx" if the
+     * underlying operating environment is Apple OSX or "default".
+     * To distinguish other platforms one can reset this property
+     * based on the value of the {@code "os.name"} system property.
+     * <p>
+     * This method should be called as early as possible, typically
+     * in the Application {@link Application#initialize initialize}
+     * method.  
+     * 
+     * @see #getPlatform
+     * @see System#getProperty
+     */
+    public void setPlatform(String platform) {
+        if (platform == null) {
+            throw new IllegalArgumentException("null platform");
+        }
+        getResourceMap().putResource("platform", platform);
     }
 }

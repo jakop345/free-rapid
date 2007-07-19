@@ -113,12 +113,14 @@ public class ApplicationAction extends AbstractAction {
     private static final Logger logger = Logger.getLogger(ApplicationAction.class.getName());
     private final ApplicationActionMap appAM;
     private final ResourceMap resourceMap;
-    private final String actionName;       // see getName()
-    private final Method actionMethod;     // The @Action method
-    private final String enabledProperty;  // names an appAM.getActionsClass() property
-    private final Method isEnabledMethod;  // Method object for is/getEnabledProperty
-    private final Method setEnabledMethod; // Method object for setEnabledProperty
-    private final String selectedProperty; // TBD...
+    private final String actionName;        // see getName()
+    private final Method actionMethod;      // The @Action method
+    private final String enabledProperty;   // names a bound appAM.getActionsClass() property
+    private final Method isEnabledMethod;   // Method object for is/getEnabledProperty
+    private final Method setEnabledMethod;  // Method object for setEnabledProperty
+    private final String selectedProperty;  // names a bound appAM.getActionsClass() property
+    private final Method isSelectedMethod;  // Method object for is/getSelectedProperty
+    private final Method setSelectedMethod; // Method object for setSelectedProperty
     private final Task.BlockingScope block;
     private javax.swing.Action proxy = null;
     private Object proxySource = null;
@@ -207,7 +209,6 @@ public class ApplicationAction extends AbstractAction {
 	if (baseName == null) {
 	    throw new IllegalArgumentException("null baseName");
 	}
-
 	this.appAM = appAM;
 	this.resourceMap = resourceMap;
 	this.actionName = baseName;
@@ -219,13 +220,11 @@ public class ApplicationAction extends AbstractAction {
 	/* If enabledProperty is specified, lookup up the is/set methods and
 	 * verify that the former exists.
 	 */
-	if (this.enabledProperty != null) {
+	if (enabledProperty != null) {
 	    setEnabledMethod = propertySetMethod(enabledProperty, boolean.class);
 	    isEnabledMethod = propertyGetMethod(enabledProperty);
 	    if (isEnabledMethod == null) {
-		String acn = appAM.getActionsClass().getName();
-		String eps = "\"is/get" + enabledProperty + "\"";
-		throw new IllegalArgumentException("no property named " + eps + " in " + acn);
+                throw newNoSuchPropertyException(enabledProperty);
 	    }
 	}
 	else {
@@ -233,7 +232,21 @@ public class ApplicationAction extends AbstractAction {
 	    this.setEnabledMethod = null;
 	}
 
-	// TBD selectedProperty
+	/* If selectedProperty is specified, lookup up the is/set methods and
+	 * verify that the former exists.
+	 */
+	if (selectedProperty != null) {
+	    setSelectedMethod = propertySetMethod(selectedProperty, boolean.class);
+	    isSelectedMethod = propertyGetMethod(selectedProperty);
+	    if (isSelectedMethod == null) {
+                throw newNoSuchPropertyException(selectedProperty);
+	    }
+            super.putValue(SELECTED_KEY, Boolean.FALSE);
+	}
+	else {
+	    this.isSelectedMethod = null;
+	    this.setSelectedMethod = null;
+	}
 
 	if (resourceMap != null) {
 	    initActionProperties(resourceMap, baseName);
@@ -247,10 +260,16 @@ public class ApplicationAction extends AbstractAction {
 	this(appAM, resourceMap, actionName, null, null, null, Task.BlockingScope.NONE);
     }
 
+    private IllegalArgumentException newNoSuchPropertyException(String propertyName) {
+        String actionsClassName = appAM.getActionsClass().getName();
+        String msg = String.format("no property named %s in %s", propertyName, actionsClassName);
+        return new IllegalArgumentException(msg);
+    }
 
     /**
-     * The name of the enabledProperty whose value is returned
-     * by {@link #isEnabled isEnabled}, or null.
+     * The name of the {@code @Action} enabledProperty 
+     * whose value is returned by {@link #isEnabled isEnabled}, 
+     * or null.
      * 
      * @return the name of the enabledProperty or null.
      * @see #isEnabled
@@ -260,9 +279,15 @@ public class ApplicationAction extends AbstractAction {
     }
     
     /**
-     * TBD
+     * The name of the {@code @Action} selectedProperty whose value is
+     * returned by {@link #isSelected isSelected}, or null.
+     * 
+     * @return the name of the selectedProperty or null.
+     * @see #isSelected
      */
-    String getSelectedProperty() { return selectedProperty; }
+    String getSelectedProperty() { 
+        return selectedProperty; 
+    }
 
 
     /**
@@ -315,7 +340,7 @@ public class ApplicationAction extends AbstractAction {
 	}
 	else if (oldProxy != null) {
 	    setEnabled(false);
-	    // TBD SELECTED
+            setSelected(false);
 	}
 	firePropertyChange("proxy", oldProxy, this.proxy);
     }
@@ -359,7 +384,8 @@ public class ApplicationAction extends AbstractAction {
 	javax.swing.Action proxy = getProxy();
 	if (proxy != null) {
 	    setEnabled(proxy.isEnabled());
-	    // TBD SELECTED
+            Object s = proxy.getValue(SELECTED_KEY);
+	    setSelected((s instanceof Boolean) && ((Boolean)s).booleanValue());
 	    maybePutDescriptionValue(javax.swing.Action.SHORT_DESCRIPTION, proxy);
 	    maybePutDescriptionValue(javax.swing.Action.LONG_DESCRIPTION, proxy);
 	}
@@ -373,8 +399,9 @@ public class ApplicationAction extends AbstractAction {
     private class ProxyPCL implements PropertyChangeListener {
 	public void propertyChange(PropertyChangeEvent e) {
 	    String propertyName = e.getPropertyName();
-	    if ((propertyName == null) || "enabled".equals(propertyName) ||
-		// TBD SELECTED
+	    if ((propertyName == null) || 
+                "enabled".equals(propertyName) ||
+		"selected".equals(propertyName) ||
 		javax.swing.Action.SHORT_DESCRIPTION.equals(propertyName) ||
 		javax.swing.Action.LONG_DESCRIPTION.equals(propertyName)) {
 		updateProxyProperties();
@@ -576,7 +603,10 @@ public class ApplicationAction extends AbstractAction {
 	    argument = resourceMap;
 	}
 	else if (pType == ApplicationContext.class) {
-	    argument = ApplicationContext.getInstance();
+	    argument = appAM.getContext();
+	}
+	else if (pType == Application.class) {
+	    argument = appAM.getContext().getApplication();
 	}
 	else {
 	    Exception e = new IllegalArgumentException("unrecognized @Action method parameter");
@@ -622,6 +652,7 @@ public class ApplicationAction extends AbstractAction {
          * BlockingDialog.optionPane.icon
          * BlockingDialog.optionPane.message
          * BlockingDialog.cancelButton.text
+         * BlockingDialog.cancelButton.icon
          */
         private JDialog createBlockingDialog() {
             JOptionPane optionPane = new JOptionPane();
@@ -652,7 +683,7 @@ public class ApplicationAction extends AbstractAction {
         private void showBlockingDialog(boolean f) {
             if (f) {
                 if (modalDialog != null) {
-                    String msg = String.format("unexepected InputBlocker state [%s] %s", f, this);
+                    String msg = String.format("unexpected InputBlocker state [%s] %s", f, this);
                     logger.warning(msg);
                     modalDialog.dispose();
                 }
@@ -670,13 +701,13 @@ public class ApplicationAction extends AbstractAction {
                     modalDialog = null;
                 }
                 else {
-                    String msg = String.format("unexepected InputBlocker state [%s] %s", f, this);
+                    String msg = String.format("unexpected InputBlocker state [%s] %s", f, this);
                     logger.warning(msg);
                 }
             }
         }
 
-        protected void block() {
+        @Override protected void block() {
             switch (getScope()) {
             case ACTION:      
                 setActionTargetBlocked(true); 
@@ -691,7 +722,7 @@ public class ApplicationAction extends AbstractAction {
             }
         }
 
-        protected void unblock() {
+        @Override protected void unblock() {
             switch (getScope()) {
             case ACTION:      
                 setActionTargetBlocked(false); 
@@ -751,24 +782,18 @@ public class ApplicationAction extends AbstractAction {
             if (task.getInputBlocker() == null) {
                 task.setInputBlocker(createInputBlocker(task, actionEvent));
             }
-	    ApplicationContext ctx = ApplicationContext.getInstance();
+	    ApplicationContext ctx = appAM.getContext();
 	    ctx.getTaskService().execute(task);
 	}
     }
 
     /**
      * This method implements this <tt>Action's</tt> behavior.  
-     * 
      * <p>
      * If there's a proxy Action then call its actionPerformed
      * method.  Otherwise, call the &#064;Action method with parameter
      * values provided by {@code getActionArgument()}.  If anything goes wrong
      * call {@code actionFailed()}.  
-     * 
-     * <p>
-     * [TBD explain the &#064;Action block=XXX parameter in more detail,
-     * likewise for exception handling.
-     * 
      * 
      * @param actionEvent @{inheritDoc}
      * @see #setProxy
@@ -787,21 +812,18 @@ public class ApplicationAction extends AbstractAction {
     }
 
     /**
-     * If the proxy action is null and <tt>enabledProperty</tt> was
-     * specified, then return the value of the enabled property.
-     * Otherwise return the value of this Action's enabled property by
-     * invoking the corresponding <tt>is/get</tt> method on
-     * <tt>appAM.getActionsObject()</tt>.
-     * <p>
-     * TBD: explain exception handling.
+     * If the proxy action is null and {@code enabledProperty} was
+     * specified, then return the value of the enabled property's
+     * is/get method applied to our ApplicationActionMap's 
+     * {@code actionsObject}.
+     * Otherwise return the value of this Action's enabled property.
      * 
      * @return {@inheritDoc}
      * @see #setProxy
      * @see #setEnabled
      * @see ApplicationActionMap#getActionsObject
      */
-    @Override
-    public boolean isEnabled() {
+    @Override  public boolean isEnabled() {
 	if ((getProxy() != null) || (isEnabledMethod == null)) {
 	    return super.isEnabled();
 	}
@@ -811,28 +833,24 @@ public class ApplicationAction extends AbstractAction {
 		return (Boolean)b;
 	    }
 	    catch (Exception e) {
-		e.printStackTrace(); // TBD NO NO NO
-		return super.isEnabled();
+                throw newInvokeError(isEnabledMethod, e);
 	    }
 	}
     }
 
     /**
-     * If the proxy action is null and <tt>enabledProperty</tt> was
+     * If the proxy action is null and {@code enabledProperty} was
      * specified, then set the value of the enabled property by
-     * invoking the corresponding <tt>set</tt> method on
-     * <tt>appAM.getActionsObject()</tt>.  Otherwise return the value
-     * of this Action's enabled property.  
-     * <p>
-     * TBD: explain exception handling
+     * invoking the corresponding {@code set} method on our
+     * ApplicationActionMap's {@code actionsObject}.
+     * Otherwise set the value of this Action's enabled property.  
      * 
      * @param enabled {@inheritDoc}
      * @see #setProxy
      * @see #isEnabled
      * @see ApplicationActionMap#getActionsObject
      */
-    @Override
-    public void setEnabled(boolean enabled) {
+    @Override public void setEnabled(boolean enabled) {
 	if ((getProxy() != null) || (setEnabledMethod == null)) {
 	    super.setEnabled(enabled);
 	}
@@ -841,19 +859,106 @@ public class ApplicationAction extends AbstractAction {
 		setEnabledMethod.invoke(appAM.getActionsObject(), enabled);
 	    }
 	    catch (Exception e) {
-		e.printStackTrace();  // NO NO NO
-		super.setEnabled(enabled);
+                throw newInvokeError(setEnabledMethod, e, enabled);
 	    }
 	}
     }
 
-    /* Forward the controller's PropertyChangeEvent e to this
+    /**
+     * If the proxy action is null and {@code selectedProperty} was
+     * specified, then return the value of the selected property's
+     * is/get method applied to our ApplicationActionMap's {@code actionsObject}.
+     * Otherwise return the value of this Action's enabled property.
+     * 
+     * @return true if this Action's JToggleButton is selected
+     * @see #setProxy
+     * @see #setSelected
+     * @see ApplicationActionMap#getActionsObject
+     */
+    public boolean isSelected() {
+	if ((getProxy() != null) || (isSelectedMethod == null)) {
+            Object v = getValue(SELECTED_KEY);
+            return (v instanceof Boolean) ? ((Boolean)v).booleanValue() : false;
+	}
+	else {
+	    try {
+		Object b = isSelectedMethod.invoke(appAM.getActionsObject());
+		return (Boolean)b;
+	    }
+	    catch (Exception e) {
+                throw newInvokeError(isSelectedMethod, e);
+	    }
+	}
+    }
+
+    /**
+     * If the proxy action is null and {@code selectedProperty} was
+     * specified, then set the value of the selected property by
+     * invoking the corresponding {@code set} method on our
+     * ApplicationActionMap's {@code actionsObject}.
+     * Otherwise set the value of this Action's selected property.  
+     * 
+     * @param selected this Action's JToggleButton's value
+     * @see #setProxy
+     * @see #isSelected
+     * @see ApplicationActionMap#getActionsObject
+     */
+    public void setSelected(boolean selected) {
+	if ((getProxy() != null) || (setSelectedMethod == null)) {
+            super.putValue(SELECTED_KEY, Boolean.valueOf(selected));
+	}
+	else {
+	    try {
+                super.putValue(SELECTED_KEY, Boolean.valueOf(selected));
+                if (selected != isSelected()) {
+                    setSelectedMethod.invoke(appAM.getActionsObject(), selected);
+                }
+	    }
+	    catch (Exception e) {
+                throw newInvokeError(setSelectedMethod, e, selected);
+	    }
+	}
+    }
+
+    /**
+     * Keeps the {@code @Action selectedProperty} in sync when 
+     * the value of {@code key} is {@code Action.SELECTED_KEY}.
+     * 
+     * @param key {@inheritDoc}
+     * @param value {@inheritDoc}
+     */
+    public void putValue(String key, Object value) {
+        if (SELECTED_KEY.equals(key) && (value instanceof Boolean)) {
+            setSelected((Boolean)value);
+        }
+        else {
+            super.putValue(key, value);
+        }
+    }
+
+    /* Throw an Error because invoking Method m on the actionsObject,
+     * with the specified arguments, failed.
+     */
+    private Error newInvokeError(Method m, Exception e, Object... args) {
+        String argsString = (args.length == 0) ? "" : args[0].toString();
+        for(int i = 1; i < args.length; i++) {
+            argsString += ", " + args[i];
+        }
+        String actionsClassName = appAM.getActionsObject().getClass().getName();
+        String msg = String.format("%s.%s(%s) failed", actionsClassName, m, argsString);
+        return new Error(msg, e);
+    }
+
+    /* Forward the @Action class's PropertyChangeEvent e to this
      * Action's PropertyChangeListeners using actionPropertyName instead
-     * the original controller property name.  This method is used
-     * by ControllerPCL to forward controller @Action enabledProperty and 
-     * selectedProperty changes.
+     * the original @Action class's property name.  This method is used
+     * by ApplicationActionMap#ActionsPCL to forward @Action 
+     * enabledProperty and selectedProperty changes.
      */
     void forwardPropertyChangeEvent(PropertyChangeEvent e, String actionPropertyName) {
+        if ("selected".equals(actionPropertyName) && (e.getNewValue() instanceof Boolean)) {
+            putValue(SELECTED_KEY, (Boolean)e.getNewValue());
+        }
 	firePropertyChange(actionPropertyName, e.getOldValue(), e.getNewValue());
     }
 

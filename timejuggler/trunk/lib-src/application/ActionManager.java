@@ -10,6 +10,7 @@ import java.awt.KeyboardFocusManager;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.WeakHashMap;
@@ -31,27 +32,42 @@ import javax.swing.JComponent;
  */
 public class ActionManager extends AbstractBean {
     private static final Logger logger = Logger.getLogger(ActionManager.class.getName());
+    private final ApplicationContext context;
     private final WeakHashMap<Object, WeakReference<ApplicationActionMap>> actionMaps;
     private ApplicationActionMap globalActionMap = null;
 
-    protected ActionManager() {
+    protected ActionManager(ApplicationContext context) {
+        if (context == null) {
+            throw new IllegalArgumentException("null context");
+        }
+        this.context = context;
 	actionMaps = new WeakHashMap<Object, WeakReference<ApplicationActionMap>>();
     }
 
-    /* Just constructs an instance of ApplicationActionMap with the specified 
-     * parent and with the ResourceMap for actionsClass.
-     */
-    private ApplicationActionMap createApplicationActionMap (
-          Class resourcesClass , Class actionsClass, Object actionsObject, ApplicationActionMap parent) {
-	if (actionsClass == null) {
-	    throw new IllegalArgumentException("null actionsClass");
-	}
-	ApplicationContext ac = ApplicationContext.getInstance();
-	ResourceMap resourceMap = ac.getResourceMap(resourcesClass);
-	ApplicationActionMap appAM = new ApplicationActionMap(actionsClass, actionsObject, resourceMap);
-	appAM.setParent(parent);
-	return appAM;
+    protected final ApplicationContext getContext() {
+        return context;
     }
+
+    private ApplicationActionMap createActionMapChain(
+            Class startClass, Class stopClass, Object actionsObject, ResourceMap resourceMap) {
+        // All of the classes from stopClass to startClass, inclusive. 
+    	List<Class> classes = new ArrayList<Class>();
+	for(Class c = startClass;  ; c = c.getSuperclass()) {
+	    classes.add(c);
+            if (c.equals(stopClass)) { break; }
+	}
+        Collections.reverse(classes);
+        // Create the ActionMap chain, one per class
+        ApplicationContext ctx = getContext();
+        ApplicationActionMap parent = null;
+        for(Class cls : classes) {
+            ApplicationActionMap appAM = new ApplicationActionMap(ctx, cls, actionsObject, resourceMap);
+            appAM.setParent(parent);
+            parent = appAM;
+        }
+        return parent;
+    }
+
 
     /** 
      * The {@code ActionMap} chain for the entire {@code Application}.
@@ -78,23 +94,11 @@ public class ActionManager extends AbstractBean {
      */
     public ApplicationActionMap getActionMap() {
 	if (globalActionMap == null) {
-	    ApplicationContext ac = ApplicationContext.getInstance();
-	    Object appObject = ac.getApplication();
-	    Class appClass = ac.getApplicationClass();
-	    List<Class> appClasses = ac.getApplicationClasses(appClass);
-	    Collections.reverse(appClasses);
-	    ApplicationActionMap parent = null;
-	    for(Class cls : appClasses) {
-		/* The ResourceMap used to lookup Action resources for 
-		 * each of the ApplicationActionMaps in the chain is
-		 * always the same: it's the one defined for the
-		 * application's class (appClass).  That way, resources
-		 * defined for appClass always shadow the ones defined
-		 * for the parent application superclasses.
-		 */
-		parent = createApplicationActionMap(appClass, cls, appObject, parent);
-	    }
-	    globalActionMap = parent;
+	    ApplicationContext ctx = getContext();
+	    Object appObject = ctx.getApplication();
+	    Class appClass = ctx.getApplicationClass();
+            ResourceMap resourceMap = ctx.getResourceMap();
+	    globalActionMap = createActionMapChain(appClass, Application.class, appObject, resourceMap);
 	    initProxyActionSupport();  // lazy initialization
 	}
 	return globalActionMap;
@@ -124,7 +128,7 @@ public class ActionManager extends AbstractBean {
      * To bind an {@code @Action} to a Swing component, one specifies
      * the {@code @Action's} name in an expression like this:
      * <pre>
-     * ApplicationContext ac = ApplicationContext.getInstance();
+     * ApplicationContext ctx = Application.getInstance(MyApplication.class).getContext();
      * MyActions myActions = new MyActions();
      * myComponent.setAction(ac.getActionMap(myActions).get("myAction"));
      * </pre>
@@ -149,11 +153,21 @@ public class ActionManager extends AbstractBean {
 	if (actionsClass == null) {
 	    throw new IllegalArgumentException("null actionsClass");
 	}
+	if (actionsObject == null) {
+	    throw new IllegalArgumentException("null actionsObject");
+	}
+        if (!actionsObject.getClass().isAssignableFrom(actionsClass)) {
+	    throw new IllegalArgumentException("actionsObject not instanceof actionsClass");
+        }
 	synchronized(actionMaps) {
 	    WeakReference<ApplicationActionMap> ref = actionMaps.get(actionsObject);
 	    ApplicationActionMap classActionMap = (ref != null) ? ref.get() : null;
-	    if (classActionMap == null) {
-		classActionMap = createApplicationActionMap(actionsClass, actionsClass, actionsObject, getActionMap());
+	    if ((classActionMap == null) || (classActionMap.getActionsClass() != actionsClass)) {
+                ApplicationContext ctx = getContext();
+                Class actionsObjectClass = actionsObject.getClass();
+                ResourceMap resourceMap = ctx.getResourceMap(actionsObjectClass, actionsClass);
+                classActionMap = createActionMapChain(actionsObjectClass, actionsClass, actionsObject, resourceMap);
+                classActionMap.setParent(getActionMap());
 		actionMaps.put(actionsObject, new WeakReference(classActionMap));
 	    }
 	    return classActionMap;
@@ -163,16 +177,15 @@ public class ActionManager extends AbstractBean {
     private final class KeyboardFocusPCL implements PropertyChangeListener {
 	private final TextActions textActions;
 	KeyboardFocusPCL() {
-	    textActions = new TextActions();
+	    textActions = new TextActions(getContext());
 	}
 	public void propertyChange(PropertyChangeEvent e) {
 	    if (e.getPropertyName() == "permanentFocusOwner") {
-		ApplicationContext ac = ApplicationContext.getInstance();
-		JComponent oldOwner = ac.getFocusOwner();
+		JComponent oldOwner = getContext().getFocusOwner();
 		Object newValue = e.getNewValue();
 		JComponent newOwner = (newValue instanceof JComponent) ? (JComponent)newValue : null;
 		textActions.updateFocusOwner(oldOwner, newOwner);
-		ac.setFocusOwner(newOwner);
+		getContext().setFocusOwner(newOwner);
 		updateAllProxyActions(oldOwner, newOwner);
 	    }
 	}
