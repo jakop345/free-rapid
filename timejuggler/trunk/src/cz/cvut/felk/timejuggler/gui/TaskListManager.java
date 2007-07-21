@@ -89,6 +89,7 @@ public class TaskListManager {
         table.setDefaultRenderer(Object.class, new DefaultStringCellRenderer());
         table.packAll();
         table.setPreferredSize(new Dimension(100, -1));
+
         panelMain.add(labelTask, new CustomLayoutConstraints(0, 0));
         panelMain.add(checkTask, new CustomLayoutConstraints(0, 1));
         panelMain.add(new JScrollPane(table), new CustomLayoutConstraints(0, 2));
@@ -169,7 +170,7 @@ public class TaskListManager {
 
         public final Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             if (value instanceof String) {
-                final boolean isDone = (Boolean) table.getModel().getValueAt(row, COLUMN_DONE_INDEX);
+                final boolean isDone = (Boolean) table.getValueAt(row, COLUMN_DONE_INDEX);
                 final String s = String.format(FORMAT_STRING, value);
                 return super.getTableCellRendererComponent(table, (isDone) ? s : value, isSelected, hasFocus, row, column);
             }
