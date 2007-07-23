@@ -56,6 +56,7 @@ public class TaskListManager {
         final JCheckBox checkTask = new JCheckBox();
         checkTask.setName("checkTask");
         final JXTable table = new JXTable();
+        table.setName("taskJXTable");
         final DefaultTableModel tableModel = new DefaultTableModel(new Object[]{"Done", "Priority", "Completed", "Title", "Calendar Name"}, 0) {
             public Class<?> getColumnClass(int columnIndex) {
                 final String name = this.getColumnName(columnIndex);
@@ -170,7 +171,7 @@ public class TaskListManager {
 
         public final Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             if (value instanceof String) {
-                final boolean isDone = (Boolean) table.getValueAt(row, COLUMN_DONE_INDEX);
+                final boolean isDone = (Boolean) table.getModel().getValueAt(table.convertRowIndexToModel(row), COLUMN_DONE_INDEX);
                 final String s = String.format(FORMAT_STRING, value);
                 return super.getTableCellRendererComponent(table, (isDone) ? s : value, isSelected, hasFocus, row, column);
             }

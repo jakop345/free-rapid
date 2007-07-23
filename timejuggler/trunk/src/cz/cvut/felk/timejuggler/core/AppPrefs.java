@@ -35,8 +35,8 @@ public final class AppPrefs {
     private static volatile Properties properties = loadProperties();
 
     //jednotlive klice pro uzivatelska nastaveni
-    public static final String SHOW_STATUSBAR = "settings.showStatusbar";
-    public static final String SHOW_TOOLBAR = "settings.showToolbar";
+    //public static final String SHOW_STATUSBAR = "settings.showStatusbar";
+//    public static final String SHOW_TOOLBAR = "settings.showToolbar";
     public static final String SHOW_SEARCHBAR = "settings.showSearchbar";
     public static final String HIDE_COMPLETED_TASKS = "settings.showCompletedTasks";
     public static final String CALENDAR_VIEW = "settings.calendarView";
@@ -189,9 +189,9 @@ public final class AppPrefs {
                 if (inputStream != null)
                     inputStream.close();
             } catch (IOException ex) {
-                logger.log(Level.SEVERE, ex.getMessage(), ex);
+                logger.log(Level.WARNING, ex.getMessage(), ex);
             }
-            logger.log(Level.SEVERE, e.getMessage(), e);
+            logger.log(Level.WARNING, e.getMessage(), e);
             return props;
         }
     }

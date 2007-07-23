@@ -2,10 +2,13 @@ package cz.cvut.felk.timejuggler.core;
 
 import application.Application;
 import application.ApplicationContext;
-import application.SingleFrameApplication;
+import application.SessionStorage;
 import cz.cvut.felk.timejuggler.gui.MainPanelManager;
+import cz.cvut.felk.timejuggler.gui.StorageProperties;
 import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
+import org.jdesktop.appframework.swingx.SingleXFrameApplication;
+import org.jdesktop.swingx.JXStatusBar;
 
 import javax.swing.*;
 import java.util.Collection;
@@ -16,7 +19,7 @@ import java.util.LinkedList;
  * Hlavni trida aplikace
  * @author Vity
  */
-public class MainApp extends SingleFrameApplication {
+public class MainApp extends SingleXFrameApplication {
 
     private MainPanelManager mainPanel;
     private Collection<String> filesToOpen;
@@ -90,6 +93,14 @@ public class MainApp extends SingleFrameApplication {
         return mainPanel.getComponent();
     }
 
+    @Override
+    protected void injectSessionProperties() {
+        super.injectSessionProperties();
+        SessionStorage storage = getContext().getSessionStorage();
+        storage.putProperty(JXStatusBar.class, new StorageProperties.XStatusBarProperty());
+        storage.putProperty(JToolBar.class, new StorageProperties.JToolbarProperty());
+        new StorageProperties().registerPersistenceDelegates();
+    }
 
     /**
      * Vraci komponentu hlavniho panelu obsahujici dalsi komponenty
@@ -128,5 +139,5 @@ public class MainApp extends SingleFrameApplication {
 
     public Collection<String> getFilesToOpen() {
         return filesToOpen;
-    }
+    }  
 }

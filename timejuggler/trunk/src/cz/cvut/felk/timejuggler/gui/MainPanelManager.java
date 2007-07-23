@@ -46,7 +46,8 @@ public class MainPanelManager {
     private void initComponents() {
         multiSplitPane = new JXMultiSplitPane();
         multiSplitPane.setDividerSize(4);
-        multiSplitPane.setContinuousLayout(false);
+        
+        multiSplitPane.setContinuousLayout(true);
         multiSplitPane.getMultiSplitLayout().setModel(new DefaultSplitPaneModel());
         multiSplitPane.add(new SmallCalendarManager().getComponent(), LEFT_TOP);
         multiSplitPane.add(getTaskList(), LEFT_BOTTOM);

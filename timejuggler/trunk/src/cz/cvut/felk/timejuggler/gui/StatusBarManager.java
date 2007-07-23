@@ -18,6 +18,7 @@ public class StatusBarManager {
 
     public StatusBarManager(ApplicationContext context) {
         final Action action = context.getActionMap().get("showStatusBar");
+        action.putValue(Action.SELECTED_KEY, true); //defaultni hodnota
         action.addPropertyChangeListener(new PropertyChangeListener() {
             //odchyt udalosti z akce pro zmenu viditelnosti statusbaru
             public void propertyChange(PropertyChangeEvent evt) {
@@ -26,12 +27,13 @@ public class StatusBarManager {
                 }
             }
         });
-        action.putValue(Action.SELECTED_KEY, AppPrefs.getProperty(AppPrefs.SHOW_STATUSBAR, true));
+
     }
 
     public JXStatusBar getStatusBar() {
         if (statusbarPanel == null) {
             statusbarPanel = new JXStatusBar();
+            statusbarPanel.setName("statusbarPanel");
             statusbarPanel.add(new JLabel("Tady je polozka statusbaru"));
         }
         return statusbarPanel;
@@ -39,6 +41,6 @@ public class StatusBarManager {
 
     private void setStatusBarVisible(boolean visible) {
         getStatusBar().setVisible(visible);
-        AppPrefs.storeProperty(AppPrefs.SHOW_STATUSBAR, visible); //ulozeni uzivatelskeho nastaveni
+        //AppPrefs.storeProperty(AppPrefs.SHOW_STATUSBAR, visible); //ulozeni uzivatelskeho nastaveni
     }
 }

@@ -1,7 +1,6 @@
 package cz.cvut.felk.timejuggler.gui;
 
 import application.ApplicationContext;
-import cz.cvut.felk.timejuggler.core.AppPrefs;
 import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.swing.ToolbarSeparator;
 
@@ -31,7 +30,7 @@ public class ToolbarManager {
     /**
      * samotny toolbar
      */
-    private JToolBar toolbar = new JToolBar("Main Toolbar");
+    private JToolBar toolbar = new JToolBar("mainToolbar");
 
     /**
      * Konstruktor - naplni toolbar buttony
@@ -40,6 +39,7 @@ public class ToolbarManager {
     public ToolbarManager(ApplicationContext context) {
         toolbarPanel.setBorder(BorderFactory.createEmptyBorder(0, 4, 0, 0));
         final Action action = context.getActionMap().get("showToolbar");
+        action.putValue(Action.SELECTED_KEY, true); //defaultni hodnota
         //odchyt udalosti z akce pro zmenu viditelnosti toolbaru
         action.addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
@@ -48,7 +48,6 @@ public class ToolbarManager {
                 }
             }
         });
-        action.putValue(Action.SELECTED_KEY, AppPrefs.getProperty(AppPrefs.SHOW_TOOLBAR, true));
         createToolbar();
     }
 
@@ -118,6 +117,7 @@ public class ToolbarManager {
 
     private void setToolBarVisible(boolean visible) {
         toolbarPanel.setVisible(visible);
-        AppPrefs.storeProperty(AppPrefs.SHOW_TOOLBAR, visible); //ulozeni uzivatelskeho nastaveni, ale jen do hashmapy        
+        toolbar.setVisible(visible);
+        //  AppPrefs.storeProperty(AppPrefs.SHOW_TOOLBAR, visible); //ulozeni uzivatelskeho nastaveni, ale jen do hashmapy
     }
 }
