@@ -4,6 +4,7 @@ import application.Action;
 import cz.cvut.felk.timejuggler.core.MainApp;
 import cz.cvut.felk.timejuggler.gui.dialogs.EventTaskDialog;
 
+import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -26,7 +27,11 @@ public class FileActions extends Component {
 
     @Action
     public void newTask() {
-
+        final boolean eventDispatchThread = SwingUtilities.isEventDispatchThread();
+        final Thread.UncaughtExceptionHandler exceptionHandler = Thread.currentThread().getUncaughtExceptionHandler();
+        System.out.println("exceptionHandler = " + exceptionHandler);
+        System.out.println("eventDispatchThread = " + eventDispatchThread);
+        throw new RuntimeException("Fatalni chyba");
     }
 
     @Action

@@ -4,7 +4,8 @@ import application.Application;
 import application.ApplicationContext;
 import application.ResourceConverter;
 import application.SessionStorage;
-import cz.cvut.felk.timejuggler.core.misc.ListItemsConvertor;
+import cz.cvut.felk.timejuggler.core.application.GlobalEDTExceptionHandler;
+import cz.cvut.felk.timejuggler.core.application.ListItemsConvertor;
 import cz.cvut.felk.timejuggler.gui.MainPanelManager;
 import cz.cvut.felk.timejuggler.gui.StorageProperties;
 import cz.cvut.felk.timejuggler.swing.Swinger;
@@ -90,6 +91,13 @@ public class MainApp extends SingleXFrameApplication {
         this.addExitListener(new MainAppExitListener());
         frame.pack();
         show(frame);
+        setGlobalEDTExceptionHandler();
+    }
+
+    private void setGlobalEDTExceptionHandler() {
+        final GlobalEDTExceptionHandler eh = new GlobalEDTExceptionHandler();
+        Thread.setDefaultUncaughtExceptionHandler(eh);
+        Thread.currentThread().setUncaughtExceptionHandler(eh);
     }
 
     private JComponent getMainPanelComponent() {
