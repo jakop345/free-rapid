@@ -1,6 +1,5 @@
 package cz.cvut.felk.timejuggler.swing;
 
-import application.ApplicationContext;
 import application.ResourceManager;
 import application.ResourceMap;
 import cz.cvut.felk.timejuggler.core.MainApp;
@@ -8,6 +7,7 @@ import cz.cvut.felk.timejuggler.core.MainApp;
 import javax.swing.*;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.plaf.metal.MetalTheme;
+import java.awt.*;
 import java.util.logging.Logger;
 
 /**
@@ -64,14 +64,27 @@ public class Swinger {
     }
 
     public static ResourceMap getResourceMap() {
-        final ApplicationContext ac = MainApp.getInstance(MainApp.class).getContext();
-        final ResourceManager rm = ac.getResourceManager();
+        final ResourceManager rm = MainApp.getAContext().getResourceManager();
         return rm.getResourceMap();
+    }
+
+    public static ResourceMap getResourceMap(final Class className) {
+        final ResourceManager rm = MainApp.getAContext().getResourceManager();
+        return rm.getResourceMap(className);
     }
 
     public static Action getAction(Object actionName) {
         final Action action = MainApp.getAContext().getActionMap().get(actionName);
         assert action != null;
         return action;
+    }
+
+
+    public static ActionMap getActionMap(Class aClass, Object actionsObject) {
+        return MainApp.getAContext().getActionMap(aClass, actionsObject);
+    }
+
+    public static void showErrorDialog(final String message) {
+        JOptionPane.showMessageDialog(Frame.getFrames()[0], message, getResourceMap().getString("errorMessage"), JOptionPane.ERROR_MESSAGE);
     }
 }
