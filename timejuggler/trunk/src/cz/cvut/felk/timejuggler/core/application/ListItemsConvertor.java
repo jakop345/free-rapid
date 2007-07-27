@@ -1,4 +1,4 @@
-package cz.cvut.felk.timejuggler.core.misc;
+package cz.cvut.felk.timejuggler.core.application;
 
 import application.ResourceConverter;
 import application.ResourceMap;
