@@ -4,8 +4,15 @@
  */
 package org.jdesktop.appframework.swingx;
 
-import java.awt.Component;
-import java.awt.Window;
+import application.ApplicationContext;
+import application.SessionStorage;
+import application.SingleFrameApplication;
+import org.jdesktop.appframework.swingx.XProperties.XTableProperty;
+import org.jdesktop.swingx.JXFrame;
+import org.jdesktop.swingx.JXTable;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -15,28 +22,13 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.RootPaneContainer;
-
-import org.jdesktop.appframework.swingx.XProperties.XTableProperty;
-import org.jdesktop.swingx.JXFrame;
-import org.jdesktop.swingx.JXTable;
-import org.jdesktop.swingx.SearchFactory;
-
-import application.ApplicationContext;
-import application.SessionStorage;
-import application.SingleFrameApplication;
-
 public abstract class SingleXFrameApplication extends SingleFrameApplication {
     private static final Logger logger = Logger.getLogger(SingleXFrameApplication.class.getName());
 
     /**
      * {@inheritDoc} <p>
-     *
-     * Overridden to force a JXFrame as main frame and inject SwingX specific
-     * session properties.
-     *
+     * <p/>
+     * Overridden to force a JXFrame as main frame and inject SwingX specific session properties.
      */
     @Override
     protected void initialize(String[] args) {
@@ -46,12 +38,10 @@ public abstract class SingleXFrameApplication extends SingleFrameApplication {
     }
 
     /**
-     * Hook to configure SwingX related global state.
-     * Here: sets SearchFactory. <p>
-     * PENDING: okay to do on the EDT?
+     * Hook to configure SwingX related global state. Here: sets SearchFactory. <p> PENDING: okay to do on the EDT?
      */
     protected void customizeSwingXContext() {
- //       SearchFactory.setInstance(new AppSearchFactory());
+        //       SearchFactory.setInstance(new AppSearchFactory());
 
     }
 
@@ -69,10 +59,8 @@ public abstract class SingleXFrameApplication extends SingleFrameApplication {
     }
 
     /**
-     * Checks and returns whether the given RootPaneContainer already has
-     * been prepared. As a side-effect, the container is marked as prepared
-     * (wrong place?)
-     *
+     * Checks and returns whether the given RootPaneContainer already has been prepared. As a side-effect, the container
+     * is marked as prepared (wrong place?)
      * @param c
      * @return
      */
@@ -89,10 +77,8 @@ public abstract class SingleXFrameApplication extends SingleFrameApplication {
 
 
     /**
-     * Prepares the given window. Injects properties from app context.
-     * Restores session state if appropriate. Registers listeners to try and
-     * track session state.
-     *
+     * Prepares the given window. Injects properties from app context. Restores session state if appropriate. Registers
+     * listeners to try and track session state.
      * @param root
      */
     protected void prepareWindow(Window root) {
@@ -136,9 +122,8 @@ public abstract class SingleXFrameApplication extends SingleFrameApplication {
 
 
     /**
-     * Save session state for the component hierarchy rooted by the mainFrame.
-     * SingleFrameApplication subclasses that override shutdown need to remember
-     * call {@code super.shutdown()}.
+     * Save session state for the component hierarchy rooted by the mainFrame. SingleFrameApplication subclasses that
+     * override shutdown need to remember call {@code super.shutdown()}.
      */
     @Override
     protected void shutdown() {
@@ -155,8 +140,7 @@ public abstract class SingleXFrameApplication extends SingleFrameApplication {
     private String sessionFilename(Window window) {
         if (window == null) {
             return null;
-        }
-        else {
+        } else {
             String name = window.getName();
             return (name == null) ? null : name + ".session.xml";
         }
@@ -178,9 +162,8 @@ public abstract class SingleXFrameApplication extends SingleFrameApplication {
     }
 
     /**
-     * Deletes the session state by deleting the file. Useful during development
-     * when restoring to old state is not always the desired behaviour.
-     * Pending: this is incomplete, deletes the mainframe state only.
+     * Deletes the session state by deleting the file. Useful during development when restoring to old state is not
+     * always the desired behaviour. Pending: this is incomplete, deletes the mainframe state only.
      */
     protected void deleteSessionState() {
         ApplicationContext context = getContext();
