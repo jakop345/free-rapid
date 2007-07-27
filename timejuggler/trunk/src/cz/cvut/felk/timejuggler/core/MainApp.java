@@ -2,7 +2,9 @@ package cz.cvut.felk.timejuggler.core;
 
 import application.Application;
 import application.ApplicationContext;
+import application.ResourceConverter;
 import application.SessionStorage;
+import cz.cvut.felk.timejuggler.core.misc.ListItemsConvertor;
 import cz.cvut.felk.timejuggler.gui.MainPanelManager;
 import cz.cvut.felk.timejuggler.gui.StorageProperties;
 import cz.cvut.felk.timejuggler.swing.Swinger;
@@ -76,6 +78,7 @@ public class MainApp extends SingleXFrameApplication {
         // logger = Logger.getLogger(MainApp.class.getName());
         Swinger.initLaF(); //inicializace LaFu, musi to byt pred vznikem hlavniho panelu
         super.initialize(args);
+        ResourceConverter.register(new ListItemsConvertor());
     }
 
     protected void startup() {
@@ -139,5 +142,5 @@ public class MainApp extends SingleXFrameApplication {
 
     public Collection<String> getFilesToOpen() {
         return filesToOpen;
-    }  
+    }
 }
