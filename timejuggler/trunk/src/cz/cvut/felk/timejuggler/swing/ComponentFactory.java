@@ -7,6 +7,7 @@ import java.awt.*;
 import java.text.DateFormat;
 
 /**
+ * Trida slouzici k instanciovani upravenych zakladnich komponent
  * @author Vity
  */
 
