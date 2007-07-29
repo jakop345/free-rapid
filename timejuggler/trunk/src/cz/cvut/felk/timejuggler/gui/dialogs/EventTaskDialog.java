@@ -12,6 +12,8 @@ import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.utilities.Browser;
 import org.jdesktop.swingx.JXDatePicker;
 
+import javax.beans.binding.Binding;
+import javax.beans.binding.BindingContext;
 import javax.swing.*;
 import java.awt.*;
 
@@ -20,6 +22,7 @@ import java.awt.*;
  */
 public class EventTaskDialog extends AppDialog {
     private final boolean newEvent;
+    private BindingContext context;
 
     public EventTaskDialog(Frame mainFrame) {
         this(mainFrame, true);
@@ -37,6 +40,7 @@ public class EventTaskDialog extends AppDialog {
         inject();
         buildGUI();
         buildModels();
+        setDefaultValues();
         pack();
         setResizable(true);
         locateOnOpticalScreenCenter(this);
@@ -53,13 +57,27 @@ public class EventTaskDialog extends AppDialog {
     }
 
     private void buildGUI() {
+        context = new BindingContext();
+        Binding binding = new Binding(checkDate, "${selected}", this.dateFromPicker, "enabled");
+
+        context.addBinding(binding);
+        context.bind();
+    }
+
+    private void setDefaultValues() {
+        checkDate.setSelected(true);
+    }
+
+    private void setDefaultValuesTask() {
 
     }
+
 
     private void buildModels() {
         setComboModelFromResource(priorityCombo);
         setComboModelFromResource(privacyCombo);
         setComboModelFromResource(statusCombo);
+        setComboModelFromResource(statusTypeCombo);
         setComboModelFromResource(alarmCombo);
         setComboModelFromResource(alarmTimeUnitCombo);
         setComboModelFromResource(alarmBeforeAfterCombo);
@@ -146,6 +164,10 @@ public class EventTaskDialog extends AppDialog {
         btnOK = new JButton();
         btnCancel = new JButton();
         btnLessMore = new JButton();
+
+        checkDate = new JCheckBox();
+        checkDueDate = new JCheckBox();
+
         CellConstraints cc = new CellConstraints();
 
         //======== mainPanel ========
@@ -197,6 +219,12 @@ public class EventTaskDialog extends AppDialog {
 
                 //---- timeToSpinner ----
                 timeToSpinner.setName("timeToSpinner");
+
+                //---- checkDate ----
+                checkDate.setName("checkDate");
+
+                //---- checkDueDate ----
+                checkDueDate.setName("checkDueDate");
 
                 //---- repeatCheckbox ----
 
@@ -486,6 +514,8 @@ public class EventTaskDialog extends AppDialog {
                         new ColumnSpec[]{
                                 new ColumnSpec(Sizes.dluX(45)),
                                 FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+                                FormFactory.PREF_COLSPEC,
+                                new ColumnSpec(ColumnSpec.LEFT, Sizes.DLUX2, FormSpec.NO_GROW),
                                 ComponentFactory.DATEPICKER_COLUMN_SPEC,
                                 FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
                                 new ColumnSpec("max(pref;35dlu)"),
@@ -497,13 +527,13 @@ public class EventTaskDialog extends AppDialog {
                                 new ColumnSpec(ColumnSpec.FILL, Sizes.PREFERRED, FormSpec.DEFAULT_GROW)
                         },
                         new RowSpec[]{
-                                FormFactory.DEFAULT_ROWSPEC,
+                                FormFactory.PREF_ROWSPEC,
                                 FormFactory.LINE_GAP_ROWSPEC,
-                                FormFactory.DEFAULT_ROWSPEC,
+                                FormFactory.PREF_ROWSPEC,
                                 FormFactory.LINE_GAP_ROWSPEC,
-                                FormFactory.DEFAULT_ROWSPEC,
+                                FormFactory.PREF_ROWSPEC,
                                 FormFactory.LINE_GAP_ROWSPEC,
-                                FormFactory.DEFAULT_ROWSPEC,
+                                FormFactory.PREF_ROWSPEC,
                                 FormFactory.LINE_GAP_ROWSPEC,
                                 FormFactory.DEFAULT_ROWSPEC,
                                 FormFactory.LINE_GAP_ROWSPEC,
@@ -513,21 +543,25 @@ public class EventTaskDialog extends AppDialog {
                         }), mainPanel);
 
                 builder.add(labelTitle, cc.xy(1, 1));
-                builder.add(titleField, cc.xywh(3, 1, 9, 1, CellConstraints.FILL, CellConstraints.DEFAULT));
+                builder.add(titleField, cc.xywh(3, 1, 11, 1, CellConstraints.FILL, CellConstraints.DEFAULT));
                 builder.add(labelLocation, cc.xy(1, 3));
-                builder.add(locationField, cc.xywh(3, 3, 9, 1, CellConstraints.FILL, CellConstraints.DEFAULT));
+                builder.add(locationField, cc.xywh(3, 3, 11, 1, CellConstraints.FILL, CellConstraints.DEFAULT));
                 builder.add(labelFrom, cc.xy(1, 5));
-                builder.add(dateFromPicker, cc.xy(3, 5));
-                builder.add(timeFromSpinner, cc.xy(5, 5));
-                builder.add(allDayCheckbox, cc.xy(7, 5));
+                builder.add(checkDate, cc.xy(3, 5));
+                builder.add(dateFromPicker, cc.xy(5, 5));
+                builder.add(timeFromSpinner, cc.xywh(7, 5, 1, 1, CellConstraints.DEFAULT, CellConstraints.FILL));
+                builder.add(allDayCheckbox, cc.xy(9, 5));
                 builder.add(labelTo, cc.xy(1, 7));
-                builder.add(dateToPicker, cc.xy(3, 7));
-                builder.add(timeToSpinner, cc.xy(5, 7));
-                builder.add(repeatCheckbox, cc.xy(7, 7));
-                builder.add(btnSetPattern, cc.xy(9, 7));
-                builder.add(panelCalendar, cc.xywh(1, 9, 11, 1));
-                builder.add(morePanel, cc.xywh(1, 11, 11, 1));
-                builder.add(panelBtn, cc.xywh(1, 13, 11, 1));
+                builder.add(checkDueDate, cc.xy(3, 7));
+                builder.add(dateToPicker, cc.xy(5, 7));
+                builder.add(timeToSpinner, cc.xywh(7, 7, 1, 1, CellConstraints.DEFAULT, CellConstraints.FILL));
+                builder.add(repeatCheckbox, cc.xy(9, 7));
+                builder.add(btnSetPattern, cc.xy(11, 7));
+                builder.add(panelCalendar, cc.xywh(1, 9, 13, 1));
+                builder.add(morePanel, cc.xywh(1, 11, 13, 1));
+                builder.add(panelBtn, cc.xywh(1, 13, 13, 1));
+
+
             }
             this.getContentPane().add(mainPanel, BorderLayout.CENTER);
         }
@@ -538,6 +572,8 @@ public class EventTaskDialog extends AppDialog {
     // Generated using JFormDesigner Open Source Project license - unknown
     private JTextField titleField;
     private JTextField locationField;
+    private JCheckBox checkDate;
+    private JCheckBox checkDueDate;
     private JXDatePicker dateFromPicker;
     private JSpinner timeFromSpinner;
     private JXDatePicker dateToPicker;
