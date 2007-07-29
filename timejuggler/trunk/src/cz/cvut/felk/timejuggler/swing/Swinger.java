@@ -7,7 +7,10 @@ import cz.cvut.felk.timejuggler.core.MainApp;
 import javax.swing.*;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.plaf.metal.MetalTheme;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.logging.Logger;
 
 /**
@@ -48,6 +51,22 @@ public class Swinger {
         }
 
     }
+
+    /**
+     * Focus listener pouzivany v textovych komponentach. Na vstup do komponenty vybere celej text.
+     */
+    public static final class SelectAllOnFocusListener implements FocusListener {
+        public final void focusGained(final FocusEvent e) {
+            if (!e.isTemporary()) {
+                //final Component component = ;
+                ((JTextComponent) e.getComponent()).selectAll();
+            }
+        }
+
+        public final void focusLost(final FocusEvent e) {
+        }
+    }
+
 
     /**
      * Vrati obrazek podle key property v resourcu Nenajde-li se obrazek pod danym kodem, vypise WARNING pokud neni

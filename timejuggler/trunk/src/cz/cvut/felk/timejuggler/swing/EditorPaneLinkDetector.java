@@ -1,81 +1,54 @@
 package cz.cvut.felk.timejuggler.swing;
 
-import javax.accessibility.AccessibleHypertext;
+import cz.cvut.felk.timejuggler.utilities.Browser;
+import cz.cvut.felk.timejuggler.utilities.LogUtils;
+
 import javax.swing.*;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Element;
-import javax.swing.text.html.HTML;
-import javax.swing.text.html.HTMLDocument;
-import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.text.html.StyleSheet;
-import javax.swing.text.html.parser.ParserDelegator;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
-import java.io.IOException;
+import javax.swing.text.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * A "HTML" JEditorPane embedded with a special HTMLDocument that detects urls and displays them as hyperlinks. When
- * CTRL is pressed, the urls are clickable.
- * @author David Bismut
+ * Komponenta, ktera zvyraznuje emaily v textu. Pri drzeni CTRL+click otevira email v klientu.
+ * @author Vity
  */
-class EditorPaneLinkDetector extends JEditorPane {
+public class EditorPaneLinkDetector extends JEditorPane {
+    private final static Logger logger = Logger.getLogger(EditorPaneLinkDetector.class.getName());
+    private final static String EXAMPLE_EMAIL = "example@email.com";
 
-    /**
-     * Creates a <code>EditorPaneLinkDetector</code>.
-     */
+
     public EditorPaneLinkDetector() {
-
-        HTMLEditorKit htmlkit = new HTMLEditorKit();
-
-        StyleSheet styles = htmlkit.getStyleSheet();
-        StyleSheet ss = new StyleSheet();
-
-        ss.addStyleSheet(styles);
-
-        ss.addRule("body {font-family:arial;font-size:12pt}");
-        ss.addRule("p {font-family:arial;margin:2}");
-
-        HTMLDocument doc = new HTMLDocLinkDetector(ss);
-
-        setEditorKit(htmlkit);
-
-        setDocument(doc);
-
-        addMouseMotionListener(new MouseMotionAdapter() {
-            public void mouseMoved(MouseEvent e) {
-
-                AccessibleJTextComponent context = (AccessibleJTextComponent) getAccessibleContext()
-                        .getAccessibleEditableText();
-
-                AccessibleHypertext accText = (AccessibleHypertext) context
-                        .getAccessibleText();
-
-                int index = accText.getIndexAtPoint(e.getPoint());
-
-                int linkIndex = accText.getLinkIndex(index);
-                if (linkIndex == -1) {
-                    setToolTipText(null);
-                    return;
-                }
-
-                String linkDesc = accText.getLink(linkIndex)
-                        .getAccessibleActionDescription(0);
-
-                String toolTipText = "<html><body style='margin: 3'>"
-                        + linkDesc
-                        + "<br><b>CTRL + click to follow link</b></body></html>";
-                setToolTipText(toolTipText);
+        super();
+        final SyntaxDocument doc = new SyntaxDocument();
+        this.setEditorKit(new StyledEditorKit() {
+            public Document createDefaultDocument() {
+                return doc;
             }
         });
 
-        addKeyListener(new KeyAdapter() {
-            public void keyPressed(KeyEvent e) {
+        this.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                final JTextComponent source = (JTextComponent) e.getSource();
+                if (source.isEditable())
+                    return;
+                final StyledDocument doc = (StyledDocument) source.getDocument();
+                final Object attribute = doc.getCharacterElement(source.viewToModel(e.getPoint())).getAttributes().getAttribute("EMAIL");
+                if (attribute != null) {
+                    e.consume();
+                    final String email = attribute.toString();
+                    logger.info("EditorPaneLinkDetector opening email " + e);
+                    Browser.openBrowser("mailto:" + email);
+                }
+            }
 
+        });
+
+        this.addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
                     if (isEditable())
                         setEditable(false);
@@ -94,171 +67,206 @@ class EditorPaneLinkDetector extends JEditorPane {
 
             }
         });
+        insertExampleEmail(doc);
+
+        this.addFocusListener(new FocusListener() {
+            public void focusGained(FocusEvent e) {
+                final JTextComponent source = (JTextComponent) e.getSource();
+                if (EXAMPLE_EMAIL.equals(source.getText()))
+                    source.setText("");
+            }
+
+            public void focusLost(FocusEvent e) {
+                final JTextComponent source = (JTextComponent) e.getSource();
+                if (source.getText().length() <= 0) {
+                    insertExampleEmail((StyledDocument) source.getDocument());
+                }
+            }
+        });
     }
 
-    protected class HTMLDocLinkDetector extends HTMLDocument {
+    private void insertExampleEmail(StyledDocument doc) {
+        SimpleAttributeSet example = new SimpleAttributeSet();
+        StyleConstants.setForeground(example, Color.GRAY);
+        try {
+            doc.insertString(0, EXAMPLE_EMAIL, example);
+        } catch (BadLocationException e) {
+            LogUtils.processException(logger, e);
+        }
+    }
 
-        public HTMLDocLinkDetector(StyleSheet ss) {
-            super(ss);
+    public void setEmails(java.util.List<String> emails) {
+        final Document document = this.getDocument();
+        final StringBuilder builder = new StringBuilder();
+        for (String email : emails) {
+            builder.append(email).append('\n');
+        }
+        final String str = builder.toString();
+        if (str.length() > 0)
+            this.setText(""); //pro pripad ze je tam demo
+        try {
 
-            setAsynchronousLoadPriority(4);
-            setTokenThreshold(100);
-            setParser(new ParserDelegator());
+            document.insertString(0, str, null);
+        } catch (BadLocationException e) {
+            LogUtils.processException(logger, e);
+        }
+    }
+
+    public java.util.List<String> getEmails() {
+        final String s = this.getText();
+        final Pattern pattern = Pattern.compile("(^|s+|\\,|\\;)(([a-z0-9_\\-]+(\\.[_a-z0-9\\-]+)*@([_a-z0-9\\-]+\\.)+([a-z]{2}|aero|arpa|biz|com|coop|edu|gov|info|int|jobs|mil|museum|name|nato|net|org|pro|travel)))($|s+|\\,|\\;)", Pattern.CASE_INSENSITIVE);
+        final Matcher matcher = pattern.matcher(s);
+        final java.util.List<String> list = new ArrayList<String>();
+        while (matcher.find()) {
+            final String e = matcher.group(2);
+            if (!EXAMPLE_EMAIL.equals(e))
+                list.add(e);
+        }
+        return list;
+    }
+
+
+    static class SyntaxDocument extends DefaultStyledDocument {
+        private DefaultStyledDocument doc;
+        private Element rootElement;
+
+        private MutableAttributeSet normal;
+        private MutableAttributeSet keyword;
+        private static final Pattern EMAIL_PATTERN = Pattern.compile("^([a-z0-9_\\-]+(\\.[_a-z0-9\\-]+)*@([_a-z0-9\\-]+\\.)+([a-z]{2}|aero|arpa|biz|com|coop|edu|gov|info|int|jobs|mil|museum|name|nato|net|org|pro|travel))$", Pattern.CASE_INSENSITIVE);
+        private static final String DELIMITERS = " ,;:{}()[]+-/%<=>!&|^~*";
+
+
+        public SyntaxDocument() {
+            doc = this;
+            rootElement = doc.getDefaultRootElement();
+            putProperty(DefaultEditorKit.EndOfLineStringProperty, "\n");
+
+            normal = new SimpleAttributeSet();
+            StyleConstants.setForeground(normal, Color.RED);
+
+            keyword = new SimpleAttributeSet();
+            StyleConstants.setForeground(keyword, Color.BLUE);
+
         }
 
-        /**
-         * Returns true if the Element contains a HTML.Tag.A attribute, false otherwise.
-         * @param e the Element to be checkd
-         * @return
-         */
-        protected boolean isLink(Element e) {
-
-            return (e.getAttributes().getAttribute(HTML.Tag.A) != null);
-
+        /*
+          *  Override to apply syntax highlighting after the document has been updated
+          */
+        public void insertString(int offset, String str, AttributeSet a) throws BadLocationException {
+            super.insertString(offset, str, a);
+            if (str.equals(EXAMPLE_EMAIL))
+                return;
+            processChangedLines(offset, str.length());
         }
 
-        /**
-         * This method corrects or creates a url contained in an Element as an hyperlink.
-         * @param e the Element to be computed
-         * @throws BadLocationException
-         */
-        protected void computeLinks(Element e) throws BadLocationException {
-
-            int caretPos = getCaretPosition();
-            try {
-                if (isLink(e))
-                    correctLink(e);
-                else
-                    createLink(e);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-            setCaretPosition(Math.min(caretPos, getLength()));
+        /*
+          *  Override to apply syntax highlighting after the document has been updated
+          */
+        public void remove(int offset, int length) throws BadLocationException {
+            super.remove(offset, length);
+            processChangedLines(offset, 0);
         }
 
-        /**
-         * The method corrects the url inside an Element, that is supposed to be an element containing a link only. This
-         * function is typically called when the url is beeing edited. What the function does is to remove the html tags, so
-         * the url is actually edited in plain text and not as an hyperlink.
-         * @param e the Element that contains the url
-         * @throws BadLocationException
-         * @throws IOException
-         */
-        protected void correctLink(Element e) throws BadLocationException,
-                IOException {
-
-            int length = e.getEndOffset() - e.getStartOffset();
-
-            boolean endOfDoc = e.getEndOffset() == getLength() + 1;
-
-            // to avoid catching the final '\n' of the document.
-            if (endOfDoc)
-                length--;
-
-            String text = getText(e.getStartOffset(), length);
-
-            setOuterHTML(e, text);
-
-            // insert final spaces ignored by the html
-            Matcher spaceMatcher = Pattern.compile("(\\s+)$").matcher(text);
-
-            if (spaceMatcher.find()) {
-                String endingSpaces = spaceMatcher.group(1);
-                insertString(Math.min(getLength(), e.getEndOffset()),
-                        endingSpaces, null);
-            }
-        }
-
-        /**
-         * The method check if the element contains a url in plain text, and if so, it creates the html tag HTML.Tag.A to have
-         * the url displayed as an hyperlink.
-         * @param e element that contains the url
-         * @throws BadLocationException
-         * @throws IOException
-         */
-        protected void createLink(Element e) throws BadLocationException,
-                IOException {
-
-            int caretPos = getCaretPosition();
-
-            int startOffset = e.getStartOffset();
-            int length = e.getEndOffset() - e.getStartOffset();
-
-            boolean endOfDoc = e.getEndOffset() == getLength() + 1;
-            // to avoid catching the final '\n' of the document.
-            if (endOfDoc)
-                length--;
-
-            String text = getText(startOffset, length);
-
-            Matcher matcher = Pattern.compile(
-                    "(?i)(\\b(http://|https://|www.|ftp://|file:/|mailto:)\\S+)(\\s+)")
-                    .matcher(text);
-
-            if (matcher.find()) {
-                String url = matcher.group(1);
-                String prefix = matcher.group(2);
-                String endingSpaces = matcher.group(3);
-
-                // to ignore characters after the caret
-                int validPos = startOffset + matcher.start(3) + 1;
-                if (validPos > caretPos)
-                    return;
-
-                Matcher dotEndMatcher = Pattern.compile("([\\W&&[^/]]+)$")
-                        .matcher(url);
-
-                //Ending non alpha characters like [.,?%] shouldn't be included
-                // in the url.
-                String endingDots = "";
-                if (dotEndMatcher.find()) {
-                    endingDots = dotEndMatcher.group(1);
-                    url = dotEndMatcher.replaceFirst("");
-                }
-
-                text = matcher.replaceFirst("<a href='" + url + "'>" + url
-                        + "</a>" + endingDots + endingSpaces);
-
-                setOuterHTML(e, text);
-
-                // insert initial spaces ignored by the html
-                Matcher spaceMatcher = Pattern.compile("^(\\s+)").matcher(text);
-
-                if (spaceMatcher.find()) {
-                    String initialSpaces = spaceMatcher.group(1);
-                    insertString(startOffset, initialSpaces, null);
-                }
-
-                // insert final spaces ignored by the html
-                spaceMatcher = Pattern.compile("(\\s+)$").matcher(text);
-
-                if (spaceMatcher.find()) {
-                    String extraSpaces = spaceMatcher.group(1);
-                    int endoffset = e.getEndOffset();
-                    if (extraSpaces.charAt(extraSpaces.length() - 1) == '\n') {
-                        extraSpaces = extraSpaces.substring(0, extraSpaces
-                                .length() - 1);
-                        endoffset--;
-                    }
-                    insertString(Math.min(getLength(), endoffset), extraSpaces,
-                            null);
-                }
-            }
-        }
-
-        public void remove(int offs, int len) throws BadLocationException {
-
-            super.remove(offs, len);
-            Element e = getCharacterElement(offs - len);
-            computeLinks(e);
-        }
-
-        public void insertString(int offs, String str, AttributeSet a)
+        /*
+          *  Determine how many lines have been changed,
+          *  then apply highlighting to each line
+          */
+        public void processChangedLines(int offset, int length)
                 throws BadLocationException {
+            String content = doc.getText(0, doc.getLength());
 
-			super.insertString(offs, str, a);
-			Element e = getCharacterElement(offs);
-			computeLinks(e);
-		}
-	}
+            //  The lines affected by the latest document update
+
+            int startLine = rootElement.getElementIndex(offset);
+            int endLine = rootElement.getElementIndex(offset + length);
+
+            //  Do the actual highlighting
+
+            for (int i = startLine; i <= endLine; i++) {
+                applyHighlighting(content, i);
+            }
+
+        }
+
+        /*
+          *  Parse the line to determine the appropriate highlighting
+          */
+        private void applyHighlighting(String content, int line)
+                throws BadLocationException {
+            int startOffset = rootElement.getElement(line).getStartOffset();
+            int endOffset = rootElement.getElement(line).getEndOffset() - 1;
+
+            int lineLength = endOffset - startOffset;
+            int contentLength = content.length();
+
+            if (endOffset >= contentLength)
+                endOffset = contentLength - 1;
+
+
+            doc.setCharacterAttributes(startOffset, lineLength, normal, true);
+
+            checkForTokens(content, startOffset, endOffset);
+        }
+
+        /*
+        *	Parse the line for tokens to highlight
+        */
+        private void checkForTokens(String content, int startOffset, int endOffset) {
+            while (startOffset <= endOffset) {
+                //  skip the delimiters to find the start of a new token
+
+                while (isDelimiter(content.substring(startOffset, startOffset + 1))) {
+                    if (startOffset < endOffset)
+                        startOffset++;
+                    else
+                        return;
+                }
+
+                startOffset = getOtherToken(content, startOffset, endOffset);
+            }
+        }
+
+        /*
+          *
+          */
+        private int getOtherToken(String content, int startOffset, int endOffset) {
+            int endOfToken = startOffset + 1;
+
+            while (endOfToken <= endOffset) {
+                if (isDelimiter(content.substring(endOfToken, endOfToken + 1)))
+                    break;
+
+                endOfToken++;
+            }
+
+            String token = content.substring(startOffset, endOfToken);
+
+            if (isKeyword(token)) {
+                keyword.addAttribute("EMAIL", token);
+                doc.setCharacterAttributes(startOffset, endOfToken - startOffset, keyword, false);
+            }
+
+            return endOfToken + 1;
+        }
+
+        /*
+          *  Override for other languages
+          */
+        protected boolean isDelimiter(String character) {
+
+            return Character.isWhitespace(character.charAt(0)) ||
+                    DELIMITERS.indexOf(character) != -1;
+        }
+
+
+        /*
+          *  Override for other languages
+          */
+        protected boolean isKeyword(String token) {
+            //return keywords.contains(token);
+//            System.out.println("token = " + token);
+            final Matcher match = EMAIL_PATTERN.matcher(token);
+            return (match.find());
+        }
+    }
 }
