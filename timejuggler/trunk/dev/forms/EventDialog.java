@@ -252,6 +252,7 @@ public class EventDialog extends JPanel {
 						panelAlarm.setName("panelAlarm");
 
 						//---- alarmTimeSpinner ----
+						alarmTimeSpinner.setModel(new SpinnerNumberModel(1, 0, null, 1));
 						alarmTimeSpinner.setName("alarmTimeSpinner");
 
 						//---- alarmTimeUnitCombo ----
@@ -262,7 +263,7 @@ public class EventDialog extends JPanel {
 
 						PanelBuilder panelAlarmBuilder = new PanelBuilder(new FormLayout(
 							new ColumnSpec[] {
-								new ColumnSpec("max(pref;20dlu)"),
+								new ColumnSpec("max(pref;23dlu)"),
 								FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
 								FormFactory.DEFAULT_COLSPEC,
 								FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
@@ -270,9 +271,9 @@ public class EventDialog extends JPanel {
 							},
 							RowSpec.decodeSpecs("default")), panelAlarm);
 
-						panelAlarmBuilder.add(alarmTimeSpinner,      cc.xy(1, 1));
-						panelAlarmBuilder.add(alarmTimeUnitCombo,    cc.xy(3, 1));
-						panelAlarmBuilder.add(alarmBeforeAfterCombo, cc.xy(5, 1));
+						panelAlarmBuilder.add(alarmTimeSpinner,      cc.xywh(1, 1, 1, 1, CellConstraints.DEFAULT, CellConstraints.FILL));
+						panelAlarmBuilder.add(alarmTimeUnitCombo,    cc.xy  (3, 1));
+						panelAlarmBuilder.add(alarmBeforeAfterCombo, cc.xy  (5, 1));
 					}
 
 					//======== panelURL ========
@@ -342,11 +343,11 @@ public class EventDialog extends JPanel {
 							},
 							RowSpec.decodeSpecs("default")), panelStatus);
 
-						panelStatusBuilder.add(labelStatus2,           cc.xy(1, 1));
-						panelStatusBuilder.add(statusTypeCombo,        cc.xy(3, 1));
-						panelStatusBuilder.add(completedDatePicker,    cc.xy(5, 1));
-						panelStatusBuilder.add(percentCompleteSpinner, cc.xy(7, 1));
-						panelStatusBuilder.add(labelComplete,          cc.xy(9, 1));
+						panelStatusBuilder.add(labelStatus2,           cc.xy  (1, 1));
+						panelStatusBuilder.add(statusTypeCombo,        cc.xy  (3, 1));
+						panelStatusBuilder.add(completedDatePicker,    cc.xy  (5, 1));
+						panelStatusBuilder.add(percentCompleteSpinner, cc.xywh(7, 1, 1, 1, CellConstraints.DEFAULT, CellConstraints.FILL));
+						panelStatusBuilder.add(labelComplete,          cc.xy  (9, 1));
 					}
 
 					PanelBuilder morePanelBuilder = new PanelBuilder(new FormLayout(
@@ -434,7 +435,6 @@ public class EventDialog extends JPanel {
 						new ColumnSpec(Sizes.dluX(45)),
 						FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
 						FormFactory.PREF_COLSPEC,
-						new ColumnSpec(ColumnSpec.LEFT, Sizes.DLUX2, FormSpec.NO_GROW),
 						FormFactory.PREF_COLSPEC,
 						FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
 						new ColumnSpec("max(pref;35dlu)"),
@@ -462,25 +462,25 @@ public class EventDialog extends JPanel {
 					}), this);
 
 				builder.add(labelTitle,      cc.xy  ( 1,  1));
-				builder.add(titleField,      cc.xywh( 3,  1, 11, 1, CellConstraints.FILL   , CellConstraints.DEFAULT));
+				builder.add(titleField,      cc.xywh( 3,  1, 10, 1, CellConstraints.FILL   , CellConstraints.DEFAULT));
 				builder.add(labelLocation,   cc.xy  ( 1,  3));
-				builder.add(locationField,   cc.xywh( 3,  3, 11, 1, CellConstraints.FILL   , CellConstraints.DEFAULT));
+				builder.add(locationField,   cc.xywh( 3,  3, 10, 1, CellConstraints.FILL   , CellConstraints.DEFAULT));
 				builder.add(labelFrom,       cc.xy  ( 1,  5));
-				builder.add(checkDate,       cc.xy  ( 3,  5));
-				builder.add(dateFromPicker,  cc.xy  ( 5,  5));
-				builder.add(timeFromSpinner, cc.xywh( 7,  5,  1, 1, CellConstraints.DEFAULT, CellConstraints.FILL   ));
-				builder.add(allDayCheckbox,  cc.xy  ( 9,  5));
+				builder.add(checkDate,       cc.xywh( 3,  5,  1, 1, CellConstraints.CENTER , CellConstraints.BOTTOM ));
+				builder.add(dateFromPicker,  cc.xy  ( 4,  5));
+				builder.add(timeFromSpinner, cc.xywh( 6,  5,  1, 1, CellConstraints.DEFAULT, CellConstraints.FILL   ));
+				builder.add(allDayCheckbox,  cc.xy  ( 8,  5));
 				builder.add(labelTo,         cc.xy  ( 1,  7));
-				builder.add(checkDueDate,    cc.xy  ( 3,  7));
-				builder.add(dateToPicker,    cc.xy  ( 5,  7));
-				builder.add(timeToSpinner,   cc.xywh( 7,  7,  1, 1, CellConstraints.DEFAULT, CellConstraints.FILL   ));
-				builder.add(repeatCheckbox,  cc.xy  ( 9,  7));
-				builder.add(btnSetPattern,   cc.xy  (11,  7));
-				builder.add(panelCalendar,   cc.xywh( 1,  9, 13, 1));
-				builder.add(morePanel,       cc.xywh( 1, 11, 13, 1));
-				builder.add(panelBtn,        cc.xywh( 1, 13, 13, 1));
+				builder.add(checkDueDate,    cc.xywh( 3,  7,  1, 1, CellConstraints.CENTER , CellConstraints.CENTER ));
+				builder.add(dateToPicker,    cc.xy  ( 4,  7));
+				builder.add(timeToSpinner,   cc.xywh( 6,  7,  1, 1, CellConstraints.DEFAULT, CellConstraints.FILL   ));
+				builder.add(repeatCheckbox,  cc.xy  ( 8,  7));
+				builder.add(btnSetPattern,   cc.xy  (10,  7));
+				builder.add(panelCalendar,   cc.xywh( 1,  9, 12, 1));
+				builder.add(morePanel,       cc.xywh( 1, 11, 12, 1));
+				builder.add(panelBtn,        cc.xywh( 1, 13, 12, 1));
 			}
-			mainPanel.add(this, BorderLayout.CENTER);
+			mainPanel.add(this, BorderLayout.NORTH);
 		}
 		// JFormDesigner - End of component initialization  //GEN-END:initComponents
 	}
