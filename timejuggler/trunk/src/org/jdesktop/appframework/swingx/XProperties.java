@@ -4,7 +4,15 @@
  */
 package org.jdesktop.appframework.swingx;
 
-import java.awt.Component;
+import application.SessionStorage.Property;
+import org.jdesktop.swingx.JXTable;
+import org.jdesktop.swingx.decorator.SortKey;
+import org.jdesktop.swingx.decorator.SortOrder;
+import org.jdesktop.swingx.table.TableColumnExt;
+
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+import java.awt.*;
 import java.beans.DefaultPersistenceDelegate;
 import java.beans.XMLEncoder;
 import java.util.ArrayList;
@@ -12,48 +20,33 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
-
-import org.jdesktop.swingx.JXTable;
-import org.jdesktop.swingx.decorator.SortKey;
-import org.jdesktop.swingx.decorator.SortOrder;
-import org.jdesktop.swingx.table.TableColumnExt;
-
-import application.SessionStorage.Property;
-
 /**
- * Container class for SwingX specific SessionStorage Properties.
- * Is Factory for custom PersistanceDelegates
+ * Container class for SwingX specific SessionStorage Properties. Is Factory for custom PersistanceDelegates
  */
 public class XProperties {
 
     /**
-     *
-     * Registers all custom PersistenceDelegates needed by contained
-     * Property classes. <p>
-     *
-     * PersistenceDelegates are effectively static properties shared by all
-     * encoders. In other words: Register once on an arbitrary encoder makes
-     * them available for all. Example usage:
-     *
+     * Registers all custom PersistenceDelegates needed by contained Property classes. <p>
+     * <p/>
+     * PersistenceDelegates are effectively static properties shared by all encoders. In other words: Register once on
+     * an arbitrary encoder makes them available for all. Example usage:
+     * <p/>
      * <pre><code>
      * new XProperties.registerPersistenceDelegates();
      * </code></pre>
-     *
      */
     public void registerPersistenceDelegates() {
         XMLEncoder encoder = new XMLEncoder(System.out);
         encoder.setPersistenceDelegate(SortKeyState.class,
-                new DefaultPersistenceDelegate(new String[] { "ascending",
-                        "modelIndex", "comparator" }));
+                new DefaultPersistenceDelegate(new String[]{"ascending",
+                        "modelIndex", "comparator"}));
         encoder.setPersistenceDelegate(ColumnState.class,
                 new DefaultPersistenceDelegate(
-                        new String[] { "width", "preferredWidth", "modelIndex",
-                                "visible", "viewIndex" }));
+                        new String[]{"width", "preferredWidth", "modelIndex",
+                                "visible", "viewIndex"}));
         encoder.setPersistenceDelegate(XTableState.class,
-                new DefaultPersistenceDelegate(new String[] { "columnStates",
-                        "sortKeyState", "horizontalScrollEnabled" }));
+                new DefaultPersistenceDelegate(new String[]{"columnStates",
+                        "sortKeyState", "horizontalScrollEnabled"}));
     }
 
     public static class XTableProperty implements Property {
@@ -68,7 +61,7 @@ public class XProperties {
                 columnStates.add(new ColumnState((TableColumnExt) column,
                         visibleColumns.indexOf(column)));
             }
-            XTableState tableState = new XTableState(columnStates.toArray(new ColumnState[0]));
+            XTableState tableState = new XTableState(columnStates.toArray(new ColumnState[columnStates.size()]));
             tableState.setHorizontalScrollEnabled(table.isHorizontalScrollEnabled());
             SortKey sortKey = SortKey.getFirstSortingKey(table.getFilters().getSortController().getSortKeys());
             if (sortKey != null) {
@@ -105,7 +98,7 @@ public class XProperties {
                 int modelIndex = visibleStates.get(i).getModelIndex();
                 if (modelIndex != column.getModelIndex()) {
                     int currentIndex = -1;
-                    for (int j = i+1; j < model.getColumnCount(); j++) {
+                    for (int j = i + 1; j < model.getColumnCount(); j++) {
                         TableColumn current = model.getColumn(j);
                         if (current.getModelIndex() == modelIndex) {
                             currentIndex = j;
@@ -120,9 +113,9 @@ public class XProperties {
 
         private List<ColumnState> getSortedVisibleColumnStates(ColumnState[] columnStates) {
             List<ColumnState> visibleStates = new ArrayList<ColumnState>();
-            for (int i = 0; i < columnStates.length; i++) {
-                if (columnStates[i].getVisible()) {
-                    visibleStates.add(columnStates[i]);
+            for (ColumnState columnState : columnStates) {
+                if (columnState.getVisible()) {
+                    visibleStates.add(columnState);
                 }
             }
             Collections.sort(visibleStates, new VisibleColumnIndexComparator());
@@ -130,11 +123,9 @@ public class XProperties {
         }
 
         /**
-         * Returns a boolean to indicate if it's reasonably safe to restore the
-         * properties of columns in the list from the columnStates. Here: returns
-         * true if the length of both are the same and the modelIndex of the
-         * items at the same position are the same, otherwise returns false.
-         *
+         * Returns a boolean to indicate if it's reasonably safe to restore the properties of columns in the list from
+         * the columnStates. Here: returns true if the length of both are the same and the modelIndex of the items at
+         * the same position are the same, otherwise returns false.
          * @param columnState
          * @param columns
          * @return
@@ -165,12 +156,13 @@ public class XProperties {
         boolean horizontalScrollEnabled;
         SortKeyState sortKeyState;
 
-        public XTableState(ColumnState[] columnStates, SortKeyState sortKeyState, boolean horizontalEnabled) {
+        public XTableState(ColumnState[] columnStates, SortKeyState sortKeyState, boolean horizontalScrollEnabled) {
             this.columnStates = copyColumnStates(columnStates);
             this.sortKeyState = sortKeyState;
             setHorizontalScrollEnabled(horizontalScrollEnabled);
 
         }
+
         public void setSortKey(SortKey sortKey) {
             this.sortKeyState = new SortKeyState(sortKey);
 
@@ -214,11 +206,9 @@ public class XProperties {
     }
 
     /**
-     * Quick hack to make SortKey encodable. How to write a PersistenceDelegate
-     * for a SortKey? Boils down to how to write a delegate for the
-     * uninstantiable class (SwingX) SortOrder which does enum-mimickry (defines
-     * privately intantiated constants)
-     *
+     * Quick hack to make SortKey encodable. How to write a PersistenceDelegate for a SortKey? Boils down to how to
+     * write a delegate for the uninstantiable class (SwingX) SortOrder which does enum-mimickry (defines privately
+     * intantiated constants)
      */
     public static class SortKeyState {
         int modelIndex;
@@ -229,13 +219,12 @@ public class XProperties {
 
         /**
          * Constructor used by the custom PersistenceDelegate.
-         *
          * @param ascending
          * @param modelIndex
          * @param comparator
          */
         public SortKeyState(boolean ascending, int modelIndex,
-                Comparator comparator) {
+                            Comparator comparator) {
             this.ascending = ascending;
             this.modelIndex = modelIndex;
             this.comparator = comparator;
@@ -243,7 +232,6 @@ public class XProperties {
 
         /**
          * Constructor used by property.
-         *
          * @param sortKey
          */
         public SortKeyState(SortKey sortKey) {
@@ -279,7 +267,6 @@ public class XProperties {
 
         /**
          * Constructor used by the custom PersistenceDelegate.
-         *
          * @param width
          * @param preferredWidth
          * @param modelColumn
@@ -296,7 +283,6 @@ public class XProperties {
 
         /**
          * Constructor used by the Property.
-         *
          * @param columnExt
          * @param viewIndex
          */
@@ -306,11 +292,10 @@ public class XProperties {
         }
 
         /**
-         * Restores column properties if the model index is the same as the
-         * column's model index. Does nothing otherwise. <p>
-         *
+         * Restores column properties if the model index is the same as the column's model index. Does nothing
+         * otherwise. <p>
+         * <p/>
          * Here the properties are: width, preferredWidth, visible.
-         *
          * @param columnExt the column to configure
          */
         public void configureColumn(TableColumnExt columnExt) {
@@ -346,7 +331,7 @@ public class XProperties {
 
         public int compare(Object o1, Object o2) {
 
-           return ((ColumnState) o1).getViewIndex() - ((ColumnState) o2).getViewIndex();
+            return ((ColumnState) o1).getViewIndex() - ((ColumnState) o2).getViewIndex();
         }
 
     }
