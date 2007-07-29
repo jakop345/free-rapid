@@ -36,10 +36,18 @@ public final class AppPrefs {
 
     //jednotlive klice pro uzivatelska nastaveni
     //public static final String SHOW_STATUSBAR = "settings.showStatusbar";
-//    public static final String SHOW_TOOLBAR = "settings.showToolbar";
+    //    public static final String SHOW_TOOLBAR = "settings.showToolbar";
     public static final String SHOW_SEARCHBAR = "settings.showSearchbar";
     public static final String HIDE_COMPLETED_TASKS = "settings.showCompletedTasks";
     public static final String CALENDAR_VIEW = "settings.calendarView";
+    public static final String SHOW_MORE_EVENTTASKDIALOG = "settings.showMoreEventTaskDialog";
+    public static final String DEFAULT_EVENT_LENGTH = "settings.defaultEventLength";
+    public static final String DEFAULT_ALARM_SETTING_FOR_EVENT = "settings.defaultAlarmSettingForEvent";
+    public static final String DEFAULT_ALARM_SETTING_FOR_TASK = "settings.defaultAlarmSettingForTask";
+    public static final String DEFAULT_ALARM_TIME_BEFORE_EVENT = "settings.defaultAlarmTmeBeforeEvent";
+    public static final String DEFAULT_ALARM_TIME_BEFORE_TASK = "settings.defaultAlarmTimeBeforeTask";
+    public static final String DEFAULT_ALARM_TIME_BEFORE_EVENT_TIMEUNIT = "settings.defaultAlarmTimeBeforeEventTimeUnit";
+    public static final String DEFAULT_ALARM_TIME_BEFORE_TASK_TIMEUNIT = "settings.defaultAlarmTimeBeforeTaskTimeUnit";
 
 
     private AppPrefs() {

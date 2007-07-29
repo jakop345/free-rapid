@@ -106,4 +106,19 @@ public class Swinger {
     public static void showErrorDialog(final String message) {
         JOptionPane.showMessageDialog(Frame.getFrames()[0], message, getResourceMap().getString("errorMessage"), JOptionPane.ERROR_MESSAGE);
     }
+
+    public static void inputFocus(final JComboBox combo) {
+        inputFocus((JComponent) combo.getEditor().getEditorComponent());
+    }
+
+    public static void inputFocus(final JComponent field) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                field.grabFocus();
+                field.requestFocus();
+            }
+        });
+    }
+
+
 }

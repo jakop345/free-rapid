@@ -54,6 +54,12 @@ public class ComponentFactory {
         return combo;
     }
 
+    public static JTextArea getTextArea() {
+        final JTextArea textArea = new JTextArea();
+        textArea.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+        return textArea;
+    }
+
     public static JTextField getTextField() {
         final JTextField field = new JTextField();
         field.addFocusListener(ComponentFactory.getInstance().getFocusListener());
