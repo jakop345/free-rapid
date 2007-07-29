@@ -4,13 +4,11 @@ import application.Action;
 import cz.cvut.felk.timejuggler.core.MainApp;
 import cz.cvut.felk.timejuggler.gui.dialogs.EventTaskDialog;
 
-import java.awt.*;
-
 /**
  * @author Vity
  */
 
-public class FileActions extends Component {
+public class FileActions {
     private MainApp app;
 
 

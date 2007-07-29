@@ -2,13 +2,11 @@ package cz.cvut.felk.timejuggler.gui.actions;
 
 import application.Action;
 
-import java.awt.*;
-
 /**
  * @author Vity
  */
 
-public class HelpActions extends Component {
+public class HelpActions {
 
     public HelpActions() {
 

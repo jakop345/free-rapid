@@ -2,13 +2,11 @@ package cz.cvut.felk.timejuggler.gui.actions;
 
 import application.Action;
 
-import java.awt.*;
-
 /**
  * @author Vity
  */
 
-public class ViewActions extends Component {
+public class ViewActions {
     public static final int DAY_VIEW = 0;
     public static final int WEEK_VIEW = 1;
     public static final int MULTIWEEK_VIEW = 2;
@@ -52,8 +50,6 @@ public class ViewActions extends Component {
     public void showSearchBar() {
 
     }
-
-
 
 //    public boolean isEnabled() {
 //        System.out.println("isenabled");

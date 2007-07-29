@@ -2,13 +2,11 @@ package cz.cvut.felk.timejuggler.gui.actions;
 
 import application.Action;
 
-import java.awt.*;
-
 /**
  * @author Vity
  */
 
-public class EditActions extends Component {
+public class EditActions {
 
     public EditActions() {
 
@@ -17,7 +15,7 @@ public class EditActions extends Component {
     @Action
     public void editSelection() {
 
-    }  
+    }
 
     @Action
     public void options() {

@@ -2,13 +2,11 @@ package cz.cvut.felk.timejuggler.gui.actions;
 
 import application.Action;
 
-import java.awt.*;
-
 /**
  * @author Vity
  */
 
-public class GoActions extends Component {
+public class GoActions {
 
 
     public GoActions() {
@@ -33,5 +31,5 @@ public class GoActions extends Component {
     public void nextDate() {
 
     }
- 
+
 }
