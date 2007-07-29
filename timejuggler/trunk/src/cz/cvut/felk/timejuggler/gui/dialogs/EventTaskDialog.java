@@ -7,6 +7,7 @@ import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.*;
 import cz.cvut.felk.timejuggler.swing.ComponentFactory;
+import cz.cvut.felk.timejuggler.swing.EditorPaneLinkDetector;
 import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.utilities.Browser;
 import org.jdesktop.swingx.JXDatePicker;
@@ -34,6 +35,7 @@ public class EventTaskDialog extends AppDialog {
 
     private void build() {
         inject();
+        buildGUI();
         buildModels();
         pack();
         setResizable(true);
@@ -48,6 +50,10 @@ public class EventTaskDialog extends AppDialog {
         btnOK.setAction(actionMap.get("okBtnAction"));
         btnCancel.setAction(actionMap.get("cancelBtnAction"));
         btnVisitURL.setAction(actionMap.get("visitURLAction"));
+    }
+
+    private void buildGUI() {
+
     }
 
     private void buildModels() {
@@ -90,15 +96,15 @@ public class EventTaskDialog extends AppDialog {
         // Generated using JFormDesigner Open Source Project license - unknown
         JPanel mainPanel = new JPanel();
         JLabel labelTitle = new JLabel();
-        titleField = new JTextField();
+        titleField = ComponentFactory.getTextField();
         JLabel labelLocation = new JLabel();
-        locationField = new JTextField();
+        locationField = ComponentFactory.getTextField();
         JLabel labelFrom = new JLabel();
-        dateFromPicker = new JXDatePicker();
+        dateFromPicker = ComponentFactory.getDatePicker();
         timeFromSpinner = ComponentFactory.getTimeSpinner();
         JCheckBox allDayCheckbox = new JCheckBox();
         JLabel labelTo = new JLabel();
-        dateToPicker = new JXDatePicker();
+        dateToPicker = ComponentFactory.getDatePicker();
         timeToSpinner = ComponentFactory.getTimeSpinner();
         JCheckBox repeatCheckbox = new JCheckBox();
         btnSetPattern = new JButton();
@@ -128,12 +134,12 @@ public class EventTaskDialog extends AppDialog {
         alarmBeforeAfterCombo = ComponentFactory.getComboBox();
         JPanel panelURL = new JPanel();
         JLabel labelURL = new JLabel();
-        urlField = new JTextField();
+        urlField = ComponentFactory.getTextField();
         btnVisitURL = new JButton();
         panelStatus = new JPanel();
         JLabel labelStatus2 = new JLabel();
         statusTypeCombo = ComponentFactory.getComboBox();
-        completedDatePicker = new JXDatePicker();
+        completedDatePicker = ComponentFactory.getDatePicker();
         percentCompleteSpinner = new JSpinner();
         JLabel labelComplete = new JLabel();
         panelBtn = new JPanel();
@@ -382,7 +388,7 @@ public class EventTaskDialog extends AppDialog {
                                         FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
                                         FormFactory.PREF_COLSPEC,
                                         FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
-                                        FormFactory.PREF_COLSPEC,
+                                        ComponentFactory.DATEPICKER_COLUMN_SPEC,
                                         FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
                                         new ColumnSpec("max(pref;20dlu)"),
                                         new ColumnSpec(ColumnSpec.LEFT, Sizes.DLUX4, FormSpec.NO_GROW),
@@ -480,7 +486,7 @@ public class EventTaskDialog extends AppDialog {
                         new ColumnSpec[]{
                                 new ColumnSpec(Sizes.dluX(45)),
                                 FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
-                                FormFactory.PREF_COLSPEC,
+                                ComponentFactory.DATEPICKER_COLUMN_SPEC,
                                 FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
                                 new ColumnSpec("max(pref;35dlu)"),
                                 FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
@@ -544,7 +550,7 @@ public class EventTaskDialog extends AppDialog {
     private JScrollPane scrollPaneDescription;
     private JTextArea descriptionArea;
     private JScrollPane scrollPaneAttendees;
-    private JEditorPane attendeesArea;
+    private EditorPaneLinkDetector attendeesArea;
     private JComboBox privacyCombo;
     private JComboBox priorityCombo;
     private JComboBox statusCombo;
