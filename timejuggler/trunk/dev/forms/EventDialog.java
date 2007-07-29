@@ -28,10 +28,12 @@ public class EventDialog extends JPanel {
 		JLabel labelLocation = new JLabel();
 		locationField = new JTextField();
 		JLabel labelFrom = new JLabel();
+		checkDate = new JCheckBox();
 		dateFromPicker = new JXDatePicker();
 		timeFromSpinner = new JSpinner();
 		JCheckBox allDayCheckbox = new JCheckBox();
 		JLabel labelTo = new JLabel();
+		checkDueDate = new JCheckBox();
 		dateToPicker = new JXDatePicker();
 		timeToSpinner = new JSpinner();
 		JCheckBox repeatCheckbox = new JCheckBox();
@@ -106,6 +108,10 @@ public class EventDialog extends JPanel {
 				labelFrom.setText( );
 				labelFrom.setName("labelFrom");
 
+				//---- checkDate ----
+				checkDate.setToolTipText( );
+				checkDate.setName("checkDate");
+
 				//---- dateFromPicker ----
 				dateFromPicker.setName("dateFromPicker");
 
@@ -119,6 +125,10 @@ public class EventDialog extends JPanel {
 				//---- labelTo ----
 				labelTo.setText( );
 				labelTo.setName("labelTo");
+
+				//---- checkDueDate ----
+				checkDueDate.setToolTipText( );
+				checkDueDate.setName("checkDueDate");
 
 				//---- dateToPicker ----
 				dateToPicker.setName("dateToPicker");
@@ -424,6 +434,8 @@ public class EventDialog extends JPanel {
 						new ColumnSpec(Sizes.dluX(45)),
 						FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
 						FormFactory.PREF_COLSPEC,
+						new ColumnSpec(ColumnSpec.LEFT, Sizes.DLUX2, FormSpec.NO_GROW),
+						FormFactory.PREF_COLSPEC,
 						FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
 						new ColumnSpec("max(pref;35dlu)"),
 						FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
@@ -449,22 +461,24 @@ public class EventDialog extends JPanel {
 						FormFactory.DEFAULT_ROWSPEC
 					}), this);
 
-				builder.add(labelTitle,      cc.xy  (1,  1));
-				builder.add(titleField,      cc.xywh(3,  1,  9, 1, CellConstraints.FILL   , CellConstraints.DEFAULT));
-				builder.add(labelLocation,   cc.xy  (1,  3));
-				builder.add(locationField,   cc.xywh(3,  3,  9, 1, CellConstraints.FILL   , CellConstraints.DEFAULT));
-				builder.add(labelFrom,       cc.xy  (1,  5));
-				builder.add(dateFromPicker,  cc.xy  (3,  5));
-				builder.add(timeFromSpinner, cc.xywh(5,  5,  1, 1, CellConstraints.DEFAULT, CellConstraints.FILL   ));
-				builder.add(allDayCheckbox,  cc.xy  (7,  5));
-				builder.add(labelTo,         cc.xy  (1,  7));
-				builder.add(dateToPicker,    cc.xy  (3,  7));
-				builder.add(timeToSpinner,   cc.xywh(5,  7,  1, 1, CellConstraints.DEFAULT, CellConstraints.FILL   ));
-				builder.add(repeatCheckbox,  cc.xy  (7,  7));
-				builder.add(btnSetPattern,   cc.xy  (9,  7));
-				builder.add(panelCalendar,   cc.xywh(1,  9, 11, 1));
-				builder.add(morePanel,       cc.xywh(1, 11, 11, 1));
-				builder.add(panelBtn,        cc.xywh(1, 13, 11, 1));
+				builder.add(labelTitle,      cc.xy  ( 1,  1));
+				builder.add(titleField,      cc.xywh( 3,  1, 11, 1, CellConstraints.FILL   , CellConstraints.DEFAULT));
+				builder.add(labelLocation,   cc.xy  ( 1,  3));
+				builder.add(locationField,   cc.xywh( 3,  3, 11, 1, CellConstraints.FILL   , CellConstraints.DEFAULT));
+				builder.add(labelFrom,       cc.xy  ( 1,  5));
+				builder.add(checkDate,       cc.xy  ( 3,  5));
+				builder.add(dateFromPicker,  cc.xy  ( 5,  5));
+				builder.add(timeFromSpinner, cc.xywh( 7,  5,  1, 1, CellConstraints.DEFAULT, CellConstraints.FILL   ));
+				builder.add(allDayCheckbox,  cc.xy  ( 9,  5));
+				builder.add(labelTo,         cc.xy  ( 1,  7));
+				builder.add(checkDueDate,    cc.xy  ( 3,  7));
+				builder.add(dateToPicker,    cc.xy  ( 5,  7));
+				builder.add(timeToSpinner,   cc.xywh( 7,  7,  1, 1, CellConstraints.DEFAULT, CellConstraints.FILL   ));
+				builder.add(repeatCheckbox,  cc.xy  ( 9,  7));
+				builder.add(btnSetPattern,   cc.xy  (11,  7));
+				builder.add(panelCalendar,   cc.xywh( 1,  9, 13, 1));
+				builder.add(morePanel,       cc.xywh( 1, 11, 13, 1));
+				builder.add(panelBtn,        cc.xywh( 1, 13, 13, 1));
 			}
 			mainPanel.add(this, BorderLayout.CENTER);
 		}
@@ -475,8 +489,10 @@ public class EventDialog extends JPanel {
 	// Generated using JFormDesigner Open Source Project license - unknown
 	private JTextField titleField;
 	private JTextField locationField;
+	private JCheckBox checkDate;
 	private JXDatePicker dateFromPicker;
 	private JSpinner timeFromSpinner;
+	private JCheckBox checkDueDate;
 	private JXDatePicker dateToPicker;
 	private JSpinner timeToSpinner;
 	private JButton btnSetPattern;
