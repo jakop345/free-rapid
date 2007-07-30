@@ -1,6 +1,7 @@
 package cz.cvut.felk.timejuggler.db;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.logging.Logger;
 
 /**
@@ -19,19 +20,11 @@ public class EventTask extends CalComponent {
     private String location;
     private int priority = 0; // 0 = undefined
     private String transparency;
-    
-    /* VTodo */
-    //TODO due Timestamp zmenit na Date, nebo ostatni na Timestamp!?
-    
-    //private Timestamp due;
-    //private String geoGPS;
-    //private String location;
-    //private int priority = 0; // 0 = undefined
+
+	/* VTodo */       
     private int percentcomplete;
     private Timestamp completed;
     //public Alarms m_Alarms;
-    
-    
     
     private boolean isTodo;
     
@@ -53,13 +46,16 @@ public class EventTask extends CalComponent {
 	/**
      * Method saveOrUpdate
      * @param template
+     *
+     * Ulozeni komponenty do databaze
      */
     public void saveOrUpdate(TimeJugglerJDBCTemplate template) {
-    	super.saveOrUpdate(template);
+    	super.saveOrUpdate(template);	// ulozeni CalComponent vlastnosti
 
     	String updateQuery;
     	String insertQuery;
 		if (!isTodo) {
+			// Ulozeni jako Event
 			updateQuery = "UPDATE VEvent SET calComponentID=?,geo=?,location=?,priority=?,transp=?) WHERE vEventID = ? ";			
 			insertQuery = "INSERT INTO VEvent (calComponentID,geo,location,priority,transp) VALUES (?,?,?,?,?) ";
 			if (getId() > 0) {
@@ -74,15 +70,16 @@ public class EventTask extends CalComponent {
 		        logger.info("Database - VEvent new ID=" + getId());
 	        }
 		}else{
-			updateQuery = "UPDATE VToDo SET calComponentID=?,geo=?,location=?,priority=?,percentcomplete=?,due=?) WHERE vToDoID = ? ";
-			insertQuery = "INSERT INTO VToDo (calComponentID,geo,location,priority,percentcomplete,due) VALUES (?,?,?,?,?,?)";
+			// Ulozeni jako ToDo
+			updateQuery = "UPDATE VToDo SET calComponentID=?,geo=?,location=?,priority=?,percentcomplete=?) WHERE vToDoID = ? ";
+			insertQuery = "INSERT INTO VToDo (calComponentID,geo,location,priority,percentcomplete) VALUES (?,?,?,?,?)";
 			if (getId() > 0) {
 				logger.info("Database - Update: VToDo[" + getId() + "]...");
-	        	Object params[] = {getComponentId(), geoGPS, location, priority, percentcomplete, getDue(), getId() };
+	        	Object params[] = {getComponentId(), geoGPS, location, priority, percentcomplete, getId() };
 	        	template.executeUpdate(updateQuery, params);
 	        }else{
 	        	logger.info("Database - Insert: VToDo[]...");
-	        	Object params[] = {getComponentId(), geoGPS, location, priority, percentcomplete, getDue() };
+	        	Object params[] = {getComponentId(), geoGPS, location, priority, percentcomplete };
 		        template.executeUpdate(insertQuery, params);
 		       	setId(template.getGeneratedId());
 		       	logger.info("Database - VToDo new ID=" + getId());
@@ -93,6 +90,8 @@ public class EventTask extends CalComponent {
     /**
      * Method delete
      * @param template
+     *
+     * Ostraneni komponenty z databaze
      */
 	public void delete(TimeJugglerJDBCTemplate template){
 		String deleteQuery;
@@ -178,8 +177,8 @@ public class EventTask extends CalComponent {
     /**
      * @param newVal
      */
-    public void setCompleted(Timestamp newVal) {
-        completed = newVal;
+    public void setCompleted(Date newVal) {
+        completed = (newVal == null ? null : new Timestamp(newVal.getTime()));
     }
     
     /**
@@ -188,7 +187,7 @@ public class EventTask extends CalComponent {
      * konverze z Todo na Event a naopak
      */
     public void convert() {
-        // TODO: napsat kod
+        // TODO: napsat kod pro konverzi Event<->ToDo
         // ....
         // delete ***
         // change e/t

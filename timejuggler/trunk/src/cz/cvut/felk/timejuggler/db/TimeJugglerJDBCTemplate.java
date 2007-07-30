@@ -11,10 +11,10 @@ import java.util.logging.Logger;
  * @version 0.1
  * @created 14-IV-2007 15:34:14
  */
-public class TimeJugglerJDBCTemplate<E> extends JDBCTemplate {
+public class TimeJugglerJDBCTemplate<F> extends JDBCTemplate {
     private final static Logger logger = Logger.getLogger(TimeJugglerJDBCTemplate.class.getName());
 
-    protected Vector<E> items;
+    protected F items;
     private int last_id = -1;
 
     public TimeJugglerJDBCTemplate() {
@@ -24,7 +24,7 @@ public class TimeJugglerJDBCTemplate<E> extends JDBCTemplate {
         //final File homePath = ApplicationContext.getInstance().getLocalStorage().getDirectory();
         logger.fine("homePath = " + homePath);
 
-        this.items = new Vector<E>();
+        //this.items = new F;
     }
 
     protected Connection getConnection() throws SQLException {
@@ -43,7 +43,7 @@ public class TimeJugglerJDBCTemplate<E> extends JDBCTemplate {
         last_id = rs.getInt(1);
     }
 
-    public Vector<E> getItems() {
+    public F getItems() {
         return items;
     }
     

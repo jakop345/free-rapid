@@ -4,11 +4,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
 import java.util.Date;
+import java.sql.Timestamp;
 
 import java.util.logging.Logger;
 /**
  * @version 0.1
  * @created 14-IV-2007 16:38:21
+ *
+ * Trida reprezentujici objekt kalendar (VCalendar) v databazi
  */
 public class VCalendar extends DbElement {
 	private final static Logger logger = Logger.getLogger(VCalendar.class.getName());
@@ -38,6 +41,8 @@ public class VCalendar extends DbElement {
 	/**
      * Method saveOrUpdate
      * @param template
+     *
+     * Ulozi novy kalendar do databaze, nebo provede update udaju o kalendari
      */
 	public void saveOrUpdate(TimeJugglerJDBCTemplate template){
 		if (getId() > 0) {
@@ -60,17 +65,19 @@ public class VCalendar extends DbElement {
 	/**
      * Method delete
      * @param template
+     *
+     * Odstrani kalendar z databaze
      */
 	public void delete(TimeJugglerJDBCTemplate template){
 		if (getId() > 0) {
 			logger.info("Database - DELETE: VCalendar[" + getId() + "]:" + name + "...");
-			Vector<VEvent> events = getEvents();
-			for (VEvent event : events) {
+			Vector<EventTask> events = getEvents();
+			for (EventTask event : events) {
 				event.delete(template);
 			}
 	
-			Vector<VToDo> todos = getToDos();
-			for (VToDo todo : todos) {
+			Vector<EventTask> todos = getToDos();
+			for (EventTask todo : todos) {
 				todo.delete(template);
 			}
 			
@@ -134,15 +141,19 @@ public class VCalendar extends DbElement {
     }
 
     /**
-     * Method getEventsByCalendar
+     * Method getEvents
      * @return
+     *
+     * Vraci vsechny udalosti typu Event v danem kalendari
      */
-    public Vector<VEvent> getEvents() {
+    public Vector<EventTask> getEvents() {
         String sql = "SELECT * FROM VEvent,CalComponent,DateTime WHERE (VEvent.calComponentID = CalComponent.calComponentID AND CalComponent.vCalendarID=? AND CalComponent.dateTimeID=DateTime.dateTimeID)";
         Object params[] = {getId()};
-        TimeJugglerJDBCTemplate<VEvent> template = new TimeJugglerJDBCTemplate<VEvent>() {
+        TimeJugglerJDBCTemplate<Vector<EventTask>> template = new TimeJugglerJDBCTemplate<Vector<EventTask>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
-                VEvent event = new VEvent();
+            	if (items == null) items = new Vector<EventTask>();
+                EventTask event = new EventTask();	// Vytvori udalost typu Event
+                Timestamp ts;
                 event.setId(rs.getInt("vEventID"));	//DB
                 event.setLocation(rs.getString("location"));
                 event.setTransparency(rs.getString("transp"));
@@ -157,16 +168,24 @@ public class VCalendar extends DbElement {
                 event.setOrganizer(rs.getString("organizer"));
                 event.setSequence(rs.getInt("sequence"));
                 event.setStatus(rs.getString("status"));
-                event.setSummary(rs.getString("summary"));
-                event.setDTimestamp(rs.getTimestamp("dtstamp"));
+                event.setSummary(rs.getString("summary"));                
+                ts = rs.getTimestamp("dtstamp");
+                if (ts != null) event.setDTimestamp(new Date(ts.getTime()));
                 
                 //cast DateTime
-                DateTime datetime = new DateTime();
-                datetime.setPeriodsId(rs.getInt("periodsID"));
-                datetime.setDistinctDatesId(rs.getInt("distinctDatesID"));
-                datetime.setLastModified(rs.getTimestamp("lastmodified"));
-                datetime.setCreated(rs.getTimestamp("created"));
-                event.setDateTime(datetime);
+                event.getDateTime().setPeriodsId(rs.getInt("periodsID"));
+                event.getDateTime().setDistinctDatesId(rs.getInt("distinctDatesID"));
+                
+                ts = rs.getTimestamp("lastmodified");
+                if (ts != null) event.setLastModified(new Date(ts.getTime()));
+                ts = rs.getTimestamp("created");
+                if (ts != null) event.setCreated(new Date(ts.getTime()));
+                ts = rs.getTimestamp("startDate");
+                if (ts != null) event.setStartDate(new Date(ts.getTime()));
+                ts = rs.getTimestamp("endDate");
+                if (ts != null) event.setEndDate(new Date(ts.getTime()));
+                                
+                // TODO: Nacitat Duration z DB (durationID)
                 
                 items.add(event);
             }
@@ -177,20 +196,26 @@ public class VCalendar extends DbElement {
     /**
      * Method getToDos
      * @return
+     *
+     * Vraci vsechny udalosti typu ToDo v danem kalendari
      */
-    public Vector<VToDo> getToDos() {
+    public Vector<EventTask> getToDos() {
         String sql = "SELECT * FROM VToDo,CalComponent,DateTime WHERE (VToDo.calComponentID = CalComponent.calComponentID AND CalComponent.vCalendarID=? AND CalComponent.dateTimeID=DateTime.dateTimeID)";
         Object params[] = { getId() };
-        TimeJugglerJDBCTemplate<VToDo> template = new TimeJugglerJDBCTemplate<VToDo>() {
+        TimeJugglerJDBCTemplate<Vector<EventTask>> template = new TimeJugglerJDBCTemplate<Vector<EventTask>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
-                VToDo todo = new VToDo();
+            	if (items == null) items = new Vector<EventTask>();
+                EventTask todo = new EventTask(true);	// Vytvori udalost typu ToDo
+                Timestamp ts;
                 todo.setId(rs.getInt("vToDoID"));
                 todo.setLocation(rs.getString("location"));
                 todo.setPercentComplete(rs.getInt("percentcomplete"));
                 todo.setPriority(rs.getInt("priority"));
                 todo.setGeoGPS(rs.getString("geo"));
-                todo.setDue(rs.getTimestamp("due"));
-                todo.setCompleted(rs.getTimestamp("completed"));
+                ts = rs.getTimestamp("due");
+                if (ts != null) todo.setEndDate(new Date(ts.getTime()));
+                ts = rs.getTimestamp("completed");
+                todo.setCompleted(new Date(ts.getTime()));
                 //cast calcomponent
                 todo.setComponentId(rs.getInt("calComponentID"));	//DB
                 todo.setDescription(rs.getString("description"));
@@ -200,11 +225,20 @@ public class VCalendar extends DbElement {
                 todo.setSequence(rs.getInt("sequence"));
                 todo.setStatus(rs.getString("status"));
                 todo.setSummary(rs.getString("summary"));
-                todo.setDTimestamp(rs.getTimestamp("dtstamp"));
-                //cast datetime
-                todo.setLastModified(rs.getTimestamp("lastmodified"));
-                todo.setCreated(rs.getTimestamp("created"));
+                ts = rs.getTimestamp("dtstamp");
+                if (ts != null) todo.setDTimestamp(new Date(ts.getTime()));
+                //cast DateTime                
+                todo.getDateTime().setPeriodsId(rs.getInt("periodsID"));
+                todo.getDateTime().setDistinctDatesId(rs.getInt("distinctDatesID"));
+                ts = rs.getTimestamp("lastmodified");
+                if (ts != null) todo.setLastModified(new Date(ts.getTime()));
+                ts = rs.getTimestamp("created");
+                if (ts != null) todo.setCreated(new Date(ts.getTime()));
+                ts = rs.getTimestamp("startDate");
+                if (ts != null) todo.setStartDate(new Date(ts.getTime()));
 
+				// TODO: Nacitat Duration z DB (durationID)
+                
                 items.add(todo);
             }
         };
@@ -219,8 +253,8 @@ public class VCalendar extends DbElement {
 	 * @return
 	 *
 	 */
-	public Vector<VEvent> getEvents(Date startDate,Date endDate) {
-		// TODO: Add your code here
+	public Vector<EventTask> getEvents(Date startDate,Date endDate) {
+		// TODO: Napsat SELECT pro vraceni udalosti mezi danymi casy
 		return null;
 	}
 }

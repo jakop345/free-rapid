@@ -11,10 +11,11 @@ import java.sql.SQLException;
 import java.util.logging.Logger;
 
 /**
- * Tato trida poskytuje pristup k instanci tridy Connection pro pouziti databaze
  * @author Jan Struz
  * @version 0.1
  * @created 16-IV-2007 18:36:42
+ *
+ * Tato trida poskytuje pristup k instanci tridy Connection pro pouziti databaze
  */
 public class ConnectionManager {
     private final static Logger logger = Logger.getLogger(ConnectionManager.class.getName());

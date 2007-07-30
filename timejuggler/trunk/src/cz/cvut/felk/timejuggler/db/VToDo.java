@@ -6,11 +6,11 @@ import java.util.logging.Logger;
 /**
  * @version 0.1
  * @created 14-IV-2007 21:47:56
+ *
+ * Tato trida je nahrazena tridou EventTask !
  */
-public class VToDo extends CalComponent {
+@Deprecated public class VToDo extends CalComponent {
 	private final static Logger logger = Logger.getLogger(VToDo.class.getName());
-	
-    private Timestamp due;
     private String geoGPS;
     private String location;
     private int priority = 0; // 0 = undefined
@@ -33,16 +33,16 @@ public class VToDo extends CalComponent {
         	logger.info("Database - Update: VToDo[" + getId() + "]...");
 	        Object params[] = {
 	                getComponentId(), geoGPS,
-	                location, priority, percentcomplete, due, getId() };
-	        String updateQuery = "UPDATE VToDo SET calComponentID=?,geo=?,location=?,priority=?,percentcomplete=?,due=?) WHERE vToDoID = ? ";
+	                location, priority, percentcomplete, getId() };
+	        String updateQuery = "UPDATE VToDo SET calComponentID=?,geo=?,location=?,priority=?,percentcomplete=?) WHERE vToDoID = ? ";
 	        template.executeUpdate(updateQuery, params);
         }else{
         	logger.info("Database - Insert: VToDo[]...");
 	        Object params[] = {
 	                getComponentId(), geoGPS,
-	                location, priority, percentcomplete, due };
+	                location, priority, percentcomplete};
 	
-	        String insertQuery = "INSERT INTO VToDo (calComponentID,geo,location,priority,percentcomplete,due) VALUES (?,?,?,?,?,?)";
+	        String insertQuery = "INSERT INTO VToDo (calComponentID,geo,location,priority,percentcomplete) VALUES (?,?,?,?,?)";
 	        template.executeUpdate(insertQuery, params);
 	       	setId(template.getGeneratedId());
 	       	logger.info("Database - VToDo new ID=" + getId());
@@ -62,17 +62,6 @@ public class VToDo extends CalComponent {
 			super.delete(template);
 		}
 	}
-
-    public Timestamp getDue() {
-        return due;
-    }
-
-    /**
-     * @param newVal
-     */
-    public void setDue(Timestamp newVal) {
-        due = newVal;
-    }
 
     public String getGeoGPS() {
         return geoGPS;

@@ -1,48 +1,50 @@
 package cz.cvut.felk.timejuggler.db;
 
-import java.sql.Time;
 import java.util.Date;
+import java.sql.Timestamp;
+import java.util.logging.Logger;
+
 /**
  * @author Jan Struz
  * @version 0.1
  * @created 27-IV-2007 22:45:44
+ * 
+ * trida reprezentujici casovy usek
+ * zacatek: startDate, konec: endDate, nebo delka trvani (duration)
  * Hotovo
  */
 public class Period extends DbElement {
-	//TODO : Logging
-	//TODO : startTime, endTime !?
-	private Date endDate;
-	private Date startDate;
-	private Time startTime;
-	private Time endTime;
+	private final static Logger logger = Logger.getLogger(Period.class.getName());
+
+	private Timestamp endDate;
+	private Timestamp startDate;
 	
-	private RepetitionRules repetitionRules;	//rrule
-	private RepetitionRules exceptionRules;		//exrule	
-	private DistinctDates exceptionDates;		//exdate
+	private RepetitionRules repetitionRules;	//rrule - pravidla pro opakovani
+	private RepetitionRules exceptionRules;		//exrule - pravidla pro opakovani, kdy se udalost nekona (vyjimky)
+	private DistinctDates exceptionDates;		//exdate - data, kdy se udalost nekona (vyjimky)
 
 	private int repetitionRulesId;
 	private int exceptionRulesId;
 	private int exceptionDatesId;
-
 		
-	private Duration duration;
+	private Duration duration;	// delka trvani udalosti
 	private int periodsId;
 
 	public Period(){
 	}
 
 	public Period(Date startDate, Date endDate){
-		this.startDate = startDate;
-		this.endDate = endDate;
+		this.startDate = (startDate == null ? null : new Timestamp(startDate.getTime()));
+		this.endDate = (endDate == null ? null : new Timestamp(endDate.getTime()));
 	}
 	
 	public Period(Date startDate, Duration duration){
-		this.startDate = startDate;
+		this.startDate = (startDate == null ? null : new Timestamp(startDate.getTime()));
 		this.duration = duration;
 	}
 	
 	public Period(Date startDate){
-		this.startDate = startDate;
+		this.startDate = new Timestamp(startDate.getTime());
 	}
 
 	
@@ -55,6 +57,7 @@ public class Period extends DbElement {
      */
 	public void saveOrUpdate(TimeJugglerJDBCTemplate template) {
 		if (duration != null) {
+			logger.info("Period: duration != null ");
 			duration.saveOrUpdate(template);
 		}
 		if (repetitionRules != null) {
@@ -68,18 +71,23 @@ public class Period extends DbElement {
 		}
 		
 		if (getId() > 0) {
-			Object params[] = { startDate, startTime, endDate, endTime, 
+			Object params[] = { startDate, endDate, 
 				(repetitionRules == null ? null : repetitionRules.getId()), 
 				(exceptionRules == null ? null : exceptionRules.getId()), 
 				(duration == null ? null : duration.getId()), periodsId, 
 				(exceptionDates == null ? null : exceptionDates.getId()), getId() };
-			String updateQuery = "UPDATE Period SET startDate=?,startTime=?,endDate=?,endTime=?,rrule=?,exrule=?,durationID=?,periodsID=?,distinctDatesID=?) WHERE periodID = ? ";
+			String updateQuery = "UPDATE Period SET startDate=?,endDate=?,rrule=?,exrule=?,durationID=?,periodsID=?,distinctDatesID=?) WHERE periodID = ? ";
 			template.executeUpdate(updateQuery, params);
 		}else{
-			Object params[] = { startDate, startTime, endDate, endTime, repetitionRules.getId(), exceptionRules.getId(), duration.getId(), periodsId, exceptionDates.getId()};
-			String insertQuery = "INSERT INTO Period (startDate,startTime,endDate,endTime,rrule,exrule,durationID,periodsID,distinctDatesID) VALUES (?,?,?,?,?,?,?,?,?)";
+			Object params[] = { startDate, endDate, 
+				repetitionRules == null ? null : repetitionRules.getId(), 
+				exceptionRules == null ? null : exceptionRules.getId(), 
+				duration == null ? null : duration.getId(), periodsId, 
+				exceptionDates == null ? null : exceptionDates.getId()};
+			String insertQuery = "INSERT INTO Period (startDate,endDate,rrule,exrule,durationID,periodsID,distinctDatesID) VALUES (?,?,?,?,?,?,?)";
 			template.executeUpdate(insertQuery, params);
 			setId(template.getGeneratedId());
+			logger.info("Period: generated ID:" + getId());			
 		}
 	}
 	
@@ -102,11 +110,11 @@ public class Period extends DbElement {
 
 	
 	public void setEndDate(Date endDate) {
-		this.endDate = endDate; 
+		this.endDate = (endDate == null ? null : new Timestamp(endDate.getTime())); 
 	}
 
 	public void setStartDate(Date startDate) {
-		this.startDate = startDate; 
+		this.startDate = (startDate == null ? null : new Timestamp(startDate.getTime())); 
 	}
 
 	public void setDuration(Duration duration) {
@@ -114,11 +122,11 @@ public class Period extends DbElement {
 	}
 
 	public Date getEndDate() {
-		return (this.endDate); 
+		return (this.endDate == null ? null : new Date(this.endDate.getTime())); 
 	}
 
 	public Date getStartDate() {
-		return (this.startDate); 
+		return (this.startDate == null ? null : new Date(this.startDate.getTime())); 
 	}
 
 	public Duration getDuration() {

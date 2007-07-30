@@ -10,17 +10,19 @@ import java.util.logging.Logger;
 /**
  * @version 0.1
  * @created 14-IV-2007 17:18:43
+ *
+ * Spolecna nadtrida eventu, tasku atd..
  */
 public class CalComponent extends DbElement {
 	private final static Logger logger = Logger.getLogger(CalComponent.class.getName());
 	
     /**
-     * povinny parametr! (globalne unikatni (MAILTO://email@...))
+     * uid - povinny parametr! (globalne unikatni (MAILTO://email@...))
      */
     private String uid;
     private String url;
     /**
-     * klasifikace (PUBLIC/PRIVATE...)
+     * clazz klasifikace (PUBLIC/PRIVATE...)
      */
     private String clazz;
     /**
@@ -36,6 +38,16 @@ public class CalComponent extends DbElement {
     private int componentId;
     private int calendarId;
     private Vector<VAlarm> alarms;
+    
+    /*
+     * nasobne properties
+     */
+    private Vector<Category> categories;
+    private Vector<Comment> comments;
+    private Vector<Contact> contacts;
+    private Vector<Attachment> attachments;
+    private Vector<RelatedTo> relatedto;
+    private Vector<Resource> resources;
     
     private DateTime dateTime;
 
@@ -151,26 +163,26 @@ public class CalComponent extends DbElement {
         summary = newVal;
     }
 
-    public Timestamp getRecurrenceId() {
-        return recurrenceid;
+    public Date getRecurrenceId() {
+        return new Date(recurrenceid.getTime());
     }
 
     /**
      * @param newVal
      */
-    public void setRecurrenceId(Timestamp newVal) {
-        recurrenceid = newVal;
+    public void setRecurrenceId(Date newVal) {
+        recurrenceid = (newVal == null ? null : new Timestamp(newVal.getTime()));
     }
 
-    public Timestamp getDTimestamp() {
-        return dtstamp;
+    public Date getDTimestamp() {
+        return (dtstamp == null ? null : new Date(dtstamp.getTime()));
     }
 
     /**
      * @param newVal
      */
-    public void setDTimestamp(Timestamp newVal) {
-        dtstamp = newVal;
+    public void setDTimestamp(Date newVal) {
+        dtstamp = (newVal == null ? null : new Timestamp(newVal.getTime()));
     }
 
 	public void store() {
@@ -179,6 +191,8 @@ public class CalComponent extends DbElement {
 	/**
      * Method saveOrUpdate
      * @param template
+     *
+     * Ulozeni spolecnych udaju z Todo, Eventu,.. do databaze
      */	
     public void saveOrUpdate(TimeJugglerJDBCTemplate template) {
     	
@@ -206,13 +220,27 @@ public class CalComponent extends DbElement {
 			Object params[] = {
 	                dateTime.getId(), uid, calendarId, url, clazz,
 	                description, organizer, sequence,
-	                status, summary, new Timestamp(new Date().getTime())
+	                status, summary, new Timestamp(System.currentTimeMillis())
 	        };
 	        String insertQuery = "INSERT INTO CalComponent (dateTimeID,uid,vCalendarID,url,clazz,description,organizer,sequence,status,summary,dtstamp) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
 	        template.executeUpdate(insertQuery, params);
 	        setComponentId(template.getGeneratedId()) ;
-	        logger.info("Database - CalComponent new ID=" + getComponentId());
+	        logger.info("Database - CalComponent new ID=" + getComponentId() + " dtstamp=" + new Timestamp(System.currentTimeMillis()) );
     	}
+    	
+    	if (categories != null) {
+    		for (Category c: categories) {
+    			c.setComponentId(getComponentId());
+    			c.saveOrUpdate(template);
+    		}
+    	}
+    	// TODO: comments
+    	// TODO: attachments
+    	// TODO: contacts
+    	// TODO: related-to
+    	// TODO: attendees
+    	// TODO: resources
+    	// TODO: request-status
     }
     
    	 /**
@@ -246,15 +274,16 @@ public class CalComponent extends DbElement {
 	public Vector<Attachment> getAttachments() {
         String sql = "SELECT * FROM Attachment WHERE calComponentID = ?";
         Object params[] = {getComponentId()};
-        TimeJugglerJDBCTemplate<Attachment> template = new TimeJugglerJDBCTemplate<Attachment>() {
+        TimeJugglerJDBCTemplate<Vector<Attachment>> template = new TimeJugglerJDBCTemplate<Vector<Attachment>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
+            	if (items == null) items = new Vector<Attachment>();
             	Attachment attach = new Attachment();
             	attach.setAttach(rs.getString("name"));
             	attach.setIsBinary(rs.getInt("isBinary") == 1 ? true : false);
                 items.add(attach);
             }
         };
-        template.executeQuery(sql, null);
+        template.executeQuery(sql, params);
         return template.getItems();
 	}
 
@@ -280,13 +309,18 @@ public class CalComponent extends DbElement {
 	public Vector<Category> getCategories() {
         String sql = "SELECT * FROM Category WHERE calComponentID = ?";
         Object params[] = {getComponentId()};
-        TimeJugglerJDBCTemplate<Category> template = new TimeJugglerJDBCTemplate<Category>() {
+        TimeJugglerJDBCTemplate<Vector<Category>> template = new TimeJugglerJDBCTemplate<Vector<Category>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
+            	if (items == null) items = new Vector<Category>();
                 items.add(new Category(rs.getString("name")));
             }
         };
-        template.executeQuery(sql, null);
+        template.executeQuery(sql, params);
         return template.getItems();
+	}
+	
+	public void setCategories(Vector<Category> categories){
+		this.categories = categories;
 	}
 
 	/**
@@ -299,12 +333,13 @@ public class CalComponent extends DbElement {
 	public Vector<Comment> getComments() {
         String sql = "SELECT * FROM Comment WHERE calComponentID = ?";
         Object params[] = {getComponentId()};
-        TimeJugglerJDBCTemplate<Comment> template = new TimeJugglerJDBCTemplate<Comment>() {
+        TimeJugglerJDBCTemplate<Vector<Comment>> template = new TimeJugglerJDBCTemplate<Vector<Comment>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
+            	if (items == null) items = new Vector<Comment>();
                 items.add(new Comment(rs.getString("comment")));
             }
         };
-        template.executeQuery(sql, null);
+        template.executeQuery(sql, params);
         return template.getItems();
 	}
 
@@ -318,12 +353,13 @@ public class CalComponent extends DbElement {
 	public Vector<Contact> getContacts() {
         String sql = "SELECT * FROM Contact WHERE calComponentID = ?";
         Object params[] = {getComponentId()};
-        TimeJugglerJDBCTemplate<Contact> template = new TimeJugglerJDBCTemplate<Contact>() {
+        TimeJugglerJDBCTemplate<Vector<Contact>> template = new TimeJugglerJDBCTemplate<Vector<Contact>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
+            	if (items == null) items = new Vector<Contact>();
                 items.add(new Contact(rs.getString("contact")));
             }
         };
-        template.executeQuery(sql, null);
+        template.executeQuery(sql, params);
         return template.getItems();
 	}
 
@@ -337,12 +373,13 @@ public class CalComponent extends DbElement {
 	public Vector<RelatedTo> getRelatedTo() {
         String sql = "SELECT * FROM RelatedTo WHERE calComponentID = ?";
         Object params[] = {getComponentId()};
-        TimeJugglerJDBCTemplate<RelatedTo> template = new TimeJugglerJDBCTemplate<RelatedTo>() {
+        TimeJugglerJDBCTemplate<Vector<RelatedTo>> template = new TimeJugglerJDBCTemplate<Vector<RelatedTo>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
+            	if (items == null) items = new Vector<RelatedTo>();
                 items.add(new RelatedTo(rs.getString("relatedto")));
             }
         };
-        template.executeQuery(sql, null);
+        template.executeQuery(sql, params);
         return template.getItems();
 	}
 
@@ -356,12 +393,13 @@ public class CalComponent extends DbElement {
 	public Vector<RequestStatus> getRequestStatuses() {
         String sql = "SELECT * FROM RequestStatus WHERE calComponentID = ? ";
         Object params[] = {getComponentId()};
-        TimeJugglerJDBCTemplate<RequestStatus> template = new TimeJugglerJDBCTemplate<RequestStatus>() {
+        TimeJugglerJDBCTemplate<Vector<RequestStatus>> template = new TimeJugglerJDBCTemplate<Vector<RequestStatus>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
+            	if (items == null) items = new Vector<RequestStatus>();
                 items.add(new RequestStatus(rs.getString("rstatus")));
             }
         };
-        template.executeQuery(sql, null);
+        template.executeQuery(sql, params);
         return template.getItems();
 	}
 
@@ -375,33 +413,25 @@ public class CalComponent extends DbElement {
 	public Vector<Resource> getResources() {
         String sql = "SELECT * FROM Resource WHERE calComponentID = ?";
         Object params[] = {getComponentId()};
-        TimeJugglerJDBCTemplate<Resource> template = new TimeJugglerJDBCTemplate<Resource>() {
+        TimeJugglerJDBCTemplate<Vector<Resource>> template = new TimeJugglerJDBCTemplate<Vector<Resource>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
+            	if (items == null) items = new Vector<Resource>();
                 items.add(new Resource(rs.getString("resource")));
             }
         };
-        template.executeQuery(sql, null);
+        template.executeQuery(sql, params);
         return template.getItems();
 	}
-
-	
-/*	public void setDateTime(DateTime dateTime) {
-		this.dateTime = dateTime; 
-	}*/
-
-/*	public DateTime getDateTime() {
-		return (this.dateTime); 
-	}*/
 
 	public void setStartDate(Date startDate) {
 		dateTime.setStartDate(startDate); 
 	}
 
-	public void setCreated(Timestamp created) {
+	public void setCreated(Date created) {
 		dateTime.setCreated(created); 
 	}
 
-	public void setLastModified(Timestamp lastModified) {
+	public void setLastModified(Date lastModified) {
 		dateTime.setLastModified(lastModified); 
 	}
 
@@ -413,11 +443,11 @@ public class CalComponent extends DbElement {
 		return (dateTime.getStartDate()); 
 	}
 
-	public Timestamp getCreated() {
+	public Date getCreated() {
 		return (dateTime.getCreated()); 
 	}
 
-	public Timestamp getLastModified() {
+	public Date getLastModified() {
 		return (dateTime.getLastModified()); 
 	}
 
@@ -448,6 +478,7 @@ public class CalComponent extends DbElement {
 	}
 
 	public Vector<VAlarm> getAlarms() {
+		// TODO: SELECT Alarms
 		return (this.alarms); 
 	}
 
@@ -456,6 +487,10 @@ public class CalComponent extends DbElement {
 		dateTime.setEndDate(endDate);
 	}
 
+	public void setEndDate(Duration dur) {
+		dateTime.setEndDate(dur);
+	}
+	
 	public Date getEndDate() {
 		return (dateTime.getEndDate()); 		
 	}

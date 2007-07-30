@@ -6,29 +6,42 @@ import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.util.Date;
 import java.util.Calendar;
+import java.util.logging.Logger;
 
 /**
  * @author Jan Struz
  * @version 0.1
  * @created 27-IV-2007 22:45:37
+ *
+ * trida reprezentujici casove udaje udalosti 
+ * (zacatek+konec platnosti, cas zmeny, casove useky (periods))
  */
 public class DateTime extends DbElement {
-	//TODO : Logging
+	private final static Logger logger = Logger.getLogger(DateTime.class.getName());
+	
 	private Timestamp created;	//datum vytvoreni objektu v databazi
 	private Timestamp lastModified;
-	private Periods periods;
+	private Periods periods;	// jednotlive useky
 	private int periodsId;
 	private DistinctDates distinctDates;	//rdate
 	private int distinctDatesId;
-
+	
+	// TODO: upravit ukladani / cteni z DB
+	private Timestamp endDate;	// datum kdy konci platnost udalosti (nemusi byt)
+	// TODO: nacitat Duration z DB
+	private Duration duration;	// delka trvani udalosti (nemusi byt, alternativa k endDate)
+	private Timestamp startDate;	// zacatek platnosti udalosti
+	/* pokud udalost nema ani koncove datum, ani delku trvani, jedna se o "vyroci", 
+	 * tedy plati "cely den" (+navic pripadne opakovani ...)*/
+	
 	public DateTime() {
-		periods = new Periods();
-		periods.addPeriod(new Period());
 	}
 
 	/**
      * Method saveOrUpdate
      * @param template
+     *
+     * Ulozeni casovych udaju do databaze / update udaju
      */
 	public void saveOrUpdate(TimeJugglerJDBCTemplate template) {
 		/* ulozeni presnych datumu */
@@ -39,22 +52,33 @@ public class DateTime extends DbElement {
 		if (periods != null) {
 			periods.saveOrUpdate(template);
 		}
+		
+		/* ulozeni - delka trvani udalosti (alternativa k endDate) */
+		if (duration != null) {
+			duration.saveOrUpdate(template);
+		}
 
 		if (getId() > 0) {
+			logger.info("Database - Update: DateTime[" + getId() + "]...");
 			Object params[] = {
 				(distinctDates == null ? null : distinctDates.getId()), 
-				(periods == null ? null : periods.getId()), created, lastModified, getId()
+				(periods == null ? null : periods.getId()), created, lastModified,
+				startDate, endDate,
+				(duration == null ? null : duration.getId()),
+				getId()
 			};
-			String updateQuery = "UPDATE DateTime SET distinctDatesID=?,periodsID=?,created=?,lastmodified=?) WHERE dateTimeID = ?";
+			String updateQuery = "UPDATE DateTime SET distinctDatesID=?,periodsID=?,created=?,lastmodified=?, startDate=?, endDate=?, durationID=? WHERE dateTimeID = ?";
 			template.executeUpdate(updateQuery, params);
 		}else{
-			setCreated(new Timestamp(new Date().getTime()));
-
+			//setCreated(new Timestamp(new Date().getTime()));
+			logger.info("Database - Insert: DateTime[]...startdate=" + startDate);
 			Object params[] = {
 				(distinctDates == null ? null : distinctDates.getId()), 
-				(periods == null ? null : periods.getId()), created, lastModified
+				(periods == null ? null : periods.getId()), created, lastModified, 
+				startDate, endDate,
+				(duration == null ? null : duration.getId())
 			};
-			String insertQuery = "INSERT INTO DateTime (distinctDatesID,periodsID,created,lastmodified) VALUES (?,?,?,?)";
+			String insertQuery = "INSERT INTO DateTime (distinctDatesID,periodsID,created,lastmodified,startDate,endDate,durationID ) VALUES (?,?,?,?,?,?,?)";
 			template.executeUpdate(insertQuery, params);
 			setId(template.getGeneratedId());
 		}
@@ -84,15 +108,15 @@ public class DateTime extends DbElement {
 	}
 	
 	public void setStartDate(Date startDate) {
-		((Period)periods.getPeriods().get(0)).setStartDate(startDate);
+		this.startDate = (startDate == null ? null : new Timestamp(startDate.getTime()));
 	}
 
-	public void setCreated(Timestamp created) {
-		this.created = created; 
+	public void setCreated(Date created) {
+		this.created = (created == null ? null :new Timestamp(created.getTime()));
 	}
 
-	public void setLastModified(Timestamp lastModified) {
-		this.lastModified = lastModified; 
+	public void setLastModified(Date lastModified) {
+		this.lastModified = (lastModified == null ? null :new Timestamp(lastModified.getTime()));
 	}
 
 	public void setPeriods(Periods periods) {
@@ -100,20 +124,41 @@ public class DateTime extends DbElement {
 	}
 
 	public Date getStartDate() {
-		return ((Period)periods.getPeriods().get(0)).getStartDate();
+		return (this.startDate == null ? null : new Date(this.startDate.getTime()));
 	}
 
-	public Timestamp getCreated() {
-		return (this.created); 
+	public Date getCreated() {
+		return (this.created == null ? null : new Date(created.getTime()));
 	}
 
-	public Timestamp getLastModified() {
-		return (this.lastModified); 
+	public Date getLastModified() {
+		return (this.lastModified == null ? null : new Date(lastModified.getTime()));
 	}
 
 	public Periods getPeriods() {
-		//TODO : SELECT FROM Period
-		return (this.periods); 
+		// TODO: SELECT .. JOIN - Duration
+		String sql = "SELECT * FROM Period WHERE periodsID = ?";
+        Object params[] = {periodsId};
+        TimeJugglerJDBCTemplate<Periods> template = new TimeJugglerJDBCTemplate<Periods>() {
+            protected void handleRow(ResultSet rs) throws SQLException {
+            	if (items == null) items = new Periods();
+            	
+            	Period period = new Period();
+            	Timestamp ts;
+            	ts = rs.getTimestamp("startDate");
+            	if (ts != null) period.setStartDate(new Date(ts.getTime()));
+            	
+            	//TODO: SELECT, durationID
+            	//period.setDuration();
+            	
+            	ts = rs.getTimestamp("endDate");
+            	if (ts != null) period.setEndDate(new Date(ts.getTime()));
+                
+                items.addPeriod(period);
+            }
+        };
+        template.executeQuery(sql, params);
+        return template.getItems();
 	}
 
 	
@@ -128,28 +173,31 @@ public class DateTime extends DbElement {
 
 	
 	public void setEndDate(Date endDate) {
-		periods.getPeriods().get(0).setEndDate(endDate);
+		this.endDate = (endDate == null ? null : new Timestamp(endDate.getTime()));
+	}
+	
+	public void setEndDate(Duration dur) {
+		this.duration = dur;
 	}
 
 	public Date getEndDate() {
-		Date endDate = periods.getPeriods().get(0).getEndDate();
+		// Vypocita koncove datum platnosti nebo vrati null;
 		if (endDate == null) {
-			Duration dur = periods.getPeriods().get(0).getDuration();
-			endDate = periods.getPeriods().get(0).getStartDate();
-			if (dur == null) {
-				return endDate;
+			Date myEndDate = new Date(startDate.getTime());
+			if (duration == null) {
+				return null;	// udalost nema konec (vyroci), vrati null 
 			}else{
 				Calendar calendar = Calendar.getInstance();
-				calendar.setTime(endDate);
-				calendar.add(Calendar.SECOND, dur.getSeconds());
-				calendar.add(Calendar.MINUTE, dur.getMinutes());
-				calendar.add(Calendar.HOUR, dur.getHours());
-				calendar.add(Calendar.DATE, dur.getDays());
-				calendar.add(Calendar.DATE, 7 * dur.getWeeks());
+				calendar.setTime(myEndDate);
+				calendar.add(Calendar.SECOND, duration.getSeconds());
+				calendar.add(Calendar.MINUTE, duration.getMinutes());
+				calendar.add(Calendar.HOUR, duration.getHours());
+				calendar.add(Calendar.DATE, duration.getDays());
+				calendar.add(Calendar.DATE, 7 * duration.getWeeks());
 				return calendar.getTime();
 			}
 		}
-		return endDate;
+		return new Date(endDate.getTime());
 	}
 
 	

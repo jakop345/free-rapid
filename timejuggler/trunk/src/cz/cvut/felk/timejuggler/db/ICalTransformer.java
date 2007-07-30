@@ -36,19 +36,19 @@ public class ICalTransformer {
 	}
 	
 	public Duration makeDuration(net.fortuna.ical4j.model.property.Duration dur) {
-		return makeDuration(dur.getDuration());
+		return (dur == null ? null : makeDuration(dur.getDuration()));
 	}
 	
 	public Duration makeDuration(net.fortuna.ical4j.model.Property dur) {
-		return makeDuration(((net.fortuna.ical4j.model.property.Duration)dur).getDuration());
+		return (dur == null ? null : makeDuration(((net.fortuna.ical4j.model.property.Duration)dur).getDuration()));
 	}
 	
 	public Period makePeriod(net.fortuna.ical4j.model.Period iperiod){
 		Period period = new Period();
 		
-		period.setDuration( makeDuration(iperiod.getDuration()) );
-		period.setStartDate( iperiod.getStart() );
-		period.setEndDate( iperiod.getEnd() );
+		period.setDuration( iperiod.getDuration() == null ? null : makeDuration(iperiod.getDuration()) );
+		period.setStartDate( iperiod.getStart());
+		period.setEndDate( iperiod.getEnd()) ;
 		//period.setRepetitionRules( per.get )
 		
 		return period;

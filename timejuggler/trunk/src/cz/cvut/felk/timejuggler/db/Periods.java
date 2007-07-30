@@ -30,15 +30,16 @@ public class Periods extends DbElement implements Iterable {
             //bez Update
         } else {
             logger.info("Database - Insert: Periods[]...");
-            String insertQuery = "INSERT INTO Periods";
+            String insertQuery = "INSERT INTO Periods (periodsID) VALUES (DEFAULT)";
             template.executeUpdate(insertQuery, null);
             setId(template.getGeneratedId());
         }
-
-        for (Period period : periods) {
-            period.setPeriodsId(getId());
-            period.saveOrUpdate(template);
-        }
+       	
+       	for (Period period : periods) {
+	    	period.setPeriodsId(getId());
+	    	logger.info("Periods: generated ID:" + getId());
+	    	period.saveOrUpdate(template);
+	    }
     }
 
     /**

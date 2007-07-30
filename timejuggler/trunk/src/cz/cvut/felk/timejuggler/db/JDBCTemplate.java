@@ -4,13 +4,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.*;
+import java.util.logging.Logger;
 
 /**
  * @version 0.1
  * @created 12-IV-2007 20:49:26
- * @updated 14-IV-2007 15:32:54
+ * 
+ * Abstrakni trida slouzici k provadeni dotazu nad databazi
  */
 public abstract class JDBCTemplate {
+	private final static Logger logger = Logger.getLogger(JDBCTemplate.class.getName());
 
     private static final int SELECT_QUERY = 0;
     private static final int UPDATE_QUERY = 1;
@@ -70,9 +73,13 @@ public abstract class JDBCTemplate {
                 }
             } else {
                 rowsAffected = ps.executeUpdate();
-                rs = ps.getGeneratedKeys();    //V pripade dotazu INSERT precteme generovane klice
-                while (rs.next()) {
-                    handleGeneratedKeys(rs);
+                rs = ps.getGeneratedKeys();    
+                //V pripade dotazu UPDATE rs=null (negeneruji se zadne klice)
+                if (rs != null) {
+                	//V pripade dotazu INSERT precteme generovane klice
+	                while (rs.next()) {
+	                    handleGeneratedKeys(rs);
+	                }
                 }
             }
         } finally {

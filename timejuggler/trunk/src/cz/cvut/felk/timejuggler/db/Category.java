@@ -5,6 +5,8 @@ import java.util.logging.Logger;
  * @author Jan Struz
  * @version 0.1
  * @created 12-V-2007 23:40:48
+ * 
+ * Reprezentuje kategorii eventu nebo tasku..
  * Hotovo
  */
 public class Category extends DbElement{
@@ -12,7 +14,7 @@ public class Category extends DbElement{
 	
 	private String name;
 	
-	private int componentId;
+	private int componentId = -1;
 	
 	public Category(){
 

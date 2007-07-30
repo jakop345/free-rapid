@@ -4,8 +4,10 @@ import java.util.logging.Logger;
 /**
  * @version 0.1
  * @created 14-IV-2007 17:18:35
+ *
+ *  Tato trida je nahrazena tridou EventTask !
  */
-public class VEvent extends CalComponent {
+@Deprecated public class VEvent extends CalComponent {
 	private final static Logger logger = Logger.getLogger(VEvent.class.getName());
 	
     private String geoGPS;

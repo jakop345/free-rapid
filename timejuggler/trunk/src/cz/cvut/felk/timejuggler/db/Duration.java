@@ -1,13 +1,17 @@
 package cz.cvut.felk.timejuggler.db;
 
+import java.util.logging.Logger;
+
 /**
  * @author Jan Struz
  * @version 0.1
  * @created 27-IV-2007 22:45:50
- * Hotovo
+ * 
+ * Trida reprezentujici delku trvani udalosti, pokud nema nastaven presny datum konce platnosti
  */
 public class Duration extends DbElement {
-	//TODO : Logging
+	private final static Logger logger = Logger.getLogger(Duration.class.getName());
+
 	private boolean negative = false;
 	private int days;
 	private int weeks;
@@ -27,18 +31,22 @@ public class Duration extends DbElement {
 	 /**
      * Method saveOrUpdate
      * @param template
+     *
+     * Ulozeni do databaze, nebo update
      */
 	public void saveOrUpdate(TimeJugglerJDBCTemplate template) {
-		if (getId() < 0) {
+		if (getId() > 0) {
 			Object params[] = { (negative ? 1 : 0), days, weeks, hours, minutes, seconds, getId() };
-			String updateQuery = "UPDATE Duration SET negative=?,days=?,weeks=?,hours=?,minutes=?,seconds=?) WHERE durationID = ? ";
+			String updateQuery = "UPDATE Duration SET negative=?,days=?,weeks=?,hours=?,minutes=?,seconds=? WHERE durationID = ? ";
 			template.executeUpdate(updateQuery, params);
 		}else{
 			Object params[] = { (negative ? 1 : 0), days, weeks, hours, minutes, seconds };
 			String insertQuery = "INSERT INTO Duration (negative,days,weeks,hours,minutes,seconds) VALUES (?,?,?,?,?,?) ";
 			template.executeUpdate(insertQuery, params);
 			setId(template.getGeneratedId());
+			logger.info("Duration: generated ID:" + getId());
 		}
+		
 	}
 	
 	 /**
