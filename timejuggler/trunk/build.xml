@@ -22,6 +22,18 @@
 
     <fileset id="jars" dir="${lib}" includes="*"/>
 
+    <patternset id="compiler.resources">
+        <include name="**/?*.properties"/>
+        <include name="**/?*.xml"/>
+        <include name="**/?*.gif"/>
+        <include name="**/?*.png"/>
+        <include name="**/?*.jpeg"/>
+        <include name="**/?*.jpg"/>
+        <include name="**/?*.html"/>
+        <include name="**/?*.dtd"/>
+        <include name="**/?*.tld"/>
+    </patternset>
+
     <path id="cp">
         <fileset refid="jars"/>
     </path>
@@ -35,13 +47,6 @@
     </pathconvert>
 
     <target name="build" depends="compile" description="building TimeJuggler">
-
-        <!-- //TODO kopie resourcu, neni to prilis ciste, ale asi je to takhle spravne  -->
-        <mkdir dir="${classes}/${resources}"/>
-        <copy todir="${classes}/${resources}">
-            <fileset dir="${src}/${resources}" includes="**/*"></fileset>
-        </copy>
-
         <jar jarfile="${build}/${jarfile}" compress="false">
             <manifest>
                 <attribute name="Build-Date" value="${TODAY}"/>
@@ -55,19 +60,28 @@
         <mkdir dir="${build}/${lib}"/>
         <!--<mkdir dir="${build}/help"/>-->
         <copy todir="${build}">
-            <fileset dir="${etc}" includes="**/*"></fileset>
+            <fileset dir="${etc}" includes="**/*"/>
         </copy>
         <!--<copy todir="${build}/help">-->
         <!--<fileset dir="${help}" includes="**/*"></fileset>-->
         <!--</copy>-->
         <copy todir="${build}/${lib}">
-            <fileset dir="${lib}" includes="**/*"></fileset>
+            <fileset dir="${lib}" includes="**/*"/>
         </copy>
     </target>
 
     <target name="compile" depends="clean, init" description="compiling source codes">
+        <mkdir dir="${classes}"/>
         <javac srcdir="${src}" destdir="${classes}" classpathref="cp" optimize="on" target="1.6">
         </javac>
+        <!-- zkopirovani resourcu -->
+
+        <copy todir="${classes}">
+            <fileset dir="${src}">
+                <patternset refid="compiler.resources"/>
+                <type type="file"/>
+            </fileset>
+        </copy>
     </target>
 
     <target name="init" description="initialization">
