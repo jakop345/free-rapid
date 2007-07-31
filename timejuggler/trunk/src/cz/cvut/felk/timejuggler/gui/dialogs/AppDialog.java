@@ -3,7 +3,7 @@ package cz.cvut.felk.timejuggler.gui.dialogs;
 import application.Application;
 import application.ApplicationContext;
 import application.ResourceMap;
-import cz.cvut.felk.timejuggler.swing.ComponentFactory;
+import cz.cvut.felk.timejuggler.swing.NaiiveComboModel;
 import cz.cvut.felk.timejuggler.swing.Swinger;
 
 import javax.swing.*;
@@ -26,7 +26,7 @@ abstract class AppDialog extends JDialog {
         super(owner, modal);
     }
 
-    public final void doClose() {
+    public void doClose() {
         dispose();
     }
 
@@ -138,7 +138,7 @@ abstract class AppDialog extends JDialog {
     protected void setComboModelFromResource(JComboBox comboBox) {
         final String name = comboBox.getName();
         assert name != null && name.length() > 0;
-        comboBox.setModel(new ComponentFactory.NaiiveComboModel(getList(name)));
+        comboBox.setModel(new NaiiveComboModel(getList(name)));
     }
 
 }

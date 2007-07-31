@@ -8,8 +8,8 @@ import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.*;
 import cz.cvut.felk.timejuggler.core.AppPrefs;
 import cz.cvut.felk.timejuggler.swing.ComponentFactory;
-import cz.cvut.felk.timejuggler.swing.EditorPaneLinkDetector;
 import cz.cvut.felk.timejuggler.swing.Swinger;
+import cz.cvut.felk.timejuggler.swing.components.EditorPaneLinkDetector;
 import cz.cvut.felk.timejuggler.utilities.Browser;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
 import org.jdesktop.swingx.JXDatePicker;
@@ -17,6 +17,8 @@ import org.jdesktop.swingx.JXDatePicker;
 import javax.beans.binding.Binding;
 import javax.beans.binding.BindingContext;
 import javax.swing.*;
+import javax.swing.binding.ParameterKeys;
+import javax.swing.binding.TextChangeStrategy;
 import java.awt.*;
 import java.util.logging.Logger;
 
@@ -74,14 +76,30 @@ public class EventTaskDialog extends AppDialog {
         showMoreOrLess(showMore, false);
 
         context = new BindingContext();
+//        Binding binding = new Binding(this.dateFromPicker, "${enabled}", checkDate, "selected");
+        checkDate = new JCheckBox() {
+            public Boolean getSelected() {
+                return isSelected();
+            }
+
+            public void setSelected(Boolean selected) {
+                setSelected(selected.booleanValue());
+            }
+        };
         Binding binding = new Binding(checkDate, "${selected}", this.dateFromPicker, "enabled");
         binding.setUpdateStrategy(Binding.UpdateStrategy.READ);
         context.addBinding(binding);
-        binding = new Binding(checkDueDate, "selected", this.dateToPicker, "visible");
-        binding.setUpdateStrategy(Binding.UpdateStrategy.READ);
+        binding = new Binding(this.dateToPicker, "${enabled}", checkDueDate, "selected");
         context.addBinding(binding);
-        binding = new Binding(this.statusTypeCombo, "${selectedIndex == 4}", this.completedDatePicker, "visible");
+        binding = new Binding(this.urlField, "${!empty text}", this.btnVisitURL, "enabled");
         binding.setUpdateStrategy(Binding.UpdateStrategy.READ);
+        binding.putParameter(ParameterKeys.TEXT_CHANGE_STRATEGY, TextChangeStrategy.ON_TYPE);
+        binding.bind();
+        //binding.setTargetValueFromSourceValue();        
+
+        //context.addBinding(binding);
+        binding = new Binding(this.statusTypeCombo, "${selectedIndex == 4}", this.completedDatePicker, "enabled");
+        //binding.setUpdateStrategy(Binding.UpdateStrategy.READ);
         context.addBinding(binding);
         context.bind();
     }
@@ -113,6 +131,12 @@ public class EventTaskDialog extends AppDialog {
     @Action
     public void cancelBtnAction() {
         doClose();
+    }
+
+    @Override
+    public void doClose() {
+        context.unbind();
+        super.doClose();
     }
 
     @Action
