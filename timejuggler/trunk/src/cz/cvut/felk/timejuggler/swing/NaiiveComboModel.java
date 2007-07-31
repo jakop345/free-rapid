@@ -4,6 +4,7 @@ import javax.swing.*;
 
 /**
  * Model podporujici '-' jako separator mezi polozkami Item '-' nelze vybrat.
+ * @author Vity
  */
 public class NaiiveComboModel extends DefaultComboBoxModel {
     public NaiiveComboModel() {

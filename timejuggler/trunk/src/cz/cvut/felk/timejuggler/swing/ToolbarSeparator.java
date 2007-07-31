@@ -4,6 +4,7 @@ import javax.swing.*;
 
 /**
  * Toolbar Separator UI
+ * @author Vity
  */
 public final class ToolbarSeparator extends JToolBar.Separator {
     private static final String uiClassID = "ToolbarSeparatorUI";

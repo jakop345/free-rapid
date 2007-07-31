@@ -5,6 +5,7 @@ import java.io.File;
 
 /**
  * Pomocne utility pro spravu aplikace Test na system.
+ * @author Vity
  */
 public final class Utils {
 

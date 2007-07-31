@@ -4,6 +4,10 @@ import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import java.awt.*;
 
+/**
+ * Pretizene UI pro Separator v toolbaru
+ * @author Vity
+ */
 @SuppressWarnings({"WeakerAccess"})
 public final class ToolbarSeparatorUI extends javax.swing.plaf.basic.BasicToolBarSeparatorUI {
     private ToolbarSeparatorUI() {

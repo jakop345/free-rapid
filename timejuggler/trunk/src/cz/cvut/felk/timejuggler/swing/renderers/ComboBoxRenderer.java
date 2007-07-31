@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
+ * Jednoduchy combobox renderer podporujici '-' separator ve vyberu
  * @author Vity
  */
 public class ComboBoxRenderer extends JLabel implements ListCellRenderer {
