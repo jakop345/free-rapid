@@ -1,4 +1,4 @@
-package cz.cvut.felk.timejuggler.swing;
+package cz.cvut.felk.timejuggler.swing.components;
 
 import cz.cvut.felk.timejuggler.utilities.Browser;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;

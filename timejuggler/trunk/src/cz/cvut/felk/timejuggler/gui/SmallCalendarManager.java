@@ -1,9 +1,9 @@
 package cz.cvut.felk.timejuggler.gui;
 
 import application.ResourceMap;
-import cz.cvut.felk.timejuggler.swing.CheckRenderer;
 import cz.cvut.felk.timejuggler.swing.CustomLayoutConstraints;
 import cz.cvut.felk.timejuggler.swing.Swinger;
+import cz.cvut.felk.timejuggler.swing.renderers.CheckRenderer;
 import info.clearthought.layout.TableLayout;
 import org.jdesktop.swingx.calendar.JXMonthView;
 
@@ -14,8 +14,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Sprava a vytvoreni maleho kalendare
@@ -23,8 +23,7 @@ import java.util.ArrayList;
  */
 public class SmallCalendarManager {
     /**
-     * Polozky dat pro seznam v kalendari
-     * //TODO sjednotit s globalnimi daty
+     * Polozky dat pro seznam v kalendari //TODO sjednotit s globalnimi daty
      */
     private List<ContentData<String>> listData;
     private JList checkedList;

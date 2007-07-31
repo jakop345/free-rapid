@@ -3,9 +3,9 @@ package cz.cvut.felk.timejuggler.gui;
 import application.ApplicationContext;
 import cz.cvut.felk.timejuggler.dao.CalendarEventDAO_DummyImpl;
 import cz.cvut.felk.timejuggler.entity.CalendarEvent;
-import cz.cvut.felk.timejuggler.swing.calendar.CalendarConfig;
-import cz.cvut.felk.timejuggler.swing.calendar.CalendarGrid;
-import cz.cvut.felk.timejuggler.swing.calendar.CalendarView;
+import cz.cvut.felk.timejuggler.swing.components.calendar.CalendarConfig;
+import cz.cvut.felk.timejuggler.swing.components.calendar.CalendarGrid;
+import cz.cvut.felk.timejuggler.swing.components.calendar.CalendarView;
 import org.jdesktop.swingx.JXMultiSplitPane;
 import org.jdesktop.swingx.MultiSplitLayout;
 
@@ -46,7 +46,7 @@ public class MainPanelManager {
     private void initComponents() {
         multiSplitPane = new JXMultiSplitPane();
         multiSplitPane.setDividerSize(4);
-        
+
         multiSplitPane.setContinuousLayout(true);
         multiSplitPane.getMultiSplitLayout().setModel(new DefaultSplitPaneModel());
         multiSplitPane.add(new SmallCalendarManager().getComponent(), LEFT_TOP);

@@ -2,8 +2,8 @@ package cz.cvut.felk.timejuggler.gui;
 
 import cz.cvut.felk.timejuggler.core.AppPrefs;
 import cz.cvut.felk.timejuggler.swing.CustomLayoutConstraints;
-import cz.cvut.felk.timejuggler.swing.HeaderIconRenderer;
 import cz.cvut.felk.timejuggler.swing.Swinger;
+import cz.cvut.felk.timejuggler.swing.renderers.HeaderIconRenderer;
 import info.clearthought.layout.TableLayout;
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.FilterPipeline;

@@ -1,4 +1,4 @@
-package cz.cvut.felk.timejuggler.swing;
+package cz.cvut.felk.timejuggler.swing.renderers;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
