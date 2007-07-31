@@ -1,7 +1,7 @@
 package cz.cvut.felk.timejuggler.gui;
 
 import application.ApplicationContext;
-import cz.cvut.felk.timejuggler.core.AppPrefs;
+import cz.cvut.felk.timejuggler.swing.components.ClockField;
 import org.jdesktop.swingx.JXStatusBar;
 
 import javax.swing.*;
@@ -13,7 +13,8 @@ import java.beans.PropertyChangeListener;
  * @author Vity
  */
 public class StatusBarManager {
-    private JXStatusBar statusbarPanel;
+    private JXStatusBar statusbar;
+    private JProgressBar progressBar;
 
 
     public StatusBarManager(ApplicationContext context) {
@@ -31,12 +32,19 @@ public class StatusBarManager {
     }
 
     public JXStatusBar getStatusBar() {
-        if (statusbarPanel == null) {
-            statusbarPanel = new JXStatusBar();
-            statusbarPanel.setName("statusbarPanel");
-            statusbarPanel.add(new JLabel("Tady je polozka statusbaru"));
+        if (statusbar == null) {
+            statusbar = new JXStatusBar();
+            statusbar.setName("statusbarPanel");
+            progressBar = new JProgressBar();
+
+            statusbar.add(progressBar, JXStatusBar.Constraint.ResizeBehavior.FIXED);
+            statusbar.add(new JLabel(), JXStatusBar.Constraint.ResizeBehavior.FILL);
+            final ClockField comp = new ClockField();
+            //    progressBar.setVisible(false);
+            comp.setHorizontalAlignment(JLabel.CENTER);
+            statusbar.add(comp);
         }
-        return statusbarPanel;
+        return statusbar;
     }
 
     private void setStatusBarVisible(boolean visible) {
