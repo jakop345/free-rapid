@@ -19,6 +19,7 @@ abstract class AppDialog extends JDialog {
     public final static int RESULT_OK = 0;
     final static int RESULT_CANCEL = 1;
     int result = RESULT_CANCEL;
+    private ActionListener okButtonListener;
 
 //    private final boolean closeOnCancel = true;
 
@@ -71,7 +72,7 @@ abstract class AppDialog extends JDialog {
                 //   }
             }
         };
-        final ActionListener okButtonListener = new ActionListener() {
+        okButtonListener = new ActionListener() {
 
             public void actionPerformed(final ActionEvent actionEvent) {
                 if (AppDialog.this.getFocusOwner() instanceof AbstractButton) {
@@ -141,4 +142,7 @@ abstract class AppDialog extends JDialog {
         comboBox.setModel(new NaiiveComboModel(getList(name)));
     }
 
+    public ActionListener getOkButtonListener() {
+        return okButtonListener;
+    }
 }

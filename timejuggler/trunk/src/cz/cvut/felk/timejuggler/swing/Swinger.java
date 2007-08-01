@@ -29,6 +29,7 @@ public class Swinger {
      */
     public static void initLaF() {
         initLafWithTheme(KUNSTSTOFF, new WordRiderMetalTheme());
+        UIManager.put("JXDatePicker.arrowDown.image", Swinger.getIconImage("JXDatePicker.arrowDown.image"));
     }
 
     /**

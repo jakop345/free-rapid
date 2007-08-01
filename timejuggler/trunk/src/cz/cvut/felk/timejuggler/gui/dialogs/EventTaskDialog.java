@@ -19,7 +19,14 @@ import javax.beans.binding.BindingContext;
 import javax.swing.*;
 import javax.swing.binding.ParameterKeys;
 import javax.swing.binding.TextChangeStrategy;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.util.Date;
 import java.util.logging.Logger;
 
 /**
@@ -28,16 +35,40 @@ import java.util.logging.Logger;
 public class EventTaskDialog extends AppDialog {
     private final static Logger logger = Logger.getLogger(EventTaskDialog.class.getName());
 
+    private final boolean isEvent;
+    private final boolean isNew;
     private final boolean newEvent;
+    private final boolean newTask;
     private BindingContext context;
+
+    private final static int ALARM_NONE_INDEX = 0;
+    private final static int ALARM_15MINUTES_BEFORE_INDEX = 2;
+    private final static int ALARM_30MINUTES_BEFORE_INDEX = 3;
+
+    private final static int ALARM_CUSTOM_INDEX = 5;
+    private final static int ALARM_CUSTOM_TIMEUNIT_MINUTE = 0;
+    private final static int ALARM_CUSTOM_TIMEUNIT_HOURS = 1;
+    private final static int ALARM_CUSTOM_TIMEUNIT_DAY = 2;
+    private final static int ALARM_CUSTOM_BEFORE = 0;
+    private final static int ALARM_CUSTOM_AFTER = 1;
+
+    private final static int STATUS_TYPE_NOT_SPECIFIED = 0;
+    private final static int STATUS_TYPE_NEEDS_ACTION = 1;
+    private final static int STATUS_TYPE_IN_PROCESS = 2;
+    private final static int STATUS_TYPE_COMPLETED_ON = 3;
+    private final static int STATUS_TYPE_CANCELED = 4;
+
 
     public EventTaskDialog(Frame mainFrame) {
         this(mainFrame, true);
     }
 
-    public EventTaskDialog(Frame mainFrame, boolean newEvent) {
+    public EventTaskDialog(Frame mainFrame, boolean isEvent) {
         super(mainFrame, true);
-        this.newEvent = newEvent;
+        this.isEvent = isEvent;
+        this.isNew = true;
+        this.newEvent = isEvent && isNew;
+        this.newTask = !isEvent && isNew;
         this.setName("EventTaskDialog");
         try {
             initComponents();
@@ -51,20 +82,27 @@ public class EventTaskDialog extends AppDialog {
         inject();
         buildGUI();
         buildModels();
+
+        final ActionMap actionMap = getActionMap();
+        btnOK.setAction(actionMap.get("okBtnAction"));
+        btnCancel.setAction(actionMap.get("cancelBtnAction"));
+        btnVisitURL.setAction(actionMap.get("visitURLAction"));
+
         setDefaultValues();
+
         pack();
         setResizable(true);
         locateOnOpticalScreenCenter(this);
 
 
         final ResourceMap resourceMap = getResourceMap();
+        String title = "";
         if (newEvent) {
-            this.setTitle(resourceMap.getString("EventTaskDialog.newevent.title"));
+            title = resourceMap.getString("EventTaskDialog.newevent.title");
+        } else if (newTask) {
+            title = resourceMap.getString("EventTaskDialog.newtask.title");
         }
-        final ActionMap actionMap = getActionMap();
-        btnOK.setAction(actionMap.get("okBtnAction"));
-        btnCancel.setAction(actionMap.get("cancelBtnAction"));
-        btnVisitURL.setAction(actionMap.get("visitURLAction"));
+        this.setTitle(title);
     }
 
     private ActionMap getActionMap() {
@@ -77,39 +115,164 @@ public class EventTaskDialog extends AppDialog {
 
         context = new BindingContext();
 //        Binding binding = new Binding(this.dateFromPicker, "${enabled}", checkDate, "selected");
-        checkDate = new JCheckBox() {
-            public Boolean getSelected() {
-                return isSelected();
-            }
-
-            public void setSelected(Boolean selected) {
-                setSelected(selected.booleanValue());
-            }
-        };
-        Binding binding = new Binding(checkDate, "${selected}", this.dateFromPicker, "enabled");
-        binding.setUpdateStrategy(Binding.UpdateStrategy.READ);
+        Binding binding = new Binding(this.btnSetPattern, "${enabled}", repeatCheckbox, "selected");
         context.addBinding(binding);
-        binding = new Binding(this.dateToPicker, "${enabled}", checkDueDate, "selected");
-        context.addBinding(binding);
+//        binding = new Binding(this.timeFromSpinner, "${!enabled}", allDayCheckbox, "selected");
+//        context.addBinding(binding);
+//        binding = new Binding(this.timeToSpinner, "${!enabled}", allDayCheckbox, "selected");
+//        context.addBinding(binding);
         binding = new Binding(this.urlField, "${!empty text}", this.btnVisitURL, "enabled");
         binding.setUpdateStrategy(Binding.UpdateStrategy.READ);
         binding.putParameter(ParameterKeys.TEXT_CHANGE_STRATEGY, TextChangeStrategy.ON_TYPE);
         binding.bind();
-        //binding.setTargetValueFromSourceValue();        
 
-        //context.addBinding(binding);
-        binding = new Binding(this.statusTypeCombo, "${selectedIndex == 4}", this.completedDatePicker, "enabled");
-        //binding.setUpdateStrategy(Binding.UpdateStrategy.READ);
-        context.addBinding(binding);
+//        binding = new Binding(this.statusTypeCombo, "${selectedIndex == 4}", this.completedDatePicker, "enabled");
+//        //binding.setUpdateStrategy(Binding.UpdateStrategy.READ);
+//        context.addBinding(binding);
         context.bind();
+
+        alarmCombo.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                final JComboBox source = (JComboBox) e.getSource();
+                panelAlarm.setVisible(source.getSelectedIndex() == ALARM_CUSTOM_INDEX);
+            }
+        });
+
+        checkDate.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                final AbstractButton checkbox = (AbstractButton) e.getSource();
+                final boolean selected = checkbox.isSelected();
+                EventTaskDialog.this.dateFromPicker.setEnabled(selected);
+                EventTaskDialog.this.timeFromSpinner.setEnabled(selected);
+                if (!selected) {
+                    EventTaskDialog.this.repeatCheckbox.setSelected(false);
+                }
+            }
+        });
+        checkDueDate.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                updateCheckDueDate();
+            }
+        });
+
+        allDayCheckbox.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                final AbstractButton checkbox = (AbstractButton) e.getSource();
+                final boolean selected = checkbox.isSelected();
+                EventTaskDialog.this.timeFromSpinner.setEnabled(!selected);
+                EventTaskDialog.this.timeToSpinner.setEnabled(!selected);
+            }
+        });
+
+        statusTypeCombo.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                final JComboBox comboBox = (JComboBox) e.getSource();
+                final int index = comboBox.getSelectedIndex();
+                completedDatePicker.setEnabled(index == STATUS_TYPE_COMPLETED_ON);
+                percentCompleteSpinner.setEnabled(index != STATUS_TYPE_NOT_SPECIFIED && index != STATUS_TYPE_CANCELED);
+            }
+        });
+        urlField.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) {
+                updateURLField();
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                insertUpdate(e);
+            }
+
+            public void changedUpdate(DocumentEvent e) {
+                insertUpdate(e);
+            }
+        });
+        attendeesArea.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_DOWN_MASK), getOkButtonListener());
+        descriptionArea.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_DOWN_MASK), getOkButtonListener());
+    }
+
+    private void updateCheckDueDate() {
+        final boolean selected = this.checkDueDate.isSelected();
+        this.dateToPicker.setEnabled(selected);
+        this.timeToSpinner.setEnabled(selected);
+    }
+
+    private void updateURLField() {
+        getActionMap().get("visitURLAction").setEnabled(this.urlField.getDocument().getLength() > 0);
     }
 
     private void setDefaultValues() {
-        checkDate.setSelected(true);
+        if (newEvent)
+            setDefaultsNewEvent();
+        else if (newTask)
+            setDefaultsNewTask();
+        checkDueDate.setVisible(!isEvent);
+        checkDate.setVisible(!isEvent);
+        allDayCheckbox.setVisible(isEvent);
+        panelStatus.setVisible(!isEvent);
+        statusCombo.setVisible(isEvent);
+        labelStatus.setVisible(isEvent);
+        if (isNew) {
+            checkDate.setSelected(true);
+            repeatCheckbox.setSelected(false);
+        }
+        updateURLField();
+        updateCheckDueDate();
     }
 
-    private void setDefaultValuesTask() {
+    private void setDefaultsNewTask() {
+        this.setIconImage(Swinger.getIconImage("newTask.Action.smallIcon").getImage());
+        statusTypeCombo.setSelectedIndex(STATUS_TYPE_NOT_SPECIFIED);
+        percentCompleteSpinner.setValue(100);
+        completedDatePicker.setDate(new Date()); //today
+        if (!AppPrefs.getProperty(AppPrefs.DEFAULT_ALARM_SETTING_FOR_TASK, false)) { //false = OFF
+            setAlarmInfo(0, ALARM_CUSTOM_TIMEUNIT_MINUTE, ALARM_CUSTOM_BEFORE);
+        } else { // v app options se provedla customizace
+            final int time = AppPrefs.getProperty(AppPrefs.DEFAULT_ALARM_TIME_BEFORE_TASK, 15);
+            final int timeunit = AppPrefs.getProperty(AppPrefs.DEFAULT_ALARM_TIME_BEFORE_EVENT_TIMEUNIT, ALARM_CUSTOM_TIMEUNIT_MINUTE);
+            setAlarmInfo(time, timeunit, ALARM_CUSTOM_BEFORE);
+        }
+        checkDueDate.setSelected(false);
+    }
 
+    private void setDefaultsNewEvent() {
+        this.setIconImage(Swinger.getIconImage("newEvent.Action.smallIcon").getImage());
+        if (!AppPrefs.getProperty(AppPrefs.DEFAULT_ALARM_SETTING_FOR_EVENT, false)) { //false = OFF
+            setAlarmInfo(0, ALARM_CUSTOM_TIMEUNIT_MINUTE, ALARM_CUSTOM_BEFORE);
+        } else { // v app options se provedla customizace
+            final int time = AppPrefs.getProperty(AppPrefs.DEFAULT_ALARM_TIME_BEFORE_EVENT, 15);
+            final int timeunit = AppPrefs.getProperty(AppPrefs.DEFAULT_ALARM_TIME_BEFORE_EVENT_TIMEUNIT, ALARM_CUSTOM_TIMEUNIT_MINUTE);
+            setAlarmInfo(time, timeunit, ALARM_CUSTOM_BEFORE);
+        }
+        this.allDayCheckbox.setSelected(false);
+        checkDueDate.setSelected(true);
+    }
+
+
+    /**
+     * Nulovej time znaci vypnuty alarm
+     * @param time          cas
+     * @param timeunit      casova jednotka
+     * @param beforeOrAfter pred nebo po
+     */
+    private void setAlarmInfo(final int time, final int timeunit, final int beforeOrAfter) {
+        int index;
+        if (time == 15 && timeunit == ALARM_CUSTOM_TIMEUNIT_MINUTE && beforeOrAfter == ALARM_CUSTOM_BEFORE) {
+            index = ALARM_15MINUTES_BEFORE_INDEX;
+        } else if (time == 30 && timeunit == ALARM_CUSTOM_TIMEUNIT_MINUTE && beforeOrAfter == ALARM_CUSTOM_BEFORE) {
+            index = ALARM_30MINUTES_BEFORE_INDEX;
+        } else if (time == 0) {
+            index = ALARM_NONE_INDEX;
+            setAlarmPanel(15, timeunit, beforeOrAfter);
+        } else {
+            setAlarmPanel(time, timeunit, beforeOrAfter);
+            index = ALARM_CUSTOM_INDEX;
+        }
+        alarmCombo.setSelectedIndex(index);
+    }
+
+    private void setAlarmPanel(final int time, final int timeunit, final int beforeAfter) {
+        alarmTimeSpinner.setValue(time);
+        alarmTimeUnitCombo.setSelectedIndex(timeunit);
+        alarmBeforeAfterCombo.setSelectedIndex(beforeAfter);
     }
 
 
@@ -185,11 +348,11 @@ public class EventTaskDialog extends AppDialog {
         JLabel labelFrom = new JLabel();
         dateFromPicker = ComponentFactory.getDatePicker();
         timeFromSpinner = ComponentFactory.getTimeSpinner();
-        JCheckBox allDayCheckbox = new JCheckBox();
+        allDayCheckbox = new JCheckBox();
         JLabel labelTo = new JLabel();
         dateToPicker = ComponentFactory.getDatePicker();
         timeToSpinner = ComponentFactory.getTimeSpinner();
-        JCheckBox repeatCheckbox = new JCheckBox();
+        repeatCheckbox = new JCheckBox();
         btnSetPattern = new JButton();
         JPanel panelCalendar = new JPanel();
         labelCalendar = new JLabel();
@@ -207,7 +370,7 @@ public class EventTaskDialog extends AppDialog {
         privacyCombo = ComponentFactory.getComboBox();
         JLabel labelPriority = new JLabel();
         priorityCombo = ComponentFactory.getComboBox();
-        JLabel labelStatus = new JLabel();
+        labelStatus = new JLabel();
         statusCombo = ComponentFactory.getComboBox();
         JLabel labelAlarm = new JLabel();
         alarmCombo = ComponentFactory.getComboBox();
@@ -263,7 +426,7 @@ public class EventTaskDialog extends AppDialog {
 
                 //---- labelFrom ----
 
-                labelFrom.setName("labelFrom");
+                labelFrom.setName(!isEvent ? "labelDate" : "labelFrom");
 
                 //---- dateFromPicker ----
                 dateFromPicker.setName("dateFromPicker");
@@ -277,7 +440,7 @@ public class EventTaskDialog extends AppDialog {
 
                 //---- labelTo ----
 
-                labelTo.setName("labelTo");
+                labelTo.setName(!isEvent ? "labelDueDate" : "labelTo");
 
                 //---- dateToPicker ----
                 dateToPicker.setName("dateToPicker");
@@ -401,7 +564,7 @@ public class EventTaskDialog extends AppDialog {
                         panelAlarm.setName("panelAlarm");
 
                         //---- alarmTimeSpinner ----
-                        alarmTimeSpinner.setModel(new SpinnerNumberModel(1, 1, null, 1));
+                        alarmTimeSpinner.setModel(new SpinnerNumberModel(1, 1, 999, 1));
                         alarmTimeSpinner.setName("alarmTimeSpinner");
 
                         //---- alarmTimeUnitCombo ----
@@ -537,8 +700,8 @@ public class EventTaskDialog extends AppDialog {
                     morePanelBuilder.add(labelStatus, cc.xy(5, 7));
                     morePanelBuilder.add(statusCombo, cc.xy(7, 7));
                     morePanelBuilder.add(labelAlarm, cc.xy(5, 9));
-                    morePanelBuilder.add(alarmCombo, cc.xy(7, 9));
-                    morePanelBuilder.add(panelAlarm, cc.xy(7, 11));
+                    morePanelBuilder.add(alarmCombo, cc.xywh(7, 9, 1, 1, CellConstraints.LEFT, CellConstraints.DEFAULT));
+                    morePanelBuilder.add(panelAlarm, cc.xywh(7, 11, 1, 1, CellConstraints.LEFT, CellConstraints.DEFAULT));
                     morePanelBuilder.add(panelURL, cc.xywh(1, 13, 7, 1));
                     morePanelBuilder.add(panelStatus, cc.xywh(1, 15, 7, 1));
                 }
@@ -634,8 +797,9 @@ public class EventTaskDialog extends AppDialog {
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
 
-    // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-    // Generated using JFormDesigner Open Source Project license - unknown
+    private JCheckBox repeatCheckbox;
+    private JCheckBox allDayCheckbox;
+    private JLabel labelStatus;
     private JTextField titleField;
     private JTextField locationField;
     private JCheckBox checkDate;
