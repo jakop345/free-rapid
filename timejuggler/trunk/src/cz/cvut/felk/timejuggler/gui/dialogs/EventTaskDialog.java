@@ -7,6 +7,7 @@ import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.*;
 import cz.cvut.felk.timejuggler.core.AppPrefs;
+import cz.cvut.felk.timejuggler.core.MainApp;
 import cz.cvut.felk.timejuggler.swing.ComponentFactory;
 import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.swing.components.EditorPaneLinkDetector;
@@ -83,17 +84,17 @@ public class EventTaskDialog extends AppDialog {
         buildGUI();
         buildModels();
 
-        final ActionMap actionMap = getActionMap();
-        btnOK.setAction(actionMap.get("okBtnAction"));
-        btnCancel.setAction(actionMap.get("cancelBtnAction"));
-        btnVisitURL.setAction(actionMap.get("visitURLAction"));
-
         setDefaultValues();
 
         pack();
         setResizable(true);
         locateOnOpticalScreenCenter(this);
 
+        final ActionMap actionMap = getActionMap();
+        btnOK.setAction(actionMap.get("okBtnAction"));
+        btnCancel.setAction(actionMap.get("cancelBtnAction"));
+        btnVisitURL.setAction(actionMap.get("visitURLAction"));
+        btnSetPattern.setAction(actionMap.get("setPatternAction"));
 
         final ResourceMap resourceMap = getResourceMap();
         String title = "";
@@ -115,7 +116,7 @@ public class EventTaskDialog extends AppDialog {
 
         context = new BindingContext();
 //        Binding binding = new Binding(this.dateFromPicker, "${enabled}", checkDate, "selected");
-        Binding binding = new Binding(this.btnSetPattern, "${enabled}", repeatCheckbox, "selected");
+        Binding binding = new Binding(getActionMap().get("setPatternAction"), "${enabled}", repeatCheckbox, "selected");
         context.addBinding(binding);
 //        binding = new Binding(this.timeFromSpinner, "${!enabled}", allDayCheckbox, "selected");
 //        context.addBinding(binding);
@@ -310,6 +311,13 @@ public class EventTaskDialog extends AppDialog {
     @Action
     public void lessAction() {
         showMoreOrLess(false, true);
+    }
+
+    @Action
+    public void setPatternAction() {
+        final MainApp app = MainApp.getInstance(MainApp.class);
+        final RecurrenceDialog recurrenceDialog = new RecurrenceDialog(app.getMainFrame());
+        app.prepareDialog(recurrenceDialog, true);
     }
 
     @Action
