@@ -31,12 +31,12 @@ public class EventDialog extends JPanel {
 		checkDate = new JCheckBox();
 		dateFromPicker = new JXDatePicker();
 		timeFromSpinner = new JSpinner();
-		JCheckBox allDayCheckbox = new JCheckBox();
+		allDayCheckbox = new JCheckBox();
 		JLabel labelTo = new JLabel();
 		checkDueDate = new JCheckBox();
 		dateToPicker = new JXDatePicker();
 		timeToSpinner = new JSpinner();
-		JCheckBox repeatCheckbox = new JCheckBox();
+		repeatCheckbox = new JCheckBox();
 		btnSetPattern = new JButton();
 		JPanel panelCalendar = new JPanel();
 		labelCalendar = new JLabel();
@@ -378,8 +378,8 @@ public class EventDialog extends JPanel {
 							FormFactory.DEFAULT_ROWSPEC
 						}), morePanel);
 
-					morePanelBuilder.add(labelDescription,      cc.xywh(1,  1, 1, 1, CellConstraints.DEFAULT, CellConstraints.TOP ));
-					morePanelBuilder.add(scrollPaneDescription, cc.xywh(3,  1, 5, 1, CellConstraints.DEFAULT, CellConstraints.FILL));
+					morePanelBuilder.add(labelDescription,      cc.xywh(1,  1, 1, 1, CellConstraints.DEFAULT, CellConstraints.TOP    ));
+					morePanelBuilder.add(scrollPaneDescription, cc.xywh(3,  1, 5, 1, CellConstraints.DEFAULT, CellConstraints.FILL   ));
 					morePanelBuilder.add(labelAttendees,        cc.xy  (1,  3));
 					morePanelBuilder.add(scrollPaneAttendees,   cc.xywh(3,  3, 1, 9));
 					morePanelBuilder.add(labelPrivacy,          cc.xy  (5,  3));
@@ -389,7 +389,7 @@ public class EventDialog extends JPanel {
 					morePanelBuilder.add(labelStatus,           cc.xy  (5,  7));
 					morePanelBuilder.add(statusCombo,           cc.xy  (7,  7));
 					morePanelBuilder.add(labelAlarm,            cc.xy  (5,  9));
-					morePanelBuilder.add(alarmCombo,            cc.xy  (7,  9));
+					morePanelBuilder.add(alarmCombo,            cc.xywh(7,  9, 1, 1, CellConstraints.LEFT   , CellConstraints.DEFAULT));
 					morePanelBuilder.add(panelAlarm,            cc.xy  (7, 11));
 					morePanelBuilder.add(panelURL,              cc.xywh(1, 13, 7, 1));
 					morePanelBuilder.add(panelStatus,           cc.xywh(1, 15, 7, 1));
@@ -492,9 +492,11 @@ public class EventDialog extends JPanel {
 	private JCheckBox checkDate;
 	private JXDatePicker dateFromPicker;
 	private JSpinner timeFromSpinner;
+	private JCheckBox allDayCheckbox;
 	private JCheckBox checkDueDate;
 	private JXDatePicker dateToPicker;
 	private JSpinner timeToSpinner;
+	private JCheckBox repeatCheckbox;
 	private JButton btnSetPattern;
 	private JLabel labelCalendar;
 	private JComboBox calendarCombo;
