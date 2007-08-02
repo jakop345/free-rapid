@@ -35,11 +35,11 @@ abstract class AppDialog extends JDialog {
         return result;
     }
 
-    protected AbstractButton getCancelButton() {
+    protected AbstractButton getBtnCancel() {
         return null;
     }
 
-    protected AbstractButton getOkButton() {
+    protected AbstractButton getBtnOK() {
         return null;
     }
 
@@ -64,7 +64,7 @@ abstract class AppDialog extends JDialog {
         final ActionListener escapeActionListener = new ActionListener() {
             public void actionPerformed(final ActionEvent actionEvent) {
                 //     if (closeOnCancel) {
-                final AbstractButton button = getCancelButton();
+                final AbstractButton button = getBtnCancel();
                 if (button != null) {
                     doButtonAction(button, actionEvent);
                 }
@@ -88,7 +88,7 @@ abstract class AppDialog extends JDialog {
                         return;
                     }
                 }
-                final AbstractButton button = getOkButton();
+                final AbstractButton button = getBtnOK();
                 if (button != null) {
                     actionEvent.setSource(button);
                     doButtonAction(button, actionEvent);
@@ -116,7 +116,7 @@ abstract class AppDialog extends JDialog {
         this.result = result;
     }
 
-    protected ResourceMap getResourceMap() {
+    protected static ResourceMap getResourceMap() {
         return Swinger.getResourceMap(this.getClass());
     }
 

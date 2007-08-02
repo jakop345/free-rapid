@@ -37,12 +37,12 @@ public class RecurrenceDialog extends AppDialog {
     }
 
     @Override
-    protected AbstractButton getCancelButton() {
+    protected AbstractButton getBtnCancel() {
         return btnCancel;
     }
 
     @Override
-    protected AbstractButton getOkButton() {
+    protected AbstractButton getBtnOK() {
         return btnOK;
     }
 
@@ -123,9 +123,6 @@ public class RecurrenceDialog extends AppDialog {
         cardLayout.show(panelOccurence, card);
     }
 
-    private ActionMap getActionMap() {
-        return Swinger.getActionMap(this.getClass(), this);
-    }
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
@@ -572,4 +569,8 @@ public class RecurrenceDialog extends AppDialog {
     private JButton btnOK;
     private JButton btnCancel;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
+
+    private ActionMap getActionMap() {
+        return Swinger.getActionMap(this.getClass(), this);
+    }
 }

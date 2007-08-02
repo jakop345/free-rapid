@@ -7,8 +7,11 @@ import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.*;
 import cz.cvut.felk.timejuggler.core.AppPrefs;
+import cz.cvut.felk.timejuggler.core.DataProvider;
 import cz.cvut.felk.timejuggler.core.MainApp;
+import cz.cvut.felk.timejuggler.db.Category;
 import cz.cvut.felk.timejuggler.swing.ComponentFactory;
+import cz.cvut.felk.timejuggler.swing.NaiiveComboModel;
 import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.swing.components.EditorPaneLinkDetector;
 import cz.cvut.felk.timejuggler.utilities.Browser;
@@ -28,6 +31,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.Date;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Logger;
 
 /**
@@ -285,6 +290,7 @@ public class EventTaskDialog extends AppDialog {
         setComboModelFromResource(alarmCombo);
         setComboModelFromResource(alarmTimeUnitCombo);
         setComboModelFromResource(alarmBeforeAfterCombo);
+        buildCategories();
     }
 
     @Action
@@ -336,13 +342,82 @@ public class EventTaskDialog extends AppDialog {
 
 
     @Override
-    protected AbstractButton getCancelButton() {
+    protected AbstractButton getBtnCancel() {
         return btnCancel;
     }
 
     @Override
-    protected AbstractButton getOkButton() {
+    protected AbstractButton getBtnOK() {
         return btnOK;
+    }
+
+    private void buildCategories() {
+        final MainApp app = MainApp.getInstance(MainApp.class);
+        final DataProvider dataProvider = app.getDataProvider();
+        final java.util.List<Category> list = dataProvider.getCategories();
+        final Set sortedSet = new TreeSet(list);
+        fillCategoryComboModel(sortedSet);
+        this.categoryCombo.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                addNewCategory();
+            }
+        });
+    }
+
+    private void addNewCategory() {
+        final CategoryItem selected = (CategoryItem) this.categoryCombo.getSelectedItem();
+        if (!selected.isCustom)
+            return;
+        final MainApp app = MainApp.getInstance(MainApp.class);
+        final CategoryDialog dialog = new CategoryDialog((Frame) this.getOwner());
+        app.prepareDialog(dialog, true);
+    }
+
+    private void fillCategoryComboModel(Set<Category> items) {
+        final NaiiveComboModel comboModel = new NaiiveComboModel();
+        comboModel.addElement(CategoryItem.NONE_CATEGORY);
+        comboModel.addElement("-");
+        for (Category item : items) {
+            comboModel.addElement(new CategoryItem(item));
+        }
+        comboModel.addElement("-");
+        comboModel.addElement(CategoryItem.CUSTOM_CATEGORY);
+        this.categoryCombo.setModel(comboModel);
+    }
+
+    /**
+     * Wrap trida pro combo seznamu kategorii
+     */
+    private static class CategoryItem {
+        private Category category;
+        private boolean isCustom;
+        private String description;
+
+        private final static CategoryItem NONE_CATEGORY = new CategoryItem(null);
+        private final static CategoryItem CUSTOM_CATEGORY = new CategoryItem();
+
+
+        private CategoryItem(Category category) {
+            if (category == null)
+                this.description = EventTaskDialog.getResourceMap().getString("noneCategory");
+            else
+                this.description = category.getName();
+            this.category = category;
+        }
+
+        private CategoryItem() {
+            description = EventTaskDialog.getResourceMap().getString("newCategory");
+            isCustom = true;
+        }
+
+        public Category getCategory() {
+            return category;
+        }
+
+        @Override
+        public String toString() {
+            return description;
+        }
     }
 
     private void initComponents() {

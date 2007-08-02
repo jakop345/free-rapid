@@ -1,5 +1,7 @@
 package cz.cvut.felk.timejuggler.swing.components;
 
+import cz.cvut.felk.timejuggler.swing.Swinger;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -14,7 +16,7 @@ public class ColorComboBox extends JComboBox {
 
     public static final String PROP_COLOR = "color"; // NOI18N
 
-    public static final Value CUSTOM_COLOR = new Value(loc("Custom"), null); // NOI18N
+    public static final Value CUSTOM_COLOR = new Value(loc("ColorCombobox_custom_color"), null); // NOI18N
 
     private static Map<Color, String> colorMap = new HashMap<Color, String>();
 
@@ -62,6 +64,8 @@ public class ColorComboBox extends JComboBox {
                             lastColor);
                     if (c != null)
                         setColor(c);
+                    else
+                        setColor(lastColor);
                 } else {
                     lastColor = ((Value) getSelectedItem()).color;
                 }
@@ -86,8 +90,8 @@ public class ColorComboBox extends JComboBox {
 
     public void setColor(Color color) {
         if (color == null) {
-            setSelectedIndex(content.length - 1);
-            lastColor = ((Value) getItemAt(content.length - 1)).color;
+            setSelectedIndex(0);
+            lastColor = ((Value) getItemAt(0)).color;
         } else {
             setSelectedItem(new Value(color));
             lastColor = color;
@@ -101,7 +105,7 @@ public class ColorComboBox extends JComboBox {
     }
 
     private static String loc(String key) {
-        return key;
+        return Swinger.getResourceMap().getString(key);
     }
 
     // innerclasses ............................................................
@@ -113,14 +117,10 @@ public class ColorComboBox extends JComboBox {
 
         Value(Color color) {
             this.color = color;
-            text = (String) colorMap.get(color);
+            text = colorMap.get(color);
             if (text != null)
                 return;
-            StringBuilder sb = new StringBuilder();
-            sb.append('[').append(color.getRed()).append(',').append(
-                    color.getGreen()).append(',').append(color.getBlue())
-                    .append(']');
-            text = sb.toString();
+            text = loc("Custom_color");
         }
 
         Value(String text, Color color) {
@@ -141,10 +141,11 @@ public class ColorComboBox extends JComboBox {
                     ColorComboBox.this.getFont()).getHeight() + 2));
             setOpaque(true);
             setFocusable(true);
-            setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
         }
 
         public void paint(Graphics g) {
+            super.paint(g);
             Color oldColor = g.getColor();
             Dimension size = getSize();
             if (isFocusOwner())
