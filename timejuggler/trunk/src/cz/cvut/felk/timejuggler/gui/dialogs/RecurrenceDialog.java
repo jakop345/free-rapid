@@ -63,7 +63,8 @@ public class RecurrenceDialog extends AppDialog {
     }
 
     private void setDefaultValues() {
-
+        radioRepeatForever.setSelected(true); //bude odstraneno
+        updateRepeatRadios();
     }
 
     private void buildModels() {
@@ -82,11 +83,24 @@ public class RecurrenceDialog extends AppDialog {
 
 
     private void buildGUI() {
+        ActionListener radioActionListener = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                updateRepeatRadios();
+            }
+        };
+        radioRepeatFor.addActionListener(radioActionListener);
+        radioRepeatForever.addActionListener(radioActionListener);
+        radioRepeatUntil.addActionListener(radioActionListener);
         comboOccurs.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 updateCardPanel();
             }
         });
+    }
+
+    private void updateRepeatRadios() {
+        dateUntil.setEnabled(radioRepeatUntil.isSelected());
+        spinnerRepeatFor.setEnabled(radioRepeatFor.isSelected());
     }
 
     private void updateCardPanel() {
@@ -153,7 +167,7 @@ public class RecurrenceDialog extends AppDialog {
         radioRepeatFor = new JRadioButton();
         spinnerRepeatFor = new JSpinner();
         JLabel labelOccurences = new JLabel();
-        repeatUntil = new JRadioButton();
+        radioRepeatUntil = new JRadioButton();
         dateUntil = ComponentFactory.getDatePicker();
         JPanel buttonBar = new JPanel();
         btnOK = new JButton();
@@ -435,7 +449,7 @@ public class RecurrenceDialog extends AppDialog {
 
                         //---- repeatUntil ----
 
-                        repeatUntil.setName("repeatUntil");
+                        radioRepeatUntil.setName("repeatUntil");
 
                         //---- dateUntil ----
                         dateUntil.setName("dateUntil");
@@ -460,7 +474,7 @@ public class RecurrenceDialog extends AppDialog {
                         panelRepeatBuilder.add(radioRepeatFor, cc.xy(1, 3));
                         panelRepeatBuilder.add(spinnerRepeatFor, cc.xywh(3, 3, 1, 1, CellConstraints.FILL, CellConstraints.FILL));
                         panelRepeatBuilder.add(labelOccurences, cc.xy(5, 3));
-                        panelRepeatBuilder.add(repeatUntil, cc.xy(1, 5));
+                        panelRepeatBuilder.add(radioRepeatUntil, cc.xy(1, 5));
                         panelRepeatBuilder.add(dateUntil, cc.xywh(3, 5, 3, 1));
                     }
 
@@ -530,7 +544,7 @@ public class RecurrenceDialog extends AppDialog {
         ButtonGroup buttonGroupRepeat = new ButtonGroup();
         buttonGroupRepeat.add(radioRepeatForever);
         buttonGroupRepeat.add(radioRepeatFor);
-        buttonGroupRepeat.add(repeatUntil);
+        buttonGroupRepeat.add(radioRepeatUntil);
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
 
@@ -553,7 +567,7 @@ public class RecurrenceDialog extends AppDialog {
     private JRadioButton radioRepeatForever;
     private JRadioButton radioRepeatFor;
     private JSpinner spinnerRepeatFor;
-    private JRadioButton repeatUntil;
+    private JRadioButton radioRepeatUntil;
     private JXDatePicker dateUntil;
     private JButton btnOK;
     private JButton btnCancel;

@@ -96,7 +96,7 @@ public class Category extends DbElement implements Comparable {
     }
 
     public int compareTo(Object o) {
-        return getName().compareTo(((Category) o).getName());
+        return getName().compareTo(((Category) o).getName()); //pridat i podporu pro componentId?
     }
 
     public String getName() {

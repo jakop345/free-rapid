@@ -363,16 +363,16 @@ public class EventTaskDialog extends AppDialog {
         repeatCheckbox = new JCheckBox();
         btnSetPattern = new JButton();
         JPanel panelCalendar = new JPanel();
-        labelCalendar = new JLabel();
+        JLabel labelCalendar = new JLabel();
         calendarCombo = ComponentFactory.getComboBox();
         JLabel labelCategory = new JLabel();
         categoryCombo = ComponentFactory.getComboBox();
         morePanel = new JPanel();
         JLabel labelDescription = new JLabel();
-        scrollPaneDescription = new JScrollPane();
+        JScrollPane scrollPaneDescription = new JScrollPane();
         descriptionArea = ComponentFactory.getTextArea();
         JLabel labelAttendees = new JLabel();
-        scrollPaneAttendees = new JScrollPane();
+        JScrollPane scrollPaneAttendees = new JScrollPane();
         attendeesArea = ComponentFactory.getEmailsEditorPane();
         JLabel labelPrivacy = new JLabel();
         privacyCombo = ComponentFactory.getComboBox();
@@ -396,7 +396,7 @@ public class EventTaskDialog extends AppDialog {
         completedDatePicker = ComponentFactory.getDatePicker();
         percentCompleteSpinner = new JSpinner();
         JLabel labelComplete = new JLabel();
-        panelBtn = new JPanel();
+        JPanel panelBtn = new JPanel();
         btnOK = new JButton();
         btnCancel = new JButton();
         btnLessMore = new JButton();
@@ -412,10 +412,7 @@ public class EventTaskDialog extends AppDialog {
             mainPanel.setName("mainPanel");
             mainPanel.setLayout(new BorderLayout());
 
-            //======== this ========
             {
-                this.setName("this");
-
                 //---- labelTitle ----
 
                 labelTitle.setLabelFor(titleField);
@@ -817,13 +814,10 @@ public class EventTaskDialog extends AppDialog {
     private JXDatePicker dateToPicker;
     private JSpinner timeToSpinner;
     private JButton btnSetPattern;
-    private JLabel labelCalendar;
     private JComboBox calendarCombo;
     private JComboBox categoryCombo;
     private JPanel morePanel;
-    private JScrollPane scrollPaneDescription;
     private JTextArea descriptionArea;
-    private JScrollPane scrollPaneAttendees;
     private EditorPaneLinkDetector attendeesArea;
     private JComboBox privacyCombo;
     private JComboBox priorityCombo;
@@ -839,7 +833,6 @@ public class EventTaskDialog extends AppDialog {
     private JComboBox statusTypeCombo;
     private JXDatePicker completedDatePicker;
     private JSpinner percentCompleteSpinner;
-    private JPanel panelBtn;
     private JButton btnOK;
     private JButton btnCancel;
     private JButton btnLessMore;

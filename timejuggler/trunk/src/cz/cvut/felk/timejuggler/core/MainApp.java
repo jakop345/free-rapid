@@ -27,6 +27,7 @@ public class MainApp extends SingleXFrameApplication {
     private MainPanelManager mainPanel;
     private Collection<String> filesToOpen;
     private static boolean debug = false;
+    private DataProvider dataProvider;
 //    private static Logger logger = null;
 
     /**
@@ -75,6 +76,7 @@ public class MainApp extends SingleXFrameApplication {
     @Override
     protected void initialize(String[] args) {
         filesToOpen = processArguments(args);
+        this.dataProvider = DataProvider.getInstance();
         LogUtils.initLogging(debug);
         // logger = Logger.getLogger(MainApp.class.getName());
         Swinger.initLaF(); //inicializace LaFu, musi to byt pred vznikem hlavniho panelu
@@ -102,6 +104,10 @@ public class MainApp extends SingleXFrameApplication {
 
     private JComponent getMainPanelComponent() {
         return mainPanel.getComponent();
+    }
+
+    public DataProvider getDataProvider() {
+        return dataProvider;
     }
 
     @Override
