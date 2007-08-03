@@ -116,7 +116,7 @@ abstract class AppDialog extends JDialog {
         this.result = result;
     }
 
-    protected static ResourceMap getResourceMap() {
+    protected ResourceMap getResourceMap() {
         return Swinger.getResourceMap(this.getClass());
     }
 

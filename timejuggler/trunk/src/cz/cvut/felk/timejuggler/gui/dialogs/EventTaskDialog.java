@@ -399,14 +399,14 @@ public class EventTaskDialog extends AppDialog {
 
         private CategoryItem(Category category) {
             if (category == null)
-                this.description = EventTaskDialog.getResourceMap().getString("noneCategory");
+                this.description = Swinger.getResourceMap(EventTaskDialog.class).getString("noneCategory");
             else
                 this.description = category.getName();
             this.category = category;
         }
 
         private CategoryItem() {
-            description = EventTaskDialog.getResourceMap().getString("newCategory");
+            description = Swinger.getResourceMap(EventTaskDialog.class).getString("newCategory");
             isCustom = true;
         }
 
