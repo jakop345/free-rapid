@@ -61,7 +61,6 @@ public class TrayIconSupport implements PropertyChangeListener {
 
         PopupMenu popup = buildPopmenu(app, map);
         final Font font = frame.getFont().deriveFont((float) 11);
-        System.out.println("font = " + font);
         popup.setFont(font);
         this.trayIcon = new TrayIcon(image, frame.getTitle(), popup);
 
