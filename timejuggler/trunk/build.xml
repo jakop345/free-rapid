@@ -32,6 +32,8 @@
         <include name="**/?*.html"/>
         <include name="**/?*.dtd"/>
         <include name="**/?*.tld"/>
+        <include name="**/?*.mid"/>
+        <include name="**/?*.wav"/>
     </patternset>
 
     <path id="cp">
