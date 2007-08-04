@@ -8,9 +8,7 @@ import cz.cvut.felk.timejuggler.swing.Swinger;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 
 /**
  * @author Vity
@@ -19,7 +17,6 @@ abstract class AppDialog extends JDialog {
     public final static int RESULT_OK = 0;
     final static int RESULT_CANCEL = 1;
     int result = RESULT_CANCEL;
-    private ActionListener okButtonListener;
 
 //    private final boolean closeOnCancel = true;
 
@@ -61,18 +58,24 @@ abstract class AppDialog extends JDialog {
 
 
     protected final JRootPane createRootPane() {
+
+
         final ActionListener escapeActionListener = new ActionListener() {
             public void actionPerformed(final ActionEvent actionEvent) {
                 //     if (closeOnCancel) {
-                final AbstractButton button = getBtnCancel();
-                if (button != null) {
-                    doButtonAction(button, actionEvent);
-                }
+                doCancel(actionEvent);
                 //doCancelButtonAction();
                 //   }
             }
         };
-        okButtonListener = new ActionListener() {
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                windowIsClosing();
+            }
+        });
+
+        final ActionListener okButtonListener = new ActionListener() {
 
             public void actionPerformed(final ActionEvent actionEvent) {
                 if (AppDialog.this.getFocusOwner() instanceof AbstractButton) {
@@ -100,15 +103,27 @@ abstract class AppDialog extends JDialog {
         rootPane.registerKeyboardAction(escapeActionListener, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
         stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
         rootPane.registerKeyboardAction(okButtonListener, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
+        stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_MASK);
+        rootPane.registerKeyboardAction(okButtonListener, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
         return rootPane;
+    }
+
+    protected void windowIsClosing() {
+
+    }
+
+    private void doCancel(ActionEvent actionEvent) {
+        final AbstractButton button = getBtnCancel();
+        if (button != null) {
+            doButtonAction(button, actionEvent);
+        }
     }
 
     private static void doButtonAction(final AbstractButton button, final ActionEvent actionEvent) {
         button.doClick();
         final Action action = button.getAction();
-        if (action != null)
+        if (action != null && action.isEnabled())
             action.actionPerformed(actionEvent);
-        //     else logger.severe("Button has no action!" + button.toString());
     }
 
 
@@ -142,7 +157,4 @@ abstract class AppDialog extends JDialog {
         comboBox.setModel(new NaiiveComboModel(getList(name)));
     }
 
-    public ActionListener getOkButtonListener() {
-        return okButtonListener;
-    }
 }

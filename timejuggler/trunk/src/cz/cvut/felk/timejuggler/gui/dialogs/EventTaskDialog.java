@@ -28,8 +28,6 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
@@ -191,8 +189,6 @@ public class EventTaskDialog extends AppDialog {
                 insertUpdate(e);
             }
         });
-        attendeesArea.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_DOWN_MASK), getOkButtonListener());
-        descriptionArea.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_DOWN_MASK), getOkButtonListener());
     }
 
     private void updateCheckDueDate() {

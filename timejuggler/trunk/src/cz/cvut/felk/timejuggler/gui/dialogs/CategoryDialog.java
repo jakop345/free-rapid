@@ -83,7 +83,7 @@ public class CategoryDialog extends AppDialog {
         //this.category = UIBeanEnhancer.enhance(category);
         final Category cat = (Category) UIBeanEnhancer.enhance(category);
         model = new PresentationModel(cat, new Trigger());
-        Bindings.bind(fieldName, model.getBufferedModel("name"), false);
+        Bindings.bind(fieldName, model.getBufferedModel("name"), true);
 
         final Action actionOK = getActionMap().get("okBtnAction");
         actionOK.setEnabled(false);
