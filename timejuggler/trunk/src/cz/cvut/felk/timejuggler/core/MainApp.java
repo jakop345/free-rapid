@@ -9,6 +9,7 @@ import cz.cvut.felk.timejuggler.core.application.ListItemsConvertor;
 import cz.cvut.felk.timejuggler.gui.MainPanelManager;
 import cz.cvut.felk.timejuggler.gui.StorageProperties;
 import cz.cvut.felk.timejuggler.swing.Swinger;
+import cz.cvut.felk.timejuggler.swing.TrayIconSupport;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
 import org.jdesktop.appframework.swingx.SingleXFrameApplication;
 import org.jdesktop.swingx.JXStatusBar;
@@ -28,6 +29,8 @@ public class MainApp extends SingleXFrameApplication {
     private Collection<String> filesToOpen;
     private static boolean debug = false;
     private DataProvider dataProvider;
+    private TrayIconSupport trayIconSupport = null;
+
 //    private static Logger logger = null;
 
     /**
@@ -86,15 +89,20 @@ public class MainApp extends SingleXFrameApplication {
 
     protected void startup() {
         mainPanel = new MainPanelManager(getContext());
-        final JFrame frame = getMainFrame();
-        frame.setJMenuBar(mainPanel.getMenuManager().getMenuBar());
-        frame.getContentPane().add(getMainPanelComponent());
-        //resourceMap.injectComponents(frame);
+        initMainFrame();
         this.addExitListener(new MainAppExitListener());
-        frame.pack();
-        show(frame);
+        show(getMainFrame());
+        getTrayIconSupport().enable();
         setGlobalEDTExceptionHandler();
     }
+
+    private void initMainFrame() {
+        final JFrame frame = getMainFrame();
+        frame.setJMenuBar(getMainPanel().getMenuManager().getMenuBar());
+        frame.getContentPane().add(getMainPanelComponent());
+        frame.pack();
+    }
+
 
     private void setGlobalEDTExceptionHandler() {
         final GlobalEDTExceptionHandler eh = new GlobalEDTExceptionHandler();
@@ -156,5 +164,12 @@ public class MainApp extends SingleXFrameApplication {
 
     public Collection<String> getFilesToOpen() {
         return filesToOpen;
+    }
+
+    public TrayIconSupport getTrayIconSupport() {
+        if (trayIconSupport == null) {
+            trayIconSupport = new TrayIconSupport();
+        }
+        return trayIconSupport;
     }
 }

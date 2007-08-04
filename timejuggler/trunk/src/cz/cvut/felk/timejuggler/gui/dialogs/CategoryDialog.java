@@ -1,5 +1,9 @@
 package cz.cvut.felk.timejuggler.gui.dialogs;
 
+import com.jgoodies.binding.PresentationModel;
+import com.jgoodies.binding.adapter.Bindings;
+import com.jgoodies.binding.beans.PropertyConnector;
+import com.jgoodies.binding.value.Trigger;
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.FormFactory;
@@ -9,11 +13,10 @@ import cz.cvut.felk.timejuggler.swing.ComponentFactory;
 import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.swing.components.ColorComboBox;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
+import org.izvin.client.desktop.ui.util.UIBeanEnhancer;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.logging.Logger;
 
 /**
@@ -23,17 +26,18 @@ public class CategoryDialog extends AppDialog {
     private final static Logger logger = Logger.getLogger(CategoryDialog.class.getName());
     private final Category category;
     private boolean newCategory;
+    private PresentationModel model;
 
 
     public CategoryDialog(Frame owner) throws HeadlessException {
-        this(owner, null);
+        this(owner, new Category(), true);
     }
 
-    public CategoryDialog(Frame owner, Category category) throws HeadlessException {
+    public CategoryDialog(Frame owner, Category category, boolean createNewCategory) throws HeadlessException {
         super(owner, true);
         this.category = category;
         this.setName("CategoryDialog");
-        this.newCategory = category == null;
+        this.newCategory = createNewCategory;
         try {
             initComponents();
             build();
@@ -70,11 +74,24 @@ public class CategoryDialog extends AppDialog {
     }
 
     private void buildGUI() {
-        checkUseColor.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                updateCombo();
-            }
-        });
+//        checkUseColor.addActionListener(new ActionListener() {
+//            public void actionPerformed(ActionEvent e) {
+//                updateCombo();
+//            }
+//        });
+
+        //this.category = UIBeanEnhancer.enhance(category);
+        final Category cat = (Category) UIBeanEnhancer.enhance(category);
+        model = new PresentationModel(cat, new Trigger());
+        Bindings.bind(fieldName, model.getBufferedModel("name"), false);
+
+        final Action actionOK = getActionMap().get("okBtnAction");
+        actionOK.setEnabled(false);
+        final PropertyConnector connector1 = PropertyConnector.connect(model, PresentationModel.PROPERTYNAME_BUFFERING, actionOK, "enabled");
+        //connector1.updateProperty2();
+
+        final PropertyConnector connector = PropertyConnector.connect(checkUseColor, "selected", comboColor, "enabled");
+        connector.updateProperty2();
     }
 
     private void updateCombo() {
@@ -95,7 +112,8 @@ public class CategoryDialog extends AppDialog {
 
             this.setTitle(getResourceMap().getString("CategoryDialog_edit_title"));
         }
-        updateCombo();
+        model.triggerFlush();
+        // updateCombo();
     }
 
     private void buildModels() {
@@ -116,7 +134,7 @@ public class CategoryDialog extends AppDialog {
         JPanel dialogPane = new JPanel();
         JPanel contentPanel = new JPanel();
         JLabel labelName = new JLabel();
-        fieldName = new JTextField();
+        fieldName = ComponentFactory.getTextField();
         checkUseColor = new JCheckBox();
         comboColor = ComponentFactory.getColorComboBox();
         JPanel buttonBar = new JPanel();

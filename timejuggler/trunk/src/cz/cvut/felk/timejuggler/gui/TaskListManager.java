@@ -16,6 +16,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseEvent;
 
 /**
  * Seznam tasku
@@ -55,9 +56,23 @@ public class TaskListManager {
         labelTask.setName("labelTask");
         final JCheckBox checkTask = new JCheckBox();
         checkTask.setName("checkTask");
-        final JXTable table = new JXTable();
+        final JXTable table = new JXTable() {
+            @Override
+            public String getToolTipText(MouseEvent e) {
+                String tip = null;
+                java.awt.Point p = e.getPoint();
+                int rowIndex = rowAtPoint(p);
+                int colIndex = columnAtPoint(p);
+                int realColumnIndex = convertColumnIndexToModel(colIndex);
+                //    int realRowIndex = convertRowIndexToModel(rowIndex);
+
+
+                return super.getToolTipText(e);
+            }
+        };
         table.setName("taskJXTable");
         final DefaultTableModel tableModel = new DefaultTableModel(new Object[]{"Done", "Priority", "Completed", "Title", "Calendar Name"}, 0) {
+
             public Class<?> getColumnClass(int columnIndex) {
                 final String name = this.getColumnName(columnIndex);
                 if (name.equals("Done"))

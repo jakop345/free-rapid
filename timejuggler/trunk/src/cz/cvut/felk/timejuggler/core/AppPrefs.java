@@ -49,6 +49,9 @@ public final class AppPrefs {
     public static final String DEFAULT_ALARM_TIME_BEFORE_EVENT_TIMEUNIT = "settings.defaultAlarmTimeBeforeEventTimeUnit";
     public static final String DEFAULT_ALARM_TIME_BEFORE_TASK_TIMEUNIT = "settings.defaultAlarmTimeBeforeTaskTimeUnit";
 
+    public static final String MINIMIZE_TO_TRAY = "settings.minimizeToTray";
+    public static final String SHOW_TRAY = "settings.showTray";
+
 
     private AppPrefs() {
     }
