@@ -35,6 +35,11 @@ public class Consts {
     public static final String DB_DEFAULT = "db_init/db.zip";
 
     /**
+     * jmeno adresare v resources, kde je sound
+     */
+    public static final String SOUNDS_DIR = "sound";
+
+    /**
      * Od teto tridy se nebudou delat zadne instance
      */
     private Consts() {
