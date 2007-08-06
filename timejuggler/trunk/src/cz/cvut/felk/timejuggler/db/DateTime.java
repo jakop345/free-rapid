@@ -1,7 +1,7 @@
 package cz.cvut.felk.timejuggler.db;
 
 import java.sql.Timestamp;
-import java.util.Vector;
+import java.util.List;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.util.Date;

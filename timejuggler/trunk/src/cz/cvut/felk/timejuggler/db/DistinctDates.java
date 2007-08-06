@@ -1,6 +1,6 @@
 package cz.cvut.felk.timejuggler.db;
 
-import java.util.Vector;
+import java.util.List;
 import java.util.Iterator;
 import java.util.logging.Logger;
 /**
@@ -12,11 +12,11 @@ import java.util.logging.Logger;
 public class DistinctDates extends DbElement implements Iterable {
 	private final static Logger logger = Logger.getLogger(DistinctDates.class.getName());
 	
-	private Vector<DistinctDate> distinctDates;
+	private List<DistinctDate> distinctDates;
 	private int distinctDatesId;
 	
 	public DistinctDates(){
-		distinctDates = new Vector<DistinctDate>();
+		distinctDates = new List<DistinctDate>();
 	}
 
 	public void store(){

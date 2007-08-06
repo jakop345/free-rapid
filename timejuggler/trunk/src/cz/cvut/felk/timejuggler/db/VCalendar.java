@@ -2,7 +2,7 @@ package cz.cvut.felk.timejuggler.db;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Vector;
+import java.util.List;
 import java.util.Date;
 import java.sql.Timestamp;
 
@@ -71,12 +71,12 @@ public class VCalendar extends DbElement {
 	public void delete(TimeJugglerJDBCTemplate template){
 		if (getId() > 0) {
 			logger.info("Database - DELETE: VCalendar[" + getId() + "]:" + name + "...");
-			Vector<EventTask> events = getEvents();
+			List<EventTask> events = getEvents();
 			for (EventTask event : events) {
 				event.delete(template);
 			}
 	
-			Vector<EventTask> todos = getToDos();
+			List<EventTask> todos = getToDos();
 			for (EventTask todo : todos) {
 				todo.delete(template);
 			}
@@ -146,12 +146,12 @@ public class VCalendar extends DbElement {
      *
      * Vraci vsechny udalosti typu Event v danem kalendari
      */
-    public Vector<EventTask> getEvents() {
+    public List<EventTask> getEvents() {
         String sql = "SELECT * FROM VEvent,CalComponent,DateTime WHERE (VEvent.calComponentID = CalComponent.calComponentID AND CalComponent.vCalendarID=? AND CalComponent.dateTimeID=DateTime.dateTimeID)";
         Object params[] = {getId()};
-        TimeJugglerJDBCTemplate<Vector<EventTask>> template = new TimeJugglerJDBCTemplate<Vector<EventTask>>() {
+        TimeJugglerJDBCTemplate<List<EventTask>> template = new TimeJugglerJDBCTemplate<List<EventTask>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
-            	if (items == null) items = new Vector<EventTask>();
+            	if (items == null) items = new List<EventTask>();
                 EventTask event = new EventTask();	// Vytvori udalost typu Event
                 Timestamp ts;
                 event.setId(rs.getInt("vEventID"));	//DB
@@ -199,12 +199,12 @@ public class VCalendar extends DbElement {
      *
      * Vraci vsechny udalosti typu ToDo v danem kalendari
      */
-    public Vector<EventTask> getToDos() {
+    public List<EventTask> getToDos() {
         String sql = "SELECT * FROM VToDo,CalComponent,DateTime WHERE (VToDo.calComponentID = CalComponent.calComponentID AND CalComponent.vCalendarID=? AND CalComponent.dateTimeID=DateTime.dateTimeID)";
         Object params[] = { getId() };
-        TimeJugglerJDBCTemplate<Vector<EventTask>> template = new TimeJugglerJDBCTemplate<Vector<EventTask>>() {
+        TimeJugglerJDBCTemplate<List<EventTask>> template = new TimeJugglerJDBCTemplate<List<EventTask>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
-            	if (items == null) items = new Vector<EventTask>();
+            	if (items == null) items = new List<EventTask>();
                 EventTask todo = new EventTask(true);	// Vytvori udalost typu ToDo
                 Timestamp ts;
                 todo.setId(rs.getInt("vToDoID"));
@@ -253,7 +253,7 @@ public class VCalendar extends DbElement {
 	 * @return
 	 *
 	 */
-	public Vector<EventTask> getEvents(Date startDate,Date endDate) {
+	public List<EventTask> getEvents(Date startDate,Date endDate) {
 		// TODO: Napsat SELECT pro vraceni udalosti mezi danymi casy
 		return null;
 	}

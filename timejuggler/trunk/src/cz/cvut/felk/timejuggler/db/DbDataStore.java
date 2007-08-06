@@ -18,7 +18,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
-import java.util.Vector;
+import java.util.List;
 import java.util.Iterator;
 import java.util.logging.Logger;
 
@@ -38,22 +38,7 @@ public class DbDataStore {
     	
         // Testing
         DbDataStore db = new DbDataStore();
-        
-        /* ICS import (uklada se do db (saveOrUpdate) automaticky)*/
-        /*
-        try {
-        	VCalendar imported = db.importICS("/path/svatky.ics");
-	    }
-	    catch (IOException ex) {
-	    	// Chyba IO
-	    	ex.printStackTrace();
-	    }
-	    catch (ParserException ex) {
-	    	// Chyba parsovani (nespravny format ?)
-	    	ex.printStackTrace();
-	    }
-	    */
-        
+       
 		
 		//VCalendar calendar1 = new VCalendar("Testovaci 1");
 		//db.saveOrUpdate(calendar1);
@@ -68,7 +53,7 @@ public class DbDataStore {
 		
 		/* Pridavani Eventu */		
 		/*
-		VEvent event = new VEvent();
+		EventTask event = new EventTask();
 		event.setUid("01234568-012144");
 		event.setDescription("Muj event 2");
 		event.setSummary("Toto je druhy event ulozeny do databaze!");
@@ -83,7 +68,7 @@ public class DbDataStore {
                   
         /* Pridavani Ukolu */
         /*
-          VToDo todo = new VToDo();
+          EventTask todo = new EventTask(true);
           Date deadline = new Date();
           deadline.setMonth(5);
           deadline.setDate(20);
@@ -96,7 +81,7 @@ public class DbDataStore {
 
 		/* Vypis */
 
-        Vector<VCalendar> cals = db.getCalendars();
+        List<VCalendar> cals = db.getCalendars();
         
         int i = 0;
         for (VCalendar cal: cals) {
@@ -164,13 +149,13 @@ public class DbDataStore {
      *
      */
 	public void showDB(){
-		Vector<VCalendar> cals = getCalendars();
+		List<VCalendar> cals = getCalendars();
         
         for (VCalendar cal: cals) {
         	System.out.println ("Calendar name:" + cal.getName());
         	System.out.println ("+--Events:");
 
-            Vector<EventTask> events = cal.getEvents();
+            List<EventTask> events = cal.getEvents();
             if (events != null) {
 	        	for (EventTask e: events) {
 	        		//System.out.println ("event.description: " + e.getDescription());
@@ -180,7 +165,7 @@ public class DbDataStore {
 	        		System.out.println ("+-created: " + e.getCreated());
 	        		System.out.println ("+-dtstamp: " + e.getDTimestamp());
 	        		
-	        		Vector<Category> cats = e.getCategories();
+	        		List<Category> cats = e.getCategories();
 	        		if (cats != null) {
 	        			System.out.print ("+-categories " );
 		        		for (Object o : cats) {
@@ -201,7 +186,7 @@ public class DbDataStore {
 	        	}
         	}
         	System.out.println ("+--Todos:");
-        	Vector<EventTask> todos = cal.getToDos();
+        	List<EventTask> todos = cal.getToDos();
         	if (todos != null) {
 	        	for (EventTask todo: todos) {
 	        		System.out.println ("todo: " + todo.getDescription());
@@ -218,11 +203,11 @@ public class DbDataStore {
      * Method getCalendars
      * @return
      */
-    public Vector<VCalendar> getCalendars() {
+    public List<VCalendar> getCalendars() {
         String sql = "SELECT * FROM VCalendar";
-        TimeJugglerJDBCTemplate<Vector<VCalendar>> template = new TimeJugglerJDBCTemplate<Vector<VCalendar>>() {
+        TimeJugglerJDBCTemplate<List<VCalendar>> template = new TimeJugglerJDBCTemplate<List<VCalendar>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
-            	if (items == null) items = new Vector<VCalendar>();
+            	if (items == null) items = new List<VCalendar>();
                 VCalendar cal = new VCalendar();
                 cal.setId(Integer.valueOf(rs.getInt("vCalendarID")).intValue());
                 cal.setProductId(rs.getString("prodid"));
@@ -366,7 +351,7 @@ public class DbDataStore {
 			prop = comp.getProperty(Property.CATEGORIES);
 				
 			CategoryList catList = ((Categories)prop).getCategories();	// iCal
-			Vector<Category> cats = new Vector<Category>();	// Timejuggler
+			List<Category> cats = new List<Category>();	// Timejuggler
 			for (Iterator<?> it = catList.iterator(); it.hasNext();) {
 				cats.add(new Category(it.next().toString()));
 			}
@@ -437,7 +422,7 @@ public class DbDataStore {
 		// TODO: Period property
 		// Funkcni - castecne expertuje Eventy
 		Calendar ical;
-		Vector<EventTask> events = calendar.getEvents();	// sada Timejuggler
+		List<EventTask> events = calendar.getEvents();	// sada Timejuggler
 		ComponentList compList = new ComponentList();	// sada pro iCal
 		
 		PropertyList propList;

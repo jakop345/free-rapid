@@ -1,6 +1,6 @@
 package cz.cvut.felk.timejuggler.db;
 
-import java.util.Vector;
+import java.util.List;
 
 /**
  * @author Jan Struz
@@ -16,7 +16,7 @@ public class VAlarm extends DbElement {
 	private int componentId;
 	//private DurationDateTime trigger;
 	private String attachment;
-	private Vector<String> attendee;
+	private List<String> attendee;
 	
 	private Duration duration;
 	
@@ -95,7 +95,7 @@ public class VAlarm extends DbElement {
 		repeat = newVal;
 	}
 
-	public Vector<String> getAttendee(){
+	public List<String> getAttendee(){
 		return attendee;
 	}
 
@@ -103,7 +103,7 @@ public class VAlarm extends DbElement {
 	 * 
 	 * @param newVal
 	 */
-	public void setAttendee(Vector<String> newVal){
+	public void setAttendee(List<String> newVal){
 		attendee = newVal;
 	}
 

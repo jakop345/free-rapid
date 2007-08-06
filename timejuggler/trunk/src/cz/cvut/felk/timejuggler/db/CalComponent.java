@@ -1,7 +1,7 @@
 package cz.cvut.felk.timejuggler.db;
 
 import java.sql.Timestamp;
-import java.util.Vector;
+import java.util.List;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.util.Date;
@@ -37,17 +37,17 @@ public class CalComponent extends DbElement {
     private Timestamp dtstamp;
     private int componentId;
     private int calendarId;
-    private Vector<VAlarm> alarms;
+    private List<VAlarm> alarms;
     
     /*
      * nasobne properties
      */
-    private Vector<Category> categories;
-    private Vector<Comment> comments;
-    private Vector<Contact> contacts;
-    private Vector<Attachment> attachments;
-    private Vector<RelatedTo> relatedto;
-    private Vector<Resource> resources;
+    private List<Category> categories;
+    private List<Comment> comments;
+    private List<Contact> contacts;
+    private List<Attachment> attachments;
+    private List<RelatedTo> relatedto;
+    private List<Resource> resources;
     
     private DateTime dateTime;
 
@@ -271,12 +271,12 @@ public class CalComponent extends DbElement {
 	 * @return
 	 *
 	 */
-	public Vector<Attachment> getAttachments() {
+	public List<Attachment> getAttachments() {
         String sql = "SELECT * FROM Attachment WHERE calComponentID = ?";
         Object params[] = {getComponentId()};
-        TimeJugglerJDBCTemplate<Vector<Attachment>> template = new TimeJugglerJDBCTemplate<Vector<Attachment>>() {
+        TimeJugglerJDBCTemplate<List<Attachment>> template = new TimeJugglerJDBCTemplate<List<Attachment>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
-            	if (items == null) items = new Vector<Attachment>();
+            	if (items == null) items = new List<Attachment>();
             	Attachment attach = new Attachment();
             	attach.setAttach(rs.getString("name"));
             	attach.setIsBinary(rs.getInt("isBinary") == 1 ? true : false);
@@ -294,7 +294,7 @@ public class CalComponent extends DbElement {
 	 * @return
 	 *
 	 */
-	public Vector<String> getAttendees() {
+	public List<String> getAttendees() {
 		// TODO: Add your code here
 		return null;
 	}
@@ -306,12 +306,12 @@ public class CalComponent extends DbElement {
 	 * @return
 	 *
 	 */
-	public Vector<Category> getCategories() {
+	public List<Category> getCategories() {
         String sql = "SELECT * FROM Category WHERE calComponentID = ?";
         Object params[] = {getComponentId()};
-        TimeJugglerJDBCTemplate<Vector<Category>> template = new TimeJugglerJDBCTemplate<Vector<Category>>() {
+        TimeJugglerJDBCTemplate<List<Category>> template = new TimeJugglerJDBCTemplate<List<Category>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
-            	if (items == null) items = new Vector<Category>();
+            	if (items == null) items = new List<Category>();
                 items.add(new Category(rs.getString("name")));
             }
         };
@@ -319,7 +319,7 @@ public class CalComponent extends DbElement {
         return template.getItems();
 	}
 	
-	public void setCategories(Vector<Category> categories){
+	public void setCategories(List<Category> categories){
 		this.categories = categories;
 	}
 
@@ -330,12 +330,12 @@ public class CalComponent extends DbElement {
 	 * @return
 	 *
 	 */
-	public Vector<Comment> getComments() {
+	public List<Comment> getComments() {
         String sql = "SELECT * FROM Comment WHERE calComponentID = ?";
         Object params[] = {getComponentId()};
-        TimeJugglerJDBCTemplate<Vector<Comment>> template = new TimeJugglerJDBCTemplate<Vector<Comment>>() {
+        TimeJugglerJDBCTemplate<List<Comment>> template = new TimeJugglerJDBCTemplate<List<Comment>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
-            	if (items == null) items = new Vector<Comment>();
+            	if (items == null) items = new List<Comment>();
                 items.add(new Comment(rs.getString("comment")));
             }
         };
@@ -350,12 +350,12 @@ public class CalComponent extends DbElement {
 	 * @return
 	 *
 	 */
-	public Vector<Contact> getContacts() {
+	public List<Contact> getContacts() {
         String sql = "SELECT * FROM Contact WHERE calComponentID = ?";
         Object params[] = {getComponentId()};
-        TimeJugglerJDBCTemplate<Vector<Contact>> template = new TimeJugglerJDBCTemplate<Vector<Contact>>() {
+        TimeJugglerJDBCTemplate<List<Contact>> template = new TimeJugglerJDBCTemplate<List<Contact>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
-            	if (items == null) items = new Vector<Contact>();
+            	if (items == null) items = new List<Contact>();
                 items.add(new Contact(rs.getString("contact")));
             }
         };
@@ -370,12 +370,12 @@ public class CalComponent extends DbElement {
 	 * @return
 	 *
 	 */
-	public Vector<RelatedTo> getRelatedTo() {
+	public List<RelatedTo> getRelatedTo() {
         String sql = "SELECT * FROM RelatedTo WHERE calComponentID = ?";
         Object params[] = {getComponentId()};
-        TimeJugglerJDBCTemplate<Vector<RelatedTo>> template = new TimeJugglerJDBCTemplate<Vector<RelatedTo>>() {
+        TimeJugglerJDBCTemplate<List<RelatedTo>> template = new TimeJugglerJDBCTemplate<List<RelatedTo>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
-            	if (items == null) items = new Vector<RelatedTo>();
+            	if (items == null) items = new List<RelatedTo>();
                 items.add(new RelatedTo(rs.getString("relatedto")));
             }
         };
@@ -390,12 +390,12 @@ public class CalComponent extends DbElement {
 	 * @return
 	 *
 	 */
-	public Vector<RequestStatus> getRequestStatuses() {
+	public List<RequestStatus> getRequestStatuses() {
         String sql = "SELECT * FROM RequestStatus WHERE calComponentID = ? ";
         Object params[] = {getComponentId()};
-        TimeJugglerJDBCTemplate<Vector<RequestStatus>> template = new TimeJugglerJDBCTemplate<Vector<RequestStatus>>() {
+        TimeJugglerJDBCTemplate<List<RequestStatus>> template = new TimeJugglerJDBCTemplate<List<RequestStatus>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
-            	if (items == null) items = new Vector<RequestStatus>();
+            	if (items == null) items = new List<RequestStatus>();
                 items.add(new RequestStatus(rs.getString("rstatus")));
             }
         };
@@ -410,12 +410,12 @@ public class CalComponent extends DbElement {
 	 * @return
 	 *
 	 */
-	public Vector<Resource> getResources() {
+	public List<Resource> getResources() {
         String sql = "SELECT * FROM Resource WHERE calComponentID = ?";
         Object params[] = {getComponentId()};
-        TimeJugglerJDBCTemplate<Vector<Resource>> template = new TimeJugglerJDBCTemplate<Vector<Resource>>() {
+        TimeJugglerJDBCTemplate<List<Resource>> template = new TimeJugglerJDBCTemplate<List<Resource>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
-            	if (items == null) items = new Vector<Resource>();
+            	if (items == null) items = new List<Resource>();
                 items.add(new Resource(rs.getString("resource")));
             }
         };
@@ -473,11 +473,11 @@ public class CalComponent extends DbElement {
 	}
 
 	
-	public void setAlarms(Vector<VAlarm> alarms) {
+	public void setAlarms(List<VAlarm> alarms) {
 		this.alarms = alarms; 
 	}
 
-	public Vector<VAlarm> getAlarms() {
+	public List<VAlarm> getAlarms() {
 		// TODO: SELECT Alarms
 		return (this.alarms); 
 	}

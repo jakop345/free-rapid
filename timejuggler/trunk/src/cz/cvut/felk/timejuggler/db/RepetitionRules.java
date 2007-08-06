@@ -1,6 +1,6 @@
 package cz.cvut.felk.timejuggler.db;
 
-import java.util.Vector;
+import java.util.List;
 import java.util.Iterator;
 import java.util.logging.Logger;
 /**
@@ -12,11 +12,11 @@ import java.util.logging.Logger;
 public class RepetitionRules extends DbElement implements Iterable {
 	private final static Logger logger = Logger.getLogger(RepetitionRules.class.getName());
 	
-	private Vector<RepetitionRule> repetitionRules;
+	private List<RepetitionRule> repetitionRules;
 	private int repetitionRulesId;
 	
 	public RepetitionRules(){
-		repetitionRules = new Vector<RepetitionRule>();
+		repetitionRules = new List<RepetitionRule>();
 	}
 
 	public void store(){

@@ -1,7 +1,7 @@
 package cz.cvut.felk.timejuggler.db;
 
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -12,10 +12,10 @@ import java.util.logging.Logger;
 public class Periods extends DbElement implements Iterable {
     private final static Logger logger = Logger.getLogger(Periods.class.getName());
 
-    private Vector<Period> periods;
+    private List<Period> periods;
 
     public Periods() {
-        periods = new Vector<Period>();
+        periods = new List<Period>();
     }
 
     public void store() {
@@ -75,7 +75,7 @@ public class Periods extends DbElement implements Iterable {
     }
 
 
-    public Vector<Period> getPeriods() {
+    public List<Period> getPeriods() {
         return periods;
     }
 }
