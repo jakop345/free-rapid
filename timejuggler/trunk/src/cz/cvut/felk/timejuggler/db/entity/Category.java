@@ -1,5 +1,7 @@
 package cz.cvut.felk.timejuggler.db.entity;
 
+import cz.cvut.felk.timejuggler.db.*;
+
 import java.awt.*;
 import java.util.logging.Logger;
 

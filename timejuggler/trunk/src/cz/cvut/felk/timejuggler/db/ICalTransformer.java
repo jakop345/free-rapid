@@ -1,5 +1,6 @@
 package cz.cvut.felk.timejuggler.db;
 
+import cz.cvut.felk.timejuggler.db.entity.*;
 import net.fortuna.ical4j.model.Property;
 /**
  * @author Jan Struz

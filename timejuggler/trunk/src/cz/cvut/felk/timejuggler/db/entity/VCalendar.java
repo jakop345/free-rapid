@@ -1,5 +1,7 @@
 package cz.cvut.felk.timejuggler.db.entity;
 
+import cz.cvut.felk.timejuggler.db.*;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;

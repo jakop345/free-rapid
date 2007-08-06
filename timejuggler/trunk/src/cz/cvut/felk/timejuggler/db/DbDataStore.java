@@ -1,6 +1,8 @@
 package cz.cvut.felk.timejuggler.db;
 
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
+import cz.cvut.felk.timejuggler.db.entity.*;
+
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.*;

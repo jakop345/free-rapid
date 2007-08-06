@@ -1,5 +1,7 @@
 package cz.cvut.felk.timejuggler.db.entity;
 
+import cz.cvut.felk.timejuggler.db.*;
+
 /**
  * @author Jan Struz
  * @version 0.1
