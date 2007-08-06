@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
-  <entry key="classpath1" value="../../lib/swingx.jar" />
+  <entry key="classpath1" value="../../lib/l2fprod-common-buttonbar.jar" />
+  <entry key="classpath2" value="../../lib/swingx.jar" />
   <entry key="description" value="timejuggler" />
   <entry key="sourcefolders1" value="src" />
 </project>
