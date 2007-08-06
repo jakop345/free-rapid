@@ -67,7 +67,7 @@ public class TimeJugglerJDBCTemplate<F> extends JDBCTemplate {
             getConnection().rollback();
         }
         catch (SQLException ex) {
-            throw new DatabaseException("Selhání rollback: " + ex.getMessage(), ex);
+            throw new DatabaseException("Selhani rollback: " + ex.getMessage(), ex);
         }
     }
 

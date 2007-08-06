@@ -134,7 +134,7 @@ public abstract class JDBCTemplate {
             } else if (paramValue instanceof Long) {
                 ps.setLong(++i, ((Long) paramValue).longValue());
             } else {
-                throw new UnsupportedOperationException("Podpora datového typu " + paramValue.getClass() + " není prozatím implementována!");
+                throw new UnsupportedOperationException("Podpora datoveho typu " + paramValue.getClass() + " neni prozatim implementovana!");
             }
         }
     }
@@ -145,7 +145,7 @@ public abstract class JDBCTemplate {
      * @param params[]
      */
     protected DatabaseException handleSQLException(SQLException e, String sql, Object params[]) {
-        String message = "Vznikla neoèekávaná chyba bìhem databázové operace!";
+        String message = "Vznikla neocekavana chyba behem databazove operace!";
         return new DatabaseException(message, e, sql, params);
     }
 
