@@ -53,7 +53,7 @@ public class UserPreferencesDialog extends JDialog {
 		comboDateTextFormat = new JComboBox();
 		JPanel panelAlarm = new JPanel();
 		JPanel panelWhenAlarmGoesOff = new JPanel();
-		JLabel labelPlaySound = new JLabel();
+		checkPlaySound = new JCheckBox();
 		fieldSoundPath = new JTextField();
 		btnUseDefaultSound = new JButton();
 		btnBrowse = new JButton();
@@ -266,10 +266,9 @@ public class UserPreferencesDialog extends JDialog {
 							panelWhenAlarmGoesOff.setBorder(new TitledBorder(bundle.getString("panelWhenAlarmGoesOff.border")));
 							panelWhenAlarmGoesOff.setName("panelWhenAlarmGoesOff");
 
-							//---- labelPlaySound ----
-							labelPlaySound.setText(bundle.getString("labelPlaySound.text"));
-							labelPlaySound.setLabelFor(fieldSoundPath);
-							labelPlaySound.setName("labelPlaySound");
+							//---- checkPlaySound ----
+							checkPlaySound.setText(bundle.getString("checkPlaySound.text"));
+							checkPlaySound.setName("checkPlaySound");
 
 							//---- fieldSoundPath ----
 							fieldSoundPath.setName("fieldSoundPath");
@@ -318,7 +317,7 @@ public class UserPreferencesDialog extends JDialog {
 								}), panelWhenAlarmGoesOff);
 							((FormLayout)panelWhenAlarmGoesOff.getLayout()).setColumnGroups(new int[][] {{9, 11}});
 
-							panelWhenAlarmGoesOffBuilder.add(labelPlaySound,        cc.xy  ( 3, 1));
+							panelWhenAlarmGoesOffBuilder.add(checkPlaySound,        cc.xy  ( 3, 1));
 							panelWhenAlarmGoesOffBuilder.add(fieldSoundPath,        cc.xywh( 5, 1, 7, 1));
 							panelWhenAlarmGoesOffBuilder.add(btnUseDefaultSound,    cc.xy  ( 7, 3));
 							panelWhenAlarmGoesOffBuilder.add(btnBrowse,             cc.xy  ( 9, 3));
@@ -573,7 +572,7 @@ public class UserPreferencesDialog extends JDialog {
 									FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
 									new ColumnSpec("max(pref;50dlu)"),
 									FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
-									new ColumnSpec(Sizes.dluX(34)),
+									FormFactory.PREF_COLSPEC,
 									FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
 									new ColumnSpec(Sizes.dluX(38)),
 									FormFactory.DEFAULT_COLSPEC
@@ -650,6 +649,7 @@ public class UserPreferencesDialog extends JDialog {
 	private JSpinner spinnerlDefaultSnoozeLength;
 	private JComboBox comboLaF;
 	private JComboBox comboDateTextFormat;
+	private JCheckBox checkPlaySound;
 	private JTextField fieldSoundPath;
 	private JButton btnUseDefaultSound;
 	private JButton btnBrowse;

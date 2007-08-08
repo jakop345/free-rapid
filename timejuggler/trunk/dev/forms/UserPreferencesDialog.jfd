@@ -676,28 +676,16 @@
                 </void> 
                 <void method="add"> 
                  <object class="com.jformdesigner.model.FormComponent"> 
-                  <string>javax.swing.JLabel</string> 
+                  <string>javax.swing.JCheckBox</string> 
                   <void method="setProperty"> 
                    <string>text</string> 
                    <object class="com.jformdesigner.model.FormMessage"> 
                     <null/> 
-                    <string>labelPlaySound.text</string> 
-                   </object> 
-                  </void> 
-                  <void method="setProperty"> 
-                   <string>labelFor</string> 
-                   <object class="com.jformdesigner.model.FormReference"> 
-                    <string>fieldSoundPath</string> 
+                    <string>checkPlaySound.text</string> 
                    </object> 
                   </void> 
                   <void property="name"> 
-                   <string>labelPlaySound</string> 
-                  </void> 
-                  <void method="auxiliary"> 
-                   <void method="setProperty"> 
-                    <string>JavaCodeGenerator.variableLocal</string> 
-                    <boolean>true</boolean> 
-                   </void> 
+                   <string>checkPlaySound</string> 
                   </void> 
                  </object> 
                  <object class="com.jformdesigner.model.FormLayoutConstraints"> 
@@ -1691,7 +1679,7 @@
                  <class>com.jgoodies.forms.layout.FormLayout</class> 
                  <void method="setProperty"> 
                   <string>$columnSpecs</string> 
-                  <string>0px, labelcompgap, max(pref;50dlu), labelcompgap, 34dlu, labelcompgap, 38dlu, default</string> 
+                  <string>0px, labelcompgap, max(pref;50dlu), labelcompgap, pref, labelcompgap, 38dlu, default</string> 
                  </void> 
                  <void method="setProperty"> 
                   <string>$rowSpecs</string> 
