@@ -55,6 +55,7 @@ public class Category extends DbElement implements Comparable {
      * @param template
      */
     public void saveOrUpdate(TimeJugglerJDBCTemplate template) {
+    	//TODO: pridat ukladani barvy
         if (getId() > 0) {
             logger.info("Database - Update: Category[" + getId() + "]:" + name + "...");
             Object params[] = {name, componentId, getId()};

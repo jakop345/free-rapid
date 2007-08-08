@@ -4,6 +4,7 @@ import cz.cvut.felk.timejuggler.db.*;
 
 import java.util.List;
 import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 /**
  * @author Jan Struz
@@ -18,7 +19,7 @@ public class DistinctDates extends DbElement implements Iterable {
 	private int distinctDatesId;
 	
 	public DistinctDates(){
-		distinctDates = new List<DistinctDate>();
+		distinctDates = new ArrayList<DistinctDate>();
 	}
 
 	public void store(){

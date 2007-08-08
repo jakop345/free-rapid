@@ -5,6 +5,7 @@ import cz.cvut.felk.timejuggler.db.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Date;
 import java.sql.Timestamp;
 
@@ -153,7 +154,7 @@ public class VCalendar extends DbElement {
         Object params[] = {getId()};
         TimeJugglerJDBCTemplate<List<EventTask>> template = new TimeJugglerJDBCTemplate<List<EventTask>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
-            	if (items == null) items = new List<EventTask>();
+            	if (items == null) items = new ArrayList<EventTask>();
                 EventTask event = new EventTask();	// Vytvori udalost typu Event
                 Timestamp ts;
                 event.setId(rs.getInt("vEventID"));	//DB
@@ -206,7 +207,7 @@ public class VCalendar extends DbElement {
         Object params[] = { getId() };
         TimeJugglerJDBCTemplate<List<EventTask>> template = new TimeJugglerJDBCTemplate<List<EventTask>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
-            	if (items == null) items = new List<EventTask>();
+            	if (items == null) items = new ArrayList<EventTask>();
                 EventTask todo = new EventTask(true);	// Vytvori udalost typu ToDo
                 Timestamp ts;
                 todo.setId(rs.getInt("vToDoID"));

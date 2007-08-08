@@ -3,6 +3,7 @@ package cz.cvut.felk.timejuggler.db.entity;
 import cz.cvut.felk.timejuggler.db.*;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.logging.Logger;
 /**
@@ -18,7 +19,7 @@ public class RepetitionRules extends DbElement implements Iterable {
 	private int repetitionRulesId;
 	
 	public RepetitionRules(){
-		repetitionRules = new List<RepetitionRule>();
+		repetitionRules = new ArrayList<RepetitionRule>();
 	}
 
 	public void store(){

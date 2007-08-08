@@ -21,6 +21,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.logging.Logger;
 
@@ -179,7 +180,7 @@ public class DbDataStore {
 	        		Periods periods = e.getPeriods();
 	        		if (periods != null) {
 		        		for (Object o : periods) {
-		        			Period p = (Period)o;
+		        			cz.cvut.felk.timejuggler.db.entity.Period p = (cz.cvut.felk.timejuggler.db.entity.Period)o;
 		        			System.out.println ("+-period " + p.getStartDate() + " ... " + p.getEndDate());
 		        		}
 	        		}
@@ -209,7 +210,7 @@ public class DbDataStore {
         String sql = "SELECT * FROM VCalendar";
         TimeJugglerJDBCTemplate<List<VCalendar>> template = new TimeJugglerJDBCTemplate<List<VCalendar>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
-            	if (items == null) items = new List<VCalendar>();
+            	if (items == null) items = new ArrayList<VCalendar>();
                 VCalendar cal = new VCalendar();
                 cal.setId(Integer.valueOf(rs.getInt("vCalendarID")).intValue());
                 cal.setProductId(rs.getString("prodid"));
@@ -353,7 +354,7 @@ public class DbDataStore {
 			prop = comp.getProperty(Property.CATEGORIES);
 				
 			CategoryList catList = ((Categories)prop).getCategories();	// iCal
-			List<Category> cats = new List<Category>();	// Timejuggler
+			List<Category> cats = new ArrayList<Category>();	// Timejuggler
 			for (Iterator<?> it = catList.iterator(); it.hasNext();) {
 				cats.add(new Category(it.next().toString()));
 			}
@@ -365,7 +366,7 @@ public class DbDataStore {
 			/* Cast Periods + Recurrence Dates */
 			/* priprava */
 			
-			cz.cvut.felk.timejuggler.db.Periods eventPeriods = event.getPeriods();
+			cz.cvut.felk.timejuggler.db.entity.Periods eventPeriods = event.getPeriods();
 			
 			prop = comp.getProperty(Property.RDATE);
 				RDate rdate = (RDate)prop;
@@ -381,7 +382,7 @@ public class DbDataStore {
 						
 						for (Object pobj : plist) {
 							net.fortuna.ical4j.model.Period p = (net.fortuna.ical4j.model.Period)pobj;
-							cz.cvut.felk.timejuggler.db.Period newPeriod = transformer.makePeriod(p);
+							cz.cvut.felk.timejuggler.db.entity.Period newPeriod = transformer.makePeriod(p);
 							periods.addPeriod(newPeriod);
 						}
 						event.setPeriods(periods);
@@ -488,7 +489,7 @@ public class DbDataStore {
     		Periods periods = e.getPeriods();
     		if (periods != null) {
         		for (Object o:periods) {
-        			Period p = (Period)o;
+        			cz.cvut.felk.timejuggler.db.entity.Period p = (cz.cvut.felk.timejuggler.db.entity.Period)o;
         			System.out.println ("+-period " + p.getStartDate() + " ... " + p.getEndDate());
         		}
     		}

@@ -9,7 +9,7 @@ import com.jgoodies.forms.layout.*;
 import cz.cvut.felk.timejuggler.core.AppPrefs;
 import cz.cvut.felk.timejuggler.core.DataProvider;
 import cz.cvut.felk.timejuggler.core.MainApp;
-import cz.cvut.felk.timejuggler.db.Category;
+import cz.cvut.felk.timejuggler.db.entity.Category;
 import cz.cvut.felk.timejuggler.swing.ComponentFactory;
 import cz.cvut.felk.timejuggler.swing.NaiiveComboModel;
 import cz.cvut.felk.timejuggler.swing.Swinger;

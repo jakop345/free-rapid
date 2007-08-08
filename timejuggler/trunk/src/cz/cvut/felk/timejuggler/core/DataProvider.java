@@ -3,7 +3,7 @@
  */
 package cz.cvut.felk.timejuggler.core;
 
-import cz.cvut.felk.timejuggler.db.Category;
+import cz.cvut.felk.timejuggler.db.entity.Category;
 
 import java.awt.*;
 import java.util.Arrays;

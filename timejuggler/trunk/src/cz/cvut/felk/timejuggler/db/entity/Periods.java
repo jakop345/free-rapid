@@ -4,6 +4,7 @@ import cz.cvut.felk.timejuggler.db.*;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 /**
@@ -17,7 +18,7 @@ public class Periods extends DbElement implements Iterable {
     private List<Period> periods;
 
     public Periods() {
-        periods = new List<Period>();
+        periods = new ArrayList<Period>();
     }
 
     public void store() {

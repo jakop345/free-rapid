@@ -4,6 +4,7 @@ import cz.cvut.felk.timejuggler.db.*;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.ArrayList;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.util.Date;
@@ -278,7 +279,7 @@ public class CalComponent extends DbElement {
         Object params[] = {getComponentId()};
         TimeJugglerJDBCTemplate<List<Attachment>> template = new TimeJugglerJDBCTemplate<List<Attachment>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
-            	if (items == null) items = new List<Attachment>();
+            	if (items == null) items = new ArrayList<Attachment>();
             	Attachment attach = new Attachment();
             	attach.setAttach(rs.getString("name"));
             	attach.setIsBinary(rs.getInt("isBinary") == 1 ? true : false);
@@ -313,7 +314,7 @@ public class CalComponent extends DbElement {
         Object params[] = {getComponentId()};
         TimeJugglerJDBCTemplate<List<Category>> template = new TimeJugglerJDBCTemplate<List<Category>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
-            	if (items == null) items = new List<Category>();
+            	if (items == null) items = new ArrayList<Category>();
                 items.add(new Category(rs.getString("name")));
             }
         };
@@ -337,7 +338,7 @@ public class CalComponent extends DbElement {
         Object params[] = {getComponentId()};
         TimeJugglerJDBCTemplate<List<Comment>> template = new TimeJugglerJDBCTemplate<List<Comment>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
-            	if (items == null) items = new List<Comment>();
+            	if (items == null) items = new ArrayList<Comment>();
                 items.add(new Comment(rs.getString("comment")));
             }
         };
@@ -357,7 +358,7 @@ public class CalComponent extends DbElement {
         Object params[] = {getComponentId()};
         TimeJugglerJDBCTemplate<List<Contact>> template = new TimeJugglerJDBCTemplate<List<Contact>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
-            	if (items == null) items = new List<Contact>();
+            	if (items == null) items = new ArrayList<Contact>();
                 items.add(new Contact(rs.getString("contact")));
             }
         };
@@ -377,7 +378,7 @@ public class CalComponent extends DbElement {
         Object params[] = {getComponentId()};
         TimeJugglerJDBCTemplate<List<RelatedTo>> template = new TimeJugglerJDBCTemplate<List<RelatedTo>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
-            	if (items == null) items = new List<RelatedTo>();
+            	if (items == null) items = new ArrayList<RelatedTo>();
                 items.add(new RelatedTo(rs.getString("relatedto")));
             }
         };
@@ -397,7 +398,7 @@ public class CalComponent extends DbElement {
         Object params[] = {getComponentId()};
         TimeJugglerJDBCTemplate<List<RequestStatus>> template = new TimeJugglerJDBCTemplate<List<RequestStatus>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
-            	if (items == null) items = new List<RequestStatus>();
+            	if (items == null) items = new ArrayList<RequestStatus>();
                 items.add(new RequestStatus(rs.getString("rstatus")));
             }
         };
@@ -417,7 +418,7 @@ public class CalComponent extends DbElement {
         Object params[] = {getComponentId()};
         TimeJugglerJDBCTemplate<List<Resource>> template = new TimeJugglerJDBCTemplate<List<Resource>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
-            	if (items == null) items = new List<Resource>();
+            	if (items == null) items = new ArrayList<Resource>();
                 items.add(new Resource(rs.getString("resource")));
             }
         };
