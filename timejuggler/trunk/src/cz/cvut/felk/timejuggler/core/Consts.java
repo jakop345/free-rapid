@@ -35,6 +35,12 @@ public class Consts {
     public static final String DB_DEFAULT = "db_init/db.zip";
 
     /**
+     * relativni cesta k souboru v adresari aplikace, kde lze nalezt default databazi
+     */
+    public static final String DB_LOCALDIR = "db";
+
+
+    /**
      * jmeno adresare v resources, kde je sound
      */
     public static final String SOUNDS_DIR = "sound";

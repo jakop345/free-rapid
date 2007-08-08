@@ -56,7 +56,7 @@ public class ConnectionManager {
         //this.create_url = ";createFrom=G:/cygwin/home/Honza/kalendar/timejuggler/trunk/build/defaultdb/db";
 
         /* deployment ready code */
-        this.url = "jdbc:derby:" + appContext.getLocalStorage().getDirectory() + "/db";
+        this.url = "jdbc:derby:" + appContext.getLocalStorage().getDirectory() + "/" + Consts.DB_LOCALDIR;
         //this.create_url = ";createFrom=" + AppPrefs.getAppPath() + "/defaultdb/db";
     }
 
@@ -71,7 +71,6 @@ public class ConnectionManager {
     }
 
     public Connection getConnection() throws SQLException {
-        // TODO : vyresit, proc hazi url s createFrom napodruhe vyjimku        
         if (connection == null) {
             // je dobre pouzivat logovani, bude pak snazsi sledovat co se stalo pri chybe
             logger.info("Initializing connection to DB");
@@ -80,39 +79,20 @@ public class ConnectionManager {
             }
             catch (SQLException ex) {//tohle neni moc cisty, spis SQLException a ani mozna taky ne...
             	//TODO: kod pro inicializaci databaze - Presunout
-            	String source = AppPrefs.getAppPath() + "/db_init/db.zip";
+            	logger.info("Creating new database...");
+            	String source = AppPrefs.getAppPath() + "/" + Consts.DB_DEFAULT;
             	String targetdir = appContext.getLocalStorage().getDirectory().getPath();	// databaze v zipu musi byt v adresari db/
             	
-            	File databasedirectory = new File(targetdir + "/db");
+            	File databasedirectory = new File(targetdir + "/" + Consts.DB_LOCALDIR);
             	if (!databasedirectory.exists()) {
-            		
             		//Unzip (inicializacni databaze)
-            		
-            		Enumeration entries;
-					try {
-						ZipFile zipped_db = new ZipFile(source);						
-						databasedirectory.mkdir();
-						
-						entries = zipped_db.entries();
-						while(entries.hasMoreElements()) {
-					        ZipEntry entry = (ZipEntry)entries.nextElement();
-					
-							if(entry.isDirectory()) {
-								// Assume directories are stored parents first then children.
-								logger.info("Extracting directory: " + entry.getName());
-								// This is not robust, just for demonstration purposes.
-					        	(new File(targetdir + "/" + entry.getName())).mkdir();
-					        	continue;
-					        }
-
-					        logger.info("Extracting file: " + entry.getName());
-					        copyInputStream(zipped_db.getInputStream(entry),
-					           new BufferedOutputStream(new FileOutputStream(targetdir + "/" + entry.getName())));
-						}
-						zipped_db.close();
-					    } catch (IOException e) {
-					    	LogUtils.processException(logger, e);
-					    }
+            		try {
+            			databasedirectory.mkdir();
+            			unzip(source, targetdir);
+				    }
+				    catch (IOException e) {
+				    	LogUtils.processException(logger, e);
+				    }
             	}
                 connection = DriverManager.getConnection(url /*+ create_url (nemelo by byt potreba)*/, db_user, db_pass);
             }
@@ -135,6 +115,34 @@ public class ConnectionManager {
 
     }
     
+    /*
+     * Method unzip
+     *
+     * Rozbali zip soubor 
+     */
+    public static void unzip(String source, String targetdir) throws IOException{
+		Enumeration entries;
+
+		ZipFile zipped_db = new ZipFile(source);						
+		
+		entries = zipped_db.entries();
+		while(entries.hasMoreElements()) {
+	        ZipEntry entry = (ZipEntry)entries.nextElement();
+	
+			if(entry.isDirectory()) {
+				// Assume directories are stored parents first then children.
+				logger.info("Extracting directory: " + entry.getName());
+				// This is not robust, just for demonstration purposes.
+	        	(new File(targetdir + "/" + entry.getName())).mkdir();
+	        	continue;
+	        }
+
+	        logger.info("Extracting file: " + entry.getName());
+	        copyInputStream(zipped_db.getInputStream(entry),
+	           new BufferedOutputStream(new FileOutputStream(targetdir + "/" + entry.getName())));
+		}
+		zipped_db.close();
+    }
     
     public static final void copyInputStream(InputStream in, OutputStream out) throws IOException {
     	byte[] buffer = new byte[1024];

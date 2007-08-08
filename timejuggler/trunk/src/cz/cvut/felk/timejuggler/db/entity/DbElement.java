@@ -1,6 +1,7 @@
 package cz.cvut.felk.timejuggler.db.entity;
 
 import cz.cvut.felk.timejuggler.db.*;
+import cz.cvut.felk.timejuggler.db.TimeJugglerJDBCTemplate;
 
 /**
  * @author Jan Struz
@@ -28,5 +29,7 @@ public abstract class DbElement {
     }
 
     public abstract void store();
+    
+    public abstract void saveOrUpdate(TimeJugglerJDBCTemplate template);
 
 }
