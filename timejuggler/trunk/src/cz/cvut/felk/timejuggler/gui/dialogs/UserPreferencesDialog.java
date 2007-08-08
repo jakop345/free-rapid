@@ -2,12 +2,22 @@ package cz.cvut.felk.timejuggler.gui.dialogs;
 
 import application.ResourceMap;
 import com.jgoodies.binding.PresentationModel;
+import com.jgoodies.binding.adapter.Bindings;
+import com.jgoodies.binding.adapter.SpinnerAdapterFactory;
+import com.jgoodies.binding.beans.PropertyConnector;
+import com.jgoodies.binding.list.SelectionInList;
+import com.jgoodies.binding.value.Trigger;
+import com.jgoodies.binding.value.ValueHolder;
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.*;
 import com.l2fprod.common.swing.JButtonBar;
 import com.l2fprod.common.swing.plaf.blue.BlueishButtonBarUI;
+import cz.cvut.felk.timejuggler.core.AppPrefs;
+import cz.cvut.felk.timejuggler.core.MainApp;
+import cz.cvut.felk.timejuggler.gui.MyPreferencesAdapter;
+import cz.cvut.felk.timejuggler.gui.MyPresentationModel;
 import cz.cvut.felk.timejuggler.swing.ComponentFactory;
 import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
@@ -18,16 +28,23 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Date;
 import java.util.logging.Logger;
+import java.util.prefs.PreferenceChangeEvent;
+import java.util.prefs.PreferenceChangeListener;
 
 /**
  * @author Vity
  */
 public class UserPreferencesDialog extends AppDialog {
     private final static Logger logger = Logger.getLogger(UserPreferencesDialog.class.getName());
-    private PresentationModel model;
+    private MyPresentationModel model;
     private static final String CARD_PROPERTY = "card";
+    private ApplyPreferenceChangeListener prefListener;
 
+    private static enum Card {
+        CARD1, CARD2, CARD3, CARD4
+    }
 
     public UserPreferencesDialog(Frame owner) throws HeadlessException {
         super(owner, true);
@@ -60,11 +77,14 @@ public class UserPreferencesDialog extends AppDialog {
         btnOK.setAction(actionMap.get("okBtnAction"));
         btnCancel.setAction(actionMap.get("cancelBtnAction"));
 
-        setDefaultValues();
 
+        setDefaultValues();
+        showCard(Card.valueOf(AppPrefs.getProperty(AppPrefs.USER_SETTINGS_SELECTED_CARD, Card.CARD1.toString())));
         pack();
         setResizable(false);
         locateOnOpticalScreenCenter(this);
+
+
     }
 
     private void buildGUI() {
@@ -73,10 +93,10 @@ public class UserPreferencesDialog extends AppDialog {
         final ActionMap map = getActionMap();
 
         ButtonGroup group = new ButtonGroup();
-        addButton(map.get("generalBtnAction"), "CARD1", group);
-        addButton(map.get("alarmsBtnAction"), "CARD2", group);
-        addButton(map.get("categoriesBtnAction"), "CARD3", group);
-        addButton(map.get("viewsBtnAction"), "CARD4", group);
+        addButton(map.get("generalBtnAction"), Card.CARD1, group);
+        addButton(map.get("alarmsBtnAction"), Card.CARD2, group);
+        addButton(map.get("categoriesBtnAction"), Card.CARD3, group);
+        addButton(map.get("viewsBtnAction"), Card.CARD4, group);
 
         this.btnCategoryEdit.setAction(map.get("btnCategoryAddAction"));
         this.btnCategoryAdd.setAction(map.get("btnCategoryEditAction"));
@@ -85,12 +105,11 @@ public class UserPreferencesDialog extends AppDialog {
         this.btnBrowse.setAction(map.get("btnBrowseAction"));
         this.btnUseDefaultSound.setAction(map.get("btnUseDefaultSoundAction"));
         this.btnPreview.setAction(map.get("btnPreviewAction"));
-        //model = new PresentationModel(cat, new Trigger());
 
     }
 
 
-    private void addButton(Action action, final String card, ButtonGroup group) {
+    private void addButton(Action action, final Card card, ButtonGroup group) {
         final JToggleButton button = new JToggleButton(action);
         final Dimension size = button.getPreferredSize();
         final Dimension dim = new Dimension(60, size.height);
@@ -101,9 +120,75 @@ public class UserPreferencesDialog extends AppDialog {
         group.add(button);
     }
 
-    private void showCard(String card) {
+    private void showCard(Card card) {
         final CardLayout cardLayout = (CardLayout) panelCard.getLayout();
-        cardLayout.show(panelCard, card);
+        cardLayout.show(panelCard, card.toString());
+        AppPrefs.storeProperty(AppPrefs.USER_SETTINGS_SELECTED_CARD, card.toString());
+        final ActionMap map = getActionMap();
+        Action action = null;
+        switch (card) {
+            case CARD1:
+                action = map.get("generalBtnAction");
+                break;
+            case CARD2:
+                action = map.get("alarmsBtnAction");
+                break;
+            case CARD3:
+                action = map.get("categoriesBtnAction");
+                break;
+            case CARD4:
+                action = map.get("viewsBtnAction");
+                break;
+            default:
+                assert false;
+                break;
+        }
+        if (action != null)
+            action.putValue(Action.SELECTED_KEY, Boolean.TRUE);
+    }
+
+
+    private void buildModels() {
+        model = new MyPresentationModel(null, new Trigger());
+        prefListener = new ApplyPreferenceChangeListener();
+        AppPrefs.getPreferences().addPreferenceChangeListener(prefListener);
+
+        //spinnerDefaultTimeBeforeTask.setModel(new SpinnerNumberModel(1, 1, 1, 1));
+
+        bindCheckbox(checkShowIconInSystemTray, AppPrefs.SHOW_TRAY, true);
+        bindSpinner(spinnerDefaultEventLength, AppPrefs.DEFAULT_EVENT_LENGTH, 60, 1, 999, 60);
+        bindSpinner(spinnerlDefaultSnoozeLength, AppPrefs.DEFAULT_SNOOZE_LENGTH, 60, 1, 999, 30);
+
+        bindCombobox(comboDateTextFormat, AppPrefs.DATE_TEXT_FORMAT, AppPrefs.DEF_DATE_TEXT_FORMAT_LONG, getDateFormats());
+
+        final Action actionOK = getActionMap().get("okBtnAction");
+        final PropertyConnector connector = PropertyConnector.connect(model, PresentationModel.PROPERTYNAME_BUFFERING, actionOK, "enabled");
+        connector.updateProperty2();
+
+    }
+
+
+    private void bindSpinner(JSpinner spinner, String key, int defaultValue, int minValue, int maxValue, int step) {
+        spinner.setModel(SpinnerAdapterFactory.createNumberAdapter(
+                model.getBufferedPreferences(key, defaultValue),
+                defaultValue,   // defaultValue
+                minValue,   // minValue
+                maxValue, // maxValue
+                step)); // step
+    }
+
+    private void bindCheckbox(final JCheckBox checkBox, final String key, final Object defaultValue) {
+        Bindings.bind(checkBox, model.getBufferedPreferences(key, defaultValue));
+    }
+
+    private void bindCombobox(final JComboBox combobox, final String key, final Object defaultValue, final String propertyResourceMap) {
+        bindCombobox(combobox, key, defaultValue, getList(propertyResourceMap));
+    }
+
+    private void bindCombobox(final JComboBox combobox, String key, final Object defaultValue, final String[] values) {
+        final MyPreferencesAdapter adapter = new MyPreferencesAdapter(key, defaultValue);
+        final SelectionInList<String> inList = new SelectionInList<String>(values, new ValueHolder(values[(Integer) adapter.getValue()]), model.getBufferedModel(adapter));
+        Bindings.bind(combobox, inList);
     }
 
 
@@ -111,12 +196,17 @@ public class UserPreferencesDialog extends AppDialog {
 
     }
 
-    private void buildModels() {
-
+    private String[] getDateFormats() {
+        final ResourceMap map = this.getResourceMap();
+        final Date date = new Date();
+        final String longFormat = map.getString("longFormatDate", date);
+        final String shortFormat = map.getString("shortFormatDate", date);
+        return new String[]{longFormat, shortFormat};
     }
 
     @application.Action
     public void okBtnAction() {
+        model.triggerCommit();
         doClose();
     }
 
@@ -125,14 +215,19 @@ public class UserPreferencesDialog extends AppDialog {
         doClose();
     }
 
-    @application.Action
+    @application.Action(selectedProperty = "generalBtnActionSelected")
     public void generalBtnAction(ActionEvent e) {
         showCard(e);
     }
 
     private void showCard(ActionEvent e) {
-        showCard(((JComponent) e.getSource()).getClientProperty(CARD_PROPERTY).toString());
+        showCard((Card) ((JComponent) e.getSource()).getClientProperty(CARD_PROPERTY));
     }
+
+    public boolean isGeneralBtnActionSelected() {
+        return true;
+    }
+
 
     @application.Action
     public void alarmsBtnAction(ActionEvent e) {
@@ -183,6 +278,7 @@ public class UserPreferencesDialog extends AppDialog {
 
     @Override
     public void doClose() {
+        AppPrefs.getPreferences().removePreferenceChangeListener(prefListener);
         if (model != null)
             model.release();
         super.doClose();
@@ -313,7 +409,6 @@ public class UserPreferencesDialog extends AppDialog {
                             labelDefaultEventLength.setName("labelDefaultEventLength");
 
                             //---- spinnerDefaultEventLength ----
-                            spinnerDefaultEventLength.setModel(new SpinnerNumberModel(1, 1, 999, 1));
                             spinnerDefaultEventLength.setName("spinnerDefaultEventLength");
 
                             //---- labelDefaultSnoozeLength ----
@@ -322,7 +417,6 @@ public class UserPreferencesDialog extends AppDialog {
                             labelDefaultSnoozeLength.setName("labelDefaultSnoozeLength");
 
                             //---- spinnerlDefaultSnoozeLength ----
-                            spinnerlDefaultSnoozeLength.setModel(new SpinnerNumberModel(1, 1, 999, 1));
                             spinnerlDefaultSnoozeLength.setName("spinnerlDefaultSnoozeLength");
 
                             PanelBuilder panelGeneralSettingsBuilder = new PanelBuilder(new FormLayout(
@@ -413,7 +507,7 @@ public class UserPreferencesDialog extends AppDialog {
                         panelGeneralBuilder.add(panelGeneralSettings, cc.xy(1, 1));
                         panelGeneralBuilder.add(panelAppearance, cc.xy(1, 3));
                     }
-                    panelCard.add(panelGeneral, "CARD1");
+                    panelCard.add(panelGeneral, Card.CARD1.toString());
 
                     //======== panelAlarm ========
                     {
@@ -513,7 +607,6 @@ public class UserPreferencesDialog extends AppDialog {
                             labelDefaultTimeBeforeEvent.setName("labelDefaultTimeBeforeEvent");
 
                             //---- spinnerDefaultTimeBeforeEvent ----
-                            spinnerDefaultTimeBeforeEvent.setModel(new SpinnerNumberModel(1, 1, 999, 1));
                             spinnerDefaultTimeBeforeEvent.setName("spinnerDefaultTimeBeforeEvent");
 
                             //---- comboTimeUnitEvent ----
@@ -525,7 +618,7 @@ public class UserPreferencesDialog extends AppDialog {
                             labelDefaultTimeBeforeTask.setName("labelDefaultTimeBeforeTask");
 
                             //---- spinnerDefaultTimeBeforeTask ----
-                            spinnerDefaultTimeBeforeTask.setModel(new SpinnerNumberModel(1, 1, 1, 1));
+
                             spinnerDefaultTimeBeforeTask.setName("spinnerDefaultTimeBeforeTask");
 
                             //---- comboTimeUnitTask ----
@@ -574,7 +667,7 @@ public class UserPreferencesDialog extends AppDialog {
                         panelAlarmBuilder.add(panelWhenAlarmGoesOff, cc.xy(1, 1));
                         panelAlarmBuilder.add(panelAlarmDefaults, cc.xy(1, 3));
                     }
-                    panelCard.add(panelAlarm, "CARD2");
+                    panelCard.add(panelAlarm, Card.CARD2.toString());
 
                     //======== panelCategories ========
                     {
@@ -636,7 +729,7 @@ public class UserPreferencesDialog extends AppDialog {
 
                         panelCategoriesBuilder.add(panelListCategories, cc.xy(1, 1));
                     }
-                    panelCard.add(panelCategories, "CARD3");
+                    panelCard.add(panelCategories, Card.CARD3.toString());
 
                     //======== panelViews ========
                     {
@@ -760,7 +853,7 @@ public class UserPreferencesDialog extends AppDialog {
                         panelViewsBuilder.add(panelDayAndWeekViews, cc.xy(1, 1));
                         panelViewsBuilder.add(panelMultiWeekView, cc.xy(1, 3));
                     }
-                    panelCard.add(panelViews, "CARD4");
+                    panelCard.add(panelViews, Card.CARD4.toString());
                 }
                 contentPanel.add(panelCard, BorderLayout.CENTER);
             }
@@ -839,4 +932,13 @@ public class UserPreferencesDialog extends AppDialog {
     private JPanel panelViews;
 
 
+    private static class ApplyPreferenceChangeListener implements PreferenceChangeListener {
+        public void preferenceChange(PreferenceChangeEvent evt) {
+            final MainApp app = MainApp.getInstance(MainApp.class);
+
+            if (evt.getKey().equals(AppPrefs.SHOW_TRAY)) {
+                app.getTrayIconSupport().setVisibleByDefault();
+            }
+        }
+    }
 }

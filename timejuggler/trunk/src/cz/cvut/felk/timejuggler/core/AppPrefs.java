@@ -24,6 +24,10 @@ public final class AppPrefs {
 
     private static volatile Preferences properties = loadProperties();
 
+    // vychozi hodnoty pro uzivatelska nastaveni
+    public static final int DEF_DATE_TEXT_FORMAT_LONG = 0;
+    public static final int DEF_DATE_TEXT_FORMAT_SHORT = 1;
+
     //jednotlive klice pro uzivatelska nastaveni
     //public static final String SHOW_STATUSBAR = "settings.showStatusbar";
     //    public static final String SHOW_TOOLBAR = "settings.showToolbar";
@@ -41,6 +45,9 @@ public final class AppPrefs {
 
     public static final String MINIMIZE_TO_TRAY = "settings.minimizeToTray";
     public static final String SHOW_TRAY = "settings.showTray";
+    public static final String DATE_TEXT_FORMAT = "settings.dateTextFormat";
+    public static final String DEFAULT_SNOOZE_LENGTH = "settings.defaultSnoozeLength";
+    public static final String USER_SETTINGS_SELECTED_CARD = "setttings.userSettingsSelectedCard";
 
 
     private AppPrefs() {
@@ -210,5 +217,9 @@ public final class AppPrefs {
         }
         logger.info("App Path is " + appPath);
         return appPath;
+    }
+
+    public static Preferences getPreferences() {
+        return properties;
     }
 }
