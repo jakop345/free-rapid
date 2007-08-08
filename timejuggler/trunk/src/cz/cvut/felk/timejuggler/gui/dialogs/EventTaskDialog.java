@@ -18,11 +18,7 @@ import cz.cvut.felk.timejuggler.utilities.Browser;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
 import org.jdesktop.swingx.JXDatePicker;
 
-import javax.beans.binding.Binding;
-import javax.beans.binding.BindingContext;
 import javax.swing.*;
-import javax.swing.binding.ParameterKeys;
-import javax.swing.binding.TextChangeStrategy;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
@@ -43,7 +39,6 @@ public class EventTaskDialog extends AppDialog {
     private final boolean isNew;
     private final boolean newEvent;
     private final boolean newTask;
-    private BindingContext context;
 
     private final static int ALARM_NONE_INDEX = 0;
     private final static int ALARM_15MINUTES_BEFORE_INDEX = 2;
@@ -79,6 +74,7 @@ public class EventTaskDialog extends AppDialog {
             build();
         } catch (Exception e) {
             LogUtils.processException(logger, e);
+            doClose(); //pri fatalni chybe se dialog zavre
         }
     }
 
@@ -117,23 +113,23 @@ public class EventTaskDialog extends AppDialog {
         final boolean showMore = AppPrefs.getProperty(AppPrefs.SHOW_MORE_EVENTTASKDIALOG, true);
         showMoreOrLess(showMore, false);
 
-        context = new BindingContext();
+//        context = new BindingContext();
 //        Binding binding = new Binding(this.dateFromPicker, "${enabled}", checkDate, "selected");
-        Binding binding = new Binding(getActionMap().get("setPatternAction"), "${enabled}", repeatCheckbox, "selected");
-        context.addBinding(binding);
+//        Binding binding = new Binding(getActionMap().get("setPatternAction"), "${enabled}", repeatCheckbox, "selected");
+//        context.addBinding(binding);
 //        binding = new Binding(this.timeFromSpinner, "${!enabled}", allDayCheckbox, "selected");
 //        context.addBinding(binding);
 //        binding = new Binding(this.timeToSpinner, "${!enabled}", allDayCheckbox, "selected");
 //        context.addBinding(binding);
-        binding = new Binding(this.urlField, "${!empty text}", this.btnVisitURL, "enabled");
-        binding.setUpdateStrategy(Binding.UpdateStrategy.READ);
-        binding.putParameter(ParameterKeys.TEXT_CHANGE_STRATEGY, TextChangeStrategy.ON_TYPE);
-        binding.bind();
+//        binding = new Binding(this.urlField, "${!empty text}", this.btnVisitURL, "enabled");
+//        binding.setUpdateStrategy(Binding.UpdateStrategy.READ);
+//        binding.putParameter(ParameterKeys.TEXT_CHANGE_STRATEGY, TextChangeStrategy.ON_TYPE);
+//        binding.bind();
 
 //        binding = new Binding(this.statusTypeCombo, "${selectedIndex == 4}", this.completedDatePicker, "enabled");
 //        //binding.setUpdateStrategy(Binding.UpdateStrategy.READ);
 //        context.addBinding(binding);
-        context.bind();
+
 
         alarmCombo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -301,7 +297,6 @@ public class EventTaskDialog extends AppDialog {
 
     @Override
     public void doClose() {
-        context.unbind();
         super.doClose();
     }
 
