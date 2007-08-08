@@ -4,11 +4,15 @@ import application.ApplicationContext;
 import cz.cvut.felk.timejuggler.core.AppPrefs;
 import cz.cvut.felk.timejuggler.core.Consts;
 import cz.cvut.felk.timejuggler.core.MainApp;
+import cz.cvut.felk.timejuggler.utilities.LogUtils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.logging.Logger;
+import java.io.*;
+import java.util.zip.*;
+import java.util.Enumeration;
 
 /**
  * @author Jan Struz
@@ -23,16 +27,20 @@ public class ConnectionManager {
     private Connection connection;
 
     private String url;
-    private String create_url;
+    //private String create_url;
     private String db_user;
     private String db_pass;
+    
+    private MainApp app;
+    private final ApplicationContext appContext;
 
     /**
      * Singleton - privatni konstruktor
      */
     private ConnectionManager() {
         /* deployment ready code */
-        final ApplicationContext appContext = MainApp.getInstance(MainApp.class).getContext();
+        app = MainApp.getInstance(MainApp.class);
+        appContext = app.getContext();
 
         //TODO nevyuzijeme radeji derby.properties ? jsem pro
         this.db_user = Consts.DB_USERNAME;
@@ -49,7 +57,7 @@ public class ConnectionManager {
 
         /* deployment ready code */
         this.url = "jdbc:derby:" + appContext.getLocalStorage().getDirectory() + "/db";
-        this.create_url = ";createFrom=" + AppPrefs.getAppPath() + "/defaultdb/db";
+        //this.create_url = ";createFrom=" + AppPrefs.getAppPath() + "/defaultdb/db";
     }
 
     /**
@@ -71,7 +79,42 @@ public class ConnectionManager {
                 connection = DriverManager.getConnection(url, db_user, db_pass);
             }
             catch (SQLException ex) {//tohle neni moc cisty, spis SQLException a ani mozna taky ne...
-                connection = DriverManager.getConnection(url + create_url, db_user, db_pass);
+            	//TODO: kod pro inicializaci databaze - Presunout
+            	String source = AppPrefs.getAppPath() + "/db_init/db.zip";
+            	String targetdir = appContext.getLocalStorage().getDirectory().getPath();	// databaze v zipu musi byt v adresari db/
+            	
+            	File databasedirectory = new File(targetdir + "/db");
+            	if (!databasedirectory.exists()) {
+            		
+            		//Unzip (inicializacni databaze)
+            		
+            		Enumeration entries;
+					try {
+						ZipFile zipped_db = new ZipFile(source);						
+						databasedirectory.mkdir();
+						
+						entries = zipped_db.entries();
+						while(entries.hasMoreElements()) {
+					        ZipEntry entry = (ZipEntry)entries.nextElement();
+					
+							if(entry.isDirectory()) {
+								// Assume directories are stored parents first then children.
+								logger.info("Extracting directory: " + entry.getName());
+								// This is not robust, just for demonstration purposes.
+					        	(new File(targetdir + "/" + entry.getName())).mkdir();
+					        	continue;
+					        }
+
+					        logger.info("Extracting file: " + entry.getName());
+					        copyInputStream(zipped_db.getInputStream(entry),
+					           new BufferedOutputStream(new FileOutputStream(targetdir + "/" + entry.getName())));
+						}
+						zipped_db.close();
+					    } catch (IOException e) {
+					    	LogUtils.processException(logger, e);
+					    }
+            	}
+                connection = DriverManager.getConnection(url /*+ create_url (nemelo by byt potreba)*/, db_user, db_pass);
             }
             connection.setAutoCommit(false); // Vypnuti automatickeho commit pro kazdy dotaz
         }
@@ -91,5 +134,17 @@ public class ConnectionManager {
 
 
     }
+    
+    
+    public static final void copyInputStream(InputStream in, OutputStream out) throws IOException {
+    	byte[] buffer = new byte[1024];
+    	int len;
+
+    	while((len = in.read(buffer)) >= 0)
+      		out.write(buffer, 0, len);
+
+    	in.close();
+    	out.close();
+  }
 
 }
