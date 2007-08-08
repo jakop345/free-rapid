@@ -41,6 +41,7 @@ public class UserPreferencesDialog extends AppDialog {
     private MyPresentationModel model;
     private static final String CARD_PROPERTY = "card";
     private ApplyPreferenceChangeListener prefListener;
+    private JCheckBox checkPlaySound;
 
     private static enum Card {
         CARD1, CARD2, CARD3, CARD4
@@ -156,9 +157,24 @@ public class UserPreferencesDialog extends AppDialog {
         //spinnerDefaultTimeBeforeTask.setModel(new SpinnerNumberModel(1, 1, 1, 1));
 
         bindCheckbox(checkShowIconInSystemTray, AppPrefs.SHOW_TRAY, true);
+        bindCheckbox(checkPlaySound, AppPrefs.PLAY_SOUND, true);
+        bindCheckbox(checkShowAlarmBox, AppPrefs.SHOW_ALARM_BOX, true);
+        bindCheckbox(checkShowMissedAlarms, AppPrefs.SHOW_MISSED_ALARMS, true);
+
         bindSpinner(spinnerDefaultEventLength, AppPrefs.DEFAULT_EVENT_LENGTH, 60, 1, 999, 60);
         bindSpinner(spinnerlDefaultSnoozeLength, AppPrefs.DEFAULT_SNOOZE_LENGTH, 60, 1, 999, 30);
+        bindSpinner(spinnerDefaultTimeBeforeEvent, AppPrefs.DEFAULT_ALARM_TIME_BEFORE_EVENT, 15, 1, 999, 5);
+        bindSpinner(spinnerDefaultTimeBeforeTask, AppPrefs.DEFAULT_ALARM_TIME_BEFORE_TASK, 15, 1, 999, 5);
 
+        bindCombobox(comboDayEndsAt, AppPrefs.DAY_ENDS_AT, 0, "dayEndsAt");
+        bindCombobox(comboDayStartsAt, AppPrefs.DAY_STARTS_AT, 0, "dayStartsAt");
+        bindCombobox(comboDefaultAlarmSettingForEvent, AppPrefs.DEFAULT_ALARM_SETTING_FOR_EVENT, 0, "onOff");
+        bindCombobox(comboDefaultAlarmSettingForTask, AppPrefs.DEFAULT_ALARM_SETTING_FOR_TASK, 0, "onOff");
+        bindCombobox(comboDefaultWeeksToShow, AppPrefs.DEFAULT_WEEKS_TO_SHOW, 0, "defaultWeeksToShow");
+        bindCombobox(comboPreviousWeeksToShow, AppPrefs.PREVIOUS_WEEKS_TO_SHOW, 0, "previousWeeksToShow");
+        bindCombobox(comboShowHoursAtATime, AppPrefs.SHOW_HOURS_AT_A_TIME, 0, "showHoursAtATime");
+        bindCombobox(comboTimeUnitEvent, AppPrefs.DEFAULT_ALARM_TIME_BEFORE_EVENT_TIMEUNIT, 0, "timeunit");
+        bindCombobox(comboTimeUnitTask, AppPrefs.DEFAULT_ALARM_TIME_BEFORE_TASK_TIMEUNIT, 0, "timeunit");
         bindCombobox(comboDateTextFormat, AppPrefs.DATE_TEXT_FORMAT, AppPrefs.DEF_DATE_TEXT_FORMAT_LONG, getDateFormats());
 
         final Action actionOK = getActionMap().get("okBtnAction");
@@ -182,10 +198,15 @@ public class UserPreferencesDialog extends AppDialog {
     }
 
     private void bindCombobox(final JComboBox combobox, final String key, final Object defaultValue, final String propertyResourceMap) {
-        bindCombobox(combobox, key, defaultValue, getList(propertyResourceMap));
+        final String[] stringList = getList(propertyResourceMap);
+        if (stringList == null)
+            throw new IllegalArgumentException("Property '" + propertyResourceMap + "' does not provide any string list from resource map.");
+        bindCombobox(combobox, key, defaultValue, stringList);
     }
 
     private void bindCombobox(final JComboBox combobox, String key, final Object defaultValue, final String[] values) {
+        if (values == null)
+            throw new IllegalArgumentException("List of combobox values cannot be null!!");
         final MyPreferencesAdapter adapter = new MyPreferencesAdapter(key, defaultValue);
         final SelectionInList<String> inList = new SelectionInList<String>(values, new ValueHolder(values[(Integer) adapter.getValue()]), model.getBufferedModel(adapter));
         Bindings.bind(combobox, inList);
@@ -312,7 +333,7 @@ public class UserPreferencesDialog extends AppDialog {
         comboDateTextFormat = new JComboBox();
         panelAlarm = new JPanel();
         JPanel panelWhenAlarmGoesOff = new JPanel();
-        JLabel labelPlaySound = new JLabel();
+        checkPlaySound = new JCheckBox();
         fieldSoundPath = ComponentFactory.getTextField();
         btnUseDefaultSound = new JButton();
         btnBrowse = new JButton();
@@ -521,8 +542,7 @@ public class UserPreferencesDialog extends AppDialog {
 
                             //---- labelPlaySound ----
 
-                            labelPlaySound.setLabelFor(fieldSoundPath);
-                            labelPlaySound.setName("labelPlaySound");
+                            checkPlaySound.setName("checkPlaySound");
 
                             //---- fieldSoundPath ----
                             fieldSoundPath.setName("fieldSoundPath");
@@ -571,7 +591,7 @@ public class UserPreferencesDialog extends AppDialog {
                                     }), panelWhenAlarmGoesOff);
                             ((FormLayout) panelWhenAlarmGoesOff.getLayout()).setColumnGroups(new int[][]{{9, 11}});
 
-                            panelWhenAlarmGoesOffBuilder.add(labelPlaySound, cc.xy(3, 1));
+                            panelWhenAlarmGoesOffBuilder.add(checkPlaySound, cc.xy(3, 1));
                             panelWhenAlarmGoesOffBuilder.add(fieldSoundPath, cc.xywh(5, 1, 7, 1));
                             panelWhenAlarmGoesOffBuilder.add(btnUseDefaultSound, cc.xy(7, 3));
                             panelWhenAlarmGoesOffBuilder.add(btnBrowse, cc.xy(9, 3));
@@ -825,7 +845,7 @@ public class UserPreferencesDialog extends AppDialog {
                                             FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
                                             new ColumnSpec("max(pref;50dlu)"),
                                             FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
-                                            new ColumnSpec(Sizes.dluX(34)),
+                                            FormFactory.PREF_COLSPEC,
                                             FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
                                             new ColumnSpec(Sizes.dluX(38)),
                                             FormFactory.DEFAULT_COLSPEC
@@ -835,6 +855,7 @@ public class UserPreferencesDialog extends AppDialog {
                                             FormFactory.NARROW_LINE_GAP_ROWSPEC,
                                             FormFactory.DEFAULT_ROWSPEC
                                     }), panelMultiWeekView);
+
 
                             panelMultiWeekViewBuilder.add(labelDefaultWeeksToShow, cc.xywh(3, 1, 5, 1, CellConstraints.FILL, CellConstraints.DEFAULT));
                             panelMultiWeekViewBuilder.add(comboDefaultWeeksToShow, cc.xy(8, 1));

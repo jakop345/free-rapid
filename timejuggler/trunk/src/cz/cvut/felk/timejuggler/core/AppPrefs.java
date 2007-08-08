@@ -38,7 +38,7 @@ public final class AppPrefs {
     public static final String DEFAULT_EVENT_LENGTH = "settings.defaultEventLength";
     public static final String DEFAULT_ALARM_SETTING_FOR_EVENT = "settings.defaultAlarmSettingForEvent";
     public static final String DEFAULT_ALARM_SETTING_FOR_TASK = "settings.defaultAlarmSettingForTask";
-    public static final String DEFAULT_ALARM_TIME_BEFORE_EVENT = "settings.defaultAlarmTmeBeforeEvent";
+    public static final String DEFAULT_ALARM_TIME_BEFORE_EVENT = "settings.defaultAlarmTimeBeforeEvent";
     public static final String DEFAULT_ALARM_TIME_BEFORE_TASK = "settings.defaultAlarmTimeBeforeTask";
     public static final String DEFAULT_ALARM_TIME_BEFORE_EVENT_TIMEUNIT = "settings.defaultAlarmTimeBeforeEventTimeUnit";
     public static final String DEFAULT_ALARM_TIME_BEFORE_TASK_TIMEUNIT = "settings.defaultAlarmTimeBeforeTaskTimeUnit";
@@ -47,7 +47,15 @@ public final class AppPrefs {
     public static final String SHOW_TRAY = "settings.showTray";
     public static final String DATE_TEXT_FORMAT = "settings.dateTextFormat";
     public static final String DEFAULT_SNOOZE_LENGTH = "settings.defaultSnoozeLength";
-    public static final String USER_SETTINGS_SELECTED_CARD = "setttings.userSettingsSelectedCard";
+    public static final String USER_SETTINGS_SELECTED_CARD = "settings.userSettingsSelectedCard";
+    public static final String DAY_ENDS_AT = "settings.dayEndsAt";
+    public static final String DAY_STARTS_AT = "settings.dayStartsAt";
+    public static final String DEFAULT_WEEKS_TO_SHOW = "settings.defaultWeeksToShow";
+    public static final String PREVIOUS_WEEKS_TO_SHOW = "settings.previousWeeksToShow";
+    public static final String SHOW_HOURS_AT_A_TIME = "settings.showHoursAtATime";
+    public static final String PLAY_SOUND = "settings.playSound";
+    public static final String SHOW_ALARM_BOX = "settings.showAlarmBox";
+    public static final String SHOW_MISSED_ALARMS = "settings.showMissedAlarms";
 
 
     private AppPrefs() {
