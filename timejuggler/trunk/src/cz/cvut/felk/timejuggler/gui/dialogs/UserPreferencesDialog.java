@@ -21,6 +21,7 @@ import cz.cvut.felk.timejuggler.gui.MyPresentationModel;
 import cz.cvut.felk.timejuggler.swing.ComponentFactory;
 import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
+import org.jdesktop.swingx.JXTable;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -55,6 +56,7 @@ public class UserPreferencesDialog extends AppDialog {
             build();
         } catch (Exception e) {
             LogUtils.processException(logger, e);
+            doClose(); //dialog se pri fatalni chybe zavre
         }
     }
 
@@ -99,8 +101,8 @@ public class UserPreferencesDialog extends AppDialog {
         addButton(map.get("categoriesBtnAction"), Card.CARD3, group);
         addButton(map.get("viewsBtnAction"), Card.CARD4, group);
 
-        this.btnCategoryEdit.setAction(map.get("btnCategoryAddAction"));
-        this.btnCategoryAdd.setAction(map.get("btnCategoryEditAction"));
+        this.btnCategoryEdit.setAction(map.get("btnCategoryEditAction"));
+        this.btnCategoryAdd.setAction(map.get("btnCategoryAddAction"));
         this.btnCategoryRemove.setAction(map.get("btnCategoryRemoveAction"));
 
         this.btnBrowse.setAction(map.get("btnBrowseAction"));
@@ -354,7 +356,7 @@ public class UserPreferencesDialog extends AppDialog {
         panelCategories = new JPanel();
         JPanel panelListCategories = new JPanel();
         JScrollPane scrollPaneCategories = new JScrollPane();
-        tableCategories = new JTable();
+        tableCategories = new JXTable();
         btnCategoryAdd = new JButton();
         btnCategoryEdit = new JButton();
         btnCategoryRemove = new JButton();
@@ -957,7 +959,7 @@ public class UserPreferencesDialog extends AppDialog {
         public void preferenceChange(PreferenceChangeEvent evt) {
             final MainApp app = MainApp.getInstance(MainApp.class);
 
-            if (evt.getKey().equals(AppPrefs.SHOW_TRAY)) {
+            if (AppPrefs.SHOW_TRAY.equals(evt.getKey())) {
                 app.getTrayIconSupport().setVisibleByDefault();
             }
         }
