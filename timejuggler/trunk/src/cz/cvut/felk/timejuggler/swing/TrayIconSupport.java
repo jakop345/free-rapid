@@ -28,7 +28,17 @@ public class TrayIconSupport implements PropertyChangeListener {
 
     }
 
-    public synchronized void enable() {
+    public synchronized void setVisible(boolean visible) {
+        if (visible && !isEnabled()) {
+            enable();
+        } else if (isEnabled()) disable();
+    }
+
+    public synchronized void setVisibleByDefault() {
+        setVisible(AppPrefs.getProperty(AppPrefs.SHOW_TRAY, true));
+    }
+
+    private synchronized void enable() {
         if (!SystemTray.isSupported()) {
             logger.log(Level.WARNING, "Cannot enable Tray icon is not supported on this system");
             return;
@@ -132,11 +142,11 @@ public class TrayIconSupport implements PropertyChangeListener {
         setEnabled(false);
     }
 
-    public boolean isEnabled() {
+    private boolean isEnabled() {
         return enabled;
     }
 
-    public void setEnabled(boolean enabled) {
+    private void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 

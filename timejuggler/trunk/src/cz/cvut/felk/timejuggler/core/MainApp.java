@@ -92,7 +92,7 @@ public class MainApp extends SingleXFrameApplication {
         initMainFrame();
         this.addExitListener(new MainAppExitListener());
         show(getMainFrame());
-        getTrayIconSupport().enable();
+        getTrayIconSupport().setVisibleByDefault();
         setGlobalEDTExceptionHandler();
     }
 
