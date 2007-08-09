@@ -127,27 +127,27 @@ public class UserPreferencesDialog extends AppDialog {
         final CardLayout cardLayout = (CardLayout) panelCard.getLayout();
         cardLayout.show(panelCard, card.toString());
         AppPrefs.storeProperty(AppPrefs.USER_SETTINGS_SELECTED_CARD, card.toString());
-        final ActionMap map = getActionMap();
-        Action action = null;
+        String actionName = "";
         switch (card) {
             case CARD1:
-                action = map.get("generalBtnAction");
+                actionName = "generalBtnAction";
                 break;
             case CARD2:
-                action = map.get("alarmsBtnAction");
+                actionName = "alarmsBtnAction";
                 break;
             case CARD3:
-                action = map.get("categoriesBtnAction");
+                actionName = "categoriesBtnAction";
                 break;
             case CARD4:
-                action = map.get("viewsBtnAction");
+                actionName = "viewsBtnAction";
                 break;
             default:
                 assert false;
-                break;
+                return;
         }
-        if (action != null)
-            action.putValue(Action.SELECTED_KEY, Boolean.TRUE);
+        Action action = getActionMap().get(actionName);
+        assert action != null;
+        action.putValue(Action.SELECTED_KEY, Boolean.TRUE);
     }
 
 
