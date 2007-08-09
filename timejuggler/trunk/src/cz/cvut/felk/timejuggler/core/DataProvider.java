@@ -62,6 +62,25 @@ public class DataProvider {
         return calendars;
     }
 
+    public void deleteCalendars() {
+        calendars.clear();
+    }
+
+    public synchronized void addCalendar(VCalendar calendar) throws DatabaseException {
+        try {
+            saveOrUpdate(calendar);
+            addNewCalendar(calendar);
+        } catch (DatabaseException e) {
+            throw e;
+        }
+    }
+
+    private void addNewCalendar(VCalendar calendar) {
+        if (calendars != null)
+            calendars.add((VCalendar) UIBeanEnhancer.enhance(calendar));
+    }
+
+
     /**
      * Method saveOrUpdate
      * <p/>

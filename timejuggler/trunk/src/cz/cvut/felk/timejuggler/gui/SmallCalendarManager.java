@@ -7,6 +7,7 @@ import cz.cvut.felk.timejuggler.core.MainApp;
 import cz.cvut.felk.timejuggler.db.entity.VCalendar;
 import cz.cvut.felk.timejuggler.swing.CustomLayoutConstraints;
 import cz.cvut.felk.timejuggler.swing.Swinger;
+import cz.cvut.felk.timejuggler.swing.models.SortedListModel;
 import cz.cvut.felk.timejuggler.swing.renderers.CheckRenderer;
 import info.clearthought.layout.TableLayout;
 import org.jdesktop.swingx.calendar.JXMonthView;
@@ -18,6 +19,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Comparator;
 
 /**
  * Sprava a vytvoreni maleho kalendare
@@ -36,6 +38,7 @@ public class SmallCalendarManager {
     public JComponent getComponent() {
 
         final JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane.setName("mainTabbedPane");
         final ResourceMap rm = Swinger.getResourceMap();
         tabbedPane.addTab(rm.getString("tabbedPaneSmallCalendar.date.title"), null, getSmallCalendarPanel());
         tabbedPane.addTab(rm.getString("tabbedPaneSmallCalendar.calendar.title"), null, getCalendarList());
@@ -63,22 +66,11 @@ public class SmallCalendarManager {
     }
 
     private Component getCalendarList() {
-//        listData = new ArrayList<ContentData<String>>();
-//        listData.add(new ContentData<String>("Hlavni kalendar", true));
-//        listData.add(new ContentData<String>("Svatky", false));
-//        final AbstractListModel listModel = new AbstractListModel() {
-//            public int getSize() {
-//                return listData.size();
-//            }
-//
-//            public Object getElementAt(int index) {
-//                return listData.get(index);
-//            }
-//        };
 
         MainApp app = MainApp.getInstance(MainApp.class);
         final ListModel listModel = app.getDataProvider().getCalendars();
-        checkedList = BasicComponentFactory.createList(new SelectionInList<VCalendar>(listModel), new CheckListRenderer());
+        final SelectionInList<VCalendar> inList = new SelectionInList<VCalendar>(new SortedListModel(listModel, SortedListModel.SortOrder.ASCENDING, new CalendarComparator()));
+        checkedList = BasicComponentFactory.createList(inList, new CheckListRenderer());
         checkedList.addKeyListener(new MyKeyAdapter());
         checkedList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         checkedList.setBorder(new EmptyBorder(2, 4, 0, 0));
@@ -89,30 +81,6 @@ public class SmallCalendarManager {
         });
         return new JScrollPane(checkedList);
     }
-
-//    @SuppressWarnings({"unchecked"})
-//    private class ContentData<C extends Comparable> implements Comparable {
-//        private C value;
-//        private boolean checked;
-//
-//        public ContentData(C item, boolean checked) {
-//            this.value = item;
-//            this.checked = checked;
-//        }
-//
-//        public int compareTo(Object o) {
-//            return value.compareTo(((ContentData) o).value);
-//        }
-//
-//        public boolean isChecked() {
-//            return checked;
-//        }
-//
-//
-//        public C getValue() {
-//            return value;
-//        }
-//    }
 
     private static final class CheckListRenderer extends CheckRenderer {
         public final Component getListCellRendererComponent(final JList list, final Object value, final int index, final boolean isSelected, final boolean cellHasFocus) {
@@ -137,6 +105,13 @@ public class SmallCalendarManager {
             if (e.getKeyCode() == KeyEvent.VK_SPACE) {
                 toggleChecked(checkedList.getSelectedIndex());
             }
+        }
+    }
+
+    private final static class CalendarComparator implements Comparator<VCalendar> {
+
+        public int compare(VCalendar o1, VCalendar o2) {
+            return o1.getName().compareTo(o2.getName());
         }
     }
 
