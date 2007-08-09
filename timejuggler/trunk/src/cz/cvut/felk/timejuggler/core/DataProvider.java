@@ -4,16 +4,10 @@
 package cz.cvut.felk.timejuggler.core;
 
 import com.jgoodies.binding.list.ArrayListModel;
-import cz.cvut.felk.timejuggler.db.DatabaseException;
-import cz.cvut.felk.timejuggler.db.DbDataStore;
-import cz.cvut.felk.timejuggler.db.TimeJugglerJDBCTemplate;
 import cz.cvut.felk.timejuggler.db.entity.Category;
-import cz.cvut.felk.timejuggler.db.entity.DbElement;
 import cz.cvut.felk.timejuggler.db.entity.VCalendar;
 import org.izvin.client.desktop.ui.util.UIBeanEnhancer;
 
-import java.awt.*;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -23,22 +17,22 @@ import java.util.List;
 public class DataProvider {
 
     private static DataProvider ourInstance = new DataProvider();
-    private List<Category> categories;
+    private ArrayListModel<Category> categories;
     private ArrayListModel<VCalendar> calendars;
-    private DbDataStore dbStore;
+    PersitencyLayer persitencyLayer;
 
     public static DataProvider getInstance() {
         return ourInstance;
     }
 
     private DataProvider() {
-        dbStore = new DbDataStore();
-        calendars = new ArrayListModel<VCalendar>();
-        categories = Arrays.asList(new Category("Birthday", Color.YELLOW), new Category("Annivesary", Color.BLUE), new Category("Annivesary", Color.BLUE));
-
         calendars = null; //lazy inicializace
+        categories = null; //lazy inicializace
     }
 
+    public void init() {
+        persitencyLayer = new DBPersistencyLayer();
+    }
 
     //utilita, bude pozdeji presunuto, az jestli tohle bude potreba a budu vedet kam ;-)
     private <C> ArrayListModel<C> enhanceToBeans(List<C> list) {
@@ -49,46 +43,36 @@ public class DataProvider {
         return listModel;
     }
 
-
-    public List<Category> getCategories() {
+    public synchronized ArrayListModel<Category> getCategoriesListModel() {
+        if (categories == null) {
+            categories = enhanceToBeans(getPersitencyLayer().getCategories());
+        }
         return categories;
     }
 
-    public synchronized ArrayListModel<VCalendar> getCalendars() {
+    public synchronized ArrayListModel<VCalendar> getCalendarsListModel() throws PersistencyLayerException {
         if (calendars == null) {
-            //List<VCalendar> normalFromDBList = Arrays.asList(new VCalendar("VityCalendar"), new VCalendar("JohnnyCalendar"), new VCalendar("SvatkyCalendar"));
-            calendars = enhanceToBeans(dbStore.getCalendars());
+            calendars = enhanceToBeans(getPersitencyLayer().getCalendars());
         }
         return calendars;
     }
 
-    public void deleteCalendars() {
-        calendars.clear();
+    public synchronized void addCalendar(VCalendar calendar) throws PersistencyLayerException {
+        getPersitencyLayer().saveOrUpdateCalendar(calendar);
+        addNewCalendar(calendar);
     }
 
-    public synchronized void addCalendar(VCalendar calendar) throws DatabaseException {
-        try {
-            saveOrUpdate(calendar);
-            addNewCalendar(calendar);
-        } catch (DatabaseException e) {
-            throw e;
-        }
+    public void deleteCalendarsListModel() {//jen test
+        calendars.clear();//jen test
     }
+
 
     private void addNewCalendar(VCalendar calendar) {
         if (calendars != null)
             calendars.add((VCalendar) UIBeanEnhancer.enhance(calendar));
     }
 
-
-    /**
-     * Method saveOrUpdate
-     * <p/>
-     * Ulozi entitu do databaze
-     */
-    public <C extends DbElement> void saveOrUpdate(C entity) throws DatabaseException {
-        TimeJugglerJDBCTemplate template = new TimeJugglerJDBCTemplate();
-        entity.saveOrUpdate(template);
-        template.commit();
+    private PersitencyLayer getPersitencyLayer() {
+        return persitencyLayer;
     }
 }

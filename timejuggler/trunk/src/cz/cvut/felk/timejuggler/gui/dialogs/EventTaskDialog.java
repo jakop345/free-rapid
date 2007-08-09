@@ -345,7 +345,7 @@ public class EventTaskDialog extends AppDialog {
     private void buildCategories() {
         final MainApp app = MainApp.getInstance(MainApp.class);
         final DataProvider dataProvider = app.getDataProvider();
-        final java.util.List<Category> list = dataProvider.getCategories();
+        final java.util.List<Category> list = dataProvider.getCategoriesListModel();
         final Set sortedSet = new TreeSet(list);
         fillCategoryComboModel(sortedSet);
         this.categoryCombo.addActionListener(new ActionListener() {

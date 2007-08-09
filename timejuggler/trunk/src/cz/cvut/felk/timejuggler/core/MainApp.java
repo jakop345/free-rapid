@@ -81,6 +81,7 @@ public class MainApp extends SingleXFrameApplication {
     protected void initialize(String[] args) {
         filesToOpen = processArguments(args);
         this.dataProvider = DataProvider.getInstance();
+        this.dataProvider.init();
         LogUtils.initLogging(debug);
         // logger = Logger.getLogger(MainApp.class.getName());
         Swinger.initLaF(); //inicializace LaFu, musi to byt pred vznikem hlavniho panelu
@@ -88,6 +89,7 @@ public class MainApp extends SingleXFrameApplication {
         ResourceConverter.register(new ListItemsConvertor());
     }
 
+    @Override
     protected void startup() {
         mainPanel = new MainPanelManager(getContext());
         initMainFrame();

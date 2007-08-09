@@ -1,15 +1,15 @@
 package cz.cvut.felk.timejuggler.gui;
 
 import application.ResourceMap;
-import com.jgoodies.binding.adapter.BasicComponentFactory;
+import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.list.SelectionInList;
 import cz.cvut.felk.timejuggler.core.MainApp;
 import cz.cvut.felk.timejuggler.db.entity.VCalendar;
 import cz.cvut.felk.timejuggler.swing.CustomLayoutConstraints;
 import cz.cvut.felk.timejuggler.swing.Swinger;
-import cz.cvut.felk.timejuggler.swing.models.SortedListModel;
 import cz.cvut.felk.timejuggler.swing.renderers.CheckRenderer;
 import info.clearthought.layout.TableLayout;
+import org.jdesktop.swingx.JXList;
 import org.jdesktop.swingx.calendar.JXMonthView;
 
 import javax.swing.*;
@@ -30,7 +30,7 @@ public class SmallCalendarManager {
      * Polozky dat pro seznam v kalendari
      */
 //    private List<ContentData<String>> listData; //TODO sjednotit s globalnimi daty
-    private JList checkedList;
+    private JXList checkedList;
 
     public SmallCalendarManager() {
     }
@@ -68,9 +68,15 @@ public class SmallCalendarManager {
     private Component getCalendarList() {
 
         MainApp app = MainApp.getInstance(MainApp.class);
-        final ListModel listModel = app.getDataProvider().getCalendars();
-        final SelectionInList<VCalendar> inList = new SelectionInList<VCalendar>(new SortedListModel(listModel, SortedListModel.SortOrder.ASCENDING, new CalendarComparator()));
-        checkedList = BasicComponentFactory.createList(inList, new CheckListRenderer());
+        final ListModel listModel = app.getDataProvider().getCalendarsListModel();
+        //final SelectionInList<VCalendar> inList = new SelectionInList<VCalendar>(new SortedListModel(listModel, SortedListModel.SortOrder.ASCENDING, new CalendarComparator()));
+        final SelectionInList<VCalendar> inList = new SelectionInList<VCalendar>(listModel);
+        //checkedList = BasicComponentFactory.createList(inList, new CheckListRenderer());
+        checkedList = new JXList();
+        Bindings.bind(checkedList, inList);
+        checkedList.setCellRenderer(new CheckListRenderer());
+        checkedList.setFilterEnabled(true);
+
         checkedList.addKeyListener(new MyKeyAdapter());
         checkedList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         checkedList.setBorder(new EmptyBorder(2, 4, 0, 0));
@@ -79,6 +85,9 @@ public class SmallCalendarManager {
                 toggleChecked(checkedList.locationToIndex(e.getPoint()));
             }
         });
+        checkedList.setComparator(new CalendarComparator());
+        checkedList.setSortOrder(org.jdesktop.swingx.decorator.SortOrder.ASCENDING);
+
         return new JScrollPane(checkedList);
     }
 
