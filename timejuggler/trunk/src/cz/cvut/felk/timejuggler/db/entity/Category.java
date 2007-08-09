@@ -12,12 +12,12 @@ import java.util.logging.Logger;
  * <p/>
  * Reprezentuje kategorii eventu nebo tasku.. Hotovo
  */
-public class Category extends DbElement implements Comparable {
+public class Category extends DbElement implements Comparable, Cloneable {
     private final static Logger logger = Logger.getLogger(Category.class.getName());
 
     private String name;
 
-    private int componentId = -1;
+    //private int componentId = -1;
 
     private Color color = null;
 
@@ -58,13 +58,13 @@ public class Category extends DbElement implements Comparable {
     	//TODO: pridat ukladani barvy
         if (getId() > 0) {
             logger.info("Database - Update: Category[" + getId() + "]:" + name + "...");
-            Object params[] = {name, componentId, getId()};
-            String updateQuery = "UPDATE Category SET name=?,calComponentID=? WHERE categoryID = ? ";
+            Object params[] = {name, color == null ? null : color.getRGB(), getId()};
+            String updateQuery = "UPDATE Category SET name=?,color=? WHERE categoryID = ? ";
             template.executeUpdate(updateQuery, params);
         } else {
             logger.info("Database - Insert: Category[]:" + name + "...");
-            Object params[] = {name, componentId};
-            String insertQuery = "INSERT INTO Category (name,calComponentID) VALUES (?,?) ";
+            Object params[] = {name, color == null ? null : color.getRGB()};
+            String insertQuery = "INSERT INTO Category (name,color) VALUES (?,?) ";
             template.executeUpdate(insertQuery, params);
             setId(template.getGeneratedId());
         }
@@ -88,18 +88,18 @@ public class Category extends DbElement implements Comparable {
         if (o == null || getClass() != o.getClass()) return false;
 
         Category category = (Category) o;
-        return componentId == category.componentId && name.equals(category.name);
+        return /*componentId == category.componentId &&*/ name.equals(category.name);
     }
 
     public int hashCode() {
         int result;
         result = name.hashCode();
-        result = 31 * result + componentId;
+        result = 31 * result /*+ componentId*/;
         return result;
     }
 
     public int compareTo(Object o) {
-        return getName().compareTo(((Category) o).getName()); //pridat i podporu pro componentId?
+        return getName().compareTo(((Category) o).getName()); //pridat i podporu pro componentId? NE
     }
 
     public String getName() {
@@ -113,7 +113,7 @@ public class Category extends DbElement implements Comparable {
         name = newVal;
     }
 
-
+/*
     public void setComponentId(int componentId) {
         this.componentId = componentId;
     }
@@ -121,5 +121,10 @@ public class Category extends DbElement implements Comparable {
     public int getComponentId() {
         return (this.componentId);
     }
+*/
 
+	protected Object clone(){
+		Category newcat = new Category(name,color);
+		return newcat;
+	}
 }
