@@ -89,13 +89,19 @@ public class ColorComboBox extends JComboBox {
     }
 
     public void setColor(Color color) {
+        Color previousColor = lastColor;
         if (color == null) {
-            setSelectedIndex(0);
-            lastColor = ((Value) getItemAt(0)).color;
+            if (lastColor == null) {
+                setSelectedIndex(0);
+                lastColor = ((Value) getItemAt(0)).color;
+            }
+//            setSelectedIndex(0);
+//            lastColor = ((Value) getItemAt(0)).color;
         } else {
             setSelectedItem(new Value(color));
             lastColor = color;
         }
+        firePropertyChange("color", previousColor, lastColor);
     }
 
     public Color getColor() {

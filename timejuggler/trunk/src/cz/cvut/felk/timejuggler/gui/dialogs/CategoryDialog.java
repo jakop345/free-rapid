@@ -3,6 +3,7 @@ package cz.cvut.felk.timejuggler.gui.dialogs;
 import com.jgoodies.binding.PresentationModel;
 import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.beans.PropertyConnector;
+import com.jgoodies.binding.value.BufferedValueModel;
 import com.jgoodies.binding.value.Trigger;
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
@@ -17,6 +18,8 @@ import org.izvin.client.desktop.ui.util.UIBeanEnhancer;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.logging.Logger;
 
 /**
@@ -24,9 +27,10 @@ import java.util.logging.Logger;
  */
 public class CategoryDialog extends AppDialog {
     private final static Logger logger = Logger.getLogger(CategoryDialog.class.getName());
-    private final Category category;
+    private Category category;
     private boolean newCategory;
     private PresentationModel model;
+    private static final String PROPERTY_COLOR = "color";
 
 
     public CategoryDialog(Frame owner) throws HeadlessException {
@@ -36,6 +40,7 @@ public class CategoryDialog extends AppDialog {
     public CategoryDialog(Frame owner, Category category, boolean createNewCategory) throws HeadlessException {
         super(owner, true);
         this.category = category;
+        this.category.setColor(Color.YELLOW);
         this.setName("CategoryDialog");
         this.newCategory = createNewCategory;
         try {
@@ -43,6 +48,7 @@ public class CategoryDialog extends AppDialog {
             build();
         } catch (Exception e) {
             LogUtils.processException(logger, e);
+            doClose(); // pri otevirani vyjimce se dialog neotevre = fatalni chyba
         }
     }
 
@@ -74,24 +80,6 @@ public class CategoryDialog extends AppDialog {
     }
 
     private void buildGUI() {
-//        checkUseColor.addActionListener(new ActionListener() {
-//            public void actionPerformed(ActionEvent e) {
-//                updateCombo();
-//            }
-//        });
-
-        //this.category = UIBeanEnhancer.enhance(category);
-        final Category cat = (Category) UIBeanEnhancer.enhance(category);
-        model = new PresentationModel(cat, new Trigger());
-        Bindings.bind(fieldName, model.getBufferedModel("name"), true);
-
-        final Action actionOK = getActionMap().get("okBtnAction");
-        actionOK.setEnabled(false);
-        final PropertyConnector connector1 = PropertyConnector.connect(model, PresentationModel.PROPERTYNAME_BUFFERING, actionOK, "enabled");
-        //connector1.updateProperty2();
-
-        final PropertyConnector connector = PropertyConnector.connect(checkUseColor, "selected", comboColor, "enabled");
-        connector.updateProperty2();
     }
 
     private void updateCombo() {
@@ -99,35 +87,53 @@ public class CategoryDialog extends AppDialog {
     }
 
     private void setDefaultValues() {
-        if (newCategory) {
-            checkUseColor.setSelected(false);
-            comboColor.setColor(null);
-        } else {
-            final boolean assignedColor = category.hasAssignedColor();
-            if (assignedColor) {
-                comboColor.setColor(category.getColor());
-            } else
-                comboColor.setColor(null);
-            checkUseColor.setSelected(assignedColor);
-
+        final Color activeColor = (Color) model.getBufferedValue(PROPERTY_COLOR);
+        if (!newCategory) {
             this.setTitle(getResourceMap().getString("CategoryDialog_edit_title"));
         }
+        checkUseColor.setSelected(activeColor != null);
         model.triggerFlush();
-        // updateCombo();
+        updateCombo();
     }
 
     private void buildModels() {
+        this.category = (Category) UIBeanEnhancer.enhance(category);
+        model = new PresentationModel(this.category, new Trigger());
+        Bindings.bind(fieldName, model.getBufferedModel("name"), false);
+        final BufferedValueModel valueColorModel = model.getBufferedModel(PROPERTY_COLOR);
 
+        checkUseColor.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                updateCombo();
+            }
+        });
+
+        final Action actionOK = getActionMap().get("okBtnAction");
+        PropertyConnector.connectAndUpdate(valueColorModel, comboColor, PROPERTY_COLOR);
+
+        final PropertyConnector connector1 = PropertyConnector.connect(model, PresentationModel.PROPERTYNAME_BUFFERING, actionOK, "enabled");
+        connector1.updateProperty2();
     }
 
     @application.Action
     public void okBtnAction() {
+        model.triggerCommit();
+        //workaround
+        if (!checkUseColor.isSelected())
+            category.setColor(null);
         doClose();
     }
 
     @application.Action
     public void cancelBtnAction() {
+        model.triggerFlush();
         doClose();
+    }
+
+    @Override
+    public void doClose() {
+        model.release();
+        super.doClose();
     }
 
     private void initComponents() {
