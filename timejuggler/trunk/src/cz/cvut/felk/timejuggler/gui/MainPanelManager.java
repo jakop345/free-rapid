@@ -46,6 +46,7 @@ public class MainPanelManager {
     private void initComponents() {
         multiSplitPane = new JXMultiSplitPane();
         multiSplitPane.setDividerSize(4);
+        multiSplitPane.setName("mainSplitPane");
 
         multiSplitPane.setContinuousLayout(true);
         multiSplitPane.getMultiSplitLayout().setModel(new DefaultSplitPaneModel());
@@ -145,7 +146,7 @@ public class MainPanelManager {
     /**
      * A simplified SplitPaneLayout for common split pane needs. A common multi splitpane need is:
      */
-    private static class DefaultSplitPaneModel extends MultiSplitLayout.Split {
+    public static class DefaultSplitPaneModel extends MultiSplitLayout.Split {
         public DefaultSplitPaneModel() {
             MultiSplitLayout.Split col2 = new MultiSplitLayout.Split();
             MultiSplitLayout.Split col1 = new MultiSplitLayout.Split();

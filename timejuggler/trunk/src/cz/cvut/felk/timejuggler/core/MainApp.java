@@ -12,6 +12,7 @@ import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.swing.TrayIconSupport;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
 import org.jdesktop.appframework.swingx.SingleXFrameApplication;
+import org.jdesktop.swingx.JXMultiSplitPane;
 import org.jdesktop.swingx.JXStatusBar;
 
 import javax.swing.*;
@@ -124,6 +125,7 @@ public class MainApp extends SingleXFrameApplication {
         SessionStorage storage = getContext().getSessionStorage();
         storage.putProperty(JXStatusBar.class, new StorageProperties.XStatusBarProperty());
         storage.putProperty(JToolBar.class, new StorageProperties.JToolbarProperty());
+        storage.putProperty(JXMultiSplitPane.class, new StorageProperties.XMultipleSplitPaneProperty());
         new StorageProperties().registerPersistenceDelegates();
     }
 
