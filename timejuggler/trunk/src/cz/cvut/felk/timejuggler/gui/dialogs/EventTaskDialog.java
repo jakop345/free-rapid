@@ -360,7 +360,7 @@ public class EventTaskDialog extends AppDialog {
         if (!selected.isCustom)
             return;
         final MainApp app = MainApp.getInstance(MainApp.class);
-        final CategoryDialog dialog = new CategoryDialog((Frame) this.getOwner());
+        final CategoryDialog dialog = new CategoryDialog((Frame) this.getOwner(), null);
         app.prepareDialog(dialog, true);
     }
 

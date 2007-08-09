@@ -2,7 +2,9 @@ package cz.cvut.felk.timejuggler.gui.dialogs;
 
 import application.ResourceMap;
 import com.jgoodies.binding.PresentationModel;
+import com.jgoodies.binding.adapter.AbstractTableAdapter;
 import com.jgoodies.binding.adapter.Bindings;
+import com.jgoodies.binding.adapter.SingleListSelectionAdapter;
 import com.jgoodies.binding.adapter.SpinnerAdapterFactory;
 import com.jgoodies.binding.beans.PropertyConnector;
 import com.jgoodies.binding.list.SelectionInList;
@@ -16,10 +18,12 @@ import com.l2fprod.common.swing.JButtonBar;
 import com.l2fprod.common.swing.plaf.blue.BlueishButtonBarUI;
 import cz.cvut.felk.timejuggler.core.AppPrefs;
 import cz.cvut.felk.timejuggler.core.MainApp;
+import cz.cvut.felk.timejuggler.db.entity.Category;
 import cz.cvut.felk.timejuggler.gui.MyPreferencesAdapter;
 import cz.cvut.felk.timejuggler.gui.MyPresentationModel;
 import cz.cvut.felk.timejuggler.swing.ComponentFactory;
 import cz.cvut.felk.timejuggler.swing.Swinger;
+import cz.cvut.felk.timejuggler.swing.renderers.ColorTableCellRenderer;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
 import org.jdesktop.swingx.JXTable;
 
@@ -29,6 +33,10 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Date;
 import java.util.logging.Logger;
 import java.util.prefs.PreferenceChangeEvent;
@@ -43,6 +51,8 @@ public class UserPreferencesDialog extends AppDialog {
     private static final String CARD_PROPERTY = "card";
     private ApplyPreferenceChangeListener prefListener;
     private JCheckBox checkPlaySound;
+    private SelectionInList<Category> inList;
+    private ListModel categoriesManager;
 
     private static enum Card {
         CARD1, CARD2, CARD3, CARD4
@@ -91,7 +101,9 @@ public class UserPreferencesDialog extends AppDialog {
     }
 
     private void buildGUI() {
-        toolbar.setUI(new BlueishButtonBarUI());
+        toolbar.setUI(new BlueishButtonBarUI());//nenechat to default?
+
+        //inicializace categories tabulky
 
         final ActionMap map = getActionMap();
 
@@ -153,11 +165,33 @@ public class UserPreferencesDialog extends AppDialog {
 
     private void buildModels() {
         model = new MyPresentationModel(null, new Trigger());
+        final MainApp app = MainApp.getInstance(MainApp.class);
+        categoriesManager = (ListModel) app.getDataProvider().getCategoriesListModel();
+        inList = new SelectionInList<Category>(categoriesManager);
+
         prefListener = new ApplyPreferenceChangeListener();
         AppPrefs.getPreferences().addPreferenceChangeListener(prefListener);
 
-        //spinnerDefaultTimeBeforeTask.setModel(new SpinnerNumberModel(1, 1, 1, 1));
+        final CategoriesTableModel tableModel = new CategoriesTableModel(inList);
+        tableCategories.setModel(tableModel);
+        tableCategories.setSelectionModel(new SingleListSelectionAdapter(inList.getSelectionIndexHolder()));
 
+        tableCategories.addMouseListener(new DoubleClickHandler());
+        Swinger.updateColumn(tableCategories, "Name", 0, 350, null);
+        Swinger.updateColumn(tableCategories, "Color", 1, 50, new ColorTableCellRenderer());
+
+
+        bindBasicComponents();
+
+        final ActionMap map = getActionMap();
+        final Action actionOK = map.get("okBtnAction");
+        PropertyConnector connector = PropertyConnector.connect(model, PresentationModel.PROPERTYNAME_BUFFERING, actionOK, "enabled");
+        connector.updateProperty2();
+
+        initEventHandling();
+    }
+
+    private void bindBasicComponents() {
         bindCheckbox(checkShowIconInSystemTray, AppPrefs.SHOW_TRAY, true);
         bindCheckbox(checkPlaySound, AppPrefs.PLAY_SOUND, true);
         bindCheckbox(checkShowAlarmBox, AppPrefs.SHOW_ALARM_BOX, true);
@@ -178,11 +212,6 @@ public class UserPreferencesDialog extends AppDialog {
         bindCombobox(comboTimeUnitEvent, AppPrefs.DEFAULT_ALARM_TIME_BEFORE_EVENT_TIMEUNIT, 0, "timeunit");
         bindCombobox(comboTimeUnitTask, AppPrefs.DEFAULT_ALARM_TIME_BEFORE_TASK_TIMEUNIT, 0, "timeunit");
         bindCombobox(comboDateTextFormat, AppPrefs.DATE_TEXT_FORMAT, AppPrefs.DEF_DATE_TEXT_FORMAT_LONG, getDateFormats());
-
-        final Action actionOK = getActionMap().get("okBtnAction");
-        final PropertyConnector connector = PropertyConnector.connect(model, PresentationModel.PROPERTYNAME_BUFFERING, actionOK, "enabled");
-        connector.updateProperty2();
-
     }
 
 
@@ -269,7 +298,11 @@ public class UserPreferencesDialog extends AppDialog {
 
     @application.Action
     public void btnCategoryAddAction() {
-
+        boolean canceled = openCategoryEditor(null);
+        if (!canceled) {
+            //getCategorySelection().
+            getCategorySelection().fireSelectedContentsChanged();
+        }
     }
 
 
@@ -280,7 +313,10 @@ public class UserPreferencesDialog extends AppDialog {
 
     @application.Action
     public void btnCategoryEditAction() {
-
+        boolean canceled = openCategoryEditor(getSelectedItem());
+        if (!canceled) {
+            getCategorySelection().fireSelectedContentsChanged();
+        }
     }
 
     @application.Action
@@ -302,6 +338,9 @@ public class UserPreferencesDialog extends AppDialog {
     @Override
     public void doClose() {
         AppPrefs.getPreferences().removePreferenceChangeListener(prefListener);
+        final SelectionInList list = getCategorySelection();
+        if (list != null)
+            list.release();
         if (model != null)
             model.release();
         super.doClose();
@@ -962,6 +1001,98 @@ public class UserPreferencesDialog extends AppDialog {
             if (AppPrefs.SHOW_TRAY.equals(evt.getKey())) {
                 app.getTrayIconSupport().setVisibleByDefault();
             }
+        }
+    }
+
+    /**
+     * Describes how to present an Album in a JTable.
+     */
+    private static final class CategoriesTableModel extends AbstractTableAdapter<Category> {
+
+        private static final String[] COLUMNS = {"name", "color"};
+
+        private CategoriesTableModel(ListModel listModel) {
+            super(listModel, COLUMNS);
+        }
+
+        @Override
+        public boolean isCellEditable(int rowIndex, int columnIndex) {
+            return false;
+        }
+
+        @Override
+        public Class<?> getColumnClass(int columnIndex) {
+            if (columnIndex == 1)
+                return Color.class;
+            return super.getColumnClass(columnIndex);
+        }
+
+        public Object getValueAt(int rowIndex, int columnIndex) {
+            Category category = getRow(rowIndex);
+            switch (columnIndex) {
+                case 0:
+                    return category.getName();
+                case 1:
+                    return category.getColor();
+                default:
+                    throw new IllegalStateException("Unknown column");
+            }
+        }
+
+    }
+
+    /**
+     * Initializes the event handling by just registering a handler that updates the Action enablement if the
+     * albumSelection's 'selectionEmpty' property changes.
+     */
+    private void initEventHandling() {
+        getCategorySelection().addPropertyChangeListener(
+                SelectionInList.PROPERTYNAME_SELECTION_EMPTY,
+                new SelectionEmptyHandler());
+        updateActionEnablement();
+    }
+
+    private void updateActionEnablement() {
+        boolean hasSelection = getCategorySelection().hasSelection();
+
+        btnCategoryEdit.getAction().setEnabled(hasSelection);
+        btnCategoryRemove.getAction().setEnabled(hasSelection);
+    }
+
+    private SelectionInList<Category> getCategorySelection() {
+        return inList;
+    }
+
+    private Category getSelectedItem() {
+        return inList.getSelection();
+    }
+
+    private boolean openCategoryEditor(Category selectedItem) {
+        final MainApp instance = MainApp.getInstance(MainApp.class);
+        final CategoryDialog dialog = new CategoryDialog((Frame) this.getOwner(), selectedItem);
+        instance.prepareDialog(dialog, true);
+        return dialog.getModalResult() == RESULT_CANCEL;
+    }
+
+    /**
+     * A mouse listener that edits the selected item on double click.
+     */
+    private final class DoubleClickHandler extends MouseAdapter {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2)
+                btnCategoryEditAction();
+        }
+    }
+
+    /**
+     * Enables or disables this model's Actions when it is notified about a change in the <em>selectionEmpty</em>
+     * property of the SelectionInList.
+     */
+    private final class SelectionEmptyHandler implements PropertyChangeListener {
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            updateActionEnablement();
         }
     }
 }

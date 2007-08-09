@@ -7,6 +7,9 @@ import cz.cvut.felk.timejuggler.core.MainApp;
 import javax.swing.*;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.plaf.metal.MetalTheme;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.FocusEvent;
@@ -119,6 +122,18 @@ public class Swinger {
                 field.requestFocus();
             }
         });
+    }
+
+    public static TableColumn updateColumn(JTable table, String name, final int columnId, final int width, TableCellRenderer renderer) {
+        final TableColumnModel columnModel = table.getColumnModel();
+        TableColumn column = columnModel.getColumn(columnId);
+        if (renderer != null)
+            column.setCellRenderer(renderer);
+        column.setHeaderValue(name);
+        column.setPreferredWidth(width);
+        column.setWidth(width);
+        column.setMinWidth(width);
+        return column;
     }
 
 

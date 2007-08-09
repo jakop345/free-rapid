@@ -32,17 +32,13 @@ public class CategoryDialog extends AppDialog {
     private PresentationModel model;
     private static final String PROPERTY_COLOR = "color";
 
-
-    public CategoryDialog(Frame owner) throws HeadlessException {
-        this(owner, new Category(), true);
-    }
-
-    public CategoryDialog(Frame owner, Category category, boolean createNewCategory) throws HeadlessException {
+    //TODO pridat ikonu pro dialog
+    public CategoryDialog(Frame owner, Category category) throws HeadlessException {
         super(owner, true);
-        this.category = category;
-        this.category.setColor(Color.YELLOW);
+        this.newCategory = category == null;
+        this.category = category == null ? new Category() : category;
         this.setName("CategoryDialog");
-        this.newCategory = createNewCategory;
+
         try {
             initComponents();
             build();
@@ -97,14 +93,19 @@ public class CategoryDialog extends AppDialog {
     }
 
     private void buildModels() {
-        this.category = (Category) UIBeanEnhancer.enhance(category);
-        model = new PresentationModel(this.category, new Trigger());
+        final Category cat;
+        if (this.newCategory) //pokud zakladame novou kategorii, tak enhancovat budeme, jinak nebudeme, protoze uz bylo
+            cat = (Category) UIBeanEnhancer.enhance(category);
+        else cat = this.category;
+        model = new PresentationModel(cat, new Trigger());
         Bindings.bind(fieldName, model.getBufferedModel("name"), false);
         final BufferedValueModel valueColorModel = model.getBufferedModel(PROPERTY_COLOR);
 
         checkUseColor.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 updateCombo();
+                if (!checkUseColor.isSelected())
+                    category.setColor(null);//nutne zlo
             }
         });
 
@@ -121,6 +122,7 @@ public class CategoryDialog extends AppDialog {
         //workaround
         if (!checkUseColor.isSelected())
             category.setColor(null);
+        setResult(RESULT_OK);
         doClose();
     }
 

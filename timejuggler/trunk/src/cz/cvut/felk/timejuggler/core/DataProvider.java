@@ -31,7 +31,8 @@ public class DataProvider {
     }
 
     public void init() {
-        persitencyLayer = new DBPersistencyLayer();
+        //persitencyLayer = new DBPersistencyLayer();
+        persitencyLayer = new FakePersistencyLayer();
     }
 
     //utilita, bude pozdeji presunuto, az jestli tohle bude potreba a budu vedet kam ;-)

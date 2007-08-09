@@ -3,6 +3,7 @@ package cz.cvut.felk.timejuggler.core;
 import cz.cvut.felk.timejuggler.db.entity.Category;
 import cz.cvut.felk.timejuggler.db.entity.VCalendar;
 
+import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,6 +23,6 @@ public class FakePersistencyLayer implements PersitencyLayer {
     }
 
     public List<Category> getCategories() throws PersistencyLayerException {
-        return Arrays.asList(new Category("Svatky"), new Category("Ukoly"), new Category("Antonin"));
+        return Arrays.asList(new Category("Svatky", Color.BLUE), new Category("Ukoly", Color.GREEN), new Category("Skola"), new Category("PARy"));
     }
 }
