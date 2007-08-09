@@ -57,7 +57,6 @@
                 <attribute name="SplashScreen-Image" value="${splash}"/>
             </manifest>
             <fileset dir="${classes}" includes="**/*"/>
-            <fileset dir="${src}" includes="*.properties"/>
         </jar>
         <mkdir dir="${build}/${lib}"/>
         <!--<mkdir dir="${build}/help"/>-->
