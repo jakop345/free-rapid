@@ -3,6 +3,7 @@ package cz.cvut.felk.timejuggler.swing;
 import com.jgoodies.forms.layout.ColumnSpec;
 import cz.cvut.felk.timejuggler.swing.components.ColorComboBox;
 import cz.cvut.felk.timejuggler.swing.components.EditorPaneLinkDetector;
+import cz.cvut.felk.timejuggler.swing.models.NaiiveComboModel;
 import cz.cvut.felk.timejuggler.swing.renderers.ComboBoxRenderer;
 import org.jdesktop.swingx.JXDatePicker;
 

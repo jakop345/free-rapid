@@ -3,8 +3,8 @@ package cz.cvut.felk.timejuggler.gui.dialogs;
 import application.Application;
 import application.ApplicationContext;
 import application.ResourceMap;
-import cz.cvut.felk.timejuggler.swing.NaiiveComboModel;
 import cz.cvut.felk.timejuggler.swing.Swinger;
+import cz.cvut.felk.timejuggler.swing.models.NaiiveComboModel;
 
 import javax.swing.*;
 import java.awt.*;
