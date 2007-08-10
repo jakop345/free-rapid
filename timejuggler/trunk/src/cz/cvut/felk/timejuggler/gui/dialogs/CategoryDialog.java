@@ -15,6 +15,7 @@ import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.swing.components.ColorComboBox;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
 import org.izvin.client.desktop.ui.util.UIBeanEnhancer;
+import cz.cvut.felk.timejuggler.core.DataProvider;
 
 import javax.swing.*;
 import java.awt.*;
@@ -122,6 +123,7 @@ public class CategoryDialog extends AppDialog {
         //workaround
         if (!checkUseColor.isSelected())
             category.setColor(null);
+        DataProvider.getInstance().addCategory(category);
         setResult(RESULT_OK);
         doClose();
     }

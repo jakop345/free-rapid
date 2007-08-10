@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.util.Date;
+import java.awt.Color;
 
 import java.util.logging.Logger;
 /**
@@ -42,10 +43,13 @@ public class CalComponent extends DbElement {
     private int calendarId;
     private List<VAlarm> alarms;
     
+    private Categories _categories;
+    
     /*
      * nasobne properties
      */
     private List<Category> categories;
+    
     private List<Comment> comments;
     private List<Contact> contacts;
     private List<Attachment> attachments;
@@ -56,6 +60,7 @@ public class CalComponent extends DbElement {
 
     public CalComponent() {
 		dateTime = new DateTime();
+		_categories = new Categories();
     }
 
 	public void setComponentId(int componentId) {
@@ -203,6 +208,7 @@ public class CalComponent extends DbElement {
     		dateTime.saveOrUpdate(template);
     	}
 
+
     	if (getComponentId() > 0) {
     		logger.info("Database - Update: CalComponent[" + getId() + "]...");
     		//TODO : increment sequence
@@ -233,9 +239,13 @@ public class CalComponent extends DbElement {
     	
     	if (categories != null) {
     		for (Category c: categories) {
-    			c.setComponentId(getComponentId());
+    			//c.setComponentId(getComponentId());
     			c.saveOrUpdate(template);
     		}
+    	}
+    	if (_categories != null) {
+    		_categories.setComponentId(getComponentId());
+    		_categories.saveOrUpdate(template);
     	}
     	// TODO: comments
     	// TODO: attachments
@@ -310,12 +320,15 @@ public class CalComponent extends DbElement {
 	 *
 	 */
 	public List<Category> getCategories() {
-        String sql = "SELECT * FROM Category WHERE calComponentID = ?";
+        String sql = "SELECT * FROM Category,Categories WHERE Categories.calComponentID=? ";
         Object params[] = {getComponentId()};
         TimeJugglerJDBCTemplate<List<Category>> template = new TimeJugglerJDBCTemplate<List<Category>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
             	if (items == null) items = new ArrayList<Category>();
-                items.add(new Category(rs.getString("name")));
+            	Category c = new Category(rs.getString("name"));
+            	c.setId(rs.getInt("categoryID"));
+            	if (rs.getInt("color") != -1) c.setColor(new Color(rs.getInt("color"))); //-1 znamena bez barvy
+                items.add(c);
             }
         };
         template.executeQuery(sql, params);
@@ -325,6 +338,14 @@ public class CalComponent extends DbElement {
 	public void setCategories(List<Category> categories){
 		this.categories = categories;
 	}
+	
+	public void addCategory(Category cat){
+		_categories.addCategory(cat);
+	}
+	
+	public void removeCategory(Category cat){
+		_categories.removeCategory(cat);
+	}	
 
 	/**
 	 * Method getComments

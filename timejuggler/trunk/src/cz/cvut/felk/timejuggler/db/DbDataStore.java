@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
+import java.awt.Color;
 
 
 public class DbDataStore {
@@ -99,8 +100,12 @@ public class DbDataStore {
         }
 
         db.showDB();
-
-        ConnectionManager.getInstance().shutdown();
+		try {
+			ConnectionManager.getInstance().shutdown();
+	    }
+	    catch (SQLException e) {
+	    	LogUtils.processException(logger, e);
+	    }
     }
 
     /**
@@ -135,7 +140,12 @@ public class DbDataStore {
             LogUtils.processException(logger, e);
         }
         /* odpojeni databaze */
-        ConnectionManager.getInstance().shutdown();
+        try {
+        	ConnectionManager.getInstance().shutdown();
+	    }
+	    catch (SQLException ex) {
+	    	LogUtils.processException(logger, ex);
+	    }
         // konec programu
     }
 
@@ -211,6 +221,25 @@ public class DbDataStore {
                 cal.setVersion(rs.getString("version"));
                 cal.setName(rs.getString("name"));
                 items.add(cal);
+            }
+        };
+        template.executeQuery(sql, null);
+        return template.getItems();
+    }
+    /**
+     * Method getCategories
+     * @return
+     */
+    public List<Category> getCategories() {
+        String sql = "SELECT DISTINCT * FROM Category";
+        TimeJugglerJDBCTemplate<List<Category>> template = new TimeJugglerJDBCTemplate<List<Category>>() {
+            protected void handleRow(ResultSet rs) throws SQLException {
+            	if (items == null) items = new ArrayList<Category>();
+                Category cat = new Category();
+                cat.setId(rs.getInt("categoryID"));
+                if (rs.getInt("color") != -1) cat.setColor(new Color(rs.getInt("color"))); //-1 znamena bez barvy
+                cat.setName(rs.getString("name"));
+                items.add(cat);
             }
         };
         template.executeQuery(sql, null);
@@ -355,7 +384,7 @@ public class DbDataStore {
             /* Categories */
             prop = comp.getProperty(Property.CATEGORIES);
 
-            CategoryList catList = ((Categories) prop).getCategories();    // iCal
+            CategoryList catList = ((net.fortuna.ical4j.model.property.Categories) prop).getCategories();    // iCal
             List<Category> cats = new ArrayList<Category>();    // Timejuggler
             for (Iterator<?> it = catList.iterator(); it.hasNext();) {
                 cats.add(new Category(it.next().toString()));

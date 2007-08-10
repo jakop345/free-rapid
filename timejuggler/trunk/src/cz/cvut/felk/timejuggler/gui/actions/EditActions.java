@@ -5,10 +5,12 @@ import cz.cvut.felk.timejuggler.core.DataProvider;
 import cz.cvut.felk.timejuggler.core.MainApp;
 import cz.cvut.felk.timejuggler.db.DatabaseException;
 import cz.cvut.felk.timejuggler.db.entity.VCalendar;
+import cz.cvut.felk.timejuggler.db.entity.Category;
 import cz.cvut.felk.timejuggler.gui.dialogs.UserPreferencesDialog;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
 
 import java.util.logging.Logger;
+import java.awt.Color;
 
 /**
  * @author Vity
@@ -35,7 +37,25 @@ public class EditActions {
 
     @Action
     public void editEventOrTask() {
-        final DataProvider dataProvider = app.getDataProvider();
+    	final DataProvider dataProvider = app.getDataProvider();
+    	try {
+	        /*dataProvider.addCalendar(new VCalendar("Timejuggler"));
+	        dataProvider.addCalendar(new VCalendar("Svatky"));
+	        dataProvider.addCalendar(new VCalendar("Ostatni"));
+	        
+	        dataProvider.addCategory(new Category("Birthday", Color.YELLOW));
+	        dataProvider.addCategory(new Category("Anniversary", Color.BLUE));
+	        dataProvider.addCategory(new Category("Holidays"));*/
+	        
+	        
+	        
+	    }
+	    catch (DatabaseException e) {
+	    	LogUtils.processException(logger, e);
+	    	//TODO podpora pro zobrazeni error hlasky uzivateli
+	    }
+
+/*     	final DataProvider dataProvider = app.getDataProvider();
         try {
             dataProvider.addCalendar(new VCalendar("AAATimejuggler"));
         }
@@ -43,6 +63,7 @@ public class EditActions {
             LogUtils.processException(logger, e);
             //TODO podpora pro zobrazeni error hlasky uzivateli
         }
+*/
     }
 
     @Action

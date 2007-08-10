@@ -31,8 +31,8 @@ public class DataProvider {
     }
 
     public void init() {
-        //persitencyLayer = new DBPersistencyLayer();
-        persitencyLayer = new FakePersistencyLayer();
+        persitencyLayer = new DBPersistencyLayer();
+        //persitencyLayer = new FakePersistencyLayer();
     }
 
     //utilita, bude pozdeji presunuto, az jestli tohle bude potreba a budu vedet kam ;-)
@@ -62,7 +62,12 @@ public class DataProvider {
         getPersitencyLayer().saveOrUpdateCalendar(calendar);
         addNewCalendar(calendar);
     }
-
+    
+    public synchronized void addCategory(Category category) throws PersistencyLayerException {
+        getPersitencyLayer().saveOrUpdateCategory(category);
+        addNewCategory(category);
+    }
+    
     public void deleteCalendarsListModel() {//jen test
         calendars.clear();//jen test
     }
@@ -72,7 +77,12 @@ public class DataProvider {
         if (calendars != null)
             calendars.add((VCalendar) UIBeanEnhancer.enhance(calendar));
     }
-
+    
+    private void addNewCategory(Category category) {
+        if (categories != null)
+            categories.add((Category) UIBeanEnhancer.enhance(category));
+    }
+    
     private PersitencyLayer getPersitencyLayer() {
         return persitencyLayer;
     }

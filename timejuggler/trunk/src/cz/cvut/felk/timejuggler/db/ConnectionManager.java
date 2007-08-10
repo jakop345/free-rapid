@@ -72,7 +72,6 @@ public class ConnectionManager {
 
     public Connection getConnection() throws SQLException {
         if (connection == null) {
-            // je dobre pouzivat logovani, bude pak snazsi sledovat co se stalo pri chybe
             logger.info("Initializing connection to DB");
             try {
                 connection = DriverManager.getConnection(url, db_user, db_pass);
@@ -92,6 +91,7 @@ public class ConnectionManager {
 				    }
 				    catch (IOException e) {
 				    	LogUtils.processException(logger, e);
+			    		databasedirectory.delete();
 				    }
             	}
                 connection = DriverManager.getConnection(url /*+ create_url (nemelo by byt potreba)*/, db_user, db_pass);
@@ -101,18 +101,9 @@ public class ConnectionManager {
         return connection;
     }
 
-    public void shutdown() {
+    public void shutdown() throws SQLException {
         //TODO ma smysl povolit shutdown pokud je connection null?
-        try {
-            DriverManager.getConnection(url + ";shutdown=true");
-        }
-        catch (Exception ex) {
-            //ignore
-            //nikdy zadne ignore ;-), vyjimku vyexportit na metodu a o "patro" vyse se zaloguje
-            //podobne jako u getConnection
-        }
-
-
+        DriverManager.getConnection(url + ";shutdown=true");
     }
     
     /*

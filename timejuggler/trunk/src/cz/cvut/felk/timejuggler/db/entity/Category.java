@@ -63,7 +63,7 @@ public class Category extends DbElement implements Comparable, Cloneable {
             template.executeUpdate(updateQuery, params);
         } else {
             logger.info("Database - Insert: Category[]:" + name + "...");
-            Object params[] = {name, color == null ? null : color.getRGB()};
+            Object params[] = {name, color == null ? -1 : color.getRGB()};
             String insertQuery = "INSERT INTO Category (name,color) VALUES (?,?) ";
             template.executeUpdate(insertQuery, params);
             setId(template.getGeneratedId());
@@ -123,8 +123,5 @@ public class Category extends DbElement implements Comparable, Cloneable {
     }
 */
 
-	protected Object clone(){
-		Category newcat = new Category(name,color);
-		return newcat;
-	}
+
 }
