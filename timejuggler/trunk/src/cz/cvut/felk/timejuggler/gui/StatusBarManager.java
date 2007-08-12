@@ -5,6 +5,7 @@ import cz.cvut.felk.timejuggler.swing.components.ClockField;
 import org.jdesktop.swingx.JXStatusBar;
 
 import javax.swing.*;
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -12,12 +13,14 @@ import java.beans.PropertyChangeListener;
  * Sprava a vytvoreni Statusbaru
  * @author Vity
  */
-public class StatusBarManager {
+public class StatusBarManager implements PropertyChangeListener {
     private JXStatusBar statusbar;
-    private JProgressBar progressBar;
+    private JLabel infoLabel;
+    private final MainPanelManager panelManager;
 
 
-    public StatusBarManager(ApplicationContext context) {
+    public StatusBarManager(MainPanelManager panelManager, ApplicationContext context) {
+        this.panelManager = panelManager;
         final Action action = context.getActionMap().get("showStatusBar");
         action.putValue(Action.SELECTED_KEY, true); //defaultni hodnota
         action.addPropertyChangeListener(new PropertyChangeListener() {
@@ -34,11 +37,14 @@ public class StatusBarManager {
     public JXStatusBar getStatusBar() {
         if (statusbar == null) {
             statusbar = new JXStatusBar();
-            statusbar.setName("statusbarPanel");
-            progressBar = new JProgressBar();
 
-            statusbar.add(progressBar, JXStatusBar.Constraint.ResizeBehavior.FIXED);
-            statusbar.add(new JLabel(), JXStatusBar.Constraint.ResizeBehavior.FILL);
+            statusbar.setName("statusbarPanel");
+            infoLabel = new JLabel();
+            infoLabel.setPreferredSize(new Dimension(300, 15));
+            panelManager.getMenuManager().getMenuBar().addPropertyChangeListener("selectedText", this);
+            statusbar.add(infoLabel, JXStatusBar.Constraint.ResizeBehavior.FIXED);
+//            statusbar.add(progressBar, JXStatusBar.Constraint.ResizeBehavior.FIXED);
+            statusbar.add(Box.createGlue(), JXStatusBar.Constraint.ResizeBehavior.FILL);
             final ClockField comp = new ClockField();
             //    progressBar.setVisible(false);
             comp.setHorizontalAlignment(JLabel.CENTER);
@@ -50,5 +56,11 @@ public class StatusBarManager {
     private void setStatusBarVisible(boolean visible) {
         getStatusBar().setVisible(visible);
         //AppPrefs.storeProperty(AppPrefs.SHOW_STATUSBAR, visible); //ulozeni uzivatelskeho nastaveni
+    }
+
+    public void propertyChange(PropertyChangeEvent evt) {
+        if ("selectedText".equals(evt.getPropertyName())) {
+            infoLabel.setText(evt.getNewValue().toString());
+        }
     }
 }

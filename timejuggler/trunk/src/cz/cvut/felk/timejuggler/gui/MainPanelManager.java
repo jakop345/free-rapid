@@ -124,7 +124,7 @@ public class MainPanelManager {
 
     private StatusBarManager getStatusBarManager() {
         if (statusBarManager == null)
-            statusBarManager = new StatusBarManager(context);
+            statusBarManager = new StatusBarManager(this, context);
         return statusBarManager;
     }
 

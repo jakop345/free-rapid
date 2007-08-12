@@ -77,6 +77,12 @@ public class ToolbarManager {
         comp = getToggleButton(Swinger.getAction("monthView"));
         buttonGroup.add(comp);
         toolbar.add(comp);
+        toolbar.add(Box.createGlue());
+        final JLabel labelWorkingProgress = new JLabel();
+        labelWorkingProgress.setName("labelWorkingProgress");
+        labelWorkingProgress.setBorder(BorderFactory.createEmptyBorder(2, 10, 2, 10));
+        //label.setEnabled(false);
+        toolbar.add(labelWorkingProgress);
     }
 
     /**
@@ -107,7 +113,7 @@ public class ToolbarManager {
         button.setVerticalTextPosition(JButton.BOTTOM);
         button.setHorizontalTextPosition(JButton.CENTER);
         button.setMinimumSize(buttonDimension);
-        button.setPreferredSize(buttonDimension);
+        //button.setPreferredSize(buttonDimension);
 //        button.setMaximumSize(buttonDimension);
         button.setMnemonic(0);
         button.setFocusable(false);
@@ -117,7 +123,7 @@ public class ToolbarManager {
 
     private void setToolBarVisible(boolean visible) {
         toolbarPanel.setVisible(visible);
-        toolbar.setVisible(visible);
+        //toolbar.setVisible(visible);
         //  AppPrefs.storeProperty(AppPrefs.SHOW_TOOLBAR, visible); //ulozeni uzivatelskeho nastaveni, ale jen do hashmapy
     }
 }

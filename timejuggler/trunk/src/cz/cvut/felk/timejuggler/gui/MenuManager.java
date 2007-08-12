@@ -7,6 +7,9 @@ import cz.cvut.felk.timejuggler.gui.actions.*;
 import cz.cvut.felk.timejuggler.swing.Swinger;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.MenuListener;
 
 
 /**
@@ -16,6 +19,8 @@ import javax.swing.*;
 public class MenuManager {
     private JMenuBar menuBar;
     private final ApplicationContext context;
+    private MenuListener listener;
+    private static final String SELECTED_TEXT_PROPERTY = "selectedText";
 
     public MenuManager(final ApplicationContext context) {
         super();
@@ -66,12 +71,49 @@ public class MenuManager {
                 "about"
         };
 
+        MenuSelectionManager.defaultManager().addChangeListener(
+                new ChangeListener() {
+                    public void stateChanged(ChangeEvent evt) {
+                        // Get the selected menu or menu item
+                        MenuSelectionManager msm = (MenuSelectionManager) evt.getSource();
+                        MenuElement[] path = msm.getSelectedPath();
+                        // To interpret path, see
+                        // e813 Getting the Currently Selected Menu or Menu Item
+                        final StringBuilder builder = new StringBuilder();
+                        for (MenuElement menuElement : path) {
+                            if (!(menuElement.getComponent() instanceof JMenuItem))
+                                continue;
 
+                            JMenuItem menuItem = (JMenuItem) menuElement.getComponent();
+                            final Action action = menuItem.getAction();
+                            if (action == null)
+                                continue;
+                            final String longDescription = (String) action.getValue(Action.LONG_DESCRIPTION);
+                            if (longDescription != null) {
+                                if (builder.length() > 0)
+                                    builder.append(" - ");
+                                builder.append(longDescription);
+                            } else {
+                                final Object shortDescription = action.getValue(Action.SHORT_DESCRIPTION);
+                                if (shortDescription != null) {
+                                    if (builder.length() > 0)
+                                        builder.append(" - ");
+                                    builder.append(shortDescription);
+                                }
+                            }
+                        }
+                        menuBar.putClientProperty(SELECTED_TEXT_PROPERTY, builder.toString());
+                    }
+                }
+        );
         menuBar.add(createMenu("fileMenu", fileMenuActionNames));
         menuBar.add(createMenu("editMenu", editMenuActionNames));
         menuBar.add(createViewMenu());
         menuBar.add(createMenu("goMenu", goMenuActionNames));
         menuBar.add(createMenu("helpMenu", helpMenuActionNames));
+        menuBar.putClientProperty(SELECTED_TEXT_PROPERTY, "");
+
+
     }
 
     private void initActions(Object actionsObject) {
@@ -122,11 +164,12 @@ public class MenuManager {
         JMenu menu = new JMenu();
         menu.setName(menuName);
         for (Object actionName : actionNames) {
-            if (actionName.equals("---")) {
+            if ("---".equals(actionName)) {
                 menu.addSeparator();
             } else {
                 JMenuItem menuItem = new JMenuItem();
                 menuItem.setAction(Swinger.getAction(actionName));
+                menuItem.setToolTipText("");//showed in statusbar
                 menu.add(menuItem);
             }
         }
