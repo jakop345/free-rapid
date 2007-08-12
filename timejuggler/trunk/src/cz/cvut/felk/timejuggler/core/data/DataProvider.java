@@ -16,23 +16,18 @@ import java.util.List;
  */
 public class DataProvider {
 
-    private static DataProvider ourInstance = new DataProvider();
     private ArrayListModel<CategoryEntity> categories;
     private ArrayListModel<VCalendar> calendars;
-    PersitencyLayer persitencyLayer;
+    PersistencyLayer persistencyLayer;
 
-    public static DataProvider getInstance() {
-        return ourInstance;
-    }
-
-    private DataProvider() {
+    public DataProvider() {
         calendars = null; //lazy inicializace
         categories = null; //lazy inicializace
     }
 
     public void init() {
-        persitencyLayer = PersistencyLayerFactory.getInstance().getDefaultPersitencyLayer();
-        //persitencyLayer = new FakePersistencyLayer();
+        persistencyLayer = PersistencyLayerFactory.getInstance().getDefaultPersitencyLayer();
+        //persistencyLayer = new FakePersistencyLayer();
     }
 
     //utilita, bude pozdeji presunuto, az jestli tohle bude potreba a budu vedet kam ;-)
@@ -83,7 +78,7 @@ public class DataProvider {
             categories.add(UIBeanEnhancer.enhance(category));
     }
 
-    private PersitencyLayer getPersitencyLayer() {
-        return persitencyLayer;
+    private PersistencyLayer getPersitencyLayer() {
+        return persistencyLayer;
     }
 }

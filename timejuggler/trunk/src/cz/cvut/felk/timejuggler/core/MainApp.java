@@ -81,7 +81,7 @@ public class MainApp extends SingleXFrameApplication {
     @Override
     protected void initialize(String[] args) {
         filesToOpen = processArguments(args);
-        this.dataProvider = DataProvider.getInstance();
+        this.dataProvider = new DataProvider();
         this.dataProvider.init();
         LogUtils.initLogging(debug);
         // logger = Logger.getLogger(MainApp.class.getName());
