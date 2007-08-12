@@ -248,7 +248,7 @@ public class DbDataStore {
             }
         };
         template.executeQuery(sql, null);
-        return template.getItems();
+        return template.getItems() == null ? new ArrayList<CategoryEntity>() : template.getItems();
     }
 
     /**
