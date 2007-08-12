@@ -289,7 +289,7 @@ public class CalComponent extends DbElement {
                 if (items == null) items = new ArrayList<Attachment>();
                 Attachment attach = new Attachment();
                 attach.setAttach(rs.getString("name"));
-                attach.setIsBinary(rs.getInt("isBinary") == 1 ? true : false);
+                attach.setIsBinary(rs.getInt("isBinary") == 1);
                 items.add(attach);
             }
         };
@@ -498,9 +498,9 @@ public class CalComponent extends DbElement {
 
     public void setDateTime(DateTime dateTime) {
         this.dateTime = dateTime;
-	}
+    }
 
-	public DateTime getDateTime() {
-		return (this.dateTime); 
-	}
+    public DateTime getDateTime() {
+        return (this.dateTime);
+    }
 }
