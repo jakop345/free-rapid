@@ -4,7 +4,6 @@
 package cz.cvut.felk.timejuggler.core.data;
 
 import com.jgoodies.binding.list.ArrayListModel;
-import cz.cvut.felk.timejuggler.db.entity.Category;
 import cz.cvut.felk.timejuggler.db.entity.VCalendar;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.CategoryEntity;
 import org.izvin.client.desktop.ui.util.UIBeanEnhancer;
@@ -64,7 +63,7 @@ public class DataProvider {
         addNewCalendar(calendar);
     }
 
-    public synchronized void addCategory(Category category) throws PersistencyLayerException {
+    public synchronized void addCategory(CategoryEntity category) throws PersistencyLayerException {
         getPersitencyLayer().saveOrUpdateCategory(category);
         addNewCategory(category);
     }
@@ -79,7 +78,7 @@ public class DataProvider {
             calendars.add(UIBeanEnhancer.enhance(calendar));
     }
 
-    private void addNewCategory(Category category) {
+    private void addNewCategory(CategoryEntity category) {
         if (categories != null)
             categories.add(UIBeanEnhancer.enhance(category));
     }
