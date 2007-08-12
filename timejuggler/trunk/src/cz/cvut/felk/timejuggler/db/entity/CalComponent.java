@@ -49,7 +49,7 @@ public class CalComponent extends DbElement {
     /*
     * nasobne properties
     */
-    private List<Category> categories;
+    @Deprecated private List<Category> categories;
 
     private List<Comment> comments;
     private List<Contact> contacts;
@@ -315,24 +315,37 @@ public class CalComponent extends DbElement {
         Object params[] = {getComponentId()};
         TimeJugglerJDBCTemplate<List<Category>> template = new TimeJugglerJDBCTemplate<List<Category>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
-                if (items == null) items = new ArrayList<Category>();
-                Category c = new Category(rs.getString("name"));
-                c.setId(rs.getInt("categoryID"));
-                if (rs.getInt("color") != -1) c.setColor(new Color(rs.getInt("color"))); //-1 znamena bez barvy
+            	if (items == null) items = new ArrayList<Category>();
+            	Category c = new Category(rs.getString("name"));
+            	c.setId(rs.getInt("categoryID"));
+            	int col = rs.getInt("color");
+            	if (!rs.wasNull()) c.setColor(new Color(col));
                 items.add(c);
             }
         };
         template.executeQuery(sql, params);
         return template.getItems();
-    }
+	}
+	
+	@Deprecated public void setCategories(List<Category> categories){
+		this.categories = categories;
+	}
+	
+	public void addCategory(Category cat){
+		_categories.addCategory(cat);
+	}
+	
+	public void removeCategory(Category cat){
+		_categories.removeCategory(cat);
+	}	
 
-    public void setCategories(List<Category> categories) {
+/*    public void setCategories(List<Category> categories) {
         this.categories = categories;
-    }
+    }*/
 
-    public void addCategory(Category cat) {
+/*    public void addCategory(Category cat) {
         _categories.addCategory(cat);
-    }
+    }*/
 
     public void removeCategory(CategoryEntity cat) {
         _categories.removeCategory(cat);

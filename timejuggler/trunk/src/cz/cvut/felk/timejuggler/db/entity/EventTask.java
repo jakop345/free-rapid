@@ -172,8 +172,8 @@ public class EventTask extends CalComponent {
         percentcomplete = newVal;
     }
 
-    public Timestamp getCompleted() {
-        return completed;
+    public Date getCompleted() {
+        return new Date(completed.getTime());
     }
 
     /**
@@ -197,15 +197,6 @@ public class EventTask extends CalComponent {
         this.isTodo = !this.isTodo;
     }    
 
-	/*
-	 * pomocna funkce, TODO: asi zmenim Timestamp na Date
-	 */
-	private Timestamp getDue(){
-		
-		return new Timestamp(getEndDate().getTime());
-	}
-
-	
 	public void setIsTodo(boolean isTodo) {
 		this.isTodo = isTodo; 
 	}

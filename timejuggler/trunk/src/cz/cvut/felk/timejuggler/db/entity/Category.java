@@ -65,7 +65,7 @@ public class Category extends DbElement implements Comparable<CategoryEntity>, C
      * @param template
      */
     public void saveOrUpdate(TimeJugglerJDBCTemplate template) {
-        //TODO: pridat ukladani barvy - barva se da ukladat jednoduse jako string - search google Color.decode
+        //TODO: pridat ukladani barvy (hotovo) - barva se da ukladat jednoduse jako string - search google Color.decode - uz je to jako int,.. :)
         if (isAssigned()) {
             logger.info("Database - Update: Category[" + getId() + "]:" + name + "...");
             Object params[] = {name, color == null ? null : color.getRGB(), getId()};
@@ -73,7 +73,8 @@ public class Category extends DbElement implements Comparable<CategoryEntity>, C
             template.executeUpdate(updateQuery, params);
         } else {
             logger.info("Database - Insert: Category[]:" + name + "...");
-            Object params[] = {name, color == null ? -1 : color.getRGB()};//TODO proc je tady -1 a nahore null??
+            Object params[] = {name, color == null ? null : color.getRGB()};
+            //Object params[] = {name, color == null ? -1 : color.getRGB()};//TODO proc je tady -1 a nahore null?? chybka, puvodne sem nevedel jak na to
             String insertQuery = "INSERT INTO Category (name,color) VALUES (?,?) ";
             template.executeUpdate(insertQuery, params);
             setId(template.getGeneratedId());
@@ -132,5 +133,8 @@ public class Category extends DbElement implements Comparable<CategoryEntity>, C
         return clone;
     }
 
+	public String toString(){
+		return this.name;
+	}
 
 }
