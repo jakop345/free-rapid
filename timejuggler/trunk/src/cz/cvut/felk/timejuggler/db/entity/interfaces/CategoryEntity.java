@@ -5,7 +5,7 @@ import java.awt.*;
 /**
  * @author Vity
  */
-public interface CategoryEntity extends BasicEntity {
+public interface CategoryEntity extends EntityElement {
     boolean hasAssignedColor();
 
     Color getColor();
