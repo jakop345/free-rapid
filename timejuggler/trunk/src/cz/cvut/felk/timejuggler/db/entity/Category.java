@@ -1,6 +1,6 @@
 package cz.cvut.felk.timejuggler.db.entity;
 
-import cz.cvut.felk.timejuggler.db.*;
+import cz.cvut.felk.timejuggler.db.TimeJugglerJDBCTemplate;
 
 import java.awt.*;
 import java.util.logging.Logger;
@@ -12,12 +12,10 @@ import java.util.logging.Logger;
  * <p/>
  * Reprezentuje kategorii eventu nebo tasku.. Hotovo
  */
-public class Category extends DbElement implements Comparable, Cloneable {
+public class Category extends DbElement {
     private final static Logger logger = Logger.getLogger(Category.class.getName());
 
-    private String name;
-
-    //private int componentId = -1;
+    private String name = "";
 
     private Color color = null;
 
@@ -26,12 +24,12 @@ public class Category extends DbElement implements Comparable, Cloneable {
     }
 
     public Category(String name) {
-        this.name = name;
+        setName(name);
     }
 
     public Category(String name, Color color) {
         this(name);
-        this.color = color;
+        setColor(color);
     }
 
     public boolean hasAssignedColor() {
@@ -55,7 +53,7 @@ public class Category extends DbElement implements Comparable, Cloneable {
      * @param template
      */
     public void saveOrUpdate(TimeJugglerJDBCTemplate template) {
-    	//TODO: pridat ukladani barvy
+        //TODO: pridat ukladani barvy - barva se da ukladat jednoduse jako string - search google Color.decode
         if (getId() > 0) {
             logger.info("Database - Update: Category[" + getId() + "]:" + name + "...");
             Object params[] = {name, color == null ? null : color.getRGB(), getId()};
@@ -63,7 +61,7 @@ public class Category extends DbElement implements Comparable, Cloneable {
             template.executeUpdate(updateQuery, params);
         } else {
             logger.info("Database - Insert: Category[]:" + name + "...");
-            Object params[] = {name, color == null ? -1 : color.getRGB()};
+            Object params[] = {name, color == null ? -1 : color.getRGB()};//TODO proc je tady -1 a nahore null??
             String insertQuery = "INSERT INTO Category (name,color) VALUES (?,?) ";
             template.executeUpdate(insertQuery, params);
             setId(template.getGeneratedId());
@@ -86,21 +84,10 @@ public class Category extends DbElement implements Comparable, Cloneable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
-        Category category = (Category) o;
-        return /*componentId == category.componentId &&*/ name.equals(category.name);
+        final Category category = (Category) o;
+        return getId() == category.getId() && name.equals(category.getName());
     }
 
-    public int hashCode() {
-        int result;
-        result = name.hashCode();
-        result = 31 * result /*+ componentId*/;
-        return result;
-    }
-
-    public int compareTo(Object o) {
-        return getName().compareTo(((Category) o).getName()); //pridat i podporu pro componentId? NE
-    }
 
     public String getName() {
         return name;
@@ -110,6 +97,8 @@ public class Category extends DbElement implements Comparable, Cloneable {
      * @param newVal
      */
     public void setName(String newVal) {
+        if (newVal == null)
+            throw new IllegalArgumentException("Name cannot be null!");
         name = newVal;
     }
 
@@ -122,6 +111,16 @@ public class Category extends DbElement implements Comparable, Cloneable {
         return (this.componentId);
     }
 */
+
+    public Object clone() throws CloneNotSupportedException {
+        Category clone;
+        try {
+            clone = (Category) super.clone();
+        } catch (CloneNotSupportedException e) {
+            return null;
+        }
+        return clone;
+    }
 
 
 }
