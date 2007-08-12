@@ -1,11 +1,12 @@
 /**
  * @author Vity
  */
-package cz.cvut.felk.timejuggler.core;
+package cz.cvut.felk.timejuggler.core.data;
 
 import com.jgoodies.binding.list.ArrayListModel;
 import cz.cvut.felk.timejuggler.db.entity.Category;
 import cz.cvut.felk.timejuggler.db.entity.VCalendar;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.CategoryEntity;
 import org.izvin.client.desktop.ui.util.UIBeanEnhancer;
 
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.List;
 public class DataProvider {
 
     private static DataProvider ourInstance = new DataProvider();
-    private ArrayListModel<Category> categories;
+    private ArrayListModel<CategoryEntity> categories;
     private ArrayListModel<VCalendar> calendars;
     PersitencyLayer persitencyLayer;
 
@@ -31,7 +32,7 @@ public class DataProvider {
     }
 
     public void init() {
-        persitencyLayer = new DBPersistencyLayer();
+        persitencyLayer = PersistencyLayerFactory.getInstance().getDefaultPersitencyLayer();
         //persitencyLayer = new FakePersistencyLayer();
     }
 
@@ -39,12 +40,12 @@ public class DataProvider {
     private <C> ArrayListModel<C> enhanceToBeans(List<C> list) {
         final ArrayListModel<C> listModel = new ArrayListModel<C>();
         for (C item : list) {
-            listModel.add((C) UIBeanEnhancer.enhance(item));
+            listModel.add(UIBeanEnhancer.enhance(item));
         }
         return listModel;
     }
 
-    public synchronized ArrayListModel<Category> getCategoriesListModel() {
+    public synchronized ArrayListModel<CategoryEntity> getCategoriesListModel() {
         if (categories == null) {
             categories = enhanceToBeans(getPersitencyLayer().getCategories());
         }
@@ -62,12 +63,12 @@ public class DataProvider {
         getPersitencyLayer().saveOrUpdateCalendar(calendar);
         addNewCalendar(calendar);
     }
-    
+
     public synchronized void addCategory(Category category) throws PersistencyLayerException {
         getPersitencyLayer().saveOrUpdateCategory(category);
         addNewCategory(category);
     }
-    
+
     public void deleteCalendarsListModel() {//jen test
         calendars.clear();//jen test
     }
@@ -75,14 +76,14 @@ public class DataProvider {
 
     private void addNewCalendar(VCalendar calendar) {
         if (calendars != null)
-            calendars.add((VCalendar) UIBeanEnhancer.enhance(calendar));
+            calendars.add(UIBeanEnhancer.enhance(calendar));
     }
-    
+
     private void addNewCategory(Category category) {
         if (categories != null)
-            categories.add((Category) UIBeanEnhancer.enhance(category));
+            categories.add(UIBeanEnhancer.enhance(category));
     }
-    
+
     private PersitencyLayer getPersitencyLayer() {
         return persitencyLayer;
     }
