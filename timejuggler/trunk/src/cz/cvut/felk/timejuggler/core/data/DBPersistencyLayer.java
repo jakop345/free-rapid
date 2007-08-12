@@ -42,4 +42,8 @@ class DBPersistencyLayer implements PersistencyLayer {
     public CategoryEntity getNewCategory() {
         return new Category();
     }
+
+    public void removeCategory(CategoryEntity categoryEntity) throws PersistencyLayerException {
+        dbStore.delete((Category) categoryEntity);
+    }
 }

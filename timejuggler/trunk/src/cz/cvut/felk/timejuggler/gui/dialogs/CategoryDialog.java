@@ -33,9 +33,9 @@ public class CategoryDialog extends AppDialog {
     private static final String PROPERTY_COLOR = "color";
 
     //TODO pridat ikonu pro dialog
-    public CategoryDialog(Frame owner, CategoryEntity categoryEntity) throws HeadlessException {
+    public CategoryDialog(Frame owner, CategoryEntity categoryEntity, final boolean isNew) throws HeadlessException {
         super(owner, true);
-        this.newCategory = categoryEntity == null;
+        this.newCategory = isNew;
         this.category = categoryEntity;
         this.setName("CategoryDialog");
 
@@ -123,6 +123,7 @@ public class CategoryDialog extends AppDialog {
         if (!checkUseColor.isSelected())
             category.setColor(null);
         //   DataProvider.getInstance().addCategory(category);
+        category.setChanged(true);
         setResult(RESULT_OK);
         doClose();
     }

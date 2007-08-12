@@ -19,6 +19,9 @@ public class Category extends DbElement implements Comparable<CategoryEntity>, C
     private String name = "";
 
     private Color color = null;
+    public final static String PROPERTYNAME_NAME = "name";
+    public final static String PROPERTYNAME_COLOR = "color";
+
 
     public Category() {
         super();//dodrzovat volani predka v konstruktoru
@@ -34,6 +37,11 @@ public class Category extends DbElement implements Comparable<CategoryEntity>, C
         setColor(color);
     }
 
+    public Category(String name, Color color, int id) {
+        this(name, color);
+        setId(id);
+    }
+
     public boolean hasAssignedColor() {
         return color != null;
     }
@@ -43,7 +51,9 @@ public class Category extends DbElement implements Comparable<CategoryEntity>, C
     }
 
     public void setColor(Color color) {
+        Color oldValue = getColor();
         this.color = color;
+        firePropertyChange(PROPERTYNAME_COLOR, oldValue, color);
     }
 
     public void store() {
@@ -93,7 +103,7 @@ public class Category extends DbElement implements Comparable<CategoryEntity>, C
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         final Category category = (Category) o;
-        return getId() == category.getId() && name.equals(category.getName());
+        return getId() == category.getId() /*&& name.equals(category.getName())*/;
     }
 
 
@@ -107,7 +117,9 @@ public class Category extends DbElement implements Comparable<CategoryEntity>, C
     public void setName(String newVal) {
         if (newVal == null)
             throw new IllegalArgumentException("Name cannot be null!");
+        final String oldVal = getName();
         name = newVal;
+        firePropertyChange(PROPERTYNAME_NAME, oldVal, name);
     }
 
     public Object clone() throws CloneNotSupportedException {

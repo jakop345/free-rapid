@@ -18,7 +18,6 @@ import com.l2fprod.common.swing.JButtonBar;
 import com.l2fprod.common.swing.plaf.blue.BlueishButtonBarUI;
 import cz.cvut.felk.timejuggler.core.AppPrefs;
 import cz.cvut.felk.timejuggler.core.MainApp;
-import cz.cvut.felk.timejuggler.db.entity.Category;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.CategoryEntity;
 import cz.cvut.felk.timejuggler.gui.MyPreferencesAdapter;
 import cz.cvut.felk.timejuggler.gui.MyPresentationModel;
@@ -26,7 +25,6 @@ import cz.cvut.felk.timejuggler.swing.ComponentFactory;
 import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.swing.renderers.ColorTableCellRenderer;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
-import org.izvin.client.desktop.ui.util.UIBeanEnhancer;
 import org.jdesktop.swingx.JXTable;
 
 import javax.swing.*;
@@ -53,7 +51,7 @@ public class UserPreferencesDialog extends AppDialog {
     private static final String CARD_PROPERTY = "card";
     private ApplyPreferenceChangeListener prefListener;
     private JCheckBox checkPlaySound;
-    private SelectionInList<Category> inList;
+    private SelectionInList<CategoryEntity> inList;
     private CategoryManager categoriesManager;
 
     private static enum Card {
@@ -83,7 +81,7 @@ public class UserPreferencesDialog extends AppDialog {
         return btnOK;
     }
 
-    private void build() {
+    private void build() throws CloneNotSupportedException {
         inject();
         buildGUI();
         buildModels();
@@ -104,8 +102,6 @@ public class UserPreferencesDialog extends AppDialog {
 
     private void buildGUI() {
         toolbar.setUI(new BlueishButtonBarUI());//nenechat to default?
-
-        //inicializace categories tabulky
 
         final ActionMap map = getActionMap();
 
@@ -165,28 +161,29 @@ public class UserPreferencesDialog extends AppDialog {
     }
 
 
-    private void buildModels() {
-        final Trigger trigger = new Trigger();
-        model = new MyPresentationModel(null, trigger);
-        final MainApp app = MainApp.getInstance(MainApp.class);
-        categoriesManager = new CategoryManager(app.getDataProvider().getCategoriesListModel(), true);
-//        CategoryManager bufferedCategoriesManager = new CategoryManager(categoriesManager.getManagedCategories(), false);
-//
-        inList = new SelectionInList<Category>(categoriesManager.getManagedCategories());
-//        inList.add
+    private void buildModels() throws CloneNotSupportedException {
 
-        prefListener = new ApplyPreferenceChangeListener();
-        AppPrefs.getPreferences().addPreferenceChangeListener(prefListener);
+        //inicializace categories tabulky
+        categoriesManager = new CategoryManager(getApp().getDataProvider().getCategoriesListModel(), true);
+        model = new MyPresentationModel(null, new Trigger());
+
+        inList = new SelectionInList<CategoryEntity>(categoriesManager.getManagedCategories());
 
         final CategoriesTableModel tableModel = new CategoriesTableModel(inList);
+
         tableCategories.setModel(tableModel);
+        //  tableCategories.setSortOrder(0, ASCENDING);
         tableCategories.setSelectionModel(new SingleListSelectionAdapter(inList.getSelectionIndexHolder()));
 
         tableCategories.addMouseListener(new DoubleClickHandler());
-        Swinger.updateColumn(tableCategories, "Name", 0, 350, null);
-        Swinger.updateColumn(tableCategories, "Color", 1, 50, new ColorTableCellRenderer());
 
+        //nastaveni sloupcu
+        final ResourceMap resourceMap = getResourceMap();
+        Swinger.updateColumn(tableCategories, resourceMap.getString("tableCategories.column.name"), 0, 350, null);
+        Swinger.updateColumn(tableCategories, resourceMap.getString("tableCategories.column.color"), 1, 50, new ColorTableCellRenderer());
 
+        prefListener = new ApplyPreferenceChangeListener();
+        AppPrefs.getPreferences().addPreferenceChangeListener(prefListener);
         bindBasicComponents();
 
         final ActionMap map = getActionMap();
@@ -196,9 +193,6 @@ public class UserPreferencesDialog extends AppDialog {
 
         initEventHandling();
 
-        Category bean = new Category("kjjj");
-        bean = (Category) UIBeanEnhancer.enhance(bean);
-        UIBeanEnhancer.enhance(bean);
     }
 
     private void bindBasicComponents() {
@@ -269,6 +263,8 @@ public class UserPreferencesDialog extends AppDialog {
     @application.Action
     public void okBtnAction() {
         model.triggerCommit();
+        if (categoriesManager.isListChanged())
+            getApp().getDataProvider().synchronizeCategoriesFromList(categoriesManager.getCategoriesList());
         doClose();
     }
 
@@ -308,26 +304,38 @@ public class UserPreferencesDialog extends AppDialog {
 
     @application.Action
     public void btnCategoryAddAction() {
-        boolean canceled = openCategoryEditor(null);
+        final CategoryEntity newCategory = app.getDataProvider().getNewCategory();
+        boolean canceled = openCategoryEditor(newCategory, true);
         if (!canceled) {
-            //getCategorySelection().
-            getCategorySelection().fireSelectedContentsChanged();
+            categoriesManager.addItem(newCategory);
+            getCategorySelection().setSelection(newCategory);
+            categoriesListChanged();
         }
     }
 
 
     @application.Action
     public void btnCategoryRemoveAction() {
-
+        categoriesManager.removeItem(getSelectedItem());
+        categoriesListChanged();
+        if (inList.isEmpty()) {
+            inList.setSelectionIndex(0);
+        }
     }
 
     @application.Action
     public void btnCategoryEditAction() {
-        boolean canceled = openCategoryEditor(getSelectedItem());
+        boolean canceled = openCategoryEditor(getSelectedItem(), false);
         if (!canceled) {
-            getCategorySelection().fireSelectedContentsChanged();
+            categoriesListChanged();
         }
     }
+
+    private void categoriesListChanged() {
+        getCategorySelection().fireSelectedContentsChanged();
+        btnOK.getAction().setEnabled(true);
+    }
+
 
     @application.Action
     public void btnUseDefaultSoundAction() {
@@ -347,7 +355,8 @@ public class UserPreferencesDialog extends AppDialog {
 
     @Override
     public void doClose() {
-        AppPrefs.getPreferences().removePreferenceChangeListener(prefListener);
+        if (prefListener != null)
+            AppPrefs.getPreferences().removePreferenceChangeListener(prefListener);
         final SelectionInList list = getCategorySelection();
         if (list != null)
             list.release();
@@ -984,7 +993,7 @@ public class UserPreferencesDialog extends AppDialog {
     private JComboBox comboTimeUnitEvent;
     private JSpinner spinnerDefaultTimeBeforeTask;
     private JComboBox comboTimeUnitTask;
-    private JTable tableCategories;
+    private JXTable tableCategories;
     private JButton btnCategoryAdd;
     private JButton btnCategoryEdit;
     private JButton btnCategoryRemove;
@@ -1069,7 +1078,7 @@ public class UserPreferencesDialog extends AppDialog {
         btnCategoryRemove.getAction().setEnabled(hasSelection);
     }
 
-    private SelectionInList<Category> getCategorySelection() {
+    private SelectionInList<CategoryEntity> getCategorySelection() {
         return inList;
     }
 
@@ -1077,10 +1086,9 @@ public class UserPreferencesDialog extends AppDialog {
         return inList.getSelection();
     }
 
-    private boolean openCategoryEditor(CategoryEntity selectedItem) {
-        final MainApp instance = MainApp.getInstance(MainApp.class);
-        final CategoryDialog dialog = new CategoryDialog((Frame) this.getOwner(), selectedItem);
-        instance.prepareDialog(dialog, true);
+    private boolean openCategoryEditor(CategoryEntity selectedItem, final boolean isNew) {
+        final CategoryDialog dialog = new CategoryDialog((Frame) this.getOwner(), selectedItem, isNew);
+        getApp().prepareDialog(dialog, true);
         return dialog.getModalResult() == RESULT_CANCEL;
     }
 
@@ -1105,4 +1113,5 @@ public class UserPreferencesDialog extends AppDialog {
             updateActionEnablement();
         }
     }
+
 }

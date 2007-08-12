@@ -3,6 +3,7 @@ package cz.cvut.felk.timejuggler.gui.dialogs;
 import application.Application;
 import application.ApplicationContext;
 import application.ResourceMap;
+import cz.cvut.felk.timejuggler.core.MainApp;
 import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.swing.models.NaiiveComboModel;
 
@@ -17,11 +18,12 @@ abstract class AppDialog extends JDialog {
     public final static int RESULT_OK = 0;
     final static int RESULT_CANCEL = 1;
     int result = RESULT_CANCEL;
-
+    protected MainApp app;
 //    private final boolean closeOnCancel = true;
 
     public AppDialog(final Frame owner, final boolean modal) throws HeadlessException {
         super(owner, modal);
+        this.app = MainApp.getInstance(MainApp.class);
     }
 
     public void doClose() {
@@ -38,6 +40,11 @@ abstract class AppDialog extends JDialog {
 
     protected AbstractButton getBtnOK() {
         return null;
+    }
+
+
+    public MainApp getApp() {
+        return app;
     }
 
     protected void inject() {

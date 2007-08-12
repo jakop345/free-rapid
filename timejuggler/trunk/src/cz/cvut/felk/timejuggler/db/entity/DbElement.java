@@ -1,5 +1,6 @@
 package cz.cvut.felk.timejuggler.db.entity;
 
+import com.jgoodies.binding.beans.Model;
 import cz.cvut.felk.timejuggler.db.TimeJugglerJDBCTemplate;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.EntityElement;
 
@@ -8,18 +9,19 @@ import cz.cvut.felk.timejuggler.db.entity.interfaces.EntityElement;
  * @version 0.1
  * @created 14-IV-2007 15:35:01
  */
-public abstract class DbElement implements EntityElement {
+public abstract class DbElement extends Model implements EntityElement {
 
     private int id = -1;
     private boolean changed = false;
-
+    private final static String PROPERTYNAME_CHANGED = "changed";
+    private final static String PROPERTYNAME_ID = "id";
 
     public DbElement() {
 
     }
 
     public DbElement(int id) {
-        this.id = id;
+        setId(id);
     }
 
     public int getId() {
@@ -27,7 +29,9 @@ public abstract class DbElement implements EntityElement {
     }
 
     public void setId(int newVal) {
+        int oldValue = getId();
         id = newVal;
+        firePropertyChange(PROPERTYNAME_ID, oldValue, newVal);
     }
 
     public boolean isChanged() {
@@ -35,7 +39,9 @@ public abstract class DbElement implements EntityElement {
     }
 
     public void setChanged(boolean changed) {
+        boolean oldValue = isChanged();
         this.changed = changed;
+        firePropertyChange(PROPERTYNAME_CHANGED, oldValue, changed);
     }
 
     public boolean equals(Object o) {

@@ -22,4 +22,6 @@ public interface PersistencyLayer {
     List<CategoryEntity> getCategories() throws PersistencyLayerException;
 
     CategoryEntity getNewCategory();
+
+    void removeCategory(CategoryEntity categoryEntity) throws PersistencyLayerException;
 }

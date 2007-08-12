@@ -15,4 +15,6 @@ public interface CategoryEntity extends EntityElement {
     String getName();
 
     void setName(String newVal);
+
+    Object clone() throws CloneNotSupportedException;
 }

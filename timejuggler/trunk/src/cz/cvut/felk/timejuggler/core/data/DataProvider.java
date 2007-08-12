@@ -19,10 +19,12 @@ public class DataProvider {
     private ArrayListModel<CategoryEntity> categories;
     private ArrayListModel<VCalendar> calendars;
     PersistencyLayer persistencyLayer;
+    private boolean categoriesInit = false;
+    private boolean calendarsInit = false;
+
 
     public DataProvider() {
-        calendars = null; //lazy inicializace
-        categories = null; //lazy inicializace
+        categories = new ArrayListModel<CategoryEntity>();
     }
 
     public void init() {
@@ -31,6 +33,7 @@ public class DataProvider {
     }
 
     //utilita, bude pozdeji presunuto, az jestli tohle bude potreba a budu vedet kam ;-)
+    @Deprecated
     private <C> ArrayListModel<C> enhanceToBeans(List<C> list) {
         final ArrayListModel<C> listModel = new ArrayListModel<C>();
         for (C item : list) {
@@ -39,9 +42,37 @@ public class DataProvider {
         return listModel;
     }
 
+    public CategoryEntity getNewCategory() {
+        return getPersitencyLayer().getNewCategory();
+    }
+
+    /**
+     * Zesynchronizuje seznam kategorii na novy seznam kategorii. Odstranene ze seznamu opravdu, nezmenene necha byt. Na
+     * konci provede celkovy reload v databazi. //TBD melo by se to upravovat dualne?
+     * @param items novy seznam kategorii
+     */
+    public void synchronizeCategoriesFromList(List<CategoryEntity> items) {
+        final List<CategoryEntity> categoriesListModel = getCategoriesListModel();
+        for (CategoryEntity categoryEntity : categoriesListModel) {
+            if (!items.contains(categoryEntity)) {
+                getPersitencyLayer().removeCategory(categoryEntity);
+            }
+        }
+        for (CategoryEntity item : items) {
+            if (item.isChanged()) {
+                getPersitencyLayer().saveOrUpdateCategory(item);
+            }
+        }
+        categoriesListModel.clear();//smaze vsechny kategorie v globalnim seznamu
+        categoriesInit = false;
+        getCategoriesListModel();
+    }
+
+
     public synchronized ArrayListModel<CategoryEntity> getCategoriesListModel() {
-        if (categories == null) {
-            categories = enhanceToBeans(getPersitencyLayer().getCategories());
+        if (!categoriesInit) {
+            categories.addAll(getPersitencyLayer().getCategories());
+            categoriesInit = true;
         }
         return categories;
     }

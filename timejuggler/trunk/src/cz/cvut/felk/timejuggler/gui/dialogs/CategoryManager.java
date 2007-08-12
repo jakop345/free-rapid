@@ -1,10 +1,12 @@
 package cz.cvut.felk.timejuggler.gui.dialogs;
 
 import com.jgoodies.binding.list.ArrayListModel;
-import cz.cvut.felk.timejuggler.db.entity.Category;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.CategoryEntity;
 
 import javax.swing.*;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,19 +20,22 @@ public class CategoryManager {
      * In a real world application this List may be kept in synch with a database.
      */
     private final ArrayListModel<CategoryEntity> managedCategories;
+    private boolean listChanged = false;
 
     // Instance Creation ******************************************************
 
     /**
      * Constructs a CategoryManager for the given list of Categories.
      */
-    public CategoryManager(List<CategoryEntity> categories, final boolean cloneObjects) {
+    public CategoryManager(List<CategoryEntity> categories, final boolean cloneObjects) throws CloneNotSupportedException {
         if (cloneObjects) {
+            this.managedCategories = new ArrayListModel<CategoryEntity>();
             for (CategoryEntity categoryEntity : categories) {
-
+                this.managedCategories.add((CategoryEntity) categoryEntity.clone());
             }
-        }
-        this.managedCategories = new ArrayListModel<CategoryEntity>(categories);
+        } else
+            this.managedCategories = new ArrayListModel<CategoryEntity>(categories);
+        this.managedCategories.addListDataListener(new CategoryDataListener());
     }
 
     // Exposing the ListModel of Categories ****************************************
@@ -39,34 +44,46 @@ public class CategoryManager {
         return managedCategories;
     }
 
+    public List<CategoryEntity> getCategoriesList() {
+        return new ArrayList(managedCategories);
+    }
+
     // Managing Categories *********************************************************
 
     /**
-     * Creates and return a new Category.
-     * @return the new Category
-     */
-    public CategoryEntity createItem() {
-        return new Category();
-    }
-
-
-    /**
-     * Adds the given Category to the List of managed Categories and notifies observers of the managed Categories
+     * Adds the given CategoryEntity to the List of managed Categories and notifies observers of the managed Categories
      * ListModel about the change.
-     * @param CategoryToAdd the Category to add
+     * @param CategoryToAdd the CategoryEntityto add
      */
-    public void addItem(Category categoryToAdd) {
+    public void addItem(CategoryEntity categoryToAdd) {
         managedCategories.add(categoryToAdd);
     }
 
 
     /**
-     * Removes the given Category from the List of managed Categories and notifies observers of the managed
+     * Removes the given CategoryEntityfrom the List of managed Categories and notifies observers of the managed
      * Categories ListModel about the change.
-     * @param CategoryToRemove the Category to remove
+     * @param CategoryToRemove the CategoryEntityto remove
      */
     public void removeItem(CategoryEntity categoryToRemoveEntity) {
         managedCategories.remove(categoryToRemoveEntity);
     }
 
+    private class CategoryDataListener implements ListDataListener {
+        public void intervalAdded(ListDataEvent e) {
+            contentsChanged(e);
+        }
+
+        public void intervalRemoved(ListDataEvent e) {
+            contentsChanged(e);
+        }
+
+        public void contentsChanged(ListDataEvent e) {
+            listChanged = true;
+        }
+    }
+
+    public boolean isListChanged() {
+        return listChanged;
+    }
 }

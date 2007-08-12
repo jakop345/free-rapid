@@ -14,7 +14,7 @@ class PersistencyLayerFactory {
     }
 
     public synchronized PersistencyLayer getDefaultPersitencyLayer() {
-        //return new DBPersistencyLayer();
-        return new FakePersistencyLayer();
+        return new DBPersistencyLayer();
+        //return new FakePersistencyLayer();
     }
 }

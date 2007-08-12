@@ -300,6 +300,17 @@ public class DbDataStore {
         template.commit();
     }
 
+    /**
+     * Method delete
+     */
+    //TODO nejak generalizovat pro vsechny potomky DBElementu pokud mozno
+    public void delete(Category component) throws DatabaseException {
+        // Odstraneni Eventu nebo Ukolu z kalendare
+        TimeJugglerJDBCTemplate template = new TimeJugglerJDBCTemplate();
+        component.delete(template);
+        template.commit();
+    }
+
 
     /**
      * Method importICS

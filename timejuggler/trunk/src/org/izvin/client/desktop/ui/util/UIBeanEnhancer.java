@@ -12,7 +12,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 
-
+@Deprecated
 public class UIBeanEnhancer {
     //  private final static Logger logger = Logger.getLogger(UIBeanEnhancer.class.getName());
     /**

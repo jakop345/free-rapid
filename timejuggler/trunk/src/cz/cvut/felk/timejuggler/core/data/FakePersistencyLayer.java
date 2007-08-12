@@ -15,7 +15,11 @@ import java.util.List;
  * @author Vity
  */
 class FakePersistencyLayer implements PersistencyLayer {
+    private final List<CategoryEntity> fakeListCategories;
+    private static int categoryId = 1;//emulace idcka
+
     FakePersistencyLayer() {
+        fakeListCategories = new ArrayList<CategoryEntity>();
     }
 
     public List<VCalendar> getCalendars() throws PersistencyLayerException {
@@ -39,12 +43,13 @@ class FakePersistencyLayer implements PersistencyLayer {
 
 
     public List<CategoryEntity> getCategories() throws PersistencyLayerException {
-        final List<CategoryEntity> list = new ArrayList<CategoryEntity>();
-        list.add(new Category("Svatky", Color.BLUE));
-        list.add(new Category("Ukoly", Color.GREEN));
-        list.add(new Category("Skola"));
-        list.add(new Category("PARy"));
-        return list;
+        if (!fakeListCategories.isEmpty())
+            return fakeListCategories;
+        fakeListCategories.add(new Category("Svatky", Color.BLUE, ++categoryId));//jednoducha simulace databaze
+        fakeListCategories.add(new Category("Ukoly", Color.GREEN, ++categoryId));
+        fakeListCategories.add(new Category("Skola", null, ++categoryId));
+        fakeListCategories.add(new Category("PARy", null, ++categoryId));
+        return fakeListCategories;
     }
 
     public CategoryEntity getNewCategory() {
@@ -53,6 +58,14 @@ class FakePersistencyLayer implements PersistencyLayer {
 
     public void saveOrUpdateCategory(CategoryEntity category) throws PersistencyLayerException {
         final Category cat = (Category) category;
+        if (!fakeListCategories.contains(category)) {
+            fakeListCategories.add(category);
+            cat.setId(++categoryId);
+        }
         cat.setChanged(false);
+    }
+
+    public void removeCategory(CategoryEntity categoryEntity) throws PersistencyLayerException {
+        fakeListCategories.remove(categoryEntity);
     }
 }
