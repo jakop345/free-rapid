@@ -53,6 +53,7 @@ public class DataProvider {
      */
     public void synchronizeCategoriesFromList(List<CategoryEntity> items) {
         final List<CategoryEntity> categoriesListModel = getCategoriesListModel();
+        assert categoriesInit;
         for (CategoryEntity categoryEntity : categoriesListModel) {
             if (!items.contains(categoryEntity)) {
                 getPersitencyLayer().removeCategory(categoryEntity);

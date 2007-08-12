@@ -35,7 +35,7 @@ public class CategoryManager {
             }
         } else
             this.managedCategories = new ArrayListModel<CategoryEntity>(categories);
-        this.managedCategories.addListDataListener(new CategoryDataListener());
+        this.managedCategories.addListDataListener(new CategoryDataListener());//ten ale nehlida obsah bean, jen seznamu
     }
 
     // Exposing the ListModel of Categories ****************************************
@@ -67,6 +67,10 @@ public class CategoryManager {
      */
     public void removeItem(CategoryEntity categoryToRemoveEntity) {
         managedCategories.remove(categoryToRemoveEntity);
+    }
+
+    public void setListChanged(boolean listChanged) {
+        this.listChanged = listChanged;
     }
 
     private class CategoryDataListener implements ListDataListener {

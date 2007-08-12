@@ -27,6 +27,8 @@ public final class AppPrefs {
     // vychozi hodnoty pro uzivatelska nastaveni
     public static final int DEF_DATE_TEXT_FORMAT_LONG = 0;
     public static final int DEF_DATE_TEXT_FORMAT_SHORT = 1;
+    public static final String DEF_SOUND_PATH = "defaultAlarm.wav";
+
 
     //jednotlive klice pro uzivatelska nastaveni
     //public static final String SHOW_STATUSBAR = "settings.showStatusbar";
@@ -56,6 +58,7 @@ public final class AppPrefs {
     public static final String PLAY_SOUND = "settings.playSound";
     public static final String SHOW_ALARM_BOX = "settings.showAlarmBox";
     public static final String SHOW_MISSED_ALARMS = "settings.showMissedAlarms";
+    public static final String SOUND_PATH = "settings.soundPath";
 
 
     private AppPrefs() {

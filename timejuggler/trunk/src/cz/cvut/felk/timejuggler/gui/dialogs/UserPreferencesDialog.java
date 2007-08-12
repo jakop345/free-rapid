@@ -19,12 +19,13 @@ import com.l2fprod.common.swing.plaf.blue.BlueishButtonBarUI;
 import cz.cvut.felk.timejuggler.core.AppPrefs;
 import cz.cvut.felk.timejuggler.core.MainApp;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.CategoryEntity;
+import cz.cvut.felk.timejuggler.gui.JXTableSelectionConverter;
 import cz.cvut.felk.timejuggler.gui.MyPreferencesAdapter;
 import cz.cvut.felk.timejuggler.gui.MyPresentationModel;
 import cz.cvut.felk.timejuggler.swing.ComponentFactory;
 import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.swing.renderers.ColorTableCellRenderer;
-import cz.cvut.felk.timejuggler.utilities.LogUtils;
+import cz.cvut.felk.timejuggler.utilities.Sound;
 import org.jdesktop.swingx.JXTable;
 
 import javax.swing.*;
@@ -37,7 +38,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
 import java.util.Date;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
@@ -49,7 +52,7 @@ public class UserPreferencesDialog extends AppDialog {
     private final static Logger logger = Logger.getLogger(UserPreferencesDialog.class.getName());
     private MyPresentationModel model;
     private static final String CARD_PROPERTY = "card";
-    private ApplyPreferenceChangeListener prefListener;
+    private ApplyPreferenceChangeListener prefListener = null;
     private JCheckBox checkPlaySound;
     private SelectionInList<CategoryEntity> inList;
     private CategoryManager categoriesManager;
@@ -58,15 +61,15 @@ public class UserPreferencesDialog extends AppDialog {
         CARD1, CARD2, CARD3, CARD4
     }
 
-    public UserPreferencesDialog(Frame owner) throws HeadlessException {
+    public UserPreferencesDialog(Frame owner) throws HeadlessException, Exception {
         super(owner, true);
         this.setName("UserPreferencesDialog");
         try {
             initComponents();
             build();
         } catch (Exception e) {
-            LogUtils.processException(logger, e);
             doClose(); //dialog se pri fatalni chybe zavre
+            throw e;
         }
     }
 
@@ -103,6 +106,8 @@ public class UserPreferencesDialog extends AppDialog {
     private void buildGUI() {
         toolbar.setUI(new BlueishButtonBarUI());//nenechat to default?
 
+        fieldSoundPath.setEditable(false);
+
         final ActionMap map = getActionMap();
 
         ButtonGroup group = new ButtonGroup();
@@ -134,6 +139,7 @@ public class UserPreferencesDialog extends AppDialog {
     }
 
     private void showCard(Card card) {
+        assert card != null;
         final CardLayout cardLayout = (CardLayout) panelCard.getLayout();
         cardLayout.show(panelCard, card.toString());
         AppPrefs.storeProperty(AppPrefs.USER_SETTINGS_SELECTED_CARD, card.toString());
@@ -172,8 +178,8 @@ public class UserPreferencesDialog extends AppDialog {
         final CategoriesTableModel tableModel = new CategoriesTableModel(inList);
 
         tableCategories.setModel(tableModel);
-        //  tableCategories.setSortOrder(0, ASCENDING);
-        tableCategories.setSelectionModel(new SingleListSelectionAdapter(inList.getSelectionIndexHolder()));
+        tableCategories.setSortOrder(0, org.jdesktop.swingx.decorator.SortOrder.ASCENDING);
+        tableCategories.setSelectionModel(new SingleListSelectionAdapter(new JXTableSelectionConverter(inList.getSelectionIndexHolder(), tableCategories)));
 
         tableCategories.addMouseListener(new DoubleClickHandler());
 
@@ -196,6 +202,8 @@ public class UserPreferencesDialog extends AppDialog {
     }
 
     private void bindBasicComponents() {
+        bindTextField(fieldSoundPath, AppPrefs.SOUND_PATH, AppPrefs.DEF_SOUND_PATH);
+
         bindCheckbox(checkShowIconInSystemTray, AppPrefs.SHOW_TRAY, true);
         bindCheckbox(checkPlaySound, AppPrefs.PLAY_SOUND, true);
         bindCheckbox(checkShowAlarmBox, AppPrefs.SHOW_ALARM_BOX, true);
@@ -230,6 +238,10 @@ public class UserPreferencesDialog extends AppDialog {
 
     private void bindCheckbox(final JCheckBox checkBox, final String key, final Object defaultValue) {
         Bindings.bind(checkBox, model.getBufferedPreferences(key, defaultValue));
+    }
+
+    private void bindTextField(final JTextField field, final String key, final Object defaultValue) {
+        Bindings.bind(field, model.getBufferedPreferences(key, defaultValue), false);
     }
 
     private void bindCombobox(final JComboBox combobox, final String key, final Object defaultValue, final String propertyResourceMap) {
@@ -332,6 +344,7 @@ public class UserPreferencesDialog extends AppDialog {
     }
 
     private void categoriesListChanged() {
+        categoriesManager.setListChanged(true);
         getCategorySelection().fireSelectedContentsChanged();
         btnOK.getAction().setEnabled(true);
     }
@@ -344,7 +357,16 @@ public class UserPreferencesDialog extends AppDialog {
 
     @application.Action
     public void btnPreviewAction() {
-
+        final String text = fieldSoundPath.getText();
+        if (AppPrefs.DEF_SOUND_PATH.equals(text))
+            Sound.playSound(AppPrefs.DEF_SOUND_PATH);
+        else if (!text.isEmpty()) {
+            try {
+                Sound.playSound(new File(text));
+            } catch (Exception e) {
+                Swinger.showErrorDialog("Chyba pri prehravani souboru");//TODO prelozit
+            }
+        }
     }
 
     @application.Action
@@ -355,14 +377,18 @@ public class UserPreferencesDialog extends AppDialog {
 
     @Override
     public void doClose() {
-        if (prefListener != null)
-            AppPrefs.getPreferences().removePreferenceChangeListener(prefListener);
-        final SelectionInList list = getCategorySelection();
-        if (list != null)
-            list.release();
-        if (model != null)
-            model.release();
-        super.doClose();
+        logger.log(Level.FINE, "Closing UserPreferenceDialog.");
+        try {
+            if (prefListener != null)
+                AppPrefs.getPreferences().removePreferenceChangeListener(prefListener);
+            final SelectionInList list = getCategorySelection();
+            if (list != null)
+                list.release();
+            if (model != null)
+                model.release();
+        } finally {
+            super.doClose();
+        }
     }
 
     private ActionMap getActionMap() {

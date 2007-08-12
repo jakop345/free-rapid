@@ -7,6 +7,8 @@ import cz.cvut.felk.timejuggler.core.MainApp;
 
 import java.applet.Applet;
 import java.applet.AudioClip;
+import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,6 +43,8 @@ public class Sound {
         final ResourceMap resourceMap = rm.getResourceMap();
         String dir = resourceMap.getResourcesDir() + Consts.SOUNDS_DIR + "/" + fileName;
         final URL url = resourceMap.getClassLoader().getResource(dir);
+        if (url == null)
+            return null;
         return Applet.newAudioClip(url);
     }
 
@@ -48,5 +52,10 @@ public class Sound {
         final AudioClip audioClip = getCachedAudioClip(clip);
         playSound(audioClip);
         return audioClip;
+    }
+
+    public static void playSound(File clip) throws MalformedURLException {
+        final AudioClip audioClip = Applet.newAudioClip(clip.toURI().toURL());
+        playSound(audioClip);
     }
 }

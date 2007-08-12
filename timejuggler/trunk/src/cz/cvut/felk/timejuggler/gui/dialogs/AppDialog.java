@@ -18,12 +18,10 @@ abstract class AppDialog extends JDialog {
     public final static int RESULT_OK = 0;
     final static int RESULT_CANCEL = 1;
     int result = RESULT_CANCEL;
-    protected MainApp app;
 //    private final boolean closeOnCancel = true;
 
     public AppDialog(final Frame owner, final boolean modal) throws HeadlessException {
         super(owner, modal);
-        this.app = MainApp.getInstance(MainApp.class);
     }
 
     public void doClose() {
@@ -44,7 +42,7 @@ abstract class AppDialog extends JDialog {
 
 
     public MainApp getApp() {
-        return app;
+        return MainApp.getInstance(MainApp.class);
     }
 
     protected void inject() {
