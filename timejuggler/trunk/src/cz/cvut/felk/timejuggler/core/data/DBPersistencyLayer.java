@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * @author Vity
  */
-class DBPersistencyLayer implements PersitencyLayer {
+class DBPersistencyLayer implements PersistencyLayer {
     private DbDataStore dbStore;
 
     DBPersistencyLayer() {

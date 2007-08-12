@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * @author Vity
  */
-public interface PersitencyLayer {
+public interface PersistencyLayer {
 
     List<VCalendar> getCalendars() throws PersistencyLayerException;
 

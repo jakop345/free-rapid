@@ -14,7 +14,7 @@ import java.util.List;
  * Fake vrstva poskytujici testovaci data.
  * @author Vity
  */
-class FakePersistencyLayer implements PersitencyLayer {
+class FakePersistencyLayer implements PersistencyLayer {
     FakePersistencyLayer() {
     }
 
