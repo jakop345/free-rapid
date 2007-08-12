@@ -9,13 +9,12 @@ import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.*;
-import cz.cvut.felk.timejuggler.db.entity.Category;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.CategoryEntity;
 import cz.cvut.felk.timejuggler.swing.ComponentFactory;
 import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.swing.components.ColorComboBox;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
 import org.izvin.client.desktop.ui.util.UIBeanEnhancer;
-import cz.cvut.felk.timejuggler.core.DataProvider;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,16 +27,16 @@ import java.util.logging.Logger;
  */
 public class CategoryDialog extends AppDialog {
     private final static Logger logger = Logger.getLogger(CategoryDialog.class.getName());
-    private Category category;
+    private CategoryEntity category;
     private boolean newCategory;
     private PresentationModel model;
     private static final String PROPERTY_COLOR = "color";
 
     //TODO pridat ikonu pro dialog
-    public CategoryDialog(Frame owner, Category category) throws HeadlessException {
+    public CategoryDialog(Frame owner, CategoryEntity categoryEntity) throws HeadlessException {
         super(owner, true);
-        this.newCategory = category == null;
-        this.category = category == null ? new Category() : category;
+        this.newCategory = categoryEntity == null;
+        this.category = categoryEntity;
         this.setName("CategoryDialog");
 
         try {
@@ -94,9 +93,9 @@ public class CategoryDialog extends AppDialog {
     }
 
     private void buildModels() {
-        final Category cat;
+        final CategoryEntity cat;
         if (this.newCategory) //pokud zakladame novou kategorii, tak enhancovat budeme, jinak nebudeme, protoze uz bylo
-            cat = (Category) UIBeanEnhancer.enhance(category);
+            cat = UIBeanEnhancer.enhance(category);
         else cat = this.category;
         model = new PresentationModel(cat, new Trigger());
         Bindings.bind(fieldName, model.getBufferedModel("name"), false);
@@ -123,7 +122,7 @@ public class CategoryDialog extends AppDialog {
         //workaround
         if (!checkUseColor.isSelected())
             category.setColor(null);
-        DataProvider.getInstance().addCategory(category);
+        //   DataProvider.getInstance().addCategory(category);
         setResult(RESULT_OK);
         doClose();
     }

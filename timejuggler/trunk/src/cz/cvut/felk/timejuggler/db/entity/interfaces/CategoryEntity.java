@@ -1,0 +1,18 @@
+package cz.cvut.felk.timejuggler.db.entity.interfaces;
+
+import java.awt.*;
+
+/**
+ * @author Vity
+ */
+public interface CategoryEntity extends BasicEntity {
+    boolean hasAssignedColor();
+
+    Color getColor();
+
+    void setColor(Color color);
+
+    String getName();
+
+    void setName(String newVal);
+}

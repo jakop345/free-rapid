@@ -14,6 +14,7 @@ import java.util.Collection;
 
 
 public class UIBeanEnhancer {
+    //  private final static Logger logger = Logger.getLogger(UIBeanEnhancer.class.getName());
     /**
      * Enhance the given object to transform its properties in bound properties, i.e. properties firing
      * PropertyChangeEvent when they change (through a call to any setter).
@@ -32,11 +33,15 @@ public class UIBeanEnhancer {
      * @param bean the object to enhance
      * @return the enhanced object
      */
-    public static Object enhance(Object bean) {
+    public static <C> C enhance(C bean) {
+        if (bean instanceof Observable) {
+            //  logger.log(Level.INFO, "Bean " + bean + " was already enhanced to Observable");
+            return bean;
+        }
         UIBeanInterceptor interceptor = new UIBeanInterceptor(bean);
         Object p = Enhancer.create(bean.getClass(), new Class[]{Observable.class}, interceptor);
         interceptor.setProxy(p);
-        return p;
+        return (C) p;
     }
 
 
@@ -184,6 +189,31 @@ public class UIBeanEnhancer {
         public void setProxy(Object proxy) {
             this.proxy = proxy;
             support = new PropertyChangeSupport(proxy);
+        }
+    }
+
+    public static void main(String[] args) {
+        final TestInterface testClass = new TestClass();
+        UIBeanEnhancer.enhance(testClass);
+    }
+
+    private interface TestInterface {
+        void setmethod(int xxxx);
+
+        int getmethod();
+    }
+
+
+    private static class TestClass implements TestInterface {
+        public TestClass() {
+        }
+
+        public void setmethod(int xxxx) {
+
+        }
+
+        public int getmethod() {
+            return 0;
         }
     }
 }

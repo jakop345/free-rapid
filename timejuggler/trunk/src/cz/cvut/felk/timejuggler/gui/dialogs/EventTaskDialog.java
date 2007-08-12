@@ -7,9 +7,10 @@ import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.*;
 import cz.cvut.felk.timejuggler.core.AppPrefs;
-import cz.cvut.felk.timejuggler.core.DataProvider;
 import cz.cvut.felk.timejuggler.core.MainApp;
+import cz.cvut.felk.timejuggler.core.data.DataProvider;
 import cz.cvut.felk.timejuggler.db.entity.Category;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.CategoryEntity;
 import cz.cvut.felk.timejuggler.swing.ComponentFactory;
 import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.swing.components.EditorPaneLinkDetector;
@@ -345,7 +346,7 @@ public class EventTaskDialog extends AppDialog {
     private void buildCategories() {
         final MainApp app = MainApp.getInstance(MainApp.class);
         final DataProvider dataProvider = app.getDataProvider();
-        final java.util.List<Category> list = dataProvider.getCategoriesListModel();
+        final java.util.List<CategoryEntity> list = dataProvider.getCategoriesListModel();
         final Set sortedSet = new TreeSet(list);
         fillCategoryComboModel(sortedSet);
         this.categoryCombo.addActionListener(new ActionListener() {
@@ -368,7 +369,7 @@ public class EventTaskDialog extends AppDialog {
         final NaiiveComboModel comboModel = new NaiiveComboModel();
         comboModel.addElement(CategoryItem.NONE_CATEGORY);
         comboModel.addElement("-");
-        for (Category item : items) {
+        for (CategoryEntity item : items) {
             comboModel.addElement(new CategoryItem(item));
         }
         comboModel.addElement("-");
@@ -380,7 +381,7 @@ public class EventTaskDialog extends AppDialog {
      * Wrap trida pro combo seznamu kategorii
      */
     private static class CategoryItem {
-        private Category category;
+        private CategoryEntity categoryEntity;
         private boolean isCustom;
         private String description;
 
@@ -388,12 +389,12 @@ public class EventTaskDialog extends AppDialog {
         private final static CategoryItem CUSTOM_CATEGORY = new CategoryItem();
 
 
-        private CategoryItem(Category category) {
-            if (category == null)
+        private CategoryItem(CategoryEntity categoryEntity) {
+            if (categoryEntity == null)
                 this.description = Swinger.getResourceMap(EventTaskDialog.class).getString("noneCategory");
             else
-                this.description = category.getName();
-            this.category = category;
+                this.description = categoryEntity.getName();
+            this.categoryEntity = categoryEntity;
         }
 
         private CategoryItem() {
@@ -401,8 +402,8 @@ public class EventTaskDialog extends AppDialog {
             isCustom = true;
         }
 
-        public Category getCategory() {
-            return category;
+        public CategoryEntity getCategory() {
+            return categoryEntity;
         }
 
         @Override

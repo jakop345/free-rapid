@@ -1,4 +1,4 @@
-package cz.cvut.felk.timejuggler.core;
+package cz.cvut.felk.timejuggler.core.data;
 
 /**
  * @author Vity

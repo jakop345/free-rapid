@@ -1,9 +1,10 @@
-package cz.cvut.felk.timejuggler.core;
+package cz.cvut.felk.timejuggler.core.data;
 
 import cz.cvut.felk.timejuggler.db.DbDataStore;
 import cz.cvut.felk.timejuggler.db.entity.Category;
-import cz.cvut.felk.timejuggler.db.entity.VCalendar;
 import cz.cvut.felk.timejuggler.db.entity.EventTask;
+import cz.cvut.felk.timejuggler.db.entity.VCalendar;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.CategoryEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
 /**
  * @author Vity
  */
-public class DBPersistencyLayer implements PersitencyLayer {
+class DBPersistencyLayer implements PersitencyLayer {
     private DbDataStore dbStore;
 
     DBPersistencyLayer() {
@@ -21,19 +22,24 @@ public class DBPersistencyLayer implements PersitencyLayer {
     public List<VCalendar> getCalendars() throws PersistencyLayerException {
         return dbStore.getCalendars();
     }
-    
+
     public List<EventTask> getEvents() throws PersistencyLayerException {
-    	return null; //...
+        return new ArrayList(); //nikdy nevracet null, bud prazdnej seznam nebo vyjimka
     }
 
     public void saveOrUpdateCalendar(VCalendar calendar) throws PersistencyLayerException {
         dbStore.saveOrUpdate(calendar);
     }
-    public void saveOrUpdateCategory(Category category) throws PersistencyLayerException {
-        dbStore.saveOrUpdate(category);
+
+    public void saveOrUpdateCategory(CategoryEntity category) throws PersistencyLayerException {
+        dbStore.saveOrUpdate((Category) category);
     }
 
-    public List<Category> getCategories() throws PersistencyLayerException {
+    public List<CategoryEntity> getCategories() throws PersistencyLayerException {
         return dbStore.getCategories();
+    }
+
+    public CategoryEntity getNewCategory() {
+        return new Category();
     }
 }

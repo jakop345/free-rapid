@@ -19,12 +19,14 @@ import com.l2fprod.common.swing.plaf.blue.BlueishButtonBarUI;
 import cz.cvut.felk.timejuggler.core.AppPrefs;
 import cz.cvut.felk.timejuggler.core.MainApp;
 import cz.cvut.felk.timejuggler.db.entity.Category;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.CategoryEntity;
 import cz.cvut.felk.timejuggler.gui.MyPreferencesAdapter;
 import cz.cvut.felk.timejuggler.gui.MyPresentationModel;
 import cz.cvut.felk.timejuggler.swing.ComponentFactory;
 import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.swing.renderers.ColorTableCellRenderer;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
+import org.izvin.client.desktop.ui.util.UIBeanEnhancer;
 import org.jdesktop.swingx.JXTable;
 
 import javax.swing.*;
@@ -52,7 +54,7 @@ public class UserPreferencesDialog extends AppDialog {
     private ApplyPreferenceChangeListener prefListener;
     private JCheckBox checkPlaySound;
     private SelectionInList<Category> inList;
-    private ListModel categoriesManager;
+    private CategoryManager categoriesManager;
 
     private static enum Card {
         CARD1, CARD2, CARD3, CARD4
@@ -164,10 +166,14 @@ public class UserPreferencesDialog extends AppDialog {
 
 
     private void buildModels() {
-        model = new MyPresentationModel(null, new Trigger());
+        final Trigger trigger = new Trigger();
+        model = new MyPresentationModel(null, trigger);
         final MainApp app = MainApp.getInstance(MainApp.class);
-        categoriesManager = (ListModel) app.getDataProvider().getCategoriesListModel();
-        inList = new SelectionInList<Category>(categoriesManager);
+        categoriesManager = new CategoryManager(app.getDataProvider().getCategoriesListModel(), true);
+//        CategoryManager bufferedCategoriesManager = new CategoryManager(categoriesManager.getManagedCategories(), false);
+//
+        inList = new SelectionInList<Category>(categoriesManager.getManagedCategories());
+//        inList.add
 
         prefListener = new ApplyPreferenceChangeListener();
         AppPrefs.getPreferences().addPreferenceChangeListener(prefListener);
@@ -185,10 +191,14 @@ public class UserPreferencesDialog extends AppDialog {
 
         final ActionMap map = getActionMap();
         final Action actionOK = map.get("okBtnAction");
-        PropertyConnector connector = PropertyConnector.connect(model, PresentationModel.PROPERTYNAME_BUFFERING, actionOK, "enabled");
+        PropertyConnector connector = PropertyConnector.connect(model, PresentationModel.PROPERTYNAME_CHANGED, actionOK, "enabled");
         connector.updateProperty2();
 
         initEventHandling();
+
+        Category bean = new Category("kjjj");
+        bean = (Category) UIBeanEnhancer.enhance(bean);
+        UIBeanEnhancer.enhance(bean);
     }
 
     private void bindBasicComponents() {
@@ -1007,7 +1017,7 @@ public class UserPreferencesDialog extends AppDialog {
     /**
      * Describes how to present an Album in a JTable.
      */
-    private static final class CategoriesTableModel extends AbstractTableAdapter<Category> {
+    private static final class CategoriesTableModel extends AbstractTableAdapter<CategoryEntity> {
 
         private static final String[] COLUMNS = {"name", "color"};
 
@@ -1028,12 +1038,12 @@ public class UserPreferencesDialog extends AppDialog {
         }
 
         public Object getValueAt(int rowIndex, int columnIndex) {
-            Category category = getRow(rowIndex);
+            CategoryEntity categoryEntity = getRow(rowIndex);
             switch (columnIndex) {
                 case 0:
-                    return category.getName();
+                    return categoryEntity.getName();
                 case 1:
-                    return category.getColor();
+                    return categoryEntity.getColor();
                 default:
                     throw new IllegalStateException("Unknown column");
             }
@@ -1063,11 +1073,11 @@ public class UserPreferencesDialog extends AppDialog {
         return inList;
     }
 
-    private Category getSelectedItem() {
+    private CategoryEntity getSelectedItem() {
         return inList.getSelection();
     }
 
-    private boolean openCategoryEditor(Category selectedItem) {
+    private boolean openCategoryEditor(CategoryEntity selectedItem) {
         final MainApp instance = MainApp.getInstance(MainApp.class);
         final CategoryDialog dialog = new CategoryDialog((Frame) this.getOwner(), selectedItem);
         instance.prepareDialog(dialog, true);

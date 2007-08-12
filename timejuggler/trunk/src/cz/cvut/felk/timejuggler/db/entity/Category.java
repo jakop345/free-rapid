@@ -1,6 +1,7 @@
 package cz.cvut.felk.timejuggler.db.entity;
 
 import cz.cvut.felk.timejuggler.db.TimeJugglerJDBCTemplate;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.CategoryEntity;
 
 import java.awt.*;
 import java.util.logging.Logger;
@@ -12,7 +13,7 @@ import java.util.logging.Logger;
  * <p/>
  * Reprezentuje kategorii eventu nebo tasku.. Hotovo
  */
-public class Category extends DbElement {
+public class Category extends DbElement implements Comparable<CategoryEntity>, CategoryEntity {
     private final static Logger logger = Logger.getLogger(Category.class.getName());
 
     private String name = "";
@@ -20,10 +21,11 @@ public class Category extends DbElement {
     private Color color = null;
 
     public Category() {
-
+        super();//dodrzovat volani predka v konstruktoru
     }
 
     public Category(String name) {
+        this();
         setName(name);
     }
 
@@ -54,7 +56,7 @@ public class Category extends DbElement {
      */
     public void saveOrUpdate(TimeJugglerJDBCTemplate template) {
         //TODO: pridat ukladani barvy - barva se da ukladat jednoduse jako string - search google Color.decode
-        if (getId() > 0) {
+        if (isAssigned()) {
             logger.info("Database - Update: Category[" + getId() + "]:" + name + "...");
             Object params[] = {name, color == null ? null : color.getRGB(), getId()};
             String updateQuery = "UPDATE Category SET name=?,color=? WHERE categoryID = ? ";
@@ -66,6 +68,7 @@ public class Category extends DbElement {
             template.executeUpdate(insertQuery, params);
             setId(template.getGeneratedId());
         }
+        super.saveOrUpdate(template);//nastaveni changed na false
     }
 
     /**
@@ -73,12 +76,17 @@ public class Category extends DbElement {
      * @param template
      */
     public void delete(TimeJugglerJDBCTemplate template) {
-        if (getId() > 0) {
+        if (isAssigned()) {
             Object params[] = {getId()};
             String deleteQuery = "DELETE FROM Category WHERE categoryID = ? ";
             template.executeUpdate(deleteQuery, params);
             setId(-1);
         }
+    }
+
+    public int compareTo(CategoryEntity o) {
+        assert getName() != null;
+        return getName().compareTo(o.getName());
     }
 
     public boolean equals(Object o) {
@@ -102,20 +110,10 @@ public class Category extends DbElement {
         name = newVal;
     }
 
-/*
-    public void setComponentId(int componentId) {
-        this.componentId = componentId;
-    }
-
-    public int getComponentId() {
-        return (this.componentId);
-    }
-*/
-
     public Object clone() throws CloneNotSupportedException {
-        Category clone;
+        CategoryEntity clone;
         try {
-            clone = (Category) super.clone();
+            clone = (CategoryEntity) super.clone();
         } catch (CloneNotSupportedException e) {
             return null;
         }

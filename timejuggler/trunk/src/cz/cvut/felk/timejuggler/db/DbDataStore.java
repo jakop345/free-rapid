@@ -1,14 +1,17 @@
 package cz.cvut.felk.timejuggler.db;
 
 import cz.cvut.felk.timejuggler.db.entity.*;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.CategoryEntity;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.Calendars;
 
+import java.awt.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -22,7 +25,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
-import java.awt.Color;
 
 
 public class DbDataStore {
@@ -100,12 +102,12 @@ public class DbDataStore {
         }
 
         db.showDB();
-		try {
-			ConnectionManager.getInstance().shutdown();
-	    }
-	    catch (SQLException e) {
-	    	LogUtils.processException(logger, e);
-	    }
+        try {
+            ConnectionManager.getInstance().shutdown();
+        }
+        catch (SQLException e) {
+            LogUtils.processException(logger, e);
+        }
     }
 
     /**
@@ -141,11 +143,11 @@ public class DbDataStore {
         }
         /* odpojeni databaze */
         try {
-        	ConnectionManager.getInstance().shutdown();
-	    }
-	    catch (SQLException ex) {
-	    	LogUtils.processException(logger, ex);
-	    }
+            ConnectionManager.getInstance().shutdown();
+        }
+        catch (SQLException ex) {
+            LogUtils.processException(logger, ex);
+        }
         // konec programu
     }
 
@@ -174,7 +176,7 @@ public class DbDataStore {
                     if (cats != null) {
                         System.out.print("+-categories ");
                         for (Object o : cats) {
-                            Category c = (Category) o;
+                            CategoryEntity c = (CategoryEntity) o;
                             System.out.print(c.getName() + ",");
                         }
                         System.out.println();
@@ -226,15 +228,16 @@ public class DbDataStore {
         template.executeQuery(sql, null);
         return template.getItems();
     }
+
     /**
      * Method getCategories
      * @return
      */
-    public List<Category> getCategories() {
+    public List<CategoryEntity> getCategories() {
         String sql = "SELECT DISTINCT * FROM Category";
-        TimeJugglerJDBCTemplate<List<Category>> template = new TimeJugglerJDBCTemplate<List<Category>>() {
+        TimeJugglerJDBCTemplate<List<CategoryEntity>> template = new TimeJugglerJDBCTemplate<List<CategoryEntity>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
-            	if (items == null) items = new ArrayList<Category>();
+                if (items == null) items = new ArrayList<CategoryEntity>();
                 Category cat = new Category();
                 cat.setId(rs.getInt("categoryID"));
                 if (rs.getInt("color") != -1) cat.setColor(new Color(rs.getInt("color"))); //-1 znamena bez barvy
