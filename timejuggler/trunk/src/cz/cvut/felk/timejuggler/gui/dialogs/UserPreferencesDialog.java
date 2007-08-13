@@ -316,7 +316,7 @@ public class UserPreferencesDialog extends AppDialog {
 
     @application.Action
     public void btnCategoryAddAction() {
-        final CategoryEntity newCategory = app.getDataProvider().getNewCategory();
+        final CategoryEntity newCategory = getApp().getDataProvider().getNewCategory();
         boolean canceled = openCategoryEditor(newCategory, true);
         if (!canceled) {
             categoriesManager.addItem(newCategory);
