@@ -37,8 +37,10 @@ public class StorageProperties {
         public void setSessionState(Component c, Object state) {
             checkComponent(c);
             final JXMultiSplitPane splitPane = (JXMultiSplitPane) c;
+            splitPane.getMultiSplitLayout().setFloatingDividers(false);
             splitPane.getMultiSplitLayout().setModel(((XMultiSplitPaneState) state).getModel());
-            splitPane.validate();
+            splitPane.revalidate();
+            splitPane.repaint();
         }
 
         private void checkComponent(Component component) {
