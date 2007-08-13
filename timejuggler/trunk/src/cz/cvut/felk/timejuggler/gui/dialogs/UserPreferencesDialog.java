@@ -22,6 +22,7 @@ import cz.cvut.felk.timejuggler.db.entity.interfaces.CategoryEntity;
 import cz.cvut.felk.timejuggler.gui.JXTableSelectionConverter;
 import cz.cvut.felk.timejuggler.gui.MyPreferencesAdapter;
 import cz.cvut.felk.timejuggler.gui.MyPresentationModel;
+import cz.cvut.felk.timejuggler.gui.dialogs.filechooser.OpenSaveDialogFactory;
 import cz.cvut.felk.timejuggler.swing.ComponentFactory;
 import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.swing.renderers.ColorTableCellRenderer;
@@ -32,6 +33,8 @@ import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
@@ -124,6 +127,19 @@ public class UserPreferencesDialog extends AppDialog {
         this.btnUseDefaultSound.setAction(map.get("btnUseDefaultSoundAction"));
         this.btnPreview.setAction(map.get("btnPreviewAction"));
 
+        this.checkPlaySound.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                updateSoundBtnsEnablement();
+            }
+        });
+    }
+
+    private void updateSoundBtnsEnablement() {
+        final boolean enabled = this.checkPlaySound.isSelected();
+        btnBrowse.getAction().setEnabled(enabled);
+        btnPreview.getAction().setEnabled(enabled);
+        btnUseDefaultSound.getAction().setEnabled(enabled);
+        fieldSoundPath.setEnabled(enabled);
     }
 
 
@@ -194,7 +210,7 @@ public class UserPreferencesDialog extends AppDialog {
 
         final ActionMap map = getActionMap();
         final Action actionOK = map.get("okBtnAction");
-        PropertyConnector connector = PropertyConnector.connect(model, PresentationModel.PROPERTYNAME_CHANGED, actionOK, "enabled");
+        PropertyConnector connector = PropertyConnector.connect(model, PresentationModel.PROPERTYNAME_BUFFERING, actionOK, "enabled");
         connector.updateProperty2();
 
         initEventHandling();
@@ -261,7 +277,7 @@ public class UserPreferencesDialog extends AppDialog {
 
 
     private void setDefaultValues() {
-
+        updateSoundBtnsEnablement();
     }
 
     private String[] getDateFormats() {
@@ -352,7 +368,8 @@ public class UserPreferencesDialog extends AppDialog {
 
     @application.Action
     public void btnUseDefaultSoundAction() {
-
+        if (!AppPrefs.DEF_SOUND_PATH.equals(fieldSoundPath.getText()))
+            model.setBufferedValue(AppPrefs.SOUND_PATH, AppPrefs.DEF_SOUND_PATH);
     }
 
     @application.Action
@@ -364,14 +381,19 @@ public class UserPreferencesDialog extends AppDialog {
             try {
                 Sound.playSound(new File(text));
             } catch (Exception e) {
-                Swinger.showErrorDialog("Chyba pri prehravani souboru");//TODO prelozit
+                Swinger.showErrorDialog("Error during file playback.");//TODO prelozit
             }
         }
     }
 
     @application.Action
     public void btnBrowseAction() {
-
+        final String path = fieldSoundPath.getText();
+        final String defaultPath = AppPrefs.DEF_SOUND_PATH.equals(path) ? AppPrefs.getAppPath() : path;
+        final File[] f = OpenSaveDialogFactory.getOpenSoundDialog(defaultPath);
+        if (f.length > 0) {
+            model.setBufferedValue(AppPrefs.SOUND_PATH, f[0].getAbsolutePath());
+        }
     }
 
 

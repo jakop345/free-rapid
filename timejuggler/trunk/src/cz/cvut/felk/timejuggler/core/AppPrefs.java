@@ -59,6 +59,7 @@ public final class AppPrefs {
     public static final String SHOW_ALARM_BOX = "settings.showAlarmBox";
     public static final String SHOW_MISSED_ALARMS = "settings.showMissedAlarms";
     public static final String SOUND_PATH = "settings.soundPath";
+    public static final String LAST_USED_SOUND_FILTER = "settings.lastUsedSoundFilter";
 
 
     private AppPrefs() {
