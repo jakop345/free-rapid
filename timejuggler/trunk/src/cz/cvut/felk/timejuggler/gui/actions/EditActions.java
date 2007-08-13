@@ -27,7 +27,7 @@ public class EditActions {
     }
 
     @Action
-    public void options() {
+    public void options() throws Exception {
         final UserPreferencesDialog dialog = new UserPreferencesDialog(app.getMainFrame());
         app.prepareDialog(dialog, true);
     }
