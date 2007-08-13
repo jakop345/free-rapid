@@ -44,6 +44,13 @@ public class Consts {
      * jmeno adresare v resources, kde je sound
      */
     public static final String SOUNDS_DIR = "sound";
+    /**
+     * cesta k adresari s look&feely
+     */
+    public static final String LAFSDIR = "lookandfeel";
+
+    public static final String LAFSDIRFILE = LAFSDIR + "/lookandfeels.properties";
+
 
     /**
      * Od teto tridy se nebudou delat zadne instance

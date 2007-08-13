@@ -5,8 +5,6 @@ import application.ResourceMap;
 import cz.cvut.felk.timejuggler.core.MainApp;
 
 import javax.swing.*;
-import javax.swing.plaf.metal.MetalLookAndFeel;
-import javax.swing.plaf.metal.MetalTheme;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -22,39 +20,43 @@ import java.util.logging.Logger;
  */
 public class Swinger {
     private static final Logger logger = Logger.getLogger(Swinger.class.getName());
-    private static final String KUNSTSTOFF = "com.incors.plaf.kunststoff.KunststoffLookAndFeel";
+    //  private static final String KUNSTSTOFF = "com.incors.plaf.kunststoff.KunststoffLookAndFeel";
 
     private Swinger() {
     }
 
-    /**
-     * Nastaveni look&feelu
-     */
-    public static void initLaF() {
-        initLafWithTheme(KUNSTSTOFF, new WordRiderMetalTheme());
-        UIManager.put("JXDatePicker.arrowDown.image", Swinger.getIconImage("JXDatePicker.arrowDown.image"));
+    public static void showInformationDialog(final String message) {
+        JOptionPane.showMessageDialog(Frame.getFrames()[0], message, getResourceMap().getString("informationMessage"), JOptionPane.INFORMATION_MESSAGE);
     }
 
-    /**
-     * Nastavi look&feel jako aktivni
-     * @param lookAndFeelClassName jmeno tridy look&feelu
-     * @param metalTheme           theme pro MetalLook pokud existuje
-     */
-    private static void initLafWithTheme(final String lookAndFeelClassName, final MetalTheme metalTheme) {
+//    /**
+//     * Nastaveni look&feelu
+//     */
+//    public static void initLaF() {
+//        initLafWithTheme(KUNSTSTOFF, new WordRiderMetalTheme());
+//
+//    }
 
-        try {
-            final LookAndFeel laf = (LookAndFeel) ClassLoader.getSystemClassLoader().loadClass(lookAndFeelClassName).newInstance();
-
-            if (metalTheme != null && laf instanceof MetalLookAndFeel) {
-                laf.getClass().getMethod("setCurrentTheme", new Class[]{MetalTheme.class}).invoke(laf, metalTheme);
-            }
-
-            UIManager.setLookAndFeel(laf);
-        } catch (Exception e) {
-            logger.warning("Couldn't set LookandFeel " + KUNSTSTOFF);
-        }
-
-    }
+//    /**
+//     * Nastavi look&feel jako aktivni
+//     * @param lookAndFeelClassName jmeno tridy look&feelu
+//     * @param metalTheme           theme pro MetalLook pokud existuje
+//     */
+//    private static void initLafWithTheme(final String lookAndFeelClassName, final MetalTheme metalTheme) {
+//
+//        try {
+//            final LookAndFeel laf = (LookAndFeel) ClassLoader.getSystemClassLoader().loadClass(lookAndFeelClassName).newInstance();
+//
+//            if (metalTheme != null && laf instanceof MetalLookAndFeel) {
+//                laf.getClass().getMethod("setCurrentTheme", new Class[]{MetalTheme.class}).invoke(laf, metalTheme);
+//            }
+//
+//            UIManager.setLookAndFeel(laf);
+//        } catch (Exception e) {
+//            logger.warning("Couldn't set LookandFeel " + KUNSTSTOFF);
+//        }
+//
+//    }
 
     /**
      * Focus listener pouzivany v textovych komponentach. Na vstup do komponenty vybere celej text.

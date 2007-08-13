@@ -9,7 +9,7 @@ import cz.cvut.felk.timejuggler.core.application.ListItemsConvertor;
 import cz.cvut.felk.timejuggler.core.data.DataProvider;
 import cz.cvut.felk.timejuggler.gui.MainPanelManager;
 import cz.cvut.felk.timejuggler.gui.StorageProperties;
-import cz.cvut.felk.timejuggler.swing.Swinger;
+import cz.cvut.felk.timejuggler.swing.LookAndFeels;
 import cz.cvut.felk.timejuggler.swing.TrayIconSupport;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
 import org.jdesktop.appframework.swingx.SingleXFrameApplication;
@@ -85,7 +85,8 @@ public class MainApp extends SingleXFrameApplication {
         this.dataProvider.init();
         LogUtils.initLogging(debug);
         // logger = Logger.getLogger(MainApp.class.getName());
-        Swinger.initLaF(); //inicializace LaFu, musi to byt pred vznikem hlavniho panelu
+        LookAndFeels.getInstance().loadLookAndFeelSettings();//inicializace LaFu, musi to byt pred vznikem hlavniho panelu
+        //Swinger.initLaF(); //inicializace LaFu, musi to byt pred vznikem hlavniho panelu
         super.initialize(args);
         ResourceConverter.register(new ListItemsConvertor());
     }

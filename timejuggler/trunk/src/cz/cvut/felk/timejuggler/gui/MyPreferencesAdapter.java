@@ -51,7 +51,7 @@ import java.util.prefs.Preferences;
  * @version $Revision: 1.6 $
  * @see java.util.prefs.Preferences
  */
-public final class MyPreferencesAdapter extends AbstractValueModel {
+public class MyPreferencesAdapter extends AbstractValueModel {
 
     private static final String ERROR_MSG =
             "Value must be a Boolean, Double, Float, Integer, Long, or String.";
@@ -59,25 +59,29 @@ public final class MyPreferencesAdapter extends AbstractValueModel {
     /**
      * Refers to the preferences node that is used to persist the bound data.
      */
-    private final Preferences prefs;
+    protected Preferences prefs;
 
     /**
      * Holds the preferences key that is used to access the stored value.
      */
-    private final String key;
+    protected String key;
 
     /**
      * Refers to the type of accepted values.
      */
-    private final Class<?> type;
+    protected Class<?> type;
 
     /**
      * Holds the default value that is used if the preferences do not yet store a value.
      */
-    private final Object defaultValue;
+    protected Object defaultValue;
 
     public MyPreferencesAdapter(String key, Object defaultValue) {
         this(AppPrefs.getPreferences(), key, defaultValue);
+    }
+
+    protected MyPreferencesAdapter() {
+
     }
 
     public String getKey() {

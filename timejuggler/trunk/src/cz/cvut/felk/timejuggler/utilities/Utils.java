@@ -1,6 +1,11 @@
 package cz.cvut.felk.timejuggler.utilities;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+import java.util.logging.Logger;
 
 
 /**
@@ -8,6 +13,7 @@ import java.io.File;
  * @author Vity
  */
 public final class Utils {
+    private final static Logger logger = Logger.getLogger(Utils.class.getName());
 
     /**
      * pomocna promenna pro ulozeni verze JVM na ktere bezime
@@ -74,5 +80,25 @@ public final class Utils {
 //        return false;
     }
 
-
+    public static Properties loadProperties(final String propertiesFile, final boolean isResource) {
+        final Properties props = new Properties();
+        InputStream inputStream = null;
+        try {
+            inputStream = (!isResource) ? new FileInputStream(propertiesFile) : Utils.class.getClassLoader().getResourceAsStream(propertiesFile);
+            if (inputStream == null)
+                throw new IOException("Couldn't read Properties file");
+            props.load(inputStream);
+            inputStream.close();
+            return props;
+        } catch (IOException e) {
+            try {
+                if (inputStream != null)
+                    inputStream.close();
+            } catch (IOException ex) {
+                LogUtils.processException(logger, ex);
+            }
+            logger.warning("Couldn't load properties:" + propertiesFile);
+            return props;
+        }
+    }
 }

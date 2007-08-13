@@ -21,6 +21,20 @@ public final class ToolbarSeparatorUI extends javax.swing.plaf.basic.BasicToolBa
         return new ToolbarSeparatorUI();
     }
 
+    @Override
+    public Dimension getPreferredSize(JComponent c) {
+        Dimension dimension = super.getPreferredSize(c);
+        if (dimension == null)
+            dimension = new Dimension(10, 15);
+        dimension.width = Math.min(dimension.width, 10);
+        return dimension;
+    }
+
+    @Override
+    public Dimension getMaximumSize(JComponent c) {
+        return this.getPreferredSize(c);
+    }
+
     public final void paint(final Graphics g, final JComponent c) {
         final Dimension s = c.getSize();
         final int sWidth = s.width / 2;

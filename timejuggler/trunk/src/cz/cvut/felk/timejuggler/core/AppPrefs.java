@@ -1,5 +1,6 @@
 package cz.cvut.felk.timejuggler.core;
 
+import application.LocalStorage;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
 
 import java.io.*;
@@ -31,8 +32,6 @@ public final class AppPrefs {
 
 
     //jednotlive klice pro uzivatelska nastaveni
-    //public static final String SHOW_STATUSBAR = "settings.showStatusbar";
-    //    public static final String SHOW_TOOLBAR = "settings.showToolbar";
     public static final String SHOW_SEARCHBAR = "settings.showSearchbar";
     public static final String HIDE_COMPLETED_TASKS = "settings.showCompletedTasks";
     public static final String CALENDAR_VIEW = "settings.calendarView";
@@ -60,6 +59,9 @@ public final class AppPrefs {
     public static final String SHOW_MISSED_ALARMS = "settings.showMissedAlarms";
     public static final String SOUND_PATH = "settings.soundPath";
     public static final String LAST_USED_SOUND_FILTER = "settings.lastUsedSoundFilter";
+    public static final String LOOK_AND_FEEL_SELECTED_KEY = "lookAndFeel";
+    public static final String LOOK_AND_FEEL_OPAQUE_KEY = "lafOpaque";
+    public static final String THEME_SELECTED_KEY = "theme";
 
 
     private AppPrefs() {
@@ -104,17 +106,6 @@ public final class AppPrefs {
         properties.putBoolean(key, value);
     }
 
-//    /**
-//     * Provede ulozeni uzivatelskeho nastaveni do Properties
-//     * @param key   hodnota klice
-//     * @param value hodnota uzivatelskeho nastaveni
-//     * @store je-li hodnota true, provede se okamzite ulozeni do souboru
-//     */
-//    public static void storeProperty(final String key, final String value, final boolean store) {
-//        properties.setProperty(key, value);
-//        if (store)
-//            store();
-//    }
 
     /**
      * Provede ulozeni uzivatelskeho nastaveni do Properties
@@ -191,12 +182,16 @@ public final class AppPrefs {
      * @see store
      */
     public static Preferences loadProperties() {
-        //Preferences prefs = Preferences.userRoot();
-
-//        final Properties props = new Properties();
+        final LocalStorage localStorage = MainApp.getAContext().getLocalStorage();
+        final File storageDir = localStorage.getDirectory();
+        final File userFile = new File(storageDir, DEFAULT_PROPERTIES);
+        if (!(userFile.exists())) {
+            logger.log(Level.INFO, "File with user settings " + userFile + " was not found. First run. Using default settings");
+            return Preferences.userRoot();
+        }
         InputStream inputStream = null;
         try {
-            inputStream = MainApp.getAContext().getLocalStorage().openInputFile(DEFAULT_PROPERTIES);
+            inputStream = localStorage.openInputFile(DEFAULT_PROPERTIES);
             //props.loadFromXML(inputStream);
             Preferences.importPreferences(inputStream);
             inputStream.close();

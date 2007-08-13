@@ -7,6 +7,7 @@ import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.adapter.SingleListSelectionAdapter;
 import com.jgoodies.binding.adapter.SpinnerAdapterFactory;
 import com.jgoodies.binding.beans.PropertyConnector;
+import com.jgoodies.binding.list.ArrayListModel;
 import com.jgoodies.binding.list.SelectionInList;
 import com.jgoodies.binding.value.Trigger;
 import com.jgoodies.binding.value.ValueHolder;
@@ -24,8 +25,11 @@ import cz.cvut.felk.timejuggler.gui.MyPreferencesAdapter;
 import cz.cvut.felk.timejuggler.gui.MyPresentationModel;
 import cz.cvut.felk.timejuggler.gui.dialogs.filechooser.OpenSaveDialogFactory;
 import cz.cvut.felk.timejuggler.swing.ComponentFactory;
+import cz.cvut.felk.timejuggler.swing.LaF;
+import cz.cvut.felk.timejuggler.swing.LookAndFeels;
 import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.swing.renderers.ColorTableCellRenderer;
+import cz.cvut.felk.timejuggler.utilities.LogUtils;
 import cz.cvut.felk.timejuggler.utilities.Sound;
 import org.jdesktop.swingx.JXTable;
 
@@ -55,6 +59,7 @@ public class UserPreferencesDialog extends AppDialog {
     private final static Logger logger = Logger.getLogger(UserPreferencesDialog.class.getName());
     private MyPresentationModel model;
     private static final String CARD_PROPERTY = "card";
+    private static final String LAF_PROPERTY = "lafFakeProperty";
     private ApplyPreferenceChangeListener prefListener = null;
     private JCheckBox checkPlaySound;
     private SelectionInList<CategoryEntity> inList;
@@ -108,6 +113,8 @@ public class UserPreferencesDialog extends AppDialog {
 
     private void buildGUI() {
         toolbar.setUI(new BlueishButtonBarUI());//nenechat to default?
+        //  toolbar.setOrientation(JButtonBar.HORIZONTAL);
+        //    toolbar.setUI(new BasicButtonBarUI());//nenechat to default?
 
         fieldSoundPath.setEditable(false);
 
@@ -147,8 +154,12 @@ public class UserPreferencesDialog extends AppDialog {
         final JToggleButton button = new JToggleButton(action);
         final Dimension size = button.getPreferredSize();
         final Dimension dim = new Dimension(60, size.height);
+        button.setFont(button.getFont().deriveFont((float) 10));
         button.setMinimumSize(dim);
         button.setPreferredSize(dim);
+        button.setHorizontalTextPosition(JButton.CENTER);
+        button.setVerticalTextPosition(JButton.BOTTOM);
+        button.setOpaque(false);
         toolbar.add(button);
         button.putClientProperty(CARD_PROPERTY, card);
         group.add(button);
@@ -240,6 +251,16 @@ public class UserPreferencesDialog extends AppDialog {
         bindCombobox(comboTimeUnitEvent, AppPrefs.DEFAULT_ALARM_TIME_BEFORE_EVENT_TIMEUNIT, 0, "timeunit");
         bindCombobox(comboTimeUnitTask, AppPrefs.DEFAULT_ALARM_TIME_BEFORE_TASK_TIMEUNIT, 0, "timeunit");
         bindCombobox(comboDateTextFormat, AppPrefs.DATE_TEXT_FORMAT, AppPrefs.DEF_DATE_TEXT_FORMAT_LONG, getDateFormats());
+
+        bindLaFCombobox();
+    }
+
+    private void bindLaFCombobox() {
+        final LookAndFeels lafs = LookAndFeels.getInstance();
+        final ListModel listModel = new ArrayListModel(lafs.getAvailableLookAndFeels());
+        final LookAndFeelAdapter adapter = new LookAndFeelAdapter(LAF_PROPERTY, lafs.getSelectedLaF());
+        final SelectionInList<String> inList = new SelectionInList<String>(listModel, model.getBufferedModel(adapter));
+        Bindings.bind(comboLaF, inList);
     }
 
 
@@ -1061,12 +1082,34 @@ public class UserPreferencesDialog extends AppDialog {
     private JPanel panelViews;
 
 
-    private static class ApplyPreferenceChangeListener implements PreferenceChangeListener {
+    private class ApplyPreferenceChangeListener implements PreferenceChangeListener {
         public void preferenceChange(PreferenceChangeEvent evt) {
             final MainApp app = MainApp.getInstance(MainApp.class);
-
-            if (AppPrefs.SHOW_TRAY.equals(evt.getKey())) {
+            final String key = evt.getKey();
+            if (AppPrefs.SHOW_TRAY.equals(key)) {
                 app.getTrayIconSupport().setVisibleByDefault();
+            } else if (LAF_PROPERTY.equals(key)) {
+                boolean succesful;
+                final ResourceMap map = getResourceMap();
+                final LaF laf = (LaF) comboLaF.getSelectedItem();
+                try {
+//                    succesful = LookAndFeels.getInstance().loadLookAndFeel(laf, true);
+                    succesful = true;
+                    AppPrefs.getPreferences().removePreferenceChangeListener(this);
+                    LookAndFeels.getInstance().storeSelectedLaF(laf);
+                    AppPrefs.removeProperty(LAF_PROPERTY);
+                    AppPrefs.getPreferences().addPreferenceChangeListener(this);
+                } catch (Exception ex) {
+                    LogUtils.processException(logger, ex);
+                    succesful = false;
+                } finally {
+
+                }
+                if (!succesful) {
+                    Swinger.showErrorDialog(map.getString("message_changeLookAndFeelActionFailed"));
+                } //else {
+//                    Swinger.showInformationDialog(map.getString("message_changeLookAndFeelActionSet"));
+//                }
             }
         }
     }
