@@ -4,7 +4,6 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -46,19 +45,19 @@ public class TimeJugglerJDBCTemplate<F> extends JDBCTemplate {
     public F getItems() {
         return items;
     }
-    
+
     public int getGeneratedId() {
         //return (ids.firstElement().intValue());
         return last_id;
     }
 
-	//zmena z protected na public, pouzivano v core.DataProvider
+    //zmena z protected na public, pouzivano v core.DataProvider
     public void commit() throws DatabaseException {
         try {
             getConnection().commit();
         }
         catch (SQLException ex) {//vzdycky handlovat 'nejnizsi' moznou vyjimku
-            throw new DatabaseException("Selhání transakce: " + ex.getMessage(), ex);
+            throw new DatabaseException("Selhani transakce: " + ex.getMessage(), ex);
         }
 
     }
