@@ -33,7 +33,7 @@ public class GlobalEDTExceptionHandler implements Thread.UncaughtExceptionHandle
         final ResourceMap map = Swinger.getResourceMap();
         final ErrorInfo errorInfo = new ErrorInfo(map.getString("errorMessage"), map.getString("errorMessageBasic"), null, "EDT Thread", e, Level.SEVERE, null);
         JXErrorPane pane = new JXErrorPane();
-        pane.setErrorReporter(new EmailErrorReporter());
+        //  pane.setErrorReporter(new EmailErrorReporter());
         pane.setErrorInfo(errorInfo);
         JXErrorPane.showDialog(null, pane);
     }
