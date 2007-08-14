@@ -1,6 +1,8 @@
 package cz.cvut.felk.timejuggler.db.entity;
 
 import cz.cvut.felk.timejuggler.db.*;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.EventTaskEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.CalComponentEntity;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -14,7 +16,7 @@ import java.util.logging.Logger;
  * Spolecna trida pro VEvent a VTodo
  */
  
-public class EventTask extends CalComponent {
+public class EventTask extends CalComponent implements Comparable<EventTaskEntity>, EventTaskEntity, CalComponentEntity {
 	private final static Logger logger = Logger.getLogger(EventTask.class.getName());
 	/* VEvent */
 
@@ -29,6 +31,15 @@ public class EventTask extends CalComponent {
     //public Alarms m_Alarms;
     
     private boolean isTodo;
+    
+    public final static String PROPERTYNAME_GEOGPS = "geoGPS";
+    public final static String PROPERTYNAME_LOCATION = "location";
+    public final static String PROPERTYNAME_PRIORITY = "priority";
+    public final static String PROPERTYNAME_TRANSPARENCY = "transparency";
+    public final static String PROPERTYNAME_PERCENTCOMPLETE = "percentcomplete";
+    public final static String PROPERTYNAME_COMPLETED = "completed";
+    public final static String PROPERTYNAME_ISTODO = "isTodo";
+    
     
 	/**
 	 * Method EventTask
@@ -121,7 +132,11 @@ public class EventTask extends CalComponent {
      * @param newVal
      */
     public void setPriority(int newVal) {
+        /*if (newVal == null)
+            throw new IllegalArgumentException("Priority cannot be null!");*/
+        int oldVal = getPriority();
         priority = newVal;
+        firePropertyChange(PROPERTYNAME_PRIORITY, oldVal, newVal);
     }
     
     public int getPriority() {
@@ -136,7 +151,11 @@ public class EventTask extends CalComponent {
      * @param newVal
      */
     public void setGeoGPS(String newVal) {
+        /*if (newVal == null)
+            throw new IllegalArgumentException("GeoGPS cannot be null!");*/
+        final String oldVal = getGeoGPS();
         geoGPS = newVal;
+        firePropertyChange(PROPERTYNAME_GEOGPS, oldVal, newVal);
     }
 
     public String getLocation() {
@@ -147,7 +166,11 @@ public class EventTask extends CalComponent {
      * @param newVal
      */
     public void setLocation(String newVal) {
+        /*if (newVal == null)
+            throw new IllegalArgumentException("Location cannot be null!");*/
+        final String oldVal = getLocation();
         location = newVal;
+        firePropertyChange(PROPERTYNAME_LOCATION, oldVal, newVal);
     }
     
     public String getTransparency() {
@@ -158,7 +181,12 @@ public class EventTask extends CalComponent {
      * @param newVal
      */
     public void setTransparency(String newVal) {
+    	/* TODO - asi predelat na konstanty - int */
+        /*if (newVal == null)
+            throw new IllegalArgumentException("Transparency cannot be null!");*/
+        final String oldVal = getTransparency();
         transparency = newVal;
+        firePropertyChange(PROPERTYNAME_TRANSPARENCY, oldVal, newVal);
     }
 
     public int getPercentComplete() {
@@ -169,7 +197,9 @@ public class EventTask extends CalComponent {
      * @param newVal
      */
     public void setPercentComplete(int newVal) {
+        int oldVal = getPercentComplete();
         percentcomplete = newVal;
+        firePropertyChange(PROPERTYNAME_PERCENTCOMPLETE, oldVal, newVal);
     }
 
     public Date getCompleted() {
@@ -179,8 +209,10 @@ public class EventTask extends CalComponent {
     /**
      * @param newVal
      */
-    public void setCompleted(Date newVal) {
+    public void setCompleted(Date newVal) {        
+        Date oldVal = getCompleted();
         completed = (newVal == null ? null : new Timestamp(newVal.getTime()));
+        firePropertyChange(PROPERTYNAME_COMPLETED, oldVal, newVal);
     }
     
     /**
@@ -198,10 +230,40 @@ public class EventTask extends CalComponent {
     }    
 
 	public void setIsTodo(boolean isTodo) {
-		this.isTodo = isTodo; 
+        final boolean oldVal = getIsTodo();
+        this.isTodo = isTodo;
+        firePropertyChange(PROPERTYNAME_ISTODO, oldVal, isTodo); 
 	}
 
 	public boolean getIsTodo() {
 		return (this.isTodo); 
+	}
+
+	public int compareTo(EventTaskEntity o) {
+		//TODO: compare to ! 
+        //assert getSummary() != null;
+        //return getSummary().compareTo(o.getSummary());
+        return 1;
+    }
+    
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final EventTask event = (EventTask) o;
+        return getId() == event.getId();
+    }
+    
+    public Object clone() throws CloneNotSupportedException {
+        EventTaskEntity clone;
+        try {
+            clone = (EventTaskEntity) super.clone();
+        } catch (CloneNotSupportedException e) {
+            return null;
+        }
+        return clone;
+    }
+    
+	public String toString(){
+		return getSummary();
 	}
 }

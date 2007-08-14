@@ -2,6 +2,7 @@ package cz.cvut.felk.timejuggler.db;
 
 import cz.cvut.felk.timejuggler.db.entity.*;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.CategoryEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.PeriodsEntity;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.data.ParserException;
@@ -418,7 +419,7 @@ public class DbDataStore {
             /* Cast Periods + Recurrence Dates */
             /* priprava */
 
-            cz.cvut.felk.timejuggler.db.entity.Periods eventPeriods = event.getPeriods();
+            cz.cvut.felk.timejuggler.db.entity.interfaces.PeriodsEntity eventPeriods = event.getPeriods();
 
             prop = comp.getProperty(Property.RDATE);
             RDate rdate = (RDate) prop;

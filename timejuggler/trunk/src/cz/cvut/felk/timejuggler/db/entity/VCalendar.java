@@ -1,6 +1,7 @@
 package cz.cvut.felk.timejuggler.db.entity;
 
 import cz.cvut.felk.timejuggler.db.*;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.VCalendarEntity;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,7 +17,7 @@ import java.util.logging.Logger;
  *
  * Trida reprezentujici objekt kalendar (VCalendar) v databazi
  */
-public class VCalendar extends DbElement {
+public class VCalendar extends DbElement implements Comparable<VCalendarEntity>,VCalendarEntity {
 	private final static Logger logger = Logger.getLogger(VCalendar.class.getName());
 	
     private String productId = "-//CVUT //TimeJuggler Calendar 0.1//CZ";
@@ -24,9 +25,15 @@ public class VCalendar extends DbElement {
     private String calendarScale = "GREGORIAN";
     private String method = "PUBLISH";
     private String name = "";
+    
+    public final static String PROPERTYNAME_PRODUCTID = "productId";
+    public final static String PROPERTYNAME_NAME = "name";
+    public final static String PROPERTYNAME_VERSION = "version";
+    public final static String PROPERTYNAME_CALENDARSCALE = "calendarScale";
+    public final static String PROPERTYNAME_METHOD = "method";
 
     public VCalendar() {
-
+		super();
     }
 
     public VCalendar(int id) {
@@ -95,8 +102,12 @@ public class VCalendar extends DbElement {
         return productId;
     }
 
-    public void setProductId(String productId) {
-        this.productId = productId;
+    public void setProductId(String newVal) {
+        if (newVal == null)
+            throw new IllegalArgumentException("ProductId cannot be null!");
+        final String oldVal = getProductId();
+        productId = newVal;
+        firePropertyChange(PROPERTYNAME_PRODUCTID, oldVal, newVal);
     }
 
     public String getVersion() {
@@ -107,7 +118,11 @@ public class VCalendar extends DbElement {
      * @param newVal
      */
     public void setVersion(String newVal) {
+        if (newVal == null)
+            throw new IllegalArgumentException("Version cannot be null!");
+        final String oldVal = getVersion();
         version = newVal;
+        firePropertyChange(PROPERTYNAME_VERSION, oldVal, newVal);
     }
 
     public String getCalendarScale() {
@@ -118,7 +133,11 @@ public class VCalendar extends DbElement {
      * @param newVal
      */
     public void setCalendarScale(String newVal) {
+        if (newVal == null)
+            throw new IllegalArgumentException("CalendarScale cannot be null!");
+        final String oldVal = getCalendarScale();
         calendarScale = newVal;
+        firePropertyChange(PROPERTYNAME_CALENDARSCALE, oldVal, newVal);
     }
 
     public String getMethod() {
@@ -129,7 +148,11 @@ public class VCalendar extends DbElement {
      * @param newVal
      */
     public void setMethod(String newVal) {
+        if (newVal == null)
+            throw new IllegalArgumentException("Method cannot be null!");
+        final String oldVal = getMethod();
         method = newVal;
+        firePropertyChange(PROPERTYNAME_METHOD, oldVal, newVal);
     }
 
     public String getName() {
@@ -139,8 +162,12 @@ public class VCalendar extends DbElement {
     /**
      * @param newVal
      */
-    public void setName(String newVal) {
+    public void setName(String newVal) {       
+        if (newVal == null)
+            throw new IllegalArgumentException("Name cannot be null!");
+        final String oldVal = getName();
         name = newVal;
+        firePropertyChange(PROPERTYNAME_NAME, oldVal, newVal);
     }
 
     /**
@@ -259,5 +286,31 @@ public class VCalendar extends DbElement {
 	public List<EventTask> getEvents(Date startDate,Date endDate) {
 		// TODO: Napsat SELECT pro vraceni udalosti mezi danymi casy
 		return null;
+	}
+	
+	public int compareTo(VCalendarEntity o) {
+        assert getName() != null;
+        return getName().compareTo(o.getName());
+    }
+    
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final VCalendar cal = (VCalendar) o;
+        return getId() == cal.getId();
+    }
+    
+    public Object clone() throws CloneNotSupportedException {
+        VCalendarEntity clone;
+        try {
+            clone = (VCalendarEntity) super.clone();
+        } catch (CloneNotSupportedException e) {
+            return null;
+        }
+        return clone;
+    }
+    
+	public String toString(){
+		return this.name;
 	}
 }

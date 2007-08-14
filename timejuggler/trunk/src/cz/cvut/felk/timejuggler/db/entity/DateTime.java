@@ -1,6 +1,9 @@
 package cz.cvut.felk.timejuggler.db.entity;
 
 import cz.cvut.felk.timejuggler.db.*;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.DateTimeEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.PeriodsEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.DistinctDatesEntity;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -18,7 +21,7 @@ import java.util.logging.Logger;
  * trida reprezentujici casove udaje udalosti 
  * (zacatek+konec platnosti, cas zmeny, casove useky (periods))
  */
-public class DateTime extends DbElement {
+public class DateTime extends DbElement implements DateTimeEntity {
 	private final static Logger logger = Logger.getLogger(DateTime.class.getName());
 	
 	private Timestamp created;	//datum vytvoreni objektu v databazi

@@ -1,6 +1,7 @@
 package cz.cvut.felk.timejuggler.db.entity;
 
 import cz.cvut.felk.timejuggler.db.*;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.PeriodsEntity;
 
 import java.util.Iterator;
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.logging.Logger;
  * @version 0.1
  * @created 12-V-2007 18:42:40 Hotovo
  */
-public class Periods extends DbElement implements Iterable {
+public class Periods extends DbElement implements Iterable<Period>, PeriodsEntity {
     private final static Logger logger = Logger.getLogger(Periods.class.getName());
 
     private List<Period> periods;

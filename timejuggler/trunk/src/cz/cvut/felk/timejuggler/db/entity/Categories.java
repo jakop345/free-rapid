@@ -76,7 +76,7 @@ public class Categories extends DbElement {
         categories.add(cat);
     }
 
-    public void removeCategory(CategoryEntity cat) {
+    public void removeCategory(Category cat) {
         categories.remove(cat);
     }
 

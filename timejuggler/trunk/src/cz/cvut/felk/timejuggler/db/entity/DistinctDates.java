@@ -1,6 +1,7 @@
 package cz.cvut.felk.timejuggler.db.entity;
 
 import cz.cvut.felk.timejuggler.db.*;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.DistinctDatesEntity;
 
 import java.util.List;
 import java.util.Iterator;
@@ -12,7 +13,7 @@ import java.util.logging.Logger;
  * @created 12-V-2007 18:46:34
  * Hotovo
  */
-public class DistinctDates extends DbElement implements Iterable {
+public class DistinctDates extends DbElement implements Iterable, DistinctDatesEntity {
 	private final static Logger logger = Logger.getLogger(DistinctDates.class.getName());
 	
 	private List<DistinctDate> distinctDates;

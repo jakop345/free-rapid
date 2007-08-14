@@ -2,6 +2,9 @@ package cz.cvut.felk.timejuggler.db.entity;
 
 import cz.cvut.felk.timejuggler.db.TimeJugglerJDBCTemplate;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.CategoryEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.DateTimeEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.PeriodsEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.DistinctDatesEntity;
 
 import java.awt.*;
 import java.sql.ResultSet;
@@ -57,6 +60,7 @@ public class CalComponent extends DbElement {
     private List<RelatedTo> relatedto;
     private List<Resource> resources;
 
+    //private DateTime dateTime;
     private DateTime dateTime;
 
     public CalComponent() {
@@ -339,17 +343,10 @@ public class CalComponent extends DbElement {
 		_categories.removeCategory(cat);
 	}	
 
-/*    public void setCategories(List<Category> categories) {
-        this.categories = categories;
-    }*/
-
-/*    public void addCategory(Category cat) {
-        _categories.addCategory(cat);
-    }*/
-
-    public void removeCategory(CategoryEntity cat) {
+    /*public void removeCategory(Category cat) {
         _categories.removeCategory(cat);
     }
+    */
 
     /**
      * Method getComments
