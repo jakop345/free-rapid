@@ -5,14 +5,14 @@ import cz.cvut.felk.timejuggler.core.AppPrefs;
 import cz.cvut.felk.timejuggler.core.Consts;
 import cz.cvut.felk.timejuggler.core.MainApp;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
+import cz.cvut.felk.timejuggler.utilities.DbHelper;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 import java.io.*;
-import java.util.zip.*;
-import java.util.Enumeration;
+
 
 /**
  * @author Jan Struz
@@ -78,23 +78,11 @@ public class ConnectionManager {
             }
             catch (SQLException ex) {//tohle neni moc cisty, spis SQLException a ani mozna taky ne...
             	//TODO: kod pro inicializaci databaze - Presunout
-            	logger.info("Creating new database...");
-            	String source = AppPrefs.getAppPath() + "/" + Consts.DB_DEFAULT;
-            	String targetdir = appContext.getLocalStorage().getDirectory().getPath();	// databaze v zipu musi byt v adresari db/
-            	
-            	File databasedirectory = new File(targetdir + "/" + Consts.DB_LOCALDIR);
-            	if (!databasedirectory.exists()) {
-            		//Unzip (inicializacni databaze)
-            		try {
-            			databasedirectory.mkdir();
-            			unzip(source, targetdir);
-				    }
-				    catch (IOException e) {
-				    	LogUtils.processException(logger, e);
-			    		databasedirectory.delete();
-				    }
+            	DbHelper dbHelper = DbHelper.getInstance();
+            	if (!dbHelper.isDatabasePresent()) {
+            		dbHelper.localDbCreate();
             	}
-                connection = DriverManager.getConnection(url /*+ create_url (nemelo by byt potreba)*/, db_user, db_pass);
+                connection = DriverManager.getConnection(url, db_user, db_pass);
             }
             connection.setAutoCommit(false); // Vypnuti automatickeho commit pro kazdy dotaz
         }
@@ -105,45 +93,5 @@ public class ConnectionManager {
         //TODO ma smysl povolit shutdown pokud je connection null?
         DriverManager.getConnection(url + ";shutdown=true");
     }
-    
-    /*
-     * Method unzip
-     *
-     * Rozbali zip soubor 
-     */
-    public static void unzip(String source, String targetdir) throws IOException{
-		Enumeration entries;
-
-		ZipFile zipped_db = new ZipFile(source);						
-		
-		entries = zipped_db.entries();
-		while(entries.hasMoreElements()) {
-	        ZipEntry entry = (ZipEntry)entries.nextElement();
-	
-			if(entry.isDirectory()) {
-				// Assume directories are stored parents first then children.
-				logger.info("Extracting directory: " + entry.getName());
-				// This is not robust, just for demonstration purposes.
-	        	(new File(targetdir + "/" + entry.getName())).mkdir();
-	        	continue;
-	        }
-
-	        logger.info("Extracting file: " + entry.getName());
-	        copyInputStream(zipped_db.getInputStream(entry),
-	           new BufferedOutputStream(new FileOutputStream(targetdir + "/" + entry.getName())));
-		}
-		zipped_db.close();
-    }
-    
-    public static final void copyInputStream(InputStream in, OutputStream out) throws IOException {
-    	byte[] buffer = new byte[1024];
-    	int len;
-
-    	while((len = in.read(buffer)) >= 0)
-      		out.write(buffer, 0, len);
-
-    	in.close();
-    	out.close();
-  }
 
 }
