@@ -8,7 +8,7 @@ public class Consts {
     /**
      * verze a jmeno programu
      */
-    public static final String APPVERSION = "TimeJuggler 0.1";
+    public static final String APPVERSION = "TimeJuggler 0.4";
 
     /**
      * uzivatelske jmeno pro pristup do databaze
