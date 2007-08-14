@@ -59,9 +59,9 @@ public final class AppPrefs {
     public static final String SHOW_MISSED_ALARMS = "settings.showMissedAlarms";
     public static final String SOUND_PATH = "settings.soundPath";
     public static final String LAST_USED_SOUND_FILTER = "settings.lastUsedSoundFilter";
-    public static final String LOOK_AND_FEEL_SELECTED_KEY = "lookAndFeel";
-    public static final String LOOK_AND_FEEL_OPAQUE_KEY = "lafOpaque";
-    public static final String THEME_SELECTED_KEY = "theme";
+    public static final String LOOK_AND_FEEL_SELECTED_KEY = "settings.lookAndFeel";
+    public static final String LOOK_AND_FEEL_OPAQUE_KEY = "settings.lafOpaque";
+    public static final String THEME_SELECTED_KEY = "settings.theme";
 
 
     private AppPrefs() {
@@ -172,7 +172,7 @@ public final class AppPrefs {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        logger.info("Properties were saved successfuly");
+        logger.info("Preferences were saved successfuly");
     }
 
     /**

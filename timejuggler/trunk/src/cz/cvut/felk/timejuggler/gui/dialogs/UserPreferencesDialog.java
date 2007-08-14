@@ -155,6 +155,7 @@ public class UserPreferencesDialog extends AppDialog {
         final Dimension size = button.getPreferredSize();
         final Dimension dim = new Dimension(60, size.height);
         button.setFont(button.getFont().deriveFont((float) 10));
+        button.setForeground(Color.BLACK);
         button.setMinimumSize(dim);
         button.setPreferredSize(dim);
         button.setHorizontalTextPosition(JButton.CENTER);
@@ -1130,12 +1131,12 @@ public class UserPreferencesDialog extends AppDialog {
             return false;
         }
 
-        @Override
-        public Class<?> getColumnClass(int columnIndex) {
-            if (columnIndex == 1)
-                return Color.class;
-            return super.getColumnClass(columnIndex);
-        }
+//        @Override
+//        public Class<?> getColumnClass(int columnIndex) {
+//            if (columnIndex == 1)
+//                return Color.class;
+//            return super.getColumnClass(columnIndex);
+//        }
 
         public Object getValueAt(int rowIndex, int columnIndex) {
             CategoryEntity categoryEntity = getRow(rowIndex);
