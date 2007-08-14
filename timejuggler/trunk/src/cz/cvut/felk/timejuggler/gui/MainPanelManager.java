@@ -56,12 +56,13 @@ public class MainPanelManager {
 
         // testovaci blok
         Date startDate = new Date(0);
-        startDate.setHours(9);
+        startDate.setHours(5);
         startDate.setMinutes(15);
 
         Date endDate = new Date(0);
         endDate.setHours(13);
         endDate.setMinutes(30);
+        endDate.setDate(2);
 
         Date todayDate = new Date(0);
 
@@ -71,7 +72,7 @@ public class MainPanelManager {
         calendarGrid = new CalendarGrid(calendarEventDAO, calendarConfig);
         calendarGrid.setStartDate(todayDate);
 
-        calendarGrid.setCalendarView(CalendarView.WEEK);
+        calendarGrid.setCalendarView(CalendarView.MONTH);
 
         CalendarEvent ce = new CalendarEvent();
         ce.setName("Test udalost");
@@ -86,8 +87,10 @@ public class MainPanelManager {
         endDate = new Date(0);
         endDate.setHours(14);
         endDate.setMinutes(38);
+        endDate.setDate(2);
+        endDate.setMonth(1);
         ce = new CalendarEvent();
-        ce.setName("Test udalost 2");
+        ce.setName("Test udalost 2 do dalsiho dne");
         ce.setStartDate(startDate);
         ce.setEndDate(endDate);
 
