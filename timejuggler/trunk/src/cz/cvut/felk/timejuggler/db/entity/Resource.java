@@ -10,7 +10,7 @@ import cz.cvut.felk.timejuggler.db.*;
  */
 public class Resource extends DbElement{
 	//TODO : Logging
-	private String resource;
+	private String resource = "";
 	
 	private int componentId;
 

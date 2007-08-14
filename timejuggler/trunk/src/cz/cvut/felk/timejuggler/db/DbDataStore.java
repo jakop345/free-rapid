@@ -338,13 +338,13 @@ public class DbDataStore {
 
         // Nastaveni vlastnosti novemu kalendari, ktere byly precteny ze souboru
         prop = calendar.getMethod();
-        newcal.setMethod(prop == null ? null : prop.getValue());
+        newcal.setMethod(prop == null ? "" : prop.getValue());
         prop = calendar.getCalendarScale();
-        newcal.setCalendarScale(prop == null ? null : prop.getValue());
+        newcal.setCalendarScale(prop == null ? "" : prop.getValue());
         prop = calendar.getProductId();
-        newcal.setProductId(prop == null ? null : prop.getValue());
+        newcal.setProductId(prop == null ? "" : prop.getValue());
         prop = calendar.getVersion();
-        newcal.setVersion(prop == null ? null : prop.getValue());
+        newcal.setVersion(prop == null ? "" : prop.getValue());
         newcal.setName(filename);
 
         // Ulozeni nastaveni kalendare do DB
@@ -360,21 +360,21 @@ public class DbDataStore {
             EventTask event = new EventTask();
 
             prop = comp.getProperty(Property.CLASS);
-            event.setClazz(prop == null ? null : prop.getValue());
+            event.setClazz(prop == null ? "" : prop.getValue());
             prop = comp.getProperty(Property.CREATED);
             event.setCreated(prop == null ? null : new Date(((Created) prop).getDateTime().getTime()));
             prop = comp.getProperty(Property.DESCRIPTION);
-            event.setDescription(prop == null ? null : prop.getValue());
+            event.setDescription(prop == null ? "" : prop.getValue());
             prop = comp.getProperty(Property.DTSTART);
             event.setStartDate(prop == null ? null : (((DtStart) prop).getDate()));
             prop = comp.getProperty(Property.GEO);
-            event.setGeoGPS(prop == null ? null : ((prop).getValue()));
+            event.setGeoGPS(prop == null ? "" : ((prop).getValue()));
             prop = comp.getProperty(Property.LAST_MODIFIED);
             event.setLastModified(prop == null ? null : new Date(((LastModified) prop).getDateTime().getTime()));
             prop = comp.getProperty(Property.LOCATION);
-            event.setLocation(prop == null ? null : prop.getValue());
+            event.setLocation(prop == null ? "" : prop.getValue());
             prop = comp.getProperty(Property.ORGANIZER);
-            event.setOrganizer(prop == null ? null : prop.getValue());
+            event.setOrganizer(prop == null ? "" : prop.getValue());
             prop = comp.getProperty(Property.PRIORITY);
             event.setPriority(prop == null ? 0 : ((Priority) prop).getLevel());
             prop = comp.getProperty(Property.DTSTAMP);
@@ -382,13 +382,13 @@ public class DbDataStore {
             prop = comp.getProperty(Property.SEQUENCE);
             event.setSequence(prop == null ? 0 : ((Sequence) prop).getSequenceNo());
             prop = comp.getProperty(Property.STATUS);
-            event.setStatus(prop == null ? null : (prop).getValue());
+            event.setStatus(prop == null ? "" : (prop).getValue());
             prop = comp.getProperty(Property.SUMMARY);
-            event.setSummary(prop == null ? null : (prop).getValue());
+            event.setSummary(prop == null ? "" : (prop).getValue());
             prop = comp.getProperty(Property.TRANSP);
-            event.setTransparency(prop == null ? null : (prop).getValue());
+            event.setTransparency(prop == null ? "" : (prop).getValue());
             prop = comp.getProperty(Property.URL);
-            event.setUrl(prop == null ? null : prop.getValue());
+            event.setUrl(prop == null ? "" : prop.getValue());
             prop = comp.getProperty(Property.RECURRENCE_ID);
             event.setRecurrenceId(prop == null ? null : new Date(((RecurrenceId) prop).getDate().getTime()));
             prop = comp.getProperty(Property.DTEND);
@@ -396,7 +396,7 @@ public class DbDataStore {
             prop = comp.getProperty(Property.DURATION);
             if (prop != null) event.setEndDate(transformer.makeDuration(prop));
             prop = comp.getProperty(Property.UID);
-            event.setUid(prop == null ? null : (prop).getValue());
+            event.setUid(prop == null ? "" : (prop).getValue());
 
             /* Categories */
             prop = comp.getProperty(Property.CATEGORIES);
@@ -504,7 +504,7 @@ public class DbDataStore {
     public void exportICS(VCalendar calendar, File outputFile) throws URISyntaxException, ValidationException, IOException {
         logger.info("Exporting calendar to file " + outputFile.getPath() + "...");
         // TODO: Period property
-        // Funkcni - castecne expertuje Eventy
+        // Funkcni - castecne exportuje Eventy
         Calendar ical;
         List<EventTask> events = calendar.getEvents();    // sada Timejuggler
         ComponentList compList = new ComponentList();    // sada pro iCal
@@ -518,39 +518,39 @@ public class DbDataStore {
             // Nastaveni vlastnosti pro Eventy k ulozeni do souboru
             String value;
             value = e.getClazz();
-            if (value != null) propList.add(new Clazz(value));
+            if (value != "") propList.add(new Clazz(value));
             Date tmpdate = e.getCreated();
             if (tmpdate != null) propList.add(new Created(new DateTime(tmpdate.getTime())));
             value = e.getDescription();
-            if (value != null) propList.add(new Description(value));
+            if (value != "") propList.add(new Description(value));
             if (e.getStartDate() != null)
                 propList.add(new DtStart(new net.fortuna.ical4j.model.Date(e.getStartDate())));
 
             value = e.getGeoGPS();
-            if (value != null) propList.add(new Geo(value));
+            if (value != "") propList.add(new Geo(value));
             tmpdate = e.getLastModified();
             if (tmpdate != null) propList.add(new LastModified(new DateTime(tmpdate.getTime())));
 
             value = e.getLocation();
-            if (value != null) propList.add(new Location(value));
+            if (value != "") propList.add(new Location(value));
 
 
             value = e.getOrganizer();
-            if (value != null) propList.add(new Organizer(value));
+            if (value != "") propList.add(new Organizer(value));
 
 
             propList.add(new Priority(e.getPriority()));
             propList.add(new DtStamp());
             propList.add(new Sequence(e.getSequence()));
             value = e.getStatus();
-            if (value != null) propList.add(new Status(value));
+            if (value != "") propList.add(new Status(value));
             value = e.getSummary();
-            if (value != null) propList.add(new Summary(value));
+            if (value != "") propList.add(new Summary(value));
             value = e.getTransparency();
-            if (value != null) propList.add(new Transp(value));
+            if (value != "") propList.add(new Transp(value));
             try {
                 value = e.getUrl();
-                if (value != null) propList.add(new Url(new URI(value)));
+                if (value != "") propList.add(new Url(new URI(value)));
             }
             catch (URISyntaxException ex) {
                 LogUtils.processException(logger, ex);
@@ -569,8 +569,7 @@ public class DbDataStore {
 
             Periods periods = e.getPeriods();
             if (periods != null) {
-                for (Object o : periods) {
-                    cz.cvut.felk.timejuggler.db.entity.Period p = (cz.cvut.felk.timejuggler.db.entity.Period) o;
+                for (cz.cvut.felk.timejuggler.db.entity.Period p : periods) {
                     System.out.println("+-period " + p.getStartDate() + " ... " + p.getEndDate());
                 }
             }
@@ -582,13 +581,13 @@ public class DbDataStore {
         // Nepovinne: CalendarScale, Method
         String value;
         value = calendar.getProductId();
-        if (value != null) propList.add(new ProdId(value));
+        if (value != "") propList.add(new ProdId(value));
         value = calendar.getVersion();
-        if (value != null) propList.add(Version.VERSION_2_0);
+        if (value != "") propList.add(Version.VERSION_2_0);
         value = calendar.getCalendarScale();
-        if (value != null) propList.add(new CalScale(value));
+        if (value != "") propList.add(new CalScale(value));
         value = calendar.getMethod();
-        if (value != null) propList.add(new Method(value));
+        if (value != "") propList.add(new Method(value));
 
         // Vytvoreni objektu Calendar (typ iCal) pro ulozeni do souboru
         ical = new Calendar(propList, compList);

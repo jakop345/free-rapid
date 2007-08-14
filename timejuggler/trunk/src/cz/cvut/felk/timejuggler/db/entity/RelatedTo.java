@@ -10,7 +10,7 @@ import cz.cvut.felk.timejuggler.db.*;
  */
 public class RelatedTo extends DbElement {
 	//TODO : Logging
-	private String relatedto;
+	private String relatedto = "";
 	private int componentId;
 	
 	public RelatedTo(){

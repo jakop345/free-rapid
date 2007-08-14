@@ -24,23 +24,35 @@ import java.util.logging.Logger;
 public class CalComponent extends DbElement {
     private final static Logger logger = Logger.getLogger(CalComponent.class.getName());
 
+	private final static String PROPERTYNAME_UID = "uid";
+	private final static String PROPERTYNAME_URL = "url";
+	private final static String PROPERTYNAME_CLAZZ = "clazz";
+	private final static String PROPERTYNAME_DESCRIPTION = "description";
+	private final static String PROPERTYNAME_ORGANIZER = "organizer";
+	private final static String PROPERTYNAME_SEQUENCE = "sequence";
+	private final static String PROPERTYNAME_STATUS = "status";
+	private final static String PROPERTYNAME_SUMMARY = "summary";
+	private final static String PROPERTYNAME_COMPONENTID = "componentId";
+	private final static String PROPERTYNAME_CALENDARID = "calendarId";
+	
+
     /**
      * uid - povinny parametr! (globalne unikatni (MAILTO://email@...))
      */
-    private String uid;
-    private String url;
+    private String uid = "";
+    private String url = "";
     /**
      * clazz klasifikace (PUBLIC/PRIVATE...)
      */
-    private String clazz;
+    private String clazz = "";
     /**
      * popis komponenty
      */
-    private String description;
-    private String organizer;
+    private String description = "";
+    private String organizer = "";
     private int sequence = 0;
-    private String status;
-    private String summary;
+    private String status = "";
+    private String summary = "";
     private Timestamp recurrenceid;
     private Timestamp dtstamp;
     private int componentId;
@@ -87,8 +99,12 @@ public class CalComponent extends DbElement {
      * povinny parametr! (globalne unikatni (MAILTO://email@...))
      * @param newVal
      */
-    public void setUid(String newVal) {
+    public void setUid(String newVal) {       
+        if (newVal == null)
+            throw new IllegalArgumentException("Uid cannot be null!");
+        final String oldVal = getUid();
         uid = newVal;
+        firePropertyChange(PROPERTYNAME_UID, oldVal, newVal);
     }
 
     public String getUrl() {
@@ -99,7 +115,11 @@ public class CalComponent extends DbElement {
      * @param newVal
      */
     public void setUrl(String newVal) {
+        if (newVal == null)
+            throw new IllegalArgumentException("Url cannot be null!");
+        final String oldVal = getUrl();
         url = newVal;
+        firePropertyChange(PROPERTYNAME_URL, oldVal, newVal);
     }
 
     /**
@@ -114,7 +134,11 @@ public class CalComponent extends DbElement {
      * @param newVal
      */
     public void setClazz(String newVal) {
+        if (newVal == null)
+            throw new IllegalArgumentException("Clazz cannot be null!");
+        final String oldVal = getClazz();
         clazz = newVal;
+        firePropertyChange(PROPERTYNAME_CLAZZ, oldVal, newVal);
     }
 
     /**
@@ -129,7 +153,11 @@ public class CalComponent extends DbElement {
      * @param newVal
      */
     public void setDescription(String newVal) {
+        if (newVal == null)
+            throw new IllegalArgumentException("Description cannot be null!");
+        final String oldVal = getDescription();
         description = newVal;
+        firePropertyChange(PROPERTYNAME_DESCRIPTION, oldVal, newVal);
     }
 
     public String getOrganizer() {
@@ -140,7 +168,11 @@ public class CalComponent extends DbElement {
      * @param newVal
      */
     public void setOrganizer(String newVal) {
+        if (newVal == null)
+            throw new IllegalArgumentException("Organizer cannot be null!");
+        final String oldVal = getOrganizer();
         organizer = newVal;
+        firePropertyChange(PROPERTYNAME_ORGANIZER, oldVal, newVal);
     }
 
     public int getSequence() {
@@ -173,7 +205,11 @@ public class CalComponent extends DbElement {
      * @param newVal
      */
     public void setSummary(String newVal) {
+        if (newVal == null)
+            throw new IllegalArgumentException("Summary cannot be null!");
+        final String oldVal = getSummary();
         summary = newVal;
+        firePropertyChange(PROPERTYNAME_SUMMARY, oldVal, newVal);
     }
 
     public Date getRecurrenceId() {
@@ -206,11 +242,10 @@ public class CalComponent extends DbElement {
      * @param template Ulozeni spolecnych udaju z Todo, Eventu,.. do databaze
      */
     public void saveOrUpdate(TimeJugglerJDBCTemplate template) {
-
+		
         if (dateTime != null) {
             dateTime.saveOrUpdate(template);
         }
-
 
         if (getComponentId() > 0) {
             logger.info("Database - Update: CalComponent[" + getId() + "]...");
@@ -257,6 +292,7 @@ public class CalComponent extends DbElement {
         // TODO: attendees
         // TODO: resources
         // TODO: request-status
+        super.saveOrUpdate(template);
     }
 
     /**

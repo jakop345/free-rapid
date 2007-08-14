@@ -20,10 +20,10 @@ public class EventTask extends CalComponent implements Comparable<EventTaskEntit
 	private final static Logger logger = Logger.getLogger(EventTask.class.getName());
 	/* VEvent */
 
-    private String geoGPS;
-    private String location;
+    private String geoGPS = "";
+    private String location = "";
     private int priority = 0; // 0 = undefined
-    private String transparency;
+    private String transparency = "";
 
 	/* VTodo */       
     private int percentcomplete;
@@ -39,7 +39,6 @@ public class EventTask extends CalComponent implements Comparable<EventTaskEntit
     public final static String PROPERTYNAME_PERCENTCOMPLETE = "percentcomplete";
     public final static String PROPERTYNAME_COMPLETED = "completed";
     public final static String PROPERTYNAME_ISTODO = "isTodo";
-    
     
 	/**
 	 * Method EventTask

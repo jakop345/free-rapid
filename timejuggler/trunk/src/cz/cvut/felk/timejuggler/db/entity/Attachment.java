@@ -10,7 +10,7 @@ import cz.cvut.felk.timejuggler.db.*;
  */
 public class Attachment extends DbElement {
 	//TODO : Logging
-	private String attach;
+	private String attach = "";
 	private boolean isBinary = false;
 
 	private int componentId;

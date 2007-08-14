@@ -10,7 +10,7 @@ import cz.cvut.felk.timejuggler.db.*;
  */
 public class RequestStatus extends DbElement{
 	//TODO : Logging
-	private String rstatus;
+	private String rstatus = "";
 	
 	private int componentId;
 

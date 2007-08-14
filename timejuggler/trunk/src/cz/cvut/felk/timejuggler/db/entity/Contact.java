@@ -10,7 +10,7 @@ import cz.cvut.felk.timejuggler.db.*;
  */
 public class Contact extends DbElement {
 	//TODO : Logging
-	private String contact;
+	private String contact = "";
 	
 	private int componentId;
 	

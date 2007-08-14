@@ -10,7 +10,7 @@ import cz.cvut.felk.timejuggler.db.*;
  */
 public class Comment extends DbElement{
 	//TODO : Logging
-	private String comment;
+	private String comment = "";
 	
 	private int componentId;
 
