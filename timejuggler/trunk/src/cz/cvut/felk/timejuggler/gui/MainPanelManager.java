@@ -78,6 +78,7 @@ public class MainPanelManager {
         ce.setName("Test udalost");
         ce.setStartDate(startDate);
         ce.setEndDate(endDate);
+        ce.setColor(Color.ORANGE);
         calendarEventDAO.saveCalendarEvent(ce);
 
         startDate = new Date(0);
@@ -93,7 +94,7 @@ public class MainPanelManager {
         ce.setName("Test udalost 2 do dalsiho dne");
         ce.setStartDate(startDate);
         ce.setEndDate(endDate);
-
+        ce.setColor(Color.GREEN);
         calendarEventDAO.saveCalendarEvent(ce);
 
         startDate = new Date(0);

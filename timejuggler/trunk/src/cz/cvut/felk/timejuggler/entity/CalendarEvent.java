@@ -1,5 +1,6 @@
 package cz.cvut.felk.timejuggler.entity;
 
+import java.awt.Color;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -16,6 +17,7 @@ public class CalendarEvent implements Serializable {
 	private Date startDate;
 	private Date endDate;
 	private String name;
+	private Color color;
 	
 	public String getName() {
 		return name;
@@ -40,4 +42,13 @@ public class CalendarEvent implements Serializable {
 	public void setEndDate(Date stopDate) {
 		this.endDate = stopDate;
 	}
+
+	public Color getColor() {
+		return color;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
+	}
+
 }
