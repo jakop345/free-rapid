@@ -62,6 +62,7 @@ public final class AppPrefs {
     public static final String LOOK_AND_FEEL_SELECTED_KEY = "settings.lookAndFeel";
     public static final String LOOK_AND_FEEL_OPAQUE_KEY = "settings.lafOpaque";
     public static final String THEME_SELECTED_KEY = "settings.theme";
+    public static final String ONEINSTANCE = "settings.oneinstance";
 
 
     private AppPrefs() {

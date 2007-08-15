@@ -423,8 +423,10 @@ public class UserPreferencesDialog extends AppDialog {
     public void doClose() {
         logger.log(Level.FINE, "Closing UserPreferenceDialog.");
         try {
-            if (prefListener != null)
-                AppPrefs.getPreferences().removePreferenceChangeListener(prefListener);
+            synchronized (this) {
+                if (prefListener != null)
+                    AppPrefs.getPreferences().removePreferenceChangeListener(prefListener);
+            }
             final SelectionInList list = getCategorySelection();
             if (list != null)
                 list.release();
@@ -1096,10 +1098,12 @@ public class UserPreferencesDialog extends AppDialog {
                 try {
 //                    succesful = LookAndFeels.getInstance().loadLookAndFeel(laf, true);
                     succesful = true;
-                    AppPrefs.getPreferences().removePreferenceChangeListener(this);
-                    LookAndFeels.getInstance().storeSelectedLaF(laf);
-                    AppPrefs.removeProperty(LAF_PROPERTY);
-                    AppPrefs.getPreferences().addPreferenceChangeListener(this);
+                    synchronized (UserPreferencesDialog.this) {
+                        AppPrefs.getPreferences().removePreferenceChangeListener(this);
+                        LookAndFeels.getInstance().storeSelectedLaF(laf);
+                        AppPrefs.removeProperty(LAF_PROPERTY);
+                        AppPrefs.getPreferences().addPreferenceChangeListener(this);
+                    }
                 } catch (Exception ex) {
                     LogUtils.processException(logger, ex);
                     succesful = false;

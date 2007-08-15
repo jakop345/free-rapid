@@ -81,6 +81,10 @@ public class MainApp extends SingleXFrameApplication {
     @Override
     protected void initialize(String[] args) {
         filesToOpen = processArguments(args);
+        if (OneInstanceClient.checkInstance(filesToOpen)) {
+            this.exit();
+            return;
+        }
         this.dataProvider = new DataProvider();
         this.dataProvider.init();
         LogUtils.initLogging(debug);

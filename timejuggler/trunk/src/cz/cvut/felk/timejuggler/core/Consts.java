@@ -49,7 +49,14 @@ public class Consts {
      */
     public static final String LAFSDIR = "lookandfeel";
 
+    /**
+     * cesta k properties fajlu
+     */
     public static final String LAFSDIRFILE = LAFSDIR + "/lookandfeels.properties";
+    /**
+     * port na kterem bezi aplikace, aby se zamezilo dvojimu spousteni - kvuli konexeni k databazi
+     */
+    public static final int ONE_INSTANCE_SERVER_PORT = 28879;
 
 
     /**
