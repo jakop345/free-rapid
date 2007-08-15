@@ -10,6 +10,8 @@ import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragGestureEvent;
 import java.awt.dnd.DragGestureListener;
 import java.awt.dnd.DragSource;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -17,7 +19,7 @@ import java.util.*;
  * Komponenta zprostredkovavajici grafickou reprezentaci kalendarnich udalosti, v kontextu celku.
  * @author Jerry!
  */
-public class CalendarGrid extends JComponent {
+public class CalendarGrid extends JComponent implements ComponentListener {
 
     private static final long serialVersionUID = 1L;
 
@@ -42,11 +44,15 @@ public class CalendarGrid extends JComponent {
         super();
         this.calendarEventDAO = calendarEventDAO;
         this.calendarConfig = calendarConfig;
+        this.addComponentListener(this);
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
-        recountCalendarEvents();
+    public void paint(Graphics g) {
+    	Color color = g.getColor();
+    	g.setColor(getBackground());
+    	g.fillRect(0, 0, this.getWidth(), this.getHeight());
+    	g.setColor(color);
         switch (calendarView) {
             case DAY:
                 paintCalendarDay(g);
@@ -63,10 +69,10 @@ public class CalendarGrid extends JComponent {
             default:
                 throw new RuntimeException("UnrealException");
         }
-        super.paintComponent(g);
+        super.paint(g);
     }
 
-    /**
+	/**
      * Aktualizuje mnozinu udalosti, ktere zobrazuje podle dat z DAO
      */
     public void refreshCalendarEvents() {
@@ -170,6 +176,7 @@ public class CalendarGrid extends JComponent {
         	
         }
         recountCalendarEvents();
+        repaint();
     }
 
     /**
@@ -551,6 +558,26 @@ public class CalendarGrid extends JComponent {
 
     public void setStartDate(Date startDate) {
 		this.startDate = startDate;
+	}
+
+	@Override
+	public void componentHidden(ComponentEvent arg0) {
+		// nic
+	}
+
+	@Override
+	public void componentMoved(ComponentEvent arg0) {
+		//nic
+	}
+
+	@Override
+	public void componentResized(ComponentEvent arg0) {
+        recountCalendarEvents();        		
+	}
+
+	@Override
+	public void componentShown(ComponentEvent arg0) {
+		//nic
 	}
 
 }
