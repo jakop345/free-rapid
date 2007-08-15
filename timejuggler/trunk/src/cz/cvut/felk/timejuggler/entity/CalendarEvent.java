@@ -1,5 +1,6 @@
 package cz.cvut.felk.timejuggler.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -8,7 +9,10 @@ import java.util.Date;
  * @author Jerry!
  *
  */
-public class CalendarEvent {
+public class CalendarEvent implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
+	
 	private Date startDate;
 	private Date endDate;
 	private String name;
