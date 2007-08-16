@@ -1,18 +1,16 @@
 package cz.cvut.felk.timejuggler.gui.actions;
 
-import cz.cvut.felk.timejuggler.core.MainApp;
-import cz.cvut.felk.timejuggler.swing.components.calendar.CalendarView;
 import application.Action;
+import cz.cvut.felk.timejuggler.core.AppPrefs;
+import cz.cvut.felk.timejuggler.core.MainApp;
+import cz.cvut.felk.timejuggler.swing.components.calendar.CalendarGrid;
+import cz.cvut.felk.timejuggler.swing.components.calendar.CalendarView;
 
 /**
  * @author Vity
  */
 
 public class ViewActions {
-    public static final int DAY_VIEW = 0;
-    public static final int WEEK_VIEW = 1;
-    public static final int MULTIWEEK_VIEW = 2;
-    public static final int MONTH_VIEW = 3;
 
     private MainApp app;
 
@@ -26,27 +24,31 @@ public class ViewActions {
     }
 
     @Action
-    public void dayView(javax.swing.Action action) {
-    	app.getMainPanel().getCalendarGrid().setCalendarView(CalendarView.DAY);
-    	app.getMainPanel().getCalendarGrid().refreshCalendarEvents();
+    public void dayView() {
+        updateGrid(CalendarView.DAY);
     }
+
 
     @Action
     public void weekView() {
-    	app.getMainPanel().getCalendarGrid().setCalendarView(CalendarView.WEEK);
-    	app.getMainPanel().getCalendarGrid().refreshCalendarEvents();
+        updateGrid(CalendarView.WEEK);
     }
 
     @Action
     public void multiWeekView() {
-    	app.getMainPanel().getCalendarGrid().setCalendarView(CalendarView.MULTI_WEEK);
-    	app.getMainPanel().getCalendarGrid().refreshCalendarEvents();
+        updateGrid(CalendarView.MULTI_WEEK);
     }
 
     @Action
     public void monthView() {
-    	app.getMainPanel().getCalendarGrid().setCalendarView(CalendarView.MONTH);
-    	app.getMainPanel().getCalendarGrid().refreshCalendarEvents();
+        updateGrid(CalendarView.MONTH);
+    }
+
+    private void updateGrid(CalendarView day) {
+        final CalendarGrid calendarGrid = app.getMainPanel().getCalendarGrid();
+        calendarGrid.setCalendarView(day);
+        calendarGrid.refreshCalendarEvents();
+        AppPrefs.storeProperty(AppPrefs.CALENDAR_VIEW, day.ordinal());
     }
 
     @Action
@@ -59,9 +61,9 @@ public class ViewActions {
 
     }
 
-	protected MainApp getApp() {
-		return app;
-	}
+    protected MainApp getApp() {
+        return app;
+    }
 
 //    public boolean isEnabled() {
 //        System.out.println("isenabled");

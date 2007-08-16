@@ -5,7 +5,6 @@ import cz.cvut.felk.timejuggler.dao.CalendarEventDAO_DummyImpl;
 import cz.cvut.felk.timejuggler.entity.CalendarEvent;
 import cz.cvut.felk.timejuggler.swing.components.calendar.CalendarConfig;
 import cz.cvut.felk.timejuggler.swing.components.calendar.CalendarGrid;
-import cz.cvut.felk.timejuggler.swing.components.calendar.CalendarView;
 import org.jdesktop.swingx.JXMultiSplitPane;
 import org.jdesktop.swingx.MultiSplitLayout;
 
@@ -72,8 +71,8 @@ public class MainPanelManager {
         calendarGrid = new CalendarGrid(calendarEventDAO, calendarConfig);
         calendarGrid.setStartDate(todayDate);
 
-        calendarGrid.setCalendarView(CalendarView.MONTH);
-
+        //calendarGrid.setCalendarView(CalendarView.toCalendarView(AppPrefs.getProperty(AppPrefs.CALENDAR_VIEW, CalendarView.DAY.ordinal())));
+        //defaultni nastaveni Calendar view je provedeno v MenuManagerovi pri nastavovani asociovanych akci
         CalendarEvent ce = new CalendarEvent();
         ce.setName("Test udalost");
         ce.setStartDate(startDate);

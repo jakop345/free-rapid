@@ -14,7 +14,6 @@ import cz.cvut.felk.timejuggler.swing.ComponentFactory;
 import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.swing.components.ColorComboBox;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
-import org.izvin.client.desktop.ui.util.UIBeanEnhancer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -93,11 +92,7 @@ public class CategoryDialog extends AppDialog {
     }
 
     private void buildModels() {
-        final CategoryEntity cat;
-        if (this.newCategory) //pokud zakladame novou kategorii, tak enhancovat budeme, jinak nebudeme, protoze uz bylo
-            cat = UIBeanEnhancer.enhance(category);
-        else cat = this.category;
-        model = new PresentationModel(cat, new Trigger());
+        model = new PresentationModel(category, new Trigger());
         Bindings.bind(fieldName, model.getBufferedModel("name"), false);
         final BufferedValueModel valueColorModel = model.getBufferedModel(PROPERTY_COLOR);
 

@@ -2,14 +2,13 @@ package cz.cvut.felk.timejuggler.db;
 
 import cz.cvut.felk.timejuggler.db.entity.*;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.CategoryEntity;
-import cz.cvut.felk.timejuggler.db.entity.interfaces.PeriodsEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.VCalendarEntity;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.property.RDate;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.Calendars;
 
@@ -87,12 +86,12 @@ public class DbDataStore {
 
         /* Vypis */
 
-        List<VCalendar> cals = db.getCalendars();
+        List<VCalendarEntity> cals = db.getCalendars();
 
         int i = 0;
-        for (VCalendar cal : cals) {
+        for (VCalendarEntity cal : cals) {
             try {
-                db.exportICS(cal, new File("vystup" + i + ".ics"));
+                db.exportICS((VCalendar) cal, new File("vystup" + i + ".ics"));
                 i++;
             } catch (URISyntaxException e) {
                 LogUtils.processException(logger, e);
@@ -158,13 +157,14 @@ public class DbDataStore {
      * @param Pro vypis obsahu DB
      */
     public void showDB() {
-        List<VCalendar> cals = getCalendars();
+        List<VCalendarEntity> cals = getCalendars();
 
-        for (VCalendar cal : cals) {
+        for (VCalendarEntity cal : cals) {
             System.out.println("Calendar name:" + cal.getName());
             System.out.println("+--Events:");
 
-            List<EventTask> events = cal.getEvents();
+//            List<EventTask> events = cal.getEvents(); <<commented out by Vity >>
+            List<EventTask> events = null;
             if (events != null) {
                 for (EventTask e : events) {
                     //System.out.println ("event.description: " + e.getDescription());
@@ -194,13 +194,13 @@ public class DbDataStore {
                     System.out.println("++++++++++++++++++++++++++++++++++");
                 }
             }
-            System.out.println("+--Todos:");
-            List<EventTask> todos = cal.getToDos();
-            if (todos != null) {
-                for (EventTask todo : todos) {
-                    System.out.println("todo: " + todo.getDescription());
-                }
-            }
+//            System.out.println("+--Todos:"); <<commented out by Vity >>
+//            List<EventTask> todos = cal.getToDos();
+//            if (todos != null) {
+//                for (EventTask todo : todos) {
+//                    System.out.println("todo: " + todo.getDescription());
+//                }
+//            }
             System.out.println();
         }
         if (cals.isEmpty()) {
@@ -212,11 +212,11 @@ public class DbDataStore {
      * Method getCalendars
      * @return
      */
-    public List<VCalendar> getCalendars() {
+    public List<VCalendarEntity> getCalendars() {
         String sql = "SELECT * FROM VCalendar";
-        TimeJugglerJDBCTemplate<List<VCalendar>> template = new TimeJugglerJDBCTemplate<List<VCalendar>>() {
+        TimeJugglerJDBCTemplate<List<VCalendarEntity>> template = new TimeJugglerJDBCTemplate<List<VCalendarEntity>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
-                if (items == null) items = new ArrayList<VCalendar>();
+                if (items == null) items = new ArrayList<VCalendarEntity>();
                 VCalendar cal = new VCalendar();
                 cal.setId(Integer.valueOf(rs.getInt("vCalendarID")).intValue());
                 cal.setProductId(rs.getString("prodid"));
@@ -242,8 +242,8 @@ public class DbDataStore {
                 if (items == null) items = new ArrayList<CategoryEntity>();
                 Category cat = new Category();
                 cat.setId(rs.getInt("categoryID"));
-            	int col = rs.getInt("color");
-            	if (!rs.wasNull()) cat.setColor(new Color(col));
+                int col = rs.getInt("color");
+                if (!rs.wasNull()) cat.setColor(new Color(col));
                 cat.setName(rs.getString("name"));
                 items.add(cat);
             }
@@ -400,21 +400,20 @@ public class DbDataStore {
 
             /* Categories */
             prop = comp.getProperty(Property.CATEGORIES);
-			
+
             CategoryList catList = ((net.fortuna.ical4j.model.property.Categories) prop).getCategories();    // iCal
-            Category cat;	// Timejuggler
+            Category cat;    // Timejuggler
             List<CategoryEntity> cats = getCategories();
             String catName;
             for (Iterator<?> it = catList.iterator(); it.hasNext();) {
-            	catName = it.next().toString();
-            	cat = new Category(catName);
+                catName = it.next().toString();
+                cat = new Category(catName);
                 if (!cats.contains(cat)) {
-                	cat.saveOrUpdate(template);
-                	cats.add(cat);
+                    cat.saveOrUpdate(template);
+                    cats.add(cat);
                 }
-                event.addCategory(cat);	//TODO pridat Category z DB! 
+                event.addCategory(cat);    //TODO pridat Category z DB!
             }
-
 
             /* Cast Periods + Recurrence Dates */
             /* priprava */
@@ -423,11 +422,11 @@ public class DbDataStore {
 
             prop = comp.getProperty(Property.RDATE);
             RDate rdate = (RDate) prop;
-           
+
             PeriodList plist;
             Periods periods = new Periods();
-			cz.cvut.felk.timejuggler.db.entity.Period newPeriod;
-			
+            cz.cvut.felk.timejuggler.db.entity.Period newPeriod;
+
             if (rdate != null) {
                 plist = rdate.getPeriods();
                 //Periods
@@ -439,48 +438,47 @@ public class DbDataStore {
                     }
                     //POZDEJI ! event.setPeriods(periods);
                 }
-            	
-            	//Dates
-				DateList dlist = rdate.getDates();
-				DistinctDates ds = new DistinctDates();
-				for (Object o : dlist) {		
-					Date d = (Date)o;
-					ds.addDate(new DistinctDate(d));
-				}
-				event.setDistinctDates(ds);
+
+                //Dates
+                DateList dlist = rdate.getDates();
+                DistinctDates ds = new DistinctDates();
+                for (Object o : dlist) {
+                    Date d = (Date) o;
+                    ds.addDate(new DistinctDate(d));
+                }
+                event.setDistinctDates(ds);
 
             }
 
-			
-			//TODO : DbDataStore - Rules
-			RRule rrule;
-			
-			rrule = (RRule)comp.getProperty(Property.RRULE);
-			Recur recur = rrule.getRecur();	//iCal
-			RepetitionRules rrs = new RepetitionRules();
-			//for (Object o : ){
-				RepetitionRule rr = new RepetitionRule();
-				//recur.getSecondList() 
-				//recur.getMinuteList() 
-				//recur.getHourList() 
-				//recur.getMonthDayList() 
-				//recur.getMonthList() 
-				//recur.getYearDayList() 
-				//recur.getFrequency() 
-				//recur.getInterval() 
-				
-				rrs.addRule(rr);
-			//}
-			newPeriod = new cz.cvut.felk.timejuggler.db.entity.Period();
-			
-			newPeriod.setRepetitionRules(rrs);
-			periods.addPeriod(newPeriod);
-			
-			//rrule = (RRule)comp.getProperty(Property.EXRULE);
-			//rrule = (RRule)comp.getProperty(Property.EXDATE);
-			
-			event.setPeriods(periods);
-			
+            //TODO : DbDataStore - Rules
+            RRule rrule;
+
+            rrule = (RRule) comp.getProperty(Property.RRULE);
+            Recur recur = rrule.getRecur();    //iCal
+            RepetitionRules rrs = new RepetitionRules();
+            //for (Object o : ){
+            RepetitionRule rr = new RepetitionRule();
+            //recur.getSecondList()
+            //recur.getMinuteList()
+            //recur.getHourList()
+            //recur.getMonthDayList()
+            //recur.getMonthList()
+            //recur.getYearDayList()
+            //recur.getFrequency()
+            //recur.getInterval()
+
+            rrs.addRule(rr);
+            //}
+            newPeriod = new cz.cvut.felk.timejuggler.db.entity.Period();
+
+            newPeriod.setRepetitionRules(rrs);
+            periods.addPeriod(newPeriod);
+
+            //rrule = (RRule)comp.getProperty(Property.EXRULE);
+            //rrule = (RRule)comp.getProperty(Property.EXDATE);
+
+            event.setPeriods(periods);
+
             //eventPeriods.
 
             /* TODO: + ? , Alarms */

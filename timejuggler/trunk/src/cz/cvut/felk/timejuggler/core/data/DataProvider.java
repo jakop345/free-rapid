@@ -4,9 +4,8 @@
 package cz.cvut.felk.timejuggler.core.data;
 
 import com.jgoodies.binding.list.ArrayListModel;
-import cz.cvut.felk.timejuggler.db.entity.VCalendar;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.CategoryEntity;
-import org.izvin.client.desktop.ui.util.UIBeanEnhancer;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.VCalendarEntity;
 
 import java.util.List;
 
@@ -17,7 +16,7 @@ import java.util.List;
 public class DataProvider {
 
     private ArrayListModel<CategoryEntity> categories;
-    private ArrayListModel<VCalendar> calendars;
+    private ArrayListModel<VCalendarEntity> calendars;
     PersistencyLayer persistencyLayer;
     private boolean categoriesInit = false;
     private boolean calendarsInit = false;
@@ -25,21 +24,12 @@ public class DataProvider {
 
     public DataProvider() {
         categories = new ArrayListModel<CategoryEntity>();
+        calendars = new ArrayListModel<VCalendarEntity>();
     }
 
     public void init() {
         persistencyLayer = PersistencyLayerFactory.getInstance().getDefaultPersitencyLayer();
         //persistencyLayer = new FakePersistencyLayer();
-    }
-
-    //utilita, bude pozdeji presunuto, az jestli tohle bude potreba a budu vedet kam ;-)
-    @Deprecated
-    private <C> ArrayListModel<C> enhanceToBeans(List<C> list) {
-        final ArrayListModel<C> listModel = new ArrayListModel<C>();
-        for (C item : list) {
-            listModel.add(UIBeanEnhancer.enhance(item));
-        }
-        return listModel;
     }
 
     public CategoryEntity getNewCategory() {
@@ -78,37 +68,27 @@ public class DataProvider {
         return categories;
     }
 
-    public synchronized ArrayListModel<VCalendar> getCalendarsListModel() throws PersistencyLayerException {
-        if (calendars == null) {
-            calendars = enhanceToBeans(getPersitencyLayer().getCalendars());
+    public synchronized ArrayListModel<VCalendarEntity> getCalendarsListModel() throws PersistencyLayerException {
+        if (!calendarsInit) {
+            calendars.addAll(getPersitencyLayer().getCalendars());
         }
         return calendars;
     }
 
-    public synchronized void addCalendar(VCalendar calendar) throws PersistencyLayerException {
+    public synchronized void addCalendar(VCalendarEntity calendar) throws PersistencyLayerException {
         getPersitencyLayer().saveOrUpdateCalendar(calendar);
-        addNewCalendar(calendar);
+        calendars.add(calendar);
     }
 
     public synchronized void addCategory(CategoryEntity category) throws PersistencyLayerException {
         getPersitencyLayer().saveOrUpdateCategory(category);
-        addNewCategory(category);
+        categories.add(category);
     }
 
     public void deleteCalendarsListModel() {//jen test
         calendars.clear();//jen test
     }
 
-
-    private void addNewCalendar(VCalendar calendar) {
-        if (calendars != null)
-            calendars.add(UIBeanEnhancer.enhance(calendar));
-    }
-
-    private void addNewCategory(CategoryEntity category) {
-        if (categories != null)
-            categories.add(UIBeanEnhancer.enhance(category));
-    }
 
     private PersistencyLayer getPersitencyLayer() {
         return persistencyLayer;

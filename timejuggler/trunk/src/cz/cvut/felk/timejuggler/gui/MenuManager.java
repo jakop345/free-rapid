@@ -5,11 +5,11 @@ import application.ApplicationContext;
 import cz.cvut.felk.timejuggler.core.AppPrefs;
 import cz.cvut.felk.timejuggler.gui.actions.*;
 import cz.cvut.felk.timejuggler.swing.Swinger;
+import cz.cvut.felk.timejuggler.swing.components.calendar.CalendarView;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.MenuListener;
 
 
 /**
@@ -19,7 +19,6 @@ import javax.swing.event.MenuListener;
 public class MenuManager {
     private JMenuBar menuBar;
     private final ApplicationContext context;
-    private MenuListener listener;
     private static final String SELECTED_TEXT_PROPERTY = "selectedText";
 
     public MenuManager(final ApplicationContext context) {
@@ -177,10 +176,11 @@ public class MenuManager {
     }
 
     private void setDefaultCalendarView() {
-        final int selectedView = AppPrefs.getProperty(AppPrefs.CALENDAR_VIEW, ViewActions.DAY_VIEW);
-        Swinger.getAction("dayView").putValue(Action.SELECTED_KEY, selectedView == ViewActions.DAY_VIEW);
-        Swinger.getAction("weekView").putValue(Action.SELECTED_KEY, selectedView == ViewActions.WEEK_VIEW);
-        Swinger.getAction("multiWeekView").putValue(Action.SELECTED_KEY, selectedView == ViewActions.MULTIWEEK_VIEW);
-        Swinger.getAction("monthView").putValue(Action.SELECTED_KEY, selectedView == ViewActions.MONTH_VIEW);
+        final int userValue = AppPrefs.getProperty(AppPrefs.CALENDAR_VIEW, CalendarView.DAY.ordinal());
+        final CalendarView selectedView = CalendarView.toCalendarView(userValue);
+        Swinger.getAction("dayView").putValue(Action.SELECTED_KEY, selectedView == CalendarView.DAY);
+        Swinger.getAction("weekView").putValue(Action.SELECTED_KEY, selectedView == CalendarView.WEEK);
+        Swinger.getAction("multiWeekView").putValue(Action.SELECTED_KEY, selectedView == CalendarView.MULTI_WEEK);
+        Swinger.getAction("monthView").putValue(Action.SELECTED_KEY, selectedView == CalendarView.MONTH);
     }
 }

@@ -81,13 +81,13 @@ public class MainApp extends SingleXFrameApplication {
     @Override
     protected void initialize(String[] args) {
         filesToOpen = processArguments(args);
+        LogUtils.initLogging(debug);//logovani nejdrive
         if (OneInstanceClient.checkInstance(filesToOpen)) {
             this.exit();
             return;
         }
         this.dataProvider = new DataProvider();
         this.dataProvider.init();
-        LogUtils.initLogging(debug);
         // logger = Logger.getLogger(MainApp.class.getName());
         LookAndFeels.getInstance().loadLookAndFeelSettings();//inicializace LaFu, musi to byt pred vznikem hlavniho panelu
         //Swinger.initLaF(); //inicializace LaFu, musi to byt pred vznikem hlavniho panelu

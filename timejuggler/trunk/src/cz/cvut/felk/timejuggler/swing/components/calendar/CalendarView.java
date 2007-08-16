@@ -8,5 +8,9 @@ public enum CalendarView {
     DAY,
     WEEK,
     MULTI_WEEK,
-    MONTH
+    MONTH;
+
+    public static CalendarView toCalendarView(int ordinal) {
+        return values()[ordinal];
+    }
 }

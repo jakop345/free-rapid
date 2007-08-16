@@ -4,6 +4,7 @@ import cz.cvut.felk.timejuggler.db.entity.Category;
 import cz.cvut.felk.timejuggler.db.entity.EventTask;
 import cz.cvut.felk.timejuggler.db.entity.VCalendar;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.CategoryEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.VCalendarEntity;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -16,14 +17,21 @@ import java.util.List;
  */
 class FakePersistencyLayer implements PersistencyLayer {
     private final List<CategoryEntity> fakeListCategories;
+    private final List<VCalendarEntity> fakeListCalendars;
     private static int categoryId = 1;//emulace idcka
 
     FakePersistencyLayer() {
         fakeListCategories = new ArrayList<CategoryEntity>();
+        fakeListCalendars = new ArrayList<VCalendarEntity>();
     }
 
-    public List<VCalendar> getCalendars() throws PersistencyLayerException {
-        return Arrays.asList(new VCalendar("Franta"), new VCalendar("Pepa"), new VCalendar("Antonin"));
+    public List<VCalendarEntity> getCalendars() throws PersistencyLayerException {
+        if (!fakeListCalendars.isEmpty())
+            return fakeListCalendars;
+        fakeListCalendars.add(new VCalendar("Franta", ++categoryId));
+        fakeListCalendars.add(new VCalendar("Pepa", ++categoryId));
+        fakeListCalendars.add(new VCalendar("Antonin", ++categoryId));
+        return fakeListCalendars;
     }
 
     public List<EventTask> getEvents() throws PersistencyLayerException {
@@ -37,7 +45,7 @@ class FakePersistencyLayer implements PersistencyLayer {
         return Arrays.asList(event1);
     }
 
-    public void saveOrUpdateCalendar(VCalendar calendar) throws PersistencyLayerException {
+    public void saveOrUpdateCalendar(VCalendarEntity calendar) throws PersistencyLayerException {
         //do nothing
     }
 
@@ -56,6 +64,10 @@ class FakePersistencyLayer implements PersistencyLayer {
         return new Category();
     }
 
+    public VCalendarEntity getNewCalendar() {
+        return new VCalendar();
+    }
+
     public void saveOrUpdateCategory(CategoryEntity category) throws PersistencyLayerException {
         final Category cat = (Category) category;
         if (!fakeListCategories.contains(category)) {
@@ -67,5 +79,10 @@ class FakePersistencyLayer implements PersistencyLayer {
 
     public void removeCategory(CategoryEntity categoryEntity) throws PersistencyLayerException {
         fakeListCategories.remove(categoryEntity);
+    }
+
+
+    public void removeCalendar(VCalendarEntity calendarEntity) throws PersistencyLayerException {
+        fakeListCalendars.remove(calendarEntity);
     }
 }
