@@ -2,10 +2,8 @@ package cz.cvut.felk.timejuggler.gui;
 
 import application.ApplicationActionMap;
 import application.ApplicationContext;
-import cz.cvut.felk.timejuggler.core.AppPrefs;
 import cz.cvut.felk.timejuggler.gui.actions.*;
 import cz.cvut.felk.timejuggler.swing.Swinger;
-import cz.cvut.felk.timejuggler.swing.components.calendar.CalendarView;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -26,7 +24,6 @@ public class MenuManager {
         this.context = context;
         initActions(new FileActions());
         initActions(new EditActions());
-        initActions(new ViewActions());
         initActions(new GoActions());
         initActions(new ViewActions());
         initActions(new HelpActions());
@@ -143,8 +140,6 @@ public class MenuManager {
         item = new JRadioButtonMenuItem(Swinger.getAction("monthView"));
         buttonGroup.add(item);
         jMenu.add(item);
-        setDefaultCalendarView(); // prozatim tady
-
         return jMenu;
     }
 
@@ -175,12 +170,4 @@ public class MenuManager {
         return menu;
     }
 
-    private void setDefaultCalendarView() {
-        final int userValue = AppPrefs.getProperty(AppPrefs.CALENDAR_VIEW, CalendarView.DAY.ordinal());
-        final CalendarView selectedView = CalendarView.toCalendarView(userValue);
-        Swinger.getAction("dayView").putValue(Action.SELECTED_KEY, selectedView == CalendarView.DAY);
-        Swinger.getAction("weekView").putValue(Action.SELECTED_KEY, selectedView == CalendarView.WEEK);
-        Swinger.getAction("multiWeekView").putValue(Action.SELECTED_KEY, selectedView == CalendarView.MULTI_WEEK);
-        Swinger.getAction("monthView").putValue(Action.SELECTED_KEY, selectedView == CalendarView.MONTH);
-    }
 }

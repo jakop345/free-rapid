@@ -142,6 +142,7 @@ public class MainApp extends SingleXFrameApplication {
      * @return hlavni panel
      */
     public MainPanelManager getMainPanel() {
+        assert mainPanel != null; //calling getMainPanel before finished initialization
         return mainPanel;
     }
 

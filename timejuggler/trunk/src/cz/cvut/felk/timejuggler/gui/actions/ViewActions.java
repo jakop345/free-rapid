@@ -1,9 +1,7 @@
 package cz.cvut.felk.timejuggler.gui.actions;
 
 import application.Action;
-import cz.cvut.felk.timejuggler.core.AppPrefs;
 import cz.cvut.felk.timejuggler.core.MainApp;
-import cz.cvut.felk.timejuggler.swing.components.calendar.CalendarGrid;
 import cz.cvut.felk.timejuggler.swing.components.calendar.CalendarView;
 
 /**
@@ -44,11 +42,8 @@ public class ViewActions {
         updateGrid(CalendarView.MONTH);
     }
 
-    private void updateGrid(CalendarView day) {
-        final CalendarGrid calendarGrid = app.getMainPanel().getCalendarGrid();
-        calendarGrid.setCalendarView(day);
-        calendarGrid.refreshCalendarEvents();
-        AppPrefs.storeProperty(AppPrefs.CALENDAR_VIEW, day.ordinal());
+    private void updateGrid(CalendarView view) {
+        app.getMainPanel().updateGrid(view);
     }
 
     @Action

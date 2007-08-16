@@ -1,10 +1,13 @@
 package cz.cvut.felk.timejuggler.gui;
 
 import application.ApplicationContext;
+import cz.cvut.felk.timejuggler.core.AppPrefs;
 import cz.cvut.felk.timejuggler.dao.CalendarEventDAO_DummyImpl;
 import cz.cvut.felk.timejuggler.entity.CalendarEvent;
+import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.swing.components.calendar.CalendarConfig;
 import cz.cvut.felk.timejuggler.swing.components.calendar.CalendarGrid;
+import cz.cvut.felk.timejuggler.swing.components.calendar.CalendarView;
 import org.jdesktop.swingx.JXMultiSplitPane;
 import org.jdesktop.swingx.MultiSplitLayout;
 
@@ -113,7 +116,9 @@ public class MainPanelManager {
 
         calendarEventDAO.saveCalendarEvent(ce);
 
-        calendarGrid.refreshCalendarEvents();
+        setDefaultCalendarView(); //nastaveni vybraneho view
+
+        //calendarGrid.refreshCalendarEvents();
 
         // testovaci blok
 
@@ -168,5 +173,23 @@ public class MainPanelManager {
 
     public CalendarGrid getCalendarGrid() {
         return calendarGrid;
+    }
+
+
+    private void setDefaultCalendarView() {
+        final int userValue = AppPrefs.getProperty(AppPrefs.CALENDAR_VIEW, CalendarView.DAY.ordinal());
+        final CalendarView selectedView = CalendarView.toCalendarView(userValue);
+        Swinger.getAction("dayView").putValue(Action.SELECTED_KEY, selectedView == CalendarView.DAY);
+        Swinger.getAction("weekView").putValue(Action.SELECTED_KEY, selectedView == CalendarView.WEEK);
+        Swinger.getAction("multiWeekView").putValue(Action.SELECTED_KEY, selectedView == CalendarView.MULTI_WEEK);
+        Swinger.getAction("monthView").putValue(Action.SELECTED_KEY, selectedView == CalendarView.MONTH);
+        updateGrid(selectedView);
+    }
+
+    public void updateGrid(CalendarView day) {
+        final CalendarGrid calendarGrid = getCalendarGrid();
+        calendarGrid.setCalendarView(day);
+        calendarGrid.refreshCalendarEvents();
+        AppPrefs.storeProperty(AppPrefs.CALENDAR_VIEW, day.ordinal());
     }
 }
