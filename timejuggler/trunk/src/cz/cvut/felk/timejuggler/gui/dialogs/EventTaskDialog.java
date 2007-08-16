@@ -9,6 +9,7 @@ import com.jgoodies.forms.layout.*;
 import cz.cvut.felk.timejuggler.core.AppPrefs;
 import cz.cvut.felk.timejuggler.core.MainApp;
 import cz.cvut.felk.timejuggler.core.data.DataProvider;
+import cz.cvut.felk.timejuggler.core.data.PersistencyLayerException;
 import cz.cvut.felk.timejuggler.db.entity.Category;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.CategoryEntity;
 import cz.cvut.felk.timejuggler.swing.ComponentFactory;
@@ -25,6 +26,7 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
@@ -346,7 +348,13 @@ public class EventTaskDialog extends AppDialog {
     private void buildCategories() {
         final MainApp app = MainApp.getInstance(MainApp.class);
         final DataProvider dataProvider = app.getDataProvider();
-        final java.util.List<CategoryEntity> list = dataProvider.getCategoriesListModel();
+        java.util.List<CategoryEntity> list;
+        try {
+            list = dataProvider.getCategoriesListModel();
+        } catch (PersistencyLayerException e) {
+            list = new ArrayList<CategoryEntity>();
+            LogUtils.processException(logger, e);
+        }
         final Set sortedSet = new TreeSet(list);
         fillCategoryComboModel(sortedSet);
         this.categoryCombo.addActionListener(new ActionListener() {

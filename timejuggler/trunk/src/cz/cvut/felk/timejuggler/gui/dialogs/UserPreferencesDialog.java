@@ -19,6 +19,7 @@ import com.l2fprod.common.swing.JButtonBar;
 import com.l2fprod.common.swing.plaf.blue.BlueishButtonBarUI;
 import cz.cvut.felk.timejuggler.core.AppPrefs;
 import cz.cvut.felk.timejuggler.core.MainApp;
+import cz.cvut.felk.timejuggler.core.data.PersistencyLayerException;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.CategoryEntity;
 import cz.cvut.felk.timejuggler.gui.JXTableSelectionConverter;
 import cz.cvut.felk.timejuggler.gui.MyPreferencesAdapter;
@@ -92,7 +93,7 @@ public class UserPreferencesDialog extends AppDialog {
         return btnOK;
     }
 
-    private void build() throws CloneNotSupportedException {
+    private void build() throws CloneNotSupportedException, PersistencyLayerException {
         inject();
         buildGUI();
         buildModels();
@@ -195,10 +196,14 @@ public class UserPreferencesDialog extends AppDialog {
     }
 
 
-    private void buildModels() throws CloneNotSupportedException {
+    private void buildModels() throws CloneNotSupportedException, PersistencyLayerException {
 
         //inicializace categories tabulky
-        categoriesManager = new CategoryManager(getApp().getDataProvider().getCategoriesListModel(), true);
+        try {
+            categoriesManager = new CategoryManager(getApp().getDataProvider().getCategoriesListModel(), true);
+        } catch (PersistencyLayerException e) {
+            throw e;
+        }
         model = new MyPresentationModel(null, new Trigger());
 
         inList = new SelectionInList<CategoryEntity>(categoriesManager.getManagedCategories());
@@ -314,7 +319,11 @@ public class UserPreferencesDialog extends AppDialog {
     public void okBtnAction() {
         model.triggerCommit();
         if (categoriesManager.isListChanged())
-            getApp().getDataProvider().synchronizeCategoriesFromList(categoriesManager.getCategoriesList());
+            try {
+                getApp().getDataProvider().synchronizeCategoriesFromList(categoriesManager.getCategoriesList());
+            } catch (PersistencyLayerException e) {
+                LogUtils.processException(logger, e); //TODO error hlasku
+            }
         doClose();
     }
 

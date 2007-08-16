@@ -25,6 +25,12 @@ public class OpenSaveDialogFactory {
         return getOpenFileDialog(filters, AppPrefs.LAST_USED_SOUND_FILTER, currentPath);
     }
 
+    public static File[] getImportCalendarDialog() {
+        final List<EnhancedFileFilter> filters = new ArrayList<EnhancedFileFilter>(1);
+        filters.add(new EnhancedFileFilter(new String[]{"ics"}, "importICSDialog.filterIcs"));
+        return getOpenFileDialog(filters, AppPrefs.LAST_IMPORT_FILTER, AppPrefs.getProperty(AppPrefs.IMPORT_LAST_USED_FOLDER, ""));
+    }
+
 
     @SuppressWarnings({"SuspiciousMethodCalls"})
     private static File[] getOpenFileDialog(final List<EnhancedFileFilter> fileFilters, final String lastUsedFilterKey, final String folderPath) {

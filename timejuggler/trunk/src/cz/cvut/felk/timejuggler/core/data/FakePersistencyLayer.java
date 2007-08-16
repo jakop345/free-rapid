@@ -4,14 +4,15 @@ import cz.cvut.felk.timejuggler.db.entity.Category;
 import cz.cvut.felk.timejuggler.db.entity.EventTask;
 import cz.cvut.felk.timejuggler.db.entity.VCalendar;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.CategoryEntity;
-import cz.cvut.felk.timejuggler.db.entity.interfaces.VCalendarEntity;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.EventTaskEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.VCalendarEntity;
 
 import java.awt.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Fake vrstva poskytujici testovaci data.
@@ -36,31 +37,31 @@ class FakePersistencyLayer implements PersistencyLayer {
         return fakeListCalendars;
     }
 
-	public List<EventTaskEntity> getEventsByCalendar(VCalendarEntity cal) throws PersistencyLayerException {
-		return new ArrayList();
-	}
-	
-	public List<EventTaskEntity> getToDosByCalendar(VCalendarEntity cal) throws PersistencyLayerException {
-		return new ArrayList();
-	}
+    public List<EventTaskEntity> getEventsByCalendar(VCalendarEntity cal) throws PersistencyLayerException {
+        return new ArrayList();
+    }
+
+    public List<EventTaskEntity> getToDosByCalendar(VCalendarEntity cal) throws PersistencyLayerException {
+        return new ArrayList();
+    }
 
     public List<EventTask> getEvents() throws PersistencyLayerException {
 
-		Calendar cal = Calendar.getInstance();
+        Calendar cal = Calendar.getInstance();
         EventTask event1 = new EventTask();
         event1.setSummary("MujEvent");
         event1.setDescription("Pokus");
         event1.setStartDate(cal.getTime());
-        	cal.add(Calendar.DAY_OF_MONTH, 1);
+        cal.add(Calendar.DAY_OF_MONTH, 1);
         event1.setEndDate(cal.getTime());
-		Category cat = new Category("Nova kategorie");		
+        Category cat = new Category("Nova kategorie");
         event1.addCategory(cat);
-        
+
         return Arrays.asList(event1);
     }
-    
-    public VCalendarEntity importICS(String filePath) throws PersistencyLayerException{
-   		return new VCalendar();
+
+    public VCalendarEntity importICS(File filePath) throws PersistencyLayerException {
+        return new VCalendar("Naimportovany kalendar", ++categoryId);
     }
 
     public void saveOrUpdateCalendar(VCalendarEntity calendar) throws PersistencyLayerException {
@@ -89,13 +90,13 @@ class FakePersistencyLayer implements PersistencyLayer {
         return new VCalendar();
     }
 
-	public EventTaskEntity getNewEvent(){
-		return new EventTask();
-	}
-	
-	public EventTaskEntity getNewToDo(){
-		return new EventTask(true);
-	}
+    public EventTaskEntity getNewEvent() {
+        return new EventTask();
+    }
+
+    public EventTaskEntity getNewToDo() {
+        return new EventTask(true);
+    }
 
     public void saveOrUpdateCategory(CategoryEntity category) throws PersistencyLayerException {
         final Category cat = (Category) category;
@@ -114,8 +115,8 @@ class FakePersistencyLayer implements PersistencyLayer {
     public void removeCalendar(VCalendarEntity calendarEntity) throws PersistencyLayerException {
         fakeListCalendars.remove(calendarEntity);
     }
-    
+
     public void removeEventTask(EventTaskEntity eventEntity) throws PersistencyLayerException {
-    	//do nothing
+        //do nothing
     }
 }

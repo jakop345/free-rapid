@@ -63,6 +63,8 @@ public final class AppPrefs {
     public static final String LOOK_AND_FEEL_OPAQUE_KEY = "settings.lafOpaque";
     public static final String THEME_SELECTED_KEY = "settings.theme";
     public static final String ONEINSTANCE = "settings.oneinstance";
+    public static final String IMPORT_LAST_USED_FOLDER = "settings.importLastUsedFolder";
+    public static final String LAST_IMPORT_FILTER = "settings.lastUsedImportFilter";
 
 
     private AppPrefs() {

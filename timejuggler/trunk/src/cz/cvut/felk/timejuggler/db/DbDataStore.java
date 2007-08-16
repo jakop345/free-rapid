@@ -2,8 +2,8 @@ package cz.cvut.felk.timejuggler.db;
 
 import cz.cvut.felk.timejuggler.db.entity.*;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.CategoryEntity;
-import cz.cvut.felk.timejuggler.db.entity.interfaces.VCalendarEntity;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.EventTaskEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.VCalendarEntity;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.data.ParserException;
@@ -40,14 +40,13 @@ public class DbDataStore {
      * @param args
      */
     public static void main(String[] args) {
-    	DbDataStore db = new DbDataStore();
+        DbDataStore db = new DbDataStore();
         // Testing
         //importTest();
         db.showDB();
         System.exit(0);
 
         // Testing
-        
 
         /* Vypis */
 
@@ -75,9 +74,9 @@ public class DbDataStore {
             LogUtils.processException(logger, e);
         }
     }
-    
-    public DbDataStore(){
-    	
+
+    public DbDataStore() {
+
     }
 
     /**
@@ -91,11 +90,11 @@ public class DbDataStore {
         DbDataStore db = new DbDataStore();
         /* pri importu je ulozeni do db automaticke */
         try {
-            VCalendarEntity cal = db.importICS("G:\\pokus\\USHolidays.ics");
+            VCalendarEntity cal = db.importICS(new File("G:\\pokus\\USHolidays.ics"));
             /* nastaveni jmena pro importovany kalendar */
             cal.setName("USHolidays.ics - imported 1");
             /* ulozeni zmen */
-            db.saveOrUpdate((VCalendar)cal);
+            db.saveOrUpdate((VCalendar) cal);
             /* vypis obsahu db */
             db.showDB();
 
@@ -224,9 +223,9 @@ public class DbDataStore {
      * Method getEventsByCategory
      * @return Vraci vsechny udalosti podle zadane kategorie
      */
-    public List<EventTaskEntity> getEventsByCategory(){
-    	//TODO getEventsByCategory
-    	return new ArrayList();
+    public List<EventTaskEntity> getEventsByCategory() {
+        //TODO getEventsByCategory
+        return new ArrayList();
     }
 
     /**
@@ -409,8 +408,8 @@ public class DbDataStore {
      * Method importICS
      * @return
      */
-    public VCalendarEntity importICS(String filename) throws IOException, ParserException, DatabaseException {
-        logger.info("Importing ICS file " + filename);
+    public VCalendarEntity importICS(File file) throws IOException, ParserException, DatabaseException {
+        logger.info("Importing ICS file " + file);
         TimeJugglerJDBCTemplate template = new TimeJugglerJDBCTemplate();    // import jako 1 transakce
 
         // TODO: periods,..
@@ -421,7 +420,7 @@ public class DbDataStore {
         VCalendar newcal = new VCalendar();
 
         // Vytvoreni nove instance tridy Calendar (typu iCal) ze souboru ICS
-        Calendar calendar = Calendars.load(filename);
+        Calendar calendar = Calendars.load(file.getAbsolutePath());
 
         // Instance pomocne tridy pro prevod objektu iCal na typ Timejuggler
         ICalTransformer transformer = ICalTransformer.getInstance();
@@ -435,7 +434,7 @@ public class DbDataStore {
         newcal.setProductId(prop == null ? "" : prop.getValue());
         prop = calendar.getVersion();
         newcal.setVersion(prop == null ? "" : prop.getValue());
-        newcal.setName(filename);
+        newcal.setName(file.getAbsolutePath());
 
         // Ulozeni nastaveni kalendare do DB
         newcal.saveOrUpdate(template);
@@ -545,26 +544,26 @@ public class DbDataStore {
 
             rrule = (RRule) comp.getProperty(Property.RRULE);
             if (rrule != null) {
-	            Recur recur = rrule.getRecur();    //iCal
-	            RepetitionRules rrs = new RepetitionRules();
-	            //for (Object o : ){
-	            RepetitionRule rr = new RepetitionRule();
-	            //recur.getSecondList()
-	            //recur.getMinuteList()
-	            //recur.getHourList()
-	            //recur.getMonthDayList()
-	            //recur.getMonthList()
-	            //recur.getYearDayList()
-	            //recur.getFrequency()
-	            //recur.getInterval()
-	
-	            rrs.addRule(rr);
-	            //}
+                Recur recur = rrule.getRecur();    //iCal
+                RepetitionRules rrs = new RepetitionRules();
+                //for (Object o : ){
+                RepetitionRule rr = new RepetitionRule();
+                //recur.getSecondList()
+                //recur.getMinuteList()
+                //recur.getHourList()
+                //recur.getMonthDayList()
+                //recur.getMonthList()
+                //recur.getYearDayList()
+                //recur.getFrequency()
+                //recur.getInterval()
 
-	            newPeriod = new cz.cvut.felk.timejuggler.db.entity.Period();
-	
-	            newPeriod.setRepetitionRules(rrs);
-	            periods.addPeriod(newPeriod);
+                rrs.addRule(rr);
+                //}
+
+                newPeriod = new cz.cvut.felk.timejuggler.db.entity.Period();
+
+                newPeriod.setRepetitionRules(rrs);
+                periods.addPeriod(newPeriod);
 
             }
 
@@ -704,6 +703,6 @@ public class DbDataStore {
                 outStream.close();
         }
     }
-    
+
 
 }

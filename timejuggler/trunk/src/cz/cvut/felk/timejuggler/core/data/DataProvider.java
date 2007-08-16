@@ -7,6 +7,7 @@ import com.jgoodies.binding.list.ArrayListModel;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.CategoryEntity;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.VCalendarEntity;
 
+import java.io.File;
 import java.util.List;
 
 
@@ -41,7 +42,7 @@ public class DataProvider {
      * konci provede celkovy reload v databazi. //TBD melo by se to upravovat dualne?
      * @param items novy seznam kategorii
      */
-    public void synchronizeCategoriesFromList(List<CategoryEntity> items) {
+    public void synchronizeCategoriesFromList(List<CategoryEntity> items) throws PersistencyLayerException {
         final List<CategoryEntity> categoriesListModel = getCategoriesListModel();
         assert categoriesInit;
         for (CategoryEntity categoryEntity : categoriesListModel) {
@@ -60,7 +61,7 @@ public class DataProvider {
     }
 
 
-    public synchronized ArrayListModel<CategoryEntity> getCategoriesListModel() {
+    public synchronized ArrayListModel<CategoryEntity> getCategoriesListModel() throws PersistencyLayerException {
         if (!categoriesInit) {
             categories.addAll(getPersitencyLayer().getCategories());
             categoriesInit = true;
@@ -92,5 +93,13 @@ public class DataProvider {
 
     private PersistencyLayer getPersitencyLayer() {
         return persistencyLayer;
+    }
+
+    public void importCalendarFromICS(File file) throws PersistencyLayerException {
+        try {
+            getPersitencyLayer().importICS(file);
+        } catch (PersistencyLayerException e) {
+            throw e;
+        }
     }
 }

@@ -2,8 +2,12 @@ package cz.cvut.felk.timejuggler.gui.actions;
 
 import application.Action;
 import cz.cvut.felk.timejuggler.core.MainApp;
+import cz.cvut.felk.timejuggler.core.data.PersistencyLayerException;
 import cz.cvut.felk.timejuggler.gui.dialogs.EventTaskDialog;
+import cz.cvut.felk.timejuggler.gui.dialogs.filechooser.OpenSaveDialogFactory;
 import org.jdesktop.beans.AbstractBean;
+
+import java.io.File;
 
 /**
  * @author Vity
@@ -55,7 +59,14 @@ public class FileActions extends AbstractBean {
 
     @Action
     public void importCalendar() {
-
+        final File[] files = OpenSaveDialogFactory.getImportCalendarDialog();
+        if (files.length > 0) {
+            try {
+                app.getDataProvider().importCalendarFromICS(files[0]);
+            } catch (PersistencyLayerException e) {
+                e.printStackTrace();//TODO zobrazit informaci o chybe
+            }
+        }
     }
 
     @Action
