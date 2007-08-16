@@ -6,15 +6,21 @@ import application.ResourceMap;
 import cz.cvut.felk.timejuggler.core.MainApp;
 import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.swing.models.NaiiveComboModel;
+import cz.cvut.felk.timejuggler.utilities.LogUtils;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.logging.Logger;
 
 /**
  * @author Vity
  */
 abstract class AppDialog extends JDialog {
+    private final static Logger logger = Logger.getLogger(AppDialog.class.getName());
     public final static int RESULT_OK = 0;
     final static int RESULT_CANCEL = 1;
     int result = RESULT_CANCEL;
@@ -160,6 +166,31 @@ abstract class AppDialog extends JDialog {
         final String name = comboBox.getName();
         assert name != null && name.length() > 0;
         comboBox.setModel(new NaiiveComboModel(getList(name)));
+    }
+
+    protected boolean validateNonEmpty(final JTextComponent component) {
+        final Document doc = component.getDocument();
+        String text;
+        try {
+            text = doc.getText(0, doc.getLength());
+        } catch (BadLocationException e) {
+            LogUtils.processException(logger, e);
+            return false;
+        }
+        return validateNonEmpty(text);
+    }
+
+    protected boolean validateNonEmpty(JTextField field, String value) {
+        if (!validateNonEmpty(value)) {
+            Swinger.inputFocus(field);
+            return false;
+        }
+        return true;
+    }
+
+
+    protected boolean validateNonEmpty(final String text) {
+        return text.trim().length() > 0;
     }
 
 }

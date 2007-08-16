@@ -30,6 +30,7 @@ public class CategoryDialog extends AppDialog {
     private boolean newCategory;
     private PresentationModel model;
     private static final String PROPERTY_COLOR = "color";
+    private static final String PROPERTY_NAME = "name";
 
     //TODO pridat ikonu pro dialog
     public CategoryDialog(Frame owner, CategoryEntity categoryEntity, final boolean isNew) throws HeadlessException {
@@ -93,7 +94,7 @@ public class CategoryDialog extends AppDialog {
 
     private void buildModels() {
         model = new PresentationModel(category, new Trigger());
-        Bindings.bind(fieldName, model.getBufferedModel("name"), false);
+        Bindings.bind(fieldName, model.getBufferedModel(PROPERTY_NAME), false);
         final BufferedValueModel valueColorModel = model.getBufferedModel(PROPERTY_COLOR);
 
         checkUseColor.addActionListener(new ActionListener() {
@@ -113,6 +114,9 @@ public class CategoryDialog extends AppDialog {
 
     @application.Action
     public void okBtnAction() {
+        if (!validateForm()) {
+            return;
+        }
         model.triggerCommit();
         //workaround
         if (!checkUseColor.isSelected())
@@ -233,6 +237,13 @@ public class CategoryDialog extends AppDialog {
     private ActionMap getActionMap() {
         return Swinger.getActionMap(this.getClass(), this);
     }
+
+    private boolean validateForm() {
+        final String value = (String) model.getBufferedValue(PROPERTY_NAME);
+        System.out.println("value = " + value);
+        return validateNonEmpty(fieldName, value);
+    }
+
 
     private JTextField fieldName;
     private JCheckBox checkUseColor;

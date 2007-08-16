@@ -58,6 +58,11 @@ public class FileActions extends AbstractBean {
     }
 
     @Action
+    public void editCalendarFile() {
+
+    }
+
+    @Action
     public void importCalendar() {
         final File[] files = OpenSaveDialogFactory.getImportCalendarDialog();
         if (files.length > 0) {
