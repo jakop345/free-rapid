@@ -2,12 +2,15 @@ package cz.cvut.felk.timejuggler.gui;
 
 import application.ResourceMap;
 import com.jgoodies.binding.adapter.Bindings;
+import com.jgoodies.binding.list.ArrayListModel;
 import com.jgoodies.binding.list.SelectionInList;
 import cz.cvut.felk.timejuggler.core.MainApp;
+import cz.cvut.felk.timejuggler.core.data.PersistencyLayerException;
 import cz.cvut.felk.timejuggler.db.entity.VCalendar;
 import cz.cvut.felk.timejuggler.swing.CustomLayoutConstraints;
 import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.swing.renderers.CheckRenderer;
+import cz.cvut.felk.timejuggler.utilities.LogUtils;
 import info.clearthought.layout.TableLayout;
 import org.jdesktop.swingx.JXList;
 import org.jdesktop.swingx.calendar.JXMonthView;
@@ -20,12 +23,14 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Comparator;
+import java.util.logging.Logger;
 
 /**
  * Sprava a vytvoreni maleho kalendare
  * @author Vity
  */
 public class SmallCalendarManager {
+    private final static Logger logger = Logger.getLogger(SmallCalendarManager.class.getName());
     /**
      * Polozky dat pro seznam v kalendari
      */
@@ -68,7 +73,13 @@ public class SmallCalendarManager {
     private Component getCalendarList() {
 
         MainApp app = MainApp.getInstance(MainApp.class);
-        final ListModel listModel = app.getDataProvider().getCalendarsListModel();
+        ListModel listModel;
+        try {
+            listModel = app.getDataProvider().getCalendarsListModel();
+        } catch (PersistencyLayerException e) {
+            LogUtils.processException(logger, e);
+            listModel = new ArrayListModel();
+        }
         //final SelectionInList<VCalendar> inList = new SelectionInList<VCalendar>(new SortedListModel(listModel, SortedListModel.SortOrder.ASCENDING, new CalendarComparator()));
         final SelectionInList<VCalendar> inList = new SelectionInList<VCalendar>(listModel);
         //checkedList = BasicComponentFactory.createList(inList, new CheckListRenderer());
