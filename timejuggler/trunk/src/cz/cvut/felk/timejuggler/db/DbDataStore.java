@@ -110,6 +110,10 @@ public class DbDataStore {
             LogUtils.processException(logger, e);
         }
     }
+    
+    public DbDataStore(){
+    	
+    }
 
     /**
      * Method importTest
@@ -288,7 +292,8 @@ public class DbDataStore {
     public <C extends CalComponent> void saveOrUpdate(VCalendar cal, C component) throws DatabaseException {
         // Pridani noveho Eventu nebo Ukolu do kalendare
         TimeJugglerJDBCTemplate template = new TimeJugglerJDBCTemplate();
-        component.setCalendarId(cal.getId());
+        // Kalendar musi byt jiz v databazi
+        component.setCalendar(cal);
         component.saveOrUpdate(template);
         template.commit();
     }
@@ -484,7 +489,7 @@ public class DbDataStore {
             /* TODO: + ? , Alarms */
 
             //Ulozeni eventu do kalendare
-            event.setCalendarId(newcal.getId());
+            event.setCalendar(newcal);
             event.saveOrUpdate(template);
         }
         template.commit();    // potvrzeni transakce
@@ -610,4 +615,6 @@ public class DbDataStore {
                 outStream.close();
         }
     }
+    
+
 }

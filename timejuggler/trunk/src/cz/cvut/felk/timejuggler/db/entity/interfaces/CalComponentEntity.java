@@ -3,6 +3,7 @@ package cz.cvut.felk.timejuggler.db.entity.interfaces;
 import java.util.Date;
 import java.util.List;
 
+import cz.cvut.felk.timejuggler.db.entity.VCalendar;
 import cz.cvut.felk.timejuggler.db.entity.DateTime;
 import cz.cvut.felk.timejuggler.db.entity.Periods;
 import cz.cvut.felk.timejuggler.db.entity.DistinctDates;
@@ -24,8 +25,10 @@ import cz.cvut.felk.timejuggler.db.entity.Attachment;
  */
 
 public interface CalComponentEntity extends EntityElement {
+	
 	void setComponentId(int componentId);	//TODO ??
 	int getComponentId();		//TODO ??
+	
 	String getUid();
 	void setUid(String newVal);
 	String getUrl();
@@ -65,8 +68,6 @@ public interface CalComponentEntity extends EntityElement {
 	List<RequestStatus> getRequestStatuses();
 	List<Resource> getResources();
 
-
-
 	void setStartDate(Date startDate);
 	void setCreated(Date created);
 	void setLastModified(Date lastModified);
@@ -77,8 +78,16 @@ public interface CalComponentEntity extends EntityElement {
 	Periods getPeriods();
 	void setDistinctDates(DistinctDates distinctDates);
 	DistinctDates getDistinctDates();
+	
+	/* 
 	void setCalendarId(int calendarId);	//TODO ??
 	int getCalendarId();	//TODO ??
+	
+	nahrazeno set/get Calendar */
+	void setCalendar(VCalendar cal);
+	VCalendar getCalendar();
+
+	
 	void setAlarms(List<VAlarm> alarms);
 	List<VAlarm> getAlarms();
 	void setEndDate(Date endDate);

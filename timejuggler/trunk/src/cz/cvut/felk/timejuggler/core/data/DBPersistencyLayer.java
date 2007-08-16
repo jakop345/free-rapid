@@ -6,6 +6,7 @@ import cz.cvut.felk.timejuggler.db.entity.EventTask;
 import cz.cvut.felk.timejuggler.db.entity.VCalendar;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.CategoryEntity;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.VCalendarEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.EventTaskEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +37,10 @@ class DBPersistencyLayer implements PersistencyLayer {
         dbStore.saveOrUpdate((Category) category);
     }
 
+    public void saveOrUpdateEventTask(EventTaskEntity event) throws PersistencyLayerException {
+        dbStore.saveOrUpdate((EventTask) event);
+    }
+    
     public List<CategoryEntity> getCategories() throws PersistencyLayerException {
         return dbStore.getCategories();
     }
@@ -52,7 +57,19 @@ class DBPersistencyLayer implements PersistencyLayer {
         return new VCalendar();
     }
 
+	public EventTaskEntity getNewEvent(){
+		return new EventTask();
+	}
+	
+	public EventTaskEntity getNewToDo(){
+		return new EventTask(true);
+	}
+	
     public void removeCalendar(VCalendarEntity calendarEntity) throws PersistencyLayerException {
         dbStore.delete((VCalendar) calendarEntity);
+    }
+    
+    public void removeEventTask(EventTaskEntity eventEntity) throws PersistencyLayerException {
+    	dbStore.delete((EventTask) eventEntity);
     }
 }

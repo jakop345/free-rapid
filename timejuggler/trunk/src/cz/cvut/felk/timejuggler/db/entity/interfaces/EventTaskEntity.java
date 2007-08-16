@@ -9,7 +9,7 @@ import java.util.Date;
  * 
  */
  
-public interface EventTaskEntity extends /*CalComponentEntity*/ EntityElement {
+public interface EventTaskEntity extends CalComponentEntity /*EntityElement*/ {
 	
 	void setPriority(int newVal);
     

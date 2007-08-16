@@ -56,7 +56,10 @@ public class CalComponent extends DbElement {
     private Timestamp recurrenceid;
     private Timestamp dtstamp;
     private int componentId;
-    private int calendarId;
+    /**/
+    //private int calendarId; nahrazeno vcalendar
+    private VCalendar vcalendar;
+    
     private List<VAlarm> alarms;
 
     private Categories _categories;
@@ -81,7 +84,9 @@ public class CalComponent extends DbElement {
     }
 
     public void setComponentId(int componentId) {
+        int oldVal = getComponentId();
         this.componentId = componentId;
+        firePropertyChange(PROPERTYNAME_COMPONENTID, oldVal, componentId);
     }
 
     public int getComponentId() {
@@ -183,7 +188,9 @@ public class CalComponent extends DbElement {
      * @param newVal
      */
     public void setSequence(int newVal) {
+        final int oldVal = getSequence();
         sequence = newVal;
+        firePropertyChange(PROPERTYNAME_SEQUENCE, oldVal, newVal);
     }
 
     public String getStatus() {
@@ -194,7 +201,11 @@ public class CalComponent extends DbElement {
      * @param newVal
      */
     public void setStatus(String newVal) {
+        if (newVal == null)
+            throw new IllegalArgumentException("Status cannot be null!");
+        final String oldVal = getStatus();
         status = newVal;
+        firePropertyChange(PROPERTYNAME_STATUS, oldVal, newVal);
     }
 
     public String getSummary() {
@@ -242,6 +253,8 @@ public class CalComponent extends DbElement {
      * @param template Ulozeni spolecnych udaju z Todo, Eventu,.. do databaze
      */
     public void saveOrUpdate(TimeJugglerJDBCTemplate template) {
+		assert vcalendar != null;
+		assert vcalendar.getId() > 0;
 		
         if (dateTime != null) {
             dateTime.saveOrUpdate(template);
@@ -251,7 +264,7 @@ public class CalComponent extends DbElement {
             logger.info("Database - Update: CalComponent[" + getId() + "]...");
             //TODO : increment sequence
             Object params[] = {
-                    dateTime.getId(), uid, calendarId, url, clazz,
+                    dateTime.getId(), uid, vcalendar.getId(), url, clazz,
                     description, organizer, sequence,
                     status, summary, dtstamp, getComponentId()};
             String updateQuery = "UPDATE CalComponent SET dateTimeID=?,uid=?,vCalendarID=?,url=?,clazz=?,description=?,organizer=?,sequence=?,status=?,summary=?,dtstamp=?) WHERE calComponentID = ? ";
@@ -265,7 +278,7 @@ public class CalComponent extends DbElement {
             }
             logger.info("Database - Insert: CalComponent[]...");
             Object params[] = {
-                    dateTime.getId(), uid, calendarId, url, clazz,
+                    dateTime.getId(), uid, vcalendar.getId(), url, clazz,
                     description, organizer, sequence,
                     status, summary, new Timestamp(System.currentTimeMillis())
             };
@@ -509,7 +522,15 @@ public class CalComponent extends DbElement {
         return (dateTime.getDistinctDates());
     }
 
-
+	public void setCalendar(VCalendar cal){
+		vcalendar = cal;
+	}
+	
+	public VCalendar getCalendar(){
+		return vcalendar;
+	}
+	
+	/*
     public void setCalendarId(int calendarId) {
         this.calendarId = calendarId;
     }
@@ -517,7 +538,7 @@ public class CalComponent extends DbElement {
     public int getCalendarId() {
         return (this.calendarId);
     }
-
+	*/
 
     public void setAlarms(List<VAlarm> alarms) {
         this.alarms = alarms;

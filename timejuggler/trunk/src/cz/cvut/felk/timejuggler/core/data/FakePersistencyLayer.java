@@ -5,11 +5,13 @@ import cz.cvut.felk.timejuggler.db.entity.EventTask;
 import cz.cvut.felk.timejuggler.db.entity.VCalendar;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.CategoryEntity;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.VCalendarEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.EventTaskEntity;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Calendar;
 
 /**
  * Fake vrstva poskytujici testovaci data.
@@ -35,13 +37,17 @@ class FakePersistencyLayer implements PersistencyLayer {
     }
 
     public List<EventTask> getEvents() throws PersistencyLayerException {
-//    	List<CategoryEntity> cats = getCategories();
 
+		Calendar cal = Calendar.getInstance();
         EventTask event1 = new EventTask();
         event1.setSummary("MujEvent");
         event1.setDescription("Pokus");
-
-        //event1.addCategory(...)
+        event1.setStartDate(cal.getTime());
+        	cal.add(Calendar.DAY_OF_MONTH, 1);
+        event1.setEndDate(cal.getTime());
+		Category cat = new Category("Nova kategorie");		
+        event1.addCategory(cat);
+        
         return Arrays.asList(event1);
     }
 
@@ -49,6 +55,9 @@ class FakePersistencyLayer implements PersistencyLayer {
         //do nothing
     }
 
+    public void saveOrUpdateEventTask(EventTaskEntity event) throws PersistencyLayerException {
+        //do nothing
+    }
 
     public List<CategoryEntity> getCategories() throws PersistencyLayerException {
         if (!fakeListCategories.isEmpty())
@@ -68,6 +77,14 @@ class FakePersistencyLayer implements PersistencyLayer {
         return new VCalendar();
     }
 
+	public EventTaskEntity getNewEvent(){
+		return new EventTask();
+	}
+	
+	public EventTaskEntity getNewToDo(){
+		return new EventTask(true);
+	}
+
     public void saveOrUpdateCategory(CategoryEntity category) throws PersistencyLayerException {
         final Category cat = (Category) category;
         if (!fakeListCategories.contains(category)) {
@@ -84,5 +101,9 @@ class FakePersistencyLayer implements PersistencyLayer {
 
     public void removeCalendar(VCalendarEntity calendarEntity) throws PersistencyLayerException {
         fakeListCalendars.remove(calendarEntity);
+    }
+    
+    public void removeEventTask(EventTaskEntity eventEntity) throws PersistencyLayerException {
+    	//do nothing
     }
 }

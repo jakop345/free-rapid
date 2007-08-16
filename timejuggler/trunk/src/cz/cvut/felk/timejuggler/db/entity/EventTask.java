@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  * Spolecna trida pro VEvent a VTodo
  */
  
-public class EventTask extends CalComponent implements Comparable<EventTaskEntity>, EventTaskEntity, CalComponentEntity {
+public class EventTask extends CalComponent implements Comparable<EventTaskEntity>, EventTaskEntity {
 	private final static Logger logger = Logger.getLogger(EventTask.class.getName());
 	/* VEvent */
 
@@ -150,8 +150,8 @@ public class EventTask extends CalComponent implements Comparable<EventTaskEntit
      * @param newVal
      */
     public void setGeoGPS(String newVal) {
-        /*if (newVal == null)
-            throw new IllegalArgumentException("GeoGPS cannot be null!");*/
+        if (newVal == null)
+            throw new IllegalArgumentException("GeoGPS cannot be null!");
         final String oldVal = getGeoGPS();
         geoGPS = newVal;
         firePropertyChange(PROPERTYNAME_GEOGPS, oldVal, newVal);
@@ -165,8 +165,8 @@ public class EventTask extends CalComponent implements Comparable<EventTaskEntit
      * @param newVal
      */
     public void setLocation(String newVal) {
-        /*if (newVal == null)
-            throw new IllegalArgumentException("Location cannot be null!");*/
+        if (newVal == null)
+            throw new IllegalArgumentException("Location cannot be null!");
         final String oldVal = getLocation();
         location = newVal;
         firePropertyChange(PROPERTYNAME_LOCATION, oldVal, newVal);
@@ -181,8 +181,8 @@ public class EventTask extends CalComponent implements Comparable<EventTaskEntit
      */
     public void setTransparency(String newVal) {
     	/* TODO - asi predelat na konstanty - int */
-        /*if (newVal == null)
-            throw new IllegalArgumentException("Transparency cannot be null!");*/
+        if (newVal == null)
+            throw new IllegalArgumentException("Transparency cannot be null!");
         final String oldVal = getTransparency();
         transparency = newVal;
         firePropertyChange(PROPERTYNAME_TRANSPARENCY, oldVal, newVal);

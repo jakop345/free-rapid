@@ -1,5 +1,6 @@
 package cz.cvut.felk.timejuggler.db;
 
+import application.Application;
 import application.ApplicationContext;
 import cz.cvut.felk.timejuggler.core.AppPrefs;
 import cz.cvut.felk.timejuggler.core.Consts;
@@ -11,6 +12,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.logging.Logger;
+import java.util.EventObject;
 import java.io.*;
 
 
@@ -58,6 +60,8 @@ public class ConnectionManager {
         /* deployment ready code */
         this.url = "jdbc:derby:" + appContext.getLocalStorage().getDirectory() + "/" + Consts.DB_LOCALDIR;
         //this.create_url = ";createFrom=" + AppPrefs.getAppPath() + "/defaultdb/db";
+        
+        app.addExitListener(new ConnectionManagerExitListener());
     }
 
     /**
@@ -90,8 +94,26 @@ public class ConnectionManager {
     }
 
     public void shutdown() throws SQLException {
-        //TODO ma smysl povolit shutdown pokud je connection null?
-        DriverManager.getConnection(url + ";shutdown=true");
+        if (connection != null) DriverManager.getConnection(url + ";shutdown=true", db_user, db_pass);
     }
 
+    /**
+     * Exit listener. Provede ukonceni spojeni s databazi
+     */
+    private static class ConnectionManagerExitListener implements Application.ExitListener {
+
+        public boolean canExit(EventObject event) {
+            return true;
+        }
+
+        public void willExit(EventObject event) {
+        	logger.info("Shutting down database connection ...");
+        	try {
+        		ConnectionManager.getInstance().shutdown();
+		    }
+		    catch (SQLException ex) {
+		    	LogUtils.processException(logger, ex);
+		    }
+        }
+    }
 }
