@@ -94,7 +94,9 @@ public class ConnectionManager {
     }
 
     public void shutdown() throws SQLException {
-        if (connection != null) DriverManager.getConnection(url + ";shutdown=true", db_user, db_pass);
+        if (connection != null) {
+        	DriverManager.getConnection("jdbc:derby:;shutdown=true", db_user, db_pass);
+        }
     }
 
     /**
@@ -107,13 +109,23 @@ public class ConnectionManager {
         }
 
         public void willExit(EventObject event) {
+        	boolean gotSQLExc = false;
         	logger.info("Shutting down database connection ...");
         	try {
         		ConnectionManager.getInstance().shutdown();
 		    }
 		    catch (SQLException ex) {
-		    	LogUtils.processException(logger, ex);
+      			if ( ex.getSQLState().equals("XJ015") ) {
+         			gotSQLExc = true;	// uspesne ukonceni databaze
+      			}else{
+      				LogUtils.processException(logger, ex);
+      			}
 		    }
+		   	if (!gotSQLExc) {
+		      	logger.info("Database did not shut down normally");
+		   	} else {
+		      	logger.info("Database shut down normally");
+		   	}
         }
     }
 }
