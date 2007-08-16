@@ -1,15 +1,17 @@
 package cz.cvut.felk.timejuggler.db.entity;
 
 import cz.cvut.felk.timejuggler.db.*;
-
+import cz.cvut.felk.timejuggler.db.entity.interfaces.PropertyEntity;
+import cz.cvut.felk.timejuggler.utilities.LogUtils;
+import java.util.logging.Logger;
 /**
  * @author Jan Struz
  * @version 0.1
  * @created 12-V-2007 23:39:36
  * Hotovo
  */
-public class RelatedTo extends DbElement {
-	//TODO : Logging
+public class RelatedTo extends DbElement implements PropertyEntity {
+	private final static Logger logger = Logger.getLogger(RelatedTo.class.getName());
 	private String relatedto = "";
 	private int componentId;
 	
@@ -75,6 +77,28 @@ public class RelatedTo extends DbElement {
 
 	public int getComponentId() {
 		return (this.componentId); 
+	}
+
+	/**
+	 * Method getValue
+	 *
+	 *
+	 * @return
+	 *
+	 */
+	public String getValue() {
+		return relatedto;
+	}
+
+	/**
+	 * Method setValue
+	 *
+	 *
+	 * @param newVal
+	 *
+	 */
+	public void setValue(String newVal) {
+		relatedto = newVal;
 	}
 
 }

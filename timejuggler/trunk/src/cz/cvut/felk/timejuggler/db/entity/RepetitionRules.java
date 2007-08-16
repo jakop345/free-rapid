@@ -34,7 +34,7 @@ public class RepetitionRules extends DbElement implements Iterable {
 			//bez update
 		}else{
 			logger.info("Database - Insert: RepetitionRules[]...");
-			String insertQuery = "INSERT INTO RepetitionRules";
+			String insertQuery = "INSERT INTO RepetitionRules (repetitionRulesID) VALUES (DEFAULT)";
 			template.executeUpdate(insertQuery, null);
 			setId(template.getGeneratedId());			
 		}

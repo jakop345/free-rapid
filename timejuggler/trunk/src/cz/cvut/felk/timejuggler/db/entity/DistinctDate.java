@@ -1,6 +1,8 @@
 package cz.cvut.felk.timejuggler.db.entity;
 
 import cz.cvut.felk.timejuggler.db.*;
+import java.util.logging.Logger;
+import cz.cvut.felk.timejuggler.utilities.LogUtils;
 
 import java.util.Date;
 /**
@@ -10,7 +12,7 @@ import java.util.Date;
  * Hotovo
  */
 public class DistinctDate extends DbElement {
-	//TODO : Logging
+	private final static Logger logger = Logger.getLogger(DistinctDate.class.getName());
 	private Date date;
 	private int distinctDatesId;
 

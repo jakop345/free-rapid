@@ -36,6 +36,14 @@ class FakePersistencyLayer implements PersistencyLayer {
         return fakeListCalendars;
     }
 
+	public List<EventTaskEntity> getEventsByCalendar(VCalendarEntity cal) throws PersistencyLayerException {
+		return new ArrayList();
+	}
+	
+	public List<EventTaskEntity> getToDosByCalendar(VCalendarEntity cal) throws PersistencyLayerException {
+		return new ArrayList();
+	}
+
     public List<EventTask> getEvents() throws PersistencyLayerException {
 
 		Calendar cal = Calendar.getInstance();
@@ -49,6 +57,10 @@ class FakePersistencyLayer implements PersistencyLayer {
         event1.addCategory(cat);
         
         return Arrays.asList(event1);
+    }
+    
+    public VCalendarEntity importICS(String filePath) throws PersistencyLayerException{
+   		return new VCalendar();
     }
 
     public void saveOrUpdateCalendar(VCalendarEntity calendar) throws PersistencyLayerException {

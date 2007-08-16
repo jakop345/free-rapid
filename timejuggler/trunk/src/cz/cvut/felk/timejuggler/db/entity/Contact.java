@@ -1,6 +1,9 @@
 package cz.cvut.felk.timejuggler.db.entity;
 
 import cz.cvut.felk.timejuggler.db.*;
+import java.util.logging.Logger;
+import cz.cvut.felk.timejuggler.utilities.LogUtils;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.PropertyEntity;
 
 /**
  * @author Jan Struz
@@ -8,8 +11,8 @@ import cz.cvut.felk.timejuggler.db.*;
  * @created 12-V-2007 23:41:01
  * Hotovo
  */
-public class Contact extends DbElement {
-	//TODO : Logging
+public class Contact extends DbElement implements PropertyEntity {
+	private final static Logger logger = Logger.getLogger(Contact.class.getName());
 	private String contact = "";
 	
 	private int componentId;
@@ -75,6 +78,28 @@ public class Contact extends DbElement {
 
 	public int getComponentId() {
 		return (this.componentId); 
+	}
+
+	/**
+	 * Method getValue
+	 *
+	 *
+	 * @return
+	 *
+	 */
+	public String getValue() {
+		return contact;
+	}
+
+	/**
+	 * Method setValue
+	 *
+	 *
+	 * @param newVal
+	 *
+	 */
+	public void setValue(String newVal) {
+		contact = newVal;
 	}
 
 }

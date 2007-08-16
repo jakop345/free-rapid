@@ -14,7 +14,13 @@ public interface PersistencyLayer {
 
     List<VCalendarEntity> getCalendars() throws PersistencyLayerException;
 
+	List<EventTaskEntity> getEventsByCalendar(VCalendarEntity cal) throws PersistencyLayerException;
+	
+	List<EventTaskEntity> getToDosByCalendar(VCalendarEntity cal) throws PersistencyLayerException;
+
     List<EventTask> getEvents() throws PersistencyLayerException;
+
+	VCalendarEntity importICS(String filePath) throws PersistencyLayerException;
 
     void saveOrUpdateCalendar(VCalendarEntity calendar) throws PersistencyLayerException;
 

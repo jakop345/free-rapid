@@ -1,6 +1,8 @@
 package cz.cvut.felk.timejuggler.db.entity;
 
 import cz.cvut.felk.timejuggler.db.*;
+import java.util.logging.Logger;
+import cz.cvut.felk.timejuggler.utilities.LogUtils;
 
 /**
  * @author Jan Struz
@@ -9,7 +11,7 @@ import cz.cvut.felk.timejuggler.db.*;
  * Hotovo
  */
 public class RepetitionRule  extends DbElement {
-	//TODO : Logging
+	private final static Logger logger = Logger.getLogger(RepetitionRule.class.getName());
 	//TODO : Pridat operace pro manipulaci s opakovanim + konstanty
 	
 	private int frequency;

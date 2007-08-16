@@ -26,9 +26,6 @@ import cz.cvut.felk.timejuggler.db.entity.Attachment;
 
 public interface CalComponentEntity extends EntityElement {
 	
-	void setComponentId(int componentId);	//TODO ??
-	int getComponentId();		//TODO ??
-	
 	String getUid();
 	void setUid(String newVal);
 	String getUrl();
@@ -80,8 +77,8 @@ public interface CalComponentEntity extends EntityElement {
 	DistinctDates getDistinctDates();
 	
 	/* 
-	void setCalendarId(int calendarId);	//TODO ??
-	int getCalendarId();	//TODO ??
+	void setCalendarId(int calendarId);
+	int getCalendarId();
 	
 	nahrazeno set/get Calendar */
 	void setCalendar(VCalendar cal);
@@ -95,4 +92,6 @@ public interface CalComponentEntity extends EntityElement {
 	Date getEndDate();
 	void setDateTime(DateTime dateTime);
 	DateTime getDateTime();
+	
+	Object clone() throws CloneNotSupportedException;
 }

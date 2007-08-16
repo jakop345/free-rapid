@@ -48,18 +48,10 @@ public class ConnectionManager {
         this.db_user = Consts.DB_USERNAME;
         this.db_pass = Consts.DB_PASSWORD;
 
-        //this.url = "jdbc:derby:/timejuggler;createFrom=jar:database_init.jar" ; // nefunkcni
-        //this.url = "jdbc:derby:jar:(database_init.jar)timejuggler" ; // nefunkcni
-        //this.url = "jdbc:derby:c:/WINDOWS/Application Data/CTU-FEL/TimeJuggler/db" + ";createFrom=" + "G:/cygwin/home/honza/kalendar/timejuggler/trunk/build/defaultdb/db";
-        /* funkcni, vytvori databazi v rootu aktualniho disku podle prazdne databaze */
-        //this.url = "jdbc:derby:/timejuggler;createFrom=G:/pokus/derbydb/timejuggler" ;        
-
-        //this.url = "jdbc:derby:G:/pokus/db";
-        //this.create_url = ";createFrom=G:/cygwin/home/Honza/kalendar/timejuggler/trunk/build/defaultdb/db";
+//		this.url = "jdbc:derby:G:/pokus/db";
 
         /* deployment ready code */
         this.url = "jdbc:derby:" + appContext.getLocalStorage().getDirectory() + "/" + Consts.DB_LOCALDIR;
-        //this.create_url = ";createFrom=" + AppPrefs.getAppPath() + "/defaultdb/db";
         
         app.addExitListener(new ConnectionManagerExitListener());
     }

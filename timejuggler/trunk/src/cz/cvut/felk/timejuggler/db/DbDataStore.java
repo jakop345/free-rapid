@@ -3,6 +3,7 @@ package cz.cvut.felk.timejuggler.db;
 import cz.cvut.felk.timejuggler.db.entity.*;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.CategoryEntity;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.VCalendarEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.EventTaskEntity;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.data.ParserException;
@@ -21,6 +22,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -38,51 +40,14 @@ public class DbDataStore {
      * @param args
      */
     public static void main(String[] args) {
+    	DbDataStore db = new DbDataStore();
         // Testing
-        importTest();
+        //importTest();
+        db.showDB();
         System.exit(0);
 
         // Testing
-        DbDataStore db = new DbDataStore();
-
-        //VCalendar calendar1 = new VCalendar("Testovaci 1");
-        //db.saveOrUpdate(calendar1);
-
-        /* Pridavani kalendare */
-        /*
-          VCalendar calendar1 = new VCalendar("Hlavni kalendar");
-          VCalendar calendar2 = new VCalendar("Svatky");
-          db.saveOrUpdate(calendar1);
-          db.saveOrUpdate(calendar2);
-          */
-
-        /* Pridavani Eventu */
-        /*
-          EventTask event = new EventTask();
-          event.setUid("01234568-012144");
-          event.setDescription("Muj event 2");
-          event.setSummary("Toto je druhy event ulozeny do databaze!");
-          Date dt = new Date();
-          dt.setDate(27);
-          dt.setMonth(4);
-          dt.setYear(2007);
-          event.setStartDate(dt);
-
-          db.saveOrUpdate(calendar1,event);
-          */
-
-        /* Pridavani Ukolu */
-        /*
-          EventTask todo = new EventTask(true);
-          Date deadline = new Date();
-          deadline.setMonth(5);
-          deadline.setDate(20);
-          todo.setUid("123456-7898");
-          todo.setDescription("Napsat ukoly!");
-          todo.setSummary("Museji se napsat vsechny ukoly do skoly! :)");
-          todo.setDue(new Timestamp(deadline.getTime()));
-          db.saveOrUpdate(calendar1,todo);
-          */
+        
 
         /* Vypis */
 
@@ -126,11 +91,11 @@ public class DbDataStore {
         DbDataStore db = new DbDataStore();
         /* pri importu je ulozeni do db automaticke */
         try {
-            VCalendar cal = db.importICS("G:\\pokus\\USHolidays.ics");
+            VCalendarEntity cal = db.importICS("G:\\pokus\\USHolidays.ics");
             /* nastaveni jmena pro importovany kalendar */
             cal.setName("USHolidays.ics - imported 1");
             /* ulozeni zmen */
-            db.saveOrUpdate(cal);
+            db.saveOrUpdate((VCalendar)cal);
             /* vypis obsahu db */
             db.showDB();
 
@@ -147,12 +112,12 @@ public class DbDataStore {
             LogUtils.processException(logger, e);
         }
         /* odpojeni databaze */
-        try {
+        /*try {
             ConnectionManager.getInstance().shutdown();
         }
         catch (SQLException ex) {
             LogUtils.processException(logger, ex);
-        }
+        }*/
         // konec programu
     }
 
@@ -167,10 +132,9 @@ public class DbDataStore {
             System.out.println("Calendar name:" + cal.getName());
             System.out.println("+--Events:");
 
-//            List<EventTask> events = cal.getEvents(); <<commented out by Vity >>
-            List<EventTask> events = null;
+            List<EventTaskEntity> events = getEventsByCalendar((VCalendar) cal);
             if (events != null) {
-                for (EventTask e : events) {
+                for (EventTaskEntity e : events) {
                     //System.out.println ("event.description: " + e.getDescription());
                     System.out.println("event.summary: " + e.getSummary());
                     System.out.println("+-startDate: " + e.getStartDate());
@@ -189,8 +153,8 @@ public class DbDataStore {
                     }
                     Periods periods = e.getPeriods();
                     if (periods != null) {
-                        for (Object o : periods) {
-                            cz.cvut.felk.timejuggler.db.entity.Period p = (cz.cvut.felk.timejuggler.db.entity.Period) o;
+                        for (cz.cvut.felk.timejuggler.db.entity.Period p : periods) {
+                            //cz.cvut.felk.timejuggler.db.entity.Period p = (cz.cvut.felk.timejuggler.db.entity.Period) o;
                             System.out.println("+-period " + p.getStartDate() + " ... " + p.getEndDate());
                         }
                     }
@@ -254,6 +218,127 @@ public class DbDataStore {
         };
         template.executeQuery(sql, null);
         return template.getItems() == null ? new ArrayList<CategoryEntity>() : template.getItems();
+    }
+
+    /**
+     * Method getEventsByCategory
+     * @return Vraci vsechny udalosti podle zadane kategorie
+     */
+    public List<EventTaskEntity> getEventsByCategory(){
+    	//TODO getEventsByCategory
+    	return new ArrayList();
+    }
+
+    /**
+     * Method getEventsByCalendar
+     * @return Vraci vsechny udalosti typu Event v danem kalendari
+     */
+    public List<EventTaskEntity> getEventsByCalendar(VCalendar cal) {
+        String sql = "SELECT * FROM VEvent,CalComponent,DateTime WHERE (VEvent.calComponentID = CalComponent.calComponentID AND CalComponent.vCalendarID=? AND CalComponent.dateTimeID=DateTime.dateTimeID)";
+        Object params[] = {cal.getId()};
+        TimeJugglerJDBCTemplate<List<EventTaskEntity>> template = new TimeJugglerJDBCTemplate<List<EventTaskEntity>>() {
+            protected void handleRow(ResultSet rs) throws SQLException {
+                if (items == null) items = new ArrayList<EventTaskEntity>();
+                EventTask event = new EventTask();    // Vytvori udalost typu Event
+                Timestamp ts;
+                event.setId(rs.getInt("vEventID"));    //DB
+                event.setLocation(rs.getString("location"));
+                event.setTransparency(rs.getString("transp"));
+                event.setPriority(rs.getInt("priority"));
+                event.setGeoGPS(rs.getString("geo"));
+
+                //cast calcomponent
+                event.setComponentId(rs.getInt("calComponentID"));    //DB
+                event.setDescription(rs.getString("description"));
+                event.setUid(rs.getString("uid"));
+                event.setClazz(rs.getString("clazz"));
+                event.setOrganizer(rs.getString("organizer"));
+                event.setSequence(rs.getInt("sequence"));
+                event.setStatus(rs.getString("status"));
+                event.setSummary(rs.getString("summary"));
+                ts = rs.getTimestamp("dtstamp");
+                if (ts != null) event.setDTimestamp(new Date(ts.getTime()));
+
+                //cast DateTime
+                event.getDateTime().setPeriodsId(rs.getInt("periodsID"));
+                event.getDateTime().setDistinctDatesId(rs.getInt("distinctDatesID"));
+
+                ts = rs.getTimestamp("lastmodified");
+                if (ts != null) event.setLastModified(new Date(ts.getTime()));
+                ts = rs.getTimestamp("created");
+                if (ts != null) event.setCreated(new Date(ts.getTime()));
+                ts = rs.getTimestamp("startDate");
+                if (ts != null) event.setStartDate(new Date(ts.getTime()));
+                ts = rs.getTimestamp("endDate");
+                if (ts != null) event.setEndDate(new Date(ts.getTime()));
+
+                // TODO: Nacitat Duration z DB (durationID)
+
+                items.add(event);
+            }
+        };
+        template.executeQuery(sql, params);
+        return template.getItems();
+    }
+
+    /**
+     * Method getToDosByCalendar
+     * @return Vraci vsechny ukoly v danem kalendari
+     */
+    public List<EventTaskEntity> getToDosByCalendar(VCalendar cal) {
+        String sql = "SELECT * FROM VToDo,CalComponent,DateTime WHERE (VToDo.calComponentID = CalComponent.calComponentID AND CalComponent.vCalendarID=? AND CalComponent.dateTimeID=DateTime.dateTimeID)";
+        Object params[] = {cal.getId()};
+        TimeJugglerJDBCTemplate<List<EventTaskEntity>> template = new TimeJugglerJDBCTemplate<List<EventTaskEntity>>() {
+            protected void handleRow(ResultSet rs) throws SQLException {
+                if (items == null) items = new ArrayList<EventTaskEntity>();
+                EventTask todo = new EventTask(true);    // Vytvori udalost typu ToDo
+                Timestamp ts;
+                todo.setId(rs.getInt("vToDoID"));
+                todo.setLocation(rs.getString("location"));
+                todo.setPercentComplete(rs.getInt("percentcomplete"));
+                todo.setPriority(rs.getInt("priority"));
+                todo.setGeoGPS(rs.getString("geo"));
+                ts = rs.getTimestamp("due");
+                if (ts != null) todo.setEndDate(new Date(ts.getTime()));
+                ts = rs.getTimestamp("completed");
+                todo.setCompleted(new Date(ts.getTime()));
+                //cast calcomponent
+                todo.setComponentId(rs.getInt("calComponentID"));    //DB
+                todo.setDescription(rs.getString("description"));
+                todo.setUid(rs.getString("uid"));
+                todo.setClazz(rs.getString("clazz"));
+                todo.setOrganizer(rs.getString("organizer"));
+                todo.setSequence(rs.getInt("sequence"));
+                todo.setStatus(rs.getString("status"));
+                todo.setSummary(rs.getString("summary"));
+                ts = rs.getTimestamp("dtstamp");
+                if (ts != null) todo.setDTimestamp(new Date(ts.getTime()));
+                //cast DateTime                
+                todo.getDateTime().setPeriodsId(rs.getInt("periodsID"));
+                todo.getDateTime().setDistinctDatesId(rs.getInt("distinctDatesID"));
+                ts = rs.getTimestamp("lastmodified");
+                if (ts != null) todo.setLastModified(new Date(ts.getTime()));
+                ts = rs.getTimestamp("created");
+                if (ts != null) todo.setCreated(new Date(ts.getTime()));
+                ts = rs.getTimestamp("startDate");
+                if (ts != null) todo.setStartDate(new Date(ts.getTime()));
+
+                // TODO: Nacitat Duration z DB (durationID)
+
+                items.add(todo);
+            }
+        };
+        template.executeQuery(sql, params);
+        return template.getItems();
+    }
+
+    /**
+     * Method getEvents
+     * @return
+     */
+    public List<EventTaskEntity> getEvents(Date startDate, Date endDate) {
+        // TODO: Napsat SELECT pro vraceni udalosti mezi danymi casy
+        return new ArrayList<EventTaskEntity>();
     }
 
     /**
@@ -324,11 +409,11 @@ public class DbDataStore {
      * Method importICS
      * @return
      */
-    public VCalendar importICS(String filename) throws IOException, ParserException, DatabaseException {
+    public VCalendarEntity importICS(String filename) throws IOException, ParserException, DatabaseException {
         logger.info("Importing ICS file " + filename);
         TimeJugglerJDBCTemplate template = new TimeJugglerJDBCTemplate();    // import jako 1 transakce
 
-        // TODO: categories,periods,..
+        // TODO: periods,..
         // Import je castecne funkcni
         Property prop;
 
@@ -417,7 +502,7 @@ public class DbDataStore {
                     cat.saveOrUpdate(template);
                     cats.add(cat);
                 }
-                event.addCategory(cat);    //TODO pridat Category z DB!
+                event.addCategory(cat);    //TODO import: pridat Category z DB!, nebo vytvorit novou kategorii, pokud jiz existuje
             }
 
             /* Cast Periods + Recurrence Dates */
@@ -459,25 +544,29 @@ public class DbDataStore {
             RRule rrule;
 
             rrule = (RRule) comp.getProperty(Property.RRULE);
-            Recur recur = rrule.getRecur();    //iCal
-            RepetitionRules rrs = new RepetitionRules();
-            //for (Object o : ){
-            RepetitionRule rr = new RepetitionRule();
-            //recur.getSecondList()
-            //recur.getMinuteList()
-            //recur.getHourList()
-            //recur.getMonthDayList()
-            //recur.getMonthList()
-            //recur.getYearDayList()
-            //recur.getFrequency()
-            //recur.getInterval()
+            if (rrule != null) {
+	            Recur recur = rrule.getRecur();    //iCal
+	            RepetitionRules rrs = new RepetitionRules();
+	            //for (Object o : ){
+	            RepetitionRule rr = new RepetitionRule();
+	            //recur.getSecondList()
+	            //recur.getMinuteList()
+	            //recur.getHourList()
+	            //recur.getMonthDayList()
+	            //recur.getMonthList()
+	            //recur.getYearDayList()
+	            //recur.getFrequency()
+	            //recur.getInterval()
+	
+	            rrs.addRule(rr);
+	            //}
 
-            rrs.addRule(rr);
-            //}
-            newPeriod = new cz.cvut.felk.timejuggler.db.entity.Period();
+	            newPeriod = new cz.cvut.felk.timejuggler.db.entity.Period();
+	
+	            newPeriod.setRepetitionRules(rrs);
+	            periods.addPeriod(newPeriod);
 
-            newPeriod.setRepetitionRules(rrs);
-            periods.addPeriod(newPeriod);
+            }
 
             //rrule = (RRule)comp.getProperty(Property.EXRULE);
             //rrule = (RRule)comp.getProperty(Property.EXDATE);
@@ -509,13 +598,13 @@ public class DbDataStore {
         // TODO: Period property
         // Funkcni - castecne exportuje Eventy
         Calendar ical;
-        List<EventTask> events = calendar.getEvents();    // sada Timejuggler
+        List<EventTaskEntity> events = getEventsByCalendar(calendar);    // sada Timejuggler
         ComponentList compList = new ComponentList();    // sada pro iCal
 
         PropertyList propList;
         ComponentFactory iCalFactory = ComponentFactory.getInstance();
 
-        for (EventTask e : events) {
+        for (EventTaskEntity e : events) {
             propList = new PropertyList();
 
             // Nastaveni vlastnosti pro Eventy k ulozeni do souboru

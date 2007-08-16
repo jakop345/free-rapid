@@ -239,10 +239,8 @@ public class EventTask extends CalComponent implements Comparable<EventTaskEntit
 	}
 
 	public int compareTo(EventTaskEntity o) {
-		//TODO: compare to ! 
-        //assert getSummary() != null;
-        //return getSummary().compareTo(o.getSummary());
-        return 1;
+        assert getSummary() != null;
+        return getSummary().compareTo(o.getSummary());
     }
     
     public boolean equals(Object o) {

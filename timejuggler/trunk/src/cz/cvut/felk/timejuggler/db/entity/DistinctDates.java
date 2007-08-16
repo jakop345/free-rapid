@@ -35,7 +35,7 @@ public class DistinctDates extends DbElement implements Iterable, DistinctDatesE
 			//bez Update
 		}else{
 			logger.info("Database - Insert: DistinctDates[]...");
-			String insertQuery = "INSERT INTO DistinctDates";
+			String insertQuery = "INSERT INTO DistinctDates (distinctDatesID) VALUES (DEFAULT)";
 			template.executeUpdate(insertQuery, null);
 			setId(template.getGeneratedId());
 		}
