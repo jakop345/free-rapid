@@ -8,6 +8,7 @@ import cz.cvut.felk.timejuggler.utilities.LogUtils;
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Recur;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.property.*;
@@ -154,9 +155,19 @@ public class DbDataStore {
                     if (periods != null) {
                         for (cz.cvut.felk.timejuggler.db.entity.Period p : periods) {
                             //cz.cvut.felk.timejuggler.db.entity.Period p = (cz.cvut.felk.timejuggler.db.entity.Period) o;
-                            System.out.println("+-period " + p.getStartDate() + " ... " + p.getEndDate());
+                            //System.out.println("+-period " + p.getStartDate() + " ... " + p.getEndDate());
+                            RepetitionRules rules = p.getRepetitionRules();
+                            if (rules != null) {
+	                            for (RepetitionRule rr : rules) {
+	                            	System.out.println ("+--REPEAT " + rr.getFrequency() + 
+	                            		"; interval " + rr.getInterval() + 
+	                            		"; byMonth " + rr.getByMonth() + 
+	                            		"; byMonthDay " + rr.getByMonthDay());
+	                            }
+                            }
                         }
                     }
+                    //RepetitionRules rules;
 
                     System.out.println("++++++++++++++++++++++++++++++++++");
                 }
@@ -223,9 +234,10 @@ public class DbDataStore {
      * Method getEventsByCategory
      * @return Vraci vsechny udalosti podle zadane kategorie
      */
-    public List<EventTaskEntity> getEventsByCategory() {
-        //TODO getEventsByCategory
-        return new ArrayList();
+
+    public List<EventTaskEntity> getEventsByCategory(){
+    	//TODO getEventsByCategory
+    	return new ArrayList<EventTaskEntity>();
     }
 
     /**
@@ -411,7 +423,7 @@ public class DbDataStore {
     public VCalendarEntity importICS(File file) throws IOException, ParserException, DatabaseException {
         logger.info("Importing ICS file " + file);
         TimeJugglerJDBCTemplate template = new TimeJugglerJDBCTemplate();    // import jako 1 transakce
-
+            
         // TODO: periods,..
         // Import je castecne funkcni
         Property prop;
@@ -492,10 +504,12 @@ public class DbDataStore {
 
             CategoryList catList = ((net.fortuna.ical4j.model.property.Categories) prop).getCategories();    // iCal
             Category cat;    // Timejuggler
+
             List<CategoryEntity> cats = getCategories();
             String catName;
             for (Iterator<?> it = catList.iterator(); it.hasNext();) {
                 catName = it.next().toString();
+                //TODO if catName exists,...else create new
                 cat = new Category(catName);
                 if (!cats.contains(cat)) {
                     cat.saveOrUpdate(template);
@@ -503,7 +517,7 @@ public class DbDataStore {
                 }
                 event.addCategory(cat);    //TODO import: pridat Category z DB!, nebo vytvorit novou kategorii, pokud jiz existuje
             }
-
+			
             /* Cast Periods + Recurrence Dates */
             /* priprava */
 
@@ -538,32 +552,53 @@ public class DbDataStore {
                 event.setDistinctDates(ds);
 
             }
-
             //TODO : DbDataStore - Rules
             RRule rrule;
+            /* poradi vyhodnocovani opakovani je v RFC 2445 [Page 44] */
 
             rrule = (RRule) comp.getProperty(Property.RRULE);
             if (rrule != null) {
-                Recur recur = rrule.getRecur();    //iCal
-                RepetitionRules rrs = new RepetitionRules();
-                //for (Object o : ){
-                RepetitionRule rr = new RepetitionRule();
-                //recur.getSecondList()
-                //recur.getMinuteList()
-                //recur.getHourList()
-                //recur.getMonthDayList()
-                //recur.getMonthList()
-                //recur.getYearDayList()
-                //recur.getFrequency()
-                //recur.getInterval()
 
-                rrs.addRule(rr);
-                //}
+	            Recur recur = rrule.getRecur();    //iCal
+	            RepetitionRules rrs = new RepetitionRules();
+	            //for (Object o : ){
+	            RepetitionRule rr = new RepetitionRule();
+	            if (recur.getFrequency().equals(Recur.DAILY)) {
+	            	rr.setFrequency(RepetitionRule.DAILY);
+	            }else if (recur.getFrequency().equals(Recur.HOURLY)) {
+	            	rr.setFrequency(RepetitionRule.HOURLY);
+	            }else if (recur.getFrequency().equals(Recur.MINUTELY)) {
+	            	rr.setFrequency(RepetitionRule.MINUTELY);
+	            }else if (recur.getFrequency().equals(Recur.MONTHLY)) {
+	            	rr.setFrequency(RepetitionRule.MONTHLY);
+	            }else if (recur.getFrequency().equals(Recur.SECONDLY)) {
+	            	rr.setFrequency(RepetitionRule.SECONDLY);
+	            }else if (recur.getFrequency().equals(Recur.WEEKLY)) {
+	            	rr.setFrequency(RepetitionRule.WEEKLY);
+	            }else if (recur.getFrequency().equals(Recur.YEARLY)) {
+	            	rr.setFrequency(RepetitionRule.YEARLY);
+	            }
+	            assert recur.getHourList()!=null;
+	            rr.setByHour(recur.getHourList().toString());
+	            rr.setByWeekNo(recur.getWeekNoList().toString());
+	            rr.setByYearDay(recur.getYearDayList().toString());
+	            rr.setBySetPosition(recur.getSetPosList().toString());
+	            rr.setByMonth(recur.getMonthList().toString());
+	            rr.setByMinute(recur.getMinuteList().toString());
+	            rr.setByMonthDay(recur.getMonthDayList().toString());
+	            //rr.set ... (recur.getSecondList()); vterinove opakovani.. nevedeme :)
+				rr.setInterval(recur.getInterval());
+				rr.setRepeat(recur.getCount());
+				
+	            rrs.addRule(rr);
+	            //}
 
-                newPeriod = new cz.cvut.felk.timejuggler.db.entity.Period();
-
-                newPeriod.setRepetitionRules(rrs);
-                periods.addPeriod(newPeriod);
+	            newPeriod = new cz.cvut.felk.timejuggler.db.entity.Period();
+	
+	            newPeriod.setRepetitionRules(rrs);
+	            newPeriod.setEndDate(recur.getUntil());
+	            
+	            periods.addPeriod(newPeriod);
 
             }
 

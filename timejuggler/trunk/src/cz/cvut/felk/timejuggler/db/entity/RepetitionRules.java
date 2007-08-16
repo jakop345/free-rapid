@@ -12,7 +12,7 @@ import java.util.logging.Logger;
  * @created 12-V-2007 18:40:08
  * Hotovo
  */
-public class RepetitionRules extends DbElement implements Iterable {
+public class RepetitionRules extends DbElement implements Iterable<RepetitionRule> {
 	private final static Logger logger = Logger.getLogger(RepetitionRules.class.getName());
 	
 	private List<RepetitionRule> repetitionRules;
@@ -80,7 +80,7 @@ public class RepetitionRules extends DbElement implements Iterable {
 	 * @return
 	 *
 	 */
-	public Iterator iterator() {
+	public Iterator<RepetitionRule> iterator() {
 		return repetitionRules.iterator();
 	}
 }

@@ -364,7 +364,7 @@ public class CalComponent extends DbElement {
      * @return
      */
     public List<Category> getCategories() {
-        String sql = "SELECT * FROM Category,Categories WHERE Categories.calComponentID=? ";
+        String sql = "SELECT * FROM Category,Categories WHERE Categories.calComponentID=? AND Categories.CategoryId=Category.CategoryId ";
         Object params[] = {getComponentId()};
         TimeJugglerJDBCTemplate<List<Category>> template = new TimeJugglerJDBCTemplate<List<Category>>() {
             protected void handleRow(ResultSet rs) throws SQLException {

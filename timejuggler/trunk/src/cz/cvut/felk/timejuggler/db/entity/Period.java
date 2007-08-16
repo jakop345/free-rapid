@@ -170,7 +170,7 @@ public class Period extends DbElement {
 	}
 
 	public RepetitionRules getRepetitionRules() {
-		//TODO : SELECT FROM RepetitionRule
+		//TODO : SELECT FROM RepetitionRule TODO TODO TODO TODO TODO TODO
 		return (this.repetitionRules); 
 	}
 

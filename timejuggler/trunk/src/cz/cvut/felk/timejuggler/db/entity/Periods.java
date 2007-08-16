@@ -74,12 +74,12 @@ public class Periods extends DbElement implements Iterable<Period>, PeriodsEntit
      * Method iterator
      * @return
      */
-    public Iterator iterator() {
+    public Iterator<Period> iterator() {
         return periods.iterator();
     }
 
 
-    public List<Period> getPeriods() {
+    @Deprecated public List<Period> getPeriods() {
         return periods;
     }
 }

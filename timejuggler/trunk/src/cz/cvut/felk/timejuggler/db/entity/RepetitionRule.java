@@ -1,6 +1,7 @@
 package cz.cvut.felk.timejuggler.db.entity;
 
 import cz.cvut.felk.timejuggler.db.*;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.RepetitionRuleEntity;
 import java.util.logging.Logger;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
 
@@ -10,9 +11,18 @@ import cz.cvut.felk.timejuggler.utilities.LogUtils;
  * @created 12-V-2007 18:38:50
  * Hotovo
  */
-public class RepetitionRule  extends DbElement {
+public class RepetitionRule extends DbElement implements RepetitionRuleEntity {
 	private final static Logger logger = Logger.getLogger(RepetitionRule.class.getName());
 	//TODO : Pridat operace pro manipulaci s opakovanim + konstanty
+	
+	/* Frequency */
+	public static final int SECONDLY = 0;
+	public static final int MINUTELY = 1;
+	public static final int HOURLY = 2;
+	public static final int DAILY = 3;
+	public static final int WEEKLY = 4;
+	public static final int MONTHLY = 5;
+	public static final int YEARLY = 6;
 	
 	private int frequency;
 	private int interval;
@@ -47,7 +57,7 @@ public class RepetitionRule  extends DbElement {
      * @param template
      */
 	public void saveOrUpdate(TimeJugglerJDBCTemplate template) {
-		
+		logger.info("RepetitionRule: freq=" + frequency);
 		if (getId() > 0) {
 	 		Object params[] = { repetitionRulesID, frequency, interval, repeat, 
 	 							weekStart, byHour, byWeekNo, byYearDay, 
@@ -133,5 +143,63 @@ public class RepetitionRule  extends DbElement {
 	public int getRepetitionRulesID() {
 		return (this.repetitionRulesID); 
 	}
+
+	
+	public void setByHour(String byHour) {
+		this.byHour = byHour; 
+	}
+
+	public void setByWeekNo(String byWeekNo) {
+		this.byWeekNo = byWeekNo; 
+	}
+
+	public void setByYearDay(String byYearDay) {
+		this.byYearDay = byYearDay; 
+	}
+
+	public void setBySetPosition(String bySetPosition) {
+		this.bySetPosition = bySetPosition; 
+	}
+
+	public void setByMonth(String byMonth) {
+		this.byMonth = byMonth; 
+	}
+
+	public void setByMinute(String byMinute) {
+		this.byMinute = byMinute; 
+	}
+
+	public void setByMonthDay(String byMonthDay) {
+		this.byMonthDay = byMonthDay; 
+	}
+
+	public String getByHour() {
+		return (this.byHour); 
+	}
+
+	public String getByWeekNo() {
+		return (this.byWeekNo); 
+	}
+
+	public String getByYearDay() {
+		return (this.byYearDay); 
+	}
+
+	public String getBySetPosition() {
+		return (this.bySetPosition); 
+	}
+
+	public String getByMonth() {
+		return (this.byMonth); 
+	}
+
+	public String getByMinute() {
+		return (this.byMinute); 
+	}
+
+	public String getByMonthDay() {
+		return (this.byMonthDay); 
+	}
+	
 
 }
