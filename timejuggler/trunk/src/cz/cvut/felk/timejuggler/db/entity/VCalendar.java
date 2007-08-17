@@ -97,8 +97,8 @@ public class VCalendar extends DbElement implements Comparable<VCalendarEntity>,
                 todo.delete(template);
             }*/
 
-            Object params[] = {getId()};    //TODO: DELETE CASCADE / zachovat eventy..?! / dialog
-            String deleteQuery = "DELETE FROM VCalendar WHERE vCalendarID = ?";
+            Object params[] = {getId()};
+            String deleteQuery = "DELETE CASCADE FROM VCalendar WHERE vCalendarID = ?";
             try {
                 template.executeUpdate(deleteQuery, params);
             } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
