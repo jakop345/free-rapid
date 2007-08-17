@@ -51,8 +51,7 @@ public class TimeJugglerJDBCTemplate<F> extends JDBCTemplate {
         return last_id;
     }
 
-    //zmena z protected na public, pouzivano v core.DataProvider
-    public void commit() throws DatabaseException {
+    protected void commit() throws DatabaseException {
         try {
             getConnection().commit();
         }
@@ -62,7 +61,7 @@ public class TimeJugglerJDBCTemplate<F> extends JDBCTemplate {
 
     }
 
-    public void rollback() throws DatabaseException {
+    protected void rollback() throws DatabaseException {
         try {
             getConnection().rollback();
         }

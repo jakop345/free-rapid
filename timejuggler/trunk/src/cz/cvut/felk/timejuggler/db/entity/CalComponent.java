@@ -84,6 +84,7 @@ public class CalComponent extends DbElement {
     public void setComponentId(int componentId) {
         int oldVal = getComponentId();
         this.componentId = componentId;
+        _categories.setComponentId(componentId);
         firePropertyChange(PROPERTYNAME_COMPONENTID, oldVal, componentId);
     }
 
@@ -320,7 +321,7 @@ public class CalComponent extends DbElement {
      * @param template
      */
     public void delete(TimeJugglerJDBCTemplate template) {
-        if (getId() > 0) {
+        if (componentId > 0) {
             if (dateTime != null) {
                 dateTime.delete(template);
             }
@@ -329,14 +330,20 @@ public class CalComponent extends DbElement {
                     alarm.delete(template);
                 }
             }
-            logger.info("Database - DELETE: CalComponent[" + getId() + "]...");
+            /* nesmaze kategorie prirazene k eventu, pouze propojovaci tabulku */
+            if (_categories != null) {
+            	_categories.delete(template);
+            }         
+            
+            logger.info("Database - DELETE: CalComponent[" + componentId + "]...");
             String deleteQuery = "DELETE FROM CalComponent WHERE calComponentID = ?";
-            Object params[] = {getId()};
+            Object params[] = {componentId};
             try {
                 template.executeUpdate(deleteQuery, params);
             } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
                 e.printStackTrace();
             }
+            
         }
         setComponentId(-1);
     }

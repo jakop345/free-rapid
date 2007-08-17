@@ -130,8 +130,8 @@ public class EventTask extends CalComponent implements Comparable<EventTaskEntit
             } catch (DatabaseException e) {
                 e.printStackTrace();
             }
-            setId(-1);
             super.delete(template);
+            setId(-1);
         }
     }
 

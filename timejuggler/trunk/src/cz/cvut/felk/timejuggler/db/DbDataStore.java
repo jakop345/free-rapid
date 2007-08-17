@@ -210,7 +210,7 @@ public class DbDataStore {
         } catch (DatabaseException e) {
             e.printStackTrace();
         }
-        return template.getItems();
+        return template.getItems() == null ? new ArrayList<VCalendarEntity>() : template.getItems();
     }
 
     /**
@@ -277,6 +277,7 @@ public class DbDataStore {
                 event.setSummary(rs.getString("summary"));
                 ts = rs.getTimestamp("dtstamp");
                 if (ts != null) event.setDTimestamp(new Date(ts.getTime()));
+                //event.setCalendar(cal);
 
                 //cast DateTime
                 event.getDateTime().setPeriodsId(rs.getInt("periodsID"));
@@ -301,7 +302,7 @@ public class DbDataStore {
         } catch (DatabaseException e) {
             e.printStackTrace();
         }
-        return template.getItems();
+        return template.getItems() == null ? new ArrayList<EventTaskEntity>() : template.getItems();
     }
 
     /**
@@ -336,6 +337,8 @@ public class DbDataStore {
                 todo.setSummary(rs.getString("summary"));
                 ts = rs.getTimestamp("dtstamp");
                 if (ts != null) todo.setDTimestamp(new Date(ts.getTime()));
+                //todo.setCalendar(cal);
+                
                 //cast DateTime                
                 todo.getDateTime().setPeriodsId(rs.getInt("periodsID"));
                 todo.getDateTime().setDistinctDatesId(rs.getInt("distinctDatesID"));
@@ -356,7 +359,7 @@ public class DbDataStore {
         } catch (DatabaseException e) {
             e.printStackTrace();
         }
-        return template.getItems();
+        return template.getItems() == null ? new ArrayList<EventTaskEntity>() : template.getItems();
     }
 
     /**
@@ -393,7 +396,20 @@ public class DbDataStore {
      */
     public void delete(VCalendar cal) throws DatabaseException {
         TimeJugglerJDBCTemplate template = new TimeJugglerJDBCTemplate();
-        // TODO: vymazat take vsechny eventy a todo v kalendari
+        List<EventTaskEntity> events = getEventsByCalendar(cal);
+        
+        for (EventTaskEntity event : events) {
+            ((EventTask)event).delete(template);
+        }
+        
+		/*
+        List<EventTaskEntity> todos = getToDosByCalendar(cal);
+        if (todos != null) {
+	        for (EventTaskEntity todo : todos) {
+	            ((EventTask)todo).delete(template);
+	        }
+        }
+        */
         cal.delete(template);
         template.commit();
     }

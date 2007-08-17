@@ -63,15 +63,15 @@ public class Categories extends DbElement {
      * @param template
      */
     public void delete(TimeJugglerJDBCTemplate template) {
-        if (getId() > 0) {
-            Object params[] = {getId()};
-            String deleteQuery = "DELETE FROM Categories WHERE categoriesID = ? ";
+        if (componentId > 0) {
+            Object params[] = {componentId};
+            String deleteQuery = "DELETE FROM Categories WHERE calComponentID = ? ";
             try {
                 template.executeUpdate(deleteQuery, params);
             } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
                 e.printStackTrace();
             }
-            setId(-1);
+            setComponentId(-1);
         }
     }
 

@@ -26,6 +26,7 @@ public abstract class JDBCTemplate {
      * @param sql
      */
     public final int executeUpdate(String sql, Object params[]) throws DatabaseException {
+    	//logger.info("SQL: " + sql);
         try {
             return executeQueryInternal(sql, params, UPDATE_QUERY);
         } catch (SQLException e) {
@@ -37,6 +38,7 @@ public abstract class JDBCTemplate {
      * @param sql
      */
     public final void executeQuery(String sql, Object params[]) throws DatabaseException {
+    	//logger.info("SQL: " + sql);
         try {
             executeQueryInternal(sql, params, SELECT_QUERY);
         } catch (SQLException e) {
