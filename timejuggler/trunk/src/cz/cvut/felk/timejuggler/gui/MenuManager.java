@@ -18,6 +18,7 @@ public class MenuManager {
     private JMenuBar menuBar;
     private final ApplicationContext context;
     private static final String SELECTED_TEXT_PROPERTY = "selectedText";
+    private static final String MENU_SEPARATOR = "---";
 
     public MenuManager(final ApplicationContext context) {
         super();
@@ -36,14 +37,14 @@ public class MenuManager {
                 "newTask",
                 "newCalendar",
                 "openCalendarFile",
-                "---",
+                MENU_SEPARATOR,
                 "importCalendar",
                 "exportSelection",
                 "exportCalendar",
-                "---",
+                MENU_SEPARATOR,
                 "pageSetup",
                 "print",
-                "---",
+                MENU_SEPARATOR,
                 "quit"
         };
         final Object[] editMenuActionNames = {
@@ -51,19 +52,19 @@ public class MenuManager {
                 "copy",
                 "paste",
                 "editSelection",
-                "---",
+                MENU_SEPARATOR,
                 "options",
         };
         final Object[] goMenuActionNames = {
                 "goToday",
                 "goToDate",
-                "---",
+                MENU_SEPARATOR,
                 "previousDate",
                 "nextDate",
         };
         final Object[] helpMenuActionNames = {
                 "help",
-                "---",
+                MENU_SEPARATOR,
                 "about"
         };
 
@@ -154,16 +155,34 @@ public class MenuManager {
         return menuBar;
     }
 
-    private JMenu createMenu(String menuName, Object[] actionNames) {
+    private static JMenu createMenu(String menuName, Object[] actionNames) {
         JMenu menu = new JMenu();
+        return processMenu(menu, menuName, actionNames);
+    }
+
+    private static JMenu processMenu(JMenu menu, String menuName, Object[] actionNames) {
         menu.setName(menuName);
         for (Object actionName : actionNames) {
-            if ("---".equals(actionName)) {
+            if (MENU_SEPARATOR.equals(actionName)) {
                 menu.addSeparator();
             } else {
                 JMenuItem menuItem = new JMenuItem();
                 menuItem.setAction(Swinger.getAction(actionName));
                 menuItem.setToolTipText("");//showed in statusbar
+                menu.add(menuItem);
+            }
+        }
+        return menu;
+    }
+
+    public static JPopupMenu processMenu(JPopupMenu menu, String menuName, Object[] actionNames) {
+        menu.setName(menuName);
+        for (Object actionName : actionNames) {
+            if (MENU_SEPARATOR.equals(actionName)) {
+                menu.addSeparator();
+            } else {
+                JMenuItem menuItem = new JMenuItem();
+                menuItem.setAction(Swinger.getAction(actionName));
                 menu.add(menuItem);
             }
         }

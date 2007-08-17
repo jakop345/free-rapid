@@ -378,7 +378,7 @@ public class UserPreferencesDialog extends AppDialog {
         categoriesManager.removeItem(getSelectedItem());
         categoriesListChanged();
         if (inList.isEmpty()) {
-            inList.setSelectionIndex(0);
+            inList.setSelectionIndex(0); //??
         }
     }
 
@@ -1143,13 +1143,6 @@ public class UserPreferencesDialog extends AppDialog {
         public boolean isCellEditable(int rowIndex, int columnIndex) {
             return false;
         }
-
-//        @Override
-//        public Class<?> getColumnClass(int columnIndex) {
-//            if (columnIndex == 1)
-//                return Color.class;
-//            return super.getColumnClass(columnIndex);
-//        }
 
         public Object getValueAt(int rowIndex, int columnIndex) {
             CategoryEntity categoryEntity = getRow(rowIndex);

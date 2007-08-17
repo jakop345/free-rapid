@@ -30,6 +30,9 @@ public class MainPanelManager {
     private ToolbarManager toolbarManager;
     private CalendarGrid calendarGrid;
     private final ApplicationContext context;
+    private TaskListManager taskListManager;
+    private SmallCalendarManager smallCalendarManager;
+
 
     public MainPanelManager(ApplicationContext context) {
         this.context = context;
@@ -52,7 +55,7 @@ public class MainPanelManager {
 
         multiSplitPane.setContinuousLayout(true);
         multiSplitPane.getMultiSplitLayout().setModel(new DefaultSplitPaneModel());
-        multiSplitPane.add(new SmallCalendarManager().getComponent(), LEFT_TOP);
+        multiSplitPane.add(getSmallCalendar().getComponent(), LEFT_TOP);
         multiSplitPane.add(getTaskList(), LEFT_BOTTOM);
         multiSplitPane.add(new EventsListManager(context).getComponent(), RIGHT_TOP);
 
@@ -141,7 +144,9 @@ public class MainPanelManager {
     }
 
     private JComponent getTaskList() {
-        return new TaskListManager().getComponent();
+        if (taskListManager == null)
+            taskListManager = new TaskListManager();
+        return taskListManager.getComponent();
     }
 
     public ToolbarManager getToolbarManager() {
@@ -191,5 +196,11 @@ public class MainPanelManager {
         calendarGrid.setCalendarView(day);
         calendarGrid.refreshCalendarEvents();
         AppPrefs.storeProperty(AppPrefs.CALENDAR_VIEW, day.ordinal());
+    }
+
+    public SmallCalendarManager getSmallCalendar() {
+        if (smallCalendarManager == null)
+            smallCalendarManager = new SmallCalendarManager();
+        return smallCalendarManager;
     }
 }

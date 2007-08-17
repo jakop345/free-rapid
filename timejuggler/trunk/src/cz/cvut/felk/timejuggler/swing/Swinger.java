@@ -100,7 +100,9 @@ public class Swinger {
 
     public static Action getAction(Object actionName) {
         final Action action = MainApp.getAContext().getActionMap().get(actionName);
-        assert action != null;
+        if (action == null) {
+            throw new IllegalStateException("Action with a name \"" + actionName + "\" does not exist.");
+        }
         return action;
     }
 

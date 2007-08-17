@@ -21,6 +21,7 @@ public class DataProvider {
     PersistencyLayer persistencyLayer;
     private boolean categoriesInit = false;
     private boolean calendarsInit = false;
+    private Object newCalendar;
 
 
     public DataProvider() {
@@ -96,10 +97,20 @@ public class DataProvider {
     }
 
     public void importCalendarFromICS(File file) throws PersistencyLayerException {
-        try {
-            getPersitencyLayer().importICS(file);
-        } catch (PersistencyLayerException e) {
-            throw e;
-        }
+        getPersitencyLayer().importICS(file);
+    }
+
+    public VCalendarEntity getNewCalendar() {
+        return getPersitencyLayer().getNewCalendar();
+    }
+
+    public void saveOrUpdateCalendar(VCalendarEntity calendar) throws PersistencyLayerException {
+        getPersitencyLayer().saveOrUpdateCalendar(calendar);
+        calendars.fireContentsChanged(calendars.indexOf(calendar));
+    }
+
+    public void removeCalendar(VCalendarEntity calendar) throws PersistencyLayerException {
+        getPersitencyLayer().removeCalendar(calendar);
+        calendars.remove(calendar);
     }
 }
