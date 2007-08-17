@@ -84,13 +84,13 @@ public class FileActions extends AbstractBean {
         final VCalendarEntity calendar = list.getSelection();
         if (calendar == null) //zadny vyber
             return;
-        final VCalendarEntity calendarEntity = (VCalendarEntity) calendar.clone();
-        final CalendarDialog dialog = new CalendarDialog(app.getMainFrame(), calendarEntity, false);
+        final CalendarDialog dialog = new CalendarDialog(app.getMainFrame(), calendar, false);
         app.prepareDialog(dialog, true);
         if (dialog.getModalResult() == CalendarDialog.RESULT_OK) {
             try {
                 app.getDataProvider().saveOrUpdateCalendar(calendar);
-                list.fireSelectedContentsChanged(); //neni tu duplicita vs saveOrUpdate? treba otestovat 
+                list.setSelection(calendar);
+                //  list.fireSelectedContentsChanged(); //neni tu duplicita vs saveOrUpdate? treba otestovat
             } catch (PersistencyLayerException e) {
                 LogUtils.processException(logger, e);//TODO pridat error dialog
             }
