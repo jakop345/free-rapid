@@ -9,6 +9,7 @@ import com.jgoodies.binding.list.SelectionInList;
 import cz.cvut.felk.timejuggler.core.AppPrefs;
 import cz.cvut.felk.timejuggler.core.MainApp;
 import cz.cvut.felk.timejuggler.core.data.PersistencyLayerException;
+import cz.cvut.felk.timejuggler.db.entity.Category;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.EventTaskEntity;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.VCalendarEntity;
 import cz.cvut.felk.timejuggler.swing.CustomLayoutConstraints;
@@ -258,7 +259,10 @@ public class EventsListManager {
                 case COLUMN_END_INDEX:
                     return entity.getEndDate();
                 case COLUMN_CATEGORY_INDEX:
-                    return entity.getCategories().get(0).getName();
+                    final java.util.List<Category> list = entity.getCategories();
+                    if (list != null && !list.isEmpty())
+                        return list.get(0).getName();
+                    else return "";
                 case COLUMN_LOCATION_INDEX:
                     return entity.getLocation();
                 case COLUMN_STATUS_INDEX:
