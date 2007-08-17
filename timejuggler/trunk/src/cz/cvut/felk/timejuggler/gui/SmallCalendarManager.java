@@ -144,7 +144,7 @@ public class SmallCalendarManager {
     private void updateCheckedStateToDB(VCalendarEntity calendarEntity) {
         MainApp app = MainApp.getInstance(MainApp.class);
         try {
-            app.getDataProvider().saveOrUpdateCalendar(calendarEntity);
+            app.getDataProvider().updateCalendarActive(calendarEntity);
         } catch (PersistencyLayerException e) {
             LogUtils.processException(logger, e);//TODO error hlasku 
         }

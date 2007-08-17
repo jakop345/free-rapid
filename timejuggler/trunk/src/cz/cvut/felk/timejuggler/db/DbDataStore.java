@@ -338,7 +338,7 @@ public class DbDataStore {
                 ts = rs.getTimestamp("dtstamp");
                 if (ts != null) todo.setDTimestamp(new Date(ts.getTime()));
                 //todo.setCalendar(cal);
-                
+
                 //cast DateTime                
                 todo.getDateTime().setPeriodsId(rs.getInt("periodsID"));
                 todo.getDateTime().setDistinctDatesId(rs.getInt("distinctDatesID"));
@@ -363,7 +363,7 @@ public class DbDataStore {
     }
 
     /**
-     * Method getEvents
+     * Method getAllEventsFromSelectedCalendars
      * @return
      */
     public List<EventTaskEntity> getEvents(Date startDate, Date endDate) {
@@ -397,17 +397,17 @@ public class DbDataStore {
     public void delete(VCalendar cal) throws DatabaseException {
         TimeJugglerJDBCTemplate template = new TimeJugglerJDBCTemplate();
         List<EventTaskEntity> events = getEventsByCalendar(cal);
-        
+
         for (EventTaskEntity event : events) {
-            ((EventTask)event).delete(template);
+            ((EventTask) event).delete(template);
         }
-        
-		/*
+
+        /*
         List<EventTaskEntity> todos = getToDosByCalendar(cal);
         if (todos != null) {
-	        for (EventTaskEntity todo : todos) {
-	            ((EventTask)todo).delete(template);
-	        }
+            for (EventTaskEntity todo : todos) {
+                ((EventTask)todo).delete(template);
+            }
         }
         */
         cal.delete(template);
@@ -533,23 +533,23 @@ public class DbDataStore {
 
             /* Categories */
             prop = comp.getProperty(Property.CATEGORIES);
-			if (prop != null) {
-	            CategoryList catList = ((net.fortuna.ical4j.model.property.Categories) prop).getCategories();    // iCal
-	            Category cat;    // Timejuggler
-	
-	            List<CategoryEntity> cats = getCategories();
-	            String catName;
-	            for (Iterator<?> it = catList.iterator(); it.hasNext();) {
-	                catName = it.next().toString();
-	                //TODO if catName exists,...else create new
-	                cat = new Category(catName);
-	                if (!cats.contains(cat)) {
-	                    cat.saveOrUpdate(template);
-	                    cats.add(cat);
-	                }
-	                event.addCategory(cat);    //TODO import: pridat Category z DB!, nebo vytvorit novou kategorii, pokud jiz existuje
-	            }
-			}
+            if (prop != null) {
+                CategoryList catList = ((net.fortuna.ical4j.model.property.Categories) prop).getCategories();    // iCal
+                Category cat;    // Timejuggler
+
+                List<CategoryEntity> cats = getCategories();
+                String catName;
+                for (Iterator<?> it = catList.iterator(); it.hasNext();) {
+                    catName = it.next().toString();
+                    //TODO if catName exists,...else create new
+                    cat = new Category(catName);
+                    if (!cats.contains(cat)) {
+                        cat.saveOrUpdate(template);
+                        cats.add(cat);
+                    }
+                    event.addCategory(cat);    //TODO import: pridat Category z DB!, nebo vytvorit novou kategorii, pokud jiz existuje
+                }
+            }
 
             /* Cast Periods + Recurrence Dates */
             /* priprava */

@@ -5,6 +5,7 @@ package cz.cvut.felk.timejuggler.core.data;
 
 import com.jgoodies.binding.list.ArrayListModel;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.CategoryEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.EventTaskEntity;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.VCalendarEntity;
 
 import java.io.File;
@@ -18,15 +19,18 @@ public class DataProvider {
 
     private ArrayListModel<CategoryEntity> categories;
     private ArrayListModel<VCalendarEntity> calendars;
+    private ArrayListModel<EventTaskEntity> events;
     PersistencyLayer persistencyLayer;
     private boolean categoriesInit = false;
     private boolean calendarsInit = false;
+    private boolean eventsInit = false;
     private Object newCalendar;
 
 
     public DataProvider() {
         categories = new ArrayListModel<CategoryEntity>();
         calendars = new ArrayListModel<VCalendarEntity>();
+        events = new ArrayListModel<EventTaskEntity>();
     }
 
     public void init() throws PersistencyLayerException {
@@ -71,6 +75,14 @@ public class DataProvider {
         return categories;
     }
 
+    public synchronized ArrayListModel<EventTaskEntity> getEventsListModel() throws PersistencyLayerException {
+        if (!eventsInit) {
+            events.addAll(getPersitencyLayer().getAllEventsFromSelectedCalendars());
+            eventsInit = true;
+        }
+        return events;
+    }
+
     public synchronized ArrayListModel<VCalendarEntity> getCalendarsListModel() throws PersistencyLayerException {
         if (!calendarsInit) {
             calendars.addAll(getPersitencyLayer().getCalendars());
@@ -108,6 +120,12 @@ public class DataProvider {
         getCalendarsListModel();
     }
 
+    private void resetEvents() throws PersistencyLayerException {
+        events.clear();//smaze vsechny kategorie v globalnim seznamu
+        eventsInit = false;
+        getEventsListModel();
+    }
+
     public VCalendarEntity getNewCalendar() {
         return getPersitencyLayer().getNewCalendar();
     }
@@ -120,5 +138,10 @@ public class DataProvider {
     public void removeCalendar(VCalendarEntity calendar) throws PersistencyLayerException {
         getPersitencyLayer().removeCalendar(calendar);
         calendars.remove(calendar);
+    }
+
+    public void updateCalendarActive(VCalendarEntity calendarEntity) throws PersistencyLayerException {
+        saveOrUpdateCalendar(calendarEntity);
+        resetEvents();
     }
 }

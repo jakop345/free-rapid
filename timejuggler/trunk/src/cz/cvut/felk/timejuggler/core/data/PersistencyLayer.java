@@ -1,6 +1,5 @@
 package cz.cvut.felk.timejuggler.core.data;
 
-import cz.cvut.felk.timejuggler.db.entity.EventTask;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.CategoryEntity;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.EventTaskEntity;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.VCalendarEntity;
@@ -19,7 +18,7 @@ public interface PersistencyLayer {
 
     List<EventTaskEntity> getToDosByCalendar(VCalendarEntity cal) throws PersistencyLayerException;
 
-    List<EventTask> getEvents() throws PersistencyLayerException;
+    List<EventTaskEntity> getAllEventsFromSelectedCalendars() throws PersistencyLayerException;
 
     VCalendarEntity importICS(File filePath) throws PersistencyLayerException;
 

@@ -55,12 +55,21 @@ class DBPersistencyLayer implements PersistencyLayer {
         return dbStore.getToDosByCalendar((VCalendar) cal);
     }
 
-    public List<EventTask> getEvents() throws PersistencyLayerException {
-        return new ArrayList(); //nikdy nevracet null, bud prazdnej seznam nebo vyjimka
+    public List<EventTaskEntity> getAllEventsFromSelectedCalendars() throws PersistencyLayerException {
+        //TODO nebylo by lepsi tohle jednim selectem???
+        final List<EventTaskEntity> events = new ArrayList<EventTaskEntity>();
+        final List<VCalendarEntity> list = dbStore.getCalendars();
+        for (VCalendarEntity calendarEntity : list) {
+            if (calendarEntity.isActive()) {
+                final List<EventTaskEntity> calendarEvents = dbStore.getEventsByCalendar((VCalendar) calendarEntity);
+                if (calendarEvents != null) //TODO opravit na neposilani null!!
+                    events.addAll(calendarEvents);
+            }
+        }
+        return events;
     }
 
     public VCalendarEntity importICS(File file) throws PersistencyLayerException {
-        //TODO: zpracovani vyjimek.?!? - zpracujeme ve vyssi vrstve
         try {
             return dbStore.importICS(file);
         } catch (IOException e) {

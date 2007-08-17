@@ -45,10 +45,10 @@ class FakePersistencyLayer implements PersistencyLayer {
         return new ArrayList();
     }
 
-    public List<EventTask> getEvents() throws PersistencyLayerException {
+    public List<EventTaskEntity> getAllEventsFromSelectedCalendars() throws PersistencyLayerException {
 
         Calendar cal = Calendar.getInstance();
-        EventTask event1 = new EventTask();
+        EventTaskEntity event1 = new EventTask();
         event1.setSummary("MujEvent");
         event1.setDescription("Pokus");
         event1.setStartDate(cal.getTime());

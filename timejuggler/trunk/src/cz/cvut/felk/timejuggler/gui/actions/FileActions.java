@@ -35,6 +35,18 @@ public class FileActions extends AbstractBean {
         app.prepareDialog(taskDialog, true);
     }
 
+    @Action()
+    public void editEvent() {
+        final EventTaskDialog taskDialog = new EventTaskDialog(app.getMainFrame(), true);
+        app.prepareDialog(taskDialog, true);
+    }
+
+    @Action()
+    public void editTask() {
+        final EventTaskDialog taskDialog = new EventTaskDialog(app.getMainFrame(), true);
+        app.prepareDialog(taskDialog, true);
+    }
+
 //    public boolean isStatusbarVisible() {
 //        final Object value = Swinger.getAction("showStatusBar").getValue(javax.swing.Action.SELECTED_KEY);
 //        System.out.println("value = " + value);
