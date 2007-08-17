@@ -50,7 +50,7 @@ public class CheckRenderer extends JPanel implements ListCellRenderer {
             setBackground(list.getBackground());
             setForeground(list.getForeground());
         }
-
+        this.setOpaque(isSelected);
         setEnabled(list.isEnabled());
 
         label.setFont(list.getFont());
