@@ -202,6 +202,7 @@ public class DbDataStore {
                 cal.setMethod(rs.getString("method"));
                 cal.setVersion(rs.getString("version"));
                 cal.setName(rs.getString("name"));
+                cal.setActive(rs.getInt("active") == 1 ? true : false);
                 items.add(cal);
             }
         };

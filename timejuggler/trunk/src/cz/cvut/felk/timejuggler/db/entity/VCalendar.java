@@ -25,12 +25,14 @@ public class VCalendar extends DbElement implements Comparable<VCalendarEntity>,
     private String calendarScale = "GREGORIAN";
     private String method = "PUBLISH";
     private String name = "";
+    private boolean active = false;
 
     public final static String PROPERTYNAME_PRODUCTID = "productId";
     public final static String PROPERTYNAME_NAME = "name";
     public final static String PROPERTYNAME_VERSION = "version";
     public final static String PROPERTYNAME_CALENDARSCALE = "calendarScale";
     public final static String PROPERTYNAME_METHOD = "method";
+    public final static String PROPERTYNAME_ACTIVE = "active";
 
     public VCalendar() {
         super();
@@ -61,14 +63,14 @@ public class VCalendar extends DbElement implements Comparable<VCalendarEntity>,
     public void saveOrUpdate(TimeJugglerJDBCTemplate template) {
         if (getId() > 0) {
             logger.info("Database - Update: VCalendar[" + getId() + "]:" + name + "...");
-            Object params[] = {productId, version, calendarScale, method, name, getId()};
-            String updateQuery = "UPDATE VCalendar SET prodid=?,version=?,calscale=?,method=?,name=? WHERE vCalendarID = ? ";
+            Object params[] = {productId, version, calendarScale, method, name, active ? 1 : 0, getId()};
+            String updateQuery = "UPDATE VCalendar SET prodid=?,version=?,calscale=?,method=?,name=?,active=? WHERE vCalendarID = ? ";
             template.executeUpdate(updateQuery, params);
         } else {
             // Pridani noveho kalendare do databaze
             logger.info("Database - Insert: VCalendar[]:" + name + "...");
-            Object params[] = {productId, version, calendarScale, method, name};
-            String insertQuery = "INSERT INTO VCalendar (prodid,version,calscale,method,name) VALUES (?,?,?,?,?)";
+            Object params[] = {productId, version, calendarScale, method, name, active ? 1 : 0};
+            String insertQuery = "INSERT INTO VCalendar (prodid,version,calscale,method,name,active) VALUES (?,?,?,?,?,?)";
             template.executeUpdate(insertQuery, params);
             // nastaveni klice objektu VCalendar
             setId(template.getGeneratedId());
@@ -196,5 +198,18 @@ public class VCalendar extends DbElement implements Comparable<VCalendarEntity>,
 
     public String toString(){
 		return this.name;
+	}
+
+	/*
+	 * nastavi kalendar jako vybrany (checked)
+	 */
+	public void setActive(boolean active) {
+        boolean oldVal = isActive();
+        this.active = active; 
+        firePropertyChange(PROPERTYNAME_ACTIVE, oldVal, active);
+	}
+
+	public boolean isActive() {
+		return (this.active); 
 	}
 }

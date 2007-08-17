@@ -29,5 +29,9 @@ public interface VCalendarEntity extends EntityElement {
 	
 	void setName(String newVal);
 	
+	void setActive(boolean active);
+
+	boolean isActive();
+	
 	Object clone() throws CloneNotSupportedException;
 }
