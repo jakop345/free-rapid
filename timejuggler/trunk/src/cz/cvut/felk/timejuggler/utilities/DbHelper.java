@@ -71,7 +71,7 @@ public class DbHelper {
             catch (IOException e) {
                 //LogUtils.processException(logger, e);
                 databasedirectory.delete();
-                throw new DatabaseException("Nastal problem s vychozi databazi : " + source);
+                throw new DatabaseException("Nastal problem s vychozi databazi : " + source, e);
             }
             logger.info("Database was created sucessfully");
         } else logger.info("Database is already present");
