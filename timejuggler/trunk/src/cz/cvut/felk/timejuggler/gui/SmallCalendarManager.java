@@ -135,19 +135,19 @@ public class SmallCalendarManager {
     private static final class CheckListRenderer extends CheckRenderer {
         public final Component getListCellRendererComponent(final JList list, final Object value, final int index, final boolean isSelected, final boolean cellHasFocus) {
             final VCalendarEntity contentData = (VCalendarEntity) value;
-            check.setSelected(false);
+            check.setSelected(contentData.isActive());
             return super.getListCellRendererComponent(list, contentData.getName(), index, isSelected, cellHasFocus, null);    //call to super
         }
 
     }
 
-    private void toggleChecked(final int index) {
-        if (index < 0)
-            throw new IllegalArgumentException("Index must be >=0");
-        final VCalendarEntity data = (VCalendarEntity) checkedList.getModel().getElementAt(index);
-        //data.checked = !data.checked;//TODO podpora pro checked
-        final Rectangle rect = checkedList.getCellBounds(index, index);
-        checkedList.repaint(rect);
+    private void updateCheckedStateToDB(VCalendarEntity calendarEntity) {
+        MainApp app = MainApp.getInstance(MainApp.class);
+        try {
+            app.getDataProvider().saveOrUpdateCalendar(calendarEntity);
+        } catch (PersistencyLayerException e) {
+            LogUtils.processException(logger, e);//TODO error hlasku 
+        }
     }
 
     private final class MyKeyAdapter extends KeyAdapter {
@@ -168,11 +168,16 @@ public class SmallCalendarManager {
     class CalendarsListMouseListener extends MouseAdapter {
 
         public void mouseClicked(final MouseEvent e) {
-            if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2) {
-                Swinger.getAction("editCalendar").actionPerformed(null);
-                return;
+//            if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2) {
+//                Swinger.getAction("editCalendar").actionPerformed(null);
+//                return;
+//            }
+            if (SwingUtilities.isLeftMouseButton(e) && e.getX() < 20) {
+                final int index = checkedList.locationToIndex(e.getPoint());
+                toggleChecked(index);
+
+                e.consume();
             }
-            toggleChecked(checkedList.locationToIndex(e.getPoint()));
         }
 
         public void mousePressed(MouseEvent e) {
@@ -186,8 +191,22 @@ public class SmallCalendarManager {
         private void maybeShowPopup(MouseEvent e) {
             if (e.isPopupTrigger() && popupMenu != null) {
                 popupMenu.show(e.getComponent(), e.getX(), e.getY());
+                e.consume();
             }
         }
+    }
+
+
+    private void toggleChecked(final int index) {
+        if (index < 0)
+            throw new IllegalArgumentException("Index must be >=0");
+        //final Rectangle rect = checkedList.getCellBounds(index, index);
+
+        final VCalendarEntity data = (VCalendarEntity) checkedList.getModel().getElementAt(index);
+        data.setActive(!data.isActive());
+        updateCheckedStateToDB(data);
+        checkedList.setSelectedIndex(index);
+        //checkedList.repaint(rect);
     }
 
     /**
