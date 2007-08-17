@@ -403,7 +403,7 @@ public class CalComponent extends DbElement {
         } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
             e.printStackTrace();
         }
-        return template.getItems();
+        return template.getItems() == null ? new ArrayList<Category>() : template.getItems();
     }
 
     @Deprecated
