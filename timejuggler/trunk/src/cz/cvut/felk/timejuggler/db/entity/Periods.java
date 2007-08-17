@@ -1,11 +1,12 @@
 package cz.cvut.felk.timejuggler.db.entity;
 
-import cz.cvut.felk.timejuggler.db.*;
+import cz.cvut.felk.timejuggler.db.DatabaseException;
+import cz.cvut.felk.timejuggler.db.TimeJugglerJDBCTemplate;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.PeriodsEntity;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.logging.Logger;
 
 /**
@@ -35,15 +36,19 @@ public class Periods extends DbElement implements Iterable<Period>, PeriodsEntit
         } else {
             logger.info("Database - Insert: Periods[]...");
             String insertQuery = "INSERT INTO Periods (periodsID) VALUES (DEFAULT)";
-            template.executeUpdate(insertQuery, null);
+            try {
+                template.executeUpdate(insertQuery, null);
+            } catch (DatabaseException e) {
+                e.printStackTrace();
+            }
             setId(template.getGeneratedId());
         }
-       	
-       	for (Period period : periods) {
-	    	period.setPeriodsId(getId());
-	    	logger.info("Periods: generated ID:" + getId());
-	    	period.saveOrUpdate(template);
-	    }
+
+        for (Period period : periods) {
+            period.setPeriodsId(getId());
+            logger.info("Periods: generated ID:" + getId());
+            period.saveOrUpdate(template);
+        }
     }
 
     /**
@@ -58,7 +63,11 @@ public class Periods extends DbElement implements Iterable<Period>, PeriodsEntit
         if (getId() > 0) {
             String deleteQuery = "DELETE FROM Periods WHERE periodsID = ? ";
             Object params[] = {getId()};
-            template.executeUpdate(deleteQuery, params);
+            try {
+                template.executeUpdate(deleteQuery, params);
+            } catch (DatabaseException e) {
+                e.printStackTrace();
+            }
             setId(-1);
         }
     }
@@ -79,7 +88,8 @@ public class Periods extends DbElement implements Iterable<Period>, PeriodsEntit
     }
 
 
-    @Deprecated public List<Period> getPeriods() {
+    @Deprecated
+    public List<Period> getPeriods() {
         return periods;
     }
 }

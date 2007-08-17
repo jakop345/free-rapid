@@ -3,9 +3,7 @@ package cz.cvut.felk.timejuggler.gui.actions;
 import application.Action;
 import cz.cvut.felk.timejuggler.core.MainApp;
 import cz.cvut.felk.timejuggler.core.data.DataProvider;
-import cz.cvut.felk.timejuggler.db.DatabaseException;
 import cz.cvut.felk.timejuggler.gui.dialogs.UserPreferencesDialog;
-import cz.cvut.felk.timejuggler.utilities.LogUtils;
 
 import java.util.logging.Logger;
 
@@ -35,21 +33,21 @@ public class EditActions {
     @Action
     public void editEventOrTask() {
         final DataProvider dataProvider = app.getDataProvider();
-        try {
-            /*dataProvider.addCalendar(new VCalendar("Timejuggler"));
-               dataProvider.addCalendar(new VCalendar("Svatky"));
-               dataProvider.addCalendar(new VCalendar("Ostatni"));
-
-               dataProvider.addCategory(new Category("Birthday", Color.YELLOW));
-               dataProvider.addCategory(new Category("Anniversary", Color.BLUE));
-               dataProvider.addCategory(new Category("Holidays"));*/
-
-
-        }
-        catch (DatabaseException e) {
-            LogUtils.processException(logger, e);
-            //TODO podpora pro zobrazeni error hlasky uzivateli
-        }
+//        try {
+//            /*dataProvider.addCalendar(new VCalendar("Timejuggler"));
+//               dataProvider.addCalendar(new VCalendar("Svatky"));
+//               dataProvider.addCalendar(new VCalendar("Ostatni"));
+//
+//               dataProvider.addCategory(new Category("Birthday", Color.YELLOW));
+//               dataProvider.addCategory(new Category("Anniversary", Color.BLUE));
+//               dataProvider.addCategory(new Category("Holidays"));*/
+//
+//
+//        }
+//        catch (PersistencyLayerException e) {
+//            LogUtils.processException(logger, e);
+//            //TODO podpora pro zobrazeni error hlasky uzivateli
+//        }
 
 /*     	final DataProvider dataProvider = app.getDataProvider();
         try {

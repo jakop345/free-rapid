@@ -4,7 +4,7 @@ import application.ApplicationContext;
 import cz.cvut.felk.timejuggler.core.AppPrefs;
 import cz.cvut.felk.timejuggler.core.Consts;
 import cz.cvut.felk.timejuggler.core.MainApp;
-import cz.cvut.felk.timejuggler.db.DatabaseException;
+import cz.cvut.felk.timejuggler.db.InitiateDatabaseException;
 
 import java.io.*;
 import java.util.Enumeration;
@@ -59,19 +59,20 @@ public class DbHelper {
      * <p/>
      * vytvori novou lokalni databazi (podle db_init/db.zip)
      */
-    public void localDbCreate() throws DatabaseException {
+    public void localDbCreate() throws InitiateDatabaseException {
         logger.info("Checking for existing database...");
         if (!databasedirectory.exists()) {
             //Unzip (inicializacni databaze)
             logger.info("Database is not present, initiating db_init copy");
             try {
-                databasedirectory.mkdir();
+                if (!databasedirectory.mkdirs())
+                    throw new IOException("Couldn't create database directory:" + databasedirectory);
                 unzip(source, targetdir);
             }
             catch (IOException e) {
                 //LogUtils.processException(logger, e);
                 databasedirectory.delete();
-                throw new DatabaseException("Nastal problem s vychozi databazi : " + source, e);
+                throw new InitiateDatabaseException("Error during initializing default database : " + source, e);
             }
             logger.info("Database was created sucessfully");
         } else logger.info("Database is already present");

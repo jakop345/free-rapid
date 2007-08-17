@@ -9,11 +9,11 @@ import java.util.logging.Logger;
 /**
  * @version 0.1
  * @created 12-IV-2007 20:49:26
- * 
+ * <p/>
  * Abstrakni trida slouzici k provadeni dotazu nad databazi
  */
 public abstract class JDBCTemplate {
-	private final static Logger logger = Logger.getLogger(JDBCTemplate.class.getName());
+    private final static Logger logger = Logger.getLogger(JDBCTemplate.class.getName());
 
     private static final int SELECT_QUERY = 0;
     private static final int UPDATE_QUERY = 1;
@@ -24,9 +24,8 @@ public abstract class JDBCTemplate {
 
     /**
      * @param sql
-     * @param params[]
      */
-    public final int executeUpdate(String sql, Object params[]) {
+    public final int executeUpdate(String sql, Object params[]) throws DatabaseException {
         try {
             return executeQueryInternal(sql, params, UPDATE_QUERY);
         } catch (SQLException e) {
@@ -36,9 +35,8 @@ public abstract class JDBCTemplate {
 
     /**
      * @param sql
-     * @param params[] []
      */
-    public final void executeQuery(String sql, Object params[]) {
+    public final void executeQuery(String sql, Object params[]) throws DatabaseException {
         try {
             executeQueryInternal(sql, params, SELECT_QUERY);
         } catch (SQLException e) {
@@ -73,13 +71,13 @@ public abstract class JDBCTemplate {
                 }
             } else {
                 rowsAffected = ps.executeUpdate();
-                rs = ps.getGeneratedKeys();    
+                rs = ps.getGeneratedKeys();
                 //V pripade dotazu UPDATE rs=null (negeneruji se zadne klice)
                 if (rs != null) {
-                	//V pripade dotazu INSERT precteme generovane klice
-	                while (rs.next()) {
-	                    handleGeneratedKeys(rs);
-	                }
+                    //V pripade dotazu INSERT precteme generovane klice
+                    while (rs.next()) {
+                        handleGeneratedKeys(rs);
+                    }
                 }
             }
         } finally {
@@ -107,13 +105,13 @@ public abstract class JDBCTemplate {
             paramValue = params[i];
             if (paramValue == null) {
                 ++i;
-                ps.setNull(i,ps.getParameterMetaData().getParameterType(i));
+                ps.setNull(i, ps.getParameterMetaData().getParameterType(i));
             } else if (paramValue instanceof BigDecimal) {
                 ps.setBigDecimal(++i, (BigDecimal) paramValue);
             } else if (paramValue instanceof java.sql.Date) {
                 ps.setDate(++i, (Date) paramValue);
             } else if (paramValue instanceof java.util.Date) {
-                ps.setDate(++i, new Date(((java.util.Date)paramValue).getTime()));
+                ps.setDate(++i, new Date(((java.util.Date) paramValue).getTime()));
             } else if (paramValue instanceof InputStream) {
                 try {
                     InputStream is = (InputStream) paramValue;
@@ -165,14 +163,14 @@ public abstract class JDBCTemplate {
                     ps.close();
                 }
             } finally {
-            	/* nezavirat spojeni, pouzijeme jej znovu!
-                if (con != null){
-          			con.close();
-        		}
-        		*/
-      		}
-    	}
-	}
+                /* nezavirat spojeni, pouzijeme jej znovu!
+                    if (con != null){
+                          con.close();
+                    }
+                    */
+            }
+        }
+    }
 
 
 }

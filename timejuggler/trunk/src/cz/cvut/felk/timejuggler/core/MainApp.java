@@ -7,6 +7,7 @@ import application.SessionStorage;
 import cz.cvut.felk.timejuggler.core.application.GlobalEDTExceptionHandler;
 import cz.cvut.felk.timejuggler.core.application.ListItemsConvertor;
 import cz.cvut.felk.timejuggler.core.data.DataProvider;
+import cz.cvut.felk.timejuggler.core.data.PersistencyLayerException;
 import cz.cvut.felk.timejuggler.gui.MainPanelManager;
 import cz.cvut.felk.timejuggler.gui.StorageProperties;
 import cz.cvut.felk.timejuggler.swing.LookAndFeels;
@@ -20,6 +21,7 @@ import javax.swing.*;
 import java.util.Collection;
 import java.util.EventObject;
 import java.util.LinkedList;
+import java.util.logging.Logger;
 
 /**
  * Hlavni trida aplikace
@@ -87,8 +89,15 @@ public class MainApp extends SingleXFrameApplication {
             return;
         }
         this.dataProvider = new DataProvider();
-        this.dataProvider.init();
-        // logger = Logger.getLogger(MainApp.class.getName());
+        try {
+            this.dataProvider.init();
+        } catch (PersistencyLayerException e) {
+            Logger logger = Logger.getLogger(MainApp.class.getName());
+            LogUtils.processException(logger, e);
+            this.exit();
+            return;
+        }
+
         LookAndFeels.getInstance().loadLookAndFeelSettings();//inicializace LaFu, musi to byt pred vznikem hlavniho panelu
         //Swinger.initLaF(); //inicializace LaFu, musi to byt pred vznikem hlavniho panelu
         super.initialize(args);

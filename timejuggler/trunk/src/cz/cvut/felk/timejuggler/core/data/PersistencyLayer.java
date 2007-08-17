@@ -45,4 +45,5 @@ public interface PersistencyLayer {
 
     void removeEventTask(EventTaskEntity eventEntity) throws PersistencyLayerException;
 
+    void init() throws PersistencyLayerException;
 }

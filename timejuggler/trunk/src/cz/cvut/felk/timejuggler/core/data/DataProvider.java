@@ -29,8 +29,9 @@ public class DataProvider {
         calendars = new ArrayListModel<VCalendarEntity>();
     }
 
-    public void init() {
+    public void init() throws PersistencyLayerException {
         persistencyLayer = PersistencyLayerFactory.getInstance().getDefaultPersitencyLayer();
+        persistencyLayer.init();
         //persistencyLayer = new FakePersistencyLayer();
     }
 

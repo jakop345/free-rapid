@@ -3,12 +3,6 @@ package cz.cvut.felk.timejuggler.db.entity;
 import cz.cvut.felk.timejuggler.db.TimeJugglerJDBCTemplate;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.VCalendarEntity;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -65,13 +59,21 @@ public class VCalendar extends DbElement implements Comparable<VCalendarEntity>,
             logger.info("Database - Update: VCalendar[" + getId() + "]:" + name + "...");
             Object params[] = {productId, version, calendarScale, method, name, active ? 1 : 0, getId()};
             String updateQuery = "UPDATE VCalendar SET prodid=?,version=?,calscale=?,method=?,name=?,active=? WHERE vCalendarID = ? ";
-            template.executeUpdate(updateQuery, params);
+            try {
+                template.executeUpdate(updateQuery, params);
+            } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
+                e.printStackTrace();
+            }
         } else {
             // Pridani noveho kalendare do databaze
             logger.info("Database - Insert: VCalendar[]:" + name + "...");
             Object params[] = {productId, version, calendarScale, method, name, active ? 1 : 0};
             String insertQuery = "INSERT INTO VCalendar (prodid,version,calscale,method,name,active) VALUES (?,?,?,?,?,?)";
-            template.executeUpdate(insertQuery, params);
+            try {
+                template.executeUpdate(insertQuery, params);
+            } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
+                e.printStackTrace();
+            }
             // nastaveni klice objektu VCalendar
             setId(template.getGeneratedId());
             logger.info("Database - VCalendar new ID=" + getId());
@@ -95,9 +97,13 @@ public class VCalendar extends DbElement implements Comparable<VCalendarEntity>,
                 todo.delete(template);
             }*/
 
-            Object params[] = {getId()};	//TODO: DELETE CASCADE / zachovat eventy..?! / dialog
+            Object params[] = {getId()};    //TODO: DELETE CASCADE / zachovat eventy..?! / dialog
             String deleteQuery = "DELETE FROM VCalendar WHERE vCalendarID = ?";
-            template.executeUpdate(deleteQuery, params);
+            try {
+                template.executeUpdate(deleteQuery, params);
+            } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
+                e.printStackTrace();
+            }
             setId(-1);
         }
     }
@@ -196,20 +202,20 @@ public class VCalendar extends DbElement implements Comparable<VCalendarEntity>,
         return clone;
     }
 
-    public String toString(){
-		return this.name;
-	}
+    public String toString() {
+        return this.name;
+    }
 
-	/*
-	 * nastavi kalendar jako vybrany (checked)
-	 */
-	public void setActive(boolean active) {
+    /*
+      * nastavi kalendar jako vybrany (checked)
+      */
+    public void setActive(boolean active) {
         boolean oldVal = isActive();
-        this.active = active; 
+        this.active = active;
         firePropertyChange(PROPERTYNAME_ACTIVE, oldVal, active);
-	}
+    }
 
-	public boolean isActive() {
-		return (this.active); 
-	}
+    public boolean isActive() {
+        return (this.active);
+    }
 }

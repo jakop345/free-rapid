@@ -1,12 +1,15 @@
 package cz.cvut.felk.timejuggler.core.data;
 
+import cz.cvut.felk.timejuggler.db.DatabaseException;
 import cz.cvut.felk.timejuggler.db.DbDataStore;
+import cz.cvut.felk.timejuggler.db.InitiateDatabaseException;
 import cz.cvut.felk.timejuggler.db.entity.Category;
 import cz.cvut.felk.timejuggler.db.entity.EventTask;
 import cz.cvut.felk.timejuggler.db.entity.VCalendar;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.CategoryEntity;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.EventTaskEntity;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.VCalendarEntity;
+import cz.cvut.felk.timejuggler.utilities.DbHelper;
 import net.fortuna.ical4j.data.ParserException;
 
 import java.io.File;
@@ -26,6 +29,19 @@ class DBPersistencyLayer implements PersistencyLayer {
     DBPersistencyLayer() {
         dbStore = new DbDataStore();
     }
+
+    public void init() throws PersistencyLayerException {
+        //TODO: kod pro inicializaci databaze - Presunout
+        DbHelper dbHelper = DbHelper.getInstance();
+        if (!dbHelper.isDatabasePresent()) {
+            try {
+                dbHelper.localDbCreate();
+            } catch (InitiateDatabaseException e) {
+                throw new PersistencyLayerException("Fatal error during initialing database", e);
+            }
+        }
+    }
+
 
     public List<VCalendarEntity> getCalendars() throws PersistencyLayerException {
         return dbStore.getCalendars();
@@ -51,19 +67,33 @@ class DBPersistencyLayer implements PersistencyLayer {
             throw new PersistencyLayerException(e);
         } catch (ParserException e) {
             throw new PersistencyLayerException(e);
+        } catch (DatabaseException e) {
+            throw new PersistencyLayerException(e);
         }
     }
 
     public void saveOrUpdateCalendar(VCalendarEntity calendar) throws PersistencyLayerException {
-        dbStore.saveOrUpdate((VCalendar) calendar);
+        try {
+            dbStore.saveOrUpdate((VCalendar) calendar);
+        } catch (DatabaseException e) {
+            throw new PersistencyLayerException("Error during save or update Calendar", e);
+        }
     }
 
     public void saveOrUpdateCategory(CategoryEntity category) throws PersistencyLayerException {
-        dbStore.saveOrUpdate((Category) category);
+        try {
+            dbStore.saveOrUpdate((Category) category);
+        } catch (DatabaseException e) {
+            throw new PersistencyLayerException("Error during save or update Category", e);
+        }
     }
 
     public void saveOrUpdateEventTask(EventTaskEntity event) throws PersistencyLayerException {
-        dbStore.saveOrUpdate((EventTask) event);
+        try {
+            dbStore.saveOrUpdate((EventTask) event);
+        } catch (DatabaseException e) {
+            throw new PersistencyLayerException("Error during save or update Event Task", e);
+        }
     }
 
     public List<CategoryEntity> getCategories() throws PersistencyLayerException {
@@ -75,7 +105,11 @@ class DBPersistencyLayer implements PersistencyLayer {
     }
 
     public void removeCategory(CategoryEntity categoryEntity) throws PersistencyLayerException {
-        dbStore.delete((Category) categoryEntity);
+        try {
+            dbStore.delete((Category) categoryEntity);
+        } catch (DatabaseException e) {
+            throw new PersistencyLayerException("Error during removing Category", e);
+        }
     }
 
     public VCalendarEntity getNewCalendar() {
@@ -91,10 +125,18 @@ class DBPersistencyLayer implements PersistencyLayer {
     }
 
     public void removeCalendar(VCalendarEntity calendarEntity) throws PersistencyLayerException {
-        dbStore.delete((VCalendar) calendarEntity);
+        try {
+            dbStore.delete((VCalendar) calendarEntity);
+        } catch (DatabaseException e) {
+            throw new PersistencyLayerException("Error during removing Calendar", e);
+        }
     }
 
     public void removeEventTask(EventTaskEntity eventEntity) throws PersistencyLayerException {
-        dbStore.delete((EventTask) eventEntity);
+        try {
+            dbStore.delete((EventTask) eventEntity);
+        } catch (DatabaseException e) {
+            throw new PersistencyLayerException("Error during removing Event Task", e);
+        }
     }
 }

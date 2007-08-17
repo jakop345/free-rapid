@@ -5,10 +5,14 @@ package cz.cvut.felk.timejuggler.db;
  * @version 0.1
  * @created 14-IV-2007 16:20:17
  */
-public class DatabaseException extends RuntimeException {
+public class DatabaseException extends Exception {
 
     private Object params[] = new Object[0];
     private String sql = "";
+
+    public DatabaseException(Throwable cause) {
+        super(cause);
+    }
 
     public DatabaseException(String message) {
         super(message);
@@ -44,6 +48,6 @@ public class DatabaseException extends RuntimeException {
      */
     public void setSql(String newVal) {
         sql = newVal;
-	}
+    }
 
 }

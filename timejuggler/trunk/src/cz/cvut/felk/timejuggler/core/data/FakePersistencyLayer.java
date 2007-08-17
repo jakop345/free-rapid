@@ -119,4 +119,8 @@ class FakePersistencyLayer implements PersistencyLayer {
     public void removeEventTask(EventTaskEntity eventEntity) throws PersistencyLayerException {
         //do nothing
     }
+
+    public void init() throws PersistencyLayerException {
+
+    }
 }

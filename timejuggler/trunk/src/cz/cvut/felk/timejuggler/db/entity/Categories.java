@@ -1,7 +1,6 @@
 package cz.cvut.felk.timejuggler.db.entity;
 
 import cz.cvut.felk.timejuggler.db.TimeJugglerJDBCTemplate;
-import cz.cvut.felk.timejuggler.db.entity.interfaces.CategoryEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +48,11 @@ public class Categories extends DbElement {
             String insertQuery = "INSERT INTO Categories (categoryID,calComponentID) VALUES (?,?) ";
             for (Category c : categories) {
                 Object params[] = {c.getId(), componentId};
-                template.executeUpdate(insertQuery, params);
+                try {
+                    template.executeUpdate(insertQuery, params);
+                } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
+                    e.printStackTrace();
+                }
                 /*setId(template.getGeneratedId());*/
             }
         }
@@ -63,7 +66,11 @@ public class Categories extends DbElement {
         if (getId() > 0) {
             Object params[] = {getId()};
             String deleteQuery = "DELETE FROM Categories WHERE categoriesID = ? ";
-            template.executeUpdate(deleteQuery, params);
+            try {
+                template.executeUpdate(deleteQuery, params);
+            } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
+                e.printStackTrace();
+            }
             setId(-1);
         }
     }

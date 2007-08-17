@@ -1,10 +1,7 @@
 package cz.cvut.felk.timejuggler.db.entity;
 
+import cz.cvut.felk.timejuggler.db.DatabaseException;
 import cz.cvut.felk.timejuggler.db.TimeJugglerJDBCTemplate;
-import cz.cvut.felk.timejuggler.db.entity.interfaces.CategoryEntity;
-import cz.cvut.felk.timejuggler.db.entity.interfaces.DateTimeEntity;
-import cz.cvut.felk.timejuggler.db.entity.interfaces.PeriodsEntity;
-import cz.cvut.felk.timejuggler.db.entity.interfaces.DistinctDatesEntity;
 
 import java.awt.*;
 import java.sql.ResultSet;
@@ -24,17 +21,17 @@ import java.util.logging.Logger;
 public class CalComponent extends DbElement {
     private final static Logger logger = Logger.getLogger(CalComponent.class.getName());
 
-	private final static String PROPERTYNAME_UID = "uid";
-	private final static String PROPERTYNAME_URL = "url";
-	private final static String PROPERTYNAME_CLAZZ = "clazz";
-	private final static String PROPERTYNAME_DESCRIPTION = "description";
-	private final static String PROPERTYNAME_ORGANIZER = "organizer";
-	private final static String PROPERTYNAME_SEQUENCE = "sequence";
-	private final static String PROPERTYNAME_STATUS = "status";
-	private final static String PROPERTYNAME_SUMMARY = "summary";
-	private final static String PROPERTYNAME_COMPONENTID = "componentId";
-	private final static String PROPERTYNAME_CALENDARID = "calendarId";
-	
+    private final static String PROPERTYNAME_UID = "uid";
+    private final static String PROPERTYNAME_URL = "url";
+    private final static String PROPERTYNAME_CLAZZ = "clazz";
+    private final static String PROPERTYNAME_DESCRIPTION = "description";
+    private final static String PROPERTYNAME_ORGANIZER = "organizer";
+    private final static String PROPERTYNAME_SEQUENCE = "sequence";
+    private final static String PROPERTYNAME_STATUS = "status";
+    private final static String PROPERTYNAME_SUMMARY = "summary";
+    private final static String PROPERTYNAME_COMPONENTID = "componentId";
+    private final static String PROPERTYNAME_CALENDARID = "calendarId";
+
 
     /**
      * uid - povinny parametr! (globalne unikatni (MAILTO://email@...))
@@ -56,10 +53,10 @@ public class CalComponent extends DbElement {
     private Timestamp recurrenceid;
     private Timestamp dtstamp;
     private int componentId;
-    /**/
+     /**/
     //private int calendarId; nahrazeno vcalendar
     private VCalendar vcalendar;
-    
+
     private List<VAlarm> alarms;
 
     private Categories _categories;
@@ -67,7 +64,8 @@ public class CalComponent extends DbElement {
     /*
     * nasobne properties
     */
-    @Deprecated private List<Category> categories;
+    @Deprecated
+    private List<Category> categories;
 
     private List<Comment> comments;
     private List<Contact> contacts;
@@ -104,7 +102,7 @@ public class CalComponent extends DbElement {
      * povinny parametr! (globalne unikatni (MAILTO://email@...))
      * @param newVal
      */
-    public void setUid(String newVal) {       
+    public void setUid(String newVal) {
         if (newVal == null)
             throw new IllegalArgumentException("Uid cannot be null!");
         final String oldVal = getUid();
@@ -252,10 +250,11 @@ public class CalComponent extends DbElement {
      * Method saveOrUpdate
      * @param template Ulozeni spolecnych udaju z Todo, Eventu,.. do databaze
      */
-    public void saveOrUpdate(TimeJugglerJDBCTemplate template) {
-		assert vcalendar != null;
-		assert vcalendar.getId() > 0;
-		
+    @Override
+    public void saveOrUpdate(TimeJugglerJDBCTemplate template) throws DatabaseException {
+        assert vcalendar != null;
+        assert vcalendar.getId() > 0;
+
         if (dateTime != null) {
             dateTime.saveOrUpdate(template);
         }
@@ -268,7 +267,11 @@ public class CalComponent extends DbElement {
                     description, organizer, sequence,
                     status, summary, dtstamp, getComponentId()};
             String updateQuery = "UPDATE CalComponent SET dateTimeID=?,uid=?,vCalendarID=?,url=?,clazz=?,description=?,organizer=?,sequence=?,status=?,summary=?,dtstamp=?) WHERE calComponentID = ? ";
-            template.executeUpdate(updateQuery, params);
+            try {
+                template.executeUpdate(updateQuery, params);
+            } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
+                e.printStackTrace();
+            }
         } else {
             if (alarms != null) {
                 for (VAlarm alarm : alarms) {
@@ -283,7 +286,11 @@ public class CalComponent extends DbElement {
                     status, summary, new Timestamp(System.currentTimeMillis())
             };
             String insertQuery = "INSERT INTO CalComponent (dateTimeID,uid,vCalendarID,url,clazz,description,organizer,sequence,status,summary,dtstamp) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
-            template.executeUpdate(insertQuery, params);
+            try {
+                template.executeUpdate(insertQuery, params);
+            } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
+                e.printStackTrace();
+            }
             setComponentId(template.getGeneratedId());
             logger.info("Database - CalComponent new ID=" + getComponentId() + " dtstamp=" + new Timestamp(System.currentTimeMillis()));
         }
@@ -325,7 +332,11 @@ public class CalComponent extends DbElement {
             logger.info("Database - DELETE: CalComponent[" + getId() + "]...");
             String deleteQuery = "DELETE FROM CalComponent WHERE calComponentID = ?";
             Object params[] = {getId()};
-            template.executeUpdate(deleteQuery, params);
+            try {
+                template.executeUpdate(deleteQuery, params);
+            } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
+                e.printStackTrace();
+            }
         }
         setComponentId(-1);
     }
@@ -346,7 +357,11 @@ public class CalComponent extends DbElement {
                 items.add(attach);
             }
         };
-        template.executeQuery(sql, params);
+        try {
+            template.executeQuery(sql, params);
+        } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
+            e.printStackTrace();
+        }
         return template.getItems();
     }
 
@@ -368,29 +383,34 @@ public class CalComponent extends DbElement {
         Object params[] = {getComponentId()};
         TimeJugglerJDBCTemplate<List<Category>> template = new TimeJugglerJDBCTemplate<List<Category>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
-            	if (items == null) items = new ArrayList<Category>();
-            	Category c = new Category(rs.getString("name"));
-            	c.setId(rs.getInt("categoryID"));
-            	int col = rs.getInt("color");
-            	if (!rs.wasNull()) c.setColor(new Color(col));
+                if (items == null) items = new ArrayList<Category>();
+                Category c = new Category(rs.getString("name"));
+                c.setId(rs.getInt("categoryID"));
+                int col = rs.getInt("color");
+                if (!rs.wasNull()) c.setColor(new Color(col));
                 items.add(c);
             }
         };
-        template.executeQuery(sql, params);
+        try {
+            template.executeQuery(sql, params);
+        } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
+            e.printStackTrace();
+        }
         return template.getItems();
-	}
-	
-	@Deprecated public void setCategories(List<Category> categories){
-		this.categories = categories;
-	}
-	
-	public void addCategory(Category cat){
-		_categories.addCategory(cat);
-	}
-	
-	public void removeCategory(Category cat){
-		_categories.removeCategory(cat);
-	}	
+    }
+
+    @Deprecated
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
+    }
+
+    public void addCategory(Category cat) {
+        _categories.addCategory(cat);
+    }
+
+    public void removeCategory(Category cat) {
+        _categories.removeCategory(cat);
+    }
 
     /*public void removeCategory(Category cat) {
         _categories.removeCategory(cat);
@@ -410,7 +430,11 @@ public class CalComponent extends DbElement {
                 items.add(new Comment(rs.getString("comment")));
             }
         };
-        template.executeQuery(sql, params);
+        try {
+            template.executeQuery(sql, params);
+        } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
+            e.printStackTrace();
+        }
         return template.getItems();
     }
 
@@ -427,7 +451,11 @@ public class CalComponent extends DbElement {
                 items.add(new Contact(rs.getString("contact")));
             }
         };
-        template.executeQuery(sql, params);
+        try {
+            template.executeQuery(sql, params);
+        } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
+            e.printStackTrace();
+        }
         return template.getItems();
     }
 
@@ -444,7 +472,11 @@ public class CalComponent extends DbElement {
                 items.add(new RelatedTo(rs.getString("relatedto")));
             }
         };
-        template.executeQuery(sql, params);
+        try {
+            template.executeQuery(sql, params);
+        } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
+            e.printStackTrace();
+        }
         return template.getItems();
     }
 
@@ -461,7 +493,11 @@ public class CalComponent extends DbElement {
                 items.add(new RequestStatus(rs.getString("rstatus")));
             }
         };
-        template.executeQuery(sql, params);
+        try {
+            template.executeQuery(sql, params);
+        } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
+            e.printStackTrace();
+        }
         return template.getItems();
     }
 
@@ -478,7 +514,11 @@ public class CalComponent extends DbElement {
                 items.add(new Resource(rs.getString("resource")));
             }
         };
-        template.executeQuery(sql, params);
+        try {
+            template.executeQuery(sql, params);
+        } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
+            e.printStackTrace();
+        }
         return template.getItems();
     }
 
@@ -522,23 +562,23 @@ public class CalComponent extends DbElement {
         return (dateTime.getDistinctDates());
     }
 
-	public void setCalendar(VCalendar cal){
-		vcalendar = cal;
-	}
-	
-	public VCalendar getCalendar(){
-		return vcalendar;
-	}
-	
-	/*
-    public void setCalendarId(int calendarId) {
-        this.calendarId = calendarId;
+    public void setCalendar(VCalendar cal) {
+        vcalendar = cal;
     }
 
-    public int getCalendarId() {
-        return (this.calendarId);
+    public VCalendar getCalendar() {
+        return vcalendar;
     }
-	*/
+
+    /*
+     public void setCalendarId(int calendarId) {
+         this.calendarId = calendarId;
+     }
+
+     public int getCalendarId() {
+         return (this.calendarId);
+     }
+     */
 
     public void setAlarms(List<VAlarm> alarms) {
         this.alarms = alarms;

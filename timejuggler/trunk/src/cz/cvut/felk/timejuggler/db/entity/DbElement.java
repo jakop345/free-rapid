@@ -1,6 +1,7 @@
 package cz.cvut.felk.timejuggler.db.entity;
 
 import com.jgoodies.binding.beans.Model;
+import cz.cvut.felk.timejuggler.db.DatabaseException;
 import cz.cvut.felk.timejuggler.db.TimeJugglerJDBCTemplate;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.EntityElement;
 
@@ -69,7 +70,7 @@ public abstract class DbElement extends Model implements EntityElement {
 
     public abstract void store();
 
-    public void saveOrUpdate(TimeJugglerJDBCTemplate template) {
+    public void saveOrUpdate(TimeJugglerJDBCTemplate template) throws DatabaseException {
         setChanged(false);
     }
 

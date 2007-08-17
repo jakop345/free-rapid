@@ -1,5 +1,6 @@
 package cz.cvut.felk.timejuggler.db.entity;
 
+import cz.cvut.felk.timejuggler.db.DatabaseException;
 import cz.cvut.felk.timejuggler.db.TimeJugglerJDBCTemplate;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.CategoryEntity;
 
@@ -64,18 +65,27 @@ public class Category extends DbElement implements Comparable<CategoryEntity>, C
      * Method saveOrUpdate
      * @param template
      */
-    public void saveOrUpdate(TimeJugglerJDBCTemplate template) {
+    @Override
+    public void saveOrUpdate(TimeJugglerJDBCTemplate template) throws DatabaseException {
         //TODO: pridat ukladani barvy (hotovo) - barva se da ukladat jednoduse jako string - search google Color.decode - uz je to jako int,.. :)
         if (isAssigned()) {
             logger.info("Database - Update: Category[" + getId() + "]:" + name + "...");
             Object params[] = {name, color == null ? null : color.getRGB(), getId()};
             String updateQuery = "UPDATE Category SET name=?,color=? WHERE categoryID = ? ";
-            template.executeUpdate(updateQuery, params);
+            try {
+                template.executeUpdate(updateQuery, params);
+            } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
+                e.printStackTrace();
+            }
         } else {
             logger.info("Database - Insert: Category[]:" + name + "...");
             Object params[] = {name, color == null ? null : color.getRGB()};
             String insertQuery = "INSERT INTO Category (name,color) VALUES (?,?) ";
-            template.executeUpdate(insertQuery, params);
+            try {
+                template.executeUpdate(insertQuery, params);
+            } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
+                e.printStackTrace();
+            }
             setId(template.getGeneratedId());
         }
         super.saveOrUpdate(template);//nastaveni changed na false
@@ -89,7 +99,11 @@ public class Category extends DbElement implements Comparable<CategoryEntity>, C
         if (isAssigned()) {
             Object params[] = {getId()};
             String deleteQuery = "DELETE FROM Category WHERE categoryID = ? ";
-            template.executeUpdate(deleteQuery, params);
+            try {
+                template.executeUpdate(deleteQuery, params);
+            } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
+                e.printStackTrace();
+            }
             setId(-1);
         }
     }
@@ -132,8 +146,8 @@ public class Category extends DbElement implements Comparable<CategoryEntity>, C
         return clone;
     }
 
-	public String toString(){
-		return this.name;
-	}
+    public String toString() {
+        return this.name;
+    }
 
 }
