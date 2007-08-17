@@ -98,7 +98,14 @@ public class DataProvider {
     }
 
     public void importCalendarFromICS(File file) throws PersistencyLayerException {
-        getPersitencyLayer().importICS(file);
+        final VCalendarEntity calendarEntity = getPersitencyLayer().importICS(file);
+        calendars.add(calendarEntity);
+    }
+
+    private void resetCalendars() throws PersistencyLayerException {
+        calendars.clear();//smaze vsechny kategorie v globalnim seznamu
+        calendarsInit = false;
+        getCalendarsListModel();
     }
 
     public VCalendarEntity getNewCalendar() {

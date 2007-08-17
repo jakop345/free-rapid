@@ -62,7 +62,7 @@ public class EditActions {
 
     @Action
     public void deleteEventOrTask() {
-        app.getDataProvider().deleteCalendarsListModel(); //test
+//        app.getDataProvider().deleteCalendarsListModel(); //test
     }
 
 }
