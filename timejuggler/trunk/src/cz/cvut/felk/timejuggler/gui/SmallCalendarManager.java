@@ -104,18 +104,13 @@ public class SmallCalendarManager {
 
         Bindings.addComponentPropertyHandler(checkedList, inCalendarsList.getSelectionHolder());
 
-        checkedList.addMouseListener(new DoubleClickHandler());
+//        checkedList.addMouseListener(new DoubleClickHandler());
         checkedList.setCellRenderer(new CheckListRenderer());
         checkedList.setFilterEnabled(true);
 
         checkedList.addKeyListener(new MyKeyAdapter());
         checkedList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         checkedList.setBorder(new EmptyBorder(2, 4, 0, 0));
-        checkedList.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(final MouseEvent e) {
-                toggleChecked(checkedList.locationToIndex(e.getPoint()));
-            }
-        });
         checkedList.setComparator(new CalendarComparator());
         checkedList.setSortOrder(org.jdesktop.swingx.decorator.SortOrder.ASCENDING);
 
@@ -132,7 +127,7 @@ public class SmallCalendarManager {
 
         MenuManager.processMenu(popupMenu, "Calendar popup", popmenuActionNames);
         checkedList.add(popupMenu);
-        checkedList.addMouseListener(new PopupListener());
+        checkedList.addMouseListener(new CalendarsListMouseListener());
         initActionHandling();
         return new JScrollPane(checkedList);
     }
@@ -170,7 +165,16 @@ public class SmallCalendarManager {
         }
     }
 
-    class PopupListener extends MouseAdapter {
+    class CalendarsListMouseListener extends MouseAdapter {
+
+        public void mouseClicked(final MouseEvent e) {
+            if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2) {
+                Swinger.getAction("editCalendar").actionPerformed(null);
+                return;
+            }
+            toggleChecked(checkedList.locationToIndex(e.getPoint()));
+        }
+
         public void mousePressed(MouseEvent e) {
             maybeShowPopup(e);
         }
@@ -231,17 +235,6 @@ public class SmallCalendarManager {
 
         public void contentsChanged(ListDataEvent e) {
 
-        }
-    }
-
-    /**
-     * A mouse listener that edits the selected item on double click.
-     */
-    private static final class DoubleClickHandler extends MouseAdapter {
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2)
-                Swinger.getAction("editCalendar").actionPerformed(null);
         }
     }
 
