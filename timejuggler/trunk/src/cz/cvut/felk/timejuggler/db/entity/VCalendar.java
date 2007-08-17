@@ -87,18 +87,9 @@ public class VCalendar extends DbElement implements Comparable<VCalendarEntity>,
     public void delete(TimeJugglerJDBCTemplate template) {
         if (getId() > 0) {
             logger.info("Database - DELETE: VCalendar[" + getId() + "]:" + name + "...");
-            /*List<EventTask> events = getEvents();
-            for (EventTask event : events) {
-                event.delete(template);
-            }
 
-            List<EventTask> todos = getToDos();
-            for (EventTask todo : todos) {
-                todo.delete(template);
-            }*/
-
-            Object params[] = {getId()};
-            String deleteQuery = "DELETE CASCADE FROM VCalendar WHERE vCalendarID = ?";
+            Object params[] = {getId()};	//TODO: Derby neumi Cascade Delete
+            String deleteQuery = "DELETE FROM VCalendar WHERE vCalendarID = ?";
             try {
                 template.executeUpdate(deleteQuery, params);
             } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
