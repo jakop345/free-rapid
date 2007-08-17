@@ -104,7 +104,7 @@ public class SmallCalendarManager {
 
         Bindings.addComponentPropertyHandler(checkedList, inCalendarsList.getSelectionHolder());
 
-
+        checkedList.addMouseListener(new DoubleClickHandler());
         checkedList.setCellRenderer(new CheckListRenderer());
         checkedList.setFilterEnabled(true);
 
@@ -231,6 +231,17 @@ public class SmallCalendarManager {
 
         public void contentsChanged(ListDataEvent e) {
 
+        }
+    }
+
+    /**
+     * A mouse listener that edits the selected item on double click.
+     */
+    private static final class DoubleClickHandler extends MouseAdapter {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2)
+                Swinger.getAction("editCalendar").actionPerformed(null);
         }
     }
 

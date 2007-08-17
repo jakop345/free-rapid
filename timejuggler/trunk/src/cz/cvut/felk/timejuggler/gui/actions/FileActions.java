@@ -82,7 +82,7 @@ public class FileActions extends AbstractBean {
     public void editCalendar() throws CloneNotSupportedException {
         final SelectionInList<VCalendarEntity> list = getSelectionInListCalendars();
         final VCalendarEntity calendar = list.getSelection();
-        if (calendar == null) //zadny vyber - pro jistotu
+        if (calendar == null) //zadny vyber
             return;
         final VCalendarEntity calendarEntity = (VCalendarEntity) calendar.clone();
         final CalendarDialog dialog = new CalendarDialog(app.getMainFrame(), calendarEntity, false);
@@ -90,6 +90,7 @@ public class FileActions extends AbstractBean {
         if (dialog.getModalResult() == CalendarDialog.RESULT_OK) {
             try {
                 app.getDataProvider().saveOrUpdateCalendar(calendar);
+                list.fireSelectedContentsChanged(); //neni tu duplicita vs saveOrUpdate? treba otestovat 
             } catch (PersistencyLayerException e) {
                 LogUtils.processException(logger, e);//TODO pridat error dialog
             }
