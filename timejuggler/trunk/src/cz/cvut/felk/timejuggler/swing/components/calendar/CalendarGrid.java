@@ -37,9 +37,9 @@ public class CalendarGrid extends JComponent implements ComponentListener {
     int headerPadding = 15;
 
     int hourPadding = 30;
-    
+
     int monthViewPadding = 8;
-    
+
     public CalendarGrid(CalendarEventDAO calendarEventDAO, CalendarConfig calendarConfig) {
         super();
         this.calendarEventDAO = calendarEventDAO;
@@ -49,10 +49,10 @@ public class CalendarGrid extends JComponent implements ComponentListener {
 
     @Override
     public void paint(Graphics g) {
-    	Color color = g.getColor();
-    	g.setColor(getBackground());
-    	g.fillRect(0, 0, this.getWidth(), this.getHeight());
-    	g.setColor(color);
+        Color color = g.getColor();
+        g.setColor(getBackground());
+        g.fillRect(0, 0, this.getWidth(), this.getHeight());
+        g.setColor(color);
         switch (calendarView) {
             case DAY:
                 paintCalendarDay(g);
@@ -72,7 +72,7 @@ public class CalendarGrid extends JComponent implements ComponentListener {
         super.paint(g);
     }
 
-	/**
+    /**
      * Aktualizuje mnozinu udalosti, ktere zobrazuje podle dat z DAO
      */
     public void refreshCalendarEvents() {
@@ -91,16 +91,16 @@ public class CalendarGrid extends JComponent implements ComponentListener {
                 calendar.add(Calendar.DATE, 6);
                 break;
             case MULTI_WEEK:
-            	if (true) throw new RuntimeException("Implement me!");
-                break;
+//            	if (true) throw new RuntimeException("Implement me!");
+//                break;
             case MONTH:
-            	calendar.add(Calendar.DAY_OF_MONTH, 34);
+                calendar.add(Calendar.DAY_OF_MONTH, 34);
                 break;
             default:
                 throw new RuntimeException("UnrealException");
         }
         endDate = calendar.getTime();
-        
+
         Set<CalendarEvent> nove = calendarEventDAO.getCalendarEvents(startDate, endDate);
 
         // TODO: tady to mergnout, zatim brutalne vykosim stavajici a udelam nove Jerry!
@@ -109,71 +109,71 @@ public class CalendarGrid extends JComponent implements ComponentListener {
         }
         calendarEvents.clear();
         for (CalendarEvent calendarEvent : nove) {
-        	DateInterval dateInterval = null;        	
-        	switch (calendarView) {
-        		case DAY:
-        			dateInterval = new DateInterval();
-        			dateInterval.setStartDate(calendarEvent.getStartDate());
-        			if (endDate.before(calendarEvent.getEndDate())) {
-        				dateInterval.setEndDate(endDate);
-        			} else {
-        				dateInterval.setEndDate(calendarEvent.getEndDate());
-        			}
-        			pushSingleCalendarGridEvent(calendarEvent, dateInterval);
-        			break;
-        		case MONTH:
-        			// rozdeleni do dnu bude stejny. Pro kresleni mesic se pak pouzije pouze startovni datum
-        		case WEEK:
-        			Calendar oneCalendarStart = Calendar.getInstance();
-        			oneCalendarStart.setTime(calendarEvent.getStartDate());
-        			oneCalendarStart.set(Calendar.HOUR_OF_DAY, 0);
-        			oneCalendarStart.set(Calendar.MINUTE, 0);
-        			oneCalendarStart.set(Calendar.SECOND, 0);
+            DateInterval dateInterval = null;
+            switch (calendarView) {
+                case DAY:
+                    dateInterval = new DateInterval();
+                    dateInterval.setStartDate(calendarEvent.getStartDate());
+                    if (endDate.before(calendarEvent.getEndDate())) {
+                        dateInterval.setEndDate(endDate);
+                    } else {
+                        dateInterval.setEndDate(calendarEvent.getEndDate());
+                    }
+                    pushSingleCalendarGridEvent(calendarEvent, dateInterval);
+                    break;
+                case MONTH:
+                    // rozdeleni do dnu bude stejny. Pro kresleni mesic se pak pouzije pouze startovni datum
+                case WEEK:
+                    Calendar oneCalendarStart = Calendar.getInstance();
+                    oneCalendarStart.setTime(calendarEvent.getStartDate());
+                    oneCalendarStart.set(Calendar.HOUR_OF_DAY, 0);
+                    oneCalendarStart.set(Calendar.MINUTE, 0);
+                    oneCalendarStart.set(Calendar.SECOND, 0);
 
-        			Calendar oneCalendarEnd = Calendar.getInstance();
-        			oneCalendarEnd.setTime(calendarEvent.getStartDate());
-        			oneCalendarEnd.set(Calendar.HOUR_OF_DAY, 23);
-        			oneCalendarEnd.set(Calendar.MINUTE, 59);
-        			oneCalendarEnd.set(Calendar.SECOND, 59);
-        			        			
-        			if (calendarEvent.getEndDate().after(oneCalendarEnd.getTime())) {
-            			dateInterval = new DateInterval();
-        				dateInterval.setStartDate(calendarEvent.getStartDate());
-        				dateInterval.setEndDate(oneCalendarEnd.getTime());
-        				pushSingleCalendarGridEvent(calendarEvent, dateInterval);
-        				oneCalendarStart.add(Calendar.DATE, 1);
-        				oneCalendarEnd.add(Calendar.DATE, 1);        				
-        				
-	        			while (calendarEvent.getEndDate().after(oneCalendarEnd.getTime())) {
-	            			dateInterval = new DateInterval();
-	        				dateInterval.setStartDate(oneCalendarStart.getTime());
-	        				dateInterval.setEndDate(oneCalendarEnd.getTime());
-	        				pushSingleCalendarGridEvent(calendarEvent, dateInterval);
-	        				
-	        				oneCalendarStart.add(Calendar.DATE, 1);
-	        				oneCalendarEnd.add(Calendar.DATE, 1);        				
-	        			}
+                    Calendar oneCalendarEnd = Calendar.getInstance();
+                    oneCalendarEnd.setTime(calendarEvent.getStartDate());
+                    oneCalendarEnd.set(Calendar.HOUR_OF_DAY, 23);
+                    oneCalendarEnd.set(Calendar.MINUTE, 59);
+                    oneCalendarEnd.set(Calendar.SECOND, 59);
 
-	        			dateInterval = new DateInterval();
-        				dateInterval.setStartDate(oneCalendarStart.getTime());
-        				dateInterval.setEndDate(calendarEvent.getEndDate());
-        				pushSingleCalendarGridEvent(calendarEvent, dateInterval);
-	        			
-        			} else {
-            			dateInterval = new DateInterval();
-        				dateInterval.setStartDate(calendarEvent.getStartDate());
-        				dateInterval.setEndDate(calendarEvent.getEndDate());        				
-        				pushSingleCalendarGridEvent(calendarEvent, dateInterval);
-        			}
-        			break;
-        		case MULTI_WEEK:
-                	if (true) throw new RuntimeException("Implement me!");
-        			break;
-        		default:
+                    if (calendarEvent.getEndDate().after(oneCalendarEnd.getTime())) {
+                        dateInterval = new DateInterval();
+                        dateInterval.setStartDate(calendarEvent.getStartDate());
+                        dateInterval.setEndDate(oneCalendarEnd.getTime());
+                        pushSingleCalendarGridEvent(calendarEvent, dateInterval);
+                        oneCalendarStart.add(Calendar.DATE, 1);
+                        oneCalendarEnd.add(Calendar.DATE, 1);
+
+                        while (calendarEvent.getEndDate().after(oneCalendarEnd.getTime())) {
+                            dateInterval = new DateInterval();
+                            dateInterval.setStartDate(oneCalendarStart.getTime());
+                            dateInterval.setEndDate(oneCalendarEnd.getTime());
+                            pushSingleCalendarGridEvent(calendarEvent, dateInterval);
+
+                            oneCalendarStart.add(Calendar.DATE, 1);
+                            oneCalendarEnd.add(Calendar.DATE, 1);
+                        }
+
+                        dateInterval = new DateInterval();
+                        dateInterval.setStartDate(oneCalendarStart.getTime());
+                        dateInterval.setEndDate(calendarEvent.getEndDate());
+                        pushSingleCalendarGridEvent(calendarEvent, dateInterval);
+
+                    } else {
+                        dateInterval = new DateInterval();
+                        dateInterval.setStartDate(calendarEvent.getStartDate());
+                        dateInterval.setEndDate(calendarEvent.getEndDate());
+                        pushSingleCalendarGridEvent(calendarEvent, dateInterval);
+                    }
+                    break;
+                case MULTI_WEEK:
+                    if (true) throw new RuntimeException("Implement me!");
+                    break;
+                default:
                     throw new RuntimeException("UnrealException");
-        			
-        	}
-        	
+
+            }
+
         }
         recountCalendarEvents();
         repaint();
@@ -181,7 +181,6 @@ public class CalendarGrid extends JComponent implements ComponentListener {
 
     /**
      * Vytvori jeden {@link CalendarGridEvent} s prislusnym nastavenim
-     * 
      * @param calendarEvent
      * @param dateInterval
      */
@@ -200,7 +199,7 @@ public class CalendarGrid extends JComponent implements ComponentListener {
         ds.createDefaultDragGestureRecognizer(ce, DnDConstants.ACTION_COPY_OR_MOVE, dgl);
 
         calendarEvents.add(ce);
-        this.add(ce);    	
+        this.add(ce);
     }
 
     /**
@@ -257,7 +256,7 @@ public class CalendarGrid extends JComponent implements ComponentListener {
                 calendarBottom.set(Calendar.SECOND, 0);
                 calendarBottom.set(Calendar.HOUR_OF_DAY, calendarConfig.getDayEndTime());
                 if (calendarBottom.getTime().before(bottomDate)) {
-                	bottomDate = calendarBottom.getTime();
+                    bottomDate = calendarBottom.getTime();
                 }
 
                 Date topDate = event.getVisibleDateInterval().getStartDate();
@@ -266,10 +265,10 @@ public class CalendarGrid extends JComponent implements ComponentListener {
                 calendarTop.set(Calendar.SECOND, 0);
                 calendarTop.set(Calendar.HOUR_OF_DAY, calendarConfig.getDayStartTime());
                 if (calendarTop.getTime().after(topDate)) {
-                	topDate = calendarTop.getTime();
+                    topDate = calendarTop.getTime();
                 }
-                
-                int topTime = (topDate.getHours() - calendarConfig.getDayStartTime());                        
+
+                int topTime = (topDate.getHours() - calendarConfig.getDayStartTime());
                 int bottomTime = (bottomDate.getHours() - topDate.getHours());
                 int top = Math.round(topTime * hourSize + topDate.getMinutes() * minuteSize);
                 int bottom = Math.round(bottomTime * hourSize + (bottomDate.getMinutes() - topDate.getMinutes()) * minuteSize);
@@ -324,7 +323,7 @@ public class CalendarGrid extends JComponent implements ComponentListener {
                 if (component instanceof CalendarGridEvent) {
                     CalendarGridEvent event = (CalendarGridEvent) component;
                     Date d = event.getVisibleDateInterval().getStartDate();
-                    if ((calendar.getTime().compareTo(d)<=0) && endCalendar.getTime().after(d)) {
+                    if ((calendar.getTime().compareTo(d) <= 0) && endCalendar.getTime().after(d)) {
                         eventsInDay.add(event);
                     }
                 }
@@ -338,7 +337,7 @@ public class CalendarGrid extends JComponent implements ComponentListener {
                 calendarBottom.set(Calendar.SECOND, 0);
                 calendarBottom.set(Calendar.HOUR_OF_DAY, calendarConfig.getDayEndTime());
                 if (calendarBottom.getTime().before(bottomDate)) {
-                	bottomDate = calendarBottom.getTime();
+                    bottomDate = calendarBottom.getTime();
                 }
 
                 Date topDate = event.getVisibleDateInterval().getStartDate();
@@ -347,7 +346,7 @@ public class CalendarGrid extends JComponent implements ComponentListener {
                 calendarTop.set(Calendar.SECOND, 0);
                 calendarTop.set(Calendar.HOUR_OF_DAY, calendarConfig.getDayStartTime());
                 if (calendarTop.getTime().after(topDate)) {
-                	topDate = calendarTop.getTime();
+                    topDate = calendarTop.getTime();
                 }
 
                 float width = (daySize) / eventsInDay.size();
@@ -377,7 +376,7 @@ public class CalendarGrid extends JComponent implements ComponentListener {
      * @return Zda byla pri prepoctu provedena zmena
      */
     protected boolean recountCalendarEventMultiWeek() {
-    	if (true) throw new RuntimeException("Implement me!");
+        if (true) throw new RuntimeException("Implement me!");
         return false;
     }
 
@@ -386,8 +385,8 @@ public class CalendarGrid extends JComponent implements ComponentListener {
      * @return Zda byla pri prepoctu provedena zmena
      */
     protected boolean recountCalendarEventMonth() {
-        float weekSize = (this.getHeight() - headerPadding - monthViewPadding*5) / 5;
-        float daySize = (this.getWidth()-5) / (float) 7;
+        float weekSize = (this.getHeight() - headerPadding - monthViewPadding * 5) / 5;
+        float daySize = (this.getWidth() - 5) / (float) 7;
 
         boolean result = false;
 
@@ -402,15 +401,15 @@ public class CalendarGrid extends JComponent implements ComponentListener {
         endCalendar.set(Calendar.MINUTE, 59);
         endCalendar.set(Calendar.SECOND, 59);
 
-        
-        for (int row = 0; row<5; row++) {
-        	for (int col = 0; col<7; col++) {
+
+        for (int row = 0; row < 5; row++) {
+            for (int col = 0; col < 7; col++) {
                 Set<CalendarGridEvent> eventsInDay = new HashSet<CalendarGridEvent>();
                 for (Component component : calendarEvents) {
                     if (component instanceof CalendarGridEvent) {
                         CalendarGridEvent event = (CalendarGridEvent) component;
                         Date d = event.getVisibleDateInterval().getStartDate();
-                        if ((calendar.getTime().compareTo(d)<=0) && (endCalendar.getTime().compareTo(d)>=0)) {
+                        if ((calendar.getTime().compareTo(d) <= 0) && (endCalendar.getTime().compareTo(d) >= 0)) {
                             eventsInDay.add(event);
                         }
                     }
@@ -421,18 +420,17 @@ public class CalendarGrid extends JComponent implements ComponentListener {
                 int roundedEventHeight = Math.round(eventHeight);
                 int roundedDaySize = Math.round(daySize);
                 for (CalendarGridEvent event : eventsInDay) {
-                	event.setLocation(Math.round(col*daySize), Math.round(row*weekSize + eventHeight*eventNumber) + headerPadding + (row+1)*monthViewPadding);
-                	event.setSize(roundedDaySize, roundedEventHeight);
-                	eventNumber++;
+                    event.setLocation(Math.round(col * daySize), Math.round(row * weekSize + eventHeight * eventNumber) + headerPadding + (row + 1) * monthViewPadding);
+                    event.setSize(roundedDaySize, roundedEventHeight);
+                    eventNumber++;
                 }
-                
+
                 endCalendar.add(Calendar.DATE, 1);
-                calendar.add(Calendar.DATE, 1);                
-        	}
+                calendar.add(Calendar.DATE, 1);
+            }
         }
-        
-        
- 
+
+
         return result;
     }
 
@@ -479,14 +477,14 @@ public class CalendarGrid extends JComponent implements ComponentListener {
      * Jak bude probihat vykreslovani v pripade CalendarView.MULTI_WEEK
      */
     protected void paintCalendarMultiWeek(Graphics g) {
-    	if (true) throw new RuntimeException("Implement me!");
+        if (true) throw new RuntimeException("Implement me!");
     }
 
     /**
      * Jak bude probihat vykreslovani v pripade CalendarView.MONTH
      */
     protected void paintCalendarMonth(Graphics g) {
-    	monthViewPadding = g.getFont().getSize() + 4;
+        monthViewPadding = g.getFont().getSize() + 4;
         float weekSize = (this.getHeight() - headerPadding) / 5;
         float daySize = this.getWidth() / 7;
 
@@ -499,21 +497,21 @@ public class CalendarGrid extends JComponent implements ComponentListener {
         calendar.setTime(this.startDate);
         for (int i = 0; i < 7; i++) {
             int p = Math.round(i * daySize);
-            g.drawLine(p , 0, p , this.getHeight());
+            g.drawLine(p, 0, p, this.getHeight());
             String den = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
             g.drawString(den, p + 2, g.getFont().getSize());
             calendar.roll(Calendar.DATE, 1);
         }
-        
+
         calendar.setTime(startDate);
-        for (int row = 0; row<5; row++) {
+        for (int row = 0; row < 5; row++) {
             int p = Math.round(row * weekSize);
-        	for (int col = 0; col < 7; col++) {
+            for (int col = 0; col < 7; col++) {
                 int q = Math.round(col * daySize);
-        		String datum = SimpleDateFormat.getDateInstance().format(calendar.getTime());
-        		g.drawString(datum, q + 2, p + g.getFont().getSize()*2 + 2);
-        		calendar.add(Calendar.DATE, 1);
-			}
+                String datum = SimpleDateFormat.getDateInstance().format(calendar.getTime());
+                g.drawString(datum, q + 2, p + g.getFont().getSize() * 2 + 2);
+                calendar.add(Calendar.DATE, 1);
+            }
         }
     }
 
@@ -530,13 +528,13 @@ public class CalendarGrid extends JComponent implements ComponentListener {
                 result.setMinutes(minut);
                 break;
             case WEEK:
-            	if (true) throw new RuntimeException("Implement me!");
+                if (true) throw new RuntimeException("Implement me!");
                 break;
             case MULTI_WEEK:
-            	if (true) throw new RuntimeException("Implement me!");
+                if (true) throw new RuntimeException("Implement me!");
                 break;
             case MONTH:
-            	if (true) throw new RuntimeException("Implement me!");
+                if (true) throw new RuntimeException("Implement me!");
                 break;
             default:
                 throw new RuntimeException("UnrealException");
@@ -557,27 +555,27 @@ public class CalendarGrid extends JComponent implements ComponentListener {
     }
 
     public void setStartDate(Date startDate) {
-		this.startDate = startDate;
-	}
+        this.startDate = startDate;
+    }
 
-	@Override
-	public void componentHidden(ComponentEvent arg0) {
-		// nic
-	}
+    @Override
+    public void componentHidden(ComponentEvent arg0) {
+        // nic
+    }
 
-	@Override
-	public void componentMoved(ComponentEvent arg0) {
-		//nic
-	}
+    @Override
+    public void componentMoved(ComponentEvent arg0) {
+        //nic
+    }
 
-	@Override
-	public void componentResized(ComponentEvent arg0) {
-        recountCalendarEvents();        		
-	}
+    @Override
+    public void componentResized(ComponentEvent arg0) {
+        recountCalendarEvents();
+    }
 
-	@Override
-	public void componentShown(ComponentEvent arg0) {
-		//nic
-	}
+    @Override
+    public void componentShown(ComponentEvent arg0) {
+        //nic
+    }
 
 }
