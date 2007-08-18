@@ -6,6 +6,7 @@ import cz.cvut.felk.timejuggler.swing.components.EditorPaneLinkDetector;
 import cz.cvut.felk.timejuggler.swing.models.NaiiveComboModel;
 import cz.cvut.felk.timejuggler.swing.renderers.ComboBoxRenderer;
 import org.jdesktop.swingx.JXDatePicker;
+import org.jdesktop.swingx.calendar.JXMonthView;
 
 import javax.swing.*;
 import javax.swing.text.DateFormatter;
@@ -48,6 +49,7 @@ public class ComponentFactory {
     public static JXDatePicker getDatePicker() {
         final JXDatePicker picker = new JXDatePicker();
         picker.setFormats(DateFormat.getDateInstance(DateFormat.MEDIUM));
+        setMonthViewStyle(picker.getMonthView());
         return picker;
     }
 
@@ -78,4 +80,14 @@ public class ComponentFactory {
         return new EditorPaneLinkDetector();
     }
 
+    public static void setMonthViewStyle(JXMonthView view) {
+        final UIDefaults feelDefaults = UIManager.getLookAndFeelDefaults();
+        view.setBackground(feelDefaults.getColor("Panel.background"));
+        view.setMonthStringBackground(feelDefaults.getColor("TableHeader.background"));
+        view.setMonthStringForeground(feelDefaults.getColor("TableHeader.foreground"));
+        view.setFlaggedDayForeground(feelDefaults.getColor("TableHeader.foreground"));
+        view.setSelectedBackground(feelDefaults.getColor("List.selectionBackground"));
+        view.setForeground(feelDefaults.getColor("List.foreground"));
+        view.setFont(feelDefaults.getFont("List.font"));
+    }
 }

@@ -48,6 +48,7 @@ public class EventsListManager {
     private final JPanel panelMain = new JPanel(new BorderLayout(2, 2));
     private final JPanel panelSearchbar = new JPanel();
     private SelectionInList<EventTaskEntity> inList;
+    private JPopupMenu popupMenu;
 
     private static enum EventsFilters {
         ALL_EVENTS
@@ -95,7 +96,8 @@ public class EventsListManager {
 
         final JXTable table = new JXTable();
         table.setName("eventsTable");
-        //inicializace categories tabulky
+
+        //inicializace dat
         ArrayListModel<EventTaskEntity> eventsListModel = new ArrayListModel<EventTaskEntity>();
         try {
             eventsListModel = app.getDataProvider().getEventsListModel();
@@ -154,8 +156,25 @@ public class EventsListManager {
         panelMain.add(panelSearchbar, BorderLayout.NORTH);
         panelMain.add(new JScrollPane(table), BorderLayout.CENTER);
 
+        initPopUpMenu(table);
         return panelMain;
     }
+
+    private void initPopUpMenu(final JComponent component) {
+        final Object[] popmenuActionNames = {
+                "newEvent",
+                "newTask",
+                "editEvent",
+                "deleteEvent",
+                "---",
+                "goToDate"
+        };
+        popupMenu = new JPopupMenu();
+        MenuManager.processMenu(popupMenu, "eventsPopup", popmenuActionNames);
+        component.add(popupMenu);
+        component.addMouseListener(new EventsListMouseListener());
+    }
+
 
     private void updateFilters(final String filterText, JXTable table) {
         if (filterText == null || filterText.isEmpty()) {
@@ -174,7 +193,7 @@ public class EventsListManager {
     private static class AllPatternFilter extends PatternFilter {
 
         public AllPatternFilter(String string, int patternFlags, int col) {
-            super(string, patternFlags, col);
+            super(Pattern.quote(string), patternFlags, col);
         }
 
         @Override
@@ -221,7 +240,9 @@ public class EventsListManager {
     }
 
     private void updateActionEnablement() {
-
+        final boolean empty = getEventSelection().isSelectionEmpty();
+        Swinger.getAction("editEvent").setEnabled(!empty);
+        Swinger.getAction("deleteEvent").setEnabled(!empty);
     }
 
     /**
@@ -359,6 +380,23 @@ public class EventsListManager {
 //                    calendar.set(Calendar.YEAR, currentYear);
 //                }
                 dataProvider.getCurrentDateHolder().setValue(newValue);
+            }
+        }
+    }
+
+    private class EventsListMouseListener extends MouseAdapter {
+        public void mousePressed(MouseEvent e) {
+            maybeShowPopup(e);
+        }
+
+        public void mouseReleased(MouseEvent e) {
+            maybeShowPopup(e);
+        }
+
+        private void maybeShowPopup(MouseEvent e) {
+            if (e.isPopupTrigger() && popupMenu != null) {
+                popupMenu.show(e.getComponent(), e.getX(), e.getY());
+                e.consume();
             }
         }
     }

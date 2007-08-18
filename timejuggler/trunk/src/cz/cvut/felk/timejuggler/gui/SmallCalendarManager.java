@@ -10,6 +10,7 @@ import cz.cvut.felk.timejuggler.core.MainApp;
 import cz.cvut.felk.timejuggler.core.data.DataProvider;
 import cz.cvut.felk.timejuggler.core.data.PersistencyLayerException;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.VCalendarEntity;
+import cz.cvut.felk.timejuggler.swing.ComponentFactory;
 import cz.cvut.felk.timejuggler.swing.CustomLayoutConstraints;
 import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.swing.renderers.CheckRenderer;
@@ -270,7 +271,6 @@ public class SmallCalendarManager {
     public static class EnhancedJXMonthView extends JXMonthView {
         public EnhancedJXMonthView() {
             super();
-            final UIDefaults feelDefaults = UIManager.getLookAndFeelDefaults();
             this.setBorder(null);
             this.setShowingWeekNumber(true);
             this.setShowLeadingDates(true);
@@ -280,13 +280,7 @@ public class SmallCalendarManager {
             this.setUnselectableDates(new long[0]);
             this.setTraversable(true);
             //this.setFirstDisplayedDate();
-            this.setBackground(feelDefaults.getColor("Panel.background"));
-            this.setMonthStringBackground(feelDefaults.getColor("TableHeader.background"));
-            this.setMonthStringForeground(feelDefaults.getColor("TableHeader.foreground"));
-            this.setFlaggedDayForeground(feelDefaults.getColor("TableHeader.foreground"));
-            this.setSelectedBackground(feelDefaults.getColor("List.selectionBackground"));
-            this.setForeground(feelDefaults.getColor("List.foreground"));
-            this.setFont(feelDefaults.getFont("List.font"));
+            ComponentFactory.setMonthViewStyle(this);
         }
 
         @Override

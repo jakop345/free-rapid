@@ -8,6 +8,7 @@ import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.*;
+import cz.cvut.felk.timejuggler.swing.ComponentFactory;
 import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
 import org.jdesktop.swingx.JXDatePicker;
@@ -120,7 +121,7 @@ public class ChooseDateDialog extends AppDialog {
         JPanel dialogPane = new JPanel();
         JPanel contentPanel = new JPanel();
         JLabel labelName = new JLabel();
-        fieldDate = new JXDatePicker();
+        fieldDate = ComponentFactory.getDatePicker();
         //checkUseColor = new JCheckBox();
         //comboColor = ComponentFactory.getColorComboBox();
         JPanel buttonBar = new JPanel();

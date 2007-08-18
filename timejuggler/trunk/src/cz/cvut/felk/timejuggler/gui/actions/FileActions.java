@@ -42,6 +42,11 @@ public class FileActions extends AbstractBean {
     }
 
     @Action()
+    public void deleteEvent() {
+
+    }
+
+    @Action()
     public void editTask() {
         final EventTaskDialog taskDialog = new EventTaskDialog(app.getMainFrame(), true);
         app.prepareDialog(taskDialog, true);

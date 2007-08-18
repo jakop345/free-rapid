@@ -84,7 +84,7 @@ public abstract class SingleXFrameApplication extends SingleFrameApplication {
     protected void prepareWindow(Window root) {
         configureWindow(root);
         // If the window's size doesn't appear to have been set, do it
-        if ((root.getWidth() == 0) || (root.getHeight() == 0)) {
+        if ((root.getWidth() < 10) || (root.getHeight() < 10)) {
             root.pack();
             if (!root.isLocationByPlatform()) {
                 Component owner = (root != getMainFrame()) ? getMainFrame()
@@ -100,6 +100,23 @@ public abstract class SingleXFrameApplication extends SingleFrameApplication {
                 ac.getSessionStorage().restore(root, filename);
             } catch (Exception e) {
                 logger.log(Level.WARNING, "couldn't restore sesssion", e);
+            }
+        }
+        {//Vity's hack
+            final Dimension size = root.getPreferredSize();
+            final boolean invalidWidth = root.getWidth() < size.width;
+            final boolean invalidHeight = root.getHeight() < size.height;
+            if (invalidWidth || (invalidHeight)) {
+                if (invalidWidth && invalidHeight) {
+                    root.pack();
+                } else {
+                    root.setSize(invalidWidth ? size.width : root.getWidth(), invalidHeight ? size.height : root.getHeight());
+                }
+                if (!root.isLocationByPlatform()) {
+                    Component owner = (root != getMainFrame()) ? getMainFrame()
+                            : null;
+                    root.setLocationRelativeTo(owner); // center the window
+                }
             }
         }
         root.addWindowListener(getDialogListener());
