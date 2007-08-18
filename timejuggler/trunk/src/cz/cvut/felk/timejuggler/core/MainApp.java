@@ -34,6 +34,7 @@ public class MainApp extends SingleXFrameApplication {
     private static boolean debug = false;
     private DataProvider dataProvider;
     private TrayIconSupport trayIconSupport = null;
+    private static DataProvider DProvider;
 
 //    private static Logger logger = null;
 
@@ -166,6 +167,10 @@ public class MainApp extends SingleXFrameApplication {
 
     public static ApplicationContext getAContext() {
         return Application.getInstance(MainApp.class).getContext();
+    }
+
+    public static DataProvider getDProvider() {
+        return Application.getInstance(MainApp.class).getDataProvider();
     }
 
     /**

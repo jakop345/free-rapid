@@ -1,39 +1,39 @@
 package cz.cvut.felk.timejuggler.gui.dialogs;
 
-import com.jgoodies.binding.PresentationModel;
 import com.jgoodies.binding.adapter.Bindings;
-import com.jgoodies.binding.beans.PropertyConnector;
+import com.jgoodies.binding.value.BufferedValueModel;
 import com.jgoodies.binding.value.Trigger;
+import com.jgoodies.binding.value.ValueHolder;
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.*;
-import cz.cvut.felk.timejuggler.db.entity.interfaces.VCalendarEntity;
-import cz.cvut.felk.timejuggler.swing.ComponentFactory;
 import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
+import org.jdesktop.swingx.JXDatePicker;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Date;
 import java.util.logging.Logger;
 
 /**
  * @author Vity
  */
-public class CalendarDialog extends AppDialog {
-    private final static Logger logger = Logger.getLogger(CalendarDialog.class.getName());
-    private VCalendarEntity calendar;
-    private boolean newCalendar;
-    private PresentationModel model;
-    // private static final String PROPERTY_COLOR = "color";
-    private static final String PROPERTY_NAME = "name";
+public class ChooseDateDialog extends AppDialog {
+    private final static Logger logger = Logger.getLogger(ChooseDateDialog.class.getName());
+
+    //   private static final String PROPERTY_DATE = "value";
+    private final ValueHolder dateModel;
+    private Trigger trigger;
+    private BufferedValueModel model;
 
     //TODO pridat ikonu pro dialog
-    public CalendarDialog(Frame owner, VCalendarEntity calendarEntity, final boolean isNew) throws HeadlessException {
+    public ChooseDateDialog(Frame owner, ValueHolder dateModel) throws HeadlessException {
         super(owner, true);
-        this.newCalendar = isNew;
-        this.calendar = calendarEntity;
-        this.setName("CalendarDialog");
+        // dateModel.setIdentityCheckEnabled(true);
+        this.dateModel = dateModel;
+        this.setName("ChooseDateDialog");
 
         try {
             initComponents();
@@ -74,38 +74,23 @@ public class CalendarDialog extends AppDialog {
     private void buildGUI() {
     }
 
-//    private void updateCombo() {
-//        comboColor.setEnabled(checkUseColor.isSelected());
-//    }
-
     private void setDefaultValues() {
-        //final Color activeColor = (Color) model.getBufferedValue(PROPERTY_COLOR);
-        if (!newCalendar) {
-            this.setTitle(getResourceMap().getString("CalendarDialog_edit_title"));
-        }
-        //checkUseColor.setSelected(activeColor != null);
-        model.triggerFlush();
-        //updateCombo();
+        trigger.triggerFlush();
     }
 
     private void buildModels() {
-        model = new PresentationModel(calendar, new Trigger());
-        Bindings.bind(fieldName, model.getBufferedModel(PROPERTY_NAME), false);
-//        final BufferedValueModel valueColorModel = model.getBufferedModel(PROPERTY_COLOR);
+        trigger = new Trigger();
 
-//        checkUseColor.addActionListener(new ActionListener() {
-//            public void actionPerformed(ActionEvent e) {
-//                updateCombo();
-//                if (!checkUseColor.isSelected())
-//                    category.setColor(null);//nutne zlo
-//            }
-//        });
+        model = new BufferedValueModel(dateModel, trigger);
+        //final JFormattedTextField formattedField = BasicComponentFactory.createDateField(model);
+        //  formattedField.setFormatterFactory(new JXDatePickerFormatterFactory());
+        Bindings.bind(fieldDate.getEditor(), model);
+        //fieldDate.setEditor(formattedField);
+        //fieldDate.setFormats(new String[]{"d.M.yyyy"});
+        //final Action actionOK = getActionMap().get("okBtnAction");
 
-        final Action actionOK = getActionMap().get("okBtnAction");
-//        PropertyConnector.connectAndUpdate(valueColorModel, comboColor, PROPERTY_COLOR);
-
-        final PropertyConnector connector1 = PropertyConnector.connect(model, PresentationModel.PROPERTYNAME_BUFFERING, actionOK, "enabled");
-        connector1.updateProperty2();
+//        final PropertyConnector connector1 = PropertyConnector.connect(model, BufferedValueModel.PROPERTYNAME_BUFFERING, actionOK, "enabled");
+//        connector1.updateProperty2();
     }
 
     @application.Action
@@ -113,19 +98,14 @@ public class CalendarDialog extends AppDialog {
         if (!validateForm()) {
             return;
         }
-        model.triggerCommit();
-        //workaround
-//        if (!checkUseColor.isSelected())
-//            category.setColor(null);
-        //   DataProvider.getInstance().addCategory(category);
-        calendar.setChanged(true);
+        trigger.triggerCommit();
         setResult(RESULT_OK);
         doClose();
     }
 
     @application.Action
     public void cancelBtnAction() {
-        model.triggerFlush();
+        trigger.triggerFlush();
         doClose();
     }
 
@@ -140,7 +120,7 @@ public class CalendarDialog extends AppDialog {
         JPanel dialogPane = new JPanel();
         JPanel contentPanel = new JPanel();
         JLabel labelName = new JLabel();
-        fieldName = ComponentFactory.getTextField();
+        fieldDate = new JXDatePicker();
         //checkUseColor = new JCheckBox();
         //comboColor = ComponentFactory.getColorComboBox();
         JPanel buttonBar = new JPanel();
@@ -148,7 +128,7 @@ public class CalendarDialog extends AppDialog {
         btnCancel = new JButton();
         CellConstraints cc = new CellConstraints();
 
-        //======== CalendarDialog ========
+        //======== ChooseDateDialog ========
         {
             Container contentPane = this.getContentPane();
             contentPane.setLayout(new BorderLayout());
@@ -165,11 +145,11 @@ public class CalendarDialog extends AppDialog {
 
                     //---- labelName ----
 
-                    labelName.setLabelFor(fieldName);
+                    labelName.setLabelFor(fieldDate);
                     labelName.setName("labelName");
 
                     //---- fieldName ----
-                    fieldName.setName("fieldName");
+                    fieldDate.setName("fieldDate");
 
                     //---- checkUseColor ----
 
@@ -182,7 +162,7 @@ public class CalendarDialog extends AppDialog {
                             new ColumnSpec[]{
                                     FormFactory.DEFAULT_COLSPEC,
                                     FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
-                                    new ColumnSpec("max(pref;80dlu)")
+                                    new ColumnSpec("max(pref;70dlu)")
                             },
                             new RowSpec[]{
                                     FormFactory.PREF_ROWSPEC,
@@ -193,7 +173,7 @@ public class CalendarDialog extends AppDialog {
                             }), contentPanel);
 
                     contentPanelBuilder.add(labelName, cc.xywh(1, 1, 1, 1, CellConstraints.RIGHT, CellConstraints.DEFAULT));
-                    contentPanelBuilder.add(fieldName, cc.xy(3, 1));
+                    contentPanelBuilder.add(fieldDate, cc.xy(3, 1));
 //                    contentPanelBuilder.add(checkUseColor, cc.xy(1, 3));
 //                    contentPanelBuilder.add(comboColor, cc.xy(3, 3));
                 }
@@ -236,16 +216,19 @@ public class CalendarDialog extends AppDialog {
     }
 
     private boolean validateForm() {
-        final String value = (String) model.getBufferedValue(PROPERTY_NAME);
-        return validateNonEmpty(fieldName, value);
+        final Date value = (Date) model.getValue();
+        return validateNonEmpty(fieldDate.getEditor(), value);
+    }
+
+    private boolean validateNonEmpty(JFormattedTextField editor, Date value) {
+        return value != null;
     }
 
 
-    private JTextField fieldName;
-    //    private JCheckBox checkUseColor;
-    //    private ColorComboBox comboColor;
+    private JXDatePicker fieldDate;
+
     private JButton btnOK;
     private JButton btnCancel;
-    // JFormDesigner - End of variables declaration  //GEN-END:variables
+
 
 }

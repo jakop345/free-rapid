@@ -3,9 +3,11 @@ package cz.cvut.felk.timejuggler.gui;
 import application.ResourceMap;
 import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.adapter.SingleListSelectionAdapter;
+import com.jgoodies.binding.beans.PropertyConnector;
 import com.jgoodies.binding.list.ArrayListModel;
 import com.jgoodies.binding.list.SelectionInList;
 import cz.cvut.felk.timejuggler.core.MainApp;
+import cz.cvut.felk.timejuggler.core.data.DataProvider;
 import cz.cvut.felk.timejuggler.core.data.PersistencyLayerException;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.VCalendarEntity;
 import cz.cvut.felk.timejuggler.swing.CustomLayoutConstraints;
@@ -28,6 +30,7 @@ import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.logging.Logger;
 
 /**
@@ -64,16 +67,13 @@ public class SmallCalendarManager {
         final TableLayout mgr = new TableLayout(new double[]{f}, new double[]{f, p, f});
         mgr.setHGap(10);
         final JPanel panel = new JPanel(mgr);
-        final JXMonthView view = new JXMonthView();
-        view.setBorder(null);
-        view.setShowingWeekNumber(true);
-        view.setShowLeadingDates(true);
-        view.setShowTrailingDates(true);
-        view.setPreferredCols(1);
-        view.setPreferredRows(1);
-        view.setUnselectableDates(new long[0]);
-        view.setTraversable(true);
+        final EnhancedJXMonthView view = new EnhancedJXMonthView();
+
         panel.add(view, new CustomLayoutConstraints(0, 1));
+        final MainApp app = MainApp.getInstance(MainApp.class);
+        final DataProvider dataProvider = app.getDataProvider();
+        PropertyConnector connector = PropertyConnector.connect(dataProvider.getCurrentDateHolder(), "value", view, "selectedDate");
+        connector.updateProperty2();
         return panel;
     }
 
@@ -265,4 +265,36 @@ public class SmallCalendarManager {
     public SelectionInList<VCalendarEntity> getInCalendarsList() {
         return inCalendarsList;
     }
+
+
+    public static class EnhancedJXMonthView extends JXMonthView {
+        public EnhancedJXMonthView() {
+            super();
+            final UIDefaults feelDefaults = UIManager.getLookAndFeelDefaults();
+            this.setBorder(null);
+            this.setShowingWeekNumber(true);
+            this.setShowLeadingDates(true);
+            this.setShowTrailingDates(true);
+            this.setPreferredCols(1);
+            this.setPreferredRows(1);
+            this.setUnselectableDates(new long[0]);
+            this.setTraversable(true);
+            //this.setFirstDisplayedDate();
+            this.setBackground(feelDefaults.getColor("Panel.background"));
+            this.setMonthStringBackground(feelDefaults.getColor("TableHeader.background"));
+            this.setMonthStringForeground(feelDefaults.getColor("TableHeader.foreground"));
+            this.setFlaggedDayForeground(feelDefaults.getColor("TableHeader.foreground"));
+            this.setSelectedBackground(feelDefaults.getColor("List.selectionBackground"));
+            this.setForeground(feelDefaults.getColor("List.foreground"));
+            this.setFont(feelDefaults.getFont("List.font"));
+        }
+
+        @Override
+        public void setSelectedDate(Date newDate) {
+            super.setSelectedDate(newDate);
+            super.setFirstDisplayedDate(newDate.getTime());
+        }
+    }
+
+
 }

@@ -1,4 +1,6 @@
-package cz.cvut.felk.timejuggler.sandbox;/*
+package cz.cvut.felk.timejuggler.sandbox;
+
+/*
 Definitive Guide to Swing for Java 2, Second Edition
 By John Zukowski
 ISBN: 1-893115-78-X
@@ -12,11 +14,113 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
-import java.awt.event.InputEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.Vector;
+
+public class ListProperties {
+    static class CustomTableModel extends AbstractTableModel {
+        Vector keys = new Vector();
+
+        Vector values = new Vector();
+
+        private static final String columnNames[] = {"Property String",
+                "Value"};
+
+        public int getColumnCount() {
+            return columnNames.length;
+        }
+
+        public String getColumnName(int column) {
+            return columnNames[column];
+        }
+
+        public int getRowCount() {
+            return keys.size();
+        }
+
+        public Object getValueAt(int row, int column) {
+            Object returnValue = null;
+            if (column == 0) {
+                returnValue = keys.elementAt(row);
+            } else if (column == 1) {
+                returnValue = values.elementAt(row);
+
+            }
+            return returnValue;
+        }
+
+        public synchronized void uiDefaultsUpdate(UIDefaults defaults) {
+            Enumeration newKeys = defaults.keys();
+            keys.removeAllElements();
+            while (newKeys.hasMoreElements()) {
+                keys.addElement(newKeys.nextElement());
+            }
+
+            Enumeration newValues = defaults.elements();
+            values.removeAllElements();
+            while (newValues.hasMoreElements()) {
+                values.addElement(newValues.nextElement());
+            }
+
+            fireTableDataChanged();
+        }
+    }
+
+    public static void main(String args[]) {
+        final JFrame frame = new JFrame("List Properties");
+
+        final CustomTableModel model = new CustomTableModel();
+        model.uiDefaultsUpdate(UIManager.getDefaults());
+        TableSorter sorter = new TableSorter(model);
+
+        JTable table = new JTable(sorter);
+        TableHeaderSorter.install(sorter, table);
+
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+
+        UIManager.LookAndFeelInfo looks[] = UIManager
+                .getInstalledLookAndFeels();
+
+        ActionListener actionListener = new ActionListener() {
+            public void actionPerformed(ActionEvent actionEvent) {
+                final String lafClassName = actionEvent.getActionCommand();
+                Runnable runnable = new Runnable() {
+                    public void run() {
+                        try {
+                            UIManager.setLookAndFeel(lafClassName);
+                            SwingUtilities.updateComponentTreeUI(frame);
+                            // Added
+                            model.uiDefaultsUpdate(UIManager.getDefaults());
+                        } catch (Exception exception) {
+                            JOptionPane.showMessageDialog(frame,
+                                    "Can't change look and feel",
+                                    "Invalid PLAF", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                };
+                SwingUtilities.invokeLater(runnable);
+            }
+        };
+
+        JToolBar toolbar = new JToolBar();
+        for (int i = 0, n = looks.length; i < n; i++) {
+            JButton button = new JButton(looks[i].getName());
+            button.setActionCommand(looks[i].getClassName());
+            button.addActionListener(actionListener);
+            toolbar.add(button);
+        }
+
+        Container content = frame.getContentPane();
+        content.add(toolbar, BorderLayout.NORTH);
+        JScrollPane scrollPane = new JScrollPane(table);
+        content.add(scrollPane, BorderLayout.CENTER);
+        frame.setSize(400, 400);
+        frame.setVisible(true);
+    }
+}
 
 class TableSorter extends TableMap implements TableModelListener {
     int indexes[] = new int[0];

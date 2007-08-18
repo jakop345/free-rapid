@@ -11,6 +11,7 @@ import com.jgoodies.binding.value.DelayedReadValueModel;
 import com.jgoodies.binding.value.ValueHolder;
 import cz.cvut.felk.timejuggler.core.AppPrefs;
 import cz.cvut.felk.timejuggler.core.MainApp;
+import cz.cvut.felk.timejuggler.core.data.DataProvider;
 import cz.cvut.felk.timejuggler.core.data.PersistencyLayerException;
 import cz.cvut.felk.timejuggler.db.entity.Category;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.EventTaskEntity;
@@ -25,12 +26,16 @@ import org.jdesktop.swingx.decorator.FilterPipeline;
 import org.jdesktop.swingx.decorator.PatternFilter;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
@@ -128,9 +133,11 @@ public class EventsListManager {
         table.setColumnControlVisible(true);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        Swinger.updateColumn(table, rm.getString("tableEvents.column.start"), EventsTableModel.COLUMN_START_INDEX, 70);
+        final DateTableCellRenderer dateRenderer = new DateTableCellRenderer();
+
+        Swinger.updateColumn(table, rm.getString("tableEvents.column.start"), EventsTableModel.COLUMN_START_INDEX, 70, dateRenderer);
         Swinger.updateColumn(table, rm.getString("tableEvents.column.title"), EventsTableModel.COLUMN_TITLE_INDEX, 100);
-        Swinger.updateColumn(table, rm.getString("tableEvents.column.end"), EventsTableModel.COLUMN_END_INDEX, 70);
+        Swinger.updateColumn(table, rm.getString("tableEvents.column.end"), EventsTableModel.COLUMN_END_INDEX, 70, dateRenderer);
         Swinger.updateColumn(table, rm.getString("tableEvents.column.category"), EventsTableModel.COLUMN_CATEGORY_INDEX, 70);
         Swinger.updateColumn(table, rm.getString("tableEvents.column.location"), EventsTableModel.COLUMN_LOCATION_INDEX, 70);
         Swinger.updateColumn(table, rm.getString("tableEvents.column.status"), EventsTableModel.COLUMN_STATUS_INDEX, 50);
@@ -225,6 +232,9 @@ public class EventsListManager {
         getEventSelection().addPropertyChangeListener(
                 SelectionInList.PROPERTYNAME_SELECTION_EMPTY,
                 new SelectionEmptyHandler());
+        getEventSelection().addPropertyChangeListener(
+                SelectionInList.PROPERTYNAME_SELECTION,
+                new SelectionHandler());
         updateActionEnablement();
     }
 
@@ -308,5 +318,48 @@ public class EventsListManager {
 
     protected String[] getList(String key) {
         return (String[]) Swinger.getResourceMap().getObject(key + "_list", String[].class);
+    }
+
+    public static class DateTableCellRenderer extends DefaultTableCellRenderer {
+        private DateFormat shortDateFormat;
+        private DateFormat longDateFormat;
+
+        public DateTableCellRenderer() {
+            super();
+            final ResourceMap map = Swinger.getResourceMap();
+            shortDateFormat = new SimpleDateFormat(map.getString("shortDateFormat"));
+            longDateFormat = new SimpleDateFormat(map.getString("longDateFormat"));
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            if (value != null) {
+                final int format = AppPrefs.getProperty(AppPrefs.DATE_TEXT_FORMAT, AppPrefs.DEF_DATE_TEXT_FORMAT_SHORT);
+                if (format == AppPrefs.DEF_DATE_TEXT_FORMAT_SHORT) {
+                    value = shortDateFormat.format(value);
+                } else
+                    value = longDateFormat.format(value);
+            }
+            return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        }
+    }
+
+    private static class SelectionHandler implements PropertyChangeListener {
+
+        public void propertyChange(PropertyChangeEvent evt) {
+            final EventTaskEntity value = (EventTaskEntity) evt.getNewValue();
+            if (value != null) {
+                DataProvider dataProvider = MainApp.getDProvider();
+//                final Calendar calendar = Calendar.getInstance();
+//                final int currentYear = calendar.get(Calendar.YEAR);
+                final Date newValue = value.getStartDate();
+//                calendar.setTime(newValue);
+//                System.out.println("calendar = " + calendar);
+//                if (currentYear < 1980) {
+//                    calendar.set(Calendar.YEAR, currentYear);
+//                }
+                dataProvider.getCurrentDateHolder().setValue(newValue);
+            }
+        }
     }
 }

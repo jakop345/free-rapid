@@ -4,11 +4,13 @@
 package cz.cvut.felk.timejuggler.core.data;
 
 import com.jgoodies.binding.list.ArrayListModel;
+import com.jgoodies.binding.value.ValueHolder;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.CategoryEntity;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.EventTaskEntity;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.VCalendarEntity;
 
 import java.io.File;
+import java.util.Date;
 import java.util.List;
 
 
@@ -25,12 +27,13 @@ public class DataProvider {
     private boolean calendarsInit = false;
     private boolean eventsInit = false;
     private Object newCalendar;
-
+    private ValueHolder currentDateHolder;
 
     public DataProvider() {
         categories = new ArrayListModel<CategoryEntity>();
         calendars = new ArrayListModel<VCalendarEntity>();
         events = new ArrayListModel<EventTaskEntity>();
+        currentDateHolder = new ValueHolder(new Date());
     }
 
     public void init() throws PersistencyLayerException {
@@ -142,5 +145,9 @@ public class DataProvider {
 
     private PersistencyLayer getPersitencyLayer() {
         return persistencyLayer;
+    }
+
+    public ValueHolder getCurrentDateHolder() {
+        return currentDateHolder;
     }
 }

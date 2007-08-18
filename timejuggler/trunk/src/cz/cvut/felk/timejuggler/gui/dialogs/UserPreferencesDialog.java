@@ -106,7 +106,7 @@ public class UserPreferencesDialog extends AppDialog {
         setDefaultValues();
         showCard(Card.valueOf(AppPrefs.getProperty(AppPrefs.USER_SETTINGS_SELECTED_CARD, Card.CARD1.toString())));
         pack();
-        setResizable(false);
+        setResizable(true);
         locateOnOpticalScreenCenter(this);
 
 
@@ -218,7 +218,7 @@ public class UserPreferencesDialog extends AppDialog {
 
         //nastaveni sloupcu
         final ResourceMap resourceMap = getResourceMap();
-        Swinger.updateColumn(tableCategories, resourceMap.getString("tableCategories.column.name"), 0, 350, null);
+        Swinger.updateColumn(tableCategories, resourceMap.getString("tableCategories.column.name"), 0, 320, null);
         Swinger.updateColumn(tableCategories, resourceMap.getString("tableCategories.column.color"), 1, 50, new ColorTableCellRenderer());
 
         prefListener = new ApplyPreferenceChangeListener();
