@@ -140,5 +140,9 @@ public class Swinger {
         return column;
     }
 
+    public static TableColumn updateColumn(JTable table, String name, final int columnId, final int width) {
+        return updateColumn(table, name, columnId, width, null);
+    }
+
 
 }

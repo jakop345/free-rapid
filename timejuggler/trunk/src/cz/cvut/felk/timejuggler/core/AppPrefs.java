@@ -65,6 +65,8 @@ public final class AppPrefs {
     public static final String ONEINSTANCE = "settings.oneinstance";
     public static final String IMPORT_LAST_USED_FOLDER = "settings.importLastUsedFolder";
     public static final String LAST_IMPORT_FILTER = "settings.lastUsedImportFilter";
+    public static final String SELECTED_EVENTS_FILTER = "settings.selectedEventsFilter";
+    public static final String CONTAIN_EVENTS_FILTER = "settings.containEventsFilter";
 
 
     private AppPrefs() {

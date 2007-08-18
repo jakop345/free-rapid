@@ -93,6 +93,7 @@ public class DataProvider {
     public synchronized void addCalendar(VCalendarEntity calendar) throws PersistencyLayerException {
         getPersitencyLayer().saveOrUpdateCalendar(calendar);
         calendars.add(calendar);
+        resetEvents();//prozatim
     }
 
     public synchronized void addCategory(CategoryEntity category) throws PersistencyLayerException {
@@ -100,14 +101,6 @@ public class DataProvider {
         categories.add(category);
     }
 
-    public void deleteCalendarsListModel() {//jen test
-        calendars.clear();//jen test
-    }
-
-
-    private PersistencyLayer getPersitencyLayer() {
-        return persistencyLayer;
-    }
 
     public void importCalendarFromICS(File file) throws PersistencyLayerException {
         final VCalendarEntity calendarEntity = getPersitencyLayer().importICS(file);
@@ -138,10 +131,16 @@ public class DataProvider {
     public void removeCalendar(VCalendarEntity calendar) throws PersistencyLayerException {
         getPersitencyLayer().removeCalendar(calendar);
         calendars.remove(calendar);
+        resetEvents();
     }
 
     public void updateCalendarActive(VCalendarEntity calendarEntity) throws PersistencyLayerException {
         saveOrUpdateCalendar(calendarEntity);
         resetEvents();
+    }
+
+
+    private PersistencyLayer getPersitencyLayer() {
+        return persistencyLayer;
     }
 }

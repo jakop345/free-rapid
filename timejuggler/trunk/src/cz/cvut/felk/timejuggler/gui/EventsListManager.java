@@ -3,15 +3,19 @@ package cz.cvut.felk.timejuggler.gui;
 import application.ApplicationContext;
 import application.ResourceMap;
 import com.jgoodies.binding.adapter.AbstractTableAdapter;
+import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.adapter.SingleListSelectionAdapter;
 import com.jgoodies.binding.list.ArrayListModel;
 import com.jgoodies.binding.list.SelectionInList;
+import com.jgoodies.binding.value.DelayedReadValueModel;
+import com.jgoodies.binding.value.ValueHolder;
 import cz.cvut.felk.timejuggler.core.AppPrefs;
 import cz.cvut.felk.timejuggler.core.MainApp;
 import cz.cvut.felk.timejuggler.core.data.PersistencyLayerException;
 import cz.cvut.felk.timejuggler.db.entity.Category;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.EventTaskEntity;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.VCalendarEntity;
+import cz.cvut.felk.timejuggler.swing.ComponentFactory;
 import cz.cvut.felk.timejuggler.swing.CustomLayoutConstraints;
 import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
@@ -21,9 +25,6 @@ import org.jdesktop.swingx.decorator.FilterPipeline;
 import org.jdesktop.swingx.decorator.PatternFilter;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
@@ -43,6 +44,10 @@ public class EventsListManager {
     private final JPanel panelSearchbar = new JPanel();
     private SelectionInList<EventTaskEntity> inList;
 
+    private static enum EventsFilters {
+        ALL_EVENTS
+    }
+
     /**
      * Zalozi, vytvorena komponenta je dostupna pres getComponent
      * @see getComponent
@@ -59,7 +64,6 @@ public class EventsListManager {
 
         });
         action.putValue(Action.SELECTED_KEY, AppPrefs.getProperty(AppPrefs.SHOW_SEARCHBAR, true));
-
     }
 
     private void setSearchBarVisible(boolean visible) {
@@ -82,14 +86,8 @@ public class EventsListManager {
         final JLabel labelContain = new JLabel();
         labelContain.setName("labelContain");
 
-        final ResourceMap rm = Swinger.getResourceMap();
-        final Integer eventFilterCount = rm.getInteger("eventFilterCount");
-        final Object[] comboValues = new Object[eventFilterCount];
-        for (int i = 0; i < eventFilterCount; ++i)
-            comboValues[i] = rm.getString("eventFilter" + i);
-
         final MainApp app = MainApp.getInstance(MainApp.class);
-        //final DefaultTableModel tableModel = new DefaultTableModel(new Object[]{"Start", "Title", "End", "Category", "Location", "Status", "Calendar Name"}, 10);
+
         final JXTable table = new JXTable();
         table.setName("eventsTable");
         //inicializace categories tabulky
@@ -105,40 +103,42 @@ public class EventsListManager {
         final EventsTableModel tableModel = new EventsTableModel(inList);
 
         table.setModel(tableModel);
-        table.setSortOrder(0, org.jdesktop.swingx.decorator.SortOrder.ASCENDING);
+        table.setSortOrder(EventsTableModel.COLUMN_START_INDEX, org.jdesktop.swingx.decorator.SortOrder.ASCENDING);
         table.setSelectionModel(new SingleListSelectionAdapter(new JXTableSelectionConverter(inList.getSelectionIndexHolder(), table)));
 
         table.addMouseListener(new DoubleClickHandler());
+        final ResourceMap rm = Swinger.getResourceMap();
 
-        final JComboBox comboBox = new JComboBox(comboValues);
-        final JTextField fieldFilter = new JTextField();
-        fieldFilter.getDocument().addDocumentListener(new DocumentListener() {
-            public void insertUpdate(DocumentEvent e) {
-                doFilter(e);
+        final JComboBox comboBox = ComponentFactory.getComboBox();
+        bindCombobox(comboBox, AppPrefs.SELECTED_EVENTS_FILTER, EventsFilters.ALL_EVENTS.ordinal(), "eventFilter");
+
+        final JTextField fieldFilter = ComponentFactory.getTextField();
+        final MyPreferencesAdapter adapter = new MyPreferencesAdapter(AppPrefs.CONTAIN_EVENTS_FILTER, "");
+        final DelayedReadValueModel delayedReadValueModel = new DelayedReadValueModel(adapter, 300, true);
+        delayedReadValueModel.addValueChangeListener(new PropertyChangeListener() {
+
+            public void propertyChange(PropertyChangeEvent evt) {
+                updateFilters(evt.getNewValue().toString(), table);
             }
-
-            public void removeUpdate(DocumentEvent e) {
-                doFilter(e);
-            }
-
-            public void changedUpdate(DocumentEvent e) {
-                doFilter(e);
-            }
-
-            private void doFilter(DocumentEvent e) {
-                try {
-                    final String filterText = e.getDocument().getText(0, e.getDocument().getLength());
-                    table.setFilters(new FilterPipeline(new AllPatternFilter(filterText, Pattern.CASE_INSENSITIVE, table.getColumnCount())));
-                } catch (BadLocationException ex) {
-                    LogUtils.processException(logger, ex);
-                }
-            }
-
         });
+
+
+        Bindings.bind(fieldFilter, delayedReadValueModel);
 
         table.setColumnControlVisible(true);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        Swinger.updateColumn(table, rm.getString("tableEvents.column.start"), EventsTableModel.COLUMN_START_INDEX, 70);
+        Swinger.updateColumn(table, rm.getString("tableEvents.column.title"), EventsTableModel.COLUMN_TITLE_INDEX, 100);
+        Swinger.updateColumn(table, rm.getString("tableEvents.column.end"), EventsTableModel.COLUMN_END_INDEX, 70);
+        Swinger.updateColumn(table, rm.getString("tableEvents.column.category"), EventsTableModel.COLUMN_CATEGORY_INDEX, 70);
+        Swinger.updateColumn(table, rm.getString("tableEvents.column.location"), EventsTableModel.COLUMN_LOCATION_INDEX, 70);
+        Swinger.updateColumn(table, rm.getString("tableEvents.column.status"), EventsTableModel.COLUMN_STATUS_INDEX, 50);
+        Swinger.updateColumn(table, rm.getString("tableEvents.column.calendarName"), EventsTableModel.COLUMN_CALENDAR_NAME_INDEX, 70, null);
+
         table.packAll();
+        initEventHandling();
+        updateFilters(delayedReadValueModel.getString(), table);
 
         panelSearchbar.add(comboBox, new CustomLayoutConstraints(0, 0));
         panelSearchbar.add(labelContain, new CustomLayoutConstraints(1, 0));
@@ -148,6 +148,16 @@ public class EventsListManager {
         panelMain.add(new JScrollPane(table), BorderLayout.CENTER);
 
         return panelMain;
+    }
+
+    private void updateFilters(final String filterText, JXTable table) {
+        if (filterText == null || filterText.isEmpty()) {
+            logger.info("Setting no events filter");
+            table.setFilters(null);
+        } else {
+            logger.info("Setting events filter");
+            table.setFilters(new FilterPipeline(new AllPatternFilter(filterText, Pattern.CASE_INSENSITIVE, table.getColumnCount())));
+        }
     }
 
     /**
@@ -251,6 +261,8 @@ public class EventsListManager {
 
         public Object getValueAt(int rowIndex, int columnIndex) {
             EventTaskEntity entity = getRow(rowIndex);
+            if (entity == null)
+                throw new IllegalStateException("entity in row cannot be null");
             switch (columnIndex) {
                 case COLUMN_START_INDEX:
                     return entity.getStartDate();
@@ -279,5 +291,22 @@ public class EventsListManager {
 
     }
 
+    private void bindCombobox(final JComboBox combobox, final String key, final Object defaultValue, final String propertyResourceMap) {
+        final String[] stringList = getList(propertyResourceMap);
+        if (stringList == null)
+            throw new IllegalArgumentException("Property '" + propertyResourceMap + "' does not provide any string list from resource map.");
+        bindCombobox(combobox, key, defaultValue, stringList);
+    }
 
+    private void bindCombobox(final JComboBox combobox, String key, final Object defaultValue, final String[] values) {
+        if (values == null)
+            throw new IllegalArgumentException("List of combobox values cannot be null!!");
+        final MyPreferencesAdapter adapter = new MyPreferencesAdapter(key, defaultValue);
+        final SelectionInList<String> inList = new SelectionInList<String>(values, new ValueHolder(values[(Integer) adapter.getValue()]), adapter);
+        Bindings.bind(combobox, inList);
+    }
+
+    protected String[] getList(String key) {
+        return (String[]) Swinger.getResourceMap().getObject(key + "_list", String[].class);
+    }
 }
