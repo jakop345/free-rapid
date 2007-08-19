@@ -33,23 +33,16 @@ public class Comment extends DbElement implements PropertyEntity {
      * Method saveOrUpdate
      * @param template
      */
-    public void saveOrUpdate(TimeJugglerJDBCTemplate template) {
+    @Override
+    public void saveOrUpdate(TimeJugglerJDBCTemplate template) throws DatabaseException {
         if (getId() > 0) {
             Object params[] = {comment, componentId, getId()};
             String updateQuery = "UPDATE Comment SET comment=?,calComponentID=? WHERE commentID = ? ";
-            try {
-                template.executeUpdate(updateQuery, params);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+            template.executeUpdate(updateQuery, params);
         } else {
             Object params[] = {comment, componentId};
             String insertQuery = "INSERT INTO Comment (comment,calComponentID) VALUES (?,?)";
-            try {
-                template.executeUpdate(insertQuery, params);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+            template.executeUpdate(insertQuery, params);
             setId(template.getGeneratedId());
         }
     }
@@ -58,15 +51,11 @@ public class Comment extends DbElement implements PropertyEntity {
      * Method delete
      * @param template
      */
-    public void delete(TimeJugglerJDBCTemplate template) {
+    public void delete(TimeJugglerJDBCTemplate template) throws DatabaseException {
         if (getId() > 0) {
             Object params[] = {getId()};
             String deleteQuery = "DELETE FROM Comment WHERE commentID = ?";
-            try {
-                template.executeUpdate(deleteQuery, params);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+            template.executeUpdate(deleteQuery, params);
             setId(-1);
         }
     }
@@ -105,7 +94,7 @@ public class Comment extends DbElement implements PropertyEntity {
      * @param newVal
      */
     public void setValue(String newVal) {
-		comment = newVal;
-	}
+        comment = newVal;
+    }
 
 }

@@ -56,7 +56,8 @@ public class Period extends DbElement {
      * Method saveOrUpdate
      * @param template
      */
-    public void saveOrUpdate(TimeJugglerJDBCTemplate template) {
+    @Override
+    public void saveOrUpdate(TimeJugglerJDBCTemplate template) throws DatabaseException {
         if (duration != null) {
             logger.info("Period: duration != null ");
             duration.saveOrUpdate(template);
@@ -78,11 +79,7 @@ public class Period extends DbElement {
                     (duration == null ? null : duration.getId()), periodsId,
                     (exceptionDates == null ? null : exceptionDates.getId()), getId()};
             String updateQuery = "UPDATE Period SET startDate=?,endDate=?,rrule=?,exrule=?,durationID=?,periodsID=?,distinctDatesID=?) WHERE periodID = ? ";
-            try {
-                template.executeUpdate(updateQuery, params);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+            template.executeUpdate(updateQuery, params);
         } else {
             Object params[] = {startDate, endDate,
                     repetitionRules == null ? null : repetitionRules.getId(),
@@ -90,11 +87,7 @@ public class Period extends DbElement {
                     duration == null ? null : duration.getId(), periodsId,
                     exceptionDates == null ? null : exceptionDates.getId()};
             String insertQuery = "INSERT INTO Period (startDate,endDate,rrule,exrule,durationID,periodsID,distinctDatesID) VALUES (?,?,?,?,?,?,?)";
-            try {
-                template.executeUpdate(insertQuery, params);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+            template.executeUpdate(insertQuery, params);
             setId(template.getGeneratedId());
             logger.info("Period: generated ID:" + getId());
         }
@@ -104,7 +97,7 @@ public class Period extends DbElement {
      * Method delete
      * @param template
      */
-    public void delete(TimeJugglerJDBCTemplate template) {
+    public void delete(TimeJugglerJDBCTemplate template) throws DatabaseException {
         if (repetitionRules != null) repetitionRules.delete(template);
         if (exceptionRules != null) exceptionRules.delete(template);
         if (exceptionDates != null) exceptionDates.delete(template);
@@ -112,11 +105,7 @@ public class Period extends DbElement {
         if (getId() > 0) {
             String deleteQuery = "DELETE FROM Period WHERE periodID = ? ";
             Object params[] = {getId()};
-            try {
-                template.executeUpdate(deleteQuery, params);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+            template.executeUpdate(deleteQuery, params);
             setId(-1);
         }
     }
@@ -205,6 +194,6 @@ public class Period extends DbElement {
 
     public int getExceptionDatesId() {
         return (this.exceptionDatesId);
-	}
+    }
 
 }

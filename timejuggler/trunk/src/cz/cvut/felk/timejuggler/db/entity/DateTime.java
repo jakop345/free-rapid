@@ -43,7 +43,7 @@ public class DateTime extends DbElement implements DateTimeEntity {
      * Method saveOrUpdate
      * @param template Ulozeni casovych udaju do databaze / update udaju
      */
-    public void saveOrUpdate(TimeJugglerJDBCTemplate template) {
+    public void saveOrUpdate(TimeJugglerJDBCTemplate template) throws DatabaseException {
         /* ulozeni presnych datumu */
         if (distinctDates != null) {
             distinctDates.saveOrUpdate(template);
@@ -68,11 +68,9 @@ public class DateTime extends DbElement implements DateTimeEntity {
                     getId()
             };
             String updateQuery = "UPDATE DateTime SET distinctDatesID=?,periodsID=?,created=?,lastmodified=?, startDate=?, endDate=?, durationID=? WHERE dateTimeID = ?";
-            try {
-                template.executeUpdate(updateQuery, params);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+
+            template.executeUpdate(updateQuery, params);
+
         } else {
             //setCreated(new Timestamp(new Date().getTime()));
             logger.info("Database - Insert: DateTime[]...startdate=" + startDate);
@@ -83,11 +81,8 @@ public class DateTime extends DbElement implements DateTimeEntity {
                     (duration == null ? null : duration.getId())
             };
             String insertQuery = "INSERT INTO DateTime (distinctDatesID,periodsID,created,lastmodified,startDate,endDate,durationID ) VALUES (?,?,?,?,?,?,?)";
-            try {
-                template.executeUpdate(insertQuery, params);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+
+            template.executeUpdate(insertQuery, params);
             setId(template.getGeneratedId());
         }
     }
@@ -96,7 +91,7 @@ public class DateTime extends DbElement implements DateTimeEntity {
      * Method delete
      * @param template
      */
-    public void delete(TimeJugglerJDBCTemplate template) {
+    public void delete(TimeJugglerJDBCTemplate template) throws DatabaseException {
         if (distinctDates != null) {
             distinctDates.delete(template);
         }
@@ -107,11 +102,7 @@ public class DateTime extends DbElement implements DateTimeEntity {
         if (getId() > 0) {
             String deleteQuery = "DELETE FROM DateTime WHERE dateTimeID = ? ";
             Object params[] = {getId()};
-            try {
-                template.executeUpdate(deleteQuery, params);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+            template.executeUpdate(deleteQuery, params);
             setId(-1);
         }
     }
@@ -147,7 +138,7 @@ public class DateTime extends DbElement implements DateTimeEntity {
         return (this.lastModified == null ? null : new Date(lastModified.getTime()));
     }
 
-    public Periods getPeriods() {
+    public Periods getPeriods() throws DatabaseException {
         // TODO: SELECT .. JOIN - Duration
         String sql = "SELECT * FROM Period WHERE periodsID = ?";
         Object params[] = {periodsId};
@@ -169,11 +160,7 @@ public class DateTime extends DbElement implements DateTimeEntity {
                 items.addPeriod(period);
             }
         };
-        try {
-            template.executeQuery(sql, params);
-        } catch (DatabaseException e) {
-            e.printStackTrace();
-        }
+        template.executeQuery(sql, params);
         return template.getItems();
     }
 
@@ -231,8 +218,7 @@ public class DateTime extends DbElement implements DateTimeEntity {
 
     public int getDistinctDatesId() {
         return (this.distinctDatesId);
-	}
-
+    }
 
 
 }

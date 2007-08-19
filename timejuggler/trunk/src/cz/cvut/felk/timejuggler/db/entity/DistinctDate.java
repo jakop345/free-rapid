@@ -31,23 +31,16 @@ public class DistinctDate extends DbElement {
      * Method saveOrUpdate
      * @param template
      */
-    public void saveOrUpdate(TimeJugglerJDBCTemplate template) {
+    @Override
+    public void saveOrUpdate(TimeJugglerJDBCTemplate template) throws DatabaseException {
         if (getId() > 0) {
             Object params[] = {date, distinctDatesId, getId()};
             String updateQuery = "UPDATE DistinctDate SET Date=?,distinctDatesID=?) WHERE distinctDateID = ? ";
-            try {
-                template.executeUpdate(updateQuery, params);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+            template.executeUpdate(updateQuery, params);
         } else {
             Object params[] = {date, distinctDatesId};
             String insertQuery = "INSERT INTO DistinctDate (Date,distinctDatesID) VALUES (?,?) ";
-            try {
-                template.executeUpdate(insertQuery, params);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+            template.executeUpdate(insertQuery, params);
             setId(template.getGeneratedId());
         }
     }
@@ -56,15 +49,11 @@ public class DistinctDate extends DbElement {
      * Method delete
      * @param template
      */
-    public void delete(TimeJugglerJDBCTemplate template) {
+    public void delete(TimeJugglerJDBCTemplate template) throws DatabaseException {
         if (getId() > 0) {
             String deleteQuery = "DELETE FROM DistinctDate WHERE distinctDateID = ? ";
             Object params[] = {getId()};
-            try {
-                template.executeUpdate(deleteQuery, params);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+            template.executeUpdate(deleteQuery, params);
             setId(-1);
         }
     }
@@ -87,6 +76,6 @@ public class DistinctDate extends DbElement {
 
     public int getDistinctDatesId() {
         return (this.distinctDatesId);
-	}
+    }
 
 }

@@ -35,23 +35,17 @@ public class Duration extends DbElement {
      * Method saveOrUpdate
      * @param template Ulozeni do databaze, nebo update
      */
-    public void saveOrUpdate(TimeJugglerJDBCTemplate template) {
+    @Override
+    public void saveOrUpdate(TimeJugglerJDBCTemplate template) throws DatabaseException {
         if (getId() > 0) {
             Object params[] = {(negative ? 1 : 0), days, weeks, hours, minutes, seconds, getId()};
             String updateQuery = "UPDATE Duration SET negative=?,days=?,weeks=?,hours=?,minutes=?,seconds=? WHERE durationID = ? ";
-            try {
-                template.executeUpdate(updateQuery, params);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+
+            template.executeUpdate(updateQuery, params);
         } else {
             Object params[] = {(negative ? 1 : 0), days, weeks, hours, minutes, seconds};
             String insertQuery = "INSERT INTO Duration (negative,days,weeks,hours,minutes,seconds) VALUES (?,?,?,?,?,?) ";
-            try {
-                template.executeUpdate(insertQuery, params);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+            template.executeUpdate(insertQuery, params);
             setId(template.getGeneratedId());
             logger.info("Duration: generated ID:" + getId());
         }
@@ -62,15 +56,11 @@ public class Duration extends DbElement {
      * Method delete
      * @param template
      */
-    public void delete(TimeJugglerJDBCTemplate template) {
+    public void delete(TimeJugglerJDBCTemplate template) throws DatabaseException {
         if (getId() > 0) {
             String deleteQuery = "DELETE FROM Duration WHERE durationID = ? ";
             Object params[] = {getId()};
-            try {
-                template.executeUpdate(deleteQuery, params);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+            template.executeUpdate(deleteQuery, params);
             setId(-1);
         }
     }
@@ -121,6 +111,6 @@ public class Duration extends DbElement {
 
     public int getSeconds() {
         return (this.seconds);
-	}
+    }
 
 }

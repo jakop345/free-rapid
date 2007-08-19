@@ -97,7 +97,7 @@ public class ConnectionManager {
             }
             catch (SQLException ex) {
                 if (ex.getSQLState().equals("XJ015")) {
-                    gotSQLExc = true;    // uspesne ukonceni databaze
+                    gotSQLExc = true;    // uspesne ukonceni databaze - viz http://db.apache.org/derby/docs/dev/getstart/rwwdactivity3.html
                 } else {
                     LogUtils.processException(logger, ex);
                 }

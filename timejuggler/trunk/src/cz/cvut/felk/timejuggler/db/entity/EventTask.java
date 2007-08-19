@@ -70,19 +70,11 @@ public class EventTask extends CalComponent implements Comparable<EventTaskEntit
             if (getId() > 0) {
                 logger.info("Database - Update: VEvent[" + getId() + "]...");
                 Object params[] = {getComponentId(), geoGPS, location, priority, transparency, getId()};
-                try {
-                    template.executeUpdate(updateQuery, params);
-                } catch (DatabaseException e) {
-                    e.printStackTrace();
-                }
+                template.executeUpdate(updateQuery, params);
             } else {
                 logger.info("Database - Insert: VEvent[]...");
                 Object params[] = {getComponentId(), geoGPS, location, priority, transparency};
-                try {
-                    template.executeUpdate(insertQuery, params);
-                } catch (DatabaseException e) {
-                    e.printStackTrace();
-                }
+                template.executeUpdate(insertQuery, params);
                 setId(template.getGeneratedId());
                 logger.info("Database - VEvent new ID=" + getId());
             }
@@ -93,19 +85,11 @@ public class EventTask extends CalComponent implements Comparable<EventTaskEntit
             if (getId() > 0) {
                 logger.info("Database - Update: VToDo[" + getId() + "]...");
                 Object params[] = {getComponentId(), geoGPS, location, priority, percentcomplete, getId()};
-                try {
-                    template.executeUpdate(updateQuery, params);
-                } catch (DatabaseException e) {
-                    e.printStackTrace();
-                }
+                template.executeUpdate(updateQuery, params);
             } else {
                 logger.info("Database - Insert: VToDo[]...");
                 Object params[] = {getComponentId(), geoGPS, location, priority, percentcomplete};
-                try {
-                    template.executeUpdate(insertQuery, params);
-                } catch (DatabaseException e) {
-                    e.printStackTrace();
-                }
+                template.executeUpdate(insertQuery, params);
                 setId(template.getGeneratedId());
                 logger.info("Database - VToDo new ID=" + getId());
             }
@@ -116,7 +100,7 @@ public class EventTask extends CalComponent implements Comparable<EventTaskEntit
      * Method delete
      * @param template Ostraneni komponenty z databaze
      */
-    public void delete(TimeJugglerJDBCTemplate template) {
+    public void delete(TimeJugglerJDBCTemplate template) throws DatabaseException {
         String deleteQuery;
         if (!isTodo) {
             deleteQuery = "DELETE FROM VEvent WHERE vEventID = ?";
@@ -125,11 +109,7 @@ public class EventTask extends CalComponent implements Comparable<EventTaskEntit
         }
         if (getId() > 0) {
             Object params[] = {getId()};
-            try {
-                template.executeUpdate(deleteQuery, params);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+            template.executeUpdate(deleteQuery, params);
             super.delete(template);
             setId(-1);
         }
@@ -267,7 +247,9 @@ public class EventTask extends CalComponent implements Comparable<EventTaskEntit
         return clone;
     }
 
+    @Override
+
     public String toString() {
         return getSummary();
-	}
+    }
 }

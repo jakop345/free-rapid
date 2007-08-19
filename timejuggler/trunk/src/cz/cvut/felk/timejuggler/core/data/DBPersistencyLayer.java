@@ -31,7 +31,6 @@ class DBPersistencyLayer implements PersistencyLayer {
     }
 
     public void init() throws PersistencyLayerException {
-        //TODO: kod pro inicializaci databaze - Presunout
         DbHelper dbHelper = DbHelper.getInstance();
         if (!dbHelper.isDatabasePresent()) {
             try {
@@ -62,7 +61,7 @@ class DBPersistencyLayer implements PersistencyLayer {
         for (VCalendarEntity calendarEntity : list) {
             if (calendarEntity.isActive()) {
                 final List<EventTaskEntity> calendarEvents = dbStore.getEventsByCalendar((VCalendar) calendarEntity);
-                if (calendarEvents != null) //TODO opravit na neposilani null!!
+                if (calendarEvents != null)
                     events.addAll(calendarEvents);
             }
         }
@@ -85,7 +84,7 @@ class DBPersistencyLayer implements PersistencyLayer {
         try {
             dbStore.saveOrUpdate((VCalendar) calendar);
         } catch (DatabaseException e) {
-            throw new PersistencyLayerException("Error during save or update Calendar", e);
+            throw new PersistencyLayerException(e);
         }
     }
 
@@ -93,7 +92,7 @@ class DBPersistencyLayer implements PersistencyLayer {
         try {
             dbStore.saveOrUpdate((Category) category);
         } catch (DatabaseException e) {
-            throw new PersistencyLayerException("Error during save or update Category", e);
+            throw new PersistencyLayerException(e);
         }
     }
 
@@ -101,7 +100,7 @@ class DBPersistencyLayer implements PersistencyLayer {
         try {
             dbStore.saveOrUpdate((EventTask) event);
         } catch (DatabaseException e) {
-            throw new PersistencyLayerException("Error during save or update Event Task", e);
+            throw new PersistencyLayerException(e);
         }
     }
 
@@ -117,7 +116,7 @@ class DBPersistencyLayer implements PersistencyLayer {
         try {
             dbStore.delete((Category) categoryEntity);
         } catch (DatabaseException e) {
-            throw new PersistencyLayerException("Error during removing Category", e);
+            throw new PersistencyLayerException(e);
         }
     }
 
@@ -137,7 +136,7 @@ class DBPersistencyLayer implements PersistencyLayer {
         try {
             dbStore.delete((VCalendar) calendarEntity);
         } catch (DatabaseException e) {
-            throw new PersistencyLayerException("Error during removing Calendar", e);
+            throw new PersistencyLayerException(e);
         }
     }
 
@@ -145,7 +144,7 @@ class DBPersistencyLayer implements PersistencyLayer {
         try {
             dbStore.delete((EventTask) eventEntity);
         } catch (DatabaseException e) {
-            throw new PersistencyLayerException("Error during removing Event Task", e);
+            throw new PersistencyLayerException(e);
         }
     }
 }

@@ -72,20 +72,14 @@ public class Category extends DbElement implements Comparable<CategoryEntity>, C
             logger.info("Database - Update: Category[" + getId() + "]:" + name + "...");
             Object params[] = {name, color == null ? null : color.getRGB(), getId()};
             String updateQuery = "UPDATE Category SET name=?,color=? WHERE categoryID = ? ";
-            try {
-                template.executeUpdate(updateQuery, params);
-            } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
-                e.printStackTrace();
-            }
+
+            template.executeUpdate(updateQuery, params);
         } else {
             logger.info("Database - Insert: Category[]:" + name + "...");
             Object params[] = {name, color == null ? null : color.getRGB()};
             String insertQuery = "INSERT INTO Category (name,color) VALUES (?,?) ";
-            try {
-                template.executeUpdate(insertQuery, params);
-            } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
-                e.printStackTrace();
-            }
+
+            template.executeUpdate(insertQuery, params);
             setId(template.getGeneratedId());
         }
         super.saveOrUpdate(template);//nastaveni changed na false
@@ -95,15 +89,12 @@ public class Category extends DbElement implements Comparable<CategoryEntity>, C
      * Method delete
      * @param template
      */
-    public void delete(TimeJugglerJDBCTemplate template) {
+    public void delete(TimeJugglerJDBCTemplate template) throws DatabaseException {
         if (isAssigned()) {
             Object params[] = {getId()};
             String deleteQuery = "DELETE FROM Category WHERE categoryID = ? ";
-            try {
-                template.executeUpdate(deleteQuery, params);
-            } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
-                e.printStackTrace();
-            }
+
+            template.executeUpdate(deleteQuery, params);
             setId(-1);
         }
     }

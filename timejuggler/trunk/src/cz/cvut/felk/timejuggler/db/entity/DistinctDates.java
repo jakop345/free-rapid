@@ -31,17 +31,14 @@ public class DistinctDates extends DbElement implements Iterable, DistinctDatesE
      * Method saveOrUpdate
      * @param template
      */
-    public void saveOrUpdate(TimeJugglerJDBCTemplate template) {
+    @Override
+    public void saveOrUpdate(TimeJugglerJDBCTemplate template) throws DatabaseException {
         if (getId() > 0) {
             //bez Update
         } else {
             logger.info("Database - Insert: DistinctDates[]...");
             String insertQuery = "INSERT INTO DistinctDates (distinctDatesID) VALUES (DEFAULT)";
-            try {
-                template.executeUpdate(insertQuery, null);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+            template.executeUpdate(insertQuery, null);
             setId(template.getGeneratedId());
         }
 
@@ -55,18 +52,14 @@ public class DistinctDates extends DbElement implements Iterable, DistinctDatesE
      * Method delete
      * @param template
      */
-    public void delete(TimeJugglerJDBCTemplate template) {
+    public void delete(TimeJugglerJDBCTemplate template) throws DatabaseException {
         for (DistinctDate date : distinctDates) {
             date.delete(template);
         }
         if (getId() > 0) {
             String deleteQuery = "DELETE FROM DistinctDates WHERE distinctDatesID = ? ";
             Object params[] = {getId()};
-            try {
-                template.executeUpdate(deleteQuery, params);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+            template.executeUpdate(deleteQuery, params);
             setId(-1);
         }
     }
@@ -95,7 +88,7 @@ public class DistinctDates extends DbElement implements Iterable, DistinctDatesE
      * Method addDistinctDate
      */
     public void addDistinctDate(DistinctDate date) {
-		distinctDates.add(date);
-	}
+        distinctDates.add(date);
+    }
 
 }

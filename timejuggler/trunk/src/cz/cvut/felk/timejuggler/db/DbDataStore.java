@@ -39,7 +39,7 @@ public class DbDataStore {
      * Method main
      * @param args
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws DatabaseException {
         DbDataStore db = new DbDataStore();
         // Testing
         //importTest();
@@ -124,7 +124,7 @@ public class DbDataStore {
      * Method showDB
      * @param Pro vypis obsahu DB
      */
-    public void showDB() {
+    public void showDB() throws DatabaseException {
         List<VCalendarEntity> cals = getCalendars();
 
         for (VCalendarEntity cal : cals) {
@@ -189,7 +189,7 @@ public class DbDataStore {
      * Method getCalendars
      * @return
      */
-    public List<VCalendarEntity> getCalendars() {
+    public List<VCalendarEntity> getCalendars() throws DatabaseException {
         String sql = "SELECT * FROM VCalendar";
         TimeJugglerJDBCTemplate<List<VCalendarEntity>> template = new TimeJugglerJDBCTemplate<List<VCalendarEntity>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
@@ -205,11 +205,7 @@ public class DbDataStore {
                 items.add(cal);
             }
         };
-        try {
-            template.executeQuery(sql, null);
-        } catch (DatabaseException e) {
-            e.printStackTrace();
-        }
+        template.executeQuery(sql, null);
         return template.getItems() == null ? new ArrayList<VCalendarEntity>() : template.getItems();
     }
 
@@ -217,7 +213,7 @@ public class DbDataStore {
      * Method getCategories
      * @return
      */
-    public List<CategoryEntity> getCategories() {
+    public List<CategoryEntity> getCategories() throws DatabaseException {
         String sql = "SELECT DISTINCT * FROM Category";
         TimeJugglerJDBCTemplate<List<CategoryEntity>> template = new TimeJugglerJDBCTemplate<List<CategoryEntity>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
@@ -230,11 +226,7 @@ public class DbDataStore {
                 items.add(cat);
             }
         };
-        try {
-            template.executeQuery(sql, null);
-        } catch (DatabaseException e) {
-            e.printStackTrace();
-        }
+        template.executeQuery(sql, null);
         return template.getItems() == null ? new ArrayList<CategoryEntity>() : template.getItems();
     }
 
@@ -252,7 +244,7 @@ public class DbDataStore {
      * Method getEventsByCalendar
      * @return Vraci vsechny udalosti typu Event v danem kalendari
      */
-    public List<EventTaskEntity> getEventsByCalendar(VCalendar cal) {
+    public List<EventTaskEntity> getEventsByCalendar(VCalendar cal) throws DatabaseException {
         String sql = "SELECT * FROM VEvent,CalComponent,DateTime WHERE (VEvent.calComponentID = CalComponent.calComponentID AND CalComponent.vCalendarID=? AND CalComponent.dateTimeID=DateTime.dateTimeID)";
         Object params[] = {cal.getId()};
         TimeJugglerJDBCTemplate<List<EventTaskEntity>> template = new TimeJugglerJDBCTemplate<List<EventTaskEntity>>() {
@@ -297,11 +289,7 @@ public class DbDataStore {
                 items.add(event);
             }
         };
-        try {
-            template.executeQuery(sql, params);
-        } catch (DatabaseException e) {
-            e.printStackTrace();
-        }
+        template.executeQuery(sql, params);
         return template.getItems() == null ? new ArrayList<EventTaskEntity>() : template.getItems();
     }
 
@@ -309,7 +297,7 @@ public class DbDataStore {
      * Method getToDosByCalendar
      * @return Vraci vsechny ukoly v danem kalendari
      */
-    public List<EventTaskEntity> getToDosByCalendar(VCalendar cal) {
+    public List<EventTaskEntity> getToDosByCalendar(VCalendar cal) throws DatabaseException {
         String sql = "SELECT * FROM VToDo,CalComponent,DateTime WHERE (VToDo.calComponentID = CalComponent.calComponentID AND CalComponent.vCalendarID=? AND CalComponent.dateTimeID=DateTime.dateTimeID)";
         Object params[] = {cal.getId()};
         TimeJugglerJDBCTemplate<List<EventTaskEntity>> template = new TimeJugglerJDBCTemplate<List<EventTaskEntity>>() {
@@ -354,11 +342,7 @@ public class DbDataStore {
                 items.add(todo);
             }
         };
-        try {
-            template.executeQuery(sql, params);
-        } catch (DatabaseException e) {
-            e.printStackTrace();
-        }
+        template.executeQuery(sql, params);
         return template.getItems() == null ? new ArrayList<EventTaskEntity>() : template.getItems();
     }
 
@@ -660,7 +644,7 @@ public class DbDataStore {
      * @throws ValidationException Chyba - Nevalidni ical
      * @throws IOException         Chyba IO pri zapisu
      */
-    public void exportICS(VCalendar calendar, File outputFile) throws URISyntaxException, ValidationException, IOException {
+    public void exportICS(VCalendar calendar, File outputFile) throws URISyntaxException, ValidationException, IOException, DatabaseException {
         logger.info("Exporting calendar to file " + outputFile.getPath() + "...");
         // TODO: Period property
         // Funkcni - castecne exportuje Eventy

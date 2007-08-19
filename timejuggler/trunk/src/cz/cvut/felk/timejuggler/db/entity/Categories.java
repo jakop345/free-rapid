@@ -1,5 +1,6 @@
 package cz.cvut.felk.timejuggler.db.entity;
 
+import cz.cvut.felk.timejuggler.db.DatabaseException;
 import cz.cvut.felk.timejuggler.db.TimeJugglerJDBCTemplate;
 
 import java.util.ArrayList;
@@ -31,7 +32,8 @@ public class Categories extends DbElement {
      * Method saveOrUpdate
      * @param template
      */
-    public void saveOrUpdate(TimeJugglerJDBCTemplate template) {
+    @Override
+    public void saveOrUpdate(TimeJugglerJDBCTemplate template) throws DatabaseException {
 
         if (getId() > 0) {
 
@@ -48,11 +50,7 @@ public class Categories extends DbElement {
             String insertQuery = "INSERT INTO Categories (categoryID,calComponentID) VALUES (?,?) ";
             for (Category c : categories) {
                 Object params[] = {c.getId(), componentId};
-                try {
-                    template.executeUpdate(insertQuery, params);
-                } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
-                    e.printStackTrace();
-                }
+                template.executeUpdate(insertQuery, params);
                 /*setId(template.getGeneratedId());*/
             }
         }
@@ -62,15 +60,11 @@ public class Categories extends DbElement {
      * Method delete
      * @param template
      */
-    public void delete(TimeJugglerJDBCTemplate template) {
+    public void delete(TimeJugglerJDBCTemplate template) throws DatabaseException {
         if (componentId > 0) {
             Object params[] = {componentId};
             String deleteQuery = "DELETE FROM Categories WHERE calComponentID = ? ";
-            try {
-                template.executeUpdate(deleteQuery, params);
-            } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
-                e.printStackTrace();
-            }
+            template.executeUpdate(deleteQuery, params);
             setComponentId(-1);
         }
     }

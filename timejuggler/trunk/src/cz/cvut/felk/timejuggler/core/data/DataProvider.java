@@ -64,7 +64,12 @@ public class DataProvider {
                 getPersitencyLayer().saveOrUpdateCategory(item);
             }
         }
-        categoriesListModel.clear();//smaze vsechny kategorie v globalnim seznamu
+        resetCategories();
+        //TODO update eventu, kterych se ty kategorie tykaji
+    }
+
+    private void resetCategories() throws PersistencyLayerException {
+        categories.clear();//smaze vsechny kategorie v globalnim seznamu
         categoriesInit = false;
         getCategoriesListModel();
     }

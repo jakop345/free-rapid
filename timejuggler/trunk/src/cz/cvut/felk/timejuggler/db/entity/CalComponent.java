@@ -268,11 +268,10 @@ public class CalComponent extends DbElement {
                     description, organizer, sequence,
                     status, summary, dtstamp, getComponentId()};
             String updateQuery = "UPDATE CalComponent SET dateTimeID=?,uid=?,vCalendarID=?,url=?,clazz=?,description=?,organizer=?,sequence=?,status=?,summary=?,dtstamp=?) WHERE calComponentID = ? ";
-            try {
-                template.executeUpdate(updateQuery, params);
-            } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
-                e.printStackTrace();
-            }
+
+            template.executeUpdate(updateQuery, params);
+
+
         } else {
             if (alarms != null) {
                 for (VAlarm alarm : alarms) {
@@ -287,11 +286,9 @@ public class CalComponent extends DbElement {
                     status, summary, new Timestamp(System.currentTimeMillis())
             };
             String insertQuery = "INSERT INTO CalComponent (dateTimeID,uid,vCalendarID,url,clazz,description,organizer,sequence,status,summary,dtstamp) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
-            try {
-                template.executeUpdate(insertQuery, params);
-            } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
-                e.printStackTrace();
-            }
+
+            template.executeUpdate(insertQuery, params);
+
             setComponentId(template.getGeneratedId());
             logger.info("Database - CalComponent new ID=" + getComponentId() + " dtstamp=" + new Timestamp(System.currentTimeMillis()));
         }
@@ -320,7 +317,7 @@ public class CalComponent extends DbElement {
      * Method delete
      * @param template
      */
-    public void delete(TimeJugglerJDBCTemplate template) {
+    public void delete(TimeJugglerJDBCTemplate template) throws DatabaseException {
         if (componentId > 0) {
             if (dateTime != null) {
                 dateTime.delete(template);
@@ -332,18 +329,15 @@ public class CalComponent extends DbElement {
             }
             /* nesmaze kategorie prirazene k eventu, pouze propojovaci tabulku */
             if (_categories != null) {
-            	_categories.delete(template);
-            }         
-            
+                _categories.delete(template);
+            }
+
             logger.info("Database - DELETE: CalComponent[" + componentId + "]...");
             String deleteQuery = "DELETE FROM CalComponent WHERE calComponentID = ?";
             Object params[] = {componentId};
-            try {
-                template.executeUpdate(deleteQuery, params);
-            } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
-                e.printStackTrace();
-            }
-            
+
+            template.executeUpdate(deleteQuery, params);
+
         }
         setComponentId(-1);
     }
@@ -352,7 +346,7 @@ public class CalComponent extends DbElement {
      * Method getAttachments
      * @return
      */
-    public List<Attachment> getAttachments() {
+    public List<Attachment> getAttachments() throws DatabaseException {
         String sql = "SELECT * FROM Attachment WHERE calComponentID = ?";
         Object params[] = {getComponentId()};
         TimeJugglerJDBCTemplate<List<Attachment>> template = new TimeJugglerJDBCTemplate<List<Attachment>>() {
@@ -364,11 +358,9 @@ public class CalComponent extends DbElement {
                 items.add(attach);
             }
         };
-        try {
-            template.executeQuery(sql, params);
-        } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
-            e.printStackTrace();
-        }
+
+        template.executeQuery(sql, params);
+
         return template.getItems();
     }
 
@@ -385,7 +377,7 @@ public class CalComponent extends DbElement {
      * Method getCategories
      * @return
      */
-    public List<Category> getCategories() {
+    public List<Category> getCategories() throws DatabaseException {
         String sql = "SELECT * FROM Category,Categories WHERE Categories.calComponentID=? AND Categories.CategoryId=Category.CategoryId ";
         Object params[] = {getComponentId()};
         TimeJugglerJDBCTemplate<List<Category>> template = new TimeJugglerJDBCTemplate<List<Category>>() {
@@ -398,11 +390,9 @@ public class CalComponent extends DbElement {
                 items.add(c);
             }
         };
-        try {
-            template.executeQuery(sql, params);
-        } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
-            e.printStackTrace();
-        }
+
+        template.executeQuery(sql, params);
+
         return template.getItems() == null ? new ArrayList<Category>() : template.getItems();
     }
 
@@ -428,7 +418,7 @@ public class CalComponent extends DbElement {
      * Method getComments
      * @return
      */
-    public List<Comment> getComments() {
+    public List<Comment> getComments() throws DatabaseException {
         String sql = "SELECT * FROM Comment WHERE calComponentID = ?";
         Object params[] = {getComponentId()};
         TimeJugglerJDBCTemplate<List<Comment>> template = new TimeJugglerJDBCTemplate<List<Comment>>() {
@@ -437,11 +427,9 @@ public class CalComponent extends DbElement {
                 items.add(new Comment(rs.getString("comment")));
             }
         };
-        try {
-            template.executeQuery(sql, params);
-        } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
-            e.printStackTrace();
-        }
+
+        template.executeQuery(sql, params);
+
         return template.getItems();
     }
 
@@ -449,7 +437,7 @@ public class CalComponent extends DbElement {
      * Method getContacts
      * @return
      */
-    public List<Contact> getContacts() {
+    public List<Contact> getContacts() throws DatabaseException {
         String sql = "SELECT * FROM Contact WHERE calComponentID = ?";
         Object params[] = {getComponentId()};
         TimeJugglerJDBCTemplate<List<Contact>> template = new TimeJugglerJDBCTemplate<List<Contact>>() {
@@ -458,11 +446,9 @@ public class CalComponent extends DbElement {
                 items.add(new Contact(rs.getString("contact")));
             }
         };
-        try {
-            template.executeQuery(sql, params);
-        } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
-            e.printStackTrace();
-        }
+
+        template.executeQuery(sql, params);
+
         return template.getItems();
     }
 
@@ -470,7 +456,7 @@ public class CalComponent extends DbElement {
      * Method getRelatedTo
      * @return
      */
-    public List<RelatedTo> getRelatedTo() {
+    public List<RelatedTo> getRelatedTo() throws DatabaseException {
         String sql = "SELECT * FROM RelatedTo WHERE calComponentID = ?";
         Object params[] = {getComponentId()};
         TimeJugglerJDBCTemplate<List<RelatedTo>> template = new TimeJugglerJDBCTemplate<List<RelatedTo>>() {
@@ -479,11 +465,9 @@ public class CalComponent extends DbElement {
                 items.add(new RelatedTo(rs.getString("relatedto")));
             }
         };
-        try {
-            template.executeQuery(sql, params);
-        } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
-            e.printStackTrace();
-        }
+
+        template.executeQuery(sql, params);
+
         return template.getItems();
     }
 
@@ -491,7 +475,7 @@ public class CalComponent extends DbElement {
      * Method getRequestStatuses
      * @return
      */
-    public List<RequestStatus> getRequestStatuses() {
+    public List<RequestStatus> getRequestStatuses() throws DatabaseException {
         String sql = "SELECT * FROM RequestStatus WHERE calComponentID = ? ";
         Object params[] = {getComponentId()};
         TimeJugglerJDBCTemplate<List<RequestStatus>> template = new TimeJugglerJDBCTemplate<List<RequestStatus>>() {
@@ -500,11 +484,9 @@ public class CalComponent extends DbElement {
                 items.add(new RequestStatus(rs.getString("rstatus")));
             }
         };
-        try {
-            template.executeQuery(sql, params);
-        } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
-            e.printStackTrace();
-        }
+
+        template.executeQuery(sql, params);
+
         return template.getItems();
     }
 
@@ -512,7 +494,7 @@ public class CalComponent extends DbElement {
      * Method getResources
      * @return
      */
-    public List<Resource> getResources() {
+    public List<Resource> getResources() throws DatabaseException {
         String sql = "SELECT * FROM Resource WHERE calComponentID = ?";
         Object params[] = {getComponentId()};
         TimeJugglerJDBCTemplate<List<Resource>> template = new TimeJugglerJDBCTemplate<List<Resource>>() {
@@ -521,11 +503,9 @@ public class CalComponent extends DbElement {
                 items.add(new Resource(rs.getString("resource")));
             }
         };
-        try {
-            template.executeQuery(sql, params);
-        } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
-            e.printStackTrace();
-        }
+
+        template.executeQuery(sql, params);
+
         return template.getItems();
     }
 
@@ -557,7 +537,7 @@ public class CalComponent extends DbElement {
         return (dateTime.getLastModified());
     }
 
-    public Periods getPeriods() {
+    public Periods getPeriods() throws DatabaseException {
         return (dateTime.getPeriods());
     }
 

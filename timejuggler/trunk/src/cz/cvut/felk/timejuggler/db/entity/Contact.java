@@ -34,18 +34,14 @@ public class Contact extends DbElement implements PropertyEntity {
      * @param template
      */
 
-    public void saveOrUpdate(TimeJugglerJDBCTemplate template) {
+    public void saveOrUpdate(TimeJugglerJDBCTemplate template) throws DatabaseException {
         if (getId() > 0) {
             Object params[] = {contact, componentId, getId()};
             String insertQuery = "UPDATE Contact SET contact=?,calComponentID=? WHERE contactID = ?";
         } else {
             Object params[] = {contact, componentId};
             String insertQuery = "INSERT INTO Contact (contact,calComponentID) VALUES (?,?)";
-            try {
-                template.executeUpdate(insertQuery, params);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+            template.executeUpdate(insertQuery, params);
             setId(template.getGeneratedId());
         }
     }
@@ -54,15 +50,11 @@ public class Contact extends DbElement implements PropertyEntity {
      * Method delete
      * @param template
      */
-    public void delete(TimeJugglerJDBCTemplate template) {
+    public void delete(TimeJugglerJDBCTemplate template) throws DatabaseException {
         if (getId() > 0) {
             Object params[] = {getId()};
             String deleteQuery = "DELETE FROM Contact WHERE contactID = ?";
-            try {
-                template.executeUpdate(deleteQuery, params);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+            template.executeUpdate(deleteQuery, params);
             setId(-1);
         }
     }
@@ -101,7 +93,7 @@ public class Contact extends DbElement implements PropertyEntity {
      * @param newVal
      */
     public void setValue(String newVal) {
-		contact = newVal;
-	}
+        contact = newVal;
+    }
 
 }
