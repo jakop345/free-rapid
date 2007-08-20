@@ -32,23 +32,16 @@ public class RelatedTo extends DbElement implements PropertyEntity {
      * Method saveOrUpdate
      * @param template
      */
-    public void saveOrUpdate(TimeJugglerJDBCTemplate template) {
+    @Override
+    public void saveOrUpdate(TimeJugglerJDBCTemplate template)  throws DatabaseException  {
         if (getId() > 0) {
             Object params[] = {relatedto, componentId, getId()};
             String updateQuery = "UPDATE RelatedTo SET relatedto=?,calComponentID=? WHERE relatedToID =? ";
-            try {
-                template.executeUpdate(updateQuery, params);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+            template.executeUpdate(updateQuery, params);
         } else {
             Object params[] = {relatedto, componentId};
             String insertQuery = "INSERT INTO RelatedTo (relatedto,calComponentID) VALUES (?,?) ";
-            try {
-                template.executeUpdate(insertQuery, params);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+            template.executeUpdate(insertQuery, params);
             setId(template.getGeneratedId());
         }
     }
@@ -57,15 +50,11 @@ public class RelatedTo extends DbElement implements PropertyEntity {
      * Method delete
      * @param template
      */
-    public void delete(TimeJugglerJDBCTemplate template) {
+    public void delete(TimeJugglerJDBCTemplate template)  throws DatabaseException {
         if (getId() > 0) {
             Object params[] = {getId()};
             String deleteQuery = "DELETE FROM RelatedTo WHERE relatedToID = ?";
-            try {
-                template.executeUpdate(deleteQuery, params);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+            template.executeUpdate(deleteQuery, params);
             setId(-1);
         }
     }

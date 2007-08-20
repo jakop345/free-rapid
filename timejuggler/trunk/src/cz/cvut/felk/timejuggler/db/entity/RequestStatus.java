@@ -30,23 +30,16 @@ public class RequestStatus extends DbElement {
      * Method saveOrUpdate
      * @param template
      */
-    public void saveOrUpdate(TimeJugglerJDBCTemplate template) {
+    @Override
+    public void saveOrUpdate(TimeJugglerJDBCTemplate template) throws DatabaseException {
         if (getId() > 0) {
             Object params[] = {rstatus, componentId, getId()};
             String updateQuery = "UPDATE RequestStatus SET rstatus=?,calComponentID=? WHERE requestStatusID = ? ";
-            try {
-                template.executeUpdate(updateQuery, params);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+            template.executeUpdate(updateQuery, params);
         } else {
             Object params[] = {rstatus, componentId};
             String insertQuery = "INSERT INTO RequestStatus (rstatus,calComponentID) VALUES (?,?) ";
-            try {
-                template.executeUpdate(insertQuery, params);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+            template.executeUpdate(insertQuery, params);
             setId(template.getGeneratedId());
         }
     }
@@ -55,15 +48,11 @@ public class RequestStatus extends DbElement {
      * Method delete
      * @param template
      */
-    public void delete(TimeJugglerJDBCTemplate template) {
+    public void delete(TimeJugglerJDBCTemplate template) throws DatabaseException {
         if (getId() > 0) {
             Object params[] = {getId()};
             String deleteQuery = "DELETE FROM RequestStatus WHERE requestStatusID = ?";
-            try {
-                template.executeUpdate(deleteQuery, params);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+            template.executeUpdate(deleteQuery, params);
             setId(-1);
         }
     }

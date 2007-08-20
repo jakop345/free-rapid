@@ -38,11 +38,7 @@ public class VEvent extends CalComponent {
                     getComponentId(), geoGPS,
                     location, priority, transparency, getId()};
             String updateQuery = "UPDATE VEvent SET calComponentID=?,geo=?,location=?,priority=?,transp=?) WHERE vEventID = ? ";
-            try {
-                template.executeUpdate(updateQuery, params);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+            template.executeUpdate(updateQuery, params);
         } else {
             logger.info("Database - Insert: VEvent[]...");
             Object params[] = {
@@ -50,11 +46,7 @@ public class VEvent extends CalComponent {
                     location, priority, transparency
             };
             String insertQuery = "INSERT INTO VEvent (calComponentID,geo,location,priority,transp) VALUES (?,?,?,?,?) ";
-            try {
-                template.executeUpdate(insertQuery, params);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+            template.executeUpdate(insertQuery, params);
             setId(template.getGeneratedId());
             logger.info("Database - VEvent new ID=" + getId());
         }
@@ -64,15 +56,11 @@ public class VEvent extends CalComponent {
      * Method delete
      * @param template
      */
-    public void delete(TimeJugglerJDBCTemplate template) {
+    public void delete(TimeJugglerJDBCTemplate template) throws DatabaseException {
         if (getId() > 0) {
             Object params[] = {getId()};
             String deleteQuery = "DELETE FROM VEvent WHERE vEventID = ?";
-            try {
-                template.executeUpdate(deleteQuery, params);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+            template.executeUpdate(deleteQuery, params);
             setId(-1);
             super.delete(template);
         }

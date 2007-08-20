@@ -30,17 +30,14 @@ public class Periods extends DbElement implements Iterable<Period>, PeriodsEntit
      * Method saveOrUpdate
      * @param template
      */
-    public void saveOrUpdate(TimeJugglerJDBCTemplate template) {
+    @Override
+    public void saveOrUpdate(TimeJugglerJDBCTemplate template) throws DatabaseException  {
         if (getId() > 0) {
             //bez Update
         } else {
             logger.info("Database - Insert: Periods[]...");
             String insertQuery = "INSERT INTO Periods (periodsID) VALUES (DEFAULT)";
-            try {
-                template.executeUpdate(insertQuery, null);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+            template.executeUpdate(insertQuery, null);
             setId(template.getGeneratedId());
         }
 
@@ -55,7 +52,7 @@ public class Periods extends DbElement implements Iterable<Period>, PeriodsEntit
      * Method delete
      * @param template
      */
-    public void delete(TimeJugglerJDBCTemplate template) {
+    public void delete(TimeJugglerJDBCTemplate template) throws DatabaseException {
         for (Period period : periods) {
             period.delete(template);
         }
@@ -63,11 +60,7 @@ public class Periods extends DbElement implements Iterable<Period>, PeriodsEntit
         if (getId() > 0) {
             String deleteQuery = "DELETE FROM Periods WHERE periodsID = ? ";
             Object params[] = {getId()};
-            try {
-                template.executeUpdate(deleteQuery, params);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+            template.executeUpdate(deleteQuery, params);
             setId(-1);
         }
     }

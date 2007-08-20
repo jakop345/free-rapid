@@ -17,7 +17,7 @@ public class VAlarm extends DbElement {
     private String action;
     private int repeat;
     private int componentId;
-    //private DurationDateTime trigger;
+    //private DurationDateTime trigger;	//TODO: VAlarm Trigger
     private String attachment;
     private List<String> attendee;
 
@@ -30,31 +30,24 @@ public class VAlarm extends DbElement {
     public void store() {
     }
 
-    public void saveOrUpdate(TimeJugglerJDBCTemplate template) {
-        //TODO : Update
+	@Override
+    public void saveOrUpdate(TimeJugglerJDBCTemplate template) throws DatabaseException {
+        //TODO : VAlarm Update
         if (duration != null) {
             duration.saveOrUpdate(template);
         }
 
         Object params[] = {componentId, description, duration.getId(), summary, action, repeat, null, attachment, null};
         String insertQuery = "INSERT INTO VAlarm (calComponentID,description,durationID,summary,action,repeat,trigg,attach,attendee) VALUES (?,?,?,?,?,?,?,?,?)";
-        try {
-            template.executeUpdate(insertQuery, params);
-        } catch (DatabaseException e) {
-            e.printStackTrace();
-        }
+        template.executeUpdate(insertQuery, params);
         setId(template.getGeneratedId());
     }
 
-    public void delete(TimeJugglerJDBCTemplate template) {
+    public void delete(TimeJugglerJDBCTemplate template) throws DatabaseException {
         if (getId() > 0) {
             Object params[] = {getId()};
             String deleteQuery = "DELETE FROM VAlarm WHERE vAlarmID=?";
-            try {
-                template.executeUpdate(deleteQuery, params);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+            template.executeUpdate(deleteQuery, params);
             setId(-1);
         }
     }

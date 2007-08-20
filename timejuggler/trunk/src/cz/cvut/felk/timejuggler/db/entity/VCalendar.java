@@ -1,5 +1,6 @@
 package cz.cvut.felk.timejuggler.db.entity;
 
+import cz.cvut.felk.timejuggler.db.DatabaseException;
 import cz.cvut.felk.timejuggler.db.TimeJugglerJDBCTemplate;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.VCalendarEntity;
 
@@ -54,26 +55,19 @@ public class VCalendar extends DbElement implements Comparable<VCalendarEntity>,
      * Method saveOrUpdate
      * @param template Ulozi novy kalendar do databaze, nebo provede update udaju o kalendari
      */
-    public void saveOrUpdate(TimeJugglerJDBCTemplate template) {
+    @Override
+    public void saveOrUpdate(TimeJugglerJDBCTemplate template) throws DatabaseException {
         if (getId() > 0) {
             logger.info("Database - Update: VCalendar[" + getId() + "]:" + name + "...");
             Object params[] = {productId, version, calendarScale, method, name, active ? 1 : 0, getId()};
             String updateQuery = "UPDATE VCalendar SET prodid=?,version=?,calscale=?,method=?,name=?,active=? WHERE vCalendarID = ? ";
-            try {
-                template.executeUpdate(updateQuery, params);
-            } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
-                e.printStackTrace();
-            }
+            template.executeUpdate(updateQuery, params);
         } else {
             // Pridani noveho kalendare do databaze
             logger.info("Database - Insert: VCalendar[]:" + name + "...");
             Object params[] = {productId, version, calendarScale, method, name, active ? 1 : 0};
             String insertQuery = "INSERT INTO VCalendar (prodid,version,calscale,method,name,active) VALUES (?,?,?,?,?,?)";
-            try {
-                template.executeUpdate(insertQuery, params);
-            } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
-                e.printStackTrace();
-            }
+            template.executeUpdate(insertQuery, params);
             // nastaveni klice objektu VCalendar
             setId(template.getGeneratedId());
             logger.info("Database - VCalendar new ID=" + getId());
@@ -84,17 +78,13 @@ public class VCalendar extends DbElement implements Comparable<VCalendarEntity>,
      * Method delete
      * @param template Odstrani kalendar z databaze
      */
-    public void delete(TimeJugglerJDBCTemplate template) {
+    public void delete(TimeJugglerJDBCTemplate template) throws DatabaseException {
         if (getId() > 0) {
             logger.info("Database - DELETE: VCalendar[" + getId() + "]:" + name + "...");
 
             Object params[] = {getId()};	//TODO: Derby neumi Cascade Delete
             String deleteQuery = "DELETE FROM VCalendar WHERE vCalendarID = ?";
-            try {
-                template.executeUpdate(deleteQuery, params);
-            } catch (cz.cvut.felk.timejuggler.db.DatabaseException e) {
-                e.printStackTrace();
-            }
+            template.executeUpdate(deleteQuery, params);
             setId(-1);
         }
     }

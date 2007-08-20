@@ -43,29 +43,54 @@ class DBPersistencyLayer implements PersistencyLayer {
 
 
     public List<VCalendarEntity> getCalendars() throws PersistencyLayerException {
-        return dbStore.getCalendars();
+    	try {
+    		return dbStore.getCalendars();
+	    }
+	    catch (DatabaseException ex) {
+	    	throw new PersistencyLayerException(ex);
+	    }
     }
 
     public List<EventTaskEntity> getEventsByCalendar(VCalendarEntity cal) throws PersistencyLayerException {
-        return dbStore.getEventsByCalendar((VCalendar) cal);
+    	try {
+    		return dbStore.getEventsByCalendar((VCalendar) cal);
+	    }
+	    catch (DatabaseException ex) {
+	    	throw new PersistencyLayerException(ex);
+	    }
+        
     }
 
     public List<EventTaskEntity> getToDosByCalendar(VCalendarEntity cal) throws PersistencyLayerException {
-        return dbStore.getToDosByCalendar((VCalendar) cal);
+    	try {
+    		return dbStore.getToDosByCalendar((VCalendar) cal);
+    	}       
+        catch (DatabaseException ex) {
+	    	throw new PersistencyLayerException(ex);
+	    }
     }
 
     public List<EventTaskEntity> getAllEventsFromSelectedCalendars() throws PersistencyLayerException {
         //TODO nebylo by lepsi tohle jednim selectem???
-        final List<EventTaskEntity> events = new ArrayList<EventTaskEntity>();
-        final List<VCalendarEntity> list = dbStore.getCalendars();
-        for (VCalendarEntity calendarEntity : list) {
-            if (calendarEntity.isActive()) {
-                final List<EventTaskEntity> calendarEvents = dbStore.getEventsByCalendar((VCalendar) calendarEntity);
-                if (calendarEvents != null)
-                    events.addAll(calendarEvents);
-            }
-        }
-        return events;
+        try {
+        	//TODO: tady taky vadi Exception..
+	        final List<EventTaskEntity> events = new ArrayList<EventTaskEntity>();
+	        final List<VCalendarEntity> list = dbStore.getCalendars();
+
+	        for (VCalendarEntity calendarEntity : list) {
+	            if (calendarEntity.isActive()) {
+	                final List<EventTaskEntity> calendarEvents = dbStore.getEventsByCalendar((VCalendar) calendarEntity);
+	                if (calendarEvents != null)
+	                    events.addAll(calendarEvents);
+	            }
+	        }
+	        return events;
+	    }
+	    catch (DatabaseException ex) {
+	    	throw new PersistencyLayerException(ex);
+	    }
+        
+
     }
 
     public VCalendarEntity importICS(File file) throws PersistencyLayerException {
@@ -105,7 +130,13 @@ class DBPersistencyLayer implements PersistencyLayer {
     }
 
     public List<CategoryEntity> getCategories() throws PersistencyLayerException {
-        return dbStore.getCategories();
+    	try {
+    		return dbStore.getCategories();
+	    }
+	    catch (DatabaseException ex) {
+	    	throw new PersistencyLayerException(ex);
+	    }
+        
     }
 
     public CategoryEntity getNewCategory() {

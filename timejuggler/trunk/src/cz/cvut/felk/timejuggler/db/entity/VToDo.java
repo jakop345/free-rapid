@@ -39,11 +39,7 @@ public class VToDo extends CalComponent {
                     getComponentId(), geoGPS,
                     location, priority, percentcomplete, getId()};
             String updateQuery = "UPDATE VToDo SET calComponentID=?,geo=?,location=?,priority=?,percentcomplete=?) WHERE vToDoID = ? ";
-            try {
-                template.executeUpdate(updateQuery, params);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+            template.executeUpdate(updateQuery, params);
         } else {
             logger.info("Database - Insert: VToDo[]...");
             Object params[] = {
@@ -51,11 +47,7 @@ public class VToDo extends CalComponent {
                     location, priority, percentcomplete};
 
             String insertQuery = "INSERT INTO VToDo (calComponentID,geo,location,priority,percentcomplete) VALUES (?,?,?,?,?)";
-            try {
-                template.executeUpdate(insertQuery, params);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+           	template.executeUpdate(insertQuery, params);
             setId(template.getGeneratedId());
             logger.info("Database - VToDo new ID=" + getId());
         }
@@ -65,15 +57,11 @@ public class VToDo extends CalComponent {
      * Method delete
      * @param template
      */
-    public void delete(TimeJugglerJDBCTemplate template) {
+    public void delete(TimeJugglerJDBCTemplate template) throws DatabaseException {
         if (getId() > 0) {
             Object params[] = {getId()};
             String deleteQuery = "DELETE FROM VToDo WHERE vToDoID = ?";
-            try {
-                template.executeUpdate(deleteQuery, params);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+            template.executeUpdate(deleteQuery, params);
             setId(-1);
             super.delete(template);
         }

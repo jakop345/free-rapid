@@ -56,28 +56,21 @@ public class RepetitionRule extends DbElement implements RepetitionRuleEntity {
      * Method saveOrUpdate
      * @param template
      */
-    public void saveOrUpdate(TimeJugglerJDBCTemplate template) {
+    @Override
+    public void saveOrUpdate(TimeJugglerJDBCTemplate template) throws DatabaseException {
         logger.info("RepetitionRule: freq=" + frequency);
         if (getId() > 0) {
             Object params[] = {repetitionRulesID, frequency, interval, repeat,
                     weekStart, byHour, byWeekNo, byYearDay,
                     bySetPosition, byMonth, byMinute, byMonthDay, getId()};
             String updateQuery = "UPDATE RepetitionRule SET repetitionRulesID=?,frequency=?,interval=?,repeat=?,weekStart=?,byHour=?,byWeekNo=?,byYearDay=?,bySetPosition=?,byMonth=?,byMinute=?,byMonthDay=?) WHERE repetitionRuleID = ? ";
-            try {
-                template.executeUpdate(updateQuery, params);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+            template.executeUpdate(updateQuery, params);
         } else {
             Object params[] = {repetitionRulesID, frequency, interval, repeat,
                     weekStart, byHour, byWeekNo, byYearDay,
                     bySetPosition, byMonth, byMinute, byMonthDay};
             String insertQuery = "INSERT INTO RepetitionRule (repetitionRulesID,frequency,interval,repeat,weekStart,byHour,byWeekNo,byYearDay,bySetPosition,byMonth,byMinute,byMonthDay) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
-            try {
-                template.executeUpdate(insertQuery, params);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+           	template.executeUpdate(insertQuery, params);
             setId(template.getGeneratedId());
         }
     }
@@ -86,15 +79,11 @@ public class RepetitionRule extends DbElement implements RepetitionRuleEntity {
      * Method delete
      * @param template
      */
-    public void delete(TimeJugglerJDBCTemplate template) {
+    public void delete(TimeJugglerJDBCTemplate template) throws DatabaseException {
         if (getId() > 0) {
             String deleteQuery = "DELETE FROM RepetitionRule WHERE repetitionRuleID = ? ";
             Object params[] = {getId()};
-            try {
-                template.executeUpdate(deleteQuery, params);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+            template.executeUpdate(deleteQuery, params);
             setId(-1);
         }
     }

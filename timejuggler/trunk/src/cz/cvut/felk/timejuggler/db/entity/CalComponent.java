@@ -346,7 +346,8 @@ public class CalComponent extends DbElement {
      * Method getAttachments
      * @return
      */
-    public List<Attachment> getAttachments() throws DatabaseException {
+    public List<Attachment> getAttachments() /*throws DatabaseException*/ {
+    	//TODO: tady je docasne try, protoze vadi neException v Interface
         String sql = "SELECT * FROM Attachment WHERE calComponentID = ?";
         Object params[] = {getComponentId()};
         TimeJugglerJDBCTemplate<List<Attachment>> template = new TimeJugglerJDBCTemplate<List<Attachment>>() {
@@ -358,8 +359,13 @@ public class CalComponent extends DbElement {
                 items.add(attach);
             }
         };
-
-        template.executeQuery(sql, params);
+		try {
+			template.executeQuery(sql, params);
+	    }
+	    catch (DatabaseException ex) {
+	    	ex.printStackTrace();
+	    }
+        
 
         return template.getItems();
     }
@@ -377,7 +383,8 @@ public class CalComponent extends DbElement {
      * Method getCategories
      * @return
      */
-    public List<Category> getCategories() throws DatabaseException {
+    public List<Category> getCategories() /*throws DatabaseException*/ {
+    	//TODO: tady je docasne try, protoze vadi neException v Interface
         String sql = "SELECT * FROM Category,Categories WHERE Categories.calComponentID=? AND Categories.CategoryId=Category.CategoryId ";
         Object params[] = {getComponentId()};
         TimeJugglerJDBCTemplate<List<Category>> template = new TimeJugglerJDBCTemplate<List<Category>>() {
@@ -390,8 +397,13 @@ public class CalComponent extends DbElement {
                 items.add(c);
             }
         };
-
-        template.executeQuery(sql, params);
+		try {
+			template.executeQuery(sql, params);
+	    }
+	    catch (DatabaseException ex) {
+	    	ex.printStackTrace();
+	    }
+        
 
         return template.getItems() == null ? new ArrayList<Category>() : template.getItems();
     }
@@ -418,7 +430,8 @@ public class CalComponent extends DbElement {
      * Method getComments
      * @return
      */
-    public List<Comment> getComments() throws DatabaseException {
+    public List<Comment> getComments() /*throws DatabaseException*/ {
+    	//TODO: tady je docasne try, protoze vadi neException v Interface
         String sql = "SELECT * FROM Comment WHERE calComponentID = ?";
         Object params[] = {getComponentId()};
         TimeJugglerJDBCTemplate<List<Comment>> template = new TimeJugglerJDBCTemplate<List<Comment>>() {
@@ -427,8 +440,13 @@ public class CalComponent extends DbElement {
                 items.add(new Comment(rs.getString("comment")));
             }
         };
-
-        template.executeQuery(sql, params);
+		try {
+			template.executeQuery(sql, params);
+	    }
+	    catch (DatabaseException ex) {
+	    	ex.printStackTrace();
+	    }
+        
 
         return template.getItems();
     }
@@ -437,7 +455,8 @@ public class CalComponent extends DbElement {
      * Method getContacts
      * @return
      */
-    public List<Contact> getContacts() throws DatabaseException {
+    public List<Contact> getContacts() /*throws DatabaseException */{
+    	//TODO: tady je docasne try, protoze vadi neException v Interface
         String sql = "SELECT * FROM Contact WHERE calComponentID = ?";
         Object params[] = {getComponentId()};
         TimeJugglerJDBCTemplate<List<Contact>> template = new TimeJugglerJDBCTemplate<List<Contact>>() {
@@ -446,8 +465,13 @@ public class CalComponent extends DbElement {
                 items.add(new Contact(rs.getString("contact")));
             }
         };
-
-        template.executeQuery(sql, params);
+		try {
+			template.executeQuery(sql, params);
+	    }
+	    catch (DatabaseException ex) {
+	    	ex.printStackTrace();
+	    }
+        
 
         return template.getItems();
     }
@@ -456,7 +480,8 @@ public class CalComponent extends DbElement {
      * Method getRelatedTo
      * @return
      */
-    public List<RelatedTo> getRelatedTo() throws DatabaseException {
+    public List<RelatedTo> getRelatedTo() /*throws DatabaseException*/ {
+    	//TODO: tady je docasne try, protoze vadi neException v Interface
         String sql = "SELECT * FROM RelatedTo WHERE calComponentID = ?";
         Object params[] = {getComponentId()};
         TimeJugglerJDBCTemplate<List<RelatedTo>> template = new TimeJugglerJDBCTemplate<List<RelatedTo>>() {
@@ -465,8 +490,13 @@ public class CalComponent extends DbElement {
                 items.add(new RelatedTo(rs.getString("relatedto")));
             }
         };
-
-        template.executeQuery(sql, params);
+		try {
+			template.executeQuery(sql, params);
+	    }
+	    catch (DatabaseException ex) {
+	    	ex.printStackTrace();
+	    }
+        
 
         return template.getItems();
     }
@@ -475,7 +505,8 @@ public class CalComponent extends DbElement {
      * Method getRequestStatuses
      * @return
      */
-    public List<RequestStatus> getRequestStatuses() throws DatabaseException {
+    public List<RequestStatus> getRequestStatuses() /*throws DatabaseException*/ {
+    	//TODO: tady je docasne try, protoze vadi neException v Interface
         String sql = "SELECT * FROM RequestStatus WHERE calComponentID = ? ";
         Object params[] = {getComponentId()};
         TimeJugglerJDBCTemplate<List<RequestStatus>> template = new TimeJugglerJDBCTemplate<List<RequestStatus>>() {
@@ -484,8 +515,13 @@ public class CalComponent extends DbElement {
                 items.add(new RequestStatus(rs.getString("rstatus")));
             }
         };
-
-        template.executeQuery(sql, params);
+		try {
+			template.executeQuery(sql, params);
+	    }
+	    catch (DatabaseException ex) {
+	    	ex.printStackTrace();
+	    }
+        
 
         return template.getItems();
     }
@@ -494,7 +530,8 @@ public class CalComponent extends DbElement {
      * Method getResources
      * @return
      */
-    public List<Resource> getResources() throws DatabaseException {
+    public List<Resource> getResources() /*throws DatabaseException*/ {
+    	//TODO: tady je docasne try, protoze vadi neException v Interface
         String sql = "SELECT * FROM Resource WHERE calComponentID = ?";
         Object params[] = {getComponentId()};
         TimeJugglerJDBCTemplate<List<Resource>> template = new TimeJugglerJDBCTemplate<List<Resource>>() {
@@ -503,8 +540,13 @@ public class CalComponent extends DbElement {
                 items.add(new Resource(rs.getString("resource")));
             }
         };
-
-        template.executeQuery(sql, params);
+		try {
+			template.executeQuery(sql, params);
+	    }
+	    catch (DatabaseException ex) {
+	    	ex.printStackTrace();
+	    }
+        
 
         return template.getItems();
     }
@@ -537,8 +579,15 @@ public class CalComponent extends DbElement {
         return (dateTime.getLastModified());
     }
 
-    public Periods getPeriods() throws DatabaseException {
-        return (dateTime.getPeriods());
+    public Periods getPeriods() /*throws DatabaseException*/ {
+    	//TODO: tady je docasne try, protoze vadi neException v Interface
+    	try {
+    		return (dateTime.getPeriods());
+	    }
+	    catch (DatabaseException ex) {
+	    	ex.printStackTrace();
+	    }
+        return /*treba*/ null; //TODO: :-P
     }
 
     public void setDistinctDates(DistinctDates distinctDates) {

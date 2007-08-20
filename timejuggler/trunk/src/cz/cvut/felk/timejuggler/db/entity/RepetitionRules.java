@@ -30,17 +30,14 @@ public class RepetitionRules extends DbElement implements Iterable<RepetitionRul
      * Method saveOrUpdate
      * @param template
      */
-    public void saveOrUpdate(TimeJugglerJDBCTemplate template) {
+    @Override
+    public void saveOrUpdate(TimeJugglerJDBCTemplate template) throws DatabaseException {
         if (getId() > 0) {
             //bez update
         } else {
             logger.info("Database - Insert: RepetitionRules[]...");
             String insertQuery = "INSERT INTO RepetitionRules (repetitionRulesID) VALUES (DEFAULT)";
-            try {
-                template.executeUpdate(insertQuery, null);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+            template.executeUpdate(insertQuery, null);
             setId(template.getGeneratedId());
         }
 
@@ -54,18 +51,14 @@ public class RepetitionRules extends DbElement implements Iterable<RepetitionRul
      * Method delete
      * @param template
      */
-    public void delete(TimeJugglerJDBCTemplate template) {
+    public void delete(TimeJugglerJDBCTemplate template) throws DatabaseException {
         for (RepetitionRule rule : repetitionRules) {
             rule.delete(template);
         }
         if (getId() > 0) {
             String deleteQuery = "DELETE FROM RepetitionRules WHERE repetitionRulesID = ? ";
             Object params[] = {getId()};
-            try {
-                template.executeUpdate(deleteQuery, params);
-            } catch (DatabaseException e) {
-                e.printStackTrace();
-            }
+            template.executeUpdate(deleteQuery, params);
             setId(-1);
         }
     }
