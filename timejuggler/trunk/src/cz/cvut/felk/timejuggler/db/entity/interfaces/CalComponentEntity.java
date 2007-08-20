@@ -2,7 +2,7 @@ package cz.cvut.felk.timejuggler.db.entity.interfaces;
 
 import java.util.Date;
 import java.util.List;
-
+/*
 import cz.cvut.felk.timejuggler.db.entity.VCalendar;
 import cz.cvut.felk.timejuggler.db.entity.DateTime;
 import cz.cvut.felk.timejuggler.db.entity.Periods;
@@ -16,6 +16,7 @@ import cz.cvut.felk.timejuggler.db.entity.RelatedTo;
 import cz.cvut.felk.timejuggler.db.entity.RequestStatus;
 import cz.cvut.felk.timejuggler.db.entity.Resource;
 import cz.cvut.felk.timejuggler.db.entity.Attachment;
+*/
 
 /**
  * @author Jan Struz
@@ -47,51 +48,56 @@ public interface CalComponentEntity extends EntityElement {
 	Date getDTimestamp();
 	void setDTimestamp(Date newVal);
 	
-	List<String> getAttendees();
-	List<Category> getCategories();
-	void addCategory(Category cat);
-	void removeCategory(Category cat);
+	List<String> getAttendees();	//TODO getAttendees - nebude to string
+	List<CategoryEntity> getCategories();
+	void addCategory(CategoryEntity cat);
+	void removeCategory(CategoryEntity cat);
 
-	/*List<PropertyEntity> getComments();
+	
+	List<PropertyEntity> getComments();
 	List<PropertyEntity> getContacts();
 	List<PropertyEntity> getRelatedTo();
 	List<PropertyEntity> getRequestStatuses();
-	List<PropertyEntity> getResources();*/
+	List<PropertyEntity> getResources();
+	List<PropertyEntity> getAttachments();
 	
+	
+	/*
 	List<Attachment> getAttachments();
 	List<Comment> getComments();
 	List<Contact> getContacts();
 	List<RelatedTo> getRelatedTo();
 	List<RequestStatus> getRequestStatuses();
 	List<Resource> getResources();
+	*/
 
 	void setStartDate(Date startDate);
 	void setCreated(Date created);
 	void setLastModified(Date lastModified);
-	void setPeriods(Periods periods);
+	void setPeriods(PeriodsEntity periods);
 	Date getStartDate();
 	Date getCreated();
 	Date getLastModified();
-	Periods getPeriods();
-	void setDistinctDates(DistinctDates distinctDates);
-	DistinctDates getDistinctDates();
+	PeriodsEntity getPeriods();
+	void setDistinctDates(DistinctDatesEntity distinctDates);
+	DistinctDatesEntity getDistinctDates();
 	
 	/* 
 	void setCalendarId(int calendarId);
 	int getCalendarId();
 	
 	nahrazeno set/get Calendar */
-	void setCalendar(VCalendar cal);
-	VCalendar getCalendar();
+	void setCalendar(VCalendarEntity cal);
+	VCalendarEntity getCalendar();
 
 	
-	void setAlarms(List<VAlarm> alarms);
-	List<VAlarm> getAlarms();
+	void setAlarms(List<VAlarmEntity> alarms);
+	List<VAlarmEntity> getAlarms();
 	void setEndDate(Date endDate);
-	void setEndDate(Duration dur);
+	void setEndDate(DurationEntity dur);
 	Date getEndDate();
-	void setDateTime(DateTime dateTime);
-	DateTime getDateTime();
+	void setDateTime(DateTimeEntity dateTime);
+	DateTimeEntity getDateTime();
 	
 	Object clone() throws CloneNotSupportedException;
 }

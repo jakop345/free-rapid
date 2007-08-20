@@ -4,6 +4,10 @@ import cz.cvut.felk.timejuggler.db.entity.*;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.CategoryEntity;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.EventTaskEntity;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.VCalendarEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.PeriodsEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.PeriodEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.RepetitionRuleEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.DurationEntity;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.data.ParserException;
@@ -141,23 +145,23 @@ public class DbDataStore {
                     System.out.println("+-created: " + e.getCreated());
                     System.out.println("+-dtstamp: " + e.getDTimestamp());
 
-                    List<Category> cats = e.getCategories();
+                    List<CategoryEntity> cats = e.getCategories();
                     if (cats != null) {
                         System.out.print("+-categories ");
-                        for (Object o : cats) {
-                            CategoryEntity c = (CategoryEntity) o;
+                        for (CategoryEntity c : cats) {
+                            //CategoryEntity c = (CategoryEntity) o;
                             System.out.print(c.getName() + ",");
                         }
                         System.out.println();
                     }
-                    Periods periods = e.getPeriods();
+                    PeriodsEntity periods = e.getPeriods();
                     if (periods != null) {
-                        for (cz.cvut.felk.timejuggler.db.entity.Period p : periods) {
+                        for (PeriodEntity p : periods) {
                             //cz.cvut.felk.timejuggler.db.entity.Period p = (cz.cvut.felk.timejuggler.db.entity.Period) o;
                             //System.out.println("+-period " + p.getStartDate() + " ... " + p.getEndDate());
                             RepetitionRules rules = p.getRepetitionRules();
                             if (rules != null) {
-                                for (RepetitionRule rr : rules) {
+                                for (RepetitionRuleEntity rr : rules) {
                                     System.out.println("+--REPEAT " + rr.getFrequency() +
                                             "; interval " + rr.getInterval() +
                                             "; byMonth " + rr.getByMonth() +
@@ -511,7 +515,7 @@ public class DbDataStore {
             prop = comp.getProperty(Property.DTEND);
             event.setEndDate(prop == null ? null : ((DtEnd) prop).getDate());
             prop = comp.getProperty(Property.DURATION);
-            if (prop != null) event.setEndDate(transformer.makeDuration(prop));
+            if (prop != null) event.setEndDate((DurationEntity)transformer.makeDuration(prop));	//TODO DurationEntity
             prop = comp.getProperty(Property.UID);
             event.setUid(prop == null ? "" : (prop).getValue());
 
@@ -710,9 +714,9 @@ public class DbDataStore {
 
             compList.add(comp);
 
-            Periods periods = e.getPeriods();
+            PeriodsEntity periods = e.getPeriods();
             if (periods != null) {
-                for (cz.cvut.felk.timejuggler.db.entity.Period p : periods) {
+                for (PeriodEntity p : periods) {
                     System.out.println("+-period " + p.getStartDate() + " ... " + p.getEndDate());
                 }
             }

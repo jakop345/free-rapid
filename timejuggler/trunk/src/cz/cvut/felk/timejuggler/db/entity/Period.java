@@ -2,6 +2,7 @@ package cz.cvut.felk.timejuggler.db.entity;
 
 import cz.cvut.felk.timejuggler.db.DatabaseException;
 import cz.cvut.felk.timejuggler.db.TimeJugglerJDBCTemplate;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.PeriodEntity;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -14,7 +15,7 @@ import java.util.logging.Logger;
  * <p/>
  * trida reprezentujici casovy usek zacatek: startDate, konec: endDate, nebo delka trvani (duration) Hotovo
  */
-public class Period extends DbElement {
+public class Period extends DbElement implements PeriodEntity {
     private final static Logger logger = Logger.getLogger(Period.class.getName());
 
     private Timestamp endDate;

@@ -3,6 +3,17 @@ package cz.cvut.felk.timejuggler.db.entity;
 import cz.cvut.felk.timejuggler.db.DatabaseException;
 import cz.cvut.felk.timejuggler.db.TimeJugglerJDBCTemplate;
 
+import cz.cvut.felk.timejuggler.db.entity.interfaces.CategoryEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.PeriodsEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.PropertyEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.DistinctDatesEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.VCalendarEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.VAlarmEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.DurationEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.DateTimeEntity;
+
+
+
 import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -57,7 +68,7 @@ public class CalComponent extends DbElement {
     //private int calendarId; nahrazeno vcalendar
     private VCalendar vcalendar;
 
-    private List<VAlarm> alarms;
+    private List<VAlarmEntity> alarms; //TODO VAlarmEntity / VAlarm
 
     private Categories _categories;
 
@@ -274,9 +285,9 @@ public class CalComponent extends DbElement {
 
         } else {
             if (alarms != null) {
-                for (VAlarm alarm : alarms) {
-                    alarm.setComponentId(componentId);
-                    alarm.saveOrUpdate(template);
+                for (VAlarmEntity alarm : alarms) {
+                    ((VAlarm)alarm).setComponentId(componentId);
+                    ((VAlarm)alarm).saveOrUpdate(template);
                 }
             }
             logger.info("Database - Insert: CalComponent[]...");
@@ -323,8 +334,8 @@ public class CalComponent extends DbElement {
                 dateTime.delete(template);
             }
             if (alarms != null) {
-                for (VAlarm alarm : alarms) {
-                    alarm.delete(template);
+                for (VAlarmEntity alarm : alarms) {
+                    ((VAlarm)alarm).delete(template);
                 }
             }
             /* nesmaze kategorie prirazene k eventu, pouze propojovaci tabulku */
@@ -346,13 +357,13 @@ public class CalComponent extends DbElement {
      * Method getAttachments
      * @return
      */
-    public List<Attachment> getAttachments() /*throws DatabaseException*/ {
+    public List<PropertyEntity> getAttachments() /*throws DatabaseException*/ {
     	//TODO: tady je docasne try, protoze vadi neException v Interface
         String sql = "SELECT * FROM Attachment WHERE calComponentID = ?";
         Object params[] = {getComponentId()};
-        TimeJugglerJDBCTemplate<List<Attachment>> template = new TimeJugglerJDBCTemplate<List<Attachment>>() {
+        TimeJugglerJDBCTemplate<List<PropertyEntity>> template = new TimeJugglerJDBCTemplate<List<PropertyEntity>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
-                if (items == null) items = new ArrayList<Attachment>();
+                if (items == null) items = new ArrayList<PropertyEntity>();
                 Attachment attach = new Attachment();
                 attach.setAttach(rs.getString("name"));
                 attach.setIsBinary(rs.getInt("isBinary") == 1);
@@ -375,7 +386,7 @@ public class CalComponent extends DbElement {
      * @return
      */
     public List<String> getAttendees() {
-        // TODO: Add your code here
+        // TODO: getAttendees
         return null;
     }
 
@@ -383,13 +394,13 @@ public class CalComponent extends DbElement {
      * Method getCategories
      * @return
      */
-    public List<Category> getCategories() /*throws DatabaseException*/ {
+    public List<CategoryEntity> getCategories() /*throws DatabaseException*/ {
     	//TODO: tady je docasne try, protoze vadi neException v Interface
         String sql = "SELECT * FROM Category,Categories WHERE Categories.calComponentID=? AND Categories.CategoryId=Category.CategoryId ";
         Object params[] = {getComponentId()};
-        TimeJugglerJDBCTemplate<List<Category>> template = new TimeJugglerJDBCTemplate<List<Category>>() {
+        TimeJugglerJDBCTemplate<List<CategoryEntity>> template = new TimeJugglerJDBCTemplate<List<CategoryEntity>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
-                if (items == null) items = new ArrayList<Category>();
+                if (items == null) items = new ArrayList<CategoryEntity>();
                 Category c = new Category(rs.getString("name"));
                 c.setId(rs.getInt("categoryID"));
                 int col = rs.getInt("color");
@@ -405,7 +416,7 @@ public class CalComponent extends DbElement {
 	    }
         
 
-        return template.getItems() == null ? new ArrayList<Category>() : template.getItems();
+        return template.getItems() == null ? new ArrayList<CategoryEntity>() : template.getItems();
     }
 
     @Deprecated
@@ -413,12 +424,12 @@ public class CalComponent extends DbElement {
         this.categories = categories;
     }
 
-    public void addCategory(Category cat) {
-        _categories.addCategory(cat);
+    public void addCategory(CategoryEntity cat) {
+        _categories.addCategory((Category)cat);
     }
 
-    public void removeCategory(Category cat) {
-        _categories.removeCategory(cat);
+    public void removeCategory(CategoryEntity cat) {
+        _categories.removeCategory((Category)cat);
     }
 
     /*public void removeCategory(Category cat) {
@@ -430,13 +441,13 @@ public class CalComponent extends DbElement {
      * Method getComments
      * @return
      */
-    public List<Comment> getComments() /*throws DatabaseException*/ {
+    public List<PropertyEntity> getComments() /*throws DatabaseException*/ {
     	//TODO: tady je docasne try, protoze vadi neException v Interface
         String sql = "SELECT * FROM Comment WHERE calComponentID = ?";
         Object params[] = {getComponentId()};
-        TimeJugglerJDBCTemplate<List<Comment>> template = new TimeJugglerJDBCTemplate<List<Comment>>() {
+        TimeJugglerJDBCTemplate<List<PropertyEntity>> template = new TimeJugglerJDBCTemplate<List<PropertyEntity>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
-                if (items == null) items = new ArrayList<Comment>();
+                if (items == null) items = new ArrayList<PropertyEntity>();
                 items.add(new Comment(rs.getString("comment")));
             }
         };
@@ -455,13 +466,13 @@ public class CalComponent extends DbElement {
      * Method getContacts
      * @return
      */
-    public List<Contact> getContacts() /*throws DatabaseException */{
+    public List<PropertyEntity> getContacts() /*throws DatabaseException */{
     	//TODO: tady je docasne try, protoze vadi neException v Interface
         String sql = "SELECT * FROM Contact WHERE calComponentID = ?";
         Object params[] = {getComponentId()};
-        TimeJugglerJDBCTemplate<List<Contact>> template = new TimeJugglerJDBCTemplate<List<Contact>>() {
+        TimeJugglerJDBCTemplate<List<PropertyEntity>> template = new TimeJugglerJDBCTemplate<List<PropertyEntity>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
-                if (items == null) items = new ArrayList<Contact>();
+                if (items == null) items = new ArrayList<PropertyEntity>();
                 items.add(new Contact(rs.getString("contact")));
             }
         };
@@ -480,13 +491,13 @@ public class CalComponent extends DbElement {
      * Method getRelatedTo
      * @return
      */
-    public List<RelatedTo> getRelatedTo() /*throws DatabaseException*/ {
+    public List<PropertyEntity> getRelatedTo() /*throws DatabaseException*/ {
     	//TODO: tady je docasne try, protoze vadi neException v Interface
         String sql = "SELECT * FROM RelatedTo WHERE calComponentID = ?";
         Object params[] = {getComponentId()};
-        TimeJugglerJDBCTemplate<List<RelatedTo>> template = new TimeJugglerJDBCTemplate<List<RelatedTo>>() {
+        TimeJugglerJDBCTemplate<List<PropertyEntity>> template = new TimeJugglerJDBCTemplate<List<PropertyEntity>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
-                if (items == null) items = new ArrayList<RelatedTo>();
+                if (items == null) items = new ArrayList<PropertyEntity>();
                 items.add(new RelatedTo(rs.getString("relatedto")));
             }
         };
@@ -505,13 +516,13 @@ public class CalComponent extends DbElement {
      * Method getRequestStatuses
      * @return
      */
-    public List<RequestStatus> getRequestStatuses() /*throws DatabaseException*/ {
+    public List<PropertyEntity> getRequestStatuses() /*throws DatabaseException*/ {
     	//TODO: tady je docasne try, protoze vadi neException v Interface
         String sql = "SELECT * FROM RequestStatus WHERE calComponentID = ? ";
         Object params[] = {getComponentId()};
-        TimeJugglerJDBCTemplate<List<RequestStatus>> template = new TimeJugglerJDBCTemplate<List<RequestStatus>>() {
+        TimeJugglerJDBCTemplate<List<PropertyEntity>> template = new TimeJugglerJDBCTemplate<List<PropertyEntity>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
-                if (items == null) items = new ArrayList<RequestStatus>();
+                if (items == null) items = new ArrayList<PropertyEntity>();
                 items.add(new RequestStatus(rs.getString("rstatus")));
             }
         };
@@ -530,13 +541,13 @@ public class CalComponent extends DbElement {
      * Method getResources
      * @return
      */
-    public List<Resource> getResources() /*throws DatabaseException*/ {
+    public List<PropertyEntity> getResources() /*throws DatabaseException*/ {
     	//TODO: tady je docasne try, protoze vadi neException v Interface
         String sql = "SELECT * FROM Resource WHERE calComponentID = ?";
         Object params[] = {getComponentId()};
-        TimeJugglerJDBCTemplate<List<Resource>> template = new TimeJugglerJDBCTemplate<List<Resource>>() {
+        TimeJugglerJDBCTemplate<List<PropertyEntity>> template = new TimeJugglerJDBCTemplate<List<PropertyEntity>>() {
             protected void handleRow(ResultSet rs) throws SQLException {
-                if (items == null) items = new ArrayList<Resource>();
+                if (items == null) items = new ArrayList<PropertyEntity>();
                 items.add(new Resource(rs.getString("resource")));
             }
         };
@@ -563,8 +574,8 @@ public class CalComponent extends DbElement {
         dateTime.setLastModified(lastModified);
     }
 
-    public void setPeriods(Periods periods) {
-        dateTime.setPeriods(periods);
+    public void setPeriods(PeriodsEntity periods) {
+        dateTime.setPeriods((Periods)periods);
     }
 
     public Date getStartDate() {
@@ -579,10 +590,10 @@ public class CalComponent extends DbElement {
         return (dateTime.getLastModified());
     }
 
-    public Periods getPeriods() /*throws DatabaseException*/ {
+    public PeriodsEntity getPeriods() /*throws DatabaseException*/ {
     	//TODO: tady je docasne try, protoze vadi neException v Interface
     	try {
-    		return (dateTime.getPeriods());
+    		return ((PeriodsEntity)dateTime.getPeriods());
 	    }
 	    catch (DatabaseException ex) {
 	    	ex.printStackTrace();
@@ -590,20 +601,20 @@ public class CalComponent extends DbElement {
         return /*treba*/ null; //TODO: :-P
     }
 
-    public void setDistinctDates(DistinctDates distinctDates) {
-        dateTime.setDistinctDates(distinctDates);
+    public void setDistinctDates(DistinctDatesEntity distinctDates) {
+        dateTime.setDistinctDates((DistinctDates)distinctDates);
     }
 
-    public DistinctDates getDistinctDates() {
-        return (dateTime.getDistinctDates());
+    public DistinctDatesEntity getDistinctDates() {
+        return ((DistinctDatesEntity)dateTime.getDistinctDates());
     }
 
-    public void setCalendar(VCalendar cal) {
-        vcalendar = cal;
+    public void setCalendar(VCalendarEntity cal) {
+        vcalendar = (VCalendar)cal;
     }
 
-    public VCalendar getCalendar() {
-        return vcalendar;
+    public VCalendarEntity getCalendar() {
+        return (VCalendarEntity)vcalendar;
     }
 
     /*
@@ -616,11 +627,11 @@ public class CalComponent extends DbElement {
      }
      */
 
-    public void setAlarms(List<VAlarm> alarms) {
+    public void setAlarms(List<VAlarmEntity> alarms) {
         this.alarms = alarms;
     }
 
-    public List<VAlarm> getAlarms() {
+    public List<VAlarmEntity> getAlarms() {
         // TODO: SELECT Alarms
         return (this.alarms);
     }
@@ -630,8 +641,8 @@ public class CalComponent extends DbElement {
         dateTime.setEndDate(endDate);
     }
 
-    public void setEndDate(Duration dur) {
-        dateTime.setEndDate(dur);
+    public void setEndDate(DurationEntity dur) {
+        dateTime.setEndDate((Duration)dur);
     }
 
     public Date getEndDate() {
@@ -639,11 +650,11 @@ public class CalComponent extends DbElement {
     }
 
 
-    public void setDateTime(DateTime dateTime) {
-        this.dateTime = dateTime;
+    public void setDateTime(DateTimeEntity dateTime) {
+        this.dateTime = (DateTime)dateTime;
     }
 
-    public DateTime getDateTime() {
-        return (this.dateTime);
+    public DateTimeEntity getDateTime() {
+        return ((DateTimeEntity)this.dateTime);
     }
 }

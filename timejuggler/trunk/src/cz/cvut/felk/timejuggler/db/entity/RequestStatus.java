@@ -2,14 +2,17 @@ package cz.cvut.felk.timejuggler.db.entity;
 
 import cz.cvut.felk.timejuggler.db.DatabaseException;
 import cz.cvut.felk.timejuggler.db.TimeJugglerJDBCTemplate;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.PropertyEntity;
 
+import java.util.logging.Logger;
 /**
  * @author Jan Struz
  * @version 0.1
  * @created 12-V-2007 23:39:58 Hotovo
  */
-public class RequestStatus extends DbElement {
-    //TODO : Logging
+public class RequestStatus extends DbElement implements PropertyEntity {
+	private final static Logger logger = Logger.getLogger(RequestStatus.class.getName());
+
     private String rstatus = "";
 
     private int componentId;
@@ -76,6 +79,28 @@ public class RequestStatus extends DbElement {
 
     public int getComponentId() {
         return (this.componentId);
+	}
+
+	/**
+	 * Method getValue
+	 *
+	 *
+	 * @return
+	 *
+	 */
+	public String getValue() {
+		return this.rstatus;
+	}
+
+	/**
+	 * Method setValue
+	 *
+	 *
+	 * @param newVal
+	 *
+	 */
+	public void setValue(String newVal) {
+		this.rstatus = newVal;
 	}
 
 }

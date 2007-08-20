@@ -2,14 +2,17 @@ package cz.cvut.felk.timejuggler.db.entity;
 
 import cz.cvut.felk.timejuggler.db.DatabaseException;
 import cz.cvut.felk.timejuggler.db.TimeJugglerJDBCTemplate;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.PropertyEntity;
 
+import java.util.logging.Logger;
 /**
  * @author Jan Struz
  * @version 0.1
  * @created 12-V-2007 23:40:21 Hotovo
  */
-public class Attachment extends DbElement {
-    //TODO : Logging
+public class Attachment extends DbElement implements PropertyEntity {
+    private final static Logger logger = Logger.getLogger(Attachment.class.getName());
+    
     private String attach = "";
     private boolean isBinary = false;
 
@@ -88,5 +91,27 @@ public class Attachment extends DbElement {
     public int getComponentId() {
         return (this.componentId);
     }
+
+	/**
+	 * Method getValue
+	 *
+	 *
+	 * @return
+	 *
+	 */
+	public String getValue() {
+		return this.attach;
+	}
+
+	/**
+	 * Method setValue
+	 *
+	 *
+	 * @param newVal
+	 *
+	 */
+	public void setValue(String newVal) {
+		this.attach = newVal;
+	}
 
 }

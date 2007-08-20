@@ -3,6 +3,7 @@ package cz.cvut.felk.timejuggler.db.entity;
 import cz.cvut.felk.timejuggler.db.DatabaseException;
 import cz.cvut.felk.timejuggler.db.TimeJugglerJDBCTemplate;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.PeriodsEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.PeriodEntity;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -14,13 +15,13 @@ import java.util.logging.Logger;
  * @version 0.1
  * @created 12-V-2007 18:42:40 Hotovo
  */
-public class Periods extends DbElement implements Iterable<Period>, PeriodsEntity {
+public class Periods extends DbElement implements Iterable<PeriodEntity>, PeriodsEntity {
     private final static Logger logger = Logger.getLogger(Periods.class.getName());
 
-    private List<Period> periods;
+    private List<PeriodEntity> periods;
 
     public Periods() {
-        periods = new ArrayList<Period>();
+        periods = new ArrayList<PeriodEntity>();
     }
 
     public void store() {
@@ -41,10 +42,10 @@ public class Periods extends DbElement implements Iterable<Period>, PeriodsEntit
             setId(template.getGeneratedId());
         }
 
-        for (Period period : periods) {
-            period.setPeriodsId(getId());
+        for (PeriodEntity period : periods) {
+            ((Period)period).setPeriodsId(getId());
             logger.info("Periods: generated ID:" + getId());
-            period.saveOrUpdate(template);
+            ((Period)period).saveOrUpdate(template);
         }
     }
 
@@ -53,8 +54,8 @@ public class Periods extends DbElement implements Iterable<Period>, PeriodsEntit
      * @param template
      */
     public void delete(TimeJugglerJDBCTemplate template) throws DatabaseException {
-        for (Period period : periods) {
-            period.delete(template);
+        for (PeriodEntity period : periods) {
+            ((Period)period).delete(template);
         }
 
         if (getId() > 0) {
@@ -68,7 +69,7 @@ public class Periods extends DbElement implements Iterable<Period>, PeriodsEntit
     /**
      * Method addPeriod
      */
-    public void addPeriod(Period period) {
+    public void addPeriod(PeriodEntity period) {
         periods.add(period);
     }
 
@@ -76,13 +77,13 @@ public class Periods extends DbElement implements Iterable<Period>, PeriodsEntit
      * Method iterator
      * @return
      */
-    public Iterator<Period> iterator() {
+    public Iterator<PeriodEntity> iterator() {
         return periods.iterator();
     }
 
 
     @Deprecated
-    public List<Period> getPeriods() {
+    public List<PeriodEntity> getPeriods() {
         return periods;
     }
 }
