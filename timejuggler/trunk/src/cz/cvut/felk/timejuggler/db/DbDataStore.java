@@ -665,39 +665,39 @@ public class DbDataStore {
             // Nastaveni vlastnosti pro Eventy k ulozeni do souboru
             String value;
             value = e.getClazz();
-            if (value != "") propList.add(new Clazz(value));
+            if (!value.isEmpty()) propList.add(new Clazz(value));
             Date tmpdate = e.getCreated();
             if (tmpdate != null) propList.add(new Created(new DateTime(tmpdate.getTime())));
             value = e.getDescription();
-            if (value != "") propList.add(new Description(value));
+            if (!value.isEmpty()) propList.add(new Description(value));
             if (e.getStartDate() != null)
                 propList.add(new DtStart(new net.fortuna.ical4j.model.Date(e.getStartDate())));
 
             value = e.getGeoGPS();
-            if (value != "") propList.add(new Geo(value));
+            if (!value.isEmpty()) propList.add(new Geo(value));
             tmpdate = e.getLastModified();
             if (tmpdate != null) propList.add(new LastModified(new DateTime(tmpdate.getTime())));
 
             value = e.getLocation();
-            if (value != "") propList.add(new Location(value));
+            if (!value.isEmpty()) propList.add(new Location(value));
 
 
             value = e.getOrganizer();
-            if (value != "") propList.add(new Organizer(value));
+            if (!value.isEmpty()) propList.add(new Organizer(value));
 
 
             propList.add(new Priority(e.getPriority()));
             propList.add(new DtStamp());
             propList.add(new Sequence(e.getSequence()));
             value = e.getStatus();
-            if (value != "") propList.add(new Status(value));
+            if (!value.isEmpty()) propList.add(new Status(value));
             value = e.getSummary();
-            if (value != "") propList.add(new Summary(value));
+            if (!value.isEmpty()) propList.add(new Summary(value));
             value = e.getTransparency();
-            if (value != "") propList.add(new Transp(value));
+            if (!value.isEmpty()) propList.add(new Transp(value));
             try {
                 value = e.getUrl();
-                if (value != "") propList.add(new Url(new URI(value)));
+                if (!value.isEmpty()) propList.add(new Url(new URI(value)));
             }
             catch (URISyntaxException ex) {
                 LogUtils.processException(logger, ex);
@@ -708,7 +708,7 @@ public class DbDataStore {
             //TODO: nastavit duration nebo dtend property
             //propList.add(new Duration());
             value = e.getUid();
-            if (value != null) propList.add(new Uid(value));
+            if (!value.isEmpty()) propList.add(new Uid(value));
 
             net.fortuna.ical4j.model.Component comp = iCalFactory.createComponent(Component.VEVENT, propList);
 
@@ -728,13 +728,13 @@ public class DbDataStore {
         // Nepovinne: CalendarScale, Method
         String value;
         value = calendar.getProductId();
-        if (value != "") propList.add(new ProdId(value));
+        if (!value.isEmpty()) propList.add(new ProdId(value));
         value = calendar.getVersion();
-        if (value != "") propList.add(Version.VERSION_2_0);
+        if (!value.isEmpty()) propList.add(Version.VERSION_2_0);
         value = calendar.getCalendarScale();
-        if (value != "") propList.add(new CalScale(value));
+        if (!value.isEmpty()) propList.add(new CalScale(value));
         value = calendar.getMethod();
-        if (value != "") propList.add(new Method(value));
+        if (!value.isEmpty()) propList.add(new Method(value));
 
         // Vytvoreni objektu Calendar (typ iCal) pro ulozeni do souboru
         ical = new Calendar(propList, compList);
