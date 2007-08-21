@@ -47,6 +47,7 @@ import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -256,7 +257,7 @@ public class UserPreferencesDialog extends AppDialog {
         bindCombobox(comboShowHoursAtATime, AppPrefs.SHOW_HOURS_AT_A_TIME, 0, "showHoursAtATime");
         bindCombobox(comboTimeUnitEvent, AppPrefs.DEFAULT_ALARM_TIME_BEFORE_EVENT_TIMEUNIT, 0, "timeunit");
         bindCombobox(comboTimeUnitTask, AppPrefs.DEFAULT_ALARM_TIME_BEFORE_TASK_TIMEUNIT, 0, "timeunit");
-        bindCombobox(comboDateTextFormat, AppPrefs.DATE_TEXT_FORMAT, AppPrefs.DEF_DATE_TEXT_FORMAT_LONG, getDateFormats());
+        bindCombobox(comboDateTextFormat, AppPrefs.DATE_TEXT_FORMAT, AppPrefs.DEF_DATE_TEXT_FORMAT_SHORT, getDateFormats());
 
         bindLaFCombobox();
     }
@@ -309,10 +310,13 @@ public class UserPreferencesDialog extends AppDialog {
 
     private String[] getDateFormats() {
         final ResourceMap map = this.getResourceMap();
+        final ResourceMap globalMap = Swinger.getResourceMap();
         final Date date = new Date();
-        final String longFormat = map.getString("longFormatDate", date);
-        final String shortFormat = map.getString("shortFormatDate", date);
-        return new String[]{longFormat, shortFormat};
+        final String longDate = new SimpleDateFormat(globalMap.getString("longDateFormat")).format(date);
+        final String shortDate = new SimpleDateFormat(globalMap.getString("shortDateFormat")).format(date);
+        final String longFormat = map.getString("longFormatDate", longDate);
+        final String shortFormat = map.getString("shortFormatDate", shortDate);
+        return new String[]{shortFormat, longFormat};
     }
 
     @application.Action
@@ -322,7 +326,8 @@ public class UserPreferencesDialog extends AppDialog {
             try {
                 getApp().getDataProvider().synchronizeCategoriesFromList(categoriesManager.getCategoriesList());
             } catch (PersistencyLayerException e) {
-                LogUtils.processException(logger, e); //TODO error hlasku
+                LogUtils.processException(logger, e);
+                Swinger.showErrorDialog("errorSynchronizeCategoriesFailed", e);
             }
         doClose();
     }
@@ -412,7 +417,7 @@ public class UserPreferencesDialog extends AppDialog {
             try {
                 Sound.playSound(new File(text));
             } catch (Exception e) {
-                Swinger.showErrorDialog("Error during file playback.");//TODO prelozit
+                Swinger.showErrorDialog("errorSoundPlayback", e);
             }
         }
     }
@@ -1102,7 +1107,7 @@ public class UserPreferencesDialog extends AppDialog {
                 app.getTrayIconSupport().setVisibleByDefault();
             } else if (LAF_PROPERTY.equals(key)) {
                 boolean succesful;
-                final ResourceMap map = getResourceMap();
+//                final ResourceMap map = getResourceMap();
                 final LaF laf = (LaF) comboLaF.getSelectedItem();
                 try {
 //                    succesful = LookAndFeels.getInstance().loadLookAndFeel(laf, true);
@@ -1115,13 +1120,14 @@ public class UserPreferencesDialog extends AppDialog {
                     }
                 } catch (Exception ex) {
                     LogUtils.processException(logger, ex);
-                    succesful = false;
+                    Swinger.showErrorDialog("changeLookAndFeelActionFailed", ex);
+//                    succesful = false;
                 } finally {
 
                 }
-                if (!succesful) {
-                    Swinger.showErrorDialog(map.getString("message_changeLookAndFeelActionFailed"));
-                } //else {
+//                if (!succesful) {
+//
+//                } //else {
 //                    Swinger.showInformationDialog(map.getString("message_changeLookAndFeelActionSet"));
 //                }
             }

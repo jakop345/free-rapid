@@ -34,7 +34,7 @@ public class Browser {
             }
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Opening browser failed", e);
-            Swinger.showErrorDialog(Swinger.getResourceMap().getString("errorOpeningBrowser", e.getMessage()));
+            Swinger.showErrorDialog("errorOpeningBrowser", e);
         }
 
     }

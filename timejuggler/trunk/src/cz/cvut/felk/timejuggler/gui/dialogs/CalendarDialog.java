@@ -28,7 +28,6 @@ public class CalendarDialog extends AppDialog {
     // private static final String PROPERTY_COLOR = "color";
     private static final String PROPERTY_NAME = "name";
 
-    //TODO pridat ikonu pro dialog
     public CalendarDialog(Frame owner, VCalendarEntity calendarEntity, final boolean isNew) throws HeadlessException {
         super(owner, true);
         this.newCalendar = isNew;

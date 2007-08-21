@@ -175,7 +175,7 @@ public final class AppPrefs {
             }
             logger.severe("Couldn't save app properties. This is a fatal error. Please reinstall the application.");
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace();//bez logovani
         }
         logger.info("Preferences were saved successfuly");
     }

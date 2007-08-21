@@ -1,9 +1,6 @@
 package cz.cvut.felk.timejuggler.core.application;
 
-import application.ResourceMap;
 import cz.cvut.felk.timejuggler.swing.Swinger;
-import org.jdesktop.swingx.JXErrorPane;
-import org.jdesktop.swingx.error.ErrorInfo;
 
 import javax.swing.*;
 import java.util.logging.Level;
@@ -22,19 +19,12 @@ public class GlobalEDTExceptionHandler implements Thread.UncaughtExceptionHandle
         //final MainApp app = MainApp.getInstance(MainApp.class);
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                showErrorDialog(e);
+                Swinger.showErrorDialog("errorMessageBasic", true, e);
             }
         });
 
 
     }
 
-    private void showErrorDialog(Throwable e) {
-        final ResourceMap map = Swinger.getResourceMap();
-        final ErrorInfo errorInfo = new ErrorInfo(map.getString("errorMessage"), map.getString("errorMessageBasic"), null, "EDT Thread", e, Level.SEVERE, null);
-        JXErrorPane pane = new JXErrorPane();
-        //  pane.setErrorReporter(new EmailErrorReporter());
-        pane.setErrorInfo(errorInfo);
-        JXErrorPane.showDialog(null, pane);
-    }
+
 }

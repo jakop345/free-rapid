@@ -11,8 +11,11 @@ import org.jdesktop.swingx.calendar.JXMonthView;
 import javax.swing.*;
 import javax.swing.text.DateFormatter;
 import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.JTextComponent;
+import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 /**
  * Trida slouzici k instanciovani upravenych zakladnich komponent
@@ -33,7 +36,7 @@ public class ComponentFactory {
     }
 
     private ComponentFactory() {
-        focusListener = new Swinger.SelectAllOnFocusListener();
+        focusListener = new SelectAllOnFocusListener();
     }
 
     private FocusListener getFocusListener() {
@@ -48,7 +51,7 @@ public class ComponentFactory {
 
     public static JXDatePicker getDatePicker() {
         final JXDatePicker picker = new JXDatePicker();
-        picker.setFormats(DateFormat.getDateInstance(DateFormat.MEDIUM));
+        picker.setFormats(new SimpleDateFormat(Swinger.getResourceMap().getString("shortDateFormat")));
         setMonthViewStyle(picker.getMonthView());
         return picker;
     }
@@ -89,5 +92,20 @@ public class ComponentFactory {
         view.setSelectedBackground(feelDefaults.getColor("List.selectionBackground"));
         view.setForeground(feelDefaults.getColor("List.foreground"));
         view.setFont(feelDefaults.getFont("List.font"));
+    }
+
+    /**
+     * Focus listener pouzivany v textovych komponentach. Na vstup do komponenty vybere celej text.
+     */
+    public static final class SelectAllOnFocusListener implements FocusListener {
+        public final void focusGained(final FocusEvent e) {
+            if (!e.isTemporary()) {
+                //final Component component = ;
+                ((JTextComponent) e.getComponent()).selectAll();
+            }
+        }
+
+        public final void focusLost(final FocusEvent e) {
+        }
     }
 }

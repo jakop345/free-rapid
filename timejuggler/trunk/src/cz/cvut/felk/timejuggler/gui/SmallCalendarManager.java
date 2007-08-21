@@ -43,7 +43,6 @@ public class SmallCalendarManager {
     /**
      * Polozky dat pro seznam v kalendari
      */
-//    private List<ContentData<String>> listData; //TODO sjednotit s globalnimi daty
     private JXList checkedList;
     private JPopupMenu popupMenu;
     private SelectionInList<VCalendarEntity> inCalendarsList;
@@ -147,7 +146,8 @@ public class SmallCalendarManager {
         try {
             app.getDataProvider().updateCalendarActive(calendarEntity);
         } catch (PersistencyLayerException e) {
-            LogUtils.processException(logger, e);//TODO error hlasku 
+            LogUtils.processException(logger, e);
+            Swinger.showErrorDialog("errorCalendarUpdate", e);
         }
     }
 

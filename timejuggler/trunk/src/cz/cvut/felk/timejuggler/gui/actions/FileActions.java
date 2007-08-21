@@ -9,6 +9,7 @@ import cz.cvut.felk.timejuggler.db.entity.interfaces.VCalendarEntity;
 import cz.cvut.felk.timejuggler.gui.dialogs.CalendarDialog;
 import cz.cvut.felk.timejuggler.gui.dialogs.EventTaskDialog;
 import cz.cvut.felk.timejuggler.gui.dialogs.filechooser.OpenSaveDialogFactory;
+import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
 import org.jdesktop.beans.AbstractBean;
 
@@ -52,24 +53,11 @@ public class FileActions extends AbstractBean {
         app.prepareDialog(taskDialog, true);
     }
 
-//    public boolean isStatusbarVisible() {
-//        final Object value = Swinger.getAction("showStatusBar").getValue(javax.swing.Action.SELECTED_KEY);
-//        System.out.println("value = " + value);
-//        final boolean b = value != null && ((Boolean) value).booleanValue();
-//        System.out.println("b = " + b);
-//        return !b;
-//    }
-
 
     @Action
     public void newTask() {
         final EventTaskDialog taskDialog = new EventTaskDialog(app.getMainFrame(), false);
         app.prepareDialog(taskDialog, true);
-//        final boolean eventDispatchThread = SwingUtilities.isEventDispatchThread();
-//        final Thread.UncaughtExceptionHandler exceptionHandler = Thread.currentThread().getUncaughtExceptionHandler();
-//        System.out.println("exceptionHandler = " + exceptionHandler);
-//        System.out.println("eventDispatchThread = " + eventDispatchThread);
-//        throw new RuntimeException("Fatalni chyba");
     }
 
     @Action
@@ -90,7 +78,8 @@ public class FileActions extends AbstractBean {
                 dataProvider.addCalendar(calendar);
                 list.setSelection(calendar);
             } catch (PersistencyLayerException e) {
-                LogUtils.processException(logger, e);//TODO pridat error dialog
+                LogUtils.processException(logger, e);
+                Swinger.showErrorDialog("errorCalendarAdd", e);
             }
         }
     }
@@ -109,7 +98,7 @@ public class FileActions extends AbstractBean {
                 list.setSelection(calendar);
                 //  list.fireSelectedContentsChanged(); //neni tu duplicita vs saveOrUpdate? treba otestovat
             } catch (PersistencyLayerException e) {
-                LogUtils.processException(logger, e);//TODO pridat error dialog
+                Swinger.showErrorDialog("errorCalendarUpdate", e);
             }
         }
     }
@@ -127,7 +116,7 @@ public class FileActions extends AbstractBean {
         try {
             app.getDataProvider().removeCalendar(calendar);
         } catch (PersistencyLayerException e) {
-            LogUtils.processException(logger, e);//TODO pridat error dialog
+            Swinger.showErrorDialog("errorCalendarRemove", e);
         }
 
     }
@@ -139,7 +128,7 @@ public class FileActions extends AbstractBean {
             try {
                 app.getDataProvider().importCalendarFromICS(files[0]);
             } catch (PersistencyLayerException e) {
-                e.printStackTrace();//TODO zobrazit informaci o chybe
+                Swinger.showErrorDialog("errorCalendarImport", e);
             }
         }
     }

@@ -46,7 +46,7 @@ public class EditActions {
 //        }
 //        catch (PersistencyLayerException e) {
 //            LogUtils.processException(logger, e);
-//            //TODO podpora pro zobrazeni error hlasky uzivateli
+//
 //        }
 
 /*     	final DataProvider dataProvider = app.getDataProvider();
@@ -54,8 +54,7 @@ public class EditActions {
             dataProvider.addCalendar(new VCalendar("AAATimejuggler"));
         }
         catch (DatabaseException e) {
-            LogUtils.processException(logger, e);
-            //TODO podpora pro zobrazeni error hlasky uzivateli
+            LogUtils.processException(logger, e);           
         }
 */
     }

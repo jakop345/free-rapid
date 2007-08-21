@@ -111,7 +111,7 @@ public class ColorComboBox extends JComboBox {
     }
 
     private static String loc(String key) {
-        return Swinger.getResourceMap().getString(key);
+        return Swinger.getResourceMap(ColorComboBox.class).getString(key);
     }
 
     // innerclasses ............................................................

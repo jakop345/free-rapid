@@ -3,15 +3,16 @@ package cz.cvut.felk.timejuggler.swing;
 import application.ResourceManager;
 import application.ResourceMap;
 import cz.cvut.felk.timejuggler.core.MainApp;
+import cz.cvut.felk.timejuggler.gui.dialogs.ErrorDialog;
+import org.jdesktop.swingx.JXErrorPane;
+import org.jdesktop.swingx.error.ErrorInfo;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -20,57 +21,12 @@ import java.util.logging.Logger;
  */
 public class Swinger {
     private static final Logger logger = Logger.getLogger(Swinger.class.getName());
-    //  private static final String KUNSTSTOFF = "com.incors.plaf.kunststoff.KunststoffLookAndFeel";
 
     private Swinger() {
     }
 
     public static void showInformationDialog(final String message) {
         JOptionPane.showMessageDialog(Frame.getFrames()[0], message, getResourceMap().getString("informationMessage"), JOptionPane.INFORMATION_MESSAGE);
-    }
-
-//    /**
-//     * Nastaveni look&feelu
-//     */
-//    public static void initLaF() {
-//        initLafWithTheme(KUNSTSTOFF, new WordRiderMetalTheme());
-//
-//    }
-
-//    /**
-//     * Nastavi look&feel jako aktivni
-//     * @param lookAndFeelClassName jmeno tridy look&feelu
-//     * @param metalTheme           theme pro MetalLook pokud existuje
-//     */
-//    private static void initLafWithTheme(final String lookAndFeelClassName, final MetalTheme metalTheme) {
-//
-//        try {
-//            final LookAndFeel laf = (LookAndFeel) ClassLoader.getSystemClassLoader().loadClass(lookAndFeelClassName).newInstance();
-//
-//            if (metalTheme != null && laf instanceof MetalLookAndFeel) {
-//                laf.getClass().getMethod("setCurrentTheme", new Class[]{MetalTheme.class}).invoke(laf, metalTheme);
-//            }
-//
-//            UIManager.setLookAndFeel(laf);
-//        } catch (Exception e) {
-//            logger.warning("Couldn't set LookandFeel " + KUNSTSTOFF);
-//        }
-//
-//    }
-
-    /**
-     * Focus listener pouzivany v textovych komponentach. Na vstup do komponenty vybere celej text.
-     */
-    public static final class SelectAllOnFocusListener implements FocusListener {
-        public final void focusGained(final FocusEvent e) {
-            if (!e.isTemporary()) {
-                //final Component component = ;
-                ((JTextComponent) e.getComponent()).selectAll();
-            }
-        }
-
-        public final void focusLost(final FocusEvent e) {
-        }
     }
 
 
@@ -111,8 +67,8 @@ public class Swinger {
         return MainApp.getAContext().getActionMap(aClass, actionsObject);
     }
 
-    public static void showErrorDialog(final String message) {
-        JOptionPane.showMessageDialog(Frame.getFrames()[0], message, getResourceMap().getString("errorMessage"), JOptionPane.ERROR_MESSAGE);
+    public static void showErrorMessage(ResourceMap map, final String message) {
+        JOptionPane.showMessageDialog(Frame.getFrames()[0], message, map.getString("errorMessage"), JOptionPane.ERROR_MESSAGE);
     }
 
     public static void inputFocus(final JComboBox combo) {
@@ -144,5 +100,30 @@ public class Swinger {
         return updateColumn(table, name, columnId, width, null);
     }
 
+    public static void showErrorDialog(Class clazz, final String messageResource, final Throwable e) {
+        showErrorDialog(Swinger.getResourceMap(clazz), messageResource, e);
+    }
+
+    public static void showErrorDialog(final String messageResource, final Throwable e) {
+        showErrorDialog(ErrorDialog.class, messageResource, e);
+    }
+
+    public static void showErrorDialog(ResourceMap map, final String messageResource, final Throwable e) {
+        if (map == null)
+            throw new IllegalArgumentException("Map cannot be null");
+        final String localizedMessage = e.getLocalizedMessage();
+        assert localizedMessage != null;
+        final String text = map.getString(messageResource, localizedMessage);
+        showErrorDialog(text, false, e);
+    }
+
+    public static void showErrorDialog(final String message, final boolean isMesssageResourceKey, final Throwable e) {
+        final ResourceMap map = getResourceMap();
+        final ErrorInfo errorInfo = new ErrorInfo(map.getString("errorMessage"), (isMesssageResourceKey) ? map.getString(message) : message, null, "EDT Thread", e, Level.SEVERE, null);
+        JXErrorPane pane = new JXErrorPane();
+        //  pane.setErrorReporter(new EmailErrorReporter());
+        pane.setErrorInfo(errorInfo);
+        JXErrorPane.showDialog(null, pane);
+    }
 
 }
