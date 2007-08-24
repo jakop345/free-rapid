@@ -16,7 +16,7 @@ public class GlobalEDTExceptionHandler implements Thread.UncaughtExceptionHandle
 
     public void uncaughtException(final Thread t, final Throwable e) {
         logger.log(Level.SEVERE, "Uncaught exception on EDT. ", e);
-        //final MainApp app = MainApp.getInstance(MainApp.class);
+        //final MainApp app = MainApp.getInstance();
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 Swinger.showErrorDialog("errorMessageBasic", true, e);

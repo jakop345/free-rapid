@@ -35,8 +35,7 @@ public class ConnectionManager {
      */
     private ConnectionManager() {
         /* deployment ready code */
-        MainApp app = MainApp.getInstance(MainApp.class);
-        ApplicationContext appContext = app.getContext();
+        ApplicationContext appContext = MainApp.getInstance().getContext();
 
         //TODO nevyuzijeme radeji derby.properties ? jsem pro
         this.db_user = Consts.DB_USERNAME;
@@ -47,7 +46,7 @@ public class ConnectionManager {
         /* deployment ready code */
         this.url = "jdbc:derby:" + appContext.getLocalStorage().getDirectory() + "/" + Consts.DB_LOCALDIR;
 
-        app.addExitListener(new ConnectionManagerExitListener());
+        appContext.getApplication().addExitListener(new ConnectionManagerExitListener());
     }
 
     /**
