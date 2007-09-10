@@ -3,6 +3,10 @@ package cz.cvut.felk.timejuggler.db.entity;
 import cz.cvut.felk.timejuggler.db.DatabaseException;
 import cz.cvut.felk.timejuggler.db.TimeJugglerJDBCTemplate;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.PeriodEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.DurationEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.RepetitionRulesEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.DistinctDatesEntity;
+
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -21,15 +25,15 @@ public class Period extends DbElement implements PeriodEntity {
     private Timestamp endDate;
     private Timestamp startDate;
 
-    private RepetitionRules repetitionRules;    //rrule - pravidla pro opakovani
-    private RepetitionRules exceptionRules;        //exrule - pravidla pro opakovani, kdy se udalost nekona (vyjimky)
-    private DistinctDates exceptionDates;        //exdate - data, kdy se udalost nekona (vyjimky)
+    private RepetitionRulesEntity repetitionRules;    //rrule - pravidla pro opakovani
+    private RepetitionRulesEntity exceptionRules;        //exrule - pravidla pro opakovani, kdy se udalost nekona (vyjimky)
+    private DistinctDatesEntity exceptionDates;        //exdate - data, kdy se udalost nekona (vyjimky)
 
     private int repetitionRulesId;
     private int exceptionRulesId;
     private int exceptionDatesId;
 
-    private Duration duration;    // delka trvani udalosti
+    private DurationEntity duration;    // delka trvani udalosti
     private int periodsId;
 
     public Period() {
@@ -61,32 +65,32 @@ public class Period extends DbElement implements PeriodEntity {
     public void saveOrUpdate(TimeJugglerJDBCTemplate template) throws DatabaseException {
         if (duration != null) {
             logger.info("Period: duration != null ");
-            duration.saveOrUpdate(template);
+            ((Duration)duration).saveOrUpdate(template);
         }
         if (repetitionRules != null) {
-            repetitionRules.saveOrUpdate(template);
+            ((RepetitionRules)repetitionRules).saveOrUpdate(template);
         }
         if (exceptionRules != null) {
-            exceptionRules.saveOrUpdate(template);
+            ((RepetitionRules)exceptionRules).saveOrUpdate(template);
         }
         if (exceptionDates != null) {
-            exceptionDates.saveOrUpdate(template);
+            ((DistinctDates)exceptionDates).saveOrUpdate(template);
         }
 
         if (getId() > 0) {
             Object params[] = {startDate, endDate,
-                    (repetitionRules == null ? null : repetitionRules.getId()),
-                    (exceptionRules == null ? null : exceptionRules.getId()),
-                    (duration == null ? null : duration.getId()), periodsId,
-                    (exceptionDates == null ? null : exceptionDates.getId()), getId()};
+                    (repetitionRules == null ? null : ((RepetitionRules)repetitionRules).getId()),
+                    (exceptionRules == null ? null : ((RepetitionRules)exceptionRules).getId()),
+                    (duration == null ? null : ((Duration)duration).getId()), periodsId,
+                    (exceptionDates == null ? null : ((DistinctDates)exceptionDates).getId()), getId()};
             String updateQuery = "UPDATE Period SET startDate=?,endDate=?,rrule=?,exrule=?,durationID=?,periodsID=?,distinctDatesID=?) WHERE periodID = ? ";
             template.executeUpdate(updateQuery, params);
         } else {
             Object params[] = {startDate, endDate,
-                    repetitionRules == null ? null : repetitionRules.getId(),
-                    exceptionRules == null ? null : exceptionRules.getId(),
-                    duration == null ? null : duration.getId(), periodsId,
-                    exceptionDates == null ? null : exceptionDates.getId()};
+                    repetitionRules == null ? null : ((RepetitionRules)repetitionRules).getId(),
+                    exceptionRules == null ? null : ((RepetitionRules)exceptionRules).getId(),
+                    duration == null ? null : ((Duration)duration).getId(), periodsId,
+                    exceptionDates == null ? null : ((DistinctDates)exceptionDates).getId()};
             String insertQuery = "INSERT INTO Period (startDate,endDate,rrule,exrule,durationID,periodsID,distinctDatesID) VALUES (?,?,?,?,?,?,?)";
             template.executeUpdate(insertQuery, params);
             setId(template.getGeneratedId());
@@ -99,9 +103,15 @@ public class Period extends DbElement implements PeriodEntity {
      * @param template
      */
     public void delete(TimeJugglerJDBCTemplate template) throws DatabaseException {
-        if (repetitionRules != null) repetitionRules.delete(template);
-        if (exceptionRules != null) exceptionRules.delete(template);
-        if (exceptionDates != null) exceptionDates.delete(template);
+        if (repetitionRules != null) {
+        	((RepetitionRules)repetitionRules).delete(template);
+        }
+        if (exceptionRules != null) {
+        	((RepetitionRules)exceptionRules).delete(template);
+        }
+        if (exceptionDates != null) {
+        	((DistinctDates)exceptionDates).delete(template);
+        }
 
         if (getId() > 0) {
             String deleteQuery = "DELETE FROM Period WHERE periodID = ? ";
@@ -120,7 +130,7 @@ public class Period extends DbElement implements PeriodEntity {
         this.startDate = (startDate == null ? null : new Timestamp(startDate.getTime()));
     }
 
-    public void setDuration(Duration duration) {
+    public void setDuration(DurationEntity duration) {
         this.duration = duration;
     }
 
@@ -132,7 +142,7 @@ public class Period extends DbElement implements PeriodEntity {
         return (this.startDate == null ? null : new Date(this.startDate.getTime()));
     }
 
-    public Duration getDuration() {
+    public DurationEntity getDuration() {
         return (this.duration);
     }
 
@@ -146,15 +156,15 @@ public class Period extends DbElement implements PeriodEntity {
     }
 
 
-    public void setRepetitionRules(RepetitionRules repetitionRules) {
+    public void setRepetitionRules(RepetitionRulesEntity repetitionRules) {
         this.repetitionRules = repetitionRules;
     }
 
-    public void setExceptionRules(RepetitionRules exceptionRules) {
+    public void setExceptionRules(RepetitionRulesEntity exceptionRules) {
         this.exceptionRules = exceptionRules;
     }
 
-    public void setExceptionDates(DistinctDates exceptionDates) {
+    public void setExceptionDates(DistinctDatesEntity exceptionDates) {
         this.exceptionDates = exceptionDates;
     }
 
@@ -170,17 +180,17 @@ public class Period extends DbElement implements PeriodEntity {
         this.exceptionDatesId = exceptionDatesId;
     }
 
-    public RepetitionRules getRepetitionRules() {
+    public RepetitionRulesEntity getRepetitionRules() {
         //TODO : SELECT FROM RepetitionRule TODO TODO TODO TODO TODO TODO
         return (this.repetitionRules);
     }
 
-    public RepetitionRules getExceptionRules() {
+    public RepetitionRulesEntity getExceptionRules() {
         //TODO : SELECT FROM RepetitionRule
         return (this.exceptionRules);
     }
 
-    public DistinctDates getExceptionDates() {
+    public DistinctDatesEntity getExceptionDates() {
         //TODO : SELECT FROM DistinctDate
         return (this.exceptionDates);
     }

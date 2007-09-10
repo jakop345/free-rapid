@@ -3,6 +3,7 @@ package cz.cvut.felk.timejuggler.db.entity;
 import cz.cvut.felk.timejuggler.db.DatabaseException;
 import cz.cvut.felk.timejuggler.db.TimeJugglerJDBCTemplate;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.DistinctDatesEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.DistinctDateEntity;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -14,14 +15,14 @@ import java.util.logging.Logger;
  * @version 0.1
  * @created 12-V-2007 18:46:34 Hotovo
  */
-public class DistinctDates extends DbElement implements Iterable, DistinctDatesEntity {
+public class DistinctDates extends DbElement implements Iterable<DistinctDateEntity>, DistinctDatesEntity {
     private final static Logger logger = Logger.getLogger(DistinctDates.class.getName());
 
-    private List<DistinctDate> distinctDates;
+    private List<DistinctDateEntity> distinctDates;
     private int distinctDatesId;
 
     public DistinctDates() {
-        distinctDates = new ArrayList<DistinctDate>();
+        distinctDates = new ArrayList<DistinctDateEntity>();
     }
 
     public void store() {
@@ -42,9 +43,9 @@ public class DistinctDates extends DbElement implements Iterable, DistinctDatesE
             setId(template.getGeneratedId());
         }
 
-        for (DistinctDate date : distinctDates) {
-            date.setDistinctDatesId(getId());
-            date.saveOrUpdate(template);
+        for (DistinctDateEntity date : distinctDates) {
+            ((DistinctDate)date).setDistinctDatesId(getId());
+            ((DistinctDate)date).saveOrUpdate(template);
         }
     }
 
@@ -53,8 +54,8 @@ public class DistinctDates extends DbElement implements Iterable, DistinctDatesE
      * @param template
      */
     public void delete(TimeJugglerJDBCTemplate template) throws DatabaseException {
-        for (DistinctDate date : distinctDates) {
-            date.delete(template);
+        for (DistinctDateEntity date : distinctDates) {
+            ((DistinctDate)date).delete(template);
         }
         if (getId() > 0) {
             String deleteQuery = "DELETE FROM DistinctDates WHERE distinctDatesID = ? ";
@@ -64,7 +65,7 @@ public class DistinctDates extends DbElement implements Iterable, DistinctDatesE
         }
     }
 
-    public void addDate(DistinctDate date) {
+    public void addDate(DistinctDateEntity date) {
         distinctDates.add(date);
     }
 
@@ -80,14 +81,14 @@ public class DistinctDates extends DbElement implements Iterable, DistinctDatesE
      * Method iterator
      * @return
      */
-    public Iterator iterator() {
+    public Iterator<DistinctDateEntity> iterator() {
         return distinctDates.iterator();
     }
 
     /**
      * Method addDistinctDate
      */
-    public void addDistinctDate(DistinctDate date) {
+    public void addDistinctDate(DistinctDateEntity date) {
         distinctDates.add(date);
     }
 

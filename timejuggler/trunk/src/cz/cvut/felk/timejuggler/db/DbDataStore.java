@@ -7,7 +7,10 @@ import cz.cvut.felk.timejuggler.db.entity.interfaces.VCalendarEntity;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.PeriodsEntity;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.PeriodEntity;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.RepetitionRuleEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.RepetitionRulesEntity;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.DurationEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.DistinctDateEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.DistinctDatesEntity;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.data.ParserException;
@@ -159,7 +162,7 @@ public class DbDataStore {
                         for (PeriodEntity p : periods) {
                             //cz.cvut.felk.timejuggler.db.entity.Period p = (cz.cvut.felk.timejuggler.db.entity.Period) o;
                             //System.out.println("+-period " + p.getStartDate() + " ... " + p.getEndDate());
-                            RepetitionRules rules = p.getRepetitionRules();
+                            RepetitionRulesEntity rules = p.getRepetitionRules();
                             if (rules != null) {
                                 for (RepetitionRuleEntity rr : rules) {
                                     System.out.println("+--REPEAT " + rr.getFrequency() +
@@ -276,8 +279,8 @@ public class DbDataStore {
                 //event.setCalendar(cal);
 
                 //cast DateTime
-                event.getDateTime().setPeriodsId(rs.getInt("periodsID"));
-                event.getDateTime().setDistinctDatesId(rs.getInt("distinctDatesID"));
+                ((cz.cvut.felk.timejuggler.db.entity.DateTime)event.getDateTime()).setPeriodsId(rs.getInt("periodsID"));
+                ((cz.cvut.felk.timejuggler.db.entity.DateTime)event.getDateTime()).setDistinctDatesId(rs.getInt("distinctDatesID"));
 
                 ts = rs.getTimestamp("lastmodified");
                 if (ts != null) event.setLastModified(new Date(ts.getTime()));
@@ -332,8 +335,8 @@ public class DbDataStore {
                 //todo.setCalendar(cal);
 
                 //cast DateTime                
-                todo.getDateTime().setPeriodsId(rs.getInt("periodsID"));
-                todo.getDateTime().setDistinctDatesId(rs.getInt("distinctDatesID"));
+                ((cz.cvut.felk.timejuggler.db.entity.DateTime)todo.getDateTime()).setPeriodsId(rs.getInt("periodsID"));
+                ((cz.cvut.felk.timejuggler.db.entity.DateTime)todo.getDateTime()).setDistinctDatesId(rs.getInt("distinctDatesID"));
                 ts = rs.getTimestamp("lastmodified");
                 if (ts != null) todo.setLastModified(new Date(ts.getTime()));
                 ts = rs.getTimestamp("created");
@@ -560,15 +563,15 @@ public class DbDataStore {
                         newPeriod = transformer.makePeriod(p);
                         periods.addPeriod(newPeriod);
                     }
-                    //POZDEJI ! event.setPeriods(periods);
+                    //event.setPeriods(periods); ted ne, ale POZDEJI ! 
                 }
 
                 //Dates
                 DateList dlist = rdate.getDates();
                 DistinctDates ds = new DistinctDates();
                 for (Object o : dlist) {
-                    Date d = (Date) o;
-                    ds.addDate(new DistinctDate(d));
+                    DistinctDate d = new DistinctDate((Date) o);
+                    ds.addDate((DistinctDateEntity)d);
                 }
                 event.setDistinctDates(ds);
 

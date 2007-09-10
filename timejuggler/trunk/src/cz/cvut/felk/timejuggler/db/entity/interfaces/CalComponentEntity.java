@@ -22,7 +22,7 @@ import cz.cvut.felk.timejuggler.db.entity.Attachment;
  * @author Jan Struz
  * @version 0.1
  * 
- * 
+ * interface
  */
 
 public interface CalComponentEntity extends EntityElement {

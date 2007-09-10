@@ -2,6 +2,7 @@ package cz.cvut.felk.timejuggler.db.entity;
 
 import cz.cvut.felk.timejuggler.db.DatabaseException;
 import cz.cvut.felk.timejuggler.db.TimeJugglerJDBCTemplate;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.DistinctDateEntity;
 
 import java.util.Date;
 import java.util.logging.Logger;
@@ -10,8 +11,11 @@ import java.util.logging.Logger;
  * @author Jan Struz
  * @version 0.1
  * @created 12-V-2007 18:47:15 Hotovo
+ *
+ * trida reprezentujici presny datum
+ * ma interface
  */
-public class DistinctDate extends DbElement {
+public class DistinctDate extends DbElement implements DistinctDateEntity {
     private final static Logger logger = Logger.getLogger(DistinctDate.class.getName());
     private Date date;
     private int distinctDatesId;

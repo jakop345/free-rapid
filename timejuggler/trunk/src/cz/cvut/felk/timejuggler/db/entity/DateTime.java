@@ -3,6 +3,10 @@ package cz.cvut.felk.timejuggler.db.entity;
 import cz.cvut.felk.timejuggler.db.DatabaseException;
 import cz.cvut.felk.timejuggler.db.TimeJugglerJDBCTemplate;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.DateTimeEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.DistinctDatesEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.PeriodsEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.PeriodEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.DurationEntity;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,21 +21,22 @@ import java.util.logging.Logger;
  * @created 27-IV-2007 22:45:37
  * <p/>
  * trida reprezentujici casove udaje udalosti (zacatek+konec platnosti, cas zmeny, casove useky (periods))
+ * ma interface
  */
 public class DateTime extends DbElement implements DateTimeEntity {
     private final static Logger logger = Logger.getLogger(DateTime.class.getName());
 
     private Timestamp created;    //datum vytvoreni objektu v databazi
     private Timestamp lastModified;
-    private Periods periods;    // jednotlive useky
+    private PeriodsEntity periods;    // jednotlive useky
     private int periodsId;
-    private DistinctDates distinctDates;    //rdate
+    private DistinctDatesEntity distinctDates;    //rdate
     private int distinctDatesId;
 
     // TODO: upravit ukladani / cteni z DB
     private Timestamp endDate;    // datum kdy konci platnost udalosti (nemusi byt)
     // TODO: nacitat Duration z DB
-    private Duration duration;    // delka trvani udalosti (nemusi byt, alternativa k endDate)
+    private DurationEntity duration;    // delka trvani udalosti (nemusi byt, alternativa k endDate)
     private Timestamp startDate;    // zacatek platnosti udalosti
     /* pokud udalost nema ani koncove datum, ani delku trvani, jedna se o "vyroci",
       * tedy plati "cely den" (+navic pripadne opakovani ...)*/
@@ -46,25 +51,25 @@ public class DateTime extends DbElement implements DateTimeEntity {
     public void saveOrUpdate(TimeJugglerJDBCTemplate template) throws DatabaseException {
         /* ulozeni presnych datumu */
         if (distinctDates != null) {
-            distinctDates.saveOrUpdate(template);
+            ((DistinctDates)distinctDates).saveOrUpdate(template);
         }
         /* ulozeni period */
         if (periods != null) {
-            periods.saveOrUpdate(template);
+            ((Periods)periods).saveOrUpdate(template);
         }
 
         /* ulozeni - delka trvani udalosti (alternativa k endDate) */
         if (duration != null) {
-            duration.saveOrUpdate(template);
+            ((Duration)duration).saveOrUpdate(template);
         }
 
         if (getId() > 0) {
             logger.info("Database - Update: DateTime[" + getId() + "]...");
             Object params[] = {
-                    (distinctDates == null ? null : distinctDates.getId()),
-                    (periods == null ? null : periods.getId()), created, lastModified,
+                    (distinctDates == null ? null : ((DistinctDates)distinctDates).getId()),
+                    (periods == null ? null : ((Periods)periods).getId()), created, lastModified,
                     startDate, endDate,
-                    (duration == null ? null : duration.getId()),
+                    (duration == null ? null : ((Duration)duration).getId()),
                     getId()
             };
             String updateQuery = "UPDATE DateTime SET distinctDatesID=?,periodsID=?,created=?,lastmodified=?, startDate=?, endDate=?, durationID=? WHERE dateTimeID = ?";
@@ -75,10 +80,10 @@ public class DateTime extends DbElement implements DateTimeEntity {
             //setCreated(new Timestamp(new Date().getTime()));
             logger.info("Database - Insert: DateTime[]...startdate=" + startDate);
             Object params[] = {
-                    (distinctDates == null ? null : distinctDates.getId()),
-                    (periods == null ? null : periods.getId()), created, lastModified,
+                    (distinctDates == null ? null : ((DistinctDates)distinctDates).getId()),
+                    (periods == null ? null : ((Periods)periods).getId()), created, lastModified,
                     startDate, endDate,
-                    (duration == null ? null : duration.getId())
+                    (duration == null ? null : ((Duration)duration).getId())
             };
             String insertQuery = "INSERT INTO DateTime (distinctDatesID,periodsID,created,lastmodified,startDate,endDate,durationID ) VALUES (?,?,?,?,?,?,?)";
 
@@ -93,10 +98,10 @@ public class DateTime extends DbElement implements DateTimeEntity {
      */
     public void delete(TimeJugglerJDBCTemplate template) throws DatabaseException {
         if (distinctDates != null) {
-            distinctDates.delete(template);
+            ((DistinctDates)distinctDates).delete(template);
         }
         if (periods != null) {
-            periods.delete(template);
+            ((Periods)periods).delete(template);
         }
 
         if (getId() > 0) {
@@ -122,7 +127,7 @@ public class DateTime extends DbElement implements DateTimeEntity {
         this.lastModified = (lastModified == null ? null : new Timestamp(lastModified.getTime()));
     }
 
-    public void setPeriods(Periods periods) {
+    public void setPeriods(PeriodsEntity periods) {
         this.periods = periods;
     }
 
@@ -138,11 +143,11 @@ public class DateTime extends DbElement implements DateTimeEntity {
         return (this.lastModified == null ? null : new Date(lastModified.getTime()));
     }
 
-    public Periods getPeriods() throws DatabaseException {
+    public PeriodsEntity getPeriods() throws DatabaseException {
         // TODO: SELECT .. JOIN - Duration
         String sql = "SELECT * FROM Period WHERE periodsID = ?";
         Object params[] = {periodsId};
-        TimeJugglerJDBCTemplate<Periods> template = new TimeJugglerJDBCTemplate<Periods>() {
+        TimeJugglerJDBCTemplate<PeriodsEntity> template = new TimeJugglerJDBCTemplate<PeriodsEntity>() {
             protected void handleRow(ResultSet rs) throws SQLException {
                 if (items == null) items = new Periods();
 
@@ -157,7 +162,7 @@ public class DateTime extends DbElement implements DateTimeEntity {
                 ts = rs.getTimestamp("endDate");
                 if (ts != null) period.setEndDate(new Date(ts.getTime()));
 
-                items.addPeriod(period);
+                items.addPeriod((PeriodEntity)period);
             }
         };
         template.executeQuery(sql, params);
@@ -165,11 +170,11 @@ public class DateTime extends DbElement implements DateTimeEntity {
     }
 
 
-    public void setDistinctDates(DistinctDates distinctDates) {
+    public void setDistinctDates(DistinctDatesEntity distinctDates) {
         this.distinctDates = distinctDates;
     }
 
-    public DistinctDates getDistinctDates() {
+    public DistinctDatesEntity getDistinctDates() {
         //TODO : SELECT FROM DistinctDate
         return (this.distinctDates);
     }
@@ -179,7 +184,7 @@ public class DateTime extends DbElement implements DateTimeEntity {
         this.endDate = (endDate == null ? null : new Timestamp(endDate.getTime()));
     }
 
-    public void setEndDate(Duration dur) {
+    public void setEndDate(DurationEntity dur) {
         this.duration = dur;
     }
 

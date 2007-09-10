@@ -14,6 +14,9 @@ import java.util.logging.Logger;
  * @author Jan Struz
  * @version 0.1
  * @created 12-V-2007 18:42:40 Hotovo
+ *
+ * trida reprezentujici seznam Period (casovych useku)
+ * ma interface
  */
 public class Periods extends DbElement implements Iterable<PeriodEntity>, PeriodsEntity {
     private final static Logger logger = Logger.getLogger(Periods.class.getName());

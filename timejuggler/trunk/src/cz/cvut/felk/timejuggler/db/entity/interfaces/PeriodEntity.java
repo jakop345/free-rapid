@@ -1,36 +1,40 @@
 package cz.cvut.felk.timejuggler.db.entity.interfaces;
 
-import cz.cvut.felk.timejuggler.db.entity.RepetitionRules;
-import cz.cvut.felk.timejuggler.db.entity.DistinctDates;
-import cz.cvut.felk.timejuggler.db.entity.Duration;
-
 import java.util.Date;
 
+/**
+ * @author Jan Struz
+ * @version 0.3
+ * 
+ * interface
+ * 
+ */
+ 
 public interface PeriodEntity extends EntityElement {
 	
 	void setEndDate(Date endDate);
 	
 	void setStartDate(Date startDate);
 	
-	void setDuration(Duration duration);
+	void setDuration(DurationEntity duration);
 	
 	Date getEndDate();
 	
 	Date getStartDate();
 	
-	Duration getDuration();
+	DurationEntity getDuration();
 	
-	void setRepetitionRules(RepetitionRules repetitionRules);
+	void setRepetitionRules(RepetitionRulesEntity repetitionRules);
 	
-	void setExceptionRules(RepetitionRules exceptionRules);
+	void setExceptionRules(RepetitionRulesEntity exceptionRules);
 	
-	void setExceptionDates(DistinctDates exceptionDates);
+	void setExceptionDates(DistinctDatesEntity exceptionDates);
 	
-	RepetitionRules getRepetitionRules();
+	RepetitionRulesEntity getRepetitionRules();
 	
-	RepetitionRules getExceptionRules();
+	RepetitionRulesEntity getExceptionRules();
 	
-	DistinctDates getExceptionDates();
+	DistinctDatesEntity getExceptionDates();
 	
 }
 

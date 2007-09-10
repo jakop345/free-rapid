@@ -2,6 +2,7 @@ package cz.cvut.felk.timejuggler.db.entity;
 
 import cz.cvut.felk.timejuggler.db.DatabaseException;
 import cz.cvut.felk.timejuggler.db.TimeJugglerJDBCTemplate;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.DurationEntity;
 
 import java.util.logging.Logger;
 
@@ -11,8 +12,9 @@ import java.util.logging.Logger;
  * @created 27-IV-2007 22:45:50
  * <p/>
  * Trida reprezentujici delku trvani udalosti, pokud nema nastaven presny datum konce platnosti
+ * ma interface
  */
-public class Duration extends DbElement {
+public class Duration extends DbElement implements DurationEntity {
     private final static Logger logger = Logger.getLogger(Duration.class.getName());
 
     private boolean negative = false;

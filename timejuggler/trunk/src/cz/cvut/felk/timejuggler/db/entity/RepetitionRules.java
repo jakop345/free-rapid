@@ -2,6 +2,8 @@ package cz.cvut.felk.timejuggler.db.entity;
 
 import cz.cvut.felk.timejuggler.db.DatabaseException;
 import cz.cvut.felk.timejuggler.db.TimeJugglerJDBCTemplate;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.RepetitionRuleEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.RepetitionRulesEntity;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -13,14 +15,14 @@ import java.util.logging.Logger;
  * @version 0.1
  * @created 12-V-2007 18:40:08 Hotovo
  */
-public class RepetitionRules extends DbElement implements Iterable<RepetitionRule> {
+public class RepetitionRules extends DbElement implements Iterable<RepetitionRuleEntity>, RepetitionRulesEntity {
     private final static Logger logger = Logger.getLogger(RepetitionRules.class.getName());
 
-    private List<RepetitionRule> repetitionRules;
+    private List<RepetitionRuleEntity> repetitionRules;
     private int repetitionRulesId;
 
     public RepetitionRules() {
-        repetitionRules = new ArrayList<RepetitionRule>();
+        repetitionRules = new ArrayList<RepetitionRuleEntity>();
     }
 
     public void store() {
@@ -41,9 +43,9 @@ public class RepetitionRules extends DbElement implements Iterable<RepetitionRul
             setId(template.getGeneratedId());
         }
 
-        for (RepetitionRule rule : repetitionRules) {
-            rule.setRepetitionRulesID(getId());
-            rule.saveOrUpdate(template);
+        for (RepetitionRuleEntity rule : repetitionRules) {
+            ((RepetitionRule)rule).setRepetitionRulesID(getId());
+            ((RepetitionRule)rule).saveOrUpdate(template);
         }
     }
 
@@ -52,8 +54,8 @@ public class RepetitionRules extends DbElement implements Iterable<RepetitionRul
      * @param template
      */
     public void delete(TimeJugglerJDBCTemplate template) throws DatabaseException {
-        for (RepetitionRule rule : repetitionRules) {
-            rule.delete(template);
+        for (RepetitionRuleEntity rule : repetitionRules) {
+            ((RepetitionRule)rule).delete(template);
         }
         if (getId() > 0) {
             String deleteQuery = "DELETE FROM RepetitionRules WHERE repetitionRulesID = ? ";
@@ -63,7 +65,7 @@ public class RepetitionRules extends DbElement implements Iterable<RepetitionRul
         }
     }
 
-    public void addRule(RepetitionRule rule) {
+    public void addRule(RepetitionRuleEntity rule) {
         repetitionRules.add(rule);
     }
 
@@ -79,7 +81,7 @@ public class RepetitionRules extends DbElement implements Iterable<RepetitionRul
      * Method iterator
      * @return
      */
-    public Iterator<RepetitionRule> iterator() {
+    public Iterator<RepetitionRuleEntity> iterator() {
         return repetitionRules.iterator();
 	}
 }
