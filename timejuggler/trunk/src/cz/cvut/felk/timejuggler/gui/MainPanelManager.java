@@ -7,12 +7,17 @@ import cz.cvut.felk.timejuggler.entity.CalendarEvent;
 import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.swing.components.calendar.CalendarConfig;
 import cz.cvut.felk.timejuggler.swing.components.calendar.CalendarGrid;
+import cz.cvut.felk.timejuggler.swing.components.calendar.CalendarGridEventFactory;
+import cz.cvut.felk.timejuggler.swing.components.calendar.CalendarGridEventFactoryImpl;
 import cz.cvut.felk.timejuggler.swing.components.calendar.CalendarView;
+
 import org.jdesktop.swingx.JXMultiSplitPane;
 import org.jdesktop.swingx.MultiSplitLayout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Date;
 
 /**
@@ -74,7 +79,9 @@ public class MainPanelManager {
         CalendarConfig calendarConfig = new CalendarConfig();
 
         CalendarEventDAO_DummyImpl calendarEventDAO = new CalendarEventDAO_DummyImpl();
-        calendarGrid = new CalendarGrid(calendarEventDAO, calendarConfig);
+        
+        CalendarGridEventFactory calendarGridEventFactory = new CalendarGridEventFactoryImpl();
+        calendarGrid = new CalendarGrid(calendarEventDAO, calendarGridEventFactory, calendarConfig);
         calendarGrid.setStartDate(todayDate);
 
         //calendarGrid.setCalendarView(CalendarView.toCalendarView(AppPrefs.getProperty(AppPrefs.CALENDAR_VIEW, CalendarView.DAY.ordinal())));
@@ -118,6 +125,13 @@ public class MainPanelManager {
         ce.setEndDate(endDate);
 
         calendarEventDAO.saveCalendarEvent(ce);
+                
+        calendarGrid.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				JOptionPane.showMessageDialog(calendarGrid, "Kliknuti na souradnicich predstavujici datum: " + calendarGrid.getDateByPosition(e.getX(), e.getY()).toString());
+			}        	
+        });
 
         setDefaultCalendarView(); //nastaveni vybraneho view
 

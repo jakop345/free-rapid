@@ -9,7 +9,9 @@ import cz.cvut.felk.timejuggler.core.domain.DateInterval;
 import cz.cvut.felk.timejuggler.entity.CalendarEvent;
 
 /**
- * Tato trida zapouzdruje udalost v kalendari do graficke komponenty
+ * Tato trida zapouzdruje udalost v kalendari do graficke komponenty. Predstavuje vrchol hierarchie grafickych zobrazeni udalosti,
+ * potomkove predstavuji specificke vykreslovani pro ruzne typy udalosti (tj. prepsat metodu paint(Graphics) ). O konstrukci instanci se stara {@link CalendarGridEventFactory}.
+ * 
  * @author Jerry!
  */
 public class CalendarGridEvent extends JComponent {
@@ -20,7 +22,7 @@ public class CalendarGridEvent extends JComponent {
 
     private DateInterval visibleDateInterval = null;
     
-    public CalendarGridEvent(CalendarEvent calendarEvent, DateInterval visibleDateInterval) {
+    protected CalendarGridEvent(CalendarEvent calendarEvent, DateInterval visibleDateInterval) {
 		super();
 		this.calendarEvent = calendarEvent;
 		this.visibleDateInterval = visibleDateInterval;
@@ -29,7 +31,7 @@ public class CalendarGridEvent extends JComponent {
 
 	@Override
     public void paint(Graphics g) {
-        //TODO jak budem kreslit? Zatim udelej obdelnicek Jerry!
+        //Basic. Zatim udelej obdelnicek
 		Color color = calendarEvent.getColor();
 		if (color==null) {
 			color = Color.YELLOW; 
