@@ -102,7 +102,7 @@
 
     <!-- run TimeJuggler -->
 
-    <target name="run">
+    <target name="run" depends="build">
         <java fork="true" jar="${build}/${jarfile}"/>
     </target>
 
