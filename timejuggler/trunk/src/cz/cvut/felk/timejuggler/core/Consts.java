@@ -5,15 +5,27 @@ package cz.cvut.felk.timejuggler.core;
  * @author Vity
  */
 public class Consts {
+
+    /**
+     * Product name
+     */
+    public static final String PRODUCT = "TimeJuggler";
+
+    /**
+     * Version
+     */
+    public static final String VERSION = "0.4";
+
     /**
      * verze a jmeno programu
      */
-    public static final String APPVERSION = "TimeJuggler 0.4";
+    public static final String APPVERSION = PRODUCT + " " + VERSION;
 
     /**
      * uzivatelske jmeno pro pristup do databaze
      */
     public static final String DB_USERNAME = "timejuggler";
+
     /**
      * uzivatelske heslo pro pristup do databaze
      */
@@ -33,13 +45,10 @@ public class Consts {
      * relativni cesta k souboru v adresari aplikace, kde lze nalezt default databazi
      */
     public static final String DB_DEFAULT = "db_init/db.zip";
-
     /**
      * relativni cesta k souboru v adresari aplikace, kde lze nalezt default databazi
      */
     public static final String DB_LOCALDIR = "db";
-
-
     /**
      * jmeno adresare v resources, kde je sound
      */
@@ -48,7 +57,6 @@ public class Consts {
      * cesta k adresari s look&feely
      */
     public static final String LAFSDIR = "lookandfeel";
-
     /**
      * cesta k properties fajlu
      */
@@ -58,6 +66,11 @@ public class Consts {
      */
     public static final int ONE_INSTANCE_SERVER_PORT = 28879;
 
+    /**
+     * URL adresa, kam se posilaji reporty o chybach
+     */
+    public static final String WEBURL_SUBMIT_ERROR = "http://wordrider.net/error.php";
+    //   public static final String WEBURL_SUBMIT_ERROR = "http://localhost/wordrider/web/error.php";
 
     /**
      * Od teto tridy se nebudou delat zadne instance

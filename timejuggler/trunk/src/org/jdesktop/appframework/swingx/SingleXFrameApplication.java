@@ -193,7 +193,6 @@ public abstract class SingleXFrameApplication extends SingleFrameApplication {
         }
     }
 
-
     protected JXFrame createXMainFrame() {
         JXFrame xFrame = createXFrame();
         ApplicationContext appContext = getContext();

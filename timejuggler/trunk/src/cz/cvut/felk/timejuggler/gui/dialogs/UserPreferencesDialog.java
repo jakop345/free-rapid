@@ -236,28 +236,28 @@ public class UserPreferencesDialog extends AppDialog {
     }
 
     private void bindBasicComponents() {
-        bindTextField(fieldSoundPath, AppPrefs.SOUND_PATH, AppPrefs.DEF_SOUND_PATH);
+        bind(fieldSoundPath, AppPrefs.SOUND_PATH, AppPrefs.DEF_SOUND_PATH);
 
-        bindCheckbox(checkShowIconInSystemTray, AppPrefs.SHOW_TRAY, true);
-        bindCheckbox(checkPlaySound, AppPrefs.PLAY_SOUND, true);
-        bindCheckbox(checkShowAlarmBox, AppPrefs.SHOW_ALARM_BOX, true);
-        bindCheckbox(checkShowMissedAlarms, AppPrefs.SHOW_MISSED_ALARMS, true);
+        bind(checkShowIconInSystemTray, AppPrefs.SHOW_TRAY, true);
+        bind(checkPlaySound, AppPrefs.PLAY_SOUND, true);
+        bind(checkShowAlarmBox, AppPrefs.SHOW_ALARM_BOX, true);
+        bind(checkShowMissedAlarms, AppPrefs.SHOW_MISSED_ALARMS, true);
 
-        bindSpinner(spinnerDefaultEventLength, AppPrefs.DEFAULT_EVENT_LENGTH, 60, 1, 999, 60);
-        bindSpinner(spinnerlDefaultSnoozeLength, AppPrefs.DEFAULT_SNOOZE_LENGTH, 60, 1, 999, 30);
-        bindSpinner(spinnerDefaultTimeBeforeEvent, AppPrefs.DEFAULT_ALARM_TIME_BEFORE_EVENT, 15, 1, 999, 5);
-        bindSpinner(spinnerDefaultTimeBeforeTask, AppPrefs.DEFAULT_ALARM_TIME_BEFORE_TASK, 15, 1, 999, 5);
+        bind(spinnerDefaultEventLength, AppPrefs.DEFAULT_EVENT_LENGTH, 60, 1, 999, 60);
+        bind(spinnerlDefaultSnoozeLength, AppPrefs.DEFAULT_SNOOZE_LENGTH, 60, 1, 999, 30);
+        bind(spinnerDefaultTimeBeforeEvent, AppPrefs.DEFAULT_ALARM_TIME_BEFORE_EVENT, 15, 1, 999, 5);
+        bind(spinnerDefaultTimeBeforeTask, AppPrefs.DEFAULT_ALARM_TIME_BEFORE_TASK, 15, 1, 999, 5);
 
-        bindCombobox(comboDayEndsAt, AppPrefs.DAY_ENDS_AT, 0, "dayEndsAt");
-        bindCombobox(comboDayStartsAt, AppPrefs.DAY_STARTS_AT, 0, "dayStartsAt");
-        bindCombobox(comboDefaultAlarmSettingForEvent, AppPrefs.DEFAULT_ALARM_SETTING_FOR_EVENT, 0, "onOff");
-        bindCombobox(comboDefaultAlarmSettingForTask, AppPrefs.DEFAULT_ALARM_SETTING_FOR_TASK, 0, "onOff");
-        bindCombobox(comboDefaultWeeksToShow, AppPrefs.DEFAULT_WEEKS_TO_SHOW, 0, "defaultWeeksToShow");
-        bindCombobox(comboPreviousWeeksToShow, AppPrefs.PREVIOUS_WEEKS_TO_SHOW, 0, "previousWeeksToShow");
-        bindCombobox(comboShowHoursAtATime, AppPrefs.SHOW_HOURS_AT_A_TIME, 0, "showHoursAtATime");
-        bindCombobox(comboTimeUnitEvent, AppPrefs.DEFAULT_ALARM_TIME_BEFORE_EVENT_TIMEUNIT, 0, "timeunit");
-        bindCombobox(comboTimeUnitTask, AppPrefs.DEFAULT_ALARM_TIME_BEFORE_TASK_TIMEUNIT, 0, "timeunit");
-        bindCombobox(comboDateTextFormat, AppPrefs.DATE_TEXT_FORMAT, AppPrefs.DEF_DATE_TEXT_FORMAT_SHORT, getDateFormats());
+        bind(comboDayEndsAt, AppPrefs.DAY_ENDS_AT, 0, "dayEndsAt");
+        bind(comboDayStartsAt, AppPrefs.DAY_STARTS_AT, 0, "dayStartsAt");
+        bind(comboDefaultAlarmSettingForEvent, AppPrefs.DEFAULT_ALARM_SETTING_FOR_EVENT, 0, "onOff");
+        bind(comboDefaultAlarmSettingForTask, AppPrefs.DEFAULT_ALARM_SETTING_FOR_TASK, 0, "onOff");
+        bind(comboDefaultWeeksToShow, AppPrefs.DEFAULT_WEEKS_TO_SHOW, 0, "defaultWeeksToShow");
+        bind(comboPreviousWeeksToShow, AppPrefs.PREVIOUS_WEEKS_TO_SHOW, 0, "previousWeeksToShow");
+        bind(comboShowHoursAtATime, AppPrefs.SHOW_HOURS_AT_A_TIME, 0, "showHoursAtATime");
+        bind(comboTimeUnitEvent, AppPrefs.DEFAULT_ALARM_TIME_BEFORE_EVENT_TIMEUNIT, 0, "timeunit");
+        bind(comboTimeUnitTask, AppPrefs.DEFAULT_ALARM_TIME_BEFORE_TASK_TIMEUNIT, 0, "timeunit");
+        bind(comboDateTextFormat, AppPrefs.DATE_TEXT_FORMAT, AppPrefs.DEF_DATE_TEXT_FORMAT_SHORT, getDateFormats());
 
         bindLaFCombobox();
     }
@@ -271,7 +271,7 @@ public class UserPreferencesDialog extends AppDialog {
     }
 
 
-    private void bindSpinner(JSpinner spinner, String key, int defaultValue, int minValue, int maxValue, int step) {
+    private void bind(JSpinner spinner, String key, int defaultValue, int minValue, int maxValue, int step) {
         spinner.setModel(SpinnerAdapterFactory.createNumberAdapter(
                 model.getBufferedPreferences(key, defaultValue),
                 defaultValue,   // defaultValue
@@ -280,22 +280,22 @@ public class UserPreferencesDialog extends AppDialog {
                 step)); // step
     }
 
-    private void bindCheckbox(final JCheckBox checkBox, final String key, final Object defaultValue) {
+    private void bind(final JCheckBox checkBox, final String key, final Object defaultValue) {
         Bindings.bind(checkBox, model.getBufferedPreferences(key, defaultValue));
     }
 
-    private void bindTextField(final JTextField field, final String key, final Object defaultValue) {
+    private void bind(final JTextField field, final String key, final Object defaultValue) {
         Bindings.bind(field, model.getBufferedPreferences(key, defaultValue), false);
     }
 
-    private void bindCombobox(final JComboBox combobox, final String key, final Object defaultValue, final String propertyResourceMap) {
+    private void bind(final JComboBox combobox, final String key, final Object defaultValue, final String propertyResourceMap) {
         final String[] stringList = getList(propertyResourceMap);
         if (stringList == null)
             throw new IllegalArgumentException("Property '" + propertyResourceMap + "' does not provide any string list from resource map.");
-        bindCombobox(combobox, key, defaultValue, stringList);
+        bind(combobox, key, defaultValue, stringList);
     }
 
-    private void bindCombobox(final JComboBox combobox, String key, final Object defaultValue, final String[] values) {
+    private void bind(final JComboBox combobox, String key, final Object defaultValue, final String[] values) {
         if (values == null)
             throw new IllegalArgumentException("List of combobox values cannot be null!!");
         final MyPreferencesAdapter adapter = new MyPreferencesAdapter(key, defaultValue);

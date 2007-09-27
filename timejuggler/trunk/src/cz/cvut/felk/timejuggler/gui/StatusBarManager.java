@@ -1,5 +1,6 @@
 package cz.cvut.felk.timejuggler.gui;
 
+import application.Application;
 import application.ApplicationContext;
 import cz.cvut.felk.timejuggler.swing.components.ClockField;
 import org.jdesktop.swingx.JXStatusBar;
@@ -31,7 +32,6 @@ public class StatusBarManager implements PropertyChangeListener {
                 }
             }
         });
-
     }
 
     public JXStatusBar getStatusBar() {
@@ -40,7 +40,7 @@ public class StatusBarManager implements PropertyChangeListener {
 
             statusbar.setName("statusbarPanel");
             infoLabel = new JLabel();
-            infoLabel.setPreferredSize(new Dimension(300, 15));
+            infoLabel.setPreferredSize(new Dimension(330, 15));
             panelManager.getMenuManager().getMenuBar().addPropertyChangeListener("selectedText", this);
             statusbar.add(infoLabel, JXStatusBar.Constraint.ResizeBehavior.FIXED);
 //            statusbar.add(progressBar, JXStatusBar.Constraint.ResizeBehavior.FIXED);
@@ -49,6 +49,7 @@ public class StatusBarManager implements PropertyChangeListener {
             //    progressBar.setVisible(false);
             comp.setHorizontalAlignment(JLabel.CENTER);
             statusbar.add(comp);
+            Application.getInstance().getContext().getTaskMonitor().addPropertyChangeListener(this);
         }
         return statusbar;
     }
@@ -59,8 +60,11 @@ public class StatusBarManager implements PropertyChangeListener {
     }
 
     public void propertyChange(PropertyChangeEvent evt) {
-        if ("selectedText".equals(evt.getPropertyName())) {
-            infoLabel.setText(evt.getNewValue().toString());
+        final String propertyName = evt.getPropertyName();
+        if ("done".equals(propertyName)) {
+            infoLabel.setText("");
+        } else if ("message".equals(propertyName) || "selectedText".equals(propertyName)) {
+            infoLabel.setText((String) evt.getNewValue());
         }
     }
 }

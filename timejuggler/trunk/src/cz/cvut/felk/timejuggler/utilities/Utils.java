@@ -1,9 +1,6 @@
 package cz.cvut.felk.timejuggler.utilities;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -19,11 +16,27 @@ public final class Utils {
      * pomocna promenna pro ulozeni verze JVM na ktere bezime
      */
     private static String actualJavaVersion = null;
+    private static final int XOR_VALUE = 35132;
 
     private Utils() {
 
     }
 
+    /**
+     * Vygeneruje/pseudokodovany retezec pomoci funkce XOR - je obousmerna
+     * @param text text k zakodovani/dekodovani
+     * @return zakodovany/dekodovany retezec
+     */
+    public static String generateXorString(final String text) {
+        final char[] textArray = text.toCharArray();
+        final int length = textArray.length;
+        if (length > 0) {
+            final StringBuilder buffer = new StringBuilder(length);
+            for (int i = 0; i < length; ++i)
+                buffer.append((char) (textArray[i] ^ XOR_VALUE));
+            return buffer.toString();
+        } else return "";
+    }
 
     /**
      * Provede test na verzi JVM na ktere aplikaci bezi
@@ -68,6 +81,27 @@ public final class Utils {
      */
     public static String addFileSeparator(final String filePath) {
         return filePath.endsWith(File.separator) ? filePath : filePath + File.separator;
+    }
+
+    /**
+     * Prida dalsi parametr s jeho hodnotou pro odeslani v URL konexi
+     * @param params     skladane parametry pro odeslani
+     * @param paramName  jmeno parametru
+     * @param paramValue hodnota parametru
+     */
+    public static void addParam(final StringBuilder params, final String paramName, String paramValue) {
+        if (paramValue == null)
+            paramValue = "";
+        String encoded;
+        try {
+            encoded = java.net.URLEncoder.encode(paramValue, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            encoded = "";
+            LogUtils.processException(logger, e);
+        }
+        if (params.length() > 0)
+            params.append('&');
+        params.append(paramName).append('=').append(encoded);
     }
 
     /**

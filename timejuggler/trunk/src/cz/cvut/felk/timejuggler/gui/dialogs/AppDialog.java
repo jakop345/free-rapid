@@ -26,6 +26,10 @@ abstract class AppDialog extends JDialog {
     int result = RESULT_CANCEL;
 //    private final boolean closeOnCancel = true;
 
+    public AppDialog(Dialog owner, boolean modal) throws HeadlessException {
+        super(owner, modal);
+    }
+
     public AppDialog(final Frame owner, final boolean modal) throws HeadlessException {
         super(owner, modal);
     }
@@ -114,7 +118,7 @@ abstract class AppDialog extends JDialog {
         rootPane.registerKeyboardAction(escapeActionListener, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
         stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
         rootPane.registerKeyboardAction(okButtonListener, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
-        stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_MASK);
+        stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_MASK);//textarea
         rootPane.registerKeyboardAction(okButtonListener, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
         return rootPane;
     }

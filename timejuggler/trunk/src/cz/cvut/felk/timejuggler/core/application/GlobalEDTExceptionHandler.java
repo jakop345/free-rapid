@@ -19,7 +19,7 @@ public class GlobalEDTExceptionHandler implements Thread.UncaughtExceptionHandle
         //final MainApp app = MainApp.getInstance();
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                Swinger.showErrorDialog("errorMessageBasic", true, e);
+                Swinger.showErrorDialog("errorMessageBasic", e, true);
             }
         });
 

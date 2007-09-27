@@ -3,6 +3,7 @@ package cz.cvut.felk.timejuggler.swing;
 import application.ResourceManager;
 import application.ResourceMap;
 import cz.cvut.felk.timejuggler.core.MainApp;
+import cz.cvut.felk.timejuggler.core.application.SubmitErrorReporter;
 import cz.cvut.felk.timejuggler.gui.dialogs.ErrorDialog;
 import org.jdesktop.swingx.JXErrorPane;
 import org.jdesktop.swingx.error.ErrorInfo;
@@ -67,8 +68,8 @@ public class Swinger {
         return MainApp.getAContext().getActionMap(aClass, actionsObject);
     }
 
-    public static void showErrorMessage(ResourceMap map, final String message) {
-        JOptionPane.showMessageDialog(Frame.getFrames()[0], message, map.getString("errorMessage"), JOptionPane.ERROR_MESSAGE);
+    public static void showErrorMessage(ResourceMap map, final String message, final Object... args) {
+        JOptionPane.showMessageDialog(Frame.getFrames()[0], map.getString(message, args), getResourceMap().getString("errorMessage", args), JOptionPane.ERROR_MESSAGE);
     }
 
     public static void inputFocus(final JComboBox combo) {
@@ -100,30 +101,37 @@ public class Swinger {
         return updateColumn(table, name, columnId, width, null);
     }
 
-    public static void showErrorDialog(Class clazz, final String messageResource, final Throwable e) {
-        showErrorDialog(Swinger.getResourceMap(clazz), messageResource, e);
+    public static void showErrorDialog(Class clazz, final String messageResource, final Throwable e, final boolean showErrorReporter) {
+        showErrorDialog(Swinger.getResourceMap(clazz), messageResource, e, showErrorReporter);
+    }
+
+    public static void showErrorDialog(final String messageResource, final Throwable e, final boolean showErrorReporter) {
+        showErrorDialog(ErrorDialog.class, messageResource, e, showErrorReporter);
     }
 
     public static void showErrorDialog(final String messageResource, final Throwable e) {
-        showErrorDialog(ErrorDialog.class, messageResource, e);
+        showErrorDialog(ErrorDialog.class, messageResource, e, false);
     }
 
-    public static void showErrorDialog(ResourceMap map, final String messageResource, final Throwable e) {
+    private static void showErrorDialog(ResourceMap map, final String messageResource, final Throwable e, boolean showErrorReporter) {
         if (map == null)
             throw new IllegalArgumentException("Map cannot be null");
         final String localizedMessage = e.getLocalizedMessage();
         assert localizedMessage != null;
         final String text = map.getString(messageResource, localizedMessage);
-        showErrorDialog(text, false, e);
+        showErrorDialog(text, false, e, showErrorReporter);
     }
 
-    public static void showErrorDialog(final String message, final boolean isMesssageResourceKey, final Throwable e) {
+    private static void showErrorDialog(final String message, final boolean isMesssageResourceKey, final Throwable e, boolean showErrorReporter) {
         final ResourceMap map = getResourceMap();
         final ErrorInfo errorInfo = new ErrorInfo(map.getString("errorMessage"), (isMesssageResourceKey) ? map.getString(message) : message, null, "EDT Thread", e, Level.SEVERE, null);
-        JXErrorPane pane = new JXErrorPane();
-        //  pane.setErrorReporter(new EmailErrorReporter());
+        final JXErrorPane pane = new JXErrorPane();
+//        pane.setName("ErrorPane");
+//        map.injectComponents(pane);
+        if (showErrorReporter)
+            pane.setErrorReporter(new SubmitErrorReporter());
         pane.setErrorInfo(errorInfo);
-        JXErrorPane.showDialog(null, pane);
+        JXErrorPane.showDialog(JFrame.getFrames()[0], pane);
     }
 
 }

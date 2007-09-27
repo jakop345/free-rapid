@@ -1,6 +1,9 @@
 package cz.cvut.felk.timejuggler.gui;
 
+import application.Application;
 import application.ApplicationContext;
+import application.ResourceMap;
+import application.TaskMonitor;
 import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.swing.ToolbarSeparator;
 
@@ -31,6 +34,7 @@ public class ToolbarManager {
      * samotny toolbar
      */
     private JToolBar toolbar = new JToolBar("mainToolbar");
+    private JLabel labelWorkingProgress;
 
     /**
      * Konstruktor - naplni toolbar buttony
@@ -49,6 +53,18 @@ public class ToolbarManager {
             }
         });
         createToolbar();
+        final TaskMonitor taskMonitor = Application.getInstance().getContext().getTaskMonitor();
+        taskMonitor.addPropertyChangeListener(new PropertyChangeListener() {
+
+            public void propertyChange(PropertyChangeEvent evt) {
+                final String propertyName = evt.getPropertyName();
+                if ("done".equals(propertyName)) {
+                    setWorkingProgress(false);
+                } else if ("started".equals(propertyName)) {
+                    setWorkingProgress(true);
+                }
+            }
+        });
     }
 
     private void createToolbar() {
@@ -78,10 +94,10 @@ public class ToolbarManager {
         buttonGroup.add(comp);
         toolbar.add(comp);
         toolbar.add(Box.createGlue());
-        final JLabel labelWorkingProgress = new JLabel();
-        labelWorkingProgress.setName("labelWorkingProgress");
+        this.labelWorkingProgress = new JLabel();
+        this.labelWorkingProgress.setName("labelWorkingProgress");
         labelWorkingProgress.setBorder(BorderFactory.createEmptyBorder(2, 10, 2, 10));
-        //label.setEnabled(false);
+        setWorkingProgress(false);
         toolbar.add(labelWorkingProgress);
     }
 
@@ -120,6 +136,13 @@ public class ToolbarManager {
         return button;
     }
 
+
+    private void setWorkingProgress(final boolean enabled) {
+        final ResourceMap map = Application.getInstance().getContext().getResourceMap();
+        final String icon = (enabled) ? "iconWorking" : "iconNotWorking";
+        labelWorkingProgress.setIcon(map.getIcon(icon));
+        labelWorkingProgress.setEnabled(false);
+    }
 
     private void setToolBarVisible(boolean visible) {
         toolbarPanel.setVisible(visible);

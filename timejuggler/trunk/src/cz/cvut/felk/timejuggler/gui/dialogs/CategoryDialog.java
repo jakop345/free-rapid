@@ -135,7 +135,8 @@ public class CategoryDialog extends AppDialog {
 
     @Override
     public void doClose() {
-        model.release();
+        if (model != null)
+            model.release();
         super.doClose();
     }
 

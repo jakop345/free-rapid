@@ -68,6 +68,15 @@ public final class AppPrefs {
     public static final String SELECTED_EVENTS_FILTER = "settings.selectedEventsFilter";
     public static final String CONTAIN_EVENTS_FILTER = "settings.containEventsFilter";
 
+    public static final String PROXY_USE = "settings.proxy";
+    public static final String PROXY_URL = "settings.proxy.url";
+    public static final String PROXY_SAVEPASSWORD = "settings.proxy.savepassword";
+    public static final String PROXY_PORT = "settings.proxy.port";
+    public static final String PROXY_LOGIN = "settings.proxy.login";
+    public static final String PROXY_USERNAME = "settings.proxy.username";
+    public static final String PROXY_PASSWORD = "settings.proxy.password";
+    public static final String SUBMIT_ERROR_EMAIL = "settings.submitError.email";
+    public static final String SUBMIT_ERROR_NAME = "settings.submitError.name";
 
     private AppPrefs() {
     }
@@ -163,6 +172,8 @@ public final class AppPrefs {
 //                    parentFile.mkdirs();
 //            }
 //
+            if (!AppPrefs.getProperty(AppPrefs.PROXY_SAVEPASSWORD, false))
+                removeProperty(AppPrefs.PROXY_PASSWORD);
             outputStream = MainApp.getAContext().getLocalStorage().openOutputFile(DEFAULT_PROPERTIES);
             properties.exportNode(outputStream);
             outputStream.close();

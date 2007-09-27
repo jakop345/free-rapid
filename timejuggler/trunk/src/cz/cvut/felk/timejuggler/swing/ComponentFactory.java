@@ -27,6 +27,7 @@ public class ComponentFactory {
 
     private static ComponentFactory instance;
     public final static ColumnSpec DATEPICKER_COLUMN_SPEC = new ColumnSpec("max(pref;65dlu)");
+    public static final ColumnSpec BUTTON_COLSPEC = new ColumnSpec("max(pref;42dlu)");
 
     private synchronized static ComponentFactory getInstance() {
         if (instance == null) {
