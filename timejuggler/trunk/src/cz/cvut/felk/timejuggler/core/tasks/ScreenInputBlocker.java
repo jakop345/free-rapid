@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 /**
  * @author Vity
  */
-public class ScreenInputBlocker extends Task.InputBlocker implements PropertyChangeListener {
+class ScreenInputBlocker extends Task.InputBlocker implements PropertyChangeListener {
     private final static Logger logger = Logger.getLogger(ScreenInputBlocker.class.getName());
 
     private JDialog modalDialog = null;
@@ -55,12 +55,13 @@ public class ScreenInputBlocker extends Task.InputBlocker implements PropertyCha
     private JDialog createBlockingDialog() {
         optionPane = new JOptionPane();
         optionPane.setMessageType(JOptionPane.PLAIN_MESSAGE);
-        if (getTask().getUserCanCancel()) {
+        final Task task = getTask();
+        if (task.getUserCanCancel()) {
             JButton cancelButton = new JButton();
             cancelButton.setName("BlockingDialog.cancelButton");
             ActionListener doCancelTask = new ActionListener() {
                 public void actionPerformed(ActionEvent ignore) {
-                    getTask().cancel(true);
+                    task.cancel(true);
                 }
             };
             cancelButton.addActionListener(doCancelTask);
@@ -72,22 +73,22 @@ public class ScreenInputBlocker extends Task.InputBlocker implements PropertyCha
         optionPane.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         Component dialogOwner = (Component) getTarget();
 
-        String taskTitle = getTask().getTitle();
+        String taskTitle = task.getTitle();
         String dialogTitle = (taskTitle == null) ? "BlockingDialog" : taskTitle;
         JDialog dialog = optionPane.createDialog(dialogOwner, dialogTitle);
         dialog.setModal(true);
         dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-        if (getTask().getUserCanCancel()) {
+        if (task.getUserCanCancel()) {
             dialog.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosing(WindowEvent e) {
-                    getTask().cancel(true);
+                    task.cancel(true);
                 }
             });
         }
         dialog.setName("BlockingDialog");
         optionPane.setName("BlockingDialog.optionPane");
-        final ResourceMap resourceMap = ((CoreTask) getTask()).getTaskResourceMap();
+        final ResourceMap resourceMap = ((CoreTask) task).getTaskResourceMap();
         if (resourceMap != null) {
             resourceMap.injectComponents(dialog);
         }

@@ -4,13 +4,9 @@ import application.ApplicationContext;
 import cz.cvut.felk.timejuggler.core.AppPrefs;
 import cz.cvut.felk.timejuggler.dao.CalendarEventDAO_DummyImpl;
 import cz.cvut.felk.timejuggler.entity.CalendarEvent;
+import cz.cvut.felk.timejuggler.swing.MouseEventQueue;
 import cz.cvut.felk.timejuggler.swing.Swinger;
-import cz.cvut.felk.timejuggler.swing.components.calendar.CalendarConfig;
-import cz.cvut.felk.timejuggler.swing.components.calendar.CalendarGrid;
-import cz.cvut.felk.timejuggler.swing.components.calendar.CalendarGridEventFactory;
-import cz.cvut.felk.timejuggler.swing.components.calendar.CalendarGridEventFactoryImpl;
-import cz.cvut.felk.timejuggler.swing.components.calendar.CalendarView;
-
+import cz.cvut.felk.timejuggler.swing.components.calendar.*;
 import org.jdesktop.swingx.JXMultiSplitPane;
 import org.jdesktop.swingx.MultiSplitLayout;
 
@@ -79,7 +75,7 @@ public class MainPanelManager {
         CalendarConfig calendarConfig = new CalendarConfig();
 
         CalendarEventDAO_DummyImpl calendarEventDAO = new CalendarEventDAO_DummyImpl();
-        
+
         CalendarGridEventFactory calendarGridEventFactory = new CalendarGridEventFactoryImpl();
         calendarGrid = new CalendarGrid(calendarEventDAO, calendarGridEventFactory, calendarConfig);
         calendarGrid.setStartDate(todayDate);
@@ -125,12 +121,12 @@ public class MainPanelManager {
         ce.setEndDate(endDate);
 
         calendarEventDAO.saveCalendarEvent(ce);
-                
+
         calendarGrid.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				JOptionPane.showMessageDialog(calendarGrid, "Kliknuti na souradnicich predstavujici datum: " + calendarGrid.getDateByPosition(e.getX(), e.getY()).toString());
-			}        	
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                JOptionPane.showMessageDialog(calendarGrid, "Kliknuti na souradnicich predstavujici datum: " + calendarGrid.getDateByPosition(e.getX(), e.getY()).toString());
+            }
         });
 
         setDefaultCalendarView(); //nastaveni vybraneho view
@@ -145,6 +141,8 @@ public class MainPanelManager {
         contentPanel.add(getToolbarManager().getComponent(), BorderLayout.NORTH);
         contentPanel.add(multiSplitPane, BorderLayout.CENTER);
         contentPanel.add(getStatusBarManager().getStatusBar(), BorderLayout.SOUTH);
+
+        Toolkit.getDefaultToolkit().getSystemEventQueue().push(new MouseEventQueue());
     }
 
     private StatusBarManager getStatusBarManager() {

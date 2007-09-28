@@ -34,7 +34,6 @@ public class MainApp extends SingleXFrameApplication {
     private static boolean debug = false;
     private DataProvider dataProvider;
     private TrayIconSupport trayIconSupport = null;
-    private static DataProvider DProvider;
 
 //    private static Logger logger = null;
 
