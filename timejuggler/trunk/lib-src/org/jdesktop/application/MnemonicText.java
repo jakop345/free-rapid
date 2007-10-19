@@ -1,30 +1,38 @@
+
 /*
-* Copyright (C) 2006 Sun Microsystems, Inc. All rights reserved. Use is
-* subject to license terms.
-*/
+ * Copyright (C) 2006 Sun Microsystems, Inc. All rights reserved. Use is
+ * subject to license terms.
+ */ 
 
 package org.jdesktop.application;
 
-import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
+import javax.swing.AbstractButton;
+import javax.swing.JLabel;
 
 
 /**
- * An internal helper class that configures the text and mnemonic properties for instances of AbstractButton, JLabel,
- * and javax.swing.Action.  It's used like this:
+ * An internal helper class that configures the text and mnemonic 
+ * properties for instances of AbstractButton, JLabel, and 
+ * javax.swing.Action.  It's used like this:
  * <pre>
  * MnemonicText.configure(myButton, "Save &As")
  * </pre>
- * The configure method unconditionally sets three properties on the target object: <ul> <li>the label text, "Save As"
- * <li>the mnemonic key code, VK_A <li>the index of the mnemonic character, 5 </ul> If the mnemonic marker character
- * isn't present, then the second two properties are cleared to VK_UNDEFINED (0) and -1 respectively.
- * <p/>
+ * The configure method unconditionally sets three properties on the 
+ * target object: 
+ * <ul>
+ * <li>the label text, "Save As" 
+ * <li>the mnemonic key code, VK_A
+ * <li>the index of the mnemonic character, 5
+ * </ul>
+ * If the mnemonic marker character isn't present, then the second
+ * two properties are cleared to VK_UNDEFINED (0) and -1 respectively.
+ * <p>
  */
 class MnemonicText {
-    private MnemonicText() {
-    } // not used
+    private MnemonicText() { } // not used
 
     public static void configure(Object target, String markedText) {
         String text = markedText;
@@ -42,23 +50,24 @@ class MnemonicText {
             mnemonicKey = mnemonicKey(sci.next());
         }
         if (target instanceof javax.swing.Action) {
-            configureAction((javax.swing.Action) target, text, mnemonicKey, mnemonicIndex);
-        } else if (target instanceof AbstractButton) {
-            configureButton((AbstractButton) target, text, mnemonicKey, mnemonicIndex);
-        } else if (target instanceof JLabel) {
-            configureLabel((JLabel) target, text, mnemonicKey, mnemonicIndex);
-        } else {
+            configureAction((javax.swing.Action)target, text, mnemonicKey, mnemonicIndex);
+        }
+        else if (target instanceof AbstractButton) {
+            configureButton((AbstractButton)target, text, mnemonicKey, mnemonicIndex);
+        }
+        else if (target instanceof JLabel) {
+            configureLabel((JLabel)target, text, mnemonicKey, mnemonicIndex);
+        }
+        else {
             throw new IllegalArgumentException("unrecognized target type " + target);
         }
     }
 
     private static int mnemonicMarkerIndex(String s, char marker) {
-        if ((s == null) || (s.length() < 2)) {
-            return -1;
-        }
-        CharacterIterator sci = new StringCharacterIterator(s);
+        if ((s == null) || (s.length() < 2)) { return -1; }
+        CharacterIterator sci = new StringCharacterIterator(s);  
         int i = 0;
-        while (i != -1) {
+        while(i != -1) {
             i = s.indexOf(marker, i);
             if (i != -1) {
                 sci.setIndex(i);
@@ -71,9 +80,7 @@ class MnemonicText {
                     return i;
                 }
             }
-            if (i != -1) {
-                i += 1;
-            }
+            if (i != -1) { i += 1; }
         }
         return -1;
     }
@@ -84,8 +91,8 @@ class MnemonicText {
      * CR 6559449 java/classes_awt Support for converting from char to KeyEvent VK_ keycode
      */
     private static int mnemonicKey(char c) {
-        int vk = (int) c;
-        if ((vk >= 'a') && (vk <= 'z')) {
+        int vk = (int)c;
+        if ((vk >= 'a') && (vk <='z')) {
             vk -= ('a' - 'A');
         }
         return vk;
@@ -99,31 +106,19 @@ class MnemonicText {
 
     private static void configureAction(javax.swing.Action target, String text, int key, int index) {
         target.putValue(javax.swing.Action.NAME, text);
-        if (key != KeyEvent.VK_UNDEFINED) {
-            target.putValue(javax.swing.Action.MNEMONIC_KEY, key);
-        }
-        if (index != -1) {
-            target.putValue(DISPLAYED_MNEMONIC_INDEX_KEY, index);
-        }
+        if (key != KeyEvent.VK_UNDEFINED) { target.putValue(javax.swing.Action.MNEMONIC_KEY, key); }
+        if (index != -1) { target.putValue(DISPLAYED_MNEMONIC_INDEX_KEY, index); }
     }
 
     private static void configureButton(AbstractButton target, String text, int key, int index) {
         target.setText(text);
-        if (key != KeyEvent.VK_UNDEFINED) {
-            target.setMnemonic(key);
-        }
-        if (index != -1) {
-            target.setDisplayedMnemonicIndex(index);
-        }
+        if (key != KeyEvent.VK_UNDEFINED) { target.setMnemonic(key); }
+        if (index != -1) { target.setDisplayedMnemonicIndex(index); }
     }
 
     private static void configureLabel(JLabel target, String text, int key, int index) {
         target.setText(text);
-        if (key != KeyEvent.VK_UNDEFINED) {
-            target.setDisplayedMnemonic(key);
-        }
-        if (index != -1) {
-            target.setDisplayedMnemonicIndex(index);
-        }
+        if (key != KeyEvent.VK_UNDEFINED) { target.setDisplayedMnemonic(key); }
+        if (index != -1) { target.setDisplayedMnemonicIndex(index); }
     }
 }
