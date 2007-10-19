@@ -2,6 +2,7 @@ package cz.cvut.felk.timejuggler.gui.dialogs;
 
 import application.Action;
 import application.ResourceMap;
+import com.jgoodies.binding.list.ArrayListModel;
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.FormFactory;
@@ -12,6 +13,7 @@ import cz.cvut.felk.timejuggler.core.data.DataProvider;
 import cz.cvut.felk.timejuggler.core.data.PersistencyLayerException;
 import cz.cvut.felk.timejuggler.db.entity.Category;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.CategoryEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.VCalendarEntity;
 import cz.cvut.felk.timejuggler.swing.ComponentFactory;
 import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.swing.components.EditorPaneLinkDetector;
@@ -81,7 +83,7 @@ public class EventTaskDialog extends AppDialog {
         }
     }
 
-    private void build() {
+    private void build() throws PersistencyLayerException {
         inject();
         buildGUI();
         buildModels();
@@ -115,23 +117,6 @@ public class EventTaskDialog extends AppDialog {
     private void buildGUI() {
         final boolean showMore = AppPrefs.getProperty(AppPrefs.SHOW_MORE_EVENTTASKDIALOG, true);
         showMoreOrLess(showMore, false);
-
-//        context = new BindingContext();
-//        Binding binding = new Binding(this.dateFromPicker, "${enabled}", checkDate, "selected");
-//        Binding binding = new Binding(getActionMap().get("setPatternAction"), "${enabled}", repeatCheckbox, "selected");
-//        context.addBinding(binding);
-//        binding = new Binding(this.timeFromSpinner, "${!enabled}", allDayCheckbox, "selected");
-//        context.addBinding(binding);
-//        binding = new Binding(this.timeToSpinner, "${!enabled}", allDayCheckbox, "selected");
-//        context.addBinding(binding);
-//        binding = new Binding(this.urlField, "${!empty text}", this.btnVisitURL, "enabled");
-//        binding.setUpdateStrategy(Binding.UpdateStrategy.READ);
-//        binding.putParameter(ParameterKeys.TEXT_CHANGE_STRATEGY, TextChangeStrategy.ON_TYPE);
-//        binding.bind();
-
-//        binding = new Binding(this.statusTypeCombo, "${selectedIndex == 4}", this.completedDatePicker, "enabled");
-//        //binding.setUpdateStrategy(Binding.UpdateStrategy.READ);
-//        context.addBinding(binding);
 
 
         alarmCombo.addActionListener(new ActionListener() {
@@ -277,7 +262,14 @@ public class EventTaskDialog extends AppDialog {
     }
 
 
-    private void buildModels() {
+    private void buildModels() throws PersistencyLayerException {
+        final DataProvider dataProvider = getApp().getDataProvider();
+
+        final ArrayListModel<VCalendarEntity> calendarEntities = dataProvider.getCalendarsListModel();
+
+        //Bindings.bind(calendarCombo, "");
+
+
         setComboModelFromResource(priorityCombo);
         setComboModelFromResource(privacyCombo);
         setComboModelFromResource(statusCombo);

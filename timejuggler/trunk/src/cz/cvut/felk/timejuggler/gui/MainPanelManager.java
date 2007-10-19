@@ -4,8 +4,8 @@ import application.ApplicationContext;
 import cz.cvut.felk.timejuggler.core.AppPrefs;
 import cz.cvut.felk.timejuggler.dao.CalendarEventDAO_DummyImpl;
 import cz.cvut.felk.timejuggler.entity.CalendarEvent;
-import cz.cvut.felk.timejuggler.swing.MouseEventQueue;
 import cz.cvut.felk.timejuggler.swing.Swinger;
+import cz.cvut.felk.timejuggler.swing.TextComponentContextMenuListener;
 import cz.cvut.felk.timejuggler.swing.components.calendar.*;
 import org.jdesktop.swingx.JXMultiSplitPane;
 import org.jdesktop.swingx.MultiSplitLayout;
@@ -142,7 +142,7 @@ public class MainPanelManager {
         contentPanel.add(multiSplitPane, BorderLayout.CENTER);
         contentPanel.add(getStatusBarManager().getStatusBar(), BorderLayout.SOUTH);
 
-        Toolkit.getDefaultToolkit().getSystemEventQueue().push(new MouseEventQueue());
+        Toolkit.getDefaultToolkit().addAWTEventListener(new TextComponentContextMenuListener(), AWTEvent.MOUSE_EVENT_MASK);
     }
 
     private StatusBarManager getStatusBarManager() {

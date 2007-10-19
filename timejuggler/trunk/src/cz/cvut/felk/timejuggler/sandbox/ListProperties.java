@@ -71,6 +71,8 @@ public class ListProperties {
 
     public static void main(String args[]) {
         final JFrame frame = new JFrame("List Properties");
+        frame.setVisible(true);
+        JOptionPane.showMessageDialog(frame, "<html><h3>Primary text providing basic information <br /> and a suggestion.</h3>Secondary text...</html>");
 
         final CustomTableModel model = new CustomTableModel();
         model.uiDefaultsUpdate(UIManager.getDefaults());

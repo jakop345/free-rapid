@@ -12,7 +12,7 @@ import java.util.logging.Logger;
  * @author Vity
  */
 
-@ProxyActions({"select-all"})
+@ProxyActions({"select-all", "copy", "cut", "paste"})
 public class EditActions {
     private final static Logger logger = Logger.getLogger(EditActions.class.getName());
     private MainApp app;
