@@ -1,9 +1,9 @@
 package cz.cvut.felk.timejuggler.gui;
 
-import application.ApplicationActionMap;
-import application.ApplicationContext;
 import cz.cvut.felk.timejuggler.gui.actions.*;
 import cz.cvut.felk.timejuggler.swing.Swinger;
+import org.jdesktop.application.ApplicationActionMap;
+import org.jdesktop.application.ApplicationContext;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;

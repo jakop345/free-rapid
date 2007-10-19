@@ -12,6 +12,7 @@ import cz.cvut.felk.timejuggler.db.entity.interfaces.VCalendarEntity;
 import cz.cvut.felk.timejuggler.swing.ComponentFactory;
 import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
+import org.jdesktop.application.Action;
 
 import javax.swing.*;
 import java.awt.*;
@@ -100,14 +101,14 @@ public class CalendarDialog extends AppDialog {
 //            }
 //        });
 
-        final Action actionOK = getActionMap().get("okBtnAction");
+        final javax.swing.Action actionOK = getActionMap().get("okBtnAction");
 //        PropertyConnector.connectAndUpdate(valueColorModel, comboColor, PROPERTY_COLOR);
 
         final PropertyConnector connector1 = PropertyConnector.connect(model, PresentationModel.PROPERTYNAME_BUFFERING, actionOK, "enabled");
         connector1.updateProperty2();
     }
 
-    @application.Action
+    @Action
     public void okBtnAction() {
         if (!validateForm()) {
             return;
@@ -122,7 +123,7 @@ public class CalendarDialog extends AppDialog {
         doClose();
     }
 
-    @application.Action
+    @Action
     public void cancelBtnAction() {
         model.triggerFlush();
         doClose();

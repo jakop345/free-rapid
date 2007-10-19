@@ -1,7 +1,5 @@
 package cz.cvut.felk.timejuggler.gui;
 
-import application.ApplicationContext;
-import application.ResourceMap;
 import com.jgoodies.binding.adapter.AbstractTableAdapter;
 import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.adapter.SingleListSelectionAdapter;
@@ -21,6 +19,8 @@ import cz.cvut.felk.timejuggler.swing.CustomLayoutConstraints;
 import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
 import info.clearthought.layout.TableLayout;
+import org.jdesktop.application.ApplicationContext;
+import org.jdesktop.application.ResourceMap;
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.FilterPipeline;
 import org.jdesktop.swingx.decorator.PatternFilter;

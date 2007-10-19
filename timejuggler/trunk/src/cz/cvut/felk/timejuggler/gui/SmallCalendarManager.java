@@ -1,6 +1,5 @@
 package cz.cvut.felk.timejuggler.gui;
 
-import application.ResourceMap;
 import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.adapter.SingleListSelectionAdapter;
 import com.jgoodies.binding.beans.PropertyConnector;
@@ -16,6 +15,7 @@ import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.swing.renderers.CheckRenderer;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
 import info.clearthought.layout.TableLayout;
+import org.jdesktop.application.ResourceMap;
 import org.jdesktop.swingx.JXList;
 import org.jdesktop.swingx.calendar.JXMonthView;
 

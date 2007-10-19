@@ -1,8 +1,8 @@
 package cz.cvut.felk.timejuggler.gui.actions;
 
-import application.Action;
 import cz.cvut.felk.timejuggler.core.MainApp;
 import cz.cvut.felk.timejuggler.gui.dialogs.AboutDialog;
+import org.jdesktop.application.Action;
 
 /**
  * @author Vity

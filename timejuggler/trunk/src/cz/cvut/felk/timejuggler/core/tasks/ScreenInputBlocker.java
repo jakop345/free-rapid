@@ -1,9 +1,9 @@
 package cz.cvut.felk.timejuggler.core.tasks;
 
-import application.Application;
-import application.ResourceMap;
-import application.SingleFrameApplication;
-import application.Task;
+import org.jdesktop.application.Application;
+import org.jdesktop.application.ResourceMap;
+import org.jdesktop.application.SingleFrameApplication;
+import org.jdesktop.application.Task;
 import org.jdesktop.swingx.JXFrame;
 
 import javax.swing.*;

@@ -1,11 +1,11 @@
 package cz.cvut.felk.timejuggler.gui;
 
-import application.Application;
-import application.ApplicationContext;
-import application.ResourceMap;
-import application.TaskMonitor;
 import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.swing.ToolbarSeparator;
+import org.jdesktop.application.Application;
+import org.jdesktop.application.ApplicationContext;
+import org.jdesktop.application.ResourceMap;
+import org.jdesktop.application.TaskMonitor;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,10 +1,10 @@
 package cz.cvut.felk.timejuggler.gui.actions;
 
-import application.Action;
-import application.ProxyActions;
 import cz.cvut.felk.timejuggler.core.MainApp;
 import cz.cvut.felk.timejuggler.core.data.DataProvider;
 import cz.cvut.felk.timejuggler.gui.dialogs.UserPreferencesDialog;
+import org.jdesktop.application.Action;
+import org.jdesktop.application.ProxyActions;
 
 import java.util.logging.Logger;
 

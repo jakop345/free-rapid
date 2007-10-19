@@ -1,6 +1,5 @@
 package cz.cvut.felk.timejuggler.gui.dialogs;
 
-import application.ResourceMap;
 import com.jgoodies.binding.PresentationModel;
 import com.jgoodies.binding.adapter.AbstractTableAdapter;
 import com.jgoodies.binding.adapter.Bindings;
@@ -32,6 +31,8 @@ import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.swing.renderers.ColorTableCellRenderer;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
 import cz.cvut.felk.timejuggler.utilities.Sound;
+import org.jdesktop.application.Action;
+import org.jdesktop.application.ResourceMap;
 import org.jdesktop.swingx.JXTable;
 
 import javax.swing.*;
@@ -152,7 +153,7 @@ public class UserPreferencesDialog extends AppDialog {
     }
 
 
-    private void addButton(Action action, final Card card, ButtonGroup group) {
+    private void addButton(javax.swing.Action action, final Card card, ButtonGroup group) {
         final JToggleButton button = new JToggleButton(action);
         final Dimension size = button.getPreferredSize();
         final Dimension dim = new Dimension(60, size.height);
@@ -191,9 +192,9 @@ public class UserPreferencesDialog extends AppDialog {
                 assert false;
                 return;
         }
-        Action action = getActionMap().get(actionName);
+        javax.swing.Action action = getActionMap().get(actionName);
         assert action != null;
-        action.putValue(Action.SELECTED_KEY, Boolean.TRUE);
+        action.putValue(javax.swing.Action.SELECTED_KEY, Boolean.TRUE);
     }
 
 
@@ -227,7 +228,7 @@ public class UserPreferencesDialog extends AppDialog {
         bindBasicComponents();
 
         final ActionMap map = getActionMap();
-        final Action actionOK = map.get("okBtnAction");
+        final javax.swing.Action actionOK = map.get("okBtnAction");
         PropertyConnector connector = PropertyConnector.connect(model, PresentationModel.PROPERTYNAME_BUFFERING, actionOK, "enabled");
         connector.updateProperty2();
 
@@ -319,7 +320,7 @@ public class UserPreferencesDialog extends AppDialog {
         return new String[]{shortFormat, longFormat};
     }
 
-    @application.Action
+    @Action
     public void okBtnAction() {
         model.triggerCommit();
         if (categoriesManager.isListChanged())
@@ -332,12 +333,12 @@ public class UserPreferencesDialog extends AppDialog {
         doClose();
     }
 
-    @application.Action
+    @Action
     public void cancelBtnAction() {
         doClose();
     }
 
-    @application.Action(selectedProperty = "generalBtnActionSelected")
+    @Action(selectedProperty = "generalBtnActionSelected")
     public void generalBtnAction(ActionEvent e) {
         showCard(e);
     }
@@ -351,22 +352,22 @@ public class UserPreferencesDialog extends AppDialog {
     }
 
 
-    @application.Action
+    @Action
     public void alarmsBtnAction(ActionEvent e) {
         showCard(e);
     }
 
-    @application.Action
+    @Action
     public void categoriesBtnAction(ActionEvent e) {
         showCard(e);
     }
 
-    @application.Action
+    @Action
     public void viewsBtnAction(ActionEvent e) {
         showCard(e);
     }
 
-    @application.Action
+    @Action
     public void btnCategoryAddAction() {
         final CategoryEntity newCategory = getApp().getDataProvider().getNewCategory();
         boolean canceled = openCategoryEditor(newCategory, true);
@@ -378,7 +379,7 @@ public class UserPreferencesDialog extends AppDialog {
     }
 
 
-    @application.Action
+    @Action
     public void btnCategoryRemoveAction() {
         categoriesManager.removeItem(getSelectedItem());
         categoriesListChanged();
@@ -387,7 +388,7 @@ public class UserPreferencesDialog extends AppDialog {
         }
     }
 
-    @application.Action
+    @Action
     public void btnCategoryEditAction() {
         boolean canceled = openCategoryEditor(getSelectedItem(), false);
         if (!canceled) {
@@ -402,13 +403,13 @@ public class UserPreferencesDialog extends AppDialog {
     }
 
 
-    @application.Action
+    @Action
     public void btnUseDefaultSoundAction() {
         if (!AppPrefs.DEF_SOUND_PATH.equals(fieldSoundPath.getText()))
             model.setBufferedValue(AppPrefs.SOUND_PATH, AppPrefs.DEF_SOUND_PATH);
     }
 
-    @application.Action
+    @Action
     public void btnPreviewAction() {
         final String text = fieldSoundPath.getText();
         if (AppPrefs.DEF_SOUND_PATH.equals(text))
@@ -422,7 +423,7 @@ public class UserPreferencesDialog extends AppDialog {
         }
     }
 
-    @application.Action
+    @Action
     public void btnBrowseAction() {
         final String path = fieldSoundPath.getText();
         final String defaultPath = AppPrefs.DEF_SOUND_PATH.equals(path) ? AppPrefs.getAppPath() : path;

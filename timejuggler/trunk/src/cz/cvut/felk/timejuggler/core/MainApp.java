@@ -1,9 +1,5 @@
 package cz.cvut.felk.timejuggler.core;
 
-import application.Application;
-import application.ApplicationContext;
-import application.ResourceConverter;
-import application.SessionStorage;
 import cz.cvut.felk.timejuggler.core.application.GlobalEDTExceptionHandler;
 import cz.cvut.felk.timejuggler.core.application.ListItemsConvertor;
 import cz.cvut.felk.timejuggler.core.data.DataProvider;
@@ -14,6 +10,10 @@ import cz.cvut.felk.timejuggler.swing.LookAndFeels;
 import cz.cvut.felk.timejuggler.swing.TrayIconSupport;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
 import org.jdesktop.appframework.swingx.SingleXFrameApplication;
+import org.jdesktop.application.Application;
+import org.jdesktop.application.ApplicationContext;
+import org.jdesktop.application.ResourceConverter;
+import org.jdesktop.application.SessionStorage;
 import org.jdesktop.swingx.JXMultiSplitPane;
 import org.jdesktop.swingx.JXStatusBar;
 

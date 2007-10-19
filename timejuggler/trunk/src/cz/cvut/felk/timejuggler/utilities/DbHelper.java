@@ -1,10 +1,10 @@
 package cz.cvut.felk.timejuggler.utilities;
 
-import application.ApplicationContext;
 import cz.cvut.felk.timejuggler.core.AppPrefs;
 import cz.cvut.felk.timejuggler.core.Consts;
 import cz.cvut.felk.timejuggler.core.MainApp;
 import cz.cvut.felk.timejuggler.db.InitiateDatabaseException;
+import org.jdesktop.application.ApplicationContext;
 
 import java.io.*;
 import java.util.Enumeration;

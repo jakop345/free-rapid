@@ -4,10 +4,10 @@
  */
 package org.jdesktop.appframework.swingx;
 
-import application.ApplicationContext;
-import application.SessionStorage;
-import application.SingleFrameApplication;
 import org.jdesktop.appframework.swingx.XProperties.XTableProperty;
+import org.jdesktop.application.ApplicationContext;
+import org.jdesktop.application.SessionStorage;
+import org.jdesktop.application.SingleFrameApplication;
 import org.jdesktop.swingx.JXFrame;
 import org.jdesktop.swingx.JXTable;
 

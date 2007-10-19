@@ -1,10 +1,10 @@
 package cz.cvut.felk.timejuggler.swing;
 
-import application.ApplicationContext;
-import application.ResourceMap;
 import cz.cvut.felk.timejuggler.core.AppPrefs;
 import cz.cvut.felk.timejuggler.core.MainApp;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
+import org.jdesktop.application.ApplicationContext;
+import org.jdesktop.application.ResourceMap;
 
 import javax.swing.*;
 import java.awt.*;

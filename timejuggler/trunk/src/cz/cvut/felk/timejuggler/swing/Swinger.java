@@ -1,10 +1,10 @@
 package cz.cvut.felk.timejuggler.swing;
 
-import application.ResourceManager;
-import application.ResourceMap;
 import cz.cvut.felk.timejuggler.core.MainApp;
 import cz.cvut.felk.timejuggler.core.application.SubmitErrorReporter;
 import cz.cvut.felk.timejuggler.gui.dialogs.ErrorDialog;
+import org.jdesktop.application.ResourceManager;
+import org.jdesktop.application.ResourceMap;
 import org.jdesktop.swingx.JXErrorPane;
 import org.jdesktop.swingx.error.ErrorInfo;
 

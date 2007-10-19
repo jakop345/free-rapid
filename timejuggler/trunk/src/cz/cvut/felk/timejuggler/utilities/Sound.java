@@ -1,9 +1,9 @@
 package cz.cvut.felk.timejuggler.utilities;
 
-import application.ResourceManager;
-import application.ResourceMap;
 import cz.cvut.felk.timejuggler.core.Consts;
 import cz.cvut.felk.timejuggler.core.MainApp;
+import org.jdesktop.application.ResourceManager;
+import org.jdesktop.application.ResourceMap;
 
 import java.applet.Applet;
 import java.applet.AudioClip;

@@ -11,6 +11,7 @@ import com.jgoodies.forms.layout.*;
 import cz.cvut.felk.timejuggler.swing.ComponentFactory;
 import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
+import org.jdesktop.application.Action;
 import org.jdesktop.swingx.JXDatePicker;
 
 import javax.swing.*;
@@ -94,7 +95,7 @@ public class ChooseDateDialog extends AppDialog {
 //        connector1.updateProperty2();
     }
 
-    @application.Action
+    @Action
     public void okBtnAction() {
         if (!validateForm()) {
             return;
@@ -104,7 +105,7 @@ public class ChooseDateDialog extends AppDialog {
         doClose();
     }
 
-    @application.Action
+    @Action
     public void cancelBtnAction() {
         trigger.triggerFlush();
         doClose();

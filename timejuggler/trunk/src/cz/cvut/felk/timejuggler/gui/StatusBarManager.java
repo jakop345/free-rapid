@@ -1,8 +1,8 @@
 package cz.cvut.felk.timejuggler.gui;
 
-import application.Application;
-import application.ApplicationContext;
 import cz.cvut.felk.timejuggler.swing.components.ClockField;
+import org.jdesktop.application.Application;
+import org.jdesktop.application.ApplicationContext;
 import org.jdesktop.swingx.JXStatusBar;
 
 import javax.swing.*;

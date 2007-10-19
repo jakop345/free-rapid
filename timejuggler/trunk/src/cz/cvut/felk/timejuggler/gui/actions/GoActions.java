@@ -1,9 +1,9 @@
 package cz.cvut.felk.timejuggler.gui.actions;
 
-import application.Action;
 import com.jgoodies.binding.value.ValueHolder;
 import cz.cvut.felk.timejuggler.core.MainApp;
 import cz.cvut.felk.timejuggler.gui.dialogs.ChooseDateDialog;
+import org.jdesktop.application.Action;
 
 import java.util.Calendar;
 import java.util.Date;

@@ -1,8 +1,8 @@
 package cz.cvut.felk.timejuggler.gui.dialogs.filechooser;
 
-import application.Application;
-import application.ApplicationContext;
 import org.jdesktop.appframework.swingx.SingleXFrameApplication;
+import org.jdesktop.application.Application;
+import org.jdesktop.application.ApplicationContext;
 
 import javax.swing.*;
 import java.awt.*;

@@ -14,6 +14,7 @@ import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.swing.components.CompTitledPane;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
 import cz.cvut.felk.timejuggler.utilities.Utils;
+import org.jdesktop.application.Action;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,13 +41,13 @@ public class ConnectDialog extends AppDialog {
         }
     }
 
-    @application.Action
+    @Action
     public void cancelBtnAction() {
         model.triggerFlush();
         doClose();
     }
 
-    @application.Action
+    @Action
     public void okBtnAction() {
         this.setResult(RESULT_OK);
         model.triggerCommit();

@@ -1,6 +1,5 @@
 package cz.cvut.felk.timejuggler.gui.actions;
 
-import application.Action;
 import com.jgoodies.binding.list.SelectionInList;
 import cz.cvut.felk.timejuggler.core.MainApp;
 import cz.cvut.felk.timejuggler.core.data.DataProvider;
@@ -11,6 +10,7 @@ import cz.cvut.felk.timejuggler.gui.dialogs.EventTaskDialog;
 import cz.cvut.felk.timejuggler.gui.dialogs.filechooser.OpenSaveDialogFactory;
 import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
+import org.jdesktop.application.Action;
 import org.jdesktop.beans.AbstractBean;
 
 import java.io.File;

@@ -1,10 +1,10 @@
 package cz.cvut.felk.timejuggler.db;
 
-import application.Application;
-import application.ApplicationContext;
 import cz.cvut.felk.timejuggler.core.Consts;
 import cz.cvut.felk.timejuggler.core.MainApp;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
+import org.jdesktop.application.Application;
+import org.jdesktop.application.ApplicationContext;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

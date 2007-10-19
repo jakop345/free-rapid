@@ -1,7 +1,7 @@
 package cz.cvut.felk.timejuggler.core;
 
-import application.LocalStorage;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
+import org.jdesktop.application.LocalStorage;
 
 import java.io.*;
 import java.net.URISyntaxException;

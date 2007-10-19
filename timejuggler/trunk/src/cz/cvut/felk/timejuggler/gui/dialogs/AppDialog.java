@@ -1,12 +1,12 @@
 package cz.cvut.felk.timejuggler.gui.dialogs;
 
-import application.Application;
-import application.ApplicationContext;
-import application.ResourceMap;
 import cz.cvut.felk.timejuggler.core.MainApp;
 import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.swing.models.NaiiveComboModel;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
+import org.jdesktop.application.Application;
+import org.jdesktop.application.ApplicationContext;
+import org.jdesktop.application.ResourceMap;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;

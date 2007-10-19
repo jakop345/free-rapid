@@ -1,7 +1,5 @@
 package cz.cvut.felk.timejuggler.gui.dialogs;
 
-import application.Action;
-import application.ResourceMap;
 import com.jgoodies.binding.list.ArrayListModel;
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
@@ -20,6 +18,8 @@ import cz.cvut.felk.timejuggler.swing.components.EditorPaneLinkDetector;
 import cz.cvut.felk.timejuggler.swing.models.NaiiveComboModel;
 import cz.cvut.felk.timejuggler.utilities.Browser;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
+import org.jdesktop.application.Action;
+import org.jdesktop.application.ResourceMap;
 import org.jdesktop.swingx.JXDatePicker;
 
 import javax.swing.*;

@@ -1,7 +1,7 @@
 package cz.cvut.felk.timejuggler.core.application;
 
-import application.ResourceConverter;
-import application.ResourceMap;
+import org.jdesktop.application.ResourceConverter;
+import org.jdesktop.application.ResourceMap;
 
 /**
  * @author Vity

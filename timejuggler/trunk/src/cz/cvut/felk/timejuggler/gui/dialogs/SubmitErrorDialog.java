@@ -1,8 +1,5 @@
 package cz.cvut.felk.timejuggler.gui.dialogs;
 
-import application.Task;
-import application.TaskEvent;
-import application.TaskListener;
 import com.jgoodies.binding.PresentationModel;
 import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.value.Trigger;
@@ -15,6 +12,10 @@ import cz.cvut.felk.timejuggler.core.tasks.SubmitErrorInfoTask;
 import cz.cvut.felk.timejuggler.swing.ComponentFactory;
 import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
+import org.jdesktop.application.Action;
+import org.jdesktop.application.Task;
+import org.jdesktop.application.TaskEvent;
+import org.jdesktop.application.TaskListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -53,19 +54,19 @@ public class SubmitErrorDialog extends AppDialog {
         return btnCancel;
     }
 
-    @application.Action
+    @Action
     public void cancelBtnAction() {
         model.triggerFlush();
         doClose();
     }
 
-    @application.Action
+    @Action
     public void btnConnectionAction() {
         final ConnectDialog connectDialog = new ConnectDialog(this);
         this.getApp().prepareDialog(connectDialog, true);
     }
 
-    @application.Action(block = Task.BlockingScope.APPLICATION)
+    @Action(block = Task.BlockingScope.APPLICATION)
     public Task okBtnAction() {
         this.setResult(RESULT_OK);
         model.triggerCommit();

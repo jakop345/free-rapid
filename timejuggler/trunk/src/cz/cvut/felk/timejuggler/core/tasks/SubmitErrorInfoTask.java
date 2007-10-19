@@ -1,10 +1,10 @@
 package cz.cvut.felk.timejuggler.core.tasks;
 
-import application.Application;
 import cz.cvut.felk.timejuggler.core.Consts;
 import cz.cvut.felk.timejuggler.core.application.ProxyHelper;
 import cz.cvut.felk.timejuggler.core.application.SubmitErrorInfo;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
+import org.jdesktop.application.Application;
 
 import java.io.DataOutputStream;
 import java.io.IOException;

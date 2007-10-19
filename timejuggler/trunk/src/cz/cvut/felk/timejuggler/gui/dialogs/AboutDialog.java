@@ -7,6 +7,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.utilities.LogUtils;
 import cz.cvut.felk.timejuggler.utilities.Sound;
+import org.jdesktop.application.Action;
 
 import javax.swing.*;
 import java.applet.AudioClip;
@@ -83,7 +84,7 @@ public class AboutDialog extends AppDialog {
         }
     }
 
-    @application.Action
+    @Action
     public void okBtnAction() {
         stopSound();
         doClose();

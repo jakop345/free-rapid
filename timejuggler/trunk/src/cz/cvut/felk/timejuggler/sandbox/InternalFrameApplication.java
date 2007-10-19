@@ -4,7 +4,7 @@ package cz.cvut.felk.timejuggler.sandbox;
  * @author Vity
  */
 
-import application.*;
+import org.jdesktop.application.*;
 import org.jdesktop.swingx.JXStatusBar;
 
 import javax.swing.*;

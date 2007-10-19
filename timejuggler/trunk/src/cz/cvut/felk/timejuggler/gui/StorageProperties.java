@@ -1,7 +1,7 @@
 package cz.cvut.felk.timejuggler.gui;
 
-import application.SessionStorage;
 import cz.cvut.felk.timejuggler.core.MainApp;
+import org.jdesktop.application.SessionStorage;
 import org.jdesktop.swingx.JXMultiSplitPane;
 import org.jdesktop.swingx.JXStatusBar;
 import org.jdesktop.swingx.MultiSplitLayout;

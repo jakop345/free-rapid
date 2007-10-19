@@ -4,7 +4,7 @@
  */
 package org.jdesktop.appframework.swingx;
 
-import application.SessionStorage.Property;
+import org.jdesktop.application.SessionStorage.Property;
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.SortKey;
 import org.jdesktop.swingx.decorator.SortOrder;
