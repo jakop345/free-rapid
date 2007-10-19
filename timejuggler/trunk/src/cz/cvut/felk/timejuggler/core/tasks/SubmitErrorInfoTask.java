@@ -21,7 +21,7 @@ public class SubmitErrorInfoTask extends CoreTask<Void, Void> {
     private final SubmitErrorInfo errorInfo;
 
     public SubmitErrorInfoTask(SubmitErrorInfo errorInfo) {
-        super(Application.getInstance(), SubmitErrorInfoTask.class);
+        super(Application.getInstance());
         this.errorInfo = errorInfo;
         this.setUserCanCancel(false);
         ProxyHelper.initProxy();//init proxy settings
@@ -31,7 +31,7 @@ public class SubmitErrorInfoTask extends CoreTask<Void, Void> {
     @Override
     protected Void doInBackground() throws Exception {
         HttpURLConnection urlConn = null;
-        message("message.status.connecting");
+        message("message.connecting");
         try {
             urlConn = (HttpURLConnection) new URL(Consts.WEBURL_SUBMIT_ERROR).openConnection();
             urlConn.setDoOutput(true);
@@ -41,13 +41,13 @@ public class SubmitErrorInfoTask extends CoreTask<Void, Void> {
             logger.info("Connected to WordRider.net, Writing params");
             final String postingData = errorInfo.toURLPostData();
             logger.info("Posting data:" + postingData);
-            message("message.status.sending");
+            message("message.sending");
             bufferOut.write(postingData.getBytes());
             bufferOut.close();
             //logger.info("reading Response");
             urlConn.getInputStream().close();
             logger.info("disconnecting");
-            message("message.status.disconnect");
+            message("message.disconnect");
             urlConn.disconnect();
         } catch (UnknownHostException e) { //Inet not available
             if (urlConn != null) urlConn.disconnect();

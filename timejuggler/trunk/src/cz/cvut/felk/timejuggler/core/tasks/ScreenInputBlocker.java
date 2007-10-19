@@ -1,7 +1,6 @@
 package cz.cvut.felk.timejuggler.core.tasks;
 
 import org.jdesktop.application.Application;
-import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
 import org.jdesktop.application.Task;
 import org.jdesktop.swingx.JXFrame;
@@ -88,10 +87,10 @@ class ScreenInputBlocker extends Task.InputBlocker implements PropertyChangeList
         }
         dialog.setName("BlockingDialog");
         optionPane.setName("BlockingDialog.optionPane");
-        final ResourceMap resourceMap = ((CoreTask) task).getTaskResourceMap();
-        if (resourceMap != null) {
-            resourceMap.injectComponents(dialog);
-        }
+//        final ResourceMap resourceMap = ((CoreTask) task).getResourceMap();
+//        if (resourceMap != null) {
+//            resourceMap.injectComponents(dialog);
+//        }
         dialog.pack();
         return dialog;
     }
