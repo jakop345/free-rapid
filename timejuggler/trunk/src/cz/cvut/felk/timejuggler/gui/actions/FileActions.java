@@ -4,6 +4,7 @@ import com.jgoodies.binding.list.SelectionInList;
 import cz.cvut.felk.timejuggler.core.MainApp;
 import cz.cvut.felk.timejuggler.core.data.DataProvider;
 import cz.cvut.felk.timejuggler.core.data.PersistencyLayerException;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.EventTaskEntity;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.VCalendarEntity;
 import cz.cvut.felk.timejuggler.gui.dialogs.CalendarDialog;
 import cz.cvut.felk.timejuggler.gui.dialogs.EventTaskDialog;
@@ -13,6 +14,7 @@ import cz.cvut.felk.timejuggler.utilities.LogUtils;
 import org.jdesktop.application.Action;
 import org.jdesktop.beans.AbstractBean;
 
+import javax.swing.*;
 import java.io.File;
 import java.util.logging.Logger;
 
@@ -32,14 +34,37 @@ public class FileActions extends AbstractBean {
 
     @Action()
     public void newEvent() {
-        final EventTaskDialog taskDialog = new EventTaskDialog(app.getMainFrame(), true);
+        final SelectionInList<VCalendarEntity> list = getSelectionInListCalendars();
+        if (list.isEmpty())
+            return;
+        final VCalendarEntity calendar = list.getSelection();
+
+        final DataProvider dataProvider = app.getDataProvider();
+        final EventTaskEntity eventEntity = dataProvider.getNewEvent();
+        if (calendar != null)
+            eventEntity.setCalendar(calendar);
+        final EventTaskDialog dialog = new EventTaskDialog(app.getMainFrame(), eventEntity, true);
+        showEventTaskDialog(dialog);
+        if (dialog.getModalResult() == EventTaskDialog.RESULT_OK) {
+            try {
+                dataProvider.addEvent(eventEntity);
+                list.setSelection(calendar);
+            } catch (PersistencyLayerException e) {
+                LogUtils.processException(logger, e);
+                Swinger.showErrorDialog("errorCalendarAdd", e);
+            }
+        }
+
+    }
+
+    private void showEventTaskDialog(JDialog taskDialog) {
         app.prepareDialog(taskDialog, true);
     }
 
     @Action()
     public void editEvent() {
-        final EventTaskDialog taskDialog = new EventTaskDialog(app.getMainFrame(), true);
-        app.prepareDialog(taskDialog, true);
+//        final EventTaskDialog taskDialog = new EventTaskDialog(app.getMainFrame(), true);
+//        showEventTaskDialog(taskDialog);
     }
 
     @Action()
@@ -49,15 +74,17 @@ public class FileActions extends AbstractBean {
 
     @Action()
     public void editTask() {
-        final EventTaskDialog taskDialog = new EventTaskDialog(app.getMainFrame(), true);
-        app.prepareDialog(taskDialog, true);
+//        final EventTaskDialog taskDialog = new EventTaskDialog(app.getMainFrame(), true);
+//        showEventTaskDialog(taskDialog);
     }
 
 
     @Action
     public void newTask() {
-        final EventTaskDialog taskDialog = new EventTaskDialog(app.getMainFrame(), false);
-        app.prepareDialog(taskDialog, true);
+        final DataProvider dataProvider = app.getDataProvider();
+        final EventTaskEntity taskEntity = dataProvider.getNewToDo();
+        final EventTaskDialog taskDialog = new EventTaskDialog(app.getMainFrame(), taskEntity, true);
+        showEventTaskDialog(taskDialog);
     }
 
     @Action

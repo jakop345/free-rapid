@@ -106,6 +106,12 @@ public class DataProvider {
         resetEvents();//prozatim
     }
 
+    public synchronized void addEvent(EventTaskEntity event) throws PersistencyLayerException {
+        getPersitencyLayer().saveOrUpdateEventTask(event);
+        events.add(event);
+        resetEvents();//prozatim
+    }
+
     public synchronized void addCategory(CategoryEntity category) throws PersistencyLayerException {
         getPersitencyLayer().saveOrUpdateCategory(category);
         categories.add(category);

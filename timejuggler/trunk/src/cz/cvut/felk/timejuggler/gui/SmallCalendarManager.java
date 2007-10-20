@@ -159,7 +159,7 @@ public class SmallCalendarManager {
         }
     }
 
-    private final static class CalendarComparator implements Comparator<VCalendarEntity> {
+    public final static class CalendarComparator implements Comparator<VCalendarEntity> {
 
         public int compare(VCalendarEntity o1, VCalendarEntity o2) {
             return o1.getName().compareTo(o2.getName());

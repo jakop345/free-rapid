@@ -1,6 +1,11 @@
 package cz.cvut.felk.timejuggler.gui.dialogs;
 
+import com.jgoodies.binding.PresentationModel;
+import com.jgoodies.binding.adapter.Bindings;
+import com.jgoodies.binding.beans.PropertyConnector;
 import com.jgoodies.binding.list.ArrayListModel;
+import com.jgoodies.binding.list.SelectionInList;
+import com.jgoodies.binding.value.ValueHolder;
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.FormFactory;
@@ -11,7 +16,9 @@ import cz.cvut.felk.timejuggler.core.data.DataProvider;
 import cz.cvut.felk.timejuggler.core.data.PersistencyLayerException;
 import cz.cvut.felk.timejuggler.db.entity.Category;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.CategoryEntity;
+import cz.cvut.felk.timejuggler.db.entity.interfaces.EventTaskEntity;
 import cz.cvut.felk.timejuggler.db.entity.interfaces.VCalendarEntity;
+import cz.cvut.felk.timejuggler.gui.SmallCalendarManager;
 import cz.cvut.felk.timejuggler.swing.ComponentFactory;
 import cz.cvut.felk.timejuggler.swing.Swinger;
 import cz.cvut.felk.timejuggler.swing.components.EditorPaneLinkDetector;
@@ -28,10 +35,7 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -41,6 +45,7 @@ public class EventTaskDialog extends AppDialog {
     private final static Logger logger = Logger.getLogger(EventTaskDialog.class.getName());
 
     private final boolean isEvent;
+    private final EventTaskEntity entity;
     private final boolean isNew;
     private final boolean newEvent;
     private final boolean newTask;
@@ -61,18 +66,15 @@ public class EventTaskDialog extends AppDialog {
     private final static int STATUS_TYPE_IN_PROCESS = 2;
     private final static int STATUS_TYPE_COMPLETED_ON = 3;
     private final static int STATUS_TYPE_CANCELED = 4;
+    private PresentationModel model;
 
-
-    public EventTaskDialog(Frame mainFrame) {
-        this(mainFrame, true);
-    }
-
-    public EventTaskDialog(Frame mainFrame, boolean isEvent) {
+    public EventTaskDialog(Frame mainFrame, EventTaskEntity entity, boolean createNew) {
         super(mainFrame, true);
-        this.isEvent = isEvent;
-        this.isNew = true;
-        this.newEvent = isEvent && isNew;
-        this.newTask = !isEvent && isNew;
+        this.entity = entity;
+        this.isNew = createNew;
+        this.newEvent = !entity.getIsTodo() && isNew;
+        this.newTask = entity.getIsTodo() && isNew;
+        this.isEvent = !entity.getIsTodo();
         this.setName("EventTaskDialog");
         try {
             initComponents();
@@ -263,14 +265,34 @@ public class EventTaskDialog extends AppDialog {
 
 
     private void buildModels() throws PersistencyLayerException {
+
+        model = new PresentationModel(this.entity);
         final DataProvider dataProvider = getApp().getDataProvider();
 
-        final ArrayListModel<VCalendarEntity> calendarEntities = dataProvider.getCalendarsListModel();
+        //calendar selection
+        final ArrayListModel<VCalendarEntity> calendarEntities = new ArrayListModel<VCalendarEntity>(dataProvider.getCalendarsListModel());
+        Collections.sort(calendarEntities, new SmallCalendarManager.CalendarComparator());
+        entity.setCalendar(calendarEntities.get(0));
+        Bindings.bind(calendarCombo, new SelectionInList((ListModel) calendarEntities, model.getBufferedModel("calendar")));
 
-        //Bindings.bind(calendarCombo, "");
+        if (isNew)
+            model.setValue("startDate", new Date());
 
+        //title
+        Bindings.bind(titleField, model.getBufferedModel("summary"));
+        //location
+        Bindings.bind(locationField, model.getBufferedModel("location"));
+        //description
+        Bindings.bind(descriptionArea, model.getBufferedModel("description"));
+        //url
+        Bindings.bind(urlField, model.getBufferedModel("url"));
 
-        setComboModelFromResource(priorityCombo);
+        Bindings.bind(dateFromPicker.getEditor(), model.getBufferedModel("startDate"));
+        //Bindings.bind(dateToPicker.getEditor(), model.getBufferedModel("endDate"));
+
+//        Bindings.bind(timeFromSpinner.getEditor(), model.getBufferedModel("startDate"));
+//        Bindings.bind(timeToSpinner.getEditor(), model.getBufferedModel("endDate"));
+        setComboModelFromResource(priorityCombo, "priority");
         setComboModelFromResource(privacyCombo);
         setComboModelFromResource(statusCombo);
         setComboModelFromResource(statusTypeCombo);
@@ -278,10 +300,18 @@ public class EventTaskDialog extends AppDialog {
         setComboModelFromResource(alarmTimeUnitCombo);
         setComboModelFromResource(alarmBeforeAfterCombo);
         buildCategories();
+
+        model.resetChanged();
+        getActionMap().get("okBtnAction").setEnabled(false);
+        final PropertyConnector connector1 = PropertyConnector.connect(model, PresentationModel.PROPERTYNAME_BUFFERING, getActionMap().get("okBtnAction"), "enabled");
+        connector1.updateProperty2();
     }
 
     @Action
     public void okBtnAction() {
+        entity.setChanged(true);
+        model.triggerCommit();
+        setResult(RESULT_OK);
         doClose();
     }
 
@@ -292,6 +322,10 @@ public class EventTaskDialog extends AppDialog {
 
     @Override
     public void doClose() {
+        if (model != null) {
+            model.triggerFlush();
+            model.release();
+        }
         super.doClose();
     }
 
@@ -410,6 +444,14 @@ public class EventTaskDialog extends AppDialog {
             return description;
         }
     }
+
+    protected void setComboModelFromResource(JComboBox comboBox, String propertyName) {
+        final String name = comboBox.getName();
+        assert name != null && name.length() > 0;
+        final String[] items = getList(name);
+        Bindings.bind(comboBox, new SelectionInList(new NaiiveComboModel(items), new ValueHolder(items[(Integer) model.getValue(propertyName)]), model.getBufferedModel(propertyName)));
+    }
+
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
