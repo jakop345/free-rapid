@@ -28,6 +28,7 @@ public class DataProvider {
     private boolean eventsInit = false;
     private Object newCalendar;
     private ValueHolder currentDateHolder;
+    private Object newEvent;
 
     public DataProvider() {
         categories = new ArrayListModel<CategoryEntity>();
@@ -94,6 +95,7 @@ public class DataProvider {
     public synchronized ArrayListModel<VCalendarEntity> getCalendarsListModel() throws PersistencyLayerException {
         if (!calendarsInit) {
             calendars.addAll(getPersitencyLayer().getCalendars());
+            calendarsInit = true;
         }
         return calendars;
     }
@@ -154,5 +156,13 @@ public class DataProvider {
 
     public ValueHolder getCurrentDateHolder() {
         return currentDateHolder;
+    }
+
+    public EventTaskEntity getNewEvent() {
+        return getPersitencyLayer().getNewEvent();
+    }
+
+    public EventTaskEntity getNewToDo() {
+        return getPersitencyLayer().getNewToDo();
     }
 }
