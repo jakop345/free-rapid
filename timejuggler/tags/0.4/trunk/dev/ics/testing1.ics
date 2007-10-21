@@ -1,0 +1,328 @@
+BEGIN:VCALENDAR
+PRODID:-//Google Inc//Google Calendar 70.9054//EN
+VERSION:2.0
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Mozilla Sunbird and Lightning Calendar Project
+X-WR-TIMEZONE:Etc/GMT
+X-WR-CALDESC:<b>Mozilla Sunbird and Lightning Calendar Project Events</b>\n
+ <br>\nThis is the project calendar for the Mozilla Sunbird/Lightning teams.
+   It contains both QA and development information.  Unless otherwise noted\
+ , all events are open to the public.  You can always contact the team on IR
+ C: for development use irc://irc.mozilla.org/calendar and for QA use irc://
+ irc.mozilla.org/calendar-qa.\n<br>\n<ul>\n<li><a href="http://www.mozilla.o
+ rg/projects/calendar/sunbird/">For information on  the Sunbird Project</a><
+ /li>\n<li><a href="http://www.mozilla.org/projects/calendar/lightning/">For
+  information on the Lightning Project</a></li>\n<li><a href="http://weblogs
+ .mozillazine.org/calendar/">Check out the latest project news on our blog</
+ a></li>\n</ul>
+BEGIN:VTIMEZONE
+TZID:America/Chicago
+X-LIC-LOCATION:America/Chicago
+BEGIN:STANDARD
+TZOFFSETFROM:-0500
+TZOFFSETTO:-0600
+TZNAME:CST
+DTSTART:19701025T020000
+RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
+END:STANDARD
+BEGIN:DAYLIGHT
+TZOFFSETFROM:-0600
+TZOFFSETTO:-0500
+TZNAME:CDT
+DTSTART:19700405T020000
+RRULE:FREQ=YEARLY;BYMONTH=4;BYDAY=1SU
+END:DAYLIGHT
+END:VTIMEZONE
+BEGIN:VEVENT
+DTSTART;TZID=America/Chicago:20061108T110000
+DTEND;TZID=America/Chicago:20061108T120000
+
+RDATE;VALUE=PERIOD:19960403T020000Z/19960403T040000Z,19960404T010000Z/PT3H
+
+RRULE:FREQ=WEEKLY;INTERVAL=1
+DTSTAMP:20070312T180938Z
+ORGANIZER;CN=Mozilla Sunbird and Lightning Calendar Project:MAILTO:u7pke58s
+ c91ksbm4h9pf9ofe8c@group.calendar.google.com
+UID:79CA6D3B-39F4-41E1-ACB2-8D90B31E4AD6
+URL:http://wiki.mozilla.org/Calendar:Status
+CLASS:PUBLIC
+CREATED:20061207T210431Z
+DESCRIPTION:Anyone is welcome to attend. We discuss development issues\, an
+ d review our progress toward our next release goals.\n\nhttp://wiki.mozilla
+ .org/Calendar:Status_Meetings\n\n# Toll free numbers\n\n    * US/Canada: 80
+ 0 867 8609\n    * Netherlands: 08002658232\n    * Germany: 08001014546\n   
+  * Poland: 008001114706\n    * Sun: x44444\n    * More numbers (toll/toll f
+ ree): https://g8.cfer.com/g8.jsp?an=8008678609&ac=6064554&login=true\n\n# A
+ ccess Code\n\n    * 3646989 \n\n# Conference controls\n\n    * *6 mute line
+ \n    * *7 unmute line \n
+LAST-MODIFIED:20070305T093329Z
+LOCATION:Conference Call
+SEQUENCE:10
+STATUS:TENTATIVE
+SUMMARY:Status Meeting
+TRANSP:OPAQUE
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20070302T120000Z
+DTEND:20070302T150000Z
+DTSTAMP:20070312T180938Z
+ORGANIZER;CN=Mozilla Sunbird and Lightning Calendar Project:MAILTO:u7pke58s
+ c91ksbm4h9pf9ofe8c@group.calendar.google.com
+UID:bmnv7thva44l84sfc34nfq5c7k@google.com
+CLASS:PUBLIC
+CREATED:20070301T154217Z
+DESCRIPTION:Meet us in #calendar-qa and we will work together to process as
+  many QA Discussion Needed and QAWanted bugs as possible.  
+LAST-MODIFIED:20070301T154217Z
+LOCATION:irc://irc.mozilla.org#calendar-qa
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:QA Work Session
+TRANSP:OPAQUE
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20070414
+DTEND;VALUE=DATE:20070415
+DTSTAMP:20070312T180938Z
+ORGANIZER;CN=Mozilla Sunbird and Lightning Calendar Project:MAILTO:u7pke58s
+ c91ksbm4h9pf9ofe8c@group.calendar.google.com
+UID:kpdokv290bca47usf04dghcf70@google.com
+CLASS:PUBLIC
+CREATED:20070228T175854Z
+DESCRIPTION:Today is the proposed release date\, in case a second release c
+ andidate was required.
+LAST-MODIFIED:20070228T175854Z
+LOCATION:0.5 Release Process
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:[0.5] Alternate Release Date
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20070408
+DTEND;VALUE=DATE:20070409
+DTSTAMP:20070312T180938Z
+ORGANIZER;CN=Mozilla Sunbird and Lightning Calendar Project:MAILTO:u7pke58s
+ c91ksbm4h9pf9ofe8c@group.calendar.google.com
+UID:g3fothuft7v5fpfhh5e544dduc@google.com
+CLASS:PUBLIC
+CREATED:20070228T175753Z
+DESCRIPTION:If no blocking bugs were found\, Sunbird and Lightning 0.5 shou
+ ld be released today. Otherwise a second release candidate will be made ava
+ ilable and the release will be postponed to the alternate release date.
+LAST-MODIFIED:20070228T175753Z
+LOCATION:0.5 Release Process
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:[0.5] Second RC or Release
+TRANSP:TRANSPARENT
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20070402
+DTEND;VALUE=DATE:20070403
+DTSTAMP:20070312T180938Z
+ORGANIZER;CN=Mozilla Sunbird and Lightning Calendar Project:MAILTO:u7pke58s
+ c91ksbm4h9pf9ofe8c@group.calendar.google.com
+UID:1n5l81e5ot6fu84te6621sg24g@google.com
+ATTENDEE;CUTYPE=GROUP;ROLE=REQ-PARTICIPANT;PARTSTAT=ORGANIZER;CN=Mozilla Su
+ nbird and Lightning Calendar Project;X-NUM-GUESTS=0:MAILTO:u7pke58sc91ksbm4
+ h9pf9ofe8c@group.calendar.google.com
+CLASS:PUBLIC
+CREATED:20070228T175259Z
+DESCRIPTION:A first release candidate should be available for testing and f
+ inding any remaining bugs.
+LAST-MODIFIED:20070228T175308Z
+LOCATION:0.5 Release Process
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:[0.5] First Release Candidate
+TRANSP:TRANSPARENT
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20070330
+DTEND;VALUE=DATE:20070331
+DTSTAMP:20070312T180938Z
+ORGANIZER;CN=Mozilla Sunbird and Lightning Calendar Project:MAILTO:u7pke58s
+ c91ksbm4h9pf9ofe8c@group.calendar.google.com
+UID:a3vaot2025klq9s9tju1np677s@google.com
+CLASS:PUBLIC
+CREATED:20070228T175101Z
+DESCRIPTION:Until this day\, localizers should be sure the translated strin
+ gs are correct. No changes will be made to localized strings past this date
+ .
+LAST-MODIFIED:20070228T175101Z
+LOCATION:0.5 Release Process
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:[0.5] l10n freeze
+TRANSP:TRANSPARENT
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20070326
+DTEND;VALUE=DATE:20070327
+DTSTAMP:20070312T180938Z
+ORGANIZER;CN=Mozilla Sunbird and Lightning Calendar Project:MAILTO:u7pke58s
+ c91ksbm4h9pf9ofe8c@group.calendar.google.com
+UID:a695cnmms4or7irlhscb9m0opg@google.com
+ATTENDEE;CUTYPE=GROUP;ROLE=REQ-PARTICIPANT;PARTSTAT=ORGANIZER;CN=Mozilla Su
+ nbird and Lightning Calendar Project;X-NUM-GUESTS=0:MAILTO:u7pke58sc91ksbm4
+ h9pf9ofe8c@group.calendar.google.com
+CLASS:PUBLIC
+CREATED:20070228T174648Z
+DESCRIPTION:Starting today\, the resulting nightlies should be tested to ma
+ ke sure all parts of Sunbird and Lightning are working correctly for the 0.
+ 5 release.\n\nAlso\, localizers should test the builds to make sure there a
+ re no problems with the translated strings and their placement.
+LAST-MODIFIED:20070228T174914Z
+LOCATION:0.5 Release Process
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:[0.5] Functional testing
+TRANSP:TRANSPARENT
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20070324
+DTEND;VALUE=DATE:20070325
+DTSTAMP:20070312T180938Z
+ORGANIZER;CN=Mozilla Sunbird and Lightning Calendar Project:MAILTO:u7pke58s
+ c91ksbm4h9pf9ofe8c@group.calendar.google.com
+UID:tl65c2dq49q44f4jrj2rec4ll4@google.com
+CLASS:PUBLIC
+CREATED:20070228T174507Z
+DESCRIPTION:A code freeze will be in effect starting today. If you would li
+ ke your patch to be included in the 0.5 release\, be sure it has reached CV
+ S by today.
+LAST-MODIFIED:20070228T174611Z
+LOCATION:0.5 Release Process
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:[0.5] Code Freeze
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20070312
+DTEND;VALUE=DATE:20070313
+DTSTAMP:20070312T180938Z
+ORGANIZER;CN=Mozilla Sunbird and Lightning Calendar Project:MAILTO:u7pke58s
+ c91ksbm4h9pf9ofe8c@group.calendar.google.com
+UID:2p3h4k5vfbs2f5it7r5ls6kcf0@google.com
+CLASS:PUBLIC
+CREATED:20070228T174301Z
+DESCRIPTION:All strings in the en-US locale are being frozen today. This al
+ so means that localizers should start translating those into their respecti
+ ve languages. 
+LAST-MODIFIED:20070228T174301Z
+LOCATION:0.5 Release Process
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:[0.5] String freeze
+TRANSP:TRANSPARENT
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART;TZID=America/Chicago:20070306T070000
+DTEND;TZID=America/Chicago:20070306T190000
+RRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=TU;WKST=SU
+DTSTAMP:20070312T180938Z
+ORGANIZER;CN=Mozilla Sunbird and Lightning Calendar Project:MAILTO:u7pke58s
+ c91ksbm4h9pf9ofe8c@group.calendar.google.com
+UID:60fnsf8gaso8amhjov895lh1bo@google.com
+CLASS:PUBLIC
+CREATED:20070226T200834Z
+DESCRIPTION:
+LAST-MODIFIED:20070226T200835Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Calendar Test Day
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=America/Chicago:20061205T070000
+DTEND;TZID=America/Chicago:20061205T190000
+RRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=TU;WKST=SU;UNTIL=20070214T010000Z
+DTSTAMP:20070312T180938Z
+ORGANIZER;CN=Mozilla Sunbird and Lightning Calendar Project:MAILTO:u7pke58s
+ c91ksbm4h9pf9ofe8c@group.calendar.google.com
+UID:59BA5CF9-AD9C-408E-B847-D2B420C1748D
+URL:http://wiki.mozilla.org/Calendar:Current_QA_TestDay
+CLASS:PUBLIC
+CREATED:20061207T210718Z
+DESCRIPTION:Everyone is welcome to attend and help us test Sunbird and Ligh
+ tning.
+LAST-MODIFIED:20070226T200604Z
+LOCATION:#calendar-qa
+SEQUENCE:12
+STATUS:TENTATIVE
+SUMMARY:Calendar Test Day
+TRANSP:OPAQUE
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20070209T130000Z
+DTEND:20070210T010000Z
+DTSTAMP:20070312T180938Z
+ORGANIZER;CN=Mozilla Sunbird and Lightning Calendar Project:MAILTO:u7pke58s
+ c91ksbm4h9pf9ofe8c@group.calendar.google.com
+UID:ucll1u7vki3u084iev5cjv8jbk@google.com
+ATTENDEE;CUTYPE=GROUP;ROLE=REQ-PARTICIPANT;PARTSTAT=ORGANIZER;CN=Mozilla Su
+ nbird and Lightning Calendar Project;X-NUM-GUESTS=0:MAILTO:u7pke58sc91ksbm4
+ h9pf9ofe8c@group.calendar.google.com
+CLASS:PUBLIC
+CREATED:20070207T175615Z
+DESCRIPTION:For more details\, see: <a rel=nofollow href="http://wiki.mozil
+ la.org/Calendar:QA_TestDay:2007-02-09" class=linkified target=_blank>http:/
+ /wiki.mozilla.org/Calendar:QA_TestDay:2007-02-09</a>
+LAST-MODIFIED:20070207T180440Z
+LOCATION:Online: Log into #calendar-qa to participate
+SEQUENCE:2
+STATUS:CONFIRMED
+SUMMARY:0.3.1 Timezone and Localization Test Day
+TRANSP:OPAQUE
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART:20070123T120000Z
+DTEND:20070123T163000Z
+DTSTAMP:20070312T180938Z
+ORGANIZER;CN=Mozilla Sunbird and Lightning Calendar Project:MAILTO:u7pke58s
+ c91ksbm4h9pf9ofe8c@group.calendar.google.com
+UID:9dljqd3tiuksussd89v7i18gck@google.com
+CLASS:PUBLIC
+CREATED:20070121T183455Z
+DESCRIPTION:
+LAST-MODIFIED:20070121T183815Z
+LOCATION:#caendar-qa
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:QA Work Session
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=America/Chicago:20061109T113000
+DTEND;TZID=America/Chicago:20061109T123000
+RRULE:FREQ=WEEKLY;INTERVAL=1
+DTSTAMP:20070312T180938Z
+ORGANIZER;CN=Mozilla Sunbird and Lightning Calendar Project:MAILTO:u7pke58s
+ c91ksbm4h9pf9ofe8c@group.calendar.google.com
+UID:4E7A96C1-4536-4574-8DFA-0E2C727FD37E
+URL:irc://irc.mozilla.org/#calendar-qa
+CLASS:PUBLIC
+CREATED:20061207T210402Z
+DESCRIPTION:All are welcome to attend. We discuss current issues related to
+  QA and review the QAWanted list of defects.
+LAST-MODIFIED:20061211T181939Z
+LOCATION:#calendar-qa Channel
+SEQUENCE:9
+STATUS:TENTATIVE
+SUMMARY:Calendar QA Chat
+TRANSP:OPAQUE
+END:VEVENT
+END:VCALENDAR

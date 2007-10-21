@@ -1,0 +1,520 @@
+<html>
+<head>
+	<link href="../../ea.css" rel=stylesheet>
+	<title>CalComponent</title>
+</head>
+
+<body>
+	<TABLE class="HeaderTable" align="center" cellSpacing=0 cellPadding=0>
+  <TBODY >
+	<TR>
+		<TD colspan=2 WIDTH="100%" class="Header">class: CalComponent</TD>
+	</TR>
+	<TR>
+		<TD WIDTH="48%" class="HeaderDetails"></TD>
+		<TD WIDTH="48%" class="HeaderDetails"></TD>
+	</TR>
+	<TR>
+		<TD WIDTH="40%" class="HeaderDetails"></TD>
+		<TD WIDTH="60%" class="HeaderDetails"></TD>
+	</TR>
+	<TR><TD colspan="2" width="100%"><HR></TD></TR>
+	</TBODY>
+</TABLE> <table cellPadding=2 cellSpacing=2 width="100%">
+  <tbody>
+		<tr>
+			<td class=ObjectTitle>
+				public   class: CalComponent  
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<table class=ObjectDetails cellPadding=2 cellSpacing=2 width="100%">
+				  <tbody>
+						<tr>
+							<td width="15%" class=ObjectDetailsTopic>Author:</td>
+							<td width="85%" class=ObjectDetailsValue>Jan Struz</td>
+						</tr>
+						<tr>
+							<td width="15%" class=ObjectDetailsTopic>Project:</td>
+							<td width="85%" class=ObjectDetailsValue>Phase: 1.0; Status: Proposed; Version: 0.1; Complexity: 1</td>
+						</tr>
+						<tr>
+							<td width="15%" class=ObjectDetailsTopic>Dates:</td>
+							<td width="85%" class=ObjectDetailsValue>Created: 10.9.2007 16:11:36; Modified: 10.9.2007 16:11:36;</td>
+						</tr>
+						<tr>
+							<td width="15%" class=ObjectDetailsTopic>Flags:</td>
+							<td width="85%" class=ObjectDetailsValue> Active: false; IsRoot: false; IsLeaf: false;</td>
+						</tr>
+						<tr>
+							<td width="15%" class=ObjectDetailsTopic>Extension Points:</td>
+							<td width="85%" class=ObjectDetailsValue></td>
+						</tr>
+						<tr>
+							<td width="15%" class=ObjectDetailsTopic>UUID:</td>
+							<td width="85%" class=ObjectDetailsValue>{59DBCA65-5FB7-11dc-93E1-0000E879DDB0}</td>
+						</tr>
+						<tr>
+							<td colspan="2" width="100%" class=ObjectDetailsTopic>@created 14-IV-2007 17:18:43<br>&lt;p/&gt; Spolecna nadtrida eventu, tasku atd..</td>
+						</tr>
+					</tbody>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table><p><table cellPadding=0 cellSpacing=0 width="100%">
+  <tbody>
+		<tr>
+			<td width="10%" class="ObjectSubTitle">
+				Goto:
+			</td>
+			<td width="90%">
+				<a href=#Fields>Fields</a>, <a href=#Methods>Methods</a>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<P/><table cellPadding=0 cellSpacing=0 width="100%">
+  <tbody>
+		<tr>
+			<td width="10%" class="ObjectSubTitle">
+				Extends:
+			</td>
+			<td width="90%">
+				<a href="EA22.htm">DbElement</a>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<P/><table cellPadding=0 cellSpacing=0 width="100%">
+  <tbody>
+		<tr>
+			<td width="10%" class="ObjectSubTitle">
+				See also:
+			</td>
+			<td width="90%">
+				<a href="EA35.htm">VCalendar</a>, <a href="EA16.htm">Categories</a>, <a href="EA22.htm">DbElement</a>, <a href="EA26.htm">EventTask</a>, <a href="EA36.htm">VEvent</a>, <a href="EA37.htm">VToDo</a>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<P/><table cellPadding=0 cellSpacing=0 width="100%">
+  <tbody>
+		<tr>
+			<td width="10%" class="ObjectSubTitle">
+				Appears in:
+			</td>
+			<td width="90%">
+				<a href="EA12.htm">entity</a>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<P/><table cellPadding=0 cellSpacing=0 width="100%">
+  <tbody>
+		<tr>
+			<td class="ObjectSubTitle">Connections</td>
+		</tr>
+		<tr>
+			<td>
+				<UL>
+							<LI>Association  link to class <a href="EA35.htm">[entity].VCalendar</a> &nbsp;  &nbsp;</LI>			<LI>Association  link to class <a href="EA16.htm">[entity].Categories</a> &nbsp;  &nbsp;</LI>			<LI>Generalization  link to class <a href="EA22.htm">[entity].DbElement</a> &nbsp;  &nbsp;</LI>			<LI>Generalization  link from class <a href="EA26.htm">[entity].EventTask</a> &nbsp;  &nbsp;</LI>			<LI>Generalization  link from class <a href="EA36.htm">[entity].VEvent</a> &nbsp;  &nbsp;</LI>			<LI>Generalization  link from class <a href="EA37.htm">[entity].VToDo</a> &nbsp;  &nbsp;</LI>	
+				</UL>
+			</td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+	<table cellPadding=0 cellSpacing=0 width="100%">
+  <tbody>
+		<tr>
+			<td class="ObjectSubTitle">
+				<a Name="Fields">CalComponent</a> Attributes
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<TABLE align="center" BORDER=1 CELLSPACING=0 CELLPADDING=1 bordercolor="white" class="AttribTable">
+					<TR>
+						<TD WIDTH="40%" class="AttribTableHeading">Attribute</TD>
+						<TD WIDTH="60%" class="AttribTableHeading">Details</TD>
+					</TR>
+						<TR>
+		<TD WIDTH="40%" class="AttribTableRow" valign = "top"><i>private static const Logger</i><br><b>&nbsp;&nbsp;logger</b></TD>
+		<TD WIDTH="60%" class="AttribTableRow" valign = "top"><i><i>Initial:</i> Logger.getLogger(CalComponent.class.getName())<br></i></TD>	
+	</TR>	<TR>
+		<TD WIDTH="40%" class="AttribTableRow" valign = "top"><i>private static const String</i><br><b>&nbsp;&nbsp;PROPERTYNAME_UID</b></TD>
+		<TD WIDTH="60%" class="AttribTableRow" valign = "top"><i><i>Initial:</i> "uid"<br></i></TD>	
+	</TR>	<TR>
+		<TD WIDTH="40%" class="AttribTableRow" valign = "top"><i>private static const String</i><br><b>&nbsp;&nbsp;PROPERTYNAME_URL</b></TD>
+		<TD WIDTH="60%" class="AttribTableRow" valign = "top"><i><i>Initial:</i> "url"<br></i></TD>	
+	</TR>	<TR>
+		<TD WIDTH="40%" class="AttribTableRow" valign = "top"><i>private static const String</i><br><b>&nbsp;&nbsp;PROPERTYNAME_CLAZZ</b></TD>
+		<TD WIDTH="60%" class="AttribTableRow" valign = "top"><i><i>Initial:</i> "clazz"<br></i></TD>	
+	</TR>	<TR>
+		<TD WIDTH="40%" class="AttribTableRow" valign = "top"><i>private static const String</i><br><b>&nbsp;&nbsp;PROPERTYNAME_DESCRIPTION</b></TD>
+		<TD WIDTH="60%" class="AttribTableRow" valign = "top"><i><i>Initial:</i> "description"<br></i></TD>	
+	</TR>	<TR>
+		<TD WIDTH="40%" class="AttribTableRow" valign = "top"><i>private static const String</i><br><b>&nbsp;&nbsp;PROPERTYNAME_ORGANIZER</b></TD>
+		<TD WIDTH="60%" class="AttribTableRow" valign = "top"><i><i>Initial:</i> "organizer"<br></i></TD>	
+	</TR>	<TR>
+		<TD WIDTH="40%" class="AttribTableRow" valign = "top"><i>private static const String</i><br><b>&nbsp;&nbsp;PROPERTYNAME_SEQUENCE</b></TD>
+		<TD WIDTH="60%" class="AttribTableRow" valign = "top"><i><i>Initial:</i> "sequence"<br></i></TD>	
+	</TR>	<TR>
+		<TD WIDTH="40%" class="AttribTableRow" valign = "top"><i>private static const String</i><br><b>&nbsp;&nbsp;PROPERTYNAME_STATUS</b></TD>
+		<TD WIDTH="60%" class="AttribTableRow" valign = "top"><i><i>Initial:</i> "status"<br></i></TD>	
+	</TR>	<TR>
+		<TD WIDTH="40%" class="AttribTableRow" valign = "top"><i>private static const String</i><br><b>&nbsp;&nbsp;PROPERTYNAME_SUMMARY</b></TD>
+		<TD WIDTH="60%" class="AttribTableRow" valign = "top"><i><i>Initial:</i> "summary"<br></i></TD>	
+	</TR>	<TR>
+		<TD WIDTH="40%" class="AttribTableRow" valign = "top"><i>private static const String</i><br><b>&nbsp;&nbsp;PROPERTYNAME_COMPONENTID</b></TD>
+		<TD WIDTH="60%" class="AttribTableRow" valign = "top"><i><i>Initial:</i> "componentId"<br></i></TD>	
+	</TR>	<TR>
+		<TD WIDTH="40%" class="AttribTableRow" valign = "top"><i>private static const String</i><br><b>&nbsp;&nbsp;PROPERTYNAME_CALENDARID</b></TD>
+		<TD WIDTH="60%" class="AttribTableRow" valign = "top"><i><i>Initial:</i> "calendarId"<br></i></TD>	
+	</TR>	<TR>
+		<TD WIDTH="40%" class="AttribTableRow" valign = "top"><i>private String</i><br><b>&nbsp;&nbsp;uid</b></TD>
+		<TD WIDTH="60%" class="AttribTableRow" valign = "top"><i><i>Initial:</i> ""<br></i><TABLE> <TR> <TD valign="top"><i>Notes: </i><span style="margin-left: .4cm;"> </span></TD><TD>uid - povinny parametr! (globalne unikatni (MAILTO://email@...))</TD> </TR> </TABLE></TD>	
+	</TR>	<TR>
+		<TD WIDTH="40%" class="AttribTableRow" valign = "top"><i>private String</i><br><b>&nbsp;&nbsp;url</b></TD>
+		<TD WIDTH="60%" class="AttribTableRow" valign = "top"><i><i>Initial:</i> ""<br></i></TD>	
+	</TR>	<TR>
+		<TD WIDTH="40%" class="AttribTableRow" valign = "top"><i>private String</i><br><b>&nbsp;&nbsp;clazz</b></TD>
+		<TD WIDTH="60%" class="AttribTableRow" valign = "top"><i><i>Initial:</i> ""<br></i><TABLE> <TR> <TD valign="top"><i>Notes: </i><span style="margin-left: .4cm;"> </span></TD><TD>clazz klasifikace (PUBLIC/PRIVATE...)</TD> </TR> </TABLE></TD>	
+	</TR>	<TR>
+		<TD WIDTH="40%" class="AttribTableRow" valign = "top"><i>private String</i><br><b>&nbsp;&nbsp;description</b></TD>
+		<TD WIDTH="60%" class="AttribTableRow" valign = "top"><i><i>Initial:</i> ""<br></i><TABLE> <TR> <TD valign="top"><i>Notes: </i><span style="margin-left: .4cm;"> </span></TD><TD>popis komponenty</TD> </TR> </TABLE></TD>	
+	</TR>	<TR>
+		<TD WIDTH="40%" class="AttribTableRow" valign = "top"><i>private String</i><br><b>&nbsp;&nbsp;organizer</b></TD>
+		<TD WIDTH="60%" class="AttribTableRow" valign = "top"><i><i>Initial:</i> ""<br></i></TD>	
+	</TR>	<TR>
+		<TD WIDTH="40%" class="AttribTableRow" valign = "top"><i>private int</i><br><b>&nbsp;&nbsp;sequence</b></TD>
+		<TD WIDTH="60%" class="AttribTableRow" valign = "top"><i><i>Initial:</i> 0<br></i></TD>	
+	</TR>	<TR>
+		<TD WIDTH="40%" class="AttribTableRow" valign = "top"><i>private String</i><br><b>&nbsp;&nbsp;status</b></TD>
+		<TD WIDTH="60%" class="AttribTableRow" valign = "top"><i><i>Initial:</i> ""<br></i></TD>	
+	</TR>	<TR>
+		<TD WIDTH="40%" class="AttribTableRow" valign = "top"><i>private String</i><br><b>&nbsp;&nbsp;summary</b></TD>
+		<TD WIDTH="60%" class="AttribTableRow" valign = "top"><i><i>Initial:</i> ""<br></i></TD>	
+	</TR>	<TR>
+		<TD WIDTH="40%" class="AttribTableRow" valign = "top"><i>private Timestamp</i><br><b>&nbsp;&nbsp;recurrenceid</b></TD>
+		<TD WIDTH="60%" class="AttribTableRow" valign = "top"><i></i></TD>	
+	</TR>	<TR>
+		<TD WIDTH="40%" class="AttribTableRow" valign = "top"><i>private Timestamp</i><br><b>&nbsp;&nbsp;dtstamp</b></TD>
+		<TD WIDTH="60%" class="AttribTableRow" valign = "top"><i></i></TD>	
+	</TR>	<TR>
+		<TD WIDTH="40%" class="AttribTableRow" valign = "top"><i>private int</i><br><b>&nbsp;&nbsp;componentId</b></TD>
+		<TD WIDTH="60%" class="AttribTableRow" valign = "top"><i></i></TD>	
+	</TR>	<TR>
+		<TD WIDTH="40%" class="AttribTableRow" valign = "top"><i>private <a href="EA35.htm">VCalendar</a></i><br><b>&nbsp;&nbsp;vcalendar</b></TD>
+		<TD WIDTH="60%" class="AttribTableRow" valign = "top"><i></i><TABLE> <TR> <TD valign="top"><i>Notes: </i><span style="margin-left: .4cm;"> </span></TD><TD>private int calendarId; nahrazeno vcalendar</TD> </TR> </TABLE></TD>	
+	</TR>	<TR>
+		<TD WIDTH="40%" class="AttribTableRow" valign = "top"><i>private List<VAlarmEntity></i><br><b>&nbsp;&nbsp;alarms</b></TD>
+		<TD WIDTH="60%" class="AttribTableRow" valign = "top"><i></i><TABLE> <TR> <TD valign="top"><i>Notes: </i><span style="margin-left: .4cm;"> </span></TD><TD>TODO VAlarmEntity / VAlarm</TD> </TR> </TABLE></TD>	
+	</TR>	<TR>
+		<TD WIDTH="40%" class="AttribTableRow" valign = "top"><i>private <a href="EA16.htm">Categories</a></i><br><b>&nbsp;&nbsp;_categories</b></TD>
+		<TD WIDTH="60%" class="AttribTableRow" valign = "top"><i></i></TD>	
+	</TR>	<TR>
+		<TD WIDTH="40%" class="AttribTableRow" valign = "top"><i>private List<Category></i><br><b>&nbsp;&nbsp;categories</b></TD>
+		<TD WIDTH="60%" class="AttribTableRow" valign = "top"><i></i>annotations=@Deprecated<br><TABLE> <TR> <TD valign="top"><i>Notes: </i><span style="margin-left: .4cm;"> </span></TD><TD>nasobne properties</TD> </TR> </TABLE></TD>	
+	</TR>	<TR>
+		<TD WIDTH="40%" class="AttribTableRow" valign = "top"><i>private List<Comment></i><br><b>&nbsp;&nbsp;comments</b></TD>
+		<TD WIDTH="60%" class="AttribTableRow" valign = "top"><i></i></TD>	
+	</TR>	<TR>
+		<TD WIDTH="40%" class="AttribTableRow" valign = "top"><i>private List<Contact></i><br><b>&nbsp;&nbsp;contacts</b></TD>
+		<TD WIDTH="60%" class="AttribTableRow" valign = "top"><i></i></TD>	
+	</TR>	<TR>
+		<TD WIDTH="40%" class="AttribTableRow" valign = "top"><i>private List<Attachment></i><br><b>&nbsp;&nbsp;attachments</b></TD>
+		<TD WIDTH="60%" class="AttribTableRow" valign = "top"><i></i></TD>	
+	</TR>	<TR>
+		<TD WIDTH="40%" class="AttribTableRow" valign = "top"><i>private List<RelatedTo></i><br><b>&nbsp;&nbsp;relatedto</b></TD>
+		<TD WIDTH="60%" class="AttribTableRow" valign = "top"><i></i></TD>	
+	</TR>	<TR>
+		<TD WIDTH="40%" class="AttribTableRow" valign = "top"><i>private List<Resource></i><br><b>&nbsp;&nbsp;resources</b></TD>
+		<TD WIDTH="60%" class="AttribTableRow" valign = "top"><i></i></TD>	
+	</TR>	<TR>
+		<TD WIDTH="40%" class="AttribTableRow" valign = "top"><i>private DateTime</i><br><b>&nbsp;&nbsp;dateTime</b></TD>
+		<TD WIDTH="60%" class="AttribTableRow" valign = "top"><i></i><TABLE> <TR> <TD valign="top"><i>Notes: </i><span style="margin-left: .4cm;"> </span></TD><TD>private DateTime dateTime;</TD> </TR> </TABLE></TD>	
+	</TR>
+				</TABLE>
+			</td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+
+<table cellPadding=0 cellSpacing=0 width="100%">
+  <tbody>
+		<tr>
+			<td class="ObjectSubTitle">
+				<a Name="Methods">CalComponent</a> Methods
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<TABLE align="center" BORDER=1 CELLSPACING=0 CELLPADDING=1 bordercolor="white" class="OperationTable">
+					<TR>
+						<TD WIDTH="40%" class="OperationTableHeading">Operation</TD>
+						<TD WIDTH="60%" class="OperationTableHeading">Details</TD>
+					</TR>
+					<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>CalComponent</B>():</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential  </i><TABLE> <TR> <TD valign = "top"><i></i><span style="margin-left: .7cm;"> </span></TD><TD></TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>setComponentId</B>(<br>&nbsp;&nbsp;&nbsp;int componentId):void</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential &lt;&lt;property set&gt;&gt; </i><TABLE> <TR> <TD valign = "top"><i>Tags:</i><span style="margin-left: .7cm;"> </span></TD><TD>attribute_name=componentId<br></TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>getComponentId</B>():int</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential &lt;&lt;property get&gt;&gt; </i><TABLE> <TR> <TD valign = "top"><i>Tags:</i><span style="margin-left: .7cm;"> </span></TD><TD>attribute_name=componentId<br></TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>getUid</B>():String</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential &lt;&lt;property get&gt;&gt; </i><TABLE> <TR> <TD valign = "top"><i>Tags:</i><span style="margin-left: .7cm;"> </span></TD><TD>attribute_name=uid<br></TD> </TR> </TABLE><TABLE> <TR> <TD valign="top"><i>Notes: </i><span style="margin-left: .4cm;"> </span></TD><TD>povinny parametr! (globalne unikatni (MAILTO://email@...))</TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>setUid</B>(<br>&nbsp;&nbsp;&nbsp;String newVal):void</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential &lt;&lt;property set&gt;&gt; </i><TABLE> <TR> <TD valign = "top"><i>Tags:</i><span style="margin-left: .7cm;"> </span></TD><TD>attribute_name=uid<br></TD> </TR> </TABLE><TABLE> <TR> <TD valign="top"><i>Notes: </i><span style="margin-left: .4cm;"> </span></TD><TD>povinny parametr! (globalne unikatni (MAILTO://email@...))</TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>getUrl</B>():String</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential &lt;&lt;property get&gt;&gt; </i><TABLE> <TR> <TD valign = "top"><i>Tags:</i><span style="margin-left: .7cm;"> </span></TD><TD>attribute_name=url<br></TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>setUrl</B>(<br>&nbsp;&nbsp;&nbsp;String newVal):void</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential &lt;&lt;property set&gt;&gt; </i><TABLE> <TR> <TD valign = "top"><i>Tags:</i><span style="margin-left: .7cm;"> </span></TD><TD>attribute_name=url<br></TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>getClazz</B>():String</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential &lt;&lt;property get&gt;&gt; </i><TABLE> <TR> <TD valign = "top"><i>Tags:</i><span style="margin-left: .7cm;"> </span></TD><TD>attribute_name=clazz<br></TD> </TR> </TABLE><TABLE> <TR> <TD valign="top"><i>Notes: </i><span style="margin-left: .4cm;"> </span></TD><TD>klasifikace (PUBLIC/PRIVATE...)</TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>setClazz</B>(<br>&nbsp;&nbsp;&nbsp;String newVal):void</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential &lt;&lt;property set&gt;&gt; </i><TABLE> <TR> <TD valign = "top"><i>Tags:</i><span style="margin-left: .7cm;"> </span></TD><TD>attribute_name=clazz<br></TD> </TR> </TABLE><TABLE> <TR> <TD valign="top"><i>Notes: </i><span style="margin-left: .4cm;"> </span></TD><TD>klasifikace (PUBLIC/PRIVATE...)</TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>getDescription</B>():String</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential &lt;&lt;property get&gt;&gt; </i><TABLE> <TR> <TD valign = "top"><i>Tags:</i><span style="margin-left: .7cm;"> </span></TD><TD>attribute_name=description<br></TD> </TR> </TABLE><TABLE> <TR> <TD valign="top"><i>Notes: </i><span style="margin-left: .4cm;"> </span></TD><TD>popis komponenty</TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>setDescription</B>(<br>&nbsp;&nbsp;&nbsp;String newVal):void</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential &lt;&lt;property set&gt;&gt; </i><TABLE> <TR> <TD valign = "top"><i>Tags:</i><span style="margin-left: .7cm;"> </span></TD><TD>attribute_name=description<br></TD> </TR> </TABLE><TABLE> <TR> <TD valign="top"><i>Notes: </i><span style="margin-left: .4cm;"> </span></TD><TD>popis komponenty</TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>getOrganizer</B>():String</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential &lt;&lt;property get&gt;&gt; </i><TABLE> <TR> <TD valign = "top"><i>Tags:</i><span style="margin-left: .7cm;"> </span></TD><TD>attribute_name=organizer<br></TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>setOrganizer</B>(<br>&nbsp;&nbsp;&nbsp;String newVal):void</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential &lt;&lt;property set&gt;&gt; </i><TABLE> <TR> <TD valign = "top"><i>Tags:</i><span style="margin-left: .7cm;"> </span></TD><TD>attribute_name=organizer<br></TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>getSequence</B>():int</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential &lt;&lt;property get&gt;&gt; </i><TABLE> <TR> <TD valign = "top"><i>Tags:</i><span style="margin-left: .7cm;"> </span></TD><TD>attribute_name=sequence<br></TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>setSequence</B>(<br>&nbsp;&nbsp;&nbsp;int newVal):void</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential &lt;&lt;property set&gt;&gt; </i><TABLE> <TR> <TD valign = "top"><i>Tags:</i><span style="margin-left: .7cm;"> </span></TD><TD>attribute_name=sequence<br></TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>getStatus</B>():String</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential &lt;&lt;property get&gt;&gt; </i><TABLE> <TR> <TD valign = "top"><i>Tags:</i><span style="margin-left: .7cm;"> </span></TD><TD>attribute_name=status<br></TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>setStatus</B>(<br>&nbsp;&nbsp;&nbsp;String newVal):void</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential &lt;&lt;property set&gt;&gt; </i><TABLE> <TR> <TD valign = "top"><i>Tags:</i><span style="margin-left: .7cm;"> </span></TD><TD>attribute_name=status<br></TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>getSummary</B>():String</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential &lt;&lt;property get&gt;&gt; </i><TABLE> <TR> <TD valign = "top"><i>Tags:</i><span style="margin-left: .7cm;"> </span></TD><TD>attribute_name=summary<br></TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>setSummary</B>(<br>&nbsp;&nbsp;&nbsp;String newVal):void</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential &lt;&lt;property set&gt;&gt; </i><TABLE> <TR> <TD valign = "top"><i>Tags:</i><span style="margin-left: .7cm;"> </span></TD><TD>attribute_name=summary<br></TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>getRecurrenceId</B>():Date</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential  </i><TABLE> <TR> <TD valign = "top"><i></i><span style="margin-left: .7cm;"> </span></TD><TD></TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>setRecurrenceId</B>(<br>&nbsp;&nbsp;&nbsp;Date newVal):void</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential  </i><TABLE> <TR> <TD valign = "top"><i></i><span style="margin-left: .7cm;"> </span></TD><TD></TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>getDTimestamp</B>():Date</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential  </i><TABLE> <TR> <TD valign = "top"><i></i><span style="margin-left: .7cm;"> </span></TD><TD></TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>setDTimestamp</B>(<br>&nbsp;&nbsp;&nbsp;Date newVal):void</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential  </i><TABLE> <TR> <TD valign = "top"><i></i><span style="margin-left: .7cm;"> </span></TD><TD></TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>store</B>():void</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential  </i><TABLE> <TR> <TD valign = "top"><i></i><span style="margin-left: .7cm;"> </span></TD><TD></TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>saveOrUpdate</B>(<br>&nbsp;&nbsp;&nbsp;<a href="../EA10.htm">TimeJugglerJDBCTemplate</a> template):void</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential  </i><TABLE> <TR> <TD valign = "top"><i>Tags:</i><span style="margin-left: .7cm;"> </span></TD><TD>annotations=@Override<br>throws=DatabaseException<br></TD> </TR> </TABLE><TABLE> <TR> <TD valign="top"><i>Notes: </i><span style="margin-left: .4cm;"> </span></TD><TD>Method saveOrUpdate</TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>delete</B>(<br>&nbsp;&nbsp;&nbsp;<a href="../EA10.htm">TimeJugglerJDBCTemplate</a> template):void</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential  </i><TABLE> <TR> <TD valign = "top"><i>Tags:</i><span style="margin-left: .7cm;"> </span></TD><TD>throws=DatabaseException<br></TD> </TR> </TABLE><TABLE> <TR> <TD valign="top"><i>Notes: </i><span style="margin-left: .4cm;"> </span></TD><TD>Method delete</TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>getAttachments</B>():List<PropertyEntity></TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential &lt;&lt;property get&gt;&gt; </i><TABLE> <TR> <TD valign = "top"><i>Tags:</i><span style="margin-left: .7cm;"> </span></TD><TD>attribute_name=attachments<br></TD> </TR> </TABLE><TABLE> <TR> <TD valign="top"><i>Notes: </i><span style="margin-left: .4cm;"> </span></TD><TD>Method getAttachments<br>@return</TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>getAttendees</B>():List<String></TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential  </i><TABLE> <TR> <TD valign = "top"><i></i><span style="margin-left: .7cm;"> </span></TD><TD></TD> </TR> </TABLE><TABLE> <TR> <TD valign="top"><i>Notes: </i><span style="margin-left: .4cm;"> </span></TD><TD>Method getAttendees<br>@return</TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>getCategories</B>():List<CategoryEntity></TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential &lt;&lt;property get&gt;&gt; </i><TABLE> <TR> <TD valign = "top"><i>Tags:</i><span style="margin-left: .7cm;"> </span></TD><TD>attribute_name=categories<br></TD> </TR> </TABLE><TABLE> <TR> <TD valign="top"><i>Notes: </i><span style="margin-left: .4cm;"> </span></TD><TD>Method getCategories<br>@return</TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>setCategories</B>(<br>&nbsp;&nbsp;&nbsp;List<Category> categories):void</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential &lt;&lt;property set&gt;&gt; </i><TABLE> <TR> <TD valign = "top"><i>Tags:</i><span style="margin-left: .7cm;"> </span></TD><TD>annotations=@Deprecated<br>attribute_name=categories<br></TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>addCategory</B>(<br>&nbsp;&nbsp;&nbsp;<a href="./EA1/EA42.htm">CategoryEntity</a> cat):void</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential  </i><TABLE> <TR> <TD valign = "top"><i></i><span style="margin-left: .7cm;"> </span></TD><TD></TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>removeCategory</B>(<br>&nbsp;&nbsp;&nbsp;<a href="./EA1/EA42.htm">CategoryEntity</a> cat):void</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential  </i><TABLE> <TR> <TD valign = "top"><i></i><span style="margin-left: .7cm;"> </span></TD><TD></TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>getComments</B>():List<PropertyEntity></TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential &lt;&lt;property get&gt;&gt; </i><TABLE> <TR> <TD valign = "top"><i>Tags:</i><span style="margin-left: .7cm;"> </span></TD><TD>attribute_name=comments<br></TD> </TR> </TABLE><TABLE> <TR> <TD valign="top"><i>Notes: </i><span style="margin-left: .4cm;"> </span></TD><TD>Method getComments<br>@return</TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>getContacts</B>():List<PropertyEntity></TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential &lt;&lt;property get&gt;&gt; </i><TABLE> <TR> <TD valign = "top"><i>Tags:</i><span style="margin-left: .7cm;"> </span></TD><TD>attribute_name=contacts<br></TD> </TR> </TABLE><TABLE> <TR> <TD valign="top"><i>Notes: </i><span style="margin-left: .4cm;"> </span></TD><TD>Method getContacts<br>@return</TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>getRelatedTo</B>():List<PropertyEntity></TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential  </i><TABLE> <TR> <TD valign = "top"><i></i><span style="margin-left: .7cm;"> </span></TD><TD></TD> </TR> </TABLE><TABLE> <TR> <TD valign="top"><i>Notes: </i><span style="margin-left: .4cm;"> </span></TD><TD>Method getRelatedTo<br>@return</TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>getRequestStatuses</B>():List<PropertyEntity></TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential  </i><TABLE> <TR> <TD valign = "top"><i></i><span style="margin-left: .7cm;"> </span></TD><TD></TD> </TR> </TABLE><TABLE> <TR> <TD valign="top"><i>Notes: </i><span style="margin-left: .4cm;"> </span></TD><TD>Method getRequestStatuses<br>@return</TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>getResources</B>():List<PropertyEntity></TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential &lt;&lt;property get&gt;&gt; </i><TABLE> <TR> <TD valign = "top"><i>Tags:</i><span style="margin-left: .7cm;"> </span></TD><TD>attribute_name=resources<br></TD> </TR> </TABLE><TABLE> <TR> <TD valign="top"><i>Notes: </i><span style="margin-left: .4cm;"> </span></TD><TD>Method getResources<br>@return</TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>setStartDate</B>(<br>&nbsp;&nbsp;&nbsp;Date startDate):void</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential  </i><TABLE> <TR> <TD valign = "top"><i></i><span style="margin-left: .7cm;"> </span></TD><TD></TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>setCreated</B>(<br>&nbsp;&nbsp;&nbsp;Date created):void</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential  </i><TABLE> <TR> <TD valign = "top"><i></i><span style="margin-left: .7cm;"> </span></TD><TD></TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>setLastModified</B>(<br>&nbsp;&nbsp;&nbsp;Date lastModified):void</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential  </i><TABLE> <TR> <TD valign = "top"><i></i><span style="margin-left: .7cm;"> </span></TD><TD></TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>setPeriods</B>(<br>&nbsp;&nbsp;&nbsp;<a href="./EA1/EA50.htm">PeriodsEntity</a> periods):void</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential  </i><TABLE> <TR> <TD valign = "top"><i></i><span style="margin-left: .7cm;"> </span></TD><TD></TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>getStartDate</B>():Date</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential  </i><TABLE> <TR> <TD valign = "top"><i></i><span style="margin-left: .7cm;"> </span></TD><TD></TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>getCreated</B>():Date</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential  </i><TABLE> <TR> <TD valign = "top"><i></i><span style="margin-left: .7cm;"> </span></TD><TD></TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>getLastModified</B>():Date</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential  </i><TABLE> <TR> <TD valign = "top"><i></i><span style="margin-left: .7cm;"> </span></TD><TD></TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>getPeriods</B>():<a href="./EA1/EA50.htm">PeriodsEntity</a></TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential  </i><TABLE> <TR> <TD valign = "top"><i></i><span style="margin-left: .7cm;"> </span></TD><TD></TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>setDistinctDates</B>(<br>&nbsp;&nbsp;&nbsp;<a href="./EA1/EA45.htm">DistinctDatesEntity</a> distinctDates):void</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential  </i><TABLE> <TR> <TD valign = "top"><i></i><span style="margin-left: .7cm;"> </span></TD><TD></TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>getDistinctDates</B>():<a href="./EA1/EA45.htm">DistinctDatesEntity</a></TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential  </i><TABLE> <TR> <TD valign = "top"><i></i><span style="margin-left: .7cm;"> </span></TD><TD></TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>setCalendar</B>(<br>&nbsp;&nbsp;&nbsp;<a href="./EA1/EA55.htm">VCalendarEntity</a> cal):void</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential  </i><TABLE> <TR> <TD valign = "top"><i></i><span style="margin-left: .7cm;"> </span></TD><TD></TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>getCalendar</B>():<a href="./EA1/EA55.htm">VCalendarEntity</a></TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential  </i><TABLE> <TR> <TD valign = "top"><i></i><span style="margin-left: .7cm;"> </span></TD><TD></TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>setAlarms</B>(<br>&nbsp;&nbsp;&nbsp;List<VAlarmEntity> alarms):void</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential &lt;&lt;property set&gt;&gt; </i><TABLE> <TR> <TD valign = "top"><i>Tags:</i><span style="margin-left: .7cm;"> </span></TD><TD>attribute_name=alarms<br></TD> </TR> </TABLE><TABLE> <TR> <TD valign="top"><i>Notes: </i><span style="margin-left: .4cm;"> </span></TD><TD>public void setCalendarId(int calendarId) { this.calendarId = calendarId; }  public int getCalendarId() { return (this.calendarId); }</TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>getAlarms</B>():List<VAlarmEntity></TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential &lt;&lt;property get&gt;&gt; </i><TABLE> <TR> <TD valign = "top"><i>Tags:</i><span style="margin-left: .7cm;"> </span></TD><TD>attribute_name=alarms<br></TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>setEndDate</B>(<br>&nbsp;&nbsp;&nbsp;Date endDate):void</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential  </i><TABLE> <TR> <TD valign = "top"><i></i><span style="margin-left: .7cm;"> </span></TD><TD></TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>setEndDate</B>(<br>&nbsp;&nbsp;&nbsp;<a href="./EA1/EA46.htm">DurationEntity</a> dur):void</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential  </i><TABLE> <TR> <TD valign = "top"><i></i><span style="margin-left: .7cm;"> </span></TD><TD></TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>getEndDate</B>():Date</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential  </i><TABLE> <TR> <TD valign = "top"><i></i><span style="margin-left: .7cm;"> </span></TD><TD></TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>setDateTime</B>(<br>&nbsp;&nbsp;&nbsp;<a href="./EA1/EA43.htm">DateTimeEntity</a> dateTime):void</TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential &lt;&lt;property set&gt;&gt; </i><TABLE> <TR> <TD valign = "top"><i>Tags:</i><span style="margin-left: .7cm;"> </span></TD><TD>attribute_name=dateTime<br></TD> </TR> </TABLE></TD>
+</TR>
+<TR>
+	<TD WIDTH="40%" class="OperationTableRow"><i>public</i><BR><B>getDateTime</B>():<a href="./EA1/EA43.htm">DateTimeEntity</a></TD>
+	<TD WIDTH="60%" class="OperationTableRow"><i>Sequential &lt;&lt;property get&gt;&gt; </i><TABLE> <TR> <TD valign = "top"><i>Tags:</i><span style="margin-left: .7cm;"> </span></TD><TD>attribute_name=dateTime<br></TD> </TR> </TABLE></TD>
+</TR>
+
+				</TABLE>
+			</td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+
+<TABLE class="FooterTable" align="center" cellSpacing=0 cellPadding=0>
+  <TBODY >
+	<TR><TD colspan="2" width="100%"><HR></TD></TR>
+	<TR>
+		<TD colspan=2 WIDTH="100%" class="Footer">class: CalComponent</TD>
+	</TR>
+	<TR>
+		<TD WIDTH="48%" class="FooterDetails"></TD>
+		<TD WIDTH="48%" class="FooterDetails"></TD>
+	</TR>
+	<TR>
+		<TD WIDTH="40%" class="FooterDetails"></TD>
+		<TD WIDTH="60%" class="FooterDetails"></TD>
+	</TR>
+	</TBODY>
+</TABLE> 
+</body>
+
+</html>
