@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="GXPConverter" default="all" basedir=".">
+    <property name="application" value="GXPConverter"/>
+    <property name="version" value="${application}-1.0"/>
+    <property name="jarfile" value="gpx.jar"/>
+
+    <!-- output data directories -->
+    <property name="build" value="build"/>
+    <property name="classes" value="_classes"/>
+    <property name="dist" value="dist"/>
+
+    <!-- input data directories -->
+    <property name="src" value="src"/>
+    <property name="etc" value="etc"/>
+    <property name="doc" value="doc"/>
+    <property name="lib" value="lib"/>
+    <property name="dev" value="dev"/>
+    <!--<property name="help" location="help"/>-->
+    <property name="resources" value="cz/cvut/felk/gps/core/resources/"/>
+    <property name="mainclass" value="cz.cvut.felk.gps.core.MainApp"/>
+   <!-- <property name="splash" value="${resources}icons/splash.jpg"/>-->
+
+    <fileset id="jars" dir="${lib}" includes="*"/>
+
+    <patternset id="compiler.resources">
+        <include name="**/?*.properties"/>
+        <include name="**/?*.xml"/>
+        <include name="**/?*.gif"/>
+        <include name="**/?*.png"/>
+        <include name="**/?*.jpeg"/>
+        <include name="**/?*.jpg"/>
+        <include name="**/?*.html"/>
+        <include name="**/?*.dtd"/>
+        <include name="**/?*.tld"/>
+        <include name="**/?*.mid"/>
+        <include name="**/?*.wav"/>
+    </patternset>
+
+    <path id="cp">
+        <fileset refid="jars"/>
+    </path>
+
+    <pathconvert property="lib.prefix" pathsep=" ">
+        <path location="${lib}"/>
+    </pathconvert>
+
+    <pathconvert property="classpath" refid="jars" pathsep=" " dirsep="/">
+        <map from="${lib.prefix}" to="${lib}"/>
+    </pathconvert>
+
+    <target name="build" depends="compile" description="building GXPConverter">
+        <jar jarfile="${build}/${jarfile}" compress="false">
+            <manifest>
+                <attribute name="Build-Date" value="${TODAY}"/>
+                <attribute name="Class-Path" value="${classpath}"/>
+                <attribute name="Main-Class" value="${mainclass}"/>
+                <!-- <attribute name="SplashScreen-Image" value="${splash}"/>-->
+            </manifest>
+            <fileset dir="${classes}" includes="**/*"/>
+        </jar>
+        <mkdir dir="${build}/${lib}"/>
+        <!--<mkdir dir="${build}/help"/>-->
+        <copy todir="${build}">
+            <fileset dir="${etc}" includes="**/*"/>
+        </copy>
+        <!--<copy todir="${build}/help">-->
+        <!--<fileset dir="${help}" includes="**/*"></fileset>-->
+        <!--</copy>-->
+        <copy todir="${build}/${lib}">
+            <fileset dir="${lib}" includes="**/*"/>
+        </copy>
+    </target>
+
+    <target name="compile" depends="clean, init" description="compiling source codes">
+        <mkdir dir="${classes}"/>
+        <javac srcdir="${src}" destdir="${classes}" classpathref="cp" optimize="on" target="1.6">
+        </javac>
+        <!-- zkopirovani resourcu -->
+
+        <copy todir="${classes}">
+            <fileset dir="${src}">
+                <patternset refid="compiler.resources"/>
+                <type type="file"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="init" description="initialization">
+        <tstamp/>
+        <mkdir dir="${classes}"/>
+        <mkdir dir="${build}"/>
+        <mkdir dir="${dist}"/>
+    </target>
+
+    <target name="clean" description="clean up">
+        <delete dir="${build}"/>
+        <delete dir="${classes}"/>
+        <delete dir="${dist}"/>
+    </target>
+
+    <target name="all" depends="clean,init,compile, build, dist" description="build all"/>
+
+    <!-- run GXPConverter -->
+
+    <target name="run" depends="build">
+        <java fork="true" jar="${build}/${jarfile}"/>
+    </target>
+
+    <target name="dist" depends="build" description="creating release">
+        <zip zipfile="${dist}/${version}.zip">
+            <fileset dir=".">
+                <include name="${build}/"/>
+            </fileset>
+        </zip>
+        <zip destfile="${dist}/${version}-src.zip">
+            <fileset dir=".">
+                <include name="${lib}/"/>
+                <include name="${etc}/"/>
+                <include name="${src}/"/>
+                <include name="${dev}/"/>
+                <include name="${doc}/"/>
+                <include name="build.xml"/>
+            </fileset>
+        </zip>
+    </target>
+
+</project>

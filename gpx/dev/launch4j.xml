@@ -1,0 +1,35 @@
+<launch4jConfig>
+  <dontWrapJar>true</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar>gpx.jar</jar>
+  <outfile>gpx.exe</outfile>
+  <errTitle></errTitle>
+  <cmdLine></cmdLine>
+  <chdir></chdir>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl></supportUrl>
+  <customProcName>false</customProcName>
+  <stayAlive>false</stayAlive>
+  <icon>c:\develope\gps\etc\gpx.ico</icon>
+  <jre>
+    <path></path>
+    <minVersion>1.6.0</minVersion>
+    <maxVersion></maxVersion>
+    <dontUsePrivateJres>true</dontUsePrivateJres>
+    <initialHeapSize>0</initialHeapSize>
+    <maxHeapSize>0</maxHeapSize>
+  </jre>
+  <versionInfo>
+    <fileVersion>1.0.0.0</fileVersion>
+    <txtFileVersion>GPX Converter</txtFileVersion>
+    <fileDescription>GPX Converter </fileDescription>
+    <copyright>Czech Technical Univesity, Faculty of Electrotechnical Engineering</copyright>
+    <productVersion>1.0.0.0</productVersion>
+    <txtProductVersion>GPX Converter</txtProductVersion>
+    <productName>GPX Converter</productName>
+    <companyName>Czech Technical Univesity, Faculty of Electrotechnical Engineering</companyName>
+    <internalName>GPXConverter</internalName>
+    <originalFilename>gpx.exe</originalFilename>
+  </versionInfo>
+</launch4jConfig>
