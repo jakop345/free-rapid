@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <project name="TimeJuggler" default="all" basedir=".">
     <property name="application" value="timejuggler"/>
-    <property name="version" value="${application}-0.3"/>
+    <property name="version" value="${application}-0.4"/>
     <property name="jarfile" value="tj.jar"/>
 
     <!-- output data directories -->
