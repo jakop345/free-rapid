@@ -19,4 +19,12 @@ public class GeoPoint extends Point2D.Double {
             return tude.substring(0, tude.length() - 1);
         else return tude;
     }
+
+    public double getLongitude() {
+        return getX();
+    }
+
+    public double getLatitude() {
+        return getY();
+    }
 }

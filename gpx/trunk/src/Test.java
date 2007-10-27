@@ -6,12 +6,12 @@ import ie.tcd.cs.dsg.hermes.gislite.geometry.Polygon;
  */
 public class Test {
     public static void main(String[] args) {
-        final Point p1 = new Point(50.04022177886585F, 14.40529892552092F);
-        final Point p2 = new Point(50.03681090322574F, 14.40773890254857F);
-        final Point p3 = new Point(50.03800752754654F, 14.40909007385753F);
-        final Point p4 = new Point(50.04092710302574F, 14.40683074896286F);
-        final Point p5 = new Point(50.04022177886585F, 14.40529892552092F);
-        final Point cont = new Point(50.03866541392449F, 14.40557436706965F);
+        final Point p1 = new Point(50.03959526995691F, 14.40600278367175F);
+        final Point p2 = new Point(50.03702356561961F, 14.40786420647061F);
+        final Point p3 = new Point(50.03765270436561F, 14.40865692328808F);
+        final Point p4 = new Point(50.04049303718759F, 14.40678943853316F);
+        final Point p5 = new Point(50.03959526995691F, 14.40600278367175F);
+        final Point cont = new Point(50.0374300F, 14.4082700F);
         final Polygon polygon = new Polygon();
         polygon.addVertex(p1);
         polygon.addVertex(p2);
@@ -33,7 +33,9 @@ public class Test {
         System.out.println("contain = " + contain);
         contain = polygon.contains(50.04065104881526F, 14.40602633447299F);//mimo
         System.out.println("contain mimo = " + contain);
-        contain = polygon.contains(50.04060986831761F, 14.40606038184733F);//mimo
+        contain = polygon.contains(50.04060986831761F, 14.4082700F);//mimo
         System.out.println("contain mimo = " + contain);
+        contain = polygon.getBounds().contains(50.0374400F, 14.4082583F);//in
+        System.out.println("contain in = " + contain);
     }
 }

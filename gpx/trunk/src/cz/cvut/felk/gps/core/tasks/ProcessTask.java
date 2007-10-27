@@ -3,10 +3,8 @@ package cz.cvut.felk.gps.core.tasks;
 import com.sun.org.apache.xpath.internal.XPathAPI;
 import cz.cvut.felk.gps.swing.Swinger;
 import cz.cvut.felk.gps.utilities.LogUtils;
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import cz.cvut.felk.gps.utilities.Utils;
+import org.w3c.dom.*;
 import org.w3c.dom.traversal.NodeIterator;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -19,6 +17,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,11 +32,12 @@ public class ProcessTask extends CoreTask<Void, Void> {
     //private final static String KML_XPATH = "/kml/Document/Placemark/Polygon/outerBoundaryIs/LinearRing/coordinates";
     private final static String KML_XPATH = "//Polygon[1]/*/*/coordinates[1]";
 
-    private final static String GPX_XPATH = "//trkpt";
     private final static Logger logger = Logger.getLogger(ProcessTask.class.getName());
     private File outDir;
-    private Polygon2D polygon2D;
+    private SimpleGeographicPolygon polygon;
     private DocumentBuilderFactory dfactory;
+    private Transformer transformer;
+    private static final String TRANSFORM_XSL = "transform.xsl";
 
     public ProcessTask(File gpxFolder, File kmlFile) {
         super();
@@ -48,13 +48,13 @@ public class ProcessTask extends CoreTask<Void, Void> {
 
     protected Void doInBackground() throws Exception {
         setMessage("Reading polygon");
-        polygon2D = readPolygon();
+        polygon = readPolygon();
         if (outDir.exists()) {
             final File[] files = outDir.listFiles();
             for (File file : files) {
                 file.delete();
             }
-        }        
+        }
         outDir.mkdirs();
         processGpxFolder();
         return null;
@@ -67,16 +67,24 @@ public class ProcessTask extends CoreTask<Void, Void> {
                 return name.endsWith(".gpx");
             }
         });
-        final int max = files.length + 2;
+        final int max = files.length + 1;
         this.setProgress(0, 0, max);
         dfactory = DocumentBuilderFactory.newInstance();
-        final Transformer serializer = TransformerFactory.newInstance().newTransformer();
+        TransformerFactory tFactory = TransformerFactory.newInstance();
+        tFactory.setAttribute("indent-number", 4);
+        final Transformer serializer = tFactory.newTransformer();
+        serializer.setOutputProperty(OutputKeys.INDENT, "yes");        
+        serializer.setOutputProperty("{http://xml.apache.org/xalan}indent-amount", "2");
+        final InputStream xslAsStream = ClassLoader.getSystemResourceAsStream(TRANSFORM_XSL);
+        setMessage("Loading transform stylesheet");
+        transformer = tFactory.newTransformer(new StreamSource(xslAsStream));
+
         for (int i = 0; i < files.length; i++) {
             if (isCancelled())
                 return;
             final File file = files[i];
             setMessage("Processing " + file.getName());
-            setProgress(i + 1);
+            setProgress(i + 1, 0, max);
             try {
                 processGpxFile(serializer, file);
             } catch (Exception e) {
@@ -85,6 +93,7 @@ public class ProcessTask extends CoreTask<Void, Void> {
                 throw e;
             }
         }
+        transformer = null;        
         setProgress(max);
         dfactory = null;
     }
@@ -93,7 +102,8 @@ public class ProcessTask extends CoreTask<Void, Void> {
         InputSource in = new InputSource(new FileInputStream(gpxFile));
         //dfactory.setNamespaceAware(true);
         final Document doc = dfactory.newDocumentBuilder().parse(in);
-        logger.info("Querying DOM using " + GPX_XPATH);
+//        doc.getDomConfig().setParameter("element-content-whitespace","false");
+        logger.info("Querying DOM for track points");
         final NodeList list = doc.getElementsByTagName("trkpt");
 
         Node n;
@@ -108,7 +118,7 @@ public class ProcessTask extends CoreTask<Void, Void> {
             final String latitude = attrs.getNamedItem("lat").getTextContent();
             final String longitude = attrs.getNamedItem("lon").getTextContent();
             final GeoPoint testPoint = new GeoPoint(longitude, latitude);
-            if (polygon2D.contains(testPoint)) {
+            if (polygon.contains(testPoint)) {
                 logger.fine("found point in polygon");
 //                final Attr attribute = doc.createAttribute("inPolygon");
 //                attribute.setTextContent("yes");
@@ -119,23 +129,30 @@ public class ProcessTask extends CoreTask<Void, Void> {
         for (Node node : nodesToRemove) {
             node.getParentNode().removeChild(node);
         }
+
         nodesToRemove.clear();
         if (!found)
             logger.warning("File " + gpxFile.getName() + " does not intersects with selected polygon");
-        else {            
+        else {
             FileOutputStream stream = null;
+            FileOutputStream txtStream = null;
             try {
                 stream = new FileOutputStream(new File(outDir, gpxFile.getName()));
-                serializer.transform(new DOMSource(doc), new StreamResult(new OutputStreamWriter(stream)));
+                txtStream = new FileOutputStream(new File(outDir, Utils.getPureFilename(gpxFile) + ".txt"));
+                final DOMSource source = new DOMSource(doc);
+                serializer.transform(source, new StreamResult(new OutputStreamWriter(stream, "utf-8")));
+                transformer.transform(source, new StreamResult(txtStream));
             } finally {
-                if (stream != null)
+                if (txtStream != null)
                     stream.close();
+                if (txtStream != null)
+                    txtStream.close();
             }
         }
         in.getByteStream().close();
     }
 
-    private Polygon2D readPolygon() throws ParserConfigurationException, TransformerException, IOException, SAXException {
+    private SimpleGeographicPolygon readPolygon() throws ParserConfigurationException, TransformerException, IOException, SAXException {
         InputSource in = new InputSource(new FileInputStream(kmlFile));
         DocumentBuilderFactory dfactory = DocumentBuilderFactory.newInstance();
         Document doc = dfactory.newDocumentBuilder().parse(in);
@@ -153,13 +170,13 @@ public class ProcessTask extends CoreTask<Void, Void> {
         if (n != null) {
             final String nodeValue = n.getTextContent();
             logger.info("coordinates nodeValue = " + nodeValue);
-            final Polygon2D polygon2D = parsePolygonCoordinates(nodeValue);
+            final SimpleGeographicPolygon polygon2D = parsePolygonCoordinates(nodeValue);
             logger.info("polygon2D = " + polygon2D);
             return polygon2D;
         } else throw new IllegalStateException("Polygon coordinates not found");
     }
 
-    private Polygon2D parsePolygonCoordinates(String value) {
+    private SimpleGeographicPolygon parsePolygonCoordinates(String value) {
         List<GeoPoint> pointList = new ArrayList<GeoPoint>();
         final String[] points = value.trim().split(",0");
         for (String point : points) {
@@ -173,19 +190,8 @@ public class ProcessTask extends CoreTask<Void, Void> {
         final GeoPoint[] pointArray = new GeoPoint[pointList.size()];
         if (pointArray.length < 3)
             throw new IllegalStateException("Not enough coordinates to create polygon");
-        return new Polygon2D(pointList.toArray(pointArray));
+        return PolygonProvider.getPolygonInstance(PolygonProvider.PolygonType.JAVA_GRAPHIC, pointList.toArray(pointArray));
     }
-
-    /**
-     * Decide if the node is text, and so must be handled specially
-     */
-    static boolean isTextNode(Node n) {
-        if (n == null)
-            return false;
-        short nodeType = n.getNodeType();
-        return nodeType == Node.CDATA_SECTION_NODE || nodeType == Node.TEXT_NODE;
-    }
-
 
     @Override
     protected void failed(Throwable cause) {

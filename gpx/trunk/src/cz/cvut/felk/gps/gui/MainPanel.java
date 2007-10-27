@@ -136,11 +136,13 @@ public class MainPanel extends JPanel {
     public Task btnProcessAction() {
         final File gpxFolder = new File(fieldGPXFolder.getText());
         if (!gpxFolder.isDirectory()) {
+            Swinger.showErrorMessage(Swinger.getResourceMap(), "message.info.folderDoesNotExists", fieldGPXFolder.getText());
             Swinger.inputFocus(fieldGPXFolder);
             return null;
         }
         final File kmlFile = new File(fieldKMLFile.getText());
         if (!kmlFile.isFile()) {
+            Swinger.showErrorMessage(Swinger.getResourceMap(), "message.info.fileDoesNotExists", fieldKMLFile.getText());
             Swinger.inputFocus(fieldKMLFile);
             return null;
         }

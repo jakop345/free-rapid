@@ -11,7 +11,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Arrays;
 
-public class Polygon2D implements Shape {
+public class Polygon2D implements Shape, SimpleGeographicPolygon {
     public int npoints;
     public double xpoints[];
     public double ypoints[];
@@ -427,4 +427,8 @@ public class Polygon2D implements Shape {
 			return (index == 0 ? SEG_MOVETO : SEG_LINETO);
 		}
 	}
+
+    public boolean contains(GeoPoint point) {
+        return this.contains(point.getX(), point.getY());
+    }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <project name="GXPConverter" default="all" basedir=".">
-    <property name="application" value="GXPConverter"/>
+    <property name="application" value="GXPExtractor"/>
     <property name="version" value="${application}-1.0"/>
     <property name="jarfile" value="gpx.jar"/>
 
@@ -25,6 +25,7 @@
     <patternset id="compiler.resources">
         <include name="**/?*.properties"/>
         <include name="**/?*.xml"/>
+        <include name="**/?*.xsl"/>
         <include name="**/?*.gif"/>
         <include name="**/?*.png"/>
         <include name="**/?*.jpeg"/>
