@@ -5,7 +5,7 @@
     <property name="jarfile" value="gpx.jar"/>
 
     <!-- output data directories -->
-    <property name="build" value="build"/>
+    <property name="build" value="${version}"/>
     <property name="classes" value="_classes"/>
     <property name="dist" value="dist"/>
 

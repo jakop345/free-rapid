@@ -1,4 +1,4 @@
-import cz.cvut.felk.gps.core.tasks.Polygon2D;
+import cz.cvut.felk.gpx.core.tasks.Polygon2D;
 
 import java.awt.geom.Point2D;
 
