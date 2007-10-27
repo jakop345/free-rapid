@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<project name="GXPConverter" default="all" basedir=".">
-    <property name="application" value="GXPExtractor"/>
+<project name="GPXExtractor" default="all" basedir=".">
+    <property name="application" value="GPXExtractor"/>
     <property name="version" value="${application}-1.0"/>
     <property name="jarfile" value="gpx.jar"/>
 
@@ -49,7 +49,7 @@
         <map from="${lib.prefix}" to="${lib}"/>
     </pathconvert>
 
-    <target name="build" depends="compile" description="building GXPConverter">
+    <target name="build" depends="compile" description="building GPXConverter">
         <jar jarfile="${build}/${jarfile}" compress="false">
             <manifest>
                 <attribute name="Build-Date" value="${TODAY}"/>
@@ -101,7 +101,7 @@
 
     <target name="all" depends="clean,init,compile, build, dist" description="build all"/>
 
-    <!-- run GXPConverter -->
+    <!-- run GPXExtractor -->
 
     <target name="run" depends="build">
         <java fork="true" jar="${build}/${jarfile}"/>
