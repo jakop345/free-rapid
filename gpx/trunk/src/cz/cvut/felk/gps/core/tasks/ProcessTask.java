@@ -203,6 +203,6 @@ public class ProcessTask extends CoreTask<Void, Void> {
     @Override
     protected void succeeded(Void result) {
         super.succeeded(result);
-        Swinger.showInformationDialog("Succesfully proceeded.");
+        Swinger.showInformationDialog("Succesfully proceeded into " + outDir.getPath());
     }
 }
