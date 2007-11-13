@@ -1,0 +1,35 @@
+<launch4jConfig>
+  <dontWrapJar>true</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar>wordrider.jar</jar>
+  <outfile>wordrider.exe</outfile>
+  <errTitle></errTitle>
+  <cmdLine></cmdLine>
+  <chdir></chdir>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl></supportUrl>
+  <customProcName>false</customProcName>
+  <stayAlive>false</stayAlive>
+  <icon>e:\My Programs\JRider\resources\images\favicon.ico</icon>
+  <jre>
+    <path></path>
+    <minVersion>1.5.0</minVersion>
+    <maxVersion></maxVersion>
+    <dontUsePrivateJres>true</dontUsePrivateJres>
+    <initialHeapSize>0</initialHeapSize>
+    <maxHeapSize>0</maxHeapSize>
+  </jre>
+  <versionInfo>
+    <fileVersion>0.8.0.0</fileVersion>
+    <txtFileVersion>WordRider</txtFileVersion>
+    <fileDescription>WordRider 0.8alpha version</fileDescription>
+    <copyright>Vitysoft (c)2004-2006</copyright>
+    <productVersion>0.8.0.0</productVersion>
+    <txtProductVersion>WordRider</txtProductVersion>
+    <productName>WordRider</productName>
+    <companyName>Vitysoft (c)2004-2006</companyName>
+    <internalName>WordRider</internalName>
+    <originalFilename>wordrider.exe</originalFilename>
+  </versionInfo>
+</launch4jConfig>
