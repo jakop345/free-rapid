@@ -54,7 +54,7 @@ public final class LookAndFeels {
     }
 
     private ClassLoader initClassLoader() {
-        final String path = AppPrefs.getAppPath() + "skin";
+        final String path = AppPrefs.getAppPath() + "lib";
         logger.info("Loading plugin path " + path);
         final File file = new File(path);
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
