@@ -1,6 +1,5 @@
 package net.wordrider.core.managers;
 
-import net.wordrider.core.MainApp;
 import net.wordrider.core.managers.interfaces.IAreaChangeListener;
 import net.wordrider.core.managers.interfaces.IFileInstance;
 import net.wordrider.plugintools.PluginTool;
@@ -41,7 +40,7 @@ public final class PluginToolsManager extends TabManager<PluginTool> implements 
         tabbedPane.setSelectedComponent(pluginTool.getComponent());
     }
 
-    public static PluginToolsManager getInstance() {
-        return MainApp.getInstance().getMainAppFrame().getManagerDirector().getPluginToolsManager();
-    }
+//    public static PluginToolsManager getInstance() {
+//        return MainApp.getInstance().getMainAppFrame().getManagerDirector().getPluginToolsManager();
+//    }
 }

@@ -2,6 +2,7 @@ package net.wordrider.core.managers;
 
 import net.wordrider.core.MainApp;
 import net.wordrider.core.managers.interfaces.IRiderManager;
+import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,19 +11,20 @@ import java.awt.*;
  * @author Vity
  */
 public final class ManagerDirector implements IRiderManager {
-    private final JPanel rootContainer;
+    private final Container rootContainer;
     private AreaManager areaManager;
     private MenuManager menuManager;
     private StatusbarManager statusbarManager;
-    private PluginToolsManager pluginsToolManager;
+    private PluginToolManager pluginsToolManager;
     private final JFrame mainFrame;
-    private ToolbarManager toolbarManager;
-    private DataDividerManager dataDividerManager;
+    private BackgroundManager backgroundManager;
     private TitleManager titleManager;
+    private ToolbarManager toolbarManager;
+    private MyDoggyToolWindowManager toolsManager;
 
-    public ManagerDirector(final JFrame mainFrame, final JPanel rootContainer) {
+    public ManagerDirector(final JFrame mainFrame) {
         this.mainFrame = mainFrame;
-        this.rootContainer = rootContainer;
+        this.rootContainer = mainFrame.getContentPane();
         init();
     }
 
@@ -39,15 +41,22 @@ public final class ManagerDirector implements IRiderManager {
         //areaManager.newFile();
         //MainApp.makeProgress();
         this.toolbarManager = new ToolbarManager();
-        this.pluginsToolManager = new PluginToolsManager();
         this.titleManager = new TitleManager(mainFrame);
+        // Add myDoggyToolWindowManager to the frame. MyDoggyToolWindowManager is an extension of a JPanel
+        //rootContainer.setLayout(new TableLayout(new double[][]{{0, -1, 0}, {0, -1, 0}}));
+        rootContainer.setLayout(new BorderLayout());
+        rootContainer.add(getDockingWindowManager(), BorderLayout.CENTER);
+
         //MainApp.makeProgress();
         //areaManager.getManagerComponent().setBackground(this.toolbarManager.getManagerComponent().getBackground());
-        dataDividerManager = new DataDividerManager(rootContainer, pluginsToolManager.getManagerComponent(), areaManager.getManagerComponent());
+
+        backgroundManager = new BackgroundManager(this);
+
+        this.pluginsToolManager = new PluginToolManager(getDockingWindowManager());
         //MainApp.makeProgress();
         getStatusbarManager();
         rootContainer.add(this.toolbarManager.getManagerComponent(), BorderLayout.NORTH);
-        rootContainer.add(dataDividerManager.getManagerComponent(), BorderLayout.CENTER);
+        //rootContainer.add(backgroundManager.getManagerComponent(), BorderLayout.CENTER);
         rootContainer.add(this.statusbarManager.getManagerComponent(), BorderLayout.SOUTH);
         areaManager.addAreaChangeListener(pluginsToolManager);
         areaManager.addAreaChangeListener(statusbarManager);
@@ -55,23 +64,27 @@ public final class ManagerDirector implements IRiderManager {
         areaManager.addAreaChangeListener(toolbarManager);
         areaManager.addAreaChangeListener(this.titleManager);
         areaManager.addFileChangeListener(toolbarManager);
-        areaManager.addFileChangeListener(dataDividerManager);
+        areaManager.addFileChangeListener(backgroundManager);
         //MainApp.makeProgress();
-        //this.dataDividerManager
+        //this.backgroundManager
         //statusbar
     }
 
 
-    public DataDividerManager getDataDividerManager() {
-        return dataDividerManager;
+    public BackgroundManager getDataDividerManager() {
+        return backgroundManager;
     }
 
-    public final PluginToolsManager getPluginToolsManager() {
+    public final PluginToolManager getPluginToolsManager() {
         return this.pluginsToolManager;
     }
 
-    public final AreaManager getAreaManager() {
+    public AreaManager getAreaManager() {
         return areaManager;
+    }
+
+    public final MyDoggyToolWindowManager getDockingWindowManager() {
+        return (this.toolsManager == null) ? this.toolsManager = new MyDoggyToolWindowManager(mainFrame) : this.toolsManager;
     }
 
     public MenuManager getMenuManager() {

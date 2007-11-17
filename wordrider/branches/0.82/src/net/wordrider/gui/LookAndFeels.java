@@ -54,7 +54,7 @@ public final class LookAndFeels {
     }
 
     private ClassLoader initClassLoader() {
-        final String path = AppPrefs.getAppPath() + "lib";
+        final String path = AppPrefs.getAppPath() + "skin";
         logger.info("Loading plugin path " + path);
         final File file = new File(path);
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
@@ -69,7 +69,7 @@ public final class LookAndFeels {
                 final URL[] urls = new URL[jarsCount];
                 final boolean isDebug = logger.isLoggable(Level.INFO);
                 for (int i = 0; i < jarsCount; ++i) {
-                    urls[i] = jars[i].toURL();
+                    urls[i] = jars[i].toURI().toURL();
                     if (isDebug)
                         logger.info("Loading URL with a jar " + urls[i]);
                 }

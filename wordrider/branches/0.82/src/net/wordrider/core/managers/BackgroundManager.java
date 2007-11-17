@@ -3,11 +3,11 @@ package net.wordrider.core.managers;
 import info.clearthought.layout.TableLayout;
 import net.wordrider.core.actions.*;
 import net.wordrider.core.managers.interfaces.IFileChangeListener;
-import net.wordrider.core.managers.interfaces.IRiderManager;
 import net.wordrider.core.swing.CustomLayoutConstraints;
 import net.wordrider.gui.LookAndFeels;
 import net.wordrider.utilities.Consts;
 import net.wordrider.utilities.Swinger;
+import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyDesktopContentManagerUI;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -19,47 +19,27 @@ import java.util.logging.Logger;
 /**
  * @author Vity
  */
-public final class DataDividerManager implements IRiderManager, IFileChangeListener, PropertyChangeListener {
-    private final static Logger logger = Logger.getLogger(DataDividerManager.class.getName());
-    private final JSplitPane splitPane;
+public final class BackgroundManager implements IFileChangeListener, PropertyChangeListener {
+    private final static Logger logger = Logger.getLogger(BackgroundManager.class.getName());
     private boolean isGraphicMenu = false;
-    private final Component rightComponent;
     private Component graphicMenu = null;
     private JLabel labelWelcome = null;
+    private final ManagerDirector director;
+    private LayoutManager layout;
 
 
-    public DataDividerManager(final JPanel parentPane, final Component leftComponent, final Component rightComponent) {
-        this.rightComponent = rightComponent;
-        parentPane.add(splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftComponent, rightComponent), BorderLayout.CENTER);
-        //        splitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
-        // splitPane.setLastDividerLocation(300);
-        //splitPane.setLayout(new BorderLayout());
-        splitPane.setOneTouchExpandable(true);
-        splitPane.setDividerSize(8);
-        //splitPane.setBackground(Color.GREEN);
-        //     splitPane.setDividerLocation(50);
+    public BackgroundManager(ManagerDirector director) {
+        this.director = director;
+        this.director.getDockingWindowManager().getContentManager().setContentManagerUI(new MyDoggyDesktopContentManagerUI());
     }
-
-    // --Commented out by Inspection START (4.2.05 16:18):
-    //    public final void setLeftComponent(final Component component) {
-    //        splitPane.setLeftComponent(component);
-    //    }
-    // --Commented out by Inspection STOP (4.2.05 16:18)
-
-    public final Component getManagerComponent() {
-        return splitPane;
-    }
-
-    // --Commented out by Inspection START (4.2.05 16:18):
-    //    public final void setRightComponent(final Component component) {
-    //        splitPane.setRightComponent(component);
-    //    }
-    // --Commented out by Inspection STOP (4.2.05 16:18)
 
 
     public void fileWasOpened(final FileChangeEvent event) {
         if (isGraphicMenu) {
-            splitPane.setRightComponent(rightComponent);
+            final Container container = getContainerUI().getContainer();
+            container.setLayout(layout);
+            container.remove(graphicMenu);
+            container.repaint();
             isGraphicMenu = false;
         }
     }
@@ -71,10 +51,17 @@ public final class DataDividerManager implements IRiderManager, IFileChangeListe
 
     public void setGraphicMenu() {
         if (!isGraphicMenu) {
-            splitPane.setRightComponent(getGraphicMenu());
+            final Container container = getContainerUI().getContainer();
+            layout = container.getLayout();
+            container.setLayout(new BorderLayout());
+            container.add(getGraphicMenu(), BorderLayout.CENTER);
             isGraphicMenu = true;
             logger.fine("Setting graphic menu");
         }
+    }
+
+    private MyDoggyDesktopContentManagerUI getContainerUI() {
+        return (MyDoggyDesktopContentManagerUI) director.getDockingWindowManager().getContentManager().getContentManagerUI();
     }
 
     private Component getGraphicMenu() {
@@ -109,7 +96,7 @@ public final class DataDividerManager implements IRiderManager, IFileChangeListe
         labelWelcome.setOpaque(true);
         labelWelcome.setHorizontalAlignment(JLabel.LEFT);
         updateLabelWelcomeColor();
-        
+
 
         final Component item1 = Swinger.getGraphicItem("gmenu.itemNew", "editor.gif", CreateNewFileAction.getInstance());
         final Component item2 = Swinger.getGraphicItem("gmenu.itemOpen", "open_big.gif", OpenFileAction.getInstance());

@@ -25,7 +25,7 @@ class ToggleViewAreaAction extends CoreAction {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 ((RiderArea) instance.getRiderArea()).setViewBorder(borderType, true);
-                getManagerDirector().getPluginToolsManager().getActiveInstance().updateData();
+                getManagerDirector().getPluginToolsManager().updateData();
             }
         });
     }

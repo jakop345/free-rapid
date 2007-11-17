@@ -4,7 +4,7 @@ import net.wordrider.area.RiderStyles;
 import net.wordrider.core.actions.ExitAction;
 import net.wordrider.core.actions.OpenFileAction;
 import net.wordrider.core.managers.ManagerDirector;
-import net.wordrider.core.managers.PluginToolsManager;
+import net.wordrider.core.managers.PluginToolManager;
 import net.wordrider.core.swing.FileTransferHandlerImpl;
 import net.wordrider.core.swing.TextComponentContextMenuListener;
 import net.wordrider.gui.LookAndFeels;
@@ -29,7 +29,7 @@ import java.util.logging.Logger;
  * @author Vity
  */
 public final class MainAppFrame extends JFrame {
-    private JPanel rootPanel;
+    //private JPanel rootPanel;
     private ManagerDirector mainPanelManager;
     private CharacterList characterList = null;
     private final static Logger logger = Logger.getLogger(MainAppFrame.class.getName());
@@ -70,7 +70,7 @@ public final class MainAppFrame extends JFrame {
         this.setSize(width, height);
         this.setTitle(Consts.APPVERSION + (logger.isLoggable(Level.INFO) ? " debug" : ""));
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setContentPane(getMainPanel());
+//        this.setContentPane(getMainPanel());
         if (maximized)
             this.setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
@@ -109,11 +109,13 @@ public final class MainAppFrame extends JFrame {
         }
         if (!openingFile)
             mainPanelManager.getDataDividerManager().setGraphicMenu();
-        final PluginToolsManager manager = mainPanelManager.getPluginToolsManager();
-        manager.addPluginTool(getCharacterList());
+        final PluginToolManager manager = mainPanelManager.getPluginToolsManager();
+        manager.addPluginTool(new FindAll());
         final BreakpointList breakpointList = new BreakpointList();
         manager.addPluginTool(breakpointList);
-        manager.addPluginTool(new FindAll());
+
+        manager.addPluginTool(getCharacterList());
+
         if (bookmarksactive)
             manager.selectPluginTool(breakpointList);
 
@@ -148,19 +150,18 @@ public final class MainAppFrame extends JFrame {
 
     }
 
-
-    private JPanel getMainPanel() {
-        if (rootPanel == null) {
-            rootPanel = new JPanel();
-            rootPanel.setLayout(new BorderLayout());
-            //create panels
-        }
-        return rootPanel;
-    }
+//    private JPanel getMainPanel() {
+//        if (rootPanel == null) {
+//            rootPanel = new JPanel();
+//            rootPanel.setLayout(new BorderLayout());
+//            //create panels
+//        }
+//        return rootPanel;
+//    }
 
     public final ManagerDirector getManagerDirector() {
         if (mainPanelManager == null) {
-            mainPanelManager = new ManagerDirector(this, rootPanel);
+            mainPanelManager = new ManagerDirector(this);
         }
         return mainPanelManager;
     }

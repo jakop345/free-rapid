@@ -1,74 +1,93 @@
 package net.wordrider.core.managers;
 
 import net.wordrider.area.RiderArea;
+import net.wordrider.area.actions.GetNextTabAction;
+import net.wordrider.area.actions.GetPrevTabAction;
 import net.wordrider.core.AppPrefs;
 import net.wordrider.core.MainApp;
-import net.wordrider.core.managers.interfaces.IAreaChangeListener;
-import net.wordrider.core.managers.interfaces.IFileChangeListener;
-import net.wordrider.core.managers.interfaces.IFileInstance;
-import net.wordrider.core.managers.interfaces.InstanceListener;
-import net.wordrider.utilities.LogUtils;
+import net.wordrider.core.actions.*;
+import net.wordrider.core.managers.interfaces.*;
 import net.wordrider.utilities.Swinger;
-import org.noos.xing.mydoggy.Content;
-import org.noos.xing.mydoggy.ContentManager;
-import org.noos.xing.mydoggy.ContentManagerListener;
-import org.noos.xing.mydoggy.event.ContentManagerEvent;
-import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.logging.Logger;
 
 /**
  * @author Vity
  */
-public final class AreaManager implements InstanceListener {
-    private final static Logger logger = Logger.getLogger(AreaManager.class.getName());
+public final class AreaManager2 extends TabManager<FileInstance> implements InstanceListener {
     //private final ManagerDirector director;
     private final EventListenerList listenerList = new EventListenerList();
     //    private final Collection<IAreaChangeListener> areaChangelisteners = new ArrayList<IAreaChangeListener>(4);
     //    private final Collection<IFileChangeListener> fileStatusListeners = new HashSet<IFileChangeListener>(2);
     private final RecentFilesManager recentFilesManager;
 
-    final Collection<FileInstance> runningInstancesIDs = new HashSet<FileInstance>(4);
-
-
-    private static int anIDCounter = 0;
-    private MyDoggyToolWindowManager toolWindowManager;
-
-    public AreaManager(final ManagerDirector director) {
+    public AreaManager2(final ManagerDirector director) {
         super();    //call to super
-        //  this.director = director;
+        //this.director = director;
         recentFilesManager = new RecentFilesManager(director.getMenuManager());
-        toolWindowManager = director.getDockingWindowManager();
         addFileChangeListener(recentFilesManager);
-        toolWindowManager.getContentManager().addContentManagerListener(new ContentManagerListener() {
-            public void contentAdded(ContentManagerEvent event) {
+        tabbedPane.setFocusable(true);//must be
+        applyTabLayout();
+//        tabbedPane.setFocusCycleRoot(true);
+//        tabbedPane.setFocusTraversalPolicy(new LayoutFocusTraversalPolicy() {
+//            public Component getDefaultComponent(Container cont) {
+//                final IFileInstance instance = getActiveInstance();
+//                if (instance != null)
+//                    return instance.getRiderArea();
+//                else return null;
+//            }
+//        });
+//        tabbedPane.addMouseListener(new MouseAdapter() {
+//            public void mousePressed(final MouseEvent e) {
+//                System.out.println("click 3x!");
+//            }
+//
+//            public void mouseReleased(final MouseEvent e) {
+//                super.mouseReleased(e);    //call to super
+//                System.out.println("released");
+//            }
+//
+//            public void mouseClicked(final MouseEvent e) {
+//                //                if (e.getClickCount() > 1) {
+//                System.out.println("click 2x!");
+//                //                }
+//            }
+//        });
+        tabbedPane.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
 
-            }
-
-            public void contentRemoved(ContentManagerEvent event) {
-
-            }
-
-            public void contentSelected(ContentManagerEvent event) {
-                final Content content = event.getContent();
-                if (content != null) {
-                    activateInstance((FileInstance) content.getKey());
-                } else {
-//                    getActiveInstance()
-//                    if (activeInstanceID != null) {
-//                        deactivateInstance(activeInstanceID);
-//                        activeInstanceID = null;
-//                    }
+                if ((SwingUtilities.isMiddleMouseButton(e) || SwingUtilities.isLeftMouseButton(e)) && e.getClickCount() >= 2) {
+                    e.consume();
+                    JTabbedPane tabbedPane = (JTabbedPane) e.getSource();
+                    int tabIdx = tabbedPane.getUI().tabForCoordinate(tabbedPane, e.getX(), e.getY());
+                    if (tabIdx == -1)
+                        CreateNewFileAction.getInstance().actionPerformed(null);
+                    else
+                        CloseActiveAction.getInstance().actionPerformed(null);
+                } else if (SwingUtilities.isRightMouseButton(e)) {
+                    final JPopupMenu popup = new JPopupMenu("popup");
+                    if (getOpenedInstanceCount() > 0) {
+                        popup.add(CloseActiveAction.getInstance());
+                        popup.add(CloseAllButThisAction.getInstance());
+                        popup.add(CloseAllAction.getInstance());
+                        popup.add(CloseAllUnmodifiedAction.getInstance());
+                        popup.addSeparator();
+                        popup.add(GetNextTabAction.getInstance());
+                        popup.add(GetPrevTabAction.getInstance());
+                    } else {
+                        popup.add(CreateNewFileAction.getInstance());
+                    }
+                    popup.show(tabbedPane, e.getX(), e.getY());
                 }
-
             }
         });
+
     }
 
 
@@ -79,22 +98,6 @@ public final class AreaManager implements InstanceListener {
             if (fileInstance.equals(instance))
                 setActivateFileInstance(fileInstance);
         }
-    }
-
-    public FileInstance getActiveInstance() {
-        final Content content = toolWindowManager.getContentManager().getSelectedContent();
-        if (content != null)
-            return (FileInstance) content.getKey();
-        return null;
-    }
-
-    private Collection<FileInstance> runningInstances() {
-        final Content[] contents = toolWindowManager.getContentManager().getContents();
-        final Collection<FileInstance> runningIds = new ArrayList<FileInstance>(contents.length);
-        for (Content content : contents) {
-            runningIds.add((FileInstance) content.getKey());
-        }
-        return runningIds;
     }
 
     final public IFileInstance isFileAlreadyOpened(final File f) {
@@ -134,21 +137,15 @@ public final class AreaManager implements InstanceListener {
         //        tabbedPane.repaint();
     }
 
-    private Integer registerNewOne(FileInstance instance) {
-        final ContentManager contentManager = toolWindowManager.getContentManager();
-        final Content content = contentManager.addContent(instance, instance.getTabName(), instance.getIcon(), instance.getComponent(), instance.getTip());
-        runningInstancesIDs.add(instance);
-        return nextID();
-    }
 
-
-    final protected void deactivateInstance(final FileInstance instance) {
-        instance.deactivate();
+    final protected void deactivateInstance(final Object anID) {
+        super.deactivateInstance(anID);    //call to super
+        //director.getPluginToolsManager().selectedAreaChanged(null);
         fireAreaDeactivated();
     }
 
-    final protected void activateInstance(final FileInstance instance) {
-        instance.activate();
+    final protected void activateInstance(final Object anID) {
+        super.activateInstance(anID);    //call to super
         fireAreaActivated();
     }
 
@@ -202,8 +199,9 @@ public final class AreaManager implements InstanceListener {
         }
     }
 
-    private void setTabTitle(final FileInstance instance) {
-        toolWindowManager.getContentManager().getContent(instance).setTitle(instance.getTabName());
+    private void setTabTitle(final IInformedTab informedPlugin) {
+        final int index = tabbedPane.indexOfComponent(informedPlugin.getComponent());
+        tabbedPane.setTitleAt(index, informedPlugin.getTabName());
     }
 
     final void addAreaChangeListener(final IAreaChangeListener listener) {
@@ -252,15 +250,12 @@ public final class AreaManager implements InstanceListener {
 
 
     public final void setActivateFileInstance(final FileInstance instance) {
-        final ContentManager contentManager = toolWindowManager.getContentManager();
-        final Content content = contentManager.getContent(instance);
-        if (content != null)
-            content.setSelected(true);
+        tabbedPane.setSelectedComponent(instance.getComponent());
     }
 
     public final void closeInstanceHard(final FileInstance instance) {
         instance.removeInstanceListener(this);
-        closeHard(instance);
+        closeHard(runningTabs.get(instance.getComponent()));
         fireFileClosed(instance);
     }
 
@@ -288,37 +283,10 @@ public final class AreaManager implements InstanceListener {
     }
 
 
-    final void closeSoft(final FileInstance instance, final boolean removeTab) {
-        if (instance == null || !runningInstancesIDs.contains(instance))
-            return;
-
-        boolean result = false;
-        try {
-            result = instance.closeSoft();
-        } catch (Throwable throwable) {
-            LogUtils.processException(logger, throwable);
-        }
-        if (result && removeTab)
-            removeInstance(instance);
-    }
-
-    final void closeHard(final FileInstance anID) {
-        if (anID == null || !runningInstancesIDs.contains(anID))
-            return;
-        removeInstance(anID);
-    }
-
-    private synchronized void removeInstance(final FileInstance instance) {
-        runningInstancesIDs.remove(instance);
-        final ContentManager contentManager = toolWindowManager.getContentManager();
-        final Content content = contentManager.getContent(instance);
-        contentManager.removeContent(content);
-    }
-
     public final void closeActiveInstance() {
-        final FileInstance fileInstance = getActiveInstance();
+        final IFileInstance fileInstance = getActiveInstance();
         if (fileInstance != null) {
-            closeSoft(fileInstance, true);
+            closeSoft(activeInstanceID, true);
             fireFileClosed(fileInstance);
         }
     }
@@ -352,7 +320,7 @@ public final class AreaManager implements InstanceListener {
 
 
     public void applyTabLayout() {
-//        tabbedPane.setTabLayoutPolicy(AppPrefs.getProperty(AppPrefs.SCROLL_LAYOUT, true) ? JTabbedPane.SCROLL_TAB_LAYOUT : JTabbedPane.WRAP_TAB_LAYOUT);
+        tabbedPane.setTabLayoutPolicy(AppPrefs.getProperty(AppPrefs.SCROLL_LAYOUT, true) ? JTabbedPane.SCROLL_TAB_LAYOUT : JTabbedPane.WRAP_TAB_LAYOUT);
     }
 
     public static AreaManager getInstance() {
@@ -364,28 +332,6 @@ public final class AreaManager implements InstanceListener {
     }
 
     public void fileAssigned(InstanceEvent e) {
-        setTabTitle((FileInstance) e.getSource());
+        setTabTitle((IInformedTab) e.getSource());
     }
-
-    private static synchronized Integer nextID() {
-        return ++anIDCounter;
-    }
-
-    public Collection<FileInstance> getOpenedInstances() {
-        return runningInstances();
-    }
-
-    public final void getPrevTab() {
-        final Content previousContent = toolWindowManager.getContentManager().getPreviousContent();
-        if (previousContent != null)
-            previousContent.setSelected(true);
-    }
-
-
-    public final void getNextTab() {
-        final Content nextContent = toolWindowManager.getContentManager().getNextContent();
-        if (nextContent != null)
-            nextContent.setSelected(true);
-    }
-
 }
