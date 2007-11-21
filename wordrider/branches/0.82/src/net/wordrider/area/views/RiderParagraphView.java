@@ -97,8 +97,11 @@ final class RiderParagraphView extends javax.swing.text.ParagraphView {
                 final int newPosition = shift + i + 1;
                 if (newPosition != rowPosition) {
                     final View childView = getView(i);
-                    if (childView.getStartOffset() <= curPosition && curPosition <= childView.getEndOffset())
-                        editor.firePropertyChange("linePosition", rowPosition, rowPosition = newPosition);
+                    if (childView.getStartOffset() <= curPosition && curPosition <= childView.getEndOffset()) {
+                        //((RiderArea) editor).setCurrentLine(rowPosition = newPosition);
+                        editor.putClientProperty("linePosition", rowPosition = newPosition);
+                        //editor.firePropertyChange("linePosition", rowPosition, rowPosition = newPosition);
+                    }
                     rowPosition = newPosition;
                 }
             }

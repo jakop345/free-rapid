@@ -10,13 +10,17 @@ import javax.swing.event.ChangeEvent;
 public class AreaChangeEvent extends ChangeEvent {
     private final IFileInstance instance;
 
-    public AreaChangeEvent(final Object source, final IFileInstance instance) {
+    public AreaChangeEvent(final AreaManager source, final IFileInstance instance) {
         super(source);
         this.instance = instance;
     }
 
     public IFileInstance getFileInstance() {
         return instance;
+    }
+
+    public AreaManager getAreaManager() {
+        return (AreaManager) source;
     }
 
 }

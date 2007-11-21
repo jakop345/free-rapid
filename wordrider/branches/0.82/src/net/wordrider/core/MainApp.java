@@ -9,6 +9,7 @@ import net.wordrider.utilities.Consts;
 import net.wordrider.utilities.LogUtils;
 import net.wordrider.utilities.Utils;
 
+import javax.swing.*;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.logging.Logger;
@@ -88,11 +89,11 @@ public final class MainApp {
 
 
     private void start(final Collection<String> openFiles) {
-//        SwingUtilities.invokeLater(new Runnable() {
-//            public void run() {
-        getMainAppFrame().init(openFiles);
-//            }
-//        });
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                getMainAppFrame().init(openFiles);
+            }
+        });
         if (AppPrefs.getProperty(AppPrefs.NEW_VERSION, false))
             startCheckNewVersion();
     }

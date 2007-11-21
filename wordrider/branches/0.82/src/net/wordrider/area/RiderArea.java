@@ -150,6 +150,7 @@ public final class RiderArea extends JTextPane implements DropTargetListener, Dr
             CurrentLineHighlighter.install(this);
         if (AppPrefs.getProperty(AppPrefs.MATCH_BRACKETS, true))
             BracketMatcher.install(this);
+        this.putClientProperty("linePosition", "-2");
         //   setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         //this.addCaretListener(this);
         //this.add(ContextMenu.getInstance());

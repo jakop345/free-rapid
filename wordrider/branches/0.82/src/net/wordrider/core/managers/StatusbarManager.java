@@ -232,7 +232,7 @@ public final class StatusbarManager implements IRiderManager, CaretListener, IAr
     public void areaActivated(AreaChangeEvent event) {
         if (!isVisible())
             return;
-        if (((AreaManager) event.getSource()).getOpenedInstanceCount() == 1)
+        if (event.getAreaManager().getOpenedInstanceCount() == 1)
             clear(true);
         final IFileInstance instance = event.getFileInstance();
         displayFilePath(instance);
@@ -250,7 +250,9 @@ public final class StatusbarManager implements IRiderManager, CaretListener, IAr
             }
         }
         );
-        displayLineNumber("1");
+        //displayLineNumber(String.valueOf(((RiderArea)editor).getCurrentLine()));
+        final Object lineProperty = editor.getClientProperty(LINE_PROPERTY);
+        displayLineNumber(lineProperty.toString());
         displayModified(instance.isModified());
         displayOvertype((Boolean) editor.getClientProperty(OVERTYPE_PROPERTY));
 
@@ -258,16 +260,16 @@ public final class StatusbarManager implements IRiderManager, CaretListener, IAr
     }
 
     public void areaDeactivated(AreaChangeEvent event) {
-        if (((AreaManager) event.getSource()).getOpenedInstanceCount() == 1)
+        if (!event.getAreaManager().hasOpenedInstance())
             clear(false);
-        event.getFileInstance().removeInstanceListener(this);
-        assert editor != null;
-
-        editor.removeCaretListener(this);
-        editor.removePropertyChangeListener(LINE_PROPERTY, this);
-        editor.removePropertyChangeListener(OVERTYPE_PROPERTY, this);
-        editor = null;
-
+        if (event.getFileInstance() != null)
+            event.getFileInstance().removeInstanceListener(this);
+        if (editor != null) {
+            editor.removeCaretListener(this);
+            editor.removePropertyChangeListener(LINE_PROPERTY, this);
+            editor.removePropertyChangeListener(OVERTYPE_PROPERTY, this);
+            editor = null;
+        }
     }
 
 
@@ -281,11 +283,10 @@ public final class StatusbarManager implements IRiderManager, CaretListener, IAr
         final FileInstance activeInstance = areaManager.getActiveInstance();
         if (value) {
             if (activeInstance != null)
-                areaDeactivated(new AreaChangeEvent(areaManager, activeInstance));
+                areaActivated(new AreaChangeEvent(areaManager, activeInstance));
         } else {
             areaDeactivated(new AreaChangeEvent(areaManager, activeInstance));
         }
-
         AppPrefs.storeProperty(AppPrefs.SHOW_STATUSBAR, value);
     }
 }

@@ -3,7 +3,7 @@ package net.wordrider.core.actions;
 import net.wordrider.area.ColorStyles;
 import net.wordrider.core.AppPrefs;
 import net.wordrider.core.managers.AreaManager;
-import net.wordrider.core.managers.PluginToolManager;
+import net.wordrider.core.managers.PluginToolsManager;
 import net.wordrider.utilities.LogUtils;
 
 import javax.swing.*;
@@ -50,7 +50,7 @@ public final class ExitAction extends CoreAction {
         if (CloseAllAction.closeAll()) {
             try {
                 AreaManager.getInstance().getRecentFilesManager().storeRecentFiles();
-                PluginToolManager.getInstance().closeSoftAllInstances(false);
+                PluginToolsManager.getInstance().closeSoftAllInstances(false);
                 storeWindowPosition();
                 ColorStyles.storeColors();
                 AppPrefs.store();

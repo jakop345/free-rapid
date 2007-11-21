@@ -19,7 +19,7 @@ public class GraphicMenuItem extends JLabel implements MouseListener {
     private final Action action;
     private final static String ITEM_STYLE = Lng.getLabel("gmenu.section");
     private final static String ITEM_STYLE_OVER = Lng.getLabel("gmenu.sectionOver");
-    private final static Border emptyBorder = BorderFactory.createEmptyBorder(8, 10, 8, 10);
+    private final static Border emptyBorder = BorderFactory.createEmptyBorder(8, 20, 8, 10);
 
     public GraphicMenuItem(final String titleText, final String text, final Icon icon, final Action action) {
         super();
@@ -49,8 +49,10 @@ public class GraphicMenuItem extends JLabel implements MouseListener {
         super.paintComponent(g);
         if (hasFocus()) {
             final Rectangle rec = this.getBounds();
-            g.setColor(Color.BLACK);
-            g.drawRect(rec.x, rec.y, rec.width, rec.height);
+            if (rec.height > 3) {
+                g.setColor(Color.BLACK);
+                g.drawRect(rec.x, rec.y, rec.width, rec.height);
+            }
         }
     }
 

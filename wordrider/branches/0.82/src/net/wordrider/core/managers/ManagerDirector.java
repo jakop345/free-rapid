@@ -15,7 +15,7 @@ public final class ManagerDirector implements IRiderManager {
     private AreaManager areaManager;
     private MenuManager menuManager;
     private StatusbarManager statusbarManager;
-    private PluginToolManager pluginsToolManager;
+    private PluginToolsManager pluginsToolManager;
     private final JFrame mainFrame;
     private BackgroundManager backgroundManager;
     private TitleManager titleManager;
@@ -52,7 +52,7 @@ public final class ManagerDirector implements IRiderManager {
 
         backgroundManager = new BackgroundManager(this);
 
-        this.pluginsToolManager = new PluginToolManager(getDockingWindowManager());
+        this.pluginsToolManager = new PluginToolsManager(getDockingWindowManager());
         //MainApp.makeProgress();
         getStatusbarManager();
         rootContainer.add(this.toolbarManager.getManagerComponent(), BorderLayout.NORTH);
@@ -75,7 +75,7 @@ public final class ManagerDirector implements IRiderManager {
         return backgroundManager;
     }
 
-    public final PluginToolManager getPluginToolsManager() {
+    public final PluginToolsManager getPluginToolsManager() {
         return this.pluginsToolManager;
     }
 
@@ -84,7 +84,11 @@ public final class ManagerDirector implements IRiderManager {
     }
 
     public final MyDoggyToolWindowManager getDockingWindowManager() {
-        return (this.toolsManager == null) ? this.toolsManager = new MyDoggyToolWindowManager(mainFrame) : this.toolsManager;
+        if (this.toolsManager == null) {
+            this.toolsManager = new MyDoggyToolWindowManager(mainFrame);
+            this.toolsManager.getContentManager().setContentManagerUI(new MyDesktopContentManagerUI());
+        }
+        return this.toolsManager;
     }
 
     public MenuManager getMenuManager() {
@@ -120,4 +124,7 @@ public final class ManagerDirector implements IRiderManager {
         getPluginToolsManager().lookAndFeelChanged();
     }
 
+    public Container getRootContainer() {
+        return rootContainer;
+    }
 }

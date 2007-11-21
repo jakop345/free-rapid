@@ -4,7 +4,7 @@ import net.wordrider.area.RiderStyles;
 import net.wordrider.core.actions.ExitAction;
 import net.wordrider.core.actions.OpenFileAction;
 import net.wordrider.core.managers.ManagerDirector;
-import net.wordrider.core.managers.PluginToolManager;
+import net.wordrider.core.managers.PluginToolsManager;
 import net.wordrider.core.swing.FileTransferHandlerImpl;
 import net.wordrider.core.swing.TextComponentContextMenuListener;
 import net.wordrider.gui.LookAndFeels;
@@ -109,7 +109,7 @@ public final class MainAppFrame extends JFrame {
         }
         if (!openingFile)
             mainPanelManager.getDataDividerManager().setGraphicMenu();
-        final PluginToolManager manager = mainPanelManager.getPluginToolsManager();
+        final PluginToolsManager manager = mainPanelManager.getPluginToolsManager();
         manager.addPluginTool(new FindAll());
         final BreakpointList breakpointList = new BreakpointList();
         manager.addPluginTool(breakpointList);

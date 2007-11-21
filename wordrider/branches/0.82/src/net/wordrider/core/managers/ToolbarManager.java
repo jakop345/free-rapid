@@ -217,7 +217,7 @@ public final class ToolbarManager implements IRiderManager, CaretListener, IFile
         editor.removeCaretListener(this);
         comboMarginX.setEnabled(false);
         this.instance.removeInstanceListener(this);
-        this.instance = null;        
+        this.instance = null;
     }
 
 
@@ -393,8 +393,8 @@ public final class ToolbarManager implements IRiderManager, CaretListener, IFile
             run = doc.getCharacterElement(Math.max(start - 1, 0));
         }
         if (!run.equals(currentRunEl)) {
-            updateToolbar();
             currentRunEl = run;
+            updateToolbar();
         } else updateCopyPasteButtons();
     }
 
@@ -509,7 +509,9 @@ public final class ToolbarManager implements IRiderManager, CaretListener, IFile
     public final void setVisible(final boolean value) {
         if (value) {
             panel.setVisible(true);
-            areaActivated(AreaManager.getInstance().getActiveInstance());
+            final FileInstance activeInstance = AreaManager.getInstance().getActiveInstance();
+            if (activeInstance != null)
+                areaActivated(activeInstance);
         } else {
             panel.setVisible(false);
             areaDeactivated();

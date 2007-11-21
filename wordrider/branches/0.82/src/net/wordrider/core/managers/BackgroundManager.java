@@ -7,7 +7,6 @@ import net.wordrider.core.swing.CustomLayoutConstraints;
 import net.wordrider.gui.LookAndFeels;
 import net.wordrider.utilities.Consts;
 import net.wordrider.utilities.Swinger;
-import org.noos.xing.mydoggy.plaf.ui.content.MyDoggyDesktopContentManagerUI;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -30,7 +29,6 @@ public final class BackgroundManager implements IFileChangeListener, PropertyCha
 
     public BackgroundManager(ManagerDirector director) {
         this.director = director;
-        this.director.getDockingWindowManager().getContentManager().setContentManagerUI(new MyDoggyDesktopContentManagerUI());
     }
 
 
@@ -60,8 +58,8 @@ public final class BackgroundManager implements IFileChangeListener, PropertyCha
         }
     }
 
-    private MyDoggyDesktopContentManagerUI getContainerUI() {
-        return (MyDoggyDesktopContentManagerUI) director.getDockingWindowManager().getContentManager().getContentManagerUI();
+    private MyDesktopContentManagerUI getContainerUI() {
+        return (MyDesktopContentManagerUI) director.getDockingWindowManager().getContentManager().getContentManagerUI();
     }
 
     private Component getGraphicMenu() {
@@ -121,8 +119,7 @@ public final class BackgroundManager implements IFileChangeListener, PropertyCha
         rightPanel.add(Swinger.getTitleComponent2("gmenu.sectionQuickLinks"), new CustomLayoutConstraints(0, 3));
         rightPanel.add(item6, new CustomLayoutConstraints(0, 4));
         rightPanel.add(item7, new CustomLayoutConstraints(0, 5));
-        graphicMenu = jPanel;
-        return jPanel;
+        return graphicMenu = jPanel;
     }
 
     private void updateLabelWelcomeColor() {
