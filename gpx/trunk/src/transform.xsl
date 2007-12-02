@@ -6,6 +6,6 @@
 		<xsl:apply-templates select="gpx/trk/trkseg/trkpt" />
 	</xsl:template>
 	<xsl:template match="trkpt">	
-		<xsl:value-of select="concat(@lat,'	',@lon, '&#13;')"/>
+		<xsl:value-of select="concat(@lat,'	',@lon, '&#xA;')"/>
 	</xsl:template>
 </xsl:stylesheet>

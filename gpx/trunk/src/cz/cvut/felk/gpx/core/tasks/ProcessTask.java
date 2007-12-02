@@ -75,6 +75,7 @@ public class ProcessTask extends CoreTask<Void, Void> {
         final Transformer serializer = tFactory.newTransformer();
         serializer.setOutputProperty(OutputKeys.INDENT, "yes");        
         serializer.setOutputProperty("{http://xml.apache.org/xalan}indent-amount", "2");
+        serializer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");        
         final InputStream xslAsStream = ClassLoader.getSystemResourceAsStream(TRANSFORM_XSL);
         setMessage("Loading transform stylesheet");
         transformer = tFactory.newTransformer(new StreamSource(xslAsStream));
@@ -140,10 +141,15 @@ public class ProcessTask extends CoreTask<Void, Void> {
                 stream = new FileOutputStream(new File(outDir, gpxFile.getName()));
                 txtStream = new FileOutputStream(new File(outDir, Utils.getPureFilename(gpxFile) + ".txt"));
                 final DOMSource source = new DOMSource(doc);
-                serializer.transform(source, new StreamResult(new OutputStreamWriter(stream, "utf-8")));
+                final StringWriter writer = new StringWriter();
+                serializer.transform(source, new StreamResult(writer));
                 transformer.transform(source, new StreamResult(txtStream));
+                final String s = writer.getBuffer().toString();
+                //final String replaced = s.replaceAll("^(\\n\\r)+$", "");
+                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(stream, "utf-8");
+                outputStreamWriter.write(s);
             } finally {
-                if (txtStream != null)
+                if (stream != null)
                     stream.close();
                 if (txtStream != null)
                     txtStream.close();
