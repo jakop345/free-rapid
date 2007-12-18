@@ -32,5 +32,4 @@ public class DateInterval implements Serializable {
 		this.endDate = endDate;
 	}
 	
-	
 }

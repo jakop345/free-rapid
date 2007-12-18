@@ -146,11 +146,11 @@ public class CalendarGrid extends JComponent implements ComponentListener {
                         dateInterval.setStartDate(calendarEvent.getStartDate());
                         dateInterval.setEndDate(oneCalendarEnd.getTime());
                         pushSingleCalendarGridEvent(calendarEvent, dateInterval);
+             
                         oneCalendarStart.add(Calendar.DATE, 1);
                         oneCalendarEnd.add(Calendar.DATE, 1);
 
                         while (calendarEvent.getEndDate().after(oneCalendarEnd.getTime())) {
-                            dateInterval = new DateInterval();
                             dateInterval.setStartDate(oneCalendarStart.getTime());
                             dateInterval.setEndDate(oneCalendarEnd.getTime());
                             pushSingleCalendarGridEvent(calendarEvent, dateInterval);

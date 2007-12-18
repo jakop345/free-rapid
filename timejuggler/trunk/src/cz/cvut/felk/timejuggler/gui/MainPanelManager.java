@@ -76,7 +76,7 @@ public class MainPanelManager {
 
         CalendarEventDAO_DummyImpl calendarEventDAO = new CalendarEventDAO_DummyImpl();
 
-        CalendarGridEventFactory calendarGridEventFactory = new CalendarGridEventFactoryImpl();
+        CalendarGridEventFactory calendarGridEventFactory = new CalendarGridEventFactory();
         calendarGrid = new CalendarGrid(calendarEventDAO, calendarGridEventFactory, calendarConfig);
         calendarGrid.setStartDate(todayDate);
 

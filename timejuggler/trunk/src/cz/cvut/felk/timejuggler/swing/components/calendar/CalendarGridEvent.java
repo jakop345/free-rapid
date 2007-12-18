@@ -56,35 +56,5 @@ public class CalendarGridEvent extends JComponent {
 		return visibleDateInterval;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((calendarEvent == null) ? 0 : calendarEvent.hashCode());
-		result = prime * result + ((visibleDateInterval == null) ? 0 : visibleDateInterval.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		final CalendarGridEvent other = (CalendarGridEvent) obj;
-		if (calendarEvent == null) {
-			if (other.calendarEvent != null)
-				return false;
-		} else if (!calendarEvent.equals(other.calendarEvent))
-			return false;
-		if (visibleDateInterval == null) {
-			if (other.visibleDateInterval != null)
-				return false;
-		} else if (!visibleDateInterval.equals(other.visibleDateInterval))
-			return false;
-		return true;
-	}
 
 }
