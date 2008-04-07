@@ -1,0 +1,34 @@
+<launch4jConfig>
+  <dontWrapJar>true</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar>erm.jar</jar>
+  <outfile>C:\develope\ermodeller\etc\erm.exe</outfile>
+  <errTitle></errTitle>
+  <cmdLine></cmdLine>
+  <chdir></chdir>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl></supportUrl>
+  <customProcName>false</customProcName>
+  <stayAlive>false</stayAlive>
+  <manifest></manifest>
+  <icon>c:\develope\ermodeller\etc\erm.ico</icon>
+  <jre>
+    <path></path>
+    <minVersion>1.6.0</minVersion>
+    <maxVersion></maxVersion>
+    <jdkPreference>preferJre</jdkPreference>
+  </jre>
+  <versionInfo>
+    <fileVersion>0.1.0.0</fileVersion>
+    <txtFileVersion>ER Modeller</txtFileVersion>
+    <fileDescription>ER Modeller - conceptual modelling tool</fileDescription>
+    <copyright>Czech Technical Univesity, Faculty of Electrotechnical Engineering</copyright>
+    <productVersion>5.0.0.0</productVersion>
+    <txtProductVersion>ER Modeller</txtProductVersion>
+    <productName>ER Modeller</productName>
+    <companyName>Czech Technical Univesity, Faculty of Electrotechnical Engineering</companyName>
+    <internalName>ER Modeller</internalName>
+    <originalFilename>erm.exe</originalFilename>
+  </versionInfo>
+</launch4jConfig>
