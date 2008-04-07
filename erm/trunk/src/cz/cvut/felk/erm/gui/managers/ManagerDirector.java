@@ -38,6 +38,7 @@ public class ManagerDirector implements IFileChangeListener {
     private void initComponents() {
         mainFrame = ((MainApp) context.getApplication()).getMainFrame();
         this.rootContainer = new JPanel();
+        this.rootContainer.setPreferredSize(new Dimension(700, 550));
 
         rootContainer.setLayout(new BorderLayout());
 

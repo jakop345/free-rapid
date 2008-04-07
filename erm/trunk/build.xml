@@ -49,7 +49,7 @@
         <map from="${lib.prefix}" to="${lib}"/>
     </pathconvert>
 
-    <target name="build" depends="compile" description="building TimeJuggler">
+    <target name="build" depends="compile" description="building ERModeller">
         <jar jarfile="${build}/${jarfile}" compress="false">
             <manifest>
                 <attribute name="Build-Date" value="${TODAY}"/>

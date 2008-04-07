@@ -11,6 +11,7 @@ import java.util.prefs.Preferences;
 
 /**
  * Sprava uzivatelskych properties
+ *
  * @author Ladislav Vitasek
  */
 public final class AppPrefs {
@@ -33,6 +34,7 @@ public final class AppPrefs {
 
     /**
      * Vrati nastaveni z properties fajlu
+     *
      * @param key          klic property
      * @param defaultValue defaultni hodnota, ktera se pouzije pokud neni hodnota nalezena
      * @return hodnota uzivatelskeho nastaveni
@@ -43,6 +45,7 @@ public final class AppPrefs {
 
     /**
      * Vrati nastaveni z properties fajlu
+     *
      * @param key          klic property
      * @param defaultValue defaultni hodnota, ktera se pouzije pokud neni hodnota nalezena
      * @return hodnota uzivatelskeho nastaveni
@@ -53,6 +56,7 @@ public final class AppPrefs {
 
     /**
      * Vrati nastaveni z properties fajlu. Pokud neni hodnota klice nalezena, vraci null!
+     *
      * @param key klic property
      * @return hodnota uzivatelskeho nastaveni
      */
@@ -62,6 +66,7 @@ public final class AppPrefs {
 
     /**
      * Provede ulozeni uzivatelskeho nastaveni do Properties
+     *
      * @param key   hodnota klice
      * @param value hodnota uzivatelskeho nastaveni
      */
@@ -72,6 +77,7 @@ public final class AppPrefs {
 
     /**
      * Provede ulozeni uzivatelskeho nastaveni do Properties
+     *
      * @param key   hodnota klice
      * @param value hodnota uzivatelskeho nastaveni
      */
@@ -81,6 +87,7 @@ public final class AppPrefs {
 
     /**
      * Provede ulozeni uzivatelskeho nastaveni do Properties
+     *
      * @param key   hodnota klice
      * @param value hodnota uzivatelskeho nastaveni
      */
@@ -90,7 +97,8 @@ public final class AppPrefs {
 
     /**
      * Provede ulozeni uzivatelskeho nastaveni do Properties
-     * @param key   hodnota klice
+     *
+     * @param key          hodnota klice
      * @param defaultValue hodnota uzivatelskeho nastaveni
      */
     public static String getProperty(final String key, final String defaultValue) {
@@ -100,6 +108,7 @@ public final class AppPrefs {
 
     /**
      * Odstraneni klic-hodnota z properties fajlu
+     *
      * @param key klic property k odstaneni
      */
     public static void removeProperty(final String key) {
@@ -148,7 +157,7 @@ public final class AppPrefs {
         final File userFile = new File(storageDir, DEFAULT_PROPERTIES);
         if (!(userFile.exists())) {
             logger.log(Level.INFO, "File with user settings " + userFile + " was not found. First run. Using default settings");
-            return Preferences.userRoot();
+            return Preferences.userRoot().node("erm");
         }
         InputStream inputStream = null;
         try {
@@ -167,11 +176,12 @@ public final class AppPrefs {
             }
             logger.log(Level.WARNING, e.getMessage(), e);
         }
-        return Preferences.userRoot();
+        return Preferences.userRoot().node("erm");
     }
 
     /**
      * Vraci aktualni cestu k adresari programu ve kterem je jar spusten
+     *
      * @return cesta do adresare
      */
     public static String getAppPath() {

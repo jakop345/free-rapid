@@ -71,8 +71,9 @@ public final class BackgroundManager implements IFileChangeListener, PropertyCha
         final TableLayout mgr = new TableLayout(new double[]{p, p, f}, new double[]{p, p, p});
         mgr.setHGap(10);
         mgr.setVGap(5);
-        final JPanel jPanel = new BackGroundPanel(mgr);
-        jPanel.setName("BackGroundPanel");
+        final JPanel bgPanel = new BackGroundPanel(mgr);
+        bgPanel.setPreferredSize(new Dimension(650, 500));
+        bgPanel.setName("BackGroundPanel");
         final TableLayout mgr2 = new TableLayout(new double[]{p}, new double[]{p, p, p, p, p, p});
         mgr.setHGap(10);
         mgr.setVGap(5);
@@ -85,7 +86,7 @@ public final class BackgroundManager implements IFileChangeListener, PropertyCha
         final JPanel rightPanel = new JPanel(mgr3);
         rightPanel.setOpaque(false);
         rightPanel.setBackground(null);
-        //jPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        //bgPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         labelWelcome = new JLabel();
         labelWelcome.setName("gmenu.labelWelcome");
         labelWelcome.setFont(labelWelcome.getFont().deriveFont(Font.BOLD, 28));
@@ -107,9 +108,9 @@ public final class BackgroundManager implements IFileChangeListener, PropertyCha
         //final Component item6 = getGraphicItem(map, "gmenu.itemKeymap", Swinger.getAction("openScheme"));
         final Component item7 = getGraphicItem(map, "gmenu.itemWeb", Swinger.getAction("openScheme"));
 
-        jPanel.add(labelWelcome, new CustomLayoutConstraints(0, 0, 3, 1));
-        jPanel.add(leftPanel, new CustomLayoutConstraints(0, 1));
-        jPanel.add(rightPanel, new CustomLayoutConstraints(1, 1));
+        bgPanel.add(labelWelcome, new CustomLayoutConstraints(0, 0, 3, 1));
+        bgPanel.add(leftPanel, new CustomLayoutConstraints(0, 1));
+        bgPanel.add(rightPanel, new CustomLayoutConstraints(1, 1));
 
         leftPanel.add(Swinger.getTitleComponent2("gmenu.sectionNew"), new CustomLayoutConstraints(0, 0));
         leftPanel.add(item1, new CustomLayoutConstraints(0, 1));
@@ -122,8 +123,8 @@ public final class BackgroundManager implements IFileChangeListener, PropertyCha
         rightPanel.add(Swinger.getTitleComponent2("gmenu.sectionQuickLinks"), new CustomLayoutConstraints(0, 3));
         //rightPanel.add(item6, new CustomLayoutConstraints(0, 4));
         rightPanel.add(item7, new CustomLayoutConstraints(0, 5));
-        graphicMenu = jPanel;
-        map.injectComponents(jPanel);
+        graphicMenu = bgPanel;
+        map.injectComponents(bgPanel);
         return graphicMenu;
     }
 

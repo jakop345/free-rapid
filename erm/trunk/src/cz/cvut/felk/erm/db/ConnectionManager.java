@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 
 /**
  * @author Ladislav Vitasek
- * Tato trida poskytuje pristup k instanci tridy Connection pro pouziti databaze
+ *         Tato trida poskytuje pristup k instanci tridy Connection pro pouziti databaze
  */
 public class ConnectionManager {
     private final static Logger logger = Logger.getLogger(ConnectionManager.class.getName());
@@ -34,7 +34,6 @@ public class ConnectionManager {
         /* deployment ready code */
         ApplicationContext appContext = MainApp.getInstance().getContext();
 
-        //TODO nevyuzijeme radeji derby.properties ? jsem pro
         this.db_user = Consts.DB_USERNAME;
         this.db_pass = Consts.DB_PASSWORD;
 
@@ -48,6 +47,7 @@ public class ConnectionManager {
 
     /**
      * Ziskani instance ConnectionManagera - Synchronized zaruci thread safety
+     *
      * @return vraci novou instanci Connection Managera
      */
     public static synchronized ConnectionManager getInstance() {
