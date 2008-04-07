@@ -53,7 +53,7 @@ public class PluginToolsManager implements IAreaChangeListener {
 
     public void areaActivated(AreaChangeEvent event) {
         updateFileInstance(event.getFileInstance());
-        if (!event.getAreaManager().hasOpenedInstance()) {
+        if (event.getAreaManager().hasOpenedInstance()) {
             setToolsAvailable(true);
         }
     }

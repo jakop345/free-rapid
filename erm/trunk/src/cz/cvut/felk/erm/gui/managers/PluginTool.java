@@ -21,7 +21,7 @@ public abstract class PluginTool implements IInformedTab {
         contentPane.setBorder(BorderFactory.createEmptyBorder(5, 4, 5, 4));
     }
 
-    Container getContentPane() {
+    protected Container getContentPane() {
         return contentPane;
     }
 

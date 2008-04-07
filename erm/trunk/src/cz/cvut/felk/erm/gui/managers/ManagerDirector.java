@@ -11,6 +11,7 @@ import java.awt.*;
 
 /**
  * Sprava a vytvoreni hlavniho panelu
+ *
  * @author Ladislav Vitasek
  */
 public class ManagerDirector implements IFileChangeListener {
@@ -29,7 +30,7 @@ public class ManagerDirector implements IFileChangeListener {
 
     public ManagerDirector(ApplicationContext context) {
         this.context = context;
-        this.menuManager = new MenuManager(context);
+        this.menuManager = new MenuManager(context, this);
         initComponents();
     }
 
@@ -85,11 +86,16 @@ public class ManagerDirector implements IFileChangeListener {
     public final MyDoggyToolWindowManager getDockingWindowManager() {
         if (this.toolsManager == null) {
             this.toolsManager = new MyDoggyToolWindowManager(mainFrame);
+
             this.toolsManager.getContentManager().setContentManagerUI(new MyDesktopContentManagerUI());
         }
         return this.toolsManager;
     }
 
+
+    public JDesktopPane getContentPane() {
+        return (JDesktopPane) ((MyDesktopContentManagerUI) getDockingWindowManager().getContentManager().getContentManagerUI()).getContainer();
+    }
 
     public void beforeLookAndFeelUpdate() {
         getToolbarManager().updateToolbar();
@@ -108,7 +114,7 @@ public class ManagerDirector implements IFileChangeListener {
     }
 
 
-     public Container getRootContainer() {
+    public Container getRootContainer() {
         return rootContainer;
     }
 
