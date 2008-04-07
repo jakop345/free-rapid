@@ -18,12 +18,13 @@ final class OneInstanceClient {
     }
 
     public static boolean checkInstance(final Collection<String> openFiles) {
-        if (!AppPrefs.getProperty(UserProp.ONEINSTANCE, true))
+        if (!AppPrefs.getProperty(UserProp.ONEINSTANCE, false))
             return false;
         Socket clientSocket = null;
         try {
             logger.info("Testing existing instance");
-            clientSocket = new Socket("localhost", Consts.ONE_INSTANCE_SERVER_PORT);
+            final int port = AppPrefs.getProperty(UserProp.ONE_INSTANCE_SERVER_PORT, Consts.ONE_INSTANCE_SERVER_PORT);
+            clientSocket = new Socket("localhost", port);
             if (openFiles != null && !openFiles.isEmpty()) {
                 OutputStream out = null;
                 try {

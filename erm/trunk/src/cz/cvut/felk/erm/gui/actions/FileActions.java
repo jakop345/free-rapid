@@ -36,7 +36,7 @@ public class FileActions extends AbstractBean {
 
     @Action()
     public void saveScheme() {
-
+        //throw new RuntimeException("Nejaka nenadala vyjimka v programu");
     }
 
     @Action()

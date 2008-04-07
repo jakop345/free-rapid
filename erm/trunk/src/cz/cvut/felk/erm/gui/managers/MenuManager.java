@@ -32,6 +32,7 @@ public class MenuManager implements IFileChangeListener, IAreaChangeListener {
     private final ManagerDirector director;
     private static final String SELECTED_TEXT_PROPERTY = "selectedText";
     private static final String MENU_SEPARATOR = "---";
+    private JMenu recentsMenu;
 
 
     public MenuManager(final ApplicationContext context, ManagerDirector director) {
@@ -46,6 +47,8 @@ public class MenuManager implements IFileChangeListener, IAreaChangeListener {
     }
 
     private void init() {
+        this.recentsMenu = createMenu("recentsMenu", new Object[0]);
+        this.recentsMenu.setEnabled(false);
 
         final Object[] fileMenuActionNames = {
                 "newScheme",
@@ -56,6 +59,8 @@ public class MenuManager implements IFileChangeListener, IAreaChangeListener {
                 MENU_SEPARATOR,
                 "closeActiveScheme",
                 "closeAllSchemes",
+                MENU_SEPARATOR,
+                this.recentsMenu,
                 MENU_SEPARATOR,
 //                "pageSetup",
 //                "print",
@@ -71,6 +76,9 @@ public class MenuManager implements IFileChangeListener, IAreaChangeListener {
         };
         final Object[] helpMenuActionNames = {
                 "help",
+                MENU_SEPARATOR,
+                "checkForNewVersion",
+                "visitHomepage",
                 MENU_SEPARATOR,
                 "about"
         };
@@ -179,7 +187,9 @@ public class MenuManager implements IFileChangeListener, IAreaChangeListener {
     private static JMenu processMenu(JMenu menu, String menuName, Object[] actionNames) {
         menu.setName(menuName);
         for (Object actionName : actionNames) {
-            if (MENU_SEPARATOR.equals(actionName)) {
+            if (actionName instanceof JMenu) { //pokud se jedna o submenu
+                menu.add((JMenu) actionName);
+            } else if (MENU_SEPARATOR.equals(actionName)) {
                 menu.addSeparator();
             } else {
                 JMenuItem menuItem = new JMenuItem();
@@ -206,7 +216,16 @@ public class MenuManager implements IFileChangeListener, IAreaChangeListener {
     }
 
     public void updateRecentMenu(Stack<File> recentFilesList) {
+        recentsMenu.removeAll();
+        int position = 0;
+        for (File file : recentFilesList) {
+            recentsMenu.add(new JMenuItem(new OpenRecentFileAction(file, getMnemonicByPosition(position++))));
+        }
+        recentsMenu.setEnabled(!recentFilesList.isEmpty());
+    }
 
+    private static char getMnemonicByPosition(final int position) {
+        return (char) ((position > 9) ? 'A' + position - 10 : '0' + position);
     }
 
     public void fileWasOpened(FileChangeEvent event) {
@@ -224,6 +243,10 @@ public class MenuManager implements IFileChangeListener, IAreaChangeListener {
 
     public void areaDeactivated(AreaChangeEvent event) {
 
+    }
+
+    public JMenu getRecentsMenu() {
+        return recentsMenu;
     }
 
 
@@ -466,4 +489,13 @@ public class MenuManager implements IFileChangeListener, IAreaChangeListener {
     }
 
 
+    private class OpenRecentFileAction extends AbstractAction {
+        public OpenRecentFileAction(File file, char mnemonicByPosition) {
+
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            //Swinger.getAction("openFile")
+        }
+    }
 }

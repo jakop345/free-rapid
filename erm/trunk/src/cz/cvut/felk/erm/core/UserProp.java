@@ -26,4 +26,8 @@ public class UserProp {
     public static final String MAX_RECENT_FILES = "settings.maxRecentFiles";
     public static final String FRAME_TITLE = "settings.frameTitleStyle";
     public static final String FRAME_TITLE_TYPE = "settings.frameTitleType";
+    public static final String CHECK_FOR_NEW_VERSION_URL = "settings.checkForNewVersionURL";
+    public static final String WEBURL = "settings.weburl";
+    public static final String ONE_INSTANCE_SERVER_PORT = "settings.oneInstanceServerPort";
+    public static final String NEW_VERSION = "settings.checkForNewVersionAuto";
 }

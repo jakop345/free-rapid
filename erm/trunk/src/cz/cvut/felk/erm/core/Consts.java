@@ -2,6 +2,7 @@ package cz.cvut.felk.erm.core;
 
 /**
  * Trida pro ukladani globalnich konstant v aplikaci
+ *
  * @author Ladislav Vitasek
  */
 public class Consts {
@@ -14,7 +15,7 @@ public class Consts {
     /**
      * Version
      */
-    public static final String VERSION = "5.0";
+    public static final String VERSION = "5.0 alpha02";
 
     /**
      * verze a jmeno programu
@@ -62,8 +63,12 @@ public class Consts {
      * URL adresa, kam se posilaji reporty o chybach
      */
     public static final String WEBURL_SUBMIT_ERROR = "http://wordrider.net/error.php";
-    public static final int DEFAULT_RECENT_FILES_MAX_COUNT = 10;
-    //   public static final String WEBURL_SUBMIT_ERROR = "http://localhost/wordrider/web/error.php";
+
+    public static final int DEFAULT_RECENT_FILES_MAX_COUNT = 7;
+
+    public static final String WEBURL_CHECKNEWVERSION = "http://wordrider.net/checkerm.php";
+
+    public static final String WEBURL = "https://service.felk.cvut.cz/prj/PROJECT88/";
 
     /**
      * Od teto tridy se nebudou delat zadne instance

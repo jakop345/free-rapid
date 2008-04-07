@@ -24,7 +24,8 @@ final class OneInstanceServer extends Thread {
         Socket clientSocket = null;
         try {
             logger.info("Creating a local socket server");
-            ServerSocket serverSocket = new ServerSocket(Consts.ONE_INSTANCE_SERVER_PORT, 1);
+            final int port = AppPrefs.getProperty(UserProp.ONE_INSTANCE_SERVER_PORT, Consts.ONE_INSTANCE_SERVER_PORT);
+            ServerSocket serverSocket = new ServerSocket(port, 1);
             while (!isInterrupted()) {
                 logger.info("Waiting for connection");
                 clientSocket = serverSocket.accept();
@@ -61,11 +62,12 @@ final class OneInstanceServer extends Thread {
 
 
     static boolean isAppInUse() {
-        if (!AppPrefs.getProperty(UserProp.ONEINSTANCE, true))
+        if (!AppPrefs.getProperty(UserProp.ONEINSTANCE, false))
             return false;
         ServerSocket serverSocket = null;
         try {
-            serverSocket = new ServerSocket(Consts.ONE_INSTANCE_SERVER_PORT, 1);
+            final int port = AppPrefs.getProperty(UserProp.ONE_INSTANCE_SERVER_PORT, Consts.ONE_INSTANCE_SERVER_PORT);
+            serverSocket = new ServerSocket(port, 1);
             return false; //it is not in use => splash screen
         } catch (IOException e) {
             //not in use

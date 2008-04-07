@@ -15,17 +15,16 @@ import java.io.File;
 /**
  * @author Ladislav Vitasek
  */
-public final class FileInstance implements IFileInstance<RiderArea>, IInformedTab, PropertyChangeListener {
+public final class FileInstance implements IFileInstance<ContentArea>, IInformedTab, PropertyChangeListener {
     private File file = null;
     private static int untitledCount;
     private String name;
-    private final RiderArea area = new RiderArea();
+    private final ContentArea area = new ContentArea();
     private final JScrollPane scrollPane = new JScrollPane();
     private Integer internalId = 0;
     private final EventListenerList listenerList = new EventListenerList();
 
     private TITextFileInfo fileInfo;
-
 
 
     public FileInstance() {
@@ -44,7 +43,7 @@ public final class FileInstance implements IFileInstance<RiderArea>, IInformedTa
         //scrollPane.setViewport(viewPort);
 
         // scrollPane = new JScrollPane();
-        area.addPropertyChangeListener(RiderArea.MODIFIED_PROPERTY, this);
+        area.addPropertyChangeListener(ContentArea.MODIFIED_PROPERTY, this);
         scrollPane.getViewport().add(area);
         scrollPane.setFocusable(false);
         scrollPane.setFocusCycleRoot(false);
@@ -89,16 +88,13 @@ public final class FileInstance implements IFileInstance<RiderArea>, IInformedTa
         fireFileAssigned();
 //        director.getAreaManager().setTabTitle(this); //save as
 
-
-
         //CloseActiveAction.getInstance().updateStatusName(this);
-
 
         //     director.getStatusbarManager().displayFilePath(file.getAbsolutePath());
         this.setModified(false);
     }
 
-    public final RiderArea getRiderArea() {
+    public final ContentArea getRiderArea() {
         return this.area;
     }
 
@@ -143,7 +139,7 @@ public final class FileInstance implements IFileInstance<RiderArea>, IInformedTa
                 default:
                     return false;
             }
-        area.removePropertyChangeListener(RiderArea.MODIFIED_PROPERTY, this);
+        area.removePropertyChangeListener(ContentArea.MODIFIED_PROPERTY, this);
         closeHard();
         return true;
     }
@@ -170,8 +166,8 @@ public final class FileInstance implements IFileInstance<RiderArea>, IInformedTa
 
 
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals(RiderArea.MODIFIED_PROPERTY)) {
-            fireInstanceModified();            
+        if (evt.getPropertyName().equals(ContentArea.MODIFIED_PROPERTY)) {
+            fireInstanceModified();
         }
     }
 

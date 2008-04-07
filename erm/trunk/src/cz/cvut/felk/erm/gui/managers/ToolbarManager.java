@@ -1,8 +1,9 @@
 package cz.cvut.felk.erm.gui.managers;
 
-import cz.cvut.felk.erm.swing.Swinger;
-import cz.cvut.felk.erm.gui.managers.interfaces.IFileChangeListener;
 import cz.cvut.felk.erm.gui.managers.interfaces.IAreaChangeListener;
+import cz.cvut.felk.erm.gui.managers.interfaces.IFileChangeListener;
+import cz.cvut.felk.erm.swing.Swinger;
+import cz.cvut.felk.erm.swing.ToolbarSeparator;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.ApplicationContext;
 import org.jdesktop.application.ResourceMap;
@@ -15,6 +16,7 @@ import java.beans.PropertyChangeListener;
 
 /**
  * Sprava toolbaru Vytvari a ovlada cely toolbar
+ *
  * @author Ladislav Vitasek
  */
 public class ToolbarManager implements IFileChangeListener, IAreaChangeListener {
@@ -78,8 +80,9 @@ public class ToolbarManager implements IFileChangeListener, IAreaChangeListener 
         toolbar.add(Box.createHorizontalStrut(STRUT_SIZE));
         toolbar.add(getButton(Swinger.getAction("saveScheme")));
         toolbar.add(getButton(Swinger.getAction("saveAsScheme")));
-
-        //toolbar.add(new ToolbarSeparator());
+        toolbar.add(new ToolbarSeparator());
+        toolbar.add(getButton(Swinger.getAction("undo")));
+        toolbar.add(getButton(Swinger.getAction("redo")));
 
 
         toolbar.add(Box.createGlue());
@@ -92,6 +95,7 @@ public class ToolbarManager implements IFileChangeListener, IAreaChangeListener 
 
     /**
      * Vraci hlavni panel toolbaru jako komponentu
+     *
      * @return komponenta toolbar
      */
     public JComponent getComponent() {

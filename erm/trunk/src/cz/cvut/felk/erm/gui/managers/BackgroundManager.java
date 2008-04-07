@@ -106,7 +106,7 @@ public final class BackgroundManager implements IFileChangeListener, PropertyCha
         final Component item4 = getGraphicItem(map, "gmenu.itemDemo", Swinger.getAction("openScheme"));
         final Component item5 = getGraphicItem(map, "gmenu.itemSample", Swinger.getAction("openScheme"));
         //final Component item6 = getGraphicItem(map, "gmenu.itemKeymap", Swinger.getAction("openScheme"));
-        final Component item7 = getGraphicItem(map, "gmenu.itemWeb", Swinger.getAction("openScheme"));
+        final Component item7 = getGraphicItem(map, "gmenu.itemWeb", Swinger.getAction("visitHomepage"));
 
         bgPanel.add(labelWelcome, new CustomLayoutConstraints(0, 0, 3, 1));
         bgPanel.add(leftPanel, new CustomLayoutConstraints(0, 1));

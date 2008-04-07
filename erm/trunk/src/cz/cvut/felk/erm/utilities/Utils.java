@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 /**
  * Pomocne utility pro spravu aplikace Test na system.
+ *
  * @author Ladislav Vitasek
  */
 public final class Utils {
@@ -24,6 +25,7 @@ public final class Utils {
 
     /**
      * Vygeneruje/pseudokodovany retezec pomoci funkce XOR - je obousmerna
+     *
      * @param text text k zakodovani/dekodovani
      * @return zakodovany/dekodovany retezec
      */
@@ -40,6 +42,7 @@ public final class Utils {
 
     /**
      * Provede test na verzi JVM na ktere aplikaci bezi
+     *
      * @param requiredVersion pozadovana verze
      * @return vraci true, pokud aplikace bezi na pozadovane verzi, pokud ne, vraci false
      */
@@ -76,6 +79,7 @@ public final class Utils {
 
     /**
      * Prida na danou cestu oddelovac, pokud jiz oddelovac na konci ma, nic se nepridava
+     *
      * @param filePath cesta
      * @return cesta s oddelovacem
      */
@@ -85,6 +89,7 @@ public final class Utils {
 
     /**
      * Prida dalsi parametr s jeho hodnotou pro odeslani v URL konexi
+     *
      * @param params     skladane parametry pro odeslani
      * @param paramName  jmeno parametru
      * @param paramValue hodnota parametru
@@ -106,6 +111,7 @@ public final class Utils {
 
     /**
      * Otestuje zda aplikace bezi na Windows
+     *
      * @return
      */
     public static boolean isWindows() {
@@ -135,4 +141,18 @@ public final class Utils {
             return props;
         }
     }
+
+    public static String addParam(final String params, final String paramName, final String paramValue) {
+        final String paramWithValue;
+        String encoded;
+        try {
+            encoded = java.net.URLEncoder.encode(paramValue, "ISO-8859-2");
+        } catch (UnsupportedEncodingException e) {
+            encoded = "";
+            LogUtils.processException(logger, e);
+        }
+        paramWithValue = paramName + "=" + encoded;
+        return params.length() > 0 ? params + "&" + paramWithValue : paramWithValue;
+    }
+
 }

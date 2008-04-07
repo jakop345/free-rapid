@@ -1,20 +1,24 @@
 package cz.cvut.felk.erm.gui.managers;
 
+import org.jgraph.JGraph;
+
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * @author Ladislav Vitasek
  */
-public class RiderArea extends JPanel {
+public class ContentArea extends JPanel {
     public static final String MODIFIED_PROPERTY = "modifiedProperty";
     private boolean modified = false;
 
-    public RiderArea() {
+    public ContentArea() {
         initComponents();
     }
 
     private void initComponents() {
-        this.add(new JLabel("Tady se bude editovat"));            
+        this.setLayout(new BorderLayout());
+        this.add(new JScrollPane(new JGraph()), BorderLayout.CENTER);
     }
 
     public void freeUpResources() {

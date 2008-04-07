@@ -2,6 +2,7 @@ package cz.cvut.felk.erm.core;
 
 import cz.cvut.felk.erm.core.application.GlobalEDTExceptionHandler;
 import cz.cvut.felk.erm.core.application.ListItemsConvertor;
+import cz.cvut.felk.erm.core.tasks.CheckForNewVersionTask;
 import cz.cvut.felk.erm.gui.StorageProperties;
 import cz.cvut.felk.erm.gui.managers.ManagerDirector;
 import cz.cvut.felk.erm.gui.managers.PluginToolsManager;
@@ -133,6 +134,9 @@ public class MainApp extends SingleXFrameApplication {
         if (!openingFile)
             this.director.getBackgroundManager().setGraphicMenu();
 
+        if (AppPrefs.getProperty(UserProp.NEW_VERSION, true))
+            startCheckNewVersion();
+
     }
 
 
@@ -170,6 +174,22 @@ public class MainApp extends SingleXFrameApplication {
     public static void main(String[] args) {
         //zde prijde overovani vstupnich pridavnych parametru
         Application.launch(MainApp.class, args); //spusteni
+    }
+
+    private void startCheckNewVersion() {
+
+        final Thread appThread = new Thread() {
+            public void run() {
+                try {
+                    Thread.sleep(30000);
+                    MainApp.this.getContext().getTaskService().execute(new CheckForNewVersionTask(false));
+                } catch (InterruptedException e) {
+                    //ignore
+                }
+            }
+        };
+        appThread.setPriority(Thread.MIN_PRIORITY);
+        appThread.start();
     }
 
     public static ApplicationContext getAContext() {

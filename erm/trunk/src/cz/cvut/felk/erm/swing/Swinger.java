@@ -52,10 +52,21 @@ public class Swinger {
                 null);
     }
 
+    public static int getChoice(final String message) {
+        final ResourceMap map = getResourceMap();
+        return JOptionPane.showOptionDialog(Frame.getFrames()[0], message, map.getString(MESSAGE_CONFIRM_TITLE_CODE),
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null, new String[]{map.getString(MESSAGE_BTN_YES_CODE), map.getString(MESSAGE_BTN_NO_CODE),
+                map.getString(MESSAGE_BTN_CANCEL_CODE)},
+                null);
+    }
+
 
     /**
      * Vrati obrazek podle key property v resourcu
      * Nenajde-li se obrazek pod danym kodem, vypise WARNING pokud neni obrazek nalezen
+     *
      * @param imagePropertyCode kod obrazku
      * @return obrazek
      */
@@ -67,6 +78,7 @@ public class Swinger {
     /**
      * Vrati obrazek podle key property v resourcu
      * Nenajde-li se obrazek pod danym kodem, vypise WARNING pokud neni obrazek nalezen
+     *
      * @param imagePropertyCode kod obrazku
      * @return obrazek
      */
@@ -168,14 +180,14 @@ public class Swinger {
     }
 
 
-     public static JComponent getTitleComponent(final String title) {
+    public static JComponent getTitleComponent(final String title) {
         return getTitleComponent(new JLabel(title));
     }
 
     public static JComponent getTitleComponent2(final String titleCode) {
         final JLabel label = new JLabel();
         label.setName(titleCode);
-        
+
         label.setFont(label.getFont().deriveFont(Font.BOLD, 16));
         return getTitleComponent(label);
     }

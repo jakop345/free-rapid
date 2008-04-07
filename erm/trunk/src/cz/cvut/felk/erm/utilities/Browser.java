@@ -1,5 +1,8 @@
 package cz.cvut.felk.erm.utilities;
 
+import cz.cvut.felk.erm.core.AppPrefs;
+import cz.cvut.felk.erm.core.Consts;
+import cz.cvut.felk.erm.core.UserProp;
 import cz.cvut.felk.erm.swing.Swinger;
 
 import java.awt.*;
@@ -9,6 +12,7 @@ import java.util.logging.Logger;
 
 /**
  * Pomocna trida pro spousteni weboveho browseru nebo emailoveho klienta
+ *
  * @author Ladislav Vitasek
  */
 public class Browser {
@@ -19,6 +23,7 @@ public class Browser {
 
     /**
      * Otevre browser nebo emailoveho klienta
+     *
      * @param mailOrUrl pokud hodnota zacina mailto, otevira se klient, jinak browser
      */
     public static void openBrowser(String mailOrUrl) {
@@ -37,6 +42,10 @@ public class Browser {
             Swinger.showErrorDialog("errorOpeningBrowser", e);
         }
 
+    }
+
+    public static void showHomepage() {
+        openBrowser(AppPrefs.getProperty(UserProp.WEBURL, Consts.WEBURL));
     }
 
 }

@@ -21,7 +21,12 @@ public class EditActions {
     }
 
     @Action
-    public void editSelection() {
+    public void undo() {
+
+    }
+
+    @Action
+    public void redo() {
 
     }
 
