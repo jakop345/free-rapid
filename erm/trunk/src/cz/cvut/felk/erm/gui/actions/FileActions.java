@@ -23,7 +23,7 @@ public class FileActions extends AbstractBean {
 
     @Action()
     public void newScheme() {
-        final AreaManager areaManager = app.getMainPanel().getAreaManager();
+        final AreaManager areaManager = app.getManagerDirector().getAreaManager();
         areaManager.openFileInstance();
         areaManager.grabActiveFocus();
     }
@@ -46,7 +46,7 @@ public class FileActions extends AbstractBean {
 
     @Action()
     public void closeActiveScheme() {
-        final AreaManager areaManager = app.getMainPanel().getAreaManager();
+        final AreaManager areaManager = app.getManagerDirector().getAreaManager();
         areaManager.closeActiveInstance();
     }
 
