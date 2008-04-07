@@ -2,8 +2,11 @@ package cz.cvut.felk.erm.core;
 
 import cz.cvut.felk.erm.core.application.GlobalEDTExceptionHandler;
 import cz.cvut.felk.erm.core.application.ListItemsConvertor;
-import cz.cvut.felk.erm.gui.managers.ManagerDirector;
 import cz.cvut.felk.erm.gui.StorageProperties;
+import cz.cvut.felk.erm.gui.managers.ManagerDirector;
+import cz.cvut.felk.erm.gui.managers.PluginToolsManager;
+import cz.cvut.felk.erm.gui.plugintools.PluginTool1;
+import cz.cvut.felk.erm.gui.plugintools.PluginTool2;
 import cz.cvut.felk.erm.swing.LookAndFeels;
 import cz.cvut.felk.erm.swing.TrayIconSupport;
 import cz.cvut.felk.erm.utilities.LogUtils;
@@ -23,6 +26,7 @@ import java.util.LinkedList;
 
 /**
  * Hlavni trida aplikace
+ *
  * @author Ladislav Vitasek
  */
 public class MainApp extends SingleXFrameApplication {
@@ -30,13 +34,14 @@ public class MainApp extends SingleXFrameApplication {
     private ManagerDirector director;
     private Collection<String> filesToOpen;
     private static boolean debug = false;
-    
+
     private TrayIconSupport trayIconSupport = null;
 
 //    private static Logger logger = null;
 
     /**
      * Zpracuje parametry pri spusteni programu
+     *
      * @param args vstupni parametry
      * @return kolekce jmen souboru pro nacteni v programu
      */
@@ -52,8 +57,6 @@ public class MainApp extends SingleXFrameApplication {
                     showVersion();
                 }
             } else {
-                if (result == null)
-                    result = new LinkedList<String>();
                 result.add(arg);
             }
         }
@@ -106,7 +109,7 @@ public class MainApp extends SingleXFrameApplication {
 
     private void initMainFrame() {
         final JFrame frame = getMainFrame();
-        frame.setJMenuBar(getMainPanel().getMenuManager().getMenuBar());
+        frame.setJMenuBar(director.getMenuManager().getMenuBar());
         frame.setContentPane(director.getComponent());
         frame.pack();
 
@@ -119,6 +122,14 @@ public class MainApp extends SingleXFrameApplication {
 //                this.director.getAreaManager().openFileInstance();
 //            }
         }
+
+        final PluginToolsManager manager = director.getPluginToolsManager();
+        final PluginTool1 pluginTool1 = new PluginTool1();
+        manager.addPluginTool(pluginTool1);
+        final PluginTool2 pluginTool2 = new PluginTool2();
+        manager.addPluginTool(pluginTool2);
+
+
         if (!openingFile)
             this.director.getBackgroundManager().setGraphicMenu();
 
@@ -143,15 +154,17 @@ public class MainApp extends SingleXFrameApplication {
 
     /**
      * Vraci komponentu hlavniho panelu obsahujici dalsi komponenty
+     *
      * @return hlavni panel
      */
-    public ManagerDirector getMainPanel() {
+    public ManagerDirector getManagerDirector() {
         assert director != null; //calling getMainPanel before finished initialization
         return director;
     }
 
     /**
      * Hlavni spousteci metoda programu
+     *
      * @param args vstupni parametry pro program
      */
     public static void main(String[] args) {
