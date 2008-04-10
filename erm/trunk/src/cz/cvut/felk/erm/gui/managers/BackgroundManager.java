@@ -1,5 +1,6 @@
 package cz.cvut.felk.erm.gui.managers;
 
+import cz.cvut.felk.erm.gui.actions.FileTransferHandlerImpl;
 import cz.cvut.felk.erm.gui.managers.interfaces.IFileChangeListener;
 import cz.cvut.felk.erm.swing.CustomLayoutConstraints;
 import cz.cvut.felk.erm.swing.LookAndFeels;
@@ -59,7 +60,7 @@ public final class BackgroundManager implements IFileChangeListener, PropertyCha
     }
 
     private MyDesktopContentManagerUI getContainerUI() {
-        return (MyDesktopContentManagerUI) director.getDockingWindowManager().getContentManager().getContentManagerUI();
+        return (MyDesktopContentManagerUI) director.getDockingManager().getContentManagerUI();
     }
 
     private Component getGraphicMenu() {
@@ -72,6 +73,7 @@ public final class BackgroundManager implements IFileChangeListener, PropertyCha
         mgr.setHGap(10);
         mgr.setVGap(5);
         final JPanel bgPanel = new BackGroundPanel(mgr);
+        bgPanel.setTransferHandler(new FileTransferHandlerImpl());
         bgPanel.setPreferredSize(new Dimension(650, 500));
         bgPanel.setName("BackGroundPanel");
         final TableLayout mgr2 = new TableLayout(new double[]{p}, new double[]{p, p, p, p, p, p});
@@ -181,9 +183,8 @@ public final class BackgroundManager implements IFileChangeListener, PropertyCha
     }
 
     private JComponent getGraphicItem(ResourceMap map, String title, Action action) {
-        final GraphicMenuItem menuItem = new GraphicMenuItem(title, map.getString(title + ".header"), map.getString(title + ".comment"), action);
         //  map.injectComponent(menuItem);
-        return menuItem;
+        return new GraphicMenuItem(title, map.getString(title + ".header"), map.getString(title + ".comment"), action);
     }
 
 }

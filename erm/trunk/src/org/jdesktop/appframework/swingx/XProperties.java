@@ -40,13 +40,13 @@ public class XProperties {
         encoder.setPersistenceDelegate(SortKeyState.class,
                 new DefaultPersistenceDelegate(new String[]{"ascending",
                         "modelIndex", "comparator"}));
-        encoder.setPersistenceDelegate(ColumnState.class,
-                new DefaultPersistenceDelegate(
-                        new String[]{"width", "preferredWidth", "modelIndex",
-                                "visible", "viewIndex"}));
-        encoder.setPersistenceDelegate(XTableState.class,
-                new DefaultPersistenceDelegate(new String[]{"columnStates",
-                        "sortKeyState", "horizontalScrollEnabled"}));
+//        encoder.setPersistenceDelegate(ColumnState.class,
+//                new DefaultPersistenceDelegate(
+//                        new String[]{"width", "preferredWidth", "modelIndex",
+//                                "visible", "viewIndex"}));
+//        encoder.setPersistenceDelegate(XTableState.class,
+//                new DefaultPersistenceDelegate(new String[]{"columnStates",
+//                        "sortKeyState", "horizontalScrollEnabled"}));
     }
 
     public static class XTableProperty implements Property {
@@ -126,6 +126,7 @@ public class XProperties {
          * Returns a boolean to indicate if it's reasonably safe to restore the properties of columns in the list from
          * the columnStates. Here: returns true if the length of both are the same and the modelIndex of the items at
          * the same position are the same, otherwise returns false.
+         *
          * @param columnState
          * @param columns
          * @return
@@ -219,6 +220,7 @@ public class XProperties {
 
         /**
          * Constructor used by the custom PersistenceDelegate.
+         *
          * @param ascending
          * @param modelIndex
          * @param comparator
@@ -232,6 +234,7 @@ public class XProperties {
 
         /**
          * Constructor used by property.
+         *
          * @param sortKey
          */
         public SortKeyState(SortKey sortKey) {
@@ -267,6 +270,7 @@ public class XProperties {
 
         /**
          * Constructor used by the custom PersistenceDelegate.
+         *
          * @param width
          * @param preferredWidth
          * @param modelColumn
@@ -283,6 +287,7 @@ public class XProperties {
 
         /**
          * Constructor used by the Property.
+         *
          * @param columnExt
          * @param viewIndex
          */
@@ -296,6 +301,7 @@ public class XProperties {
          * otherwise. <p>
          * <p/>
          * Here the properties are: width, preferredWidth, visible.
+         *
          * @param columnExt the column to configure
          */
         public void configureColumn(TableColumnExt columnExt) {

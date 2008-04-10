@@ -147,7 +147,7 @@ public class MenuManager implements IFileChangeListener, IAreaChangeListener {
 
 
         final JMenu winMenu = createMenu("windowMenu", windowMenuActionNames);
-        new JWindowsMenu(winMenu, director.getContentPane());
+        new JWindowsMenu(winMenu, (JDesktopPane) director.getDockingManager().getContentPane());
 
         return winMenu;
     }

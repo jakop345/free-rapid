@@ -44,7 +44,7 @@ public final class AreaManager implements InstanceListener, PropertyChangeListen
         super();
         //  this.director = director;
         recentFilesManager = new RecentFilesManager(director.getMenuManager());
-        contentManager = director.getDockingWindowManager().getContentManager();
+        contentManager = director.getDockingManager().getToolManager().getContentManager();
         addFileChangeListener(recentFilesManager);
         Collections.synchronizedCollection(runningInstances);
         contentManager.getContentManagerUI().addContentManagerUIListener(new ContentManagerUIListener() {
@@ -155,7 +155,7 @@ public final class AreaManager implements InstanceListener, PropertyChangeListen
 
     final protected void activateInstance(final FileInstance instance) {
         if (activeInstance != null && !activeInstance.equals(instance))
-            deactivateInstance(activeInstance);        
+            deactivateInstance(activeInstance);
         this.activeInstance = instance;
         instance.activate();
         fireAreaActivated();
@@ -182,7 +182,6 @@ public final class AreaManager implements InstanceListener, PropertyChangeListen
             });
         }
     }
-
 
 
     public final void setActivateFileInstance(final FileInstance instance) {

@@ -1,10 +1,10 @@
 package cz.cvut.felk.erm.gui.managers;
 
 import cz.cvut.felk.erm.core.MainApp;
+import cz.cvut.felk.erm.gui.actions.FileTransferHandlerImpl;
 import cz.cvut.felk.erm.gui.managers.interfaces.IFileChangeListener;
 import cz.cvut.felk.erm.swing.TextComponentContextMenuListener;
 import org.jdesktop.application.ApplicationContext;
-import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,15 +15,15 @@ import java.awt.*;
  * @author Ladislav Vitasek
  */
 public class ManagerDirector implements IFileChangeListener {
+    private final ApplicationContext context;
     private final MenuManager menuManager;
     private StatusBarManager statusBarManager;
     private ToolbarManager toolbarManager;
     private PluginToolsManager pluginToolsManager;
-    private final ApplicationContext context;
     private AreaManager areaManager;
     private BackgroundManager backgroundManager;
     private TitleManager titleManager;
-    private MyDoggyToolWindowManager toolsManager;
+    private DockingManager dockingManager;
     private Container rootContainer;
     private JFrame mainFrame;
 
@@ -37,20 +37,25 @@ public class ManagerDirector implements IFileChangeListener {
 
     private void initComponents() {
         mainFrame = ((MainApp) context.getApplication()).getMainFrame();
+
+        mainFrame.getRootPane().setTransferHandler(new FileTransferHandlerImpl());
+
         this.rootContainer = new JPanel();
         this.rootContainer.setPreferredSize(new Dimension(700, 550));
 
         rootContainer.setLayout(new BorderLayout());
 
+        this.dockingManager = new DockingManager(this, mainFrame);
 
         this.areaManager = new AreaManager(this);
 
+
         this.backgroundManager = new BackgroundManager(this);
-        this.pluginToolsManager = new PluginToolsManager(getDockingWindowManager());
+        this.pluginToolsManager = new PluginToolsManager(this);
         this.titleManager = new TitleManager(this);
 
         rootContainer.add(getToolbarManager().getComponent(), BorderLayout.NORTH);
-        rootContainer.add(getDockingWindowManager(), BorderLayout.CENTER);
+        rootContainer.add(getDockingManager().getToolManager(), BorderLayout.CENTER);
         rootContainer.add(getStatusBarManager().getStatusBar(), BorderLayout.SOUTH);
 
         areaManager.addAreaChangeListener(pluginToolsManager);
@@ -84,19 +89,6 @@ public class ManagerDirector implements IFileChangeListener {
 
     }
 
-    public final MyDoggyToolWindowManager getDockingWindowManager() {
-        if (this.toolsManager == null) {
-            this.toolsManager = new MyDoggyToolWindowManager(mainFrame);
-
-            this.toolsManager.getContentManager().setContentManagerUI(new MyDesktopContentManagerUI());
-        }
-        return this.toolsManager;
-    }
-
-
-    public JDesktopPane getContentPane() {
-        return (JDesktopPane) ((MyDesktopContentManagerUI) getDockingWindowManager().getContentManager().getContentManagerUI()).getContainer();
-    }
 
     public void beforeLookAndFeelUpdate() {
         getToolbarManager().updateToolbar();
@@ -138,5 +130,14 @@ public class ManagerDirector implements IFileChangeListener {
 
     public BackgroundManager getBackgroundManager() {
         return backgroundManager;
+    }
+
+    public DockingManager getDockingManager() {
+        return dockingManager;
+    }
+
+
+    public ApplicationContext getContext() {
+        return context;
     }
 }

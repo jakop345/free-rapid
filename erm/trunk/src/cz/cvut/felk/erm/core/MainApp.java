@@ -129,11 +129,10 @@ public class MainApp extends SingleXFrameApplication {
         manager.addPluginTool(pluginTool1);
         final PluginTool2 pluginTool2 = new PluginTool2();
         manager.addPluginTool(pluginTool2);
-
+        director.getDockingManager().renewLayout();
 
         if (!openingFile)
             this.director.getBackgroundManager().setGraphicMenu();
-
         if (AppPrefs.getProperty(UserProp.NEW_VERSION, true))
             startCheckNewVersion();
 
@@ -199,7 +198,7 @@ public class MainApp extends SingleXFrameApplication {
     /**
      * Exit listener. Pri ukoncovani provede ulozeni uzivatelskych properties.
      */
-    private static class MainAppExitListener implements Application.ExitListener {
+    private class MainAppExitListener implements Application.ExitListener {
 
         public boolean canExit(EventObject event) {
             return true;
@@ -207,6 +206,7 @@ public class MainApp extends SingleXFrameApplication {
 
         public void willExit(EventObject event) {
             AppPrefs.store();
+            director.getDockingManager().storeLayout();
         }
     }
 

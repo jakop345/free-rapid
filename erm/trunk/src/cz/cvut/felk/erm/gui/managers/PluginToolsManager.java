@@ -21,8 +21,8 @@ public class PluginToolsManager implements IAreaChangeListener {
     private List<PluginTool> tools = new Vector<PluginTool>(3);
     private final static Logger logger = Logger.getLogger(PluginToolsManager.class.getName());
 
-    public PluginToolsManager(ToolWindowManager toolWindowManager) {
-        this.toolWindowManager = toolWindowManager;
+    public PluginToolsManager(ManagerDirector director) {
+        this.toolWindowManager = director.getDockingManager().getToolManager();
         this.pluginGroup = toolWindowManager.getToolWindowGroup(PLUGINS_GROUP);
         this.pluginGroup.setImplicit(false);
         this.pluginGroup.setVisible(false);

@@ -298,7 +298,7 @@ public class WindowActions {
     }
 
     private JDesktopPane getDesktop() {
-        return app.getManagerDirector().getContentPane();
+        return (JDesktopPane) app.getManagerDirector().getDockingManager().getContentPane();
     }
 
 

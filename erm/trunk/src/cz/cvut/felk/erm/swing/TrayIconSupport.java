@@ -3,7 +3,6 @@ package cz.cvut.felk.erm.swing;
 import cz.cvut.felk.erm.core.AppPrefs;
 import cz.cvut.felk.erm.core.MainApp;
 import cz.cvut.felk.erm.core.UserProp;
-import cz.cvut.felk.erm.utilities.LogUtils;
 import org.jdesktop.application.ApplicationContext;
 import org.jdesktop.application.ResourceMap;
 
@@ -81,7 +80,7 @@ public class TrayIconSupport implements PropertyChangeListener {
             SystemTray tray = SystemTray.getSystemTray();
             tray.add(trayIcon);
         } catch (AWTException e) {
-            LogUtils.processException(logger, e);
+            logger.log(Level.WARNING, "Cannot enable Tray icon is not supported on this system");
         }
         setEnabled(true);
     }
