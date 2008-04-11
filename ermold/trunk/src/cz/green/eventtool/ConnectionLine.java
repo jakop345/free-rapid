@@ -6,6 +6,7 @@ import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.interfaces.Manager;
 import cz.green.eventtool.interfaces.Connectable;
 import cz.green.eventtool.interfaces.Connection;
+import cz.omnicom.ermodeller.conceptual.beans.Schema;
 
 import java.awt.*;
 
@@ -79,13 +80,15 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
      * Flag if the connection is to strong addiction child
      */
     protected boolean strongAddictionChild = false;
+    protected final Schema schema;
 
     /**
      * Calls the inhereted constructor and fills all properties of this object.
      */
-    public ConnectionLine(Manager manager, Connectable one, Connectable two)
+    public ConnectionLine(Manager manager, Schema schema, Connectable one, Connectable two)
             throws ImpossibleNegativeValueException, NullPointerException {
         super(manager, 0, 0, 0, 0);
+        this.schema = schema;
         if ((one == null) || (two == null))
             throw new NullPointerException();
         this.one = one;
@@ -235,7 +238,7 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
                 RenderingHints.VALUE_ANTIALIAS_ON);
 
         moves();
-        if (ACTUAL_NOTATION == ConceptualConstructItem.BINARY) {
+        if (schema.getNotationType() == ConceptualConstructItem.BINARY) {
             if ((AtributeConstruct.class.equals(one.getClass()))
                     || (AtributeConstruct.class.equals(two
                     .getClass())))
@@ -269,7 +272,7 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
             }
         }
         final Stroke stroke = updateStrokeWithAliasing(g);
-        if (ACTUAL_NOTATION == ConceptualConstructItem.UML) {
+        if (schema.getNotationType() == ConceptualConstructItem.UML) {
             if ((AtributeConstruct.class.equals(one.getClass()
             ))
                     || (AtributeConstruct.class.equals(two
@@ -283,7 +286,7 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
                 return;
             g.drawLine(borderOne.x, borderOne.y, borderTwo.x, borderTwo.y);
         }
-        if (ACTUAL_NOTATION == ConceptualConstructItem.CHEN) {
+        if (schema.getNotationType() == ConceptualConstructItem.CHEN) {
 
             switch (ACTUAL_LOD) {
                 case (LOD_FULL):
@@ -351,7 +354,7 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
      */
     public void paintFast(java.awt.Graphics g) {
         realMoves();
-        if (ACTUAL_NOTATION == ConceptualConstructItem.BINARY || ACTUAL_NOTATION == ConceptualConstructItem.UML)
+        if (schema.getNotationType() == ConceptualConstructItem.BINARY || schema.getNotationType() == ConceptualConstructItem.UML)
             if ((AtributeConstruct.class.equals(one.getClass()))
                     || (AtributeConstruct.class.equals(two.getClass()))
                     || (UniqueKeyConstruct.class.equals(two.getClass()))
@@ -370,7 +373,7 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
      */
     public void print(java.awt.Graphics g) {
         moves();
-        if (ACTUAL_NOTATION == ConceptualConstructItem.BINARY) {
+        if (schema.getNotationType() == ConceptualConstructItem.BINARY) {
             if ((AtributeConstruct.class.equals(one.getClass()))
                     || (AtributeConstruct.class.equals(two.getClass())))
                 return;
@@ -403,7 +406,7 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
                 }
             }
         }
-        if (ACTUAL_NOTATION == ConceptualConstructItem.UML) {
+        if (schema.getNotationType() == ConceptualConstructItem.UML) {
             if ((AtributeConstruct.class.equals(one.getClass()))
                     || (AtributeConstruct.class.equals(two.getClass())))
                 return;
@@ -415,7 +418,7 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
                 return;
             g.drawLine(borderOne.x, borderOne.y, borderTwo.x, borderTwo.y);
         }
-        if (ACTUAL_NOTATION == ConceptualConstructItem.CHEN) {
+        if (schema.getNotationType() == ConceptualConstructItem.CHEN) {
             switch (ACTUAL_LOD) {
                 case (LOD_FULL):
                     g.drawLine(borderOne.x, borderOne.y, borderTwo.x, borderTwo.y);

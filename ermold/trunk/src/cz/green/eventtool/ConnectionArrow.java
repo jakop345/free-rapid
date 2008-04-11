@@ -3,6 +3,7 @@ package cz.green.eventtool;
 import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.interfaces.Manager;
 import cz.green.eventtool.interfaces.Connectable;
+import cz.omnicom.ermodeller.conceptual.beans.Schema;
 
 /**
  * Has the same functionalitz as ancestor, but adds one important thing. At the and (by first
@@ -31,8 +32,8 @@ public class ConnectionArrow extends ConnectionLine {
      *
      * @see ConnectionLine#ConnectionLine(cz.green.event.interfaces.Manager , cz.green.ermodeller.Connectable, cz.green.ermodeller.Connectable)
      */
-    public ConnectionArrow(Manager manager, Connectable one, Connectable two) throws NullPointerException, ImpossibleNegativeValueException {
-        super(manager, one, two);
+    public ConnectionArrow(Manager manager, Connectable one, Connectable two, Schema scheme) throws NullPointerException, ImpossibleNegativeValueException {
+        super(manager, scheme, one, two);
     }
 
     /**
@@ -43,8 +44,6 @@ public class ConnectionArrow extends ConnectionLine {
     public void moves() {
         java.awt.Point p = one.getCenter();
         boolean rp = false;
-        boolean rd = false;
-        int[][] r = rect;
         if (arrow == null) {
             arrow = new java.awt.Polygon(new int[3], new int[3], 3);
             rp = true;
@@ -104,13 +103,13 @@ public class ConnectionArrow extends ConnectionLine {
     public void paint(java.awt.Graphics g) {
         super.paint(g);
         g.setColor(getForegroundColor());
-        switch (ACTUAL_NOTATION) {
-            case (CHEN):
+        switch (this.schema.getNotationType()) {
+            case CHEN:
                 if (!isStrongAddictionChild()) g.fillPolygon(arrow);
                 break;
-            case (BINARY):
+            case BINARY:
                 break;
-            case (UML):
+            case UML:
                 if (isStrongAddictionChild()) g.fillPolygon(diamond);
                 break;
         }
@@ -122,13 +121,13 @@ public class ConnectionArrow extends ConnectionLine {
     public void print(java.awt.Graphics g) {
         super.paint(g);
         g.setColor(getForegroundColor());
-        switch (ACTUAL_NOTATION) {
-            case (CHEN):
+        switch (this.schema.getNotationType()) {
+            case CHEN:
                 if (!isStrongAddictionChild()) g.fillPolygon(arrow);
                 break;
-            case (BINARY):
+            case BINARY:
                 break;
-            case (UML):
+            case UML:
                 if (isStrongAddictionChild()) g.fillPolygon(diamond);
                 break;
         }

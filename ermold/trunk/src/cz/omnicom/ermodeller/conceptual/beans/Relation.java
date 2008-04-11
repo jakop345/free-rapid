@@ -182,7 +182,8 @@ public class Relation extends ConceptualConstruct {
             error.connectErrorToObject(this);
             errorLogList.addElement(error);
         }
-        if (ConceptualConstructItem.ACTUAL_NOTATION != ConceptualConstructItem.CHEN &&
+
+        if (getSchema().getNotationType() != ConceptualConstructItem.CHEN &&
                 getCardinalities().size() > 2) {
             error = new HaveManyCardinalitiesValidationError(this);
             error.connectErrorToObject(this);

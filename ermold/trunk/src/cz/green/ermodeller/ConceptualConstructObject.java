@@ -8,7 +8,9 @@ import cz.green.eventtool.ConnectableWindow;
 import cz.green.eventtool.dialogs.PropertyListDialog;
 import cz.green.util.ActionAdapter;
 import cz.green.util.ParamActionAdapter;
+import cz.omnicom.ermodeller.conceptual.NotationType;
 import cz.omnicom.ermodeller.conceptual.beans.ConceptualObject;
+import cz.omnicom.ermodeller.conceptual.beans.Schema;
 
 import javax.swing.*;
 import java.awt.*;
@@ -292,5 +294,13 @@ public class ConceptualConstructObject extends ConnectableWindow implements View
         pw.println("</height>");
         ConceptualObject co = (ConceptualObject) getModel();
         co.write(pw);
+    }
+
+    public Schema getSchema() {
+        return ((ConceptualObject) this.getModel()).getSchema();
+    }
+
+    public NotationType getNotationType() {
+        return ((ConceptualObject) this.getModel()).getSchema().getNotationType();
     }
 }

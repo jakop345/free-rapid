@@ -11,8 +11,8 @@ import cz.green.eventtool.ConnectionLine;
 import cz.green.eventtool.interfaces.Connection;
 import cz.green.eventtool.interfaces.ConnectionManager;
 import cz.green.swing.ShowException;
+import cz.omnicom.ermodeller.conceptual.NotationType;
 import cz.omnicom.ermodeller.conceptual.beans.Atribute;
-import cz.omnicom.ermodeller.conceptual.beans.ConceptualObject;
 import cz.omnicom.ermodeller.conceptual.beans.UniqueKey;
 import cz.omnicom.ermodeller.datatype.DataType;
 
@@ -121,6 +121,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
      */
     protected JPopupMenu createMenu(JPopupMenu menu, PopupMenuEvent event) {
         super.createMenu(menu, event);
+        final NotationType type = model.getSchema().getNotationType();
         if (getOwner() instanceof EntityConstruct) {
             if (((EntityConstruct) cc).ISAParent == null) {
                 if (model.isPrimary()) {
@@ -149,7 +150,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
 		if (getOwner() instanceof Entity)
 		addMenuItem(menu, "Add to unique key", "mUKey.gif", this, "createUnique", this, Atribute.class);
 */
-        if (ACTUAL_NOTATION != CHEN) {
+        if (type != CHEN) {
 //		if (((cz.omnicom.ermodeller.conceptual.beans.Atribute) getModel()).getPosition()>1)
             {
                 addMenuItem(menu, "Move to top", "img/mMoveTop.gif", this, "moveTop");
@@ -170,7 +171,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
      * It is used to chnge odrer of atributes in binary and UML notation
      */
     public void moveUp() {
-        if (ACTUAL_NOTATION == BINARY && (getOwner() instanceof EntityConstruct) &&
+        if (getType() == BINARY && (getOwner() instanceof EntityConstruct) &&
                 getPosition() == ((EntityConstruct) cc).PKmembers.size() + 1)
             return;
         int actualPosition = getPosition();
@@ -186,7 +187,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
      * It is used to chnge odrer of atributes in binary and UML notation
      */
     public void moveDown() {
-        if (ACTUAL_NOTATION == BINARY && (getOwner() instanceof EntityConstruct) &&
+        if (getType() == BINARY && (getOwner() instanceof EntityConstruct) &&
                 getPosition() == ((EntityConstruct) cc).PKmembers.size())
             return;
         int actualPosition = getPosition();
@@ -202,7 +203,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
      * It is used to chnge odrer of atributes in binary and UML notation
      */
     public void moveTop() {
-        if (ACTUAL_NOTATION == BINARY && (getOwner() instanceof EntityConstruct)) {
+        if (getType() == BINARY && (getOwner() instanceof EntityConstruct)) {
             if (getPosition() > ((EntityConstruct) cc).PKmembers.size())
                 moveToPosition(((EntityConstruct) cc).PKmembers.size() + 1);
             else moveToPosition(1);
@@ -215,11 +216,15 @@ public class AtributeConstruct extends ConceptualConstructObject {
      * It is used to chnge odrer of atributes in binary and UML notation
      */
     public void moveEnd() {
-        if (ACTUAL_NOTATION == BINARY && (getOwner() instanceof EntityConstruct)) {
+        if (getType() == BINARY && (getOwner() instanceof EntityConstruct)) {
             if (getPosition() <= ((EntityConstruct) cc).PKmembers.size())
                 moveToPosition(((EntityConstruct) cc).PKmembers.size());
             else moveToPosition(cc.Attribs.size());
         } else moveToPosition(cc.Attribs.size());
+    }
+
+    private NotationType getType() {
+        return model.getSchema().getNotationType();
     }
 
     /**
@@ -430,7 +435,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
      * Same as <code>handleMovingEvent</code> but remove functionality for BINARY and UML notation.
      */
     public void handleExMovingEvent(ExMovingEvent event) {
-        if (ConceptualConstructItem.ACTUAL_NOTATION == ConceptualConstructItem.CHEN)
+        if (getType() == CHEN)
             super.handleMovingEvent(event);
     }
 
@@ -451,7 +456,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
         }
 //	this.setPosition(cc.Attribs.size());
 
-        if (ConceptualConstructItem.ACTUAL_NOTATION != ConceptualConstructItem.CHEN)
+        if (getType() != CHEN)
             if (cc instanceof EntityConstruct) {
                 EntityConstruct ent = (EntityConstruct) cc;
                 ent.recalculatePositionsOfAtributes();
@@ -484,7 +489,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
         java.awt.FontMetrics fm = g.getFontMetrics();
         final Stroke stroke = updateStrokeWithAliasing(g);
         // Enable antialiasing for shapes
-        if (ACTUAL_NOTATION == CHEN) {
+        if (getType() == CHEN) {
             switch (ACTUAL_LOD) {
                 case (LOD_LOW):
                     break;
@@ -543,7 +548,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
                     r = null;
             }
         }
-        if (ACTUAL_NOTATION == BINARY) {
+        if (getType() == BINARY) {
 
             //System.out.println("Draw binary");
             switch (ACTUAL_LOD) {
@@ -580,7 +585,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
                     r = null;
             }
         }
-        if (ACTUAL_NOTATION == UML) {
+        if (getType() == UML) {
             String nameUML = model.getName() + ": " + model.getDataType().toDescriptionString();
             switch (ACTUAL_LOD) {
                 case (LOD_LOW):
@@ -647,7 +652,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
         String name = model.getName();
         java.awt.FontMetrics fm = g.getFontMetrics();
 
-        if (ACTUAL_NOTATION == CHEN) {
+        if (getType() == CHEN) {
             switch (ACTUAL_LOD) {
                 case (LOD_LOW):
                     break;
@@ -695,7 +700,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
                     r = null;
             }
         }
-        if (ACTUAL_NOTATION == BINARY) {
+        if (getType() == BINARY) {
             switch (ACTUAL_LOD) {
                 case (LOD_LOW):
                     break;
@@ -720,7 +725,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
                     r = null;
             }
         }
-        if (ACTUAL_NOTATION == UML) {
+        if (getType() == UML) {
             String nameUML = model.getName() + ": " + model.getDataType().toDescriptionString();
             switch (ACTUAL_LOD) {
                 case (LOD_LOW):
@@ -747,7 +752,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
      * Invoked when some model's property change. Catch changes of the <b>name</b> and <b>arbitrary</b> property.
      */
     public void propertyChange(java.beans.PropertyChangeEvent e) {
-        ((ConceptualObject) getModel()).setChanged(true);
+        model.setChanged(true);
         if (e.getPropertyName().equals("dataType")) {
             if (getOwner() instanceof EntityConstruct) {
                 cz.green.event.ResizeRectangle rr = new cz.green.event.ResizeRectangle(
@@ -761,14 +766,14 @@ public class AtributeConstruct extends ConceptualConstructObject {
             if (isPrimary()) {
                 if (!((EntityConstruct) getOwner()).PKmembers.contains(this))
                     ((EntityConstruct) getOwner()).PKmembers.addElement(this);
-                if (ACTUAL_NOTATION == BINARY)
+                if (getType() == BINARY)
                     moveToPosition(((EntityConstruct) getOwner()).PKmembers.size());
             } else {
                 ((EntityConstruct) getOwner()).PKmembers.removeElement(this);
-                if (ACTUAL_NOTATION == BINARY)
+                if (getType() == BINARY)
                     moveToPosition(((EntityConstruct) getOwner()).PKmembers.size() + 1);
             }
-            if (ConceptualConstructItem.ACTUAL_NOTATION != ConceptualConstructItem.CHEN)
+            if (getType() != CHEN)
                 ((EntityConstruct) getOwner()).recalculatePositionsOfAtributes();
 
         }
@@ -788,7 +793,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
             }
             b = b.union(getBounds());
             (manager).repaintRectangle(b.x, b.y, b.width, b.height);
-            if (ACTUAL_NOTATION == UML || ACTUAL_NOTATION == BINARY) {
+            if (getType() == UML || getType() == BINARY) {
                 if (getOwner() instanceof EntityConstruct) {
                     cz.green.event.ResizeRectangle rr = new cz.green.event.ResizeRectangle(
                             0, 0, 0, 0, cz.green.event.ResizePoint.BOTTOM
@@ -850,7 +855,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
         if (add) {
             //there are no connections -- add connection to the owner
             try {
-                Connection c = new ConnectionLine(manager, this, cc);
+                Connection c = new ConnectionLine(manager, getSchema(), this, cc);
                 ((ConnectionManager) manager).addConnection(c);
                 (manager).repaintItem(c);
             } catch (ImpossibleNegativeValueException e) {

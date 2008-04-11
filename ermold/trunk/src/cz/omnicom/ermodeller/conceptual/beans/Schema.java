@@ -1,6 +1,6 @@
 package cz.omnicom.ermodeller.conceptual.beans;
 
-import cz.green.ermodeller.ConceptualConstructItem;
+import cz.omnicom.ermodeller.conceptual.NotationType;
 import cz.omnicom.ermodeller.conceptual.exception.ListException;
 import cz.omnicom.ermodeller.conceptual.exception.ParameterCannotBeNullException;
 import cz.omnicom.ermodeller.conceptual.exception.WasNotFoundException;
@@ -38,17 +38,28 @@ public class Schema extends ConceptualObject {
 
     public static final String ENTITIES_PROPERTY_CHANGE = "entities";
     public static final String RELATIONS_PROPERTY_CHANGE = "relations";
+    public static final String NOTATION_PROPERTY_CHANGE = "notation";
     private boolean changed = false;
     /**
      * ID of the first composed object
      */
     private int fieldComposeID;
 
+    private NotationType notationType = NotationType.CHEN;
+
     /**
      * This method was created by Jiri Mares
      */
     public Schema() {
         setName("Schema");
+    }
+
+    public NotationType getNotationType() {
+        return notationType;
+    }
+
+    public void setNotationType(NotationType notationType) {
+        this.notationType = notationType;
     }
 
     /**
@@ -482,7 +493,7 @@ public class Schema extends ConceptualObject {
     public void write(java.io.PrintWriter pw) {
         pw.println("\t<id>" + getID() + "</id>");
         pw.println("\t<name>" + getName() + "</name>");
-        pw.println("\t<notation>" + ConceptualConstructItem.ACTUAL_NOTATION + "</notation>");
+        pw.println("\t<notation>" + getNotationType().ordinal() + "</notation>");
         pw.println("\t<comment>" + getComment() + "</comment>");
         //System.out.println(getID()+"\t"+getName()+"\t"+getClass());
     }

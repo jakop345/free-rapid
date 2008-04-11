@@ -26,13 +26,13 @@ public abstract class ConceptualConstruct extends ConceptualObject {
      *
      * @see Atribute
      */
-    protected Vector atributes = new Vector();
+    protected Vector<Atribute> atributes = new Vector<Atribute>();
     /**
      * Atributes held by construct.
      *
      * @see Cardinality
      */
-    protected Vector cardinalities = new Vector();
+    protected Vector<Cardinality> cardinalities = new Vector<Cardinality>();
     /**
      * Counter for generating unique names of objects.
      */
@@ -134,8 +134,8 @@ public abstract class ConceptualConstruct extends ConceptualObject {
     protected synchronized void disposeAllAtributes() {
         Vector oldValue = (Vector) getAtributes().clone();
         // Disconnects each atribute from all unique keys.
-        for (Enumeration elements = getAtributes().elements(); elements.hasMoreElements();) {
-            ((Atribute) elements.nextElement()).setConstruct(null);
+        for (Enumeration<Atribute> elements = getAtributes().elements(); elements.hasMoreElements();) {
+            (elements.nextElement()).setConstruct(null);
         }
         // Construct disposes each atribute itself.
         emptyConceptualVector(getAtributes());
@@ -153,9 +153,9 @@ public abstract class ConceptualConstruct extends ConceptualObject {
     private synchronized void disposeAllCardinalities() {
         // Cardinality disconnects (removes from list) itself,
         //    construct doesn't disposes cardinalities itself.
-        for (Enumeration elements = getCardinalities().elements(); elements.hasMoreElements();) {
+        for (Enumeration<Cardinality> elements = getCardinalities().elements(); elements.hasMoreElements();) {
             // Each cardinality must be emptied - disconnected.
-            ((Cardinality) elements.nextElement()).empty();
+            (elements.nextElement()).empty();
         }
         getCardinalities().trimToSize();
     }
@@ -211,9 +211,9 @@ public abstract class ConceptualConstruct extends ConceptualObject {
      *
      * @return java.util.Vector
      */
-    public Vector getAtributes() {
+    public Vector<Atribute> getAtributes() {
         if (atributes == null)
-            atributes = new Vector();
+            atributes = new Vector<Atribute>();
         return atributes;
     }
 
@@ -222,9 +222,9 @@ public abstract class ConceptualConstruct extends ConceptualObject {
      *
      * @return java.util.Vector
      */
-    public Vector getCardinalities() {
+    public Vector<Cardinality> getCardinalities() {
         if (cardinalities == null)
-            cardinalities = new Vector();
+            cardinalities = new Vector<Cardinality>();
         return cardinalities;
     }
 
@@ -237,9 +237,9 @@ public abstract class ConceptualConstruct extends ConceptualObject {
      */
     private ErrorLogList checkAtributeNameUnicity() throws CheckNameDuplicityValidationException {
         ErrorLogList errorLogList = new ErrorLogList();
-        Vector vectorToCheck = new Vector();
-        for (Enumeration elements = getAtributes().elements(); elements.hasMoreElements();) {
-            vectorToCheck.addElement(new ConceptualObjectNameController((Atribute) elements.nextElement()));
+        Vector<ConceptualObjectNameController> vectorToCheck = new Vector<ConceptualObjectNameController>();
+        for (Enumeration<Atribute> elements = getAtributes().elements(); elements.hasMoreElements();) {
+            vectorToCheck.addElement(new ConceptualObjectNameController(elements.nextElement()));
         }
         try {
             errorLogList.concatErrorLogList(checkVectorForNameDuplicity(vectorToCheck, AtributeSameNameValidationError.class));
@@ -367,8 +367,8 @@ public abstract class ConceptualConstruct extends ConceptualObject {
      */
     protected void setAllUnvalidated() {
         // atributes
-        for (Enumeration atributes = getAtributes().elements(); atributes.hasMoreElements();) {
-            ((Atribute) atributes.nextElement()).setAllUnvalidated();
+        for (Enumeration<Atribute> atributes = getAtributes().elements(); atributes.hasMoreElements();) {
+            (atributes.nextElement()).setAllUnvalidated();
         }
         super.setAllUnvalidated();
     }
@@ -387,8 +387,8 @@ public abstract class ConceptualConstruct extends ConceptualObject {
         errorLogList.concatErrorLogList(superErrorLogList);
         // unique atribute names
         errorLogList.concatErrorLogList(checkAtributeNameUnicity());
-        for (Enumeration atributes = getAtributes().elements(); atributes.hasMoreElements();) {
-            ErrorLogList entityErrors = ((Atribute) atributes.nextElement()).validate();
+        for (Enumeration<Atribute> atributes = getAtributes().elements(); atributes.hasMoreElements();) {
+            ErrorLogList entityErrors = (atributes.nextElement()).validate();
             errorLogList.concatErrorLogList(entityErrors);
         }
         return errorLogList;

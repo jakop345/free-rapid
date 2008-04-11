@@ -73,7 +73,7 @@ public class UniqueKeyConstruct extends ConceptualConstructObject {
         try {
             model.addAtribute((Atribute) (atr
                     .getModel()));
-            Connection conn = new ConnectionLine(manager, this, atr);
+            Connection conn = new ConnectionLine(manager, getSchema(), this, atr);
             ((ConnectionManager) manager).addConnection(conn);
             (manager).repaintItem(conn);
         } catch (Throwable x) {
@@ -345,7 +345,7 @@ public class UniqueKeyConstruct extends ConceptualConstructObject {
      * crossed lines.
      */
     public void paint(java.awt.Graphics g) {
-        if (ACTUAL_NOTATION == ConceptualConstructItem.BINARY)
+        if (ent.getModel().getSchema().getNotationType() == ConceptualConstructItem.BINARY)
             return;
         final Stroke stroke = updateStrokeWithAliasing(g);
         // paints the rectangle
@@ -371,7 +371,7 @@ public class UniqueKeyConstruct extends ConceptualConstructObject {
      * crossed lines.
      */
     public void print(java.awt.Graphics g) {
-        if (ACTUAL_NOTATION == ConceptualConstructItem.BINARY)
+        if (ent.getModel().getSchema().getNotationType() == ConceptualConstructItem.BINARY)
             return;
         java.awt.Rectangle r = getBounds();
         g.drawRect(r.x, r.y, r.width, r.height);
@@ -424,7 +424,7 @@ public class UniqueKeyConstruct extends ConceptualConstructObject {
         try {
             model.addAtribute((Atribute) (atr
                     .getModel()));
-            Connection conn = new ConnectionLine(manager, this, atr);
+            Connection conn = new ConnectionLine(manager, getSchema(), this, atr);
             ((ConnectionManager) manager).addConnection(conn);
             (manager).repaintItem(conn);
         } catch (Throwable x) {

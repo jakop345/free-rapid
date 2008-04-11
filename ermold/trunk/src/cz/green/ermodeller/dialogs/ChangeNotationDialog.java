@@ -1,7 +1,7 @@
 package cz.green.ermodeller.dialogs;
 
-import cz.green.ermodeller.ConceptualConstructItem;
 import cz.green.ermodeller.ERModeller;
+import cz.omnicom.ermodeller.conceptual.NotationType;
 import cz.omnicom.ermodeller.conceptual.beans.Entity;
 
 import javax.swing.*;
@@ -37,16 +37,18 @@ public class ChangeNotationDialog extends JDialog implements java.awt.event.Acti
     final JLabel ChangeToLabel = new JLabel();
     final JList TernaryRList = new JList();
     final ERModeller Erm;
-    private final int NextNotation;
+    private final NotationType currentNotation;
+    private final NotationType nextNotation;
 
     /**
      * Constructor
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    public ChangeNotationDialog(JFrame owner, ERModeller Erm, int Notation) {
+    public ChangeNotationDialog(JFrame owner, ERModeller Erm, NotationType nextNotation, NotationType currentNotation) {
         super(owner, "Changing notation dialog ");
         this.Erm = Erm;
-        this.NextNotation = Notation;
+        this.currentNotation = currentNotation;
+        this.nextNotation = nextNotation;
         initialize();
 
     }
@@ -98,14 +100,14 @@ public class ChangeNotationDialog extends JDialog implements java.awt.event.Acti
             OKbutton.setText("Change Notation");
             OKbutton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    switch (NextNotation) {
-                        case (ConceptualConstructItem.CHEN):
+                    switch (nextNotation) {
+                        case CHEN:
                             Erm.setChen();
                             break;
-                        case (ConceptualConstructItem.BINARY):
+                        case BINARY:
                             Erm.setBinary();
                             break;
-                        case (ConceptualConstructItem.UML):
+                        case UML:
                             Erm.setUML();
                             break;
                     }
@@ -118,18 +120,18 @@ public class ChangeNotationDialog extends JDialog implements java.awt.event.Acti
 
             this.add(getTextArea(), getTextArea().getName());
 
-            if (ConceptualConstructItem.ACTUAL_NOTATION == NextNotation)
+            if (currentNotation == nextNotation)
                 InitializeNoChange();
             else {
 
-                switch (ConceptualConstructItem.ACTUAL_NOTATION) {
-                    case (ConceptualConstructItem.CHEN):
+                switch (currentNotation) {
+                    case CHEN:
                         InitializeChen();
                         break;
-                    case (ConceptualConstructItem.BINARY):
+                    case BINARY:
                         InitializeBinary();
                         break;
-                    case (ConceptualConstructItem.UML):
+                    case UML:
                         InitializeUML();
                         break;
 
@@ -150,15 +152,15 @@ public class ChangeNotationDialog extends JDialog implements java.awt.event.Acti
         OKbutton.setBounds(new Rectangle(13, 270, 130, 25));
         CancelButton.setBounds(new Rectangle(173, 270, 73, 25));
 
-        switch (NextNotation) {
-            case (ConceptualConstructItem.BINARY):
+        switch (nextNotation) {
+            case BINARY:
                 DescriptionTA.setText(
                         "If you change the notation to BINARY, all ternary relationships and \n" +
                                 "relationships with attributes will be decomposed. All relationships \n" +
                                 "without any connection to entity will be deleted!\n\n" +
                                 "Press Change notation to switch or Cancel to return back.");
                 break;
-            case (ConceptualConstructItem.UML):
+            case UML:
                 DescriptionTA.setText(
                         "If you change the notation to UML, all ternary relationships will be\n" +
                                 "decomposed. Relationships with attributes will be also decom-\n" +
@@ -203,12 +205,12 @@ public class ChangeNotationDialog extends JDialog implements java.awt.event.Acti
     }
 
     private void InitializeBinary() {
-        switch (NextNotation) {
-            case (ConceptualConstructItem.CHEN):
+        switch (nextNotation) {
+            case CHEN:
                 DescriptionTA.setText("There are no restrictions for changing notation\n from BINARY to CHAN.\n\n" +
                         "Press Change notation to switch or Cancel to return back.");
                 break;
-            case (ConceptualConstructItem.UML):
+            case UML:
                 DescriptionTA.setText("There are no restrictions for changing notation\n from BINARY to UML.\n\n" +
                         "Press Change notation to switch or Cancel to return back.");
                 break;
@@ -216,12 +218,12 @@ public class ChangeNotationDialog extends JDialog implements java.awt.event.Acti
     }
 
     private void InitializeUML() {
-        switch (NextNotation) {
-            case (ConceptualConstructItem.CHEN):
+        switch (nextNotation) {
+            case CHEN:
                 DescriptionTA.setText("There are no restrictions for changing notation\n from UML to CHAN.\n\n" +
                         "Press Change notation to switch or Cancel to return back.");
                 break;
-            case (ConceptualConstructItem.BINARY):
+            case BINARY:
                 DescriptionTA.setText("There are no restrictions for changing notation \n " +
                         "from UML to BINARY.\n" +
                         "(because Relationships with atributes are not implemented yet)\n\n" +
@@ -240,26 +242,26 @@ public class ChangeNotationDialog extends JDialog implements java.awt.event.Acti
     private String getFromToString() {
         String fromToString;
         fromToString = "From ";
-        switch (ConceptualConstructItem.ACTUAL_NOTATION) {
-            case (ConceptualConstructItem.CHEN):
+        switch (this.currentNotation) {
+            case CHEN:
                 fromToString += "CHEN";
                 break;
-            case (ConceptualConstructItem.BINARY):
+            case BINARY:
                 fromToString += "BINARY";
                 break;
-            case (ConceptualConstructItem.UML):
+            case UML:
                 fromToString += "UML";
                 break;
         }
         fromToString += " to ";
-        switch (NextNotation) {
-            case (ConceptualConstructItem.CHEN):
+        switch (nextNotation) {
+            case CHEN:
                 fromToString += "CHEN";
                 break;
-            case (ConceptualConstructItem.BINARY):
+            case BINARY:
                 fromToString += "BINARY";
                 break;
-            case (ConceptualConstructItem.UML):
+            case UML:
                 fromToString += "UML";
                 break;
         }

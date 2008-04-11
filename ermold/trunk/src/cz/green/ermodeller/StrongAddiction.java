@@ -11,6 +11,7 @@ import cz.green.eventtool.interfaces.Connection;
 import cz.green.eventtool.interfaces.ConnectionManager;
 import cz.green.eventtool.interfaces.Printable;
 import cz.green.swing.ShowException;
+import cz.omnicom.ermodeller.conceptual.NotationType;
 import cz.omnicom.ermodeller.conceptual.beans.Entity;
 
 import javax.swing.*;
@@ -40,7 +41,7 @@ public class StrongAddiction extends ConceptualConstructObject {
         super(manager, left - (SIZE / 2), top - (SIZE / 2), SIZE, SIZE);
         this.parent = parent;
         this.child = son;
-        if (ACTUAL_NOTATION == BINARY) {
+        if (getType() == BINARY) {
             java.awt.FontMetrics fm = ((FontManager) manager).getReferentFontMetrics();
             Dimension dim = new java.awt.Dimension(fm.getAscent() + fm.stringWidth("N:N"), (int) (2.25 * fm.getAscent()));
             rect[0][1] = rect[0][0] + dim.width;
@@ -48,17 +49,22 @@ public class StrongAddiction extends ConceptualConstructObject {
         }
     }
 
+    private NotationType getType() {
+        return parent.getModel().getSchema().getNotationType();
+    }
+
+
     protected java.awt.Dimension countSize() {
         java.awt.FontMetrics fm;
         fm = ((FontManager) manager).getReferentFontMetrics();
         int w2 = fm.stringWidth("N:N"), height = fm.getAscent();
         try {
-            switch (ACTUAL_NOTATION) {
-                case (CHEN):
+            switch (getType()) {
+                case CHEN:
                     break;
-                case (BINARY):
+                case BINARY:
                     return new java.awt.Dimension(height + w2, (int) (2.25 * height));
-                case (UML):
+                case UML:
                     return new java.awt.Dimension(2 * SIZE, SIZE);
             }
             return new java.awt.Dimension(SIZE, SIZE);
@@ -89,7 +95,7 @@ public class StrongAddiction extends ConceptualConstructObject {
      */
     static public StrongAddiction createStrongAddiction(EntityConstruct parent, EntityConstruct child, Manager man, int left, int top) {
         try {
-            if (ACTUAL_NOTATION == UML)
+            if (parent.getModel().getSchema().getNotationType() == UML)
                 man = parent.getManager();
             Entity cPar = (Entity) parent.getModel();
             Entity cChild = (Entity) child.getModel();
@@ -98,13 +104,13 @@ public class StrongAddiction extends ConceptualConstructObject {
             man.add(sa);
             (man).repaintItem(sa);
             //create connection to unique key
-            Connection conn = new ConnectionArrow(man, sa, child);
+            Connection conn = new ConnectionArrow(man, sa, child, child.getSchema());
             ((ConnectionArrow) conn).setStrongAddicted(true);
             ((ConnectionArrow) conn).setStrongAddictionChild(true);
             ((ConnectionManager) man).addConnectionToMain(conn);
             (man).repaintItem(conn);
             //create connection to entity
-            conn = new ConnectionArrow(man, sa, parent);
+            conn = new ConnectionArrow(man, sa, parent, parent.getSchema());
             ((ConnectionArrow) conn).setStrongAddicted(true);
             ((ConnectionArrow) conn).setStrongAddictionChild(false);
             ((ConnectionManager) man).addConnectionToMain(conn);
@@ -222,10 +228,10 @@ public class StrongAddiction extends ConceptualConstructObject {
         int dx, dy = 0;
         java.awt.Point cardinalityCenter = getCenter();
         java.awt.Rectangle er;
-        er = (ACTUAL_NOTATION == UML) ? getParent().getBounds() : getChild().getBounds();
+        er = (getType() == UML) ? getParent().getBounds() : getChild().getBounds();
         java.awt.Rectangle r = getBounds();
 
-/*	if (ACTUAL_NOTATION != UML)*/
+/*	if (getType() != UML)*/
         {
             if (event.getX() < er.x) {
                 dx = (er.x - r.width / 2) - cardinalityCenter.x;
@@ -280,10 +286,10 @@ public class StrongAddiction extends ConceptualConstructObject {
         int dx = 0, dy = 0;
         java.awt.Point cardinalityCenter = getCenter();
         java.awt.Rectangle er;
-        er = (ACTUAL_NOTATION == UML) ? getParent().getBounds() : getChild().getBounds();
+        er = (getType() == UML) ? getParent().getBounds() : getChild().getBounds();
         java.awt.Rectangle r = getBounds();
 
-//	if (ConceptualConstruct.ACTUAL_NOTATION != ConceptualConstruct.UML )
+//	if (ConceptualConstruct.getType() != ConceptualConstruct.UML )
         {
             if (cardinalityCenter.x < er.x && cardinalityCenter.y < er.y) {
                 dx = er.x - cardinalityCenter.x + r.height / 5;
@@ -341,12 +347,12 @@ public class StrongAddiction extends ConceptualConstructObject {
             g.setColor(getSelectedBackgroundColor());
             g.fillRect(r.x, r.y, r.width, r.height);
         }
-        switch (ACTUAL_NOTATION) {
-            case (CHEN):
+        switch (getType()) {
+            case CHEN:
                 g.setColor(getForegroundColor());
                 g.fillRect(r.x, r.y, r.width, r.height);
                 break;
-            case (BINARY):
+            case BINARY:
                 if (selected) {
                     g.setColor(getSelectedBackgroundColor());
                     g.fillRect(r.x, r.y, r.width, r.height);
@@ -388,7 +394,7 @@ public class StrongAddiction extends ConceptualConstructObject {
                     g.drawRect(r.x, r.y, r.width, r.height);
                 }
                 break;
-            case (UML):
+            case UML:
                 g.setColor(getForegroundColor());
                 g.fillRect(r.x, r.y, r.width, r.height);
                 break;
@@ -431,12 +437,12 @@ public class StrongAddiction extends ConceptualConstructObject {
      */
     public void print(java.awt.Graphics g) {
         java.awt.Rectangle r = getBounds();
-        switch (ACTUAL_NOTATION) {
-            case (CHEN):
+        switch (getType()) {
+            case CHEN:
                 g.setColor(getForegroundColor());
                 g.fillRect(r.x, r.y, r.width, r.height);
                 break;
-            case (BINARY):
+            case BINARY:
                 g.setColor(getForegroundColor());
                 java.awt.Point cardinalityCenter = getCenter();
                 java.awt.Rectangle er = child.getBounds();
@@ -474,7 +480,7 @@ public class StrongAddiction extends ConceptualConstructObject {
                     g.drawRect(r.x, r.y, r.width, r.height);
                 }
                 break;
-            case (UML):
+            case UML:
                 g.setColor(getForegroundColor());
                 g.fillRect(r.x, r.y, r.width, r.height);
                 break;

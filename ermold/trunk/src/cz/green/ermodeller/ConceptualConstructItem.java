@@ -8,6 +8,7 @@ import cz.green.eventtool.ConnectionLine;
 import cz.green.eventtool.interfaces.Connection;
 import cz.green.eventtool.interfaces.ConnectionManager;
 import cz.green.swing.ShowException;
+import cz.omnicom.ermodeller.conceptual.NotationType;
 import cz.omnicom.ermodeller.conceptual.beans.Atribute;
 import cz.omnicom.ermodeller.conceptual.beans.ConceptualConstruct;
 import cz.omnicom.ermodeller.conceptual.exception.ParameterCannotBeNullException;
@@ -79,14 +80,15 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
             //repaint atribute
             (manager).repaintItem(atr);
             //create connection
-            Connection conn = new ConnectionLine(manager, atr, this);
+            Connection conn = new ConnectionLine(manager, ((ConceptualConstruct) atr.getModel()).getSchema(), atr, this);
             ((ConnectionManager) manager).addConnection(conn);
             (manager).repaintItem(conn);
             if (Attribs == null)
                 Attribs = new java.util.Vector(3, 2);
             Attribs.addElement(atr);
             cAtr.setPosition(Attribs.size());
-            if (this instanceof EntityConstruct && ConceptualConstructItem.ACTUAL_NOTATION != ConceptualConstructItem.CHEN) {
+            final NotationType type = atr.getNotationType();
+            if (this instanceof EntityConstruct && type != CHEN) {
                 ((EntityConstruct) this).recalculatePositionsOfAtributes();
             }
             return atr;
@@ -171,7 +173,8 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
                 AtributeConstruct atr = (AtributeConstruct) item;
                 if (atr.getOwner() != this) {
                     reconnectAtribute(atr);
-                    if (ACTUAL_NOTATION != CHEN) {
+                    final NotationType type = atr.getNotationType();
+                    if (type != CHEN) {
                         if (this instanceof EntityConstruct) ((EntityConstruct) this).recalculatePositionsOfAtributes();
                         if (atr.getOwner() instanceof EntityConstruct)
                             ((EntityConstruct) atr.getOwner()).recalculatePositionsOfAtributes();
@@ -303,7 +306,8 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
     public void reconnectAtribute(AtributeConstruct atr) {
         try {
             //move model's atribute
-            if (ACTUAL_NOTATION != CHEN && this instanceof RelationConstruct) {
+            final NotationType type = atr.getNotationType();
+            if (type != CHEN && this instanceof RelationConstruct) {
                 javax.swing.JOptionPane
                         .showMessageDialog(
                                 null,
@@ -314,7 +318,7 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
             }
             ConceptualConstructItem ccFrom = atr.getOwner();
             ConceptualConstruct cCcFrom = (ConceptualConstruct) (ccFrom.getModel());
-            Atribute cAtr = (Atribute) (atr.getModel());
+            Atribute cAtr = (Atribute) atr.getModel();
             if (ccFrom instanceof EntityConstruct)
 //			if(((cz.omnicom.ermodeller.conceptual.beans.Entity)((Entity) ccFrom).getModel()).isPrimary())
                 if (((Atribute) atr.getModel()).isPrimary())
@@ -331,7 +335,7 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
             manager.add(atr);
             (manager).repaintItem(atr);
             //create new connection
-            Connection conn = new ConnectionLine(manager, atr, this);
+            Connection conn = new ConnectionLine(manager, atr.getSchema(), atr, this);
             ((ConnectionManager) manager).addConnection(conn);
             (manager).repaintItem(conn);
             Attribs.addElement(atr);

@@ -11,6 +11,7 @@ import cz.green.eventtool.ConnectionLine;
 import cz.green.eventtool.interfaces.Connection;
 import cz.green.eventtool.interfaces.ConnectionManager;
 import cz.green.swing.ShowException;
+import cz.omnicom.ermodeller.conceptual.NotationType;
 import cz.omnicom.ermodeller.conceptual.beans.*;
 import cz.omnicom.ermodeller.conceptual.exception.MustHave2ConnectionsException;
 import cz.omnicom.ermodeller.conceptual.exception.ParameterCannotBeNullException;
@@ -54,7 +55,7 @@ public class RelationConstruct extends ConceptualConstructItem {
         try {
             fm = ((FontManager) manager).getReferentFontMetrics();
             int width = fm.stringWidth(name), height = fm.getAscent();
-            if (ACTUAL_NOTATION == ConceptualConstructItem.CHEN) {
+            if (getType() == CHEN) {
 //			rect[0][1] = rect[0][0] + 2 * width + height;
                 rect[0][1] = rect[0][0] + 9 * height;
                 rect[1][1] = rect[1][0] + 3 * height;
@@ -134,7 +135,7 @@ public class RelationConstruct extends ConceptualConstructItem {
   		Cardinality car = new Cardinality(cCar, manager, left, top);
 		manager.add(car);
 */
-            if (ACTUAL_NOTATION != CHEN) {
+            if (getType() != CHEN) {
                 java.util.Enumeration e = connections.elements();
                 int counter = 0;
                 while (e.hasMoreElements()) {
@@ -152,11 +153,11 @@ public class RelationConstruct extends ConceptualConstructItem {
             ent.getManager().add(car);
             cCar.setName(cEnt.getName());
             //connects it to the relation
-            Connection conn = new ConnectionLine(manager, car, this);
+            Connection conn = new ConnectionLine(manager, getSchema(), car, this);
             ((ConnectionManager) manager).addConnection(conn);
             (manager).repaintItem(conn);
             //connects it to the entity
-            conn = new ConnectionLine(manager, car, ent);
+            conn = new ConnectionLine(manager, getSchema(), car, ent);
             ((ConnectionManager) manager).addConnection(conn);
             (manager).repaintItem(conn);
             return car;
@@ -183,16 +184,16 @@ public class RelationConstruct extends ConceptualConstructItem {
  */
     protected JPopupMenu createMenu(JPopupMenu menu, PopupMenuEvent event) {
         super.createMenu(menu, event);
-        if (ACTUAL_NOTATION == CHEN)
+        if (getType() == CHEN)
             addMenuItem(menu, "Add atribute", "img/mAtribute.gif", event.getComponent(), "addingAtribute", this, ConceptualConstructItem.class);
         addMenuItem(menu, "Add Connection to Entity ...", "img/mAddConnection.gif", event.getComponent(),
                 "addingConnectionToEnt", this,
                 RelationConstruct.class);
         addMenuItem(menu, "Decompose", "img/mDRelation.gif", this, "decompose", event, cz.green.event.CoordinateEvent.class);
         //addMenuItem(menu, "Compose with relation", "mCompEntity.gif", event.getComponent(), "composingRelation", this, cz.green.ermodeller.Relation.class);
-        if (ACTUAL_NOTATION == CHEN)
+        if (getType() == CHEN)
             addMenuItem(menu, "Compose with", "img/mCompEntity.gif", event.getComponent(), "removing", this, Item.class);
-        if (ACTUAL_NOTATION == CHEN)
+        if (getType() == CHEN)
             addMenuItem(menu, "Readjust size", "img/mReadjustSizeRel.gif", this, "minimizeSize", event, cz.green.event.CoordinateEvent.class);
         return menu;
     }
@@ -377,6 +378,11 @@ public class RelationConstruct extends ConceptualConstructItem {
         return model;
     }
 
+    private NotationType getType() {
+        return model.getSchema().getNotationType();
+    }
+
+
     /**
      * Returns the border point (same as <code>getBorder</code>) but according to the position
      * during moving or resizing - it's the real position. Returns the real borde.
@@ -413,7 +419,7 @@ public class RelationConstruct extends ConceptualConstructItem {
      */
     public cz.green.event.ResizePoint[] getResizePoints() {
         cz.green.event.ResizePoint[] r;
-        if (ConceptualConstructItem.ACTUAL_NOTATION == ConceptualConstructItem.CHEN) {
+        if (getType() == ConceptualConstructItem.CHEN) {
             r = new cz.green.event.ResizePoint[8];
             r[0] = new cz.green.event.ResizePoint(0, 0.5, cz.green.event.ResizePoint.LEFT);
             r[1] = new cz.green.event.ResizePoint(1, 0.5, cz.green.event.ResizePoint.RIGHT);
@@ -457,7 +463,7 @@ public class RelationConstruct extends ConceptualConstructItem {
         Item item = event.getItem();
         if (item instanceof EntityConstruct) {
             String name = "";
-            if (ACTUAL_NOTATION != ConceptualConstructItem.CHEN) {
+            if (getType() != ConceptualConstructItem.CHEN) {
                 java.util.Enumeration e = getConnections().elements();
                 CardinalityConstruct car1;
                 while (e.hasMoreElements()) {
@@ -475,7 +481,7 @@ public class RelationConstruct extends ConceptualConstructItem {
             java.awt.Point p = ((EntityConstruct) item).getAbsoluteCenter(this);
             CardinalityConstruct car = createCardinality((EntityConstruct) item, ((EntityConstruct) item).getManager(), p.x, p.y);
             car.handleMoveEvent(new MoveEvent(car.getBounds().x, car.getBounds().y, -car.getBounds().width / 2, -car.getBounds().height / 2, null));
-            if (ACTUAL_NOTATION != ConceptualConstructItem.CHEN) {
+            if (getType() != ConceptualConstructItem.CHEN) {
                 car.model.setName(this.model.getName());
                 if (name.length() > 0) car.model.setName(name);
                 car.moveCardinality(new ExMovingEvent(p.x, p.y, 0, 0, null, false));
@@ -496,7 +502,7 @@ public class RelationConstruct extends ConceptualConstructItem {
             if (event.getAdd()) {
                 EntityConstruct ent = (EntityConstruct) item;
                 try {
-                    if (ACTUAL_NOTATION == CHEN)
+                    if (getType() == CHEN)
                         ((Container) event.getComponent()).addingCardinality(new CardinalityPair(ent, this));
                     else {
                         CardinalityConstruct car = createCardinality((EntityConstruct) item, ((EntityConstruct) item).getManager(), getBounds().x, getBounds().y);
@@ -545,12 +551,12 @@ public class RelationConstruct extends ConceptualConstructItem {
     }
 
     public void handleResizeEvent(cz.green.event.ResizeEvent event) {
-        if (ACTUAL_NOTATION == CHEN)
+        if (getType() == CHEN)
             resizeRelation(event);
     }
 
     public void handleResizingEvent(cz.green.event.ResizingEvent event) {
-        if (ACTUAL_NOTATION == CHEN)
+        if (getType() == CHEN)
             resizingRelation(event);
     }
 
@@ -566,16 +572,16 @@ public class RelationConstruct extends ConceptualConstructItem {
         int width = 0;
         int height = 0;
         java.awt.FontMetrics fm;
-        switch (ACTUAL_NOTATION) {
-            case (CHEN):
+        switch (getType()) {
+            case CHEN:
                 fm = ((FontManager) manager).getReferentFontMetrics();
                 int nameWidth = fm.stringWidth(((Relation) getModel()).getName());
                 int nameHeight = fm.getAscent();
                 width = 2 * nameWidth + nameHeight;
                 height = 3 * nameHeight;
                 break;
-            case (BINARY):
-            case (UML):
+            case BINARY:
+            case UML:
                 width = 7;
                 height = 7;
                 break;
@@ -634,8 +640,8 @@ public class RelationConstruct extends ConceptualConstructItem {
         int xpoints[] = {x, r.x, x, r.x + r.width};
         int ypoints[] = {r.y, y, r.y + r.height, y};
         java.awt.Polygon p = new java.awt.Polygon(xpoints, ypoints, 4);
-        switch (ACTUAL_NOTATION) {
-            case (CHEN):
+        switch (getType()) {
+            case CHEN:
                 if (selected)
                     g.setColor(getSelectedBackgroundColor());
                 else
@@ -647,8 +653,8 @@ public class RelationConstruct extends ConceptualConstructItem {
                 String name = model.getName();
                 g.drawString(name, r.x + (r.width - fm.stringWidth(name)) / 2, r.y + (r.height + fm.getAscent()) / 2);
                 break;
-            case (BINARY):
-            case (UML):
+            case BINARY:
+            case UML:
                 g.fillPolygon(p);
                 g.setColor(getForegroundColor());
                 g.drawPolygon(p);
@@ -683,22 +689,20 @@ public class RelationConstruct extends ConceptualConstructItem {
         int ypoints[] = {r.y, y, r.y + r.height, y};
         java.awt.Polygon p = new java.awt.Polygon(xpoints, ypoints, 4);
 
-        switch (ACTUAL_NOTATION) {
-            case (CHEN):
+        switch (getType()) {
+            case CHEN:
                 g.drawPolygon(p);
                 java.awt.FontMetrics fm = g.getFontMetrics();
                 String name = model.getName();
                 g.drawString(name, r.x + (r.width - fm.stringWidth(name)) / 2, r.y + (r.height + fm.getAscent()) / 2);
                 break;
-            case (BINARY):
-            case (UML):
+            case BINARY:
+            case UML:
                 g.fillOval(x - 2, y - 2, 4, 4);
                 break;
         }
-        p = null;
-        r = null;
-
-
+//        p = null;
+//        r = null;
     }
 
     /**
@@ -712,7 +716,7 @@ public class RelationConstruct extends ConceptualConstructItem {
                 .setChanged(true);
         java.awt.Rectangle r = getBounds();
         if (e.getPropertyName().equals("name")) {
-            if (ACTUAL_NOTATION == CHEN) {
+            if (getType() == CHEN) {
                 cz.green.event.ResizeRectangle rr = new cz.green.event.ResizeRectangle(
                         0, 0, 0, 0, cz.green.event.ResizePoint.BOTTOM
                         | cz.green.event.ResizePoint.RIGHT);

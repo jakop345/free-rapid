@@ -13,6 +13,8 @@ import cz.green.event.interfaces.ContainerDesktop;
 import cz.green.event.interfaces.Item;
 import cz.green.eventtool.ContainerToolComponent;
 import cz.green.eventtool.Window;
+import cz.omnicom.ermodeller.conceptual.NotationType;
+import cz.omnicom.ermodeller.conceptual.beans.ConceptualConstruct;
 import cz.omnicom.ermodeller.conceptual.beans.Entity;
 import cz.omnicom.ermodeller.errorlog.ShowErrorEvent;
 import cz.omnicom.ermodeller.errorlog.interfaces.ShowErrorListener;
@@ -133,19 +135,14 @@ public class Container extends ContainerToolComponent implements ModeSwitcher, F
      */
     public boolean addingAtribute(ConceptualConstructItem object) {
         this.object = object;
-        if (Window.ACTUAL_NOTATION == Window.CHEN) {
+        final NotationType type = ((ConceptualConstruct) object.getModel()).getSchema().getNotationType();
+        if (type == Window.CHEN) {
             setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
             setWorkMode(ADDING_ATRIBUTE);
             return true;
         }
-        if (Window.ACTUAL_NOTATION == Window.BINARY || Window.ACTUAL_NOTATION == Window.UML) {
+        if (type == Window.BINARY || type == Window.UML) {
             (object).createAtribute(object.getBounds().x, object.getBounds().y);
-/*		int x=object.getBounds().x+5, y=object.getBounds().y+5;
-		cz.green.event.ResizeRectangle rr = new cz.green.event.ResizeRectangle(
-				0, 0, 0, 0, cz.green.event.ResizePoint.BOTTOM
-						| cz.green.event.ResizePoint.RIGHT);
-		((Entity) object).resizeEntity(new ResizeEvent(x, y, 0, 0, rr, this));
-*/
             return true;
         }
         return false;

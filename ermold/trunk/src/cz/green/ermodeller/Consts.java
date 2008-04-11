@@ -37,7 +37,7 @@ public class Consts {
     /**
      * default notation to use
      */
-    public static final int DEF_GENERAL_DEFNOTATION = ConceptualConstructItem.CHEN;
+    public static final int DEF_GENERAL_DEFNOTATION = 0;
     /**
      * default value for pkshowuml
      */

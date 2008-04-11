@@ -15,6 +15,7 @@ import cz.green.eventtool.ConnectionLine;
 import cz.green.eventtool.interfaces.Connection;
 import cz.green.eventtool.interfaces.ConnectionManager;
 import cz.green.swing.ShowException;
+import cz.omnicom.ermodeller.conceptual.NotationType;
 import cz.omnicom.ermodeller.conceptual.beans.*;
 import cz.omnicom.ermodeller.conceptual.exception.CannotHavePrimaryKeyException;
 import cz.omnicom.ermodeller.conceptual.exception.CycleWouldAppearException;
@@ -292,10 +293,11 @@ public class EntityConstruct extends ConceptualConstructItem {
         int nameWidth = fm.stringWidth(((Entity) getModel()).getName());
         if (nameWidth > width)
             width = nameWidth;
-        switch (ACTUAL_NOTATION) {
-            case (CHEN):
+        final NotationType type = model.getSchema().getNotationType();
+        switch (type) {
+            case CHEN:
                 break;
-            case (BINARY):
+            case BINARY:
                 for (int i = 0; i < getAtributes().size(); i++) {
                     AtributeConstruct a = getAtributes().get(i);
                     int x = a.getBounds().width;
@@ -303,7 +305,7 @@ public class EntityConstruct extends ConceptualConstructItem {
                 }
                 if (PKwidth > width) width = PKwidth;
                 break;
-            case (UML):
+            case UML:
                 for (int i = 0; i < getAtributes().size(); i++) {
                     AtributeConstruct a = getAtributes().get(i);
                     int x = a.getBounds().width +
@@ -313,14 +315,14 @@ public class EntityConstruct extends ConceptualConstructItem {
                 }
                 break;
         }
-        if (ConceptualConstructItem.ACTUAL_NOTATION != ConceptualConstructItem.CHEN) {
+        if (type != NotationType.CHEN) {
             for (int i = 0; i < getAtributes().size(); i++) {
                 AtributeConstruct a = getAtributes().get(i);
                 int x = a.getBounds().width;
                 if (x > width)
                     width = x;
             }
-            if (ConceptualConstructItem.ACTUAL_NOTATION == ConceptualConstructItem.BINARY) {
+            if (type == NotationType.BINARY) {
                 if (PKwidth > width)
                     width = PKwidth;
             }
@@ -377,26 +379,27 @@ public class EntityConstruct extends ConceptualConstructItem {
         int[][] s = getRect();
         int[][] r = from.getRect();
         int top;
-/*		if (ConceptualConstruct.ACTUAL_NOTATION == ConceptualConstruct.BINARY) {
+/*		if (ConceptualConstruct.type == ConceptualConstruct.BINARY) {
 		top += 20 * ((ConceptualConstruct) from).getAtributes().size(); 
 		}
 */
+        final NotationType type = model.getSchema().getNotationType();
         try {
             if (before == -1) {
                 // if it is first -> count size from the top
                 java.awt.FontMetrics fm;
                 fm = ((FontManager) manager).getReferentFontMetrics();
                 top = s[1][0] + 3 * fm.getAscent();
-                if (ACTUAL_NOTATION != CHEN) {
+                if (type != NotationType.CHEN) {
                     switch (ACTUAL_LOD) {
                         case (LOD_FULL):
                             top += 20 * getAtributes().size();
-                            if (ACTUAL_NOTATION == BINARY && PKmembers != null && PKmembers.size() > 0)
+                            if (type == BINARY && PKmembers != null && PKmembers.size() > 0)
                                 top -= 20 * (PKmembers.size() - 1);
                             break;
                         case (LOD_MEDIUM):
-                            if (ACTUAL_NOTATION == BINARY && PKmembers != null && PKmembers.size() > 0) top += 20;
-                            if (ACTUAL_NOTATION == UML && PKmembers != null && PKmembers.size() > 0)
+                            if (type == BINARY && PKmembers != null && PKmembers.size() > 0) top += 20;
+                            if (type == UML && PKmembers != null && PKmembers.size() > 0)
                                 top += 20 * PKmembers.size();
                             break;
                     }
@@ -468,12 +471,13 @@ public class EntityConstruct extends ConceptualConstructItem {
         int l = 2 * DIFFERENCE, height = l;
         int[][] r;
         getRect();
+        final NotationType type = model.getSchema().getNotationType();
         if (from == -1) {
             try {
                 java.awt.FontMetrics fm;
                 fm = ((FontManager) manager).getReferentFontMetrics();
                 height = 3 * fm.getAscent();
-                if (ACTUAL_NOTATION == BINARY) {
+                if (type == BINARY) {
                     switch (ACTUAL_LOD) {
                         case (LOD_LOW):
                             break;
@@ -488,7 +492,7 @@ public class EntityConstruct extends ConceptualConstructItem {
                             break;
                     }
                 }
-                if (ACTUAL_NOTATION == UML) {
+                if (type == UML) {
                     switch (ACTUAL_LOD) {
                         case (LOD_LOW):
                             break;
@@ -589,6 +593,7 @@ public class EntityConstruct extends ConceptualConstructItem {
      */
     protected JPopupMenu createMenu(JPopupMenu menu, PopupMenuEvent event) {
         super.createMenu(menu, event);
+        final NotationType type = model.getSchema().getNotationType();
 /*		addMenuItem(menu, "Add unique key", "mUKey.gif", event.getComponent(),
 				"addingUniqueKey", this,
 				cz.green.ermodeller.ConceptualConstruct.class);*/
@@ -631,12 +636,12 @@ public class EntityConstruct extends ConceptualConstructItem {
         addMenuItem(menu, "Readjust size", "img/mReadjustSize.gif", this,
                 "minimizeSize", event,
                 cz.green.event.CoordinateEvent.class);
-        if (ACTUAL_NOTATION == UML) {
+        if (type == UML) {
             addMenuItem(menu, "Adjacent members of PK", "img/mAdjacentPK.gif", this,
                     "collectPKatributes", null,
                     null);
         }
-        //		if (ACTUAL_NOTATION == UML) {
+        //		if (type == UML) {
         addMenuItem(menu, "Edit Constraints", "img/mEditConstraints.gif", event.getComponent(),
                 "editConstraints", this,
                 EntityConstruct.class);
@@ -680,7 +685,7 @@ public class EntityConstruct extends ConceptualConstructItem {
             manager.add(uq);
             (manager).repaintItem(uq);
             // create the connection to the
-            Connection conn = new ConnectionLine(manager, uq, this);
+            Connection conn = new ConnectionLine(manager, getModel().getSchema(), uq, this);
             ((ConnectionManager) manager).addConnection(conn);
             (manager).repaintItem(conn);
             return uq;
@@ -700,6 +705,7 @@ public class EntityConstruct extends ConceptualConstructItem {
     protected void decompose(EntityConstruct ent, Manager man) {
         java.awt.Point p = getAbsoluteCenter(ent);
         if (decomposeAsRelation) {
+            final NotationType type = model.getSchema().getNotationType();
             try {
                 // decompose using relation -- create new relation
                 RelationConstruct rel = ((ISchema) man).createRelation(p.x, p.y);
@@ -712,7 +718,7 @@ public class EntityConstruct extends ConceptualConstructItem {
                 ((Cardinality) car.getModel())
                         .setMultiCardinality(false);
                 car.handleMoveEvent(new MoveEvent(car.getBounds().x, car.getBounds().y, -car.getBounds().width / 2, -car.getBounds().height / 2, null));
-                if (ACTUAL_NOTATION != ConceptualConstructItem.CHEN) {
+                if (type != ConceptualConstructItem.CHEN) {
                     car.model.setName(this.model.getName());
                     car.moveCardinality(new ExMovingEvent(p.x, p.y, 0, 0, null, false));
                 }
@@ -723,7 +729,7 @@ public class EntityConstruct extends ConceptualConstructItem {
                 ((Cardinality) car.getModel())
                         .setMultiCardinality(false);
                 car.handleMoveEvent(new MoveEvent(car.getBounds().x, car.getBounds().y, -car.getBounds().width / 2, -car.getBounds().height / 2, null));
-                if (ACTUAL_NOTATION != ConceptualConstructItem.CHEN) {
+                if (type != ConceptualConstructItem.CHEN) {
                     car.model.setName(ent.model.getName());
                     car.moveCardinality(new ExMovingEvent(p.x, p.y, 0, 0, null, false));
                 }
@@ -767,7 +773,7 @@ public class EntityConstruct extends ConceptualConstructItem {
      *
      * @see ConceptualConstructObject#getModel()
      */
-    public Object getModel() {
+    public Entity getModel() {
         return model;
     }
 
@@ -864,6 +870,7 @@ public class EntityConstruct extends ConceptualConstructItem {
     public void handleAddRelWithConnsEvent(cz.green.event.AddRelWithConnsEvent event) throws ItemNotInsideManagerException {
         if (selected && event.getAdd())
             return;
+        final NotationType type = model.getSchema().getNotationType();
         float scale = getManager().getScale();
         Item item = event.getItem();
         java.awt.Point p = getAbsoluteCenter((EntityConstruct) item);
@@ -877,27 +884,27 @@ public class EntityConstruct extends ConceptualConstructItem {
                 p = ((EntityConstruct) item).getAbsoluteCenter(rel);
                 car = rel.createCardinality((EntityConstruct) item, man, (int) (p.x * scale), (int) (p.y * scale));
                 car.handleMoveEvent(new MoveEvent(car.getBounds().x, car.getBounds().y, -car.getBounds().width / 2, -car.getBounds().height / 2, null));
-                if (ACTUAL_NOTATION != ConceptualConstructItem.CHEN) {
+                if (type != ConceptualConstructItem.CHEN) {
                     car.model.setName(this.model.getName());
                     car.moveCardinality(new ExMovingEvent((int) (p.x * scale), (int) (p.y * scale), 0, 0, null, false));
                 }
                 p = getAbsoluteCenter(rel);
                 car = rel.createCardinality(this, man2, (int) (p.x * scale), (int) (p.y * scale));
                 car.handleMoveEvent(new MoveEvent(car.getBounds().x, car.getBounds().y, -car.getBounds().width / 2, -car.getBounds().height / 2, null));
-                if (ACTUAL_NOTATION != ConceptualConstructItem.CHEN) {
+                if (type != ConceptualConstructItem.CHEN) {
                     car.model.setName(((EntityConstruct) item).model.getName());
                     car.moveCardinality(new ExMovingEvent((int) (p.x * scale), (int) (p.y * scale), 0, 0, null, false));
                 }
             } else {
                 Manager man = getManager();
                 RelationConstruct rel = RelationConstruct.createRelation(model.getSchema(), man, (int) ((p.x + SELFRELATIONDISTANCE) * scale), (int) ((p.y + SELFRELATIONDISTANCE) * scale));
-                if (ACTUAL_NOTATION == ConceptualConstructItem.CHEN) {
+                if (type == ConceptualConstructItem.CHEN) {
                     car = rel.createCardinality((EntityConstruct) item, man, (int) ((p.x + SELFRELATIONDISTANCE) * scale) + rel.getBounds().width / 2, (int) (p.y * scale) + item.getBounds().height / 2);
                     car.move(-car.getBounds().width / 2, -car.getBounds().height / 2, true);
                     man.repaintItem(car);
                 } else
                     car = rel.createCardinality((EntityConstruct) item, man, (int) (p.x * scale), (int) (p.y * scale));
-                if (ACTUAL_NOTATION == ConceptualConstructItem.CHEN) {
+                if (type == ConceptualConstructItem.CHEN) {
                     car = rel.createCardinality(this, man, (int) (p.x * scale) + item.getBounds().width / 2, (int) ((p.y + SELFRELATIONDISTANCE) * scale) + rel.getBounds().height / 2);
                     car.move(-car.getBounds().width / 2, -car.getBounds().height / 2, true);
                     man.repaintItem(car);
@@ -912,10 +919,11 @@ public class EntityConstruct extends ConceptualConstructItem {
             return;
         float scale = getManager().getScale();
         Item item = event.getItem();
+        final NotationType type = model.getSchema().getNotationType();
         if (item instanceof RelationConstruct) {
             RelationConstruct rel = (RelationConstruct) item;
             String name = "";
-            if (ACTUAL_NOTATION != ConceptualConstructItem.CHEN) {
+            if (type != ConceptualConstructItem.CHEN) {
                 java.util.Enumeration e = rel.getConnections().elements();
                 CardinalityConstruct car1;
                 while (e.hasMoreElements()) {
@@ -933,7 +941,7 @@ public class EntityConstruct extends ConceptualConstructItem {
             java.awt.Point p = ((RelationConstruct) item).getAbsoluteCenter(this);
             CardinalityConstruct car = ((RelationConstruct) item).createCardinality(this, ((RelationConstruct) item).getManager(), (int) (p.x * scale), (int) (p.y * scale));
             car.handleMoveEvent(new MoveEvent(car.getBounds().x, car.getBounds().y, -car.getBounds().width / 2, -car.getBounds().height / 2, null));
-            if (ACTUAL_NOTATION != ConceptualConstructItem.CHEN) {
+            if (type != ConceptualConstructItem.CHEN) {
                 car.model.setName(this.model.getName());
                 if (name.length() > 0) car.model.setName(name);
                 car.moveCardinality(new ExMovingEvent((int) (p.x * scale), (int) (p.y * scale), 0, 0, null, false));
@@ -958,6 +966,7 @@ public class EntityConstruct extends ConceptualConstructItem {
         if (selected && event.getAdd())
             return;
         Item item = event.getItem();
+        final NotationType type = model.getSchema().getNotationType();
         if (item instanceof EntityConstruct) {
             // entity over
             if (event.getAdd()) {
@@ -982,7 +991,7 @@ public class EntityConstruct extends ConceptualConstructItem {
             if (event.getAdd()) {
                 RelationConstruct rel = (RelationConstruct) item;
                 try {
-                    if (ACTUAL_NOTATION == CHEN)
+                    if (type == CHEN)
                         ((Container) event.getComponent()).addingCardinality(new CardinalityPair(this, rel));
                     else {
                         java.awt.Point p = ((RelationConstruct) item).getAbsoluteCenter(this);
@@ -1322,6 +1331,7 @@ public class EntityConstruct extends ConceptualConstructItem {
         int y = 0;
         java.awt.FontMetrics fm = g.getFontMetrics();
         String name = model.getName();
+        final NotationType type = model.getSchema().getNotationType();
         java.awt.Rectangle r = getBounds();
         final Stroke stroke = updateStrokeWithAliasing(g);
         //setDefaultSize(e, fm);
@@ -1335,7 +1345,7 @@ public class EntityConstruct extends ConceptualConstructItem {
         g.fillRect(r.x, r.y, r.width, r.height);
         g.setColor(getEntityForegroundColor());
         g.drawRect(r.x, r.y, r.width, r.height);
-        switch (ACTUAL_NOTATION) {
+        switch (type) {
             case CHEN:
                 y = r.y + (r.height + fm.getAscent()) / 2;
                 if ((ISAChilds != null) && (ISAChilds.size() > 0))
@@ -1370,8 +1380,10 @@ public class EntityConstruct extends ConceptualConstructItem {
                     }
                 }
                 break;
+            default:
+                assert false;
         }
-        if (isStrongAddictionChild && ACTUAL_NOTATION == CHEN) {
+        if (isStrongAddictionChild && type == CHEN) {
             g.drawRect(r.x + diff, r.y + diff, r.width - 2 * diff, r.height - 2 * diff);
         }
         g.drawString(name, r.x + (r.width - fm.stringWidth(name)) / 2, y);
@@ -1386,11 +1398,12 @@ public class EntityConstruct extends ConceptualConstructItem {
         int y = 0;
         java.awt.FontMetrics fm = g.getFontMetrics();
         String name = model.getName();
+        final NotationType type = model.getSchema().getNotationType();
         java.awt.Rectangle r = getBounds();
         int diff = (int) (EntityConstruct.getDIFFERENCE() / (getManager()).getScale());
         g.setColor(getEntityForegroundColor());
         g.drawRect(r.x, r.y, r.width, r.height);
-        switch (ACTUAL_NOTATION) {
+        switch (type) {
             case CHEN:
                 y = r.y + (r.height + fm.getAscent()) / 2;
                 if ((ISAChilds != null) && (ISAChilds.size() > 0))
@@ -1426,11 +1439,11 @@ public class EntityConstruct extends ConceptualConstructItem {
                 }
                 break;
         }
-        if (isStrongAddictionChild && ACTUAL_NOTATION == CHEN) {
+        if (isStrongAddictionChild && type == NotationType.CHEN) {
             g.drawRect(r.x + diff, r.y + diff, r.width - 2 * diff, r.height - 2 * diff);
         }
         g.drawString(name, r.x + (r.width - fm.stringWidth(name)) / 2, y);
-        r = null;
+        //r = null;
     }
 
     /**
@@ -1495,8 +1508,9 @@ public class EntityConstruct extends ConceptualConstructItem {
         int count = getAtributes().size();
         int PKmembersCount = getPKmembers().size();
         AtributeConstruct a, pk;
+        final NotationType type = model.getSchema().getNotationType();
         java.awt.FontMetrics fm = ((FontManager) manager).getReferentFontMetrics();
-        if (ACTUAL_NOTATION == BINARY) {
+        if (type == BINARY) {
             for (int i = 0; i < count; i++) {
                 a = (getAtributes().get(i));
                 if (PKmembers.contains(a)) {
@@ -1544,7 +1558,7 @@ public class EntityConstruct extends ConceptualConstructItem {
                 //collectPKatributes();
             }
         }
-        if (ACTUAL_NOTATION == UML) {
+        if (type == UML) {
             for (int i = 0; i < count; i++) {
                 a = (getAtributes().get(i));
                 dx = getBounds().x + 5 - a.getBounds().x;

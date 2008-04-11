@@ -21,6 +21,7 @@ import cz.omnicom.ermodeller.typeseditor.UserTypeStorage;
 import cz.omnicom.ermodeller.typeseditor.UserTypeStorageVector;
 
 import javax.swing.*;
+import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -83,7 +84,8 @@ public class Desktop extends DesktopTool implements FontManager,
      */
     public void composeEntityOld(Entity e1,
                                  Entity e2) {
-        Vector v1 = e1.getAtributes(), v2 = e2.getAtributes();
+        Vector<Atribute> v1 = e1.getAtributes();
+        Vector<Atribute> v2 = e2.getAtributes();
         int i, j;
         Atribute atrM1, atrM2;
         AtributeConstruct atr2, atr1;
@@ -91,11 +93,11 @@ public class Desktop extends DesktopTool implements FontManager,
         EntityConstruct ent2 = getEntity(e2.getID()), ent1 = getEntity(e1.getID());
 
         for (i = 0; i < v2.size(); i++) {
-            atrM2 = (Atribute) v2.get(i);
+            atrM2 = v2.get(i);
             atr2 = getAtribute(atrM2.getID());
             atr1 = null;
             for (j = 0; j < v1.size(); j++) {
-                atrM1 = (Atribute) v1.get(i);
+                atrM1 = v1.get(i);
                 if (atrM1.getName().equals(atrM2.getName())) {
                     atr1 = getAtribute(atrM1.getID());
                 }
@@ -240,14 +242,14 @@ public class Desktop extends DesktopTool implements FontManager,
     /**
      * Returns vector of all entities in the schema
      */
-    private Vector getAllEntities(DGroupTool dg) {
+    private Vector<Item> getAllEntities(DGroupTool dg) {
         int cnt;
         if (dg == null)
             cnt = getItemCount();
         else
             cnt = dg.getItemCount();
 
-        Vector retval = new Vector();
+        Vector<Item> retval = new Vector<Item>();
         Item item;
         for (int i = 0; i < cnt; i++) {
             if (dg == null)
@@ -255,7 +257,7 @@ public class Desktop extends DesktopTool implements FontManager,
             else
                 item = dg.getItem(i);
             if (item instanceof DGroupTool) {
-                Vector sub;
+                Vector<Item> sub;
                 if ((sub = getAllEntities((DGroupTool) item)).size() != 0) {
                     retval.addAll(sub);
                 }
@@ -268,21 +270,21 @@ public class Desktop extends DesktopTool implements FontManager,
     /**
      * Returns vector of all entities in the schema
      */
-    public Vector getAllEntities() {
+    public Vector<Item> getAllEntities() {
         return getAllEntities(null);
     }
 
     /**
      * Returns vector of all relationships in the schema
      */
-    private Vector getAllRelations(DGroupTool dg) {
+    private Vector<Item> getAllRelations(DGroupTool dg) {
         int cnt;
         if (dg == null)
             cnt = getItemCount();
         else
             cnt = dg.getItemCount();
 
-        Vector retval = new Vector();
+        Vector<Item> retval = new Vector<Item>();
         Item item;
         for (int i = 0; i < cnt; i++) {
             if (dg == null)
@@ -290,7 +292,7 @@ public class Desktop extends DesktopTool implements FontManager,
             else
                 item = dg.getItem(i);
             if (item instanceof DGroupTool) {
-                Vector sub;
+                Vector<Item> sub;
                 if ((sub = getAllRelations((DGroupTool) item)).size() != 0) {
                     retval.addAll(sub);
                 }
@@ -303,16 +305,16 @@ public class Desktop extends DesktopTool implements FontManager,
     /**
      * Returns vector of all relationships in the schema
      */
-    public Vector getAllRelations() {
+    public Vector<Item> getAllRelations() {
         return getAllRelations(null);
     }
 
     /**
      * Returns vector of all relationships which have at least one atribute
      */
-    public Vector getRelationsWithAttribute(boolean namesOnly) {
-        Vector rels = getAllRelations();
-        Vector relsWithAtributes = new Vector(3, 2);
+    public Vector<Serializable> getRelationsWithAttribute(boolean namesOnly) {
+        Vector<Item> rels = getAllRelations();
+        Vector<Serializable> relsWithAtributes = new Vector<Serializable>(3, 2);
         for (Object rel1 : rels) {
             RelationConstruct rel = (RelationConstruct) rel1;
             /*Check for aributes*/
@@ -327,9 +329,9 @@ public class Desktop extends DesktopTool implements FontManager,
     /**
      * Returns vector of all relationships which have less than two connections to entities
      */
-    public Vector getRelationsWithoutConnection(boolean namesOnly) {
-        Vector rels = getAllRelations();
-        Vector relsNoConn = new Vector(3, 2);
+    public Vector<Serializable> getRelationsWithoutConnection(boolean namesOnly) {
+        Vector<Item> rels = getAllRelations();
+        Vector<Serializable> relsNoConn = new Vector<Serializable>(3, 2);
         int connCounter;
         for (Object rel1 : rels) {
             RelationConstruct rel = (RelationConstruct) rel1;
@@ -361,9 +363,9 @@ public class Desktop extends DesktopTool implements FontManager,
     /**
      * Returns vector of all relationships which have more than two connections to entities
      */
-    public Vector getTernaryRelations(boolean namesOnly) {
-        Vector rels = getAllRelations();
-        Vector relsTernary = new Vector(3, 2);
+    public Vector<Serializable> getTernaryRelations(boolean namesOnly) {
+        Vector<Item> rels = getAllRelations();
+        Vector<Serializable> relsTernary = new Vector<Serializable>(3, 2);
         int connCounter;
         for (Object rel1 : rels) {
             RelationConstruct rel = (RelationConstruct) rel1;
@@ -395,7 +397,7 @@ public class Desktop extends DesktopTool implements FontManager,
      * Delete all relationships which have less than two connections to entities
      */
     public void delRelsWithoutConnection() {
-        Vector RC = getRelationsWithoutConnection(false);
+        Vector<Serializable> RC = getRelationsWithoutConnection(false);
         for (Object aRC : RC) {
             RelationConstruct rel = (RelationConstruct) aRC;
             rel.handleRemoveEvent(new RemoveEvent(rel.getBounds().x, rel.getBounds().y, null));
@@ -406,7 +408,7 @@ public class Desktop extends DesktopTool implements FontManager,
      * Decompose all relationships which have atribute
      */
     public void decomposeRelsWithAtributes(Container place) {
-        Vector RA = getRelationsWithAttribute(false);
+        Vector<Serializable> RA = getRelationsWithAttribute(false);
         for (Object aRA : RA) {
             RelationConstruct rel = (RelationConstruct) aRA;
             rel.decompose(new SelectItemEvent(rel.getBounds().x, rel.getBounds().x, false, place));
@@ -417,7 +419,7 @@ public class Desktop extends DesktopTool implements FontManager,
      * Decompose all ternary relationships
      */
     public void decomposeTernaryRels(Container place) {
-        Vector TR = getTernaryRelations(false);
+        Vector<Serializable> TR = getTernaryRelations(false);
         for (Object aTR : TR) {
             RelationConstruct rel = (RelationConstruct) aTR;
             rel.decompose(new SelectItemEvent(rel.getBounds().x, rel.getBounds().x, false, place));
@@ -428,7 +430,7 @@ public class Desktop extends DesktopTool implements FontManager,
      * Switch all connetions to the other side of relationship
      */
     public void switchAllRConnectionsCard(Container place) {
-        Vector R = getAllRelations();
+        Vector<Item> R = getAllRelations();
         Cardinality car1M, car2M;
         for (Object aR : R) {
             RelationConstruct rel = (RelationConstruct) aR;
@@ -468,7 +470,7 @@ public class Desktop extends DesktopTool implements FontManager,
      * Switch all connetions to the other side of relationship
      */
     public void switchAllRConnectionsBoth(Container place) {
-        Vector R = getAllRelations();
+        Vector<Item> R = getAllRelations();
         Cardinality car1M, car2M;
         for (Object aR : R) {
             RelationConstruct rel = (RelationConstruct) aR;
@@ -509,7 +511,7 @@ public class Desktop extends DesktopTool implements FontManager,
      * Switch all connetions to the other side of relationship
      */
     public void switchAllRConnectionsArb(Container place) {
-        Vector allRelations = getAllRelations();
+        Vector<Item> allRelations = getAllRelations();
         Cardinality car1M, car2M;
         for (Object allRelation : allRelations) {
             RelationConstruct rel = (RelationConstruct) allRelation;
@@ -691,7 +693,8 @@ public class Desktop extends DesktopTool implements FontManager,
             item.addActionListener(new ParamActionAdapter(getPaintPlace(),
                     "addingEntity", null, EntityConstruct.class));
             menu.add(item);
-            if (ConceptualConstructItem.ACTUAL_NOTATION == ConceptualConstructItem.CHEN) {
+
+            if (model.getNotationType() == ConceptualConstructItem.CHEN) {
                 item = new JMenuItem("Add relationship", new ImageIcon(ClassLoader
                         .getSystemResource("img/mRelation.gif")));
                 item.setHorizontalTextPosition(JMenuItem.RIGHT);

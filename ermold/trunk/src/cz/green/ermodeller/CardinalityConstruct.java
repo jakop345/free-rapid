@@ -209,7 +209,7 @@ public class CardinalityConstruct extends ConceptualConstructObject {
 //	int eventDx = (int) (event.getDx()/scale);
 //	int eventDy = (int) (event.getDy()/scale);
 
-        if (ACTUAL_NOTATION == BINARY || ACTUAL_NOTATION == UML) {
+        if (getNotationType() == BINARY || getNotationType() == UML) {
             if (eventX < er.x) {
                 dx = (er.x - r.width / 2) - cardinalityCenter.x;
                 if (cardinalityCenter.y + r.height / 2 + eventDy >= er.y
@@ -269,7 +269,7 @@ public class CardinalityConstruct extends ConceptualConstructObject {
 	int eventDx = (int) (event.getDx());
 	int eventDy = (int) (event.getDy());
 */
-        if (ConceptualConstructItem.ACTUAL_NOTATION == ConceptualConstructItem.BINARY || ACTUAL_NOTATION == UML) {
+        if (getNotationType() == ConceptualConstructItem.BINARY || getNotationType() == UML) {
             if (cardinalityCenter.x < er.x && cardinalityCenter.y < er.y) {
                 dx = er.x - cardinalityCenter.x + r.height / 5;
                 dy = er.y - cardinalityCenter.y - r.height / 2;
@@ -316,7 +316,7 @@ public class CardinalityConstruct extends ConceptualConstructObject {
             rel.removeCardinality(this);
             super.handleRemoveEvent(event);
 /*	neni mozno pouzit protoze pri decompose to chce mazat vztah, ktery je posleze smazan jinou metodou, ktera jej nenajde
-  			if(ACTUAL_NOTATION != CHEN)
+  			if(getNotationType() != CHEN)
 			if (rel.getConnections() == null || rel.getConnections().size() == 0)
 				rel.handleRemoveEvent(new RemoveEvent(rel.getBounds().x, rel.getBounds().y, null));
 */
@@ -359,8 +359,8 @@ public class CardinalityConstruct extends ConceptualConstructObject {
         boolean multiCard = model.getMultiCardinality();
         java.awt.FontMetrics fm = g.getFontMetrics();
         String ir;
-        switch (ACTUAL_NOTATION) {
-            case (CHEN):
+        switch (getNotationType()) {
+            case CHEN:
                 if (selected) {
                     g.setColor(getSelectedBackgroundColor());
                     g.fillRect(r.x, r.y, r.width, r.height);
@@ -370,7 +370,7 @@ public class CardinalityConstruct extends ConceptualConstructObject {
                 g.drawString(ir, r.x + (r.width - fm.stringWidth(ir)) / 2, r.y + fm.getAscent());
                 g.drawString(name, r.x + (r.width - fm.stringWidth(name)) / 2, r.y + r.height);
                 break;
-            case (BINARY):
+            case BINARY:
                 if (selected) {
                     g.setColor(getSelectedBackgroundColor());
                     g.fillRect(r.x, r.y, r.width, r.height);
@@ -417,7 +417,7 @@ public class CardinalityConstruct extends ConceptualConstructObject {
                     g.drawRect(r.x, r.y, r.width, r.height);
                 }
                 break;
-            case (UML):
+            case UML:
                 if (selected) {
                     g.setColor(getSelectedBackgroundColor());
                     g.fillRect(r.x, r.y, r.width, r.height);
@@ -477,14 +477,14 @@ public class CardinalityConstruct extends ConceptualConstructObject {
         boolean multiCard = model.getMultiCardinality();
         java.awt.FontMetrics fm = g.getFontMetrics();
         String ir;
-        switch (ACTUAL_NOTATION) {
-            case (CHEN):
+        switch (getNotationType()) {
+            case CHEN:
                 g.setColor(getForegroundColor());
                 ir = ((arbitrary) ? "1" : "0") + ":" + ((multiCard) ? "N" : "1");
                 g.drawString(ir, r.x + (r.width - fm.stringWidth(ir)) / 2, r.y + fm.getAscent());
                 g.drawString(name, r.x + (r.width - fm.stringWidth(name)) / 2, r.y + r.height);
                 break;
-            case (BINARY):
+            case BINARY:
                 g.setColor(getForegroundColor());
                 ir = ((arbitrary) ? "1" : "0") + ":" + ((multiCard) ? "N" : "1");
                 java.awt.Point cardinalityCenter = getCenter();
@@ -527,7 +527,7 @@ public class CardinalityConstruct extends ConceptualConstructObject {
                     g.drawRect(r.x, r.y, r.width, r.height);
                 }
                 break;
-            case (UML):
+            case UML:
                 g.setColor(getForegroundColor());
                 ir = ((arbitrary) ? "1" : "0") + ".." + ((multiCard) ? "*" : "1");
                 if (SHOW_SHORTEN_CARD_IN_UML == 1 && !arbitrary && multiCard) ir = "*";
@@ -561,7 +561,7 @@ public class CardinalityConstruct extends ConceptualConstructObject {
         if (e.getPropertyName().equals("arbitrary")) {
             ConnectionLine conn = getRelationConnectionLine();
             conn.setConnectionMandatory(model.getArbitrary());
-            if (ACTUAL_NOTATION == BINARY) {
+            if (getNotationType() == BINARY) {
                 java.awt.Rectangle r = conn.getBounds();
                 conn.getManager().repaintRectangle(r.x, r.y, r.width, r.height);
             }

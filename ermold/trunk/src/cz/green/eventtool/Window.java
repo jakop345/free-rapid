@@ -4,6 +4,7 @@ import cz.green.event.WindowItem;
 import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.interfaces.Manager;
 import cz.green.eventtool.interfaces.Printable;
+import cz.omnicom.ermodeller.conceptual.NotationType;
 
 /**
  * This class has the same functionality as predecessor. Adds only one methods, which is caused by implementing the
@@ -29,15 +30,15 @@ public class Window extends WindowItem implements Printable {
     /**
      * Graphic notation - Chan
      */
-    public final static int CHEN = 0;
+    public final static NotationType CHEN = NotationType.CHEN;
     /**
      * Graphic notation - Binary
      */
-    public final static int BINARY = 1;
+    public final static NotationType BINARY = NotationType.BINARY;
     /**
      * Graphic notation - UML
      */
-    public final static int UML = 2;
+    public final static NotationType UML = NotationType.UML;
     /**
      * Actual graphic notation
      */
