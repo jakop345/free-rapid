@@ -24,7 +24,7 @@ import java.awt.*;
  *
  * @see ConceptualConstruct#createAtribute(int,int)
  */
-public class Atribute extends ConceptualObject {
+public class AtributeConstruct extends ConceptualConstructObject {
     /**
      * The owner of the atribute
      */
@@ -53,9 +53,9 @@ public class Atribute extends ConceptualObject {
      *          Thrown by inherited constructor.
      * @throws <code>cz.green.event.ImpossibleNegativeValueException</code>
      *          Thrown by inherited constructor.
-     * @see ConceptualObject#ConceptualObject(cz.green.event.interfaces.Manager ,int,int,int,int)
+     * @see ConceptualConstructObject#ConceptualConstructObject(cz.green.event.interfaces.Manager ,int,int,int,int)
      */
-    public Atribute(cz.omnicom.ermodeller.conceptual.Atribute atr, ConceptualConstruct cc, Manager manager, int left, int top) throws NullPointerException, ImpossibleNegativeValueException {
+    public AtributeConstruct(cz.omnicom.ermodeller.conceptual.Atribute atr, ConceptualConstruct cc, Manager manager, int left, int top) throws NullPointerException, ImpossibleNegativeValueException {
         super(manager, left, top, 50, 50);
         //set model
         this.cc = cc;
@@ -171,7 +171,7 @@ public class Atribute extends ConceptualObject {
                 getPosition() == ((EntityConstruct) cc).PKmembers.size() + 1)
             return;
         int actualPosition = getPosition();
-        Atribute upperAttr = cc.findAttributeWithPosition(actualPosition - 1);
+        AtributeConstruct upperAttr = cc.findAttributeWithPosition(actualPosition - 1);
         upperAttr.setPosition(actualPosition);
         this.setPosition(actualPosition - 1);
         if (getOwner() instanceof EntityConstruct) ((EntityConstruct) cc).recalculatePositionsOfAtributes();
@@ -187,7 +187,7 @@ public class Atribute extends ConceptualObject {
                 getPosition() == ((EntityConstruct) cc).PKmembers.size())
             return;
         int actualPosition = getPosition();
-        Atribute upperAttr = cc.findAttributeWithPosition(actualPosition + 1);
+        AtributeConstruct upperAttr = cc.findAttributeWithPosition(actualPosition + 1);
         upperAttr.setPosition(actualPosition);
         this.setPosition(actualPosition + 1);
         if (getOwner() instanceof EntityConstruct) ((EntityConstruct) cc).recalculatePositionsOfAtributes();
@@ -229,13 +229,13 @@ public class Atribute extends ConceptualObject {
         if (newPosition == actualPosition) return;
         if (newPosition > actualPosition) {
             for (int i = 0; i < cc.Attribs.size(); i++) {
-                Atribute a = (cz.green.ermodeller.Atribute) cc.Attribs.get(i);
+                AtributeConstruct a = (AtributeConstruct) cc.Attribs.get(i);
                 if (a.getPosition() > actualPosition && a.getPosition() <= newPosition)
                     a.setPosition(a.getPosition() - 1);
             }
         } else
             for (int i = 0; i < cc.Attribs.size(); i++) {
-                Atribute a = (cz.green.ermodeller.Atribute) cc.Attribs.get(i);
+                AtributeConstruct a = (AtributeConstruct) cc.Attribs.get(i);
                 if (a.getPosition() >= newPosition && a.getPosition() < actualPosition)
                     a.setPosition(a.getPosition() + 1);
             }
@@ -263,7 +263,7 @@ public class Atribute extends ConceptualObject {
      *
      * @param atr <code>cz.green.ermodeller.Atribute</code> added atribute
      */
-    public void createUnique(Atribute atr) {
+    public void createUnique(AtributeConstruct atr) {
         int l = rect[0][0], t = rect[1][0];
         EntityConstruct ent = (EntityConstruct) atr.getOwner();
         int[][] r = ent.getRect();
@@ -273,7 +273,7 @@ public class Atribute extends ConceptualObject {
             l -= 15;
         if (t > r[1][0]) t -= 15;
         else t += 15;
-        UniqueKey uni = ent.createUniqueKey(l, t);
+        UniqueKeyConstruct uni = ent.createUniqueKey(l, t);
         uni.addAtribute(atr);
     }
 
@@ -370,11 +370,11 @@ public class Atribute extends ConceptualObject {
         if (selected && event.getAdd())
             return;
         Item item = event.getItem();
-        if (item instanceof UniqueKey) {
+        if (item instanceof UniqueKeyConstruct) {
             //over me is unique key
             if (event.getAdd()) {
                 //to add the atribute
-                UniqueKey uk = (UniqueKey) item;
+                UniqueKeyConstruct uk = (UniqueKeyConstruct) item;
                 if ((uk.connectionTo(this) == null) && (uk.getOwner() == getOwner())) {
                     event.getComponent().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
                     return;
@@ -398,13 +398,13 @@ public class Atribute extends ConceptualObject {
         if (selected && event.getAdd())
             return;
         Item item = event.getItem();
-        if (item instanceof UniqueKey) {
+        if (item instanceof UniqueKeyConstruct) {
             //above is unique key
             if (event.getAdd()) {
                 //add atribute to the unique key
-                UniqueKey uk = (UniqueKey) item;
+                UniqueKeyConstruct uk = (UniqueKeyConstruct) item;
                 if ((uk.connectionTo(this) == null) && (uk.getOwner() == getOwner())) {
-                    ((UniqueKey) item).addAtribute(this);
+                    ((UniqueKeyConstruct) item).addAtribute(this);
                     event.setDropped(true);
                 }
             } else {
@@ -412,7 +412,7 @@ public class Atribute extends ConceptualObject {
                 Connection conn = connectionTo(item);
                 if (conn != null) {
                     try {
-                        ((cz.omnicom.ermodeller.conceptual.UniqueKey) (((UniqueKey) item).getModel())).removeAtribute(model);
+                        ((cz.omnicom.ermodeller.conceptual.UniqueKey) (((UniqueKeyConstruct) item).getModel())).removeAtribute(model);
                         conn.disconnect();
                     } catch (Throwable x) {
                         ShowException d = new ShowException(null, "Error", x, true);
@@ -465,7 +465,7 @@ public class Atribute extends ConceptualObject {
      */
     protected boolean isInUniqueKey() {
         for (int i = connections.size() - 1; i >= 0; i--) {
-            if (((Connection) connections.elementAt(i)).isConnectedTo(UniqueKey.class) != null)
+            if (((Connection) connections.elementAt(i)).isConnectedTo(UniqueKeyConstruct.class) != null)
                 return true;
         }
         return false;

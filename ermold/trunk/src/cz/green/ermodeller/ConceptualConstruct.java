@@ -19,7 +19,7 @@ import java.util.Vector;
  * This type is ancestor of the classes Entity and Relation. Makes the common functions
  * of these two types. It means all function about atributes and unique keys.
  */
-public class ConceptualConstruct extends ConceptualObject {
+public class ConceptualConstruct extends ConceptualConstructObject {
     /**
      * All attributes
      */
@@ -29,7 +29,7 @@ public class ConceptualConstruct extends ConceptualObject {
     /**
      * The same functionality as inhereted constructor.
      *
-     * @see ConceptualObject#ConceptualObject(cz.green.event.interfaces.Manager , int, int, int, int)
+     * @see ConceptualConstructObject#ConceptualConstructObject(cz.green.event.interfaces.Manager , int, int, int, int)
      */
     public ConceptualConstruct(Manager manager, int left, int top, int width, int height) throws NullPointerException, ImpossibleNegativeValueException {
         super(manager, left, top, width, height);
@@ -42,15 +42,15 @@ public class ConceptualConstruct extends ConceptualObject {
      * @param cc The object to which we looks for the connection.
      * @return The instance of the class <code>Cardinality</code> or <code>null</code>.
      */
-    protected Cardinality cardinalityWith(ConceptualConstruct cc) {
+    protected CardinalityConstruct cardinalityWith(ConceptualConstruct cc) {
         java.util.Enumeration e = connections.elements();
         while (e.hasMoreElements()) {
             Connection c = ((Connection) e.nextElement());
-            Cardinality car = null;
-            if (c.getOne() instanceof Cardinality)
-                car = (Cardinality) c.getOne();
-            if (c.getTwo() instanceof Cardinality)
-                car = (Cardinality) c.getTwo();
+            CardinalityConstruct car = null;
+            if (c.getOne() instanceof CardinalityConstruct)
+                car = (CardinalityConstruct) c.getOne();
+            if (c.getTwo() instanceof CardinalityConstruct)
+                car = (CardinalityConstruct) c.getTwo();
             if (car != null) {
                 if (car.connectionTo(cc) != null)
                     return car;
@@ -66,13 +66,13 @@ public class ConceptualConstruct extends ConceptualObject {
      * @param top  The y coordinate of the left top point of the new atribute.
      * @return The new created atribute.
      */
-    public Atribute createAtribute(int left, int top) {
+    public AtributeConstruct createAtribute(int left, int top) {
         try {
             //create model - atribute
             cz.omnicom.ermodeller.conceptual.ConceptualConstruct cCc = (cz.omnicom.ermodeller.conceptual.ConceptualConstruct) getModel();
             cz.omnicom.ermodeller.conceptual.Atribute cAtr = cCc.createAtribute();
             //create atribute (view-controller)
-            Atribute atr = new Atribute(cAtr, this, manager, left, top);
+            AtributeConstruct atr = new AtributeConstruct(cAtr, this, manager, left, top);
             manager.add(atr);
             //repaint atribute
             (manager).repaintItem(atr);
@@ -110,11 +110,11 @@ public class ConceptualConstruct extends ConceptualObject {
     /**
      * Returns all atributes of this construct
      */
-    public Vector<Atribute> getAtributes() {
-        Vector<Atribute> v = new java.util.Vector<Atribute>();
-        Atribute atr;
+    public Vector<AtributeConstruct> getAtributes() {
+        Vector<AtributeConstruct> v = new java.util.Vector<AtributeConstruct>();
+        AtributeConstruct atr;
         for (int i = connections.size() - 1; i >= 0; i--) {
-            if ((atr = (Atribute) ((Connection) connections.elementAt(i)).isConnectedTo(Atribute.class)) != null)
+            if ((atr = (AtributeConstruct) ((Connection) connections.elementAt(i)).isConnectedTo(AtributeConstruct.class)) != null)
                 v.add(atr);
         }
         return v;
@@ -129,18 +129,18 @@ public class ConceptualConstruct extends ConceptualObject {
         if (selected && event.getAdd())
             return;
         Item item = event.getItem();
-        if (item instanceof Atribute) {
+        if (item instanceof AtributeConstruct) {
             if (event.getAdd()) {
-                Atribute atr = (Atribute) item;
+                AtributeConstruct atr = (AtributeConstruct) item;
                 if (atr.getOwner() != this) {
                     event.getComponent().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
                     return;
                 }
             }
         }
-        if (item instanceof Cardinality) {
+        if (item instanceof CardinalityConstruct) {
             if (event.getAdd()) {
-                Cardinality car = (Cardinality) item;
+                CardinalityConstruct car = (CardinalityConstruct) item;
                 if (car.connectionTo(this) == null) {
                     event.getComponent().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
                     return;
@@ -155,18 +155,18 @@ public class ConceptualConstruct extends ConceptualObject {
      * Can work only with atributes (moving atributes between conceptual consatructs) and cardinalities
      * (reconnecting the cardinalities).
      *
-     * @see #moveAtribute(cz.green.ermodeller.Atribute)
-     * @see Cardinality#reconnect(cz.green.ermodeller.ConceptualConstruct)
+     * @see #moveAtribute(AtributeConstruct)
+     * @see CardinalityConstruct#reconnect(cz.green.ermodeller.ConceptualConstruct)
      */
     public void handleDropAboveEvent(DropAboveEvent event) {
         if (selected && event.getAdd())
             return;
 //	event.getComponent().setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         Item item = event.getItem();
-        if (item instanceof Atribute) {
+        if (item instanceof AtributeConstruct) {
             if (event.getAdd()) {
                 //move atribute
-                Atribute atr = (Atribute) item;
+                AtributeConstruct atr = (AtributeConstruct) item;
                 if (atr.getOwner() != this) {
                     reconnectAtribute(atr);
                     if (ACTUAL_NOTATION != CHEN) {
@@ -178,10 +178,10 @@ public class ConceptualConstruct extends ConceptualObject {
                 }
             }
         }
-        if (item instanceof Cardinality) {
+        if (item instanceof CardinalityConstruct) {
             if (event.getAdd()) {
                 //reconnect cardinality
-                Cardinality car = (Cardinality) item;
+                CardinalityConstruct car = (CardinalityConstruct) item;
                 if (car.connectionTo(this) == null) {
                     car.reconnect(this);
                     event.setDropped(true);
@@ -265,12 +265,12 @@ public class ConceptualConstruct extends ConceptualObject {
      * Each atribute is moved by <code>moveAtribute</code>.
      *
      * @param cc The new owner of all atributes.
-     * @see #moveAtribute(Atribute)
+     * @see #moveAtribute(AtributeConstruct)
      */
     protected void reconnectAllAtributes(ConceptualConstruct cc) {
-        Atribute atr;
+        AtributeConstruct atr;
         for (int i = connections.size() - 1; i >= 0; i--) {
-            if ((atr = (Atribute) ((Connection) connections.elementAt(i)).isConnectedTo(Atribute.class)) != null)
+            if ((atr = (AtributeConstruct) ((Connection) connections.elementAt(i)).isConnectedTo(AtributeConstruct.class)) != null)
                 cc.reconnectAtribute(atr);
             //cc.Attribs.addElement(atr);
         }
@@ -286,10 +286,10 @@ public class ConceptualConstruct extends ConceptualObject {
         Connection c;
         for (int i = connections.size() - 1; i >= 0; i--) {
             c = (Connection) connections.elementAt(i);
-            if (c.getOne() instanceof Cardinality)
-                ((Cardinality) c.getOne()).reconnect(cc);
-            if (c.getTwo() instanceof Cardinality)
-                ((Cardinality) c.getTwo()).reconnect(cc);
+            if (c.getOne() instanceof CardinalityConstruct)
+                ((CardinalityConstruct) c.getOne()).reconnect(cc);
+            if (c.getTwo() instanceof CardinalityConstruct)
+                ((CardinalityConstruct) c.getTwo()).reconnect(cc);
         }
     }
 
@@ -298,10 +298,10 @@ public class ConceptualConstruct extends ConceptualObject {
      * It means moving it the model, removing from the old construct's manager, putting to the
      * new construct manager and creating the connection to the new owner.
      */
-    public void reconnectAtribute(Atribute atr) {
+    public void reconnectAtribute(AtributeConstruct atr) {
         try {
             //move model's atribute
-            if (ACTUAL_NOTATION != CHEN && this instanceof Relation) {
+            if (ACTUAL_NOTATION != CHEN && this instanceof RelationConstruct) {
                 javax.swing.JOptionPane
                         .showMessageDialog(
                                 null,
@@ -349,7 +349,7 @@ public class ConceptualConstruct extends ConceptualObject {
      * @throws <code>cz.omnicom.ermodeller.conceptual.WasNotFound</code>
      *          Thrown by model object.
      */
-    public void removeAtribute(Atribute atr) throws ParameterCannotBeNullException, WasNotFoundException {
+    public void removeAtribute(AtributeConstruct atr) throws ParameterCannotBeNullException, WasNotFoundException {
         cz.omnicom.ermodeller.conceptual.ConceptualConstruct cCc = (cz.omnicom.ermodeller.conceptual.ConceptualConstruct) getModel();
         cCc.disposeAtribute((cz.omnicom.ermodeller.conceptual.Atribute) atr.getModel());
     }
@@ -360,9 +360,9 @@ public class ConceptualConstruct extends ConceptualObject {
      * @param event This remove event is sent to all disposed cardinalities.
      */
     protected void removeCardinalities(cz.green.event.RemoveEvent event) {
-        Cardinality car;
+        CardinalityConstruct car;
         for (int i = connections.size() - 1; i >= 0; i--) {
-            if ((car = (Cardinality) (((Connection) connections.elementAt(i))).isConnectedTo(Cardinality.class)) != null)
+            if ((car = (CardinalityConstruct) (((Connection) connections.elementAt(i))).isConnectedTo(CardinalityConstruct.class)) != null)
                 car.handleRemoveEvent(event);
         }
     }
@@ -370,15 +370,15 @@ public class ConceptualConstruct extends ConceptualObject {
     /**
      * @param i
      */
-    public Atribute findAttributeWithPosition(int position) {
+    public AtributeConstruct findAttributeWithPosition(int position) {
         for (int i = 0; i < Attribs.size(); i++) {
-            if (((Atribute) Attribs.get(i)).getPosition() == position)
-                return (Atribute) Attribs.get(i);
+            if (((AtributeConstruct) Attribs.get(i)).getPosition() == position)
+                return (AtributeConstruct) Attribs.get(i);
         }
         return null;
     }
 
-    protected java.awt.Point getAbsoluteCenter(ConceptualObject co) {
+    protected java.awt.Point getAbsoluteCenter(ConceptualConstructObject co) {
         return new java.awt.Point((getBounds().x + getBounds().width / 2 + co.getBounds().x + co.getBounds().width / 2) / 2,
                 (getBounds().y + getBounds().height / 2 + co.getBounds().y + co.getBounds().height / 2) / 2);
     }

@@ -49,7 +49,7 @@ public class EntityConstruct extends ConceptualConstruct {
     /**
      * The primary unique key of this entity
      */
-    protected final UniqueKey primary = null;
+    protected final UniqueKeyConstruct primary = null;
 
     /**
      * Determine whether this entity is strong addiction child - drawn as double rect
@@ -172,16 +172,16 @@ public class EntityConstruct extends ConceptualConstruct {
      * @param ent The tested entity);
      * @return <code>true</code> if they are.
      * @see compactableRelation( EntityConstruct )
-     * @see UniqueKey#areOthersConnections(EntityConstruct)
+     * @see UniqueKeyConstruct#areOthersConnections(EntityConstruct)
      */
     protected boolean areCompactable(EntityConstruct ent) {
         if (primary != null)
             if (!primary.areOthersConnections(ent))
                 return true;
-        UniqueKey uk;
+        UniqueKeyConstruct uk;
         for (int i = connections.size() - 1; i >= 0; i--) {
-            if ((uk = (UniqueKey) ((Connection) connections.elementAt(i))
-                    .isConnectedTo(UniqueKey.class)) != null) {
+            if ((uk = (UniqueKeyConstruct) ((Connection) connections.elementAt(i))
+                    .isConnectedTo(UniqueKeyConstruct.class)) != null) {
                 if ((uk.getOwner() == ent) && (!uk.areOthersConnections(this)))
                     return true;
             }
@@ -204,7 +204,7 @@ public class EntityConstruct extends ConceptualConstruct {
             from = this;
             to = ent;
         } else {
-            Relation rel = compactableRelation(ent);
+            RelationConstruct rel = compactableRelation(ent);
             if (rel != null)
                 rel.handleRemoveEvent(new cz.green.event.RemoveEvent(event
                         .getX(), event.getY(), event.getComponent()));
@@ -224,13 +224,13 @@ public class EntityConstruct extends ConceptualConstruct {
      * @param ent The entity with which we have to compact
      * @return Such relation or when doesn't exists null.
      */
-    protected Relation compactableRelation(EntityConstruct ent) {
-        Cardinality car;
+    protected RelationConstruct compactableRelation(EntityConstruct ent) {
+        CardinalityConstruct car;
         Connection c;
         Object o;
         for (int i = connections.size() - 1; i >= 0; i--) {
-            if ((car = (Cardinality) ((Connection) connections.elementAt(i))
-                    .isConnectedTo(Cardinality.class)) != null) {
+            if ((car = (CardinalityConstruct) ((Connection) connections.elementAt(i))
+                    .isConnectedTo(CardinalityConstruct.class)) != null) {
                 if (car.isCompactable()
                         && car.getRelation().compactConnection(ent, this))
                     return car.getRelation();
@@ -296,7 +296,7 @@ public class EntityConstruct extends ConceptualConstruct {
                 break;
             case (BINARY):
                 for (int i = 0; i < getAtributes().size(); i++) {
-                    Atribute a = getAtributes().get(i);
+                    AtributeConstruct a = getAtributes().get(i);
                     int x = a.getBounds().width;
                     if (x > width) width = x;
                 }
@@ -304,7 +304,7 @@ public class EntityConstruct extends ConceptualConstruct {
                 break;
             case (UML):
                 for (int i = 0; i < getAtributes().size(); i++) {
-                    Atribute a = getAtributes().get(i);
+                    AtributeConstruct a = getAtributes().get(i);
                     int x = a.getBounds().width +
                             fm.stringWidth(": ") +
                             fm.stringWidth(((cz.omnicom.ermodeller.conceptual.Atribute) a.getModel()).getDataType().toDescriptionString());
@@ -314,7 +314,7 @@ public class EntityConstruct extends ConceptualConstruct {
         }
         if (ConceptualConstruct.ACTUAL_NOTATION != ConceptualConstruct.CHEN) {
             for (int i = 0; i < getAtributes().size(); i++) {
-                Atribute a = getAtributes().get(i);
+                AtributeConstruct a = getAtributes().get(i);
                 int x = a.getBounds().width;
                 if (x > width)
                     width = x;
@@ -667,14 +667,14 @@ public class EntityConstruct extends ConceptualConstruct {
      * @param top  The y coordinate of the left top point of the new unique key.
      * @return The new created unique key.
      */
-    public UniqueKey createUniqueKey(int left, int top) {
+    public UniqueKeyConstruct createUniqueKey(int left, int top) {
         try {
             // create model - unique key
             cz.omnicom.ermodeller.conceptual.Entity cc = (cz.omnicom.ermodeller.conceptual.Entity) getModel();
             cz.omnicom.ermodeller.conceptual.UniqueKey cUq = cc
                     .createUniqueKey();
             // create unique key
-            UniqueKey uq = new UniqueKey(cUq, this, manager, left, top);
+            UniqueKeyConstruct uq = new UniqueKeyConstruct(cUq, this, manager, left, top);
             manager.add(uq);
             (manager).repaintItem(uq);
             // create the connection to the
@@ -700,11 +700,11 @@ public class EntityConstruct extends ConceptualConstruct {
         if (decomposeAsRelation) {
             try {
                 // decompose using relation -- create new relation
-                Relation rel = ((ISchema) man).createRelation(p.x, p.y);
+                RelationConstruct rel = ((ISchema) man).createRelation(p.x, p.y);
                 rel.handleMoveEvent(new MoveEvent(rel.getBounds().x, rel.getBounds().y, -rel.getBounds().width / 2, -rel.getBounds().height / 2, null));
                 p = ent.getAbsoluteCenter(rel);
                 // create new cardinalities
-                Cardinality car = rel.createCardinality(ent, man, p.x, p.y);
+                CardinalityConstruct car = rel.createCardinality(ent, man, p.x, p.y);
                 ((cz.omnicom.ermodeller.conceptual.Cardinality) car.getModel())
                         .setArbitrary(true);
                 ((cz.omnicom.ermodeller.conceptual.Cardinality) car.getModel())
@@ -763,7 +763,7 @@ public class EntityConstruct extends ConceptualConstruct {
     /**
      * Returns the model entity from the Aleš Kopecký work.
      *
-     * @see ConceptualObject#getModel()
+     * @see ConceptualConstructObject#getModel()
      */
     public Object getModel() {
         return model;
@@ -774,7 +774,7 @@ public class EntityConstruct extends ConceptualConstruct {
      *
      * @return The primary unique key.
      */
-    public UniqueKey getPrimary() {
+    public UniqueKeyConstruct getPrimary() {
         return primary;
     }
 
@@ -783,10 +783,10 @@ public class EntityConstruct extends ConceptualConstruct {
      */
     public java.util.Vector getUniqueKeys() {
         java.util.Vector v = new java.util.Vector();
-        UniqueKey uk;
+        UniqueKeyConstruct uk;
         for (int i = connections.size() - 1; i >= 0; i--) {
-            if ((uk = (UniqueKey) ((Connection) connections.elementAt(i))
-                    .isConnectedTo(UniqueKey.class)) != null)
+            if ((uk = (UniqueKeyConstruct) ((Connection) connections.elementAt(i))
+                    .isConnectedTo(UniqueKeyConstruct.class)) != null)
                 v.add(uk);
         }
         return v;
@@ -824,15 +824,15 @@ public class EntityConstruct extends ConceptualConstruct {
                 }
             }
         }
-        if (item instanceof Relation) {
+        if (item instanceof RelationConstruct) {
             if (event.getAdd()) {
                 event.getComponent().setCursor(
                         new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
                 return;
             }
         }
-        if (item instanceof UniqueKey) {
-            UniqueKey uk = (UniqueKey) item;
+        if (item instanceof UniqueKeyConstruct) {
+            UniqueKeyConstruct uk = (UniqueKeyConstruct) item;
             if (event.getAdd() && uk.getPrimary()
                     && (uk.connectionTo(this) == null)) {
                 event.getComponent().setCursor(
@@ -865,12 +865,12 @@ public class EntityConstruct extends ConceptualConstruct {
         float scale = getManager().getScale();
         Item item = event.getItem();
         java.awt.Point p = getAbsoluteCenter((EntityConstruct) item);
-        Cardinality car;
+        CardinalityConstruct car;
         if (item instanceof EntityConstruct) {
             if (item != this) {
                 Manager man = ((EntityConstruct) item).getManager();
                 Manager man2 = getManager();
-                Relation rel = Relation.createRelation(model.getSchema(), EntManager, (int) (p.x * scale), (int) (p.y * scale));
+                RelationConstruct rel = RelationConstruct.createRelation(model.getSchema(), EntManager, (int) (p.x * scale), (int) (p.y * scale));
                 rel.handleMoveEvent(new MoveEvent(rel.getBounds().x, rel.getBounds().y, -rel.getBounds().width / 2, -rel.getBounds().height / 2, null));
                 p = ((EntityConstruct) item).getAbsoluteCenter(rel);
                 car = rel.createCardinality((EntityConstruct) item, man, (int) (p.x * scale), (int) (p.y * scale));
@@ -888,7 +888,7 @@ public class EntityConstruct extends ConceptualConstruct {
                 }
             } else {
                 Manager man = getManager();
-                Relation rel = Relation.createRelation(model.getSchema(), man, (int) ((p.x + SELFRELATIONDISTANCE) * scale), (int) ((p.y + SELFRELATIONDISTANCE) * scale));
+                RelationConstruct rel = RelationConstruct.createRelation(model.getSchema(), man, (int) ((p.x + SELFRELATIONDISTANCE) * scale), (int) ((p.y + SELFRELATIONDISTANCE) * scale));
                 if (ACTUAL_NOTATION == ConceptualConstruct.CHEN) {
                     car = rel.createCardinality((EntityConstruct) item, man, (int) ((p.x + SELFRELATIONDISTANCE) * scale) + rel.getBounds().width / 2, (int) (p.y * scale) + ((EntityConstruct) item).getBounds().height / 2);
                     car.move(-car.getBounds().width / 2, -car.getBounds().height / 2, true);
@@ -910,26 +910,26 @@ public class EntityConstruct extends ConceptualConstruct {
             return;
         float scale = getManager().getScale();
         Item item = event.getItem();
-        if (item instanceof Relation) {
-            Relation rel = (Relation) item;
+        if (item instanceof RelationConstruct) {
+            RelationConstruct rel = (RelationConstruct) item;
             String name = "";
             if (ACTUAL_NOTATION != ConceptualConstruct.CHEN) {
                 java.util.Enumeration e = rel.getConnections().elements();
-                Cardinality car1;
+                CardinalityConstruct car1;
                 while (e.hasMoreElements()) {
                     Connection c = ((Connection) e.nextElement());
-                    if (c.getOne() instanceof Cardinality) {
-                        car1 = ((Cardinality) c.getOne());
+                    if (c.getOne() instanceof CardinalityConstruct) {
+                        car1 = ((CardinalityConstruct) c.getOne());
                         name = ((cz.omnicom.ermodeller.conceptual.Entity) car1.getEntity().getModel()).getName();
                     }
-                    if (c.getTwo() instanceof Cardinality) {
-                        car1 = ((Cardinality) c.getTwo());
+                    if (c.getTwo() instanceof CardinalityConstruct) {
+                        car1 = ((CardinalityConstruct) c.getTwo());
                         name = ((cz.omnicom.ermodeller.conceptual.Entity) car1.getEntity().getModel()).getName();
                     }
                 }
             }
-            java.awt.Point p = ((Relation) item).getAbsoluteCenter(this);
-            Cardinality car = ((Relation) item).createCardinality(this, ((Relation) item).getManager(), (int) (p.x * scale), (int) (p.y * scale));
+            java.awt.Point p = ((RelationConstruct) item).getAbsoluteCenter(this);
+            CardinalityConstruct car = ((RelationConstruct) item).createCardinality(this, ((RelationConstruct) item).getManager(), (int) (p.x * scale), (int) (p.y * scale));
             car.handleMoveEvent(new MoveEvent(car.getBounds().x, car.getBounds().y, -car.getBounds().width / 2, -car.getBounds().height / 2, null));
             if (ACTUAL_NOTATION != ConceptualConstruct.CHEN) {
                 car.model.setName(this.model.getName());
@@ -975,16 +975,16 @@ public class EntityConstruct extends ConceptualConstruct {
                 // }
             }
         }
-        if (item instanceof Relation) {
+        if (item instanceof RelationConstruct) {
             // relation over --> creates new cardinality
             if (event.getAdd()) {
-                Relation rel = (Relation) item;
+                RelationConstruct rel = (RelationConstruct) item;
                 try {
                     if (ACTUAL_NOTATION == CHEN)
                         ((Container) event.getComponent()).addingCardinality(new CardinalityPair(this, rel));
                     else {
-                        java.awt.Point p = ((Relation) item).getAbsoluteCenter(this);
-                        Cardinality car = ((Relation) item).createCardinality(this, ((Relation) item).getManager(), p.x, p.y);
+                        java.awt.Point p = ((RelationConstruct) item).getAbsoluteCenter(this);
+                        CardinalityConstruct car = ((RelationConstruct) item).createCardinality(this, ((RelationConstruct) item).getManager(), p.x, p.y);
                         car.handleMoveEvent(new MoveEvent(car.getBounds().x, car.getBounds().y, -car.getBounds().width / 2, -car.getBounds().height / 2, null));
                         car.model.setName(this.model.getName());
                         car.moveCardinality(new ExMovingEvent(p.x, p.y, 0, 0, null, false));
@@ -996,10 +996,10 @@ public class EntityConstruct extends ConceptualConstruct {
                 }
             }
         }
-        if (item instanceof UniqueKey) {
+        if (item instanceof UniqueKeyConstruct) {
             // add strong addiction
             if (event.getAdd()) {
-                UniqueKey uk = (UniqueKey) item;
+                UniqueKeyConstruct uk = (UniqueKeyConstruct) item;
                 // add as strong addiction parent
                 if (uk.getPrimary() && (uk.connectionTo(this) == null)) {
                     ((Container) event.getComponent())
@@ -1153,15 +1153,15 @@ public class EntityConstruct extends ConceptualConstruct {
     public void moveCardinalities() {
         /* Move cardinalities to its Entities*/
         java.util.Enumeration e = getConnections().elements();
-        Cardinality car;
+        CardinalityConstruct car;
         while (e.hasMoreElements()) {
             Connection c = ((Connection) e.nextElement());
-            if (c.getOne() instanceof Cardinality) {
-                car = ((Cardinality) c.getOne());
+            if (c.getOne() instanceof CardinalityConstruct) {
+                car = ((CardinalityConstruct) c.getOne());
                 car.moveCardinality(new ExMovingEvent(car.getBounds().x, car.getBounds().y, 0, 0, null, false));
             }
-            if (c.getTwo() instanceof Cardinality) {
-                car = ((Cardinality) c.getTwo());
+            if (c.getTwo() instanceof CardinalityConstruct) {
+                car = ((CardinalityConstruct) c.getTwo());
                 car.moveCardinality(new ExMovingEvent(car.getBounds().x, car.getBounds().y, 0, 0, null, false));
             }
         }
@@ -1492,7 +1492,7 @@ public class EntityConstruct extends ConceptualConstruct {
         int PKlength = 0, ALength, dx, dy, position, highestPKposition = 0, lowestNonPKposition = getAtributes().size();
         int count = getAtributes().size();
         int PKmembersCount = getPKmembers().size();
-        Atribute a, pk;
+        AtributeConstruct a, pk;
         java.awt.FontMetrics fm = ((FontManager) manager).getReferentFontMetrics();
         if (ACTUAL_NOTATION == BINARY) {
             for (int i = 0; i < count; i++) {
@@ -1503,7 +1503,7 @@ public class EntityConstruct extends ConceptualConstruct {
                     position = a.getPosition();
                     if (position > highestPKposition) highestPKposition = position;
                     for (int j = 0; j < PKmembers.size(); j++) {
-                        pk = (Atribute) (PKmembers.get(j));
+                        pk = (AtributeConstruct) (PKmembers.get(j));
                         if (pk.getPosition() < position)
                             ALength += pk.getBounds().width;
                     }
@@ -1566,7 +1566,7 @@ public class EntityConstruct extends ConceptualConstruct {
     public void collectPKatributes() {
         int count = getAtributes().size();
         Vector pks = new Vector();
-        Atribute a;
+        AtributeConstruct a;
         for (int i = count; i > 0; i--) {
             for (int j = 0; j < count; j++) {
                 a = (getAtributes().get(j));
@@ -1577,7 +1577,7 @@ public class EntityConstruct extends ConceptualConstruct {
             }
         }
         for (int i = 0; i < pks.size(); i++) {
-            ((Atribute) pks.get(i)).moveTop();
+            ((AtributeConstruct) pks.get(i)).moveTop();
         }
     }
 
@@ -1586,14 +1586,14 @@ public class EntityConstruct extends ConceptualConstruct {
      * <code>moveAtribute</code>.
      *
      * @param cc The new owner of all atributes.
-     * @see #moveAtribute(Atribute)
+     * @see #moveAtribute(AtributeConstruct)
      */
     protected void reconnectAllAtributes(ConceptualConstruct cc) {
-        UniqueKey uk;
+        UniqueKeyConstruct uk;
         RemoveEvent ev = new RemoveEvent(0, 0, null);
         for (int i = connections.size() - 1; i >= 0; i--) {
-            if ((uk = (UniqueKey) ((Connection) connections.elementAt(i))
-                    .isConnectedTo(UniqueKey.class)) != null) {
+            if ((uk = (UniqueKeyConstruct) ((Connection) connections.elementAt(i))
+                    .isConnectedTo(UniqueKeyConstruct.class)) != null) {
                 uk.handleRemoveEvent(ev);
             }
         }
@@ -1635,7 +1635,7 @@ public class EntityConstruct extends ConceptualConstruct {
     /**
      * Call the same method to the primary key.
      *
-     * @see UniqueKey#disposeStrongAddiction()
+     * @see UniqueKeyConstruct#disposeStrongAddiction()
      */
     protected void removeAllStrongAddictionParents(
             cz.green.event.RemoveEvent event) {
@@ -1900,7 +1900,7 @@ public class EntityConstruct extends ConceptualConstruct {
     public void moveAtributesBinarytoChen(int entWidth) {
         int count = getAtributes().size();
         for (int i = 0; i < count; i++) {
-            Atribute a = (getAtributes().get(i));
+            AtributeConstruct a = (getAtributes().get(i));
             try {
                 a.move(entWidth + 10, 0, true);
             } catch (ItemNotInsideManagerException e1) {

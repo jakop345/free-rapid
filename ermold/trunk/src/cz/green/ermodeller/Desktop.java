@@ -88,7 +88,7 @@ public class Desktop extends DesktopTool implements FontManager,
         Vector v1 = e1.getAtributes(), v2 = e2.getAtributes();
         int i, j;
         cz.omnicom.ermodeller.conceptual.Atribute atrM1, atrM2;
-        Atribute atr2, atr1;
+        AtributeConstruct atr2, atr1;
         cz.omnicom.ermodeller.conceptual.Entity entM;
         EntityConstruct ent2 = getEntity(e2.getID()), ent1 = getEntity(e1.getID());
 
@@ -115,7 +115,7 @@ public class Desktop extends DesktopTool implements FontManager,
      */
     public void composeRelation(RelationBean rM1,
                                 RelationBean rM2) {
-        Relation r1 = getRelation(rM1.getID()), r2 = getRelation(rM2.getID());
+        RelationConstruct r1 = getRelation(rM1.getID()), r2 = getRelation(rM2.getID());
 
         r2.composeRelation(r1, new cz.green.ermodeller.DragOverEvent(0, 0,
                 (Item) r1, getPaintPlace()));
@@ -147,8 +147,8 @@ public class Desktop extends DesktopTool implements FontManager,
      *
      * @see cz.green.ermodeller.interfaces.ISchema#createRelation(int, int)
      */
-    public Relation createRelation(int x, int y, int width, int height) {
-        return Relation.createRelation(model, this, x, y, width, height);
+    public RelationConstruct createRelation(int x, int y, int width, int height) {
+        return RelationConstruct.createRelation(model, this, x, y, width, height);
     }
 
     /**
@@ -157,21 +157,21 @@ public class Desktop extends DesktopTool implements FontManager,
      *
      * @see cz.green.ermodeller.interfaces.ISchema#createRelation(int, int)
      */
-    public Relation createRelation(int x, int y) {
-        return Relation.createRelation(model, this, x, y);
+    public RelationConstruct createRelation(int x, int y) {
+        return RelationConstruct.createRelation(model, this, x, y);
     }
 
     /**
      * Returns atribute with ID
      */
-    public Atribute getAtribute(int aid) {
-        return (Atribute) getConceptualObject(aid);
+    public AtributeConstruct getAtribute(int aid) {
+        return (AtributeConstruct) getConceptualObject(aid);
     }
 
-    private Atribute getAtribute(DGroupTool dg, int aid) {
+    private AtributeConstruct getAtribute(DGroupTool dg, int aid) {
         int cnt = dg.getItemCount(), id;
         Item item;
-        Atribute atr;
+        AtributeConstruct atr;
 
         for (int i = 0; i < cnt; i++) {
             item = dg.getItem(i);
@@ -179,10 +179,10 @@ public class Desktop extends DesktopTool implements FontManager,
                 if ((atr = getAtribute((DGroupTool) item, aid)) != null)
                     return atr;
             } else {
-                id = ((cz.omnicom.ermodeller.conceptual.ConceptualObject) ((ConceptualObject) item)
+                id = ((cz.omnicom.ermodeller.conceptual.ConceptualObject) ((ConceptualConstructObject) item)
                         .getModel()).getID();
-                if (item instanceof Atribute && aid == id)
-                    return (Atribute) item;
+                if (item instanceof AtributeConstruct && aid == id)
+                    return (AtributeConstruct) item;
             }
         }
         return null;
@@ -200,10 +200,10 @@ public class Desktop extends DesktopTool implements FontManager,
     /**
      * Returns conceptual object with ID
      */
-    public ConceptualObject getConceptualObject(int id) {
+    public ConceptualConstructObject getConceptualObject(int id) {
         int cnt = getItemCount();
         Item item;
-        ConceptualObject co = null;
+        ConceptualConstructObject co = null;
 
         for (int i = 0; i < cnt; i++) {
             item = getItem(i);
@@ -211,9 +211,9 @@ public class Desktop extends DesktopTool implements FontManager,
                 if ((co = getConceptualObject((DGroupTool) item, id)) != null)
                     return co;
             } else if (!(item instanceof StrongAddiction)
-                    && id == (((cz.omnicom.ermodeller.conceptual.ConceptualObject) ((ConceptualObject) item)
+                    && id == (((cz.omnicom.ermodeller.conceptual.ConceptualObject) ((ConceptualConstructObject) item)
                     .getModel()).getID()))
-                return (ConceptualObject) item;
+                return (ConceptualConstructObject) item;
         }
         return co;
     }
@@ -221,10 +221,10 @@ public class Desktop extends DesktopTool implements FontManager,
     /**
      * Returns conceptual object with ID
      */
-    private ConceptualObject getConceptualObject(DGroupTool dg, int id) {
+    private ConceptualConstructObject getConceptualObject(DGroupTool dg, int id) {
         int cnt = dg.getItemCount();
         Item item;
-        ConceptualObject co = null;
+        ConceptualConstructObject co = null;
 
         for (int i = 0; i < cnt; i++) {
             item = dg.getItem(i);
@@ -232,9 +232,9 @@ public class Desktop extends DesktopTool implements FontManager,
                 if ((co = getConceptualObject((DGroupTool) item, id)) != null)
                     return co;
             } else if (!(item instanceof StrongAddiction)
-                    && id == (((cz.omnicom.ermodeller.conceptual.ConceptualObject) ((ConceptualObject) item)
+                    && id == (((cz.omnicom.ermodeller.conceptual.ConceptualObject) ((ConceptualConstructObject) item)
                     .getModel()).getID()))
-                return (ConceptualObject) item;
+                return (ConceptualConstructObject) item;
         }
         return co;
     }
@@ -296,7 +296,7 @@ public class Desktop extends DesktopTool implements FontManager,
                 if ((sub = getAllRelations((DGroupTool) item)).size() != 0) {
                     retval.addAll(sub);
                 }
-            } else if (item instanceof Relation)
+            } else if (item instanceof RelationConstruct)
                 retval.add(item);
         }
         return retval;
@@ -316,7 +316,7 @@ public class Desktop extends DesktopTool implements FontManager,
         Vector rels = getAllRelations();
         Vector relsWithAtributes = new Vector(3, 2);
         for (int i = 0; i < rels.size(); ++i) {
-            Relation rel = (Relation) rels.get(i);
+            RelationConstruct rel = (RelationConstruct) rels.get(i);
             /*Check for aributes*/
             if (!rel.getAtributes().isEmpty())
                 if (namesOnly)
@@ -334,16 +334,16 @@ public class Desktop extends DesktopTool implements FontManager,
         Vector relsNoConn = new Vector(3, 2);
         int connCounter;
         for (int i = 0; i < rels.size(); ++i) {
-            Relation rel = (Relation) rels.get(i);
+            RelationConstruct rel = (RelationConstruct) rels.get(i);
             connCounter = 0;
             java.util.Enumeration e = rel.getConnections().elements();
             while (e.hasMoreElements()) {
                 Connection c = ((Connection) e.nextElement());
-                Cardinality car = null;
-                if (c.getOne() instanceof Cardinality)
-                    car = (Cardinality) c.getOne();
-                if (c.getTwo() instanceof Cardinality)
-                    car = (Cardinality) c.getTwo();
+                CardinalityConstruct car = null;
+                if (c.getOne() instanceof CardinalityConstruct)
+                    car = (CardinalityConstruct) c.getOne();
+                if (c.getTwo() instanceof CardinalityConstruct)
+                    car = (CardinalityConstruct) c.getTwo();
                 if (car != null) {
                     if (car.getEntity() != null) {
                         connCounter++;
@@ -368,16 +368,16 @@ public class Desktop extends DesktopTool implements FontManager,
         Vector relsTernary = new Vector(3, 2);
         int connCounter;
         for (int i = 0; i < rels.size(); ++i) {
-            Relation rel = (Relation) rels.get(i);
+            RelationConstruct rel = (RelationConstruct) rels.get(i);
             connCounter = 0;
             java.util.Enumeration e = rel.getConnections().elements();
             while (e.hasMoreElements()) {
                 Connection c = ((Connection) e.nextElement());
-                Cardinality car = null;
-                if (c.getOne() instanceof Cardinality)
-                    car = (Cardinality) c.getOne();
-                if (c.getTwo() instanceof Cardinality)
-                    car = (Cardinality) c.getTwo();
+                CardinalityConstruct car = null;
+                if (c.getOne() instanceof CardinalityConstruct)
+                    car = (CardinalityConstruct) c.getOne();
+                if (c.getTwo() instanceof CardinalityConstruct)
+                    car = (CardinalityConstruct) c.getTwo();
                 if (car != null) {
                     if (car.getEntity() != null) {
                         connCounter++;
@@ -399,7 +399,7 @@ public class Desktop extends DesktopTool implements FontManager,
     public void delRelsWithoutConnection() {
         Vector RC = getRelationsWithoutConnection(false);
         for (int i = 0; i < RC.size(); i++) {
-            Relation rel = (Relation) RC.get(i);
+            RelationConstruct rel = (RelationConstruct) RC.get(i);
             rel.handleRemoveEvent(new RemoveEvent(rel.getBounds().x, rel.getBounds().y, null));
         }
     }
@@ -410,7 +410,7 @@ public class Desktop extends DesktopTool implements FontManager,
     public void decomposeRelsWithAtributes(Container place) {
         Vector RA = getRelationsWithAttribute(false);
         for (Object aRA : RA) {
-            Relation rel = (Relation) aRA;
+            RelationConstruct rel = (RelationConstruct) aRA;
             rel.decompose(new SelectItemEvent(rel.getBounds().x, rel.getBounds().x, false, place));
         }
     }
@@ -421,7 +421,7 @@ public class Desktop extends DesktopTool implements FontManager,
     public void decomposeTernaryRels(Container place) {
         Vector TR = getTernaryRelations(false);
         for (int i = 0; i < TR.size(); i++) {
-            Relation rel = (Relation) TR.get(i);
+            RelationConstruct rel = (RelationConstruct) TR.get(i);
             rel.decompose(new SelectItemEvent(rel.getBounds().x, rel.getBounds().x, false, place));
         }
     }
@@ -433,21 +433,21 @@ public class Desktop extends DesktopTool implements FontManager,
         Vector R = getAllRelations();
         cz.omnicom.ermodeller.conceptual.Cardinality car1M, car2M;
         for (int i = 0; i < R.size(); i++) {
-            Relation rel = (Relation) R.get(i);
+            RelationConstruct rel = (RelationConstruct) R.get(i);
 
             java.util.Enumeration e = rel.getConnections().elements();
             Vector cards = new Vector();
             while (e.hasMoreElements()) {
                 Connection c = ((Connection) e.nextElement());
-                Cardinality car = null;
-                if (c.getOne() instanceof Cardinality)
+                CardinalityConstruct car = null;
+                if (c.getOne() instanceof CardinalityConstruct)
                     cards.add(c.getOne());
-                if (c.getTwo() instanceof Cardinality)
+                if (c.getTwo() instanceof CardinalityConstruct)
                     cards.add(c.getTwo());
             }
             if (cards.size() != 2) break;
-            car1M = (cz.omnicom.ermodeller.conceptual.Cardinality) ((Cardinality) cards.get(0)).getModel();
-            car2M = (cz.omnicom.ermodeller.conceptual.Cardinality) ((Cardinality) cards.get(1)).getModel();
+            car1M = (cz.omnicom.ermodeller.conceptual.Cardinality) ((CardinalityConstruct) cards.get(0)).getModel();
+            car2M = (cz.omnicom.ermodeller.conceptual.Cardinality) ((CardinalityConstruct) cards.get(1)).getModel();
             String name = car1M.getName();
             String comment = car1M.getComment();
             //boolean arb = car1M.getArbitrary();
@@ -473,21 +473,21 @@ public class Desktop extends DesktopTool implements FontManager,
         Vector R = getAllRelations();
         cz.omnicom.ermodeller.conceptual.Cardinality car1M, car2M;
         for (int i = 0; i < R.size(); i++) {
-            Relation rel = (Relation) R.get(i);
+            RelationConstruct rel = (RelationConstruct) R.get(i);
 
             java.util.Enumeration e = rel.getConnections().elements();
             Vector cards = new Vector();
             while (e.hasMoreElements()) {
                 Connection c = ((Connection) e.nextElement());
-                Cardinality car = null;
-                if (c.getOne() instanceof Cardinality)
+                CardinalityConstruct car = null;
+                if (c.getOne() instanceof CardinalityConstruct)
                     cards.add(c.getOne());
-                if (c.getTwo() instanceof Cardinality)
+                if (c.getTwo() instanceof CardinalityConstruct)
                     cards.add(c.getTwo());
             }
             if (cards.size() != 2) break;
-            car1M = (cz.omnicom.ermodeller.conceptual.Cardinality) ((Cardinality) cards.get(0)).getModel();
-            car2M = (cz.omnicom.ermodeller.conceptual.Cardinality) ((Cardinality) cards.get(1)).getModel();
+            car1M = (cz.omnicom.ermodeller.conceptual.Cardinality) ((CardinalityConstruct) cards.get(0)).getModel();
+            car2M = (cz.omnicom.ermodeller.conceptual.Cardinality) ((CardinalityConstruct) cards.get(1)).getModel();
             String name = car1M.getName();
             String comment = car1M.getComment();
             boolean arb = car1M.getArbitrary();
@@ -514,21 +514,21 @@ public class Desktop extends DesktopTool implements FontManager,
         Vector allRelations = getAllRelations();
         cz.omnicom.ermodeller.conceptual.Cardinality car1M, car2M;
         for (Object allRelation : allRelations) {
-            Relation rel = (Relation) allRelation;
+            RelationConstruct rel = (RelationConstruct) allRelation;
 
             java.util.Enumeration e = rel.getConnections().elements();
             Vector cards = new Vector();
             while (e.hasMoreElements()) {
                 Connection c = ((Connection) e.nextElement());
-                Cardinality car = null;
-                if (c.getOne() instanceof Cardinality)
+                CardinalityConstruct car = null;
+                if (c.getOne() instanceof CardinalityConstruct)
                     cards.add(c.getOne());
-                if (c.getTwo() instanceof Cardinality)
+                if (c.getTwo() instanceof CardinalityConstruct)
                     cards.add(c.getTwo());
             }
             if (cards.size() != 2) break;
-            car1M = (cz.omnicom.ermodeller.conceptual.Cardinality) ((Cardinality) cards.get(0)).getModel();
-            car2M = (cz.omnicom.ermodeller.conceptual.Cardinality) ((Cardinality) cards.get(1)).getModel();
+            car1M = (cz.omnicom.ermodeller.conceptual.Cardinality) ((CardinalityConstruct) cards.get(0)).getModel();
+            car2M = (cz.omnicom.ermodeller.conceptual.Cardinality) ((CardinalityConstruct) cards.get(1)).getModel();
             String name = car1M.getName();
             String comment = car1M.getComment();
             boolean arb = car1M.getArbitrary();
@@ -592,9 +592,9 @@ public class Desktop extends DesktopTool implements FontManager,
                 if (r[1] > rect[1])
                     rect[1] = r[1];
             } else {
-                if ((r[0] = ((ConceptualObject) item).getL()) > rect[0])
+                if ((r[0] = ((ConceptualConstructObject) item).getL()) > rect[0])
                     rect[0] = r[0];
-                if ((r[1] = ((ConceptualObject) item).getT()) > rect[1])
+                if ((r[1] = ((ConceptualConstructObject) item).getT()) > rect[1])
                     rect[1] = r[1];
             }
         }
@@ -612,9 +612,9 @@ public class Desktop extends DesktopTool implements FontManager,
                 if (r[1] > rect[1])
                     rect[1] = r[1];
             } else {
-                if ((r[0] = ((ConceptualObject) item).getL()) > rect[0])
+                if ((r[0] = ((ConceptualConstructObject) item).getL()) > rect[0])
                     rect[0] = r[0];
-                if ((r[1] = ((ConceptualObject) item).getT()) > rect[1])
+                if ((r[1] = ((ConceptualConstructObject) item).getT()) > rect[1])
                     rect[1] = r[1];
             }
         }
@@ -650,8 +650,8 @@ public class Desktop extends DesktopTool implements FontManager,
     /**
      * Returns relation with ID
      */
-    public Relation getRelation(int id) {
-        return (Relation) getConceptualObject(id);
+    public RelationConstruct getRelation(int id) {
+        return (RelationConstruct) getConceptualObject(id);
     }
 
     /**
@@ -907,7 +907,7 @@ public class Desktop extends DesktopTool implements FontManager,
             if (item instanceof DGroupTool)
                 writeItem((DGroupTool) item, pw);
             else
-                ((ConceptualObject) getItem(i)).write(pw);
+                ((ConceptualConstructObject) getItem(i)).write(pw);
         }
         pw.println("</schema>");
     }
@@ -919,7 +919,7 @@ public class Desktop extends DesktopTool implements FontManager,
             if (item instanceof DGroupTool)
                 writeItem((DGroupTool) item, pw);
             else
-                ((ConceptualObject) item).write(pw);
+                ((ConceptualConstructObject) item).write(pw);
         }
     }
 }

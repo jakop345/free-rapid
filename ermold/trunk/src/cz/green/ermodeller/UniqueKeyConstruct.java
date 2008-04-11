@@ -18,7 +18,7 @@ import java.util.Vector;
  * from the Aleš Kopecký work, owner - entity or relation. When the owner is
  * entity then the unique key can be primary.
  */
-public class UniqueKey extends ConceptualObject {
+public class UniqueKeyConstruct extends ConceptualConstructObject {
     /**
      * The owner of the unique key
      */
@@ -48,11 +48,11 @@ public class UniqueKey extends ConceptualObject {
      *          constructor.
      * @throws <code>cz.green.event.ImpossibleNegativeValueException</code>
      *          Thrown by inherited constructor.
-     * @see ConceptualObject#ConceptualObject(cz.green.event.interfaces.Manager , int, int,
+     * @see ConceptualConstructObject#ConceptualConstructObject(cz.green.event.interfaces.Manager , int, int,
      *      int, int)
      */
-    public UniqueKey(cz.omnicom.ermodeller.conceptual.UniqueKey uq, EntityConstruct ent,
-                     Manager manager, int left, int top)
+    public UniqueKeyConstruct(cz.omnicom.ermodeller.conceptual.UniqueKey uq, EntityConstruct ent,
+                              Manager manager, int left, int top)
             throws NullPointerException,
             ImpossibleNegativeValueException {
         super(manager, left, top, 10, 10);
@@ -67,7 +67,7 @@ public class UniqueKey extends ConceptualObject {
      *
      * @param atr The added atribute.
      */
-    public void addAtribute(Atribute atr) {
+    public void addAtribute(AtributeConstruct atr) {
         try {
             model.addAtribute((cz.omnicom.ermodeller.conceptual.Atribute) (atr
                     .getModel()));
@@ -156,7 +156,7 @@ public class UniqueKey extends ConceptualObject {
 
         for (int i = connections.size() - 1; i >= 0; i--) {
             if (((Connection) connections.elementAt(i))
-                    .isConnectedTo(Atribute.class) != null) {
+                    .isConnectedTo(AtributeConstruct.class) != null) {
                 v.add(((ConnectionLine) connections.elementAt(i)).getTwo());
             }
         }
@@ -206,9 +206,9 @@ public class UniqueKey extends ConceptualObject {
         if (selected && event.getAdd())
             return;
         Item item = event.getItem();
-        if (item instanceof Atribute) {
+        if (item instanceof AtributeConstruct) {
             if (event.getAdd()) {
-                Atribute atr = (Atribute) item;
+                AtributeConstruct atr = (AtributeConstruct) item;
                 if ((atr.connectionTo(this) == null)
                         && (atr.getOwner() == getOwner())) {
                     event.getComponent().setCursor(
@@ -256,14 +256,14 @@ public class UniqueKey extends ConceptualObject {
         Item item = event.getItem();
         event.getComponent().setCursor(
                 new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        if (item instanceof Atribute) {
+        if (item instanceof AtributeConstruct) {
             // over is atribute
             if (event.getAdd()) {
                 // add to the unique key
-                Atribute atr = (Atribute) item;
+                AtributeConstruct atr = (AtributeConstruct) item;
                 if ((atr.connectionTo(this) == null)
                         && (atr.getOwner() == getOwner())) {
-                    addAtribute((Atribute) item);
+                    addAtribute((AtributeConstruct) item);
                     event.setDropped(true);
                 }
             } else {
@@ -272,7 +272,7 @@ public class UniqueKey extends ConceptualObject {
                 if (conn != null) {
                     try {
                         model
-                                .removeAtribute((cz.omnicom.ermodeller.conceptual.Atribute) (((Atribute) item)
+                                .removeAtribute((cz.omnicom.ermodeller.conceptual.Atribute) (((AtributeConstruct) item)
                                         .getModel()));
                         conn.disconnect();
                     } catch (Throwable x) {
@@ -331,7 +331,7 @@ public class UniqueKey extends ConceptualObject {
     protected boolean hasAtribute() {
         for (int i = connections.size() - 1; i >= 0; i--) {
             if (((Connection) connections.elementAt(i))
-                    .isConnectedTo(Atribute.class) != null) {
+                    .isConnectedTo(AtributeConstruct.class) != null) {
                 return true;
             }
         }
@@ -418,7 +418,7 @@ public class UniqueKey extends ConceptualObject {
      *
      * @param atr The removing atribute.
      */
-    public void removeAtribute(Atribute atr) {
+    public void removeAtribute(AtributeConstruct atr) {
         try {
             model.addAtribute((cz.omnicom.ermodeller.conceptual.Atribute) (atr
                     .getModel()));
@@ -459,7 +459,7 @@ public class UniqueKey extends ConceptualObject {
      * @param uk The new primary key. If its <code>null</code> there is no
      *           other primary key.
      */
-    public void resetPrimary(UniqueKey uk) {
+    public void resetPrimary(UniqueKeyConstruct uk) {
         if (!primary || (uk == null))
             return;
         StrongAddiction sa = null;

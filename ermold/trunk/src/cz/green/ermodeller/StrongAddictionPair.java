@@ -11,7 +11,7 @@ import cz.green.swing.ShowException;
  */
 public class StrongAddictionPair {
     private EntityConstruct entity = null;
-    private UniqueKey uniqueKey = null;
+    private UniqueKeyConstruct uniqueKey = null;
 
     /**
      * Construct empty cardinality pair.
@@ -23,7 +23,7 @@ public class StrongAddictionPair {
     /**
      * Construct cardinality pair and sets the relation and the entity.
      */
-    public StrongAddictionPair(EntityConstruct ent, UniqueKey uk) {
+    public StrongAddictionPair(EntityConstruct ent, UniqueKeyConstruct uk) {
         this();
         setEntity(ent);
         setUniqueKey(uk);
@@ -66,7 +66,7 @@ public class StrongAddictionPair {
      * @return The relation.
      * @see #relation
      */
-    public UniqueKey getUniqueKey() {
+    public UniqueKeyConstruct getUniqueKey() {
         return uniqueKey;
     }
 
@@ -86,7 +86,7 @@ public class StrongAddictionPair {
      * @param relation The relation.
      * @see #relation
      */
-    public void setUniqueKey(UniqueKey uniqueKey) {
+    public void setUniqueKey(UniqueKeyConstruct uniqueKey) {
         this.uniqueKey = uniqueKey;
     }
 }

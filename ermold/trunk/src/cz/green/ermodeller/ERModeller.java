@@ -1094,10 +1094,10 @@ public class ERModeller extends JFrame implements
         String s;
         EntityConstruct ent;
         EntityConstruct child;
-        Relation rel;
-        Atribute atr;
-        Cardinality car;
-        UniqueKey uni;
+        RelationConstruct rel;
+        AtributeConstruct atr;
+        CardinalityConstruct car;
+        UniqueKeyConstruct uni;
         cz.omnicom.ermodeller.conceptual.ConceptualObject coM;
         cz.omnicom.ermodeller.conceptual.Atribute atrM;
         cz.omnicom.ermodeller.conceptual.ConceptualConstruct ccM;
@@ -1361,10 +1361,10 @@ public class ERModeller extends JFrame implements
 
         String s;
         EntityConstruct ent;
-        Relation rel;
-        Atribute atr;
-        Cardinality car;
-        UniqueKey uni;
+        RelationConstruct rel;
+        AtributeConstruct atr;
+        CardinalityConstruct car;
+        UniqueKeyConstruct uni;
         cz.omnicom.ermodeller.conceptual.ConceptualObject coM;
         cz.omnicom.ermodeller.conceptual.Atribute atrM;
         cz.omnicom.ermodeller.conceptual.ConceptualConstruct ccM;
@@ -1534,7 +1534,7 @@ public class ERModeller extends JFrame implements
         }
         Vector rels = d.getAllRelations();
         for (Object rel1 : rels) {
-            Relation rel = (Relation) rel1;
+            RelationConstruct rel = (RelationConstruct) rel1;
             /*Minimize size of relation */
             ResizeRectangle rr = new ResizeRectangle(
                     0, 0, 0, 0, ResizePoint.BOTTOM
@@ -1838,7 +1838,7 @@ public class ERModeller extends JFrame implements
             }
             Vector rels = desktop.getAllRelations();
             for (Object rel1 : rels) {
-                Relation rel = (Relation) rel1;
+                RelationConstruct rel = (RelationConstruct) rel1;
 //				int height=rel.getBounds().height, width=rel.getBounds().width;
                 FontMetrics fm = ((FontManager) rel.getManager()).getReferentFontMetrics();
                 int width = fm.stringWidth(rel.model.getName()), height = fm.getAscent();
@@ -1897,7 +1897,7 @@ public class ERModeller extends JFrame implements
 
         Vector rels = d.getAllRelations();
         for (int i = 0; i < rels.size(); i++) {
-            Relation rel = (Relation) rels.get(i);
+            RelationConstruct rel = (RelationConstruct) rels.get(i);
 
             /*Check for aributes*/
 /*			if (!rel.getAtributes().isEmpty()) {
@@ -1916,15 +1916,15 @@ public class ERModeller extends JFrame implements
             }
             /* Move cardinalities to its Entities*/
             java.util.Enumeration e = rel.getConnections().elements();
-            Cardinality car;
+            CardinalityConstruct car;
             while (e.hasMoreElements()) {
                 Connection c = ((Connection) e.nextElement());
-                if (c.getOne() instanceof Cardinality) {
-                    car = ((Cardinality) c.getOne());
+                if (c.getOne() instanceof CardinalityConstruct) {
+                    car = ((CardinalityConstruct) c.getOne());
                     car.moveCardinality(new ExMovingEvent(car.getBounds().x, car.getBounds().y, 0, 0, null, false));
                 }
-                if (c.getTwo() instanceof Cardinality) {
-                    car = ((Cardinality) c.getTwo());
+                if (c.getTwo() instanceof CardinalityConstruct) {
+                    car = ((CardinalityConstruct) c.getTwo());
                     car.moveCardinality(new ExMovingEvent(car.getBounds().x, car.getBounds().y, 0, 0, null, false));
                 }
             }
@@ -1962,7 +1962,7 @@ public class ERModeller extends JFrame implements
 
         Vector rels = d.getAllRelations();
         for (int i = 0; i < rels.size(); i++) {
-            Relation rel = (Relation) rels.get(i);
+            RelationConstruct rel = (RelationConstruct) rels.get(i);
             int height = rel.getBounds().height, width = rel.getBounds().width;
             try {
                 rel.resize(7 - width, 7 - height, (ResizePoint.RIGHT | ResizePoint.BOTTOM), true);
@@ -1971,15 +1971,15 @@ public class ERModeller extends JFrame implements
             }
             /* Attach all cardinalities to its Entities*/
             java.util.Enumeration e = rel.getConnections().elements();
-            Cardinality car;
+            CardinalityConstruct car;
             while (e.hasMoreElements()) {
                 Connection c = ((Connection) e.nextElement());
-                if (c.getOne() instanceof Cardinality) {
-                    car = ((Cardinality) c.getOne());
+                if (c.getOne() instanceof CardinalityConstruct) {
+                    car = ((CardinalityConstruct) c.getOne());
                     car.moveCardinality(new ExMovingEvent(car.getBounds().x, car.getBounds().y, 0, 0, null, false));
                 }
-                if (c.getTwo() instanceof Cardinality) {
-                    car = ((Cardinality) c.getTwo());
+                if (c.getTwo() instanceof CardinalityConstruct) {
+                    car = ((CardinalityConstruct) c.getTwo());
                     car.moveCardinality(new ExMovingEvent(car.getBounds().x, car.getBounds().y, 0, 0, null, false));
                 }
             }

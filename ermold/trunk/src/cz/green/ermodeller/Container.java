@@ -245,7 +245,7 @@ public class Container extends ContainerToolComponent implements ModeSwitcher, F
     /**
      * Set regime for adding connection.
      */
-    public boolean addingConnectionToEnt(Relation object) {
+    public boolean addingConnectionToEnt(RelationConstruct object) {
         this.object = object;
         setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
         setWorkMode(ADDING_CONNECTION);

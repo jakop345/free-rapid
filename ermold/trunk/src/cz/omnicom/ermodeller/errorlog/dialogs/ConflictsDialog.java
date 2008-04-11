@@ -1,6 +1,9 @@
 package cz.omnicom.ermodeller.errorlog.dialogs;
 
+import cz.green.ermodeller.AtributeConstruct;
+import cz.green.ermodeller.ConceptualConstructObject;
 import cz.green.ermodeller.EntityConstruct;
+import cz.green.ermodeller.RelationConstruct;
 import cz.omnicom.ermodeller.conceptual.RelationBean;
 import cz.omnicom.ermodeller.errorlog.ConceptualObjectVectorValidationError;
 import cz.omnicom.ermodeller.errorlog.ErrorLogList;
@@ -90,7 +93,7 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
     public void acceptButtonAction() {
         int i = conceptualObject.getID();
         EntityConstruct ent;
-        cz.green.ermodeller.Relation rel;
+        RelationConstruct rel;
 
         if (conceptualObject instanceof cz.omnicom.ermodeller.conceptual.ConceptualConstruct)
             if (getComposeModel().getSelectedItem().equals("none")) {
@@ -1438,7 +1441,7 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
         int i;
         i = conceptualObject.getID();
         cz.green.ermodeller.ConceptualConstruct cc;
-        cz.green.ermodeller.ConceptualObject co;
+        ConceptualConstructObject co;
         cz.omnicom.ermodeller.conceptual.ConceptualConstruct ccM;
         EntityConstruct ent;
 
@@ -1456,7 +1459,7 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
                 co.handleRemoveEvent(new cz.green.event.RemoveEvent(0, 0, desktop.getPaintPlace()));
             }
             if (conceptualObject instanceof cz.omnicom.ermodeller.conceptual.Atribute) {
-                cz.green.ermodeller.Atribute atr = desktop.getAtribute(i);
+                AtributeConstruct atr = desktop.getAtribute(i);
                 cc = atr.getOwner();
                 atr.removeAtribute(new cz.green.event.RemoveEvent(0, 0, desktop.getPaintPlace()));
                 cc.removeAtribute(atr);

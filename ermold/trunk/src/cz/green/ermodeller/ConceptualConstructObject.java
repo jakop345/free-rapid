@@ -18,14 +18,14 @@ import java.awt.*;
  * Creates the common functionality as context menu, implements <code>PropertyChangeListener</code> interface and
  * creates the scelet of the <code>getModel</code> method.
  */
-public class ConceptualObject extends ConnectableWindow implements ViewController, java.beans.PropertyChangeListener {
+public class ConceptualConstructObject extends ConnectableWindow implements ViewController, java.beans.PropertyChangeListener {
 
     /**
      * The same functionality as inhereted constructor.
      *
      * @see ConnectableWindow#ConnectableWindow(cz.green.event.interfaces.Manager ,int,int,int,int)
      */
-    public ConceptualObject(Manager manager, int left, int top, int width, int height) throws NullPointerException, ImpossibleNegativeValueException {
+    public ConceptualConstructObject(Manager manager, int left, int top, int width, int height) throws NullPointerException, ImpossibleNegativeValueException {
         super(manager, left, top, width, height);
     }
 
@@ -123,10 +123,10 @@ public class ConceptualObject extends ConnectableWindow implements ViewControlle
      *
      * @param cc The second conceptual construct (first is <code>this</code>).
      * @return The center point between <code>this</code> and <code>cc</code>
-     * @see Relation#decompose(cz.green.event.CoordinateEvent)
+     * @see RelationConstruct#decompose(cz.green.event.CoordinateEvent)
      * @see EntityConstruct#decompose(EntityConstruct , cz.green.event.interfaces.Manager)
      */
-    protected java.awt.Point getCenter(ConceptualObject co) {
+    protected java.awt.Point getCenter(ConceptualConstructObject co) {
         int[][] r1 = getRect(), r2 = co.getRect();
         return new java.awt.Point((r1[0][0] + r2[0][0]) / 2, (r1[1][0] + r2[1][0]) / 2);
     }

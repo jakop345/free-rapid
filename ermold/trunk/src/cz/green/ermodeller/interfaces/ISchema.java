@@ -1,7 +1,7 @@
 package cz.green.ermodeller.interfaces;
 
 import cz.green.ermodeller.EntityConstruct;
-import cz.green.ermodeller.Relation;
+import cz.green.ermodeller.RelationConstruct;
 
 /**
  * This interface adds the functionality for adding the new relations and entities.
@@ -25,5 +25,5 @@ public interface ISchema {
      * @param y Y coordinate of the left top point the new relation.
      * @return The new relation.
      */
-    Relation createRelation(int x, int y);
+    RelationConstruct createRelation(int x, int y);
 }

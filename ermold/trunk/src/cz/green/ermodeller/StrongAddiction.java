@@ -18,7 +18,7 @@ import java.awt.*;
 /**
  * This type was created in VisualAge.
  */
-public class StrongAddiction extends ConceptualObject {
+public class StrongAddiction extends ConceptualConstructObject {
     public static final int SIZE = 6;
     EntityConstruct parent;
     EntityConstruct child;
@@ -146,14 +146,14 @@ public class StrongAddiction extends ConceptualObject {
     /**
      * Get the entity that participation this object represents.
      */
-    public UniqueKey getUniqueKey() {
+    public UniqueKeyConstruct getUniqueKey() {
         java.util.Enumeration e = connections.elements();
         while (e.hasMoreElements()) {
             Connection c = ((Connection) e.nextElement());
-            if (c.getOne() instanceof UniqueKey)
-                return (UniqueKey) (c.getOne());
-            if (c.getTwo() instanceof UniqueKey)
-                return (UniqueKey) (c.getTwo());
+            if (c.getOne() instanceof UniqueKeyConstruct)
+                return (UniqueKeyConstruct) (c.getOne());
+            if (c.getTwo() instanceof UniqueKeyConstruct)
+                return (UniqueKeyConstruct) (c.getTwo());
         }
         return null;
     }
@@ -486,7 +486,7 @@ public class StrongAddiction extends ConceptualObject {
      *
      * @param ent The removing strong addiction parent.
      */
-    public void reconnectStrongAddictionChild(UniqueKey uk) {
+    public void reconnectStrongAddictionChild(UniqueKeyConstruct uk) {
         try {
             cz.omnicom.ermodeller.conceptual.Entity parent = (cz.omnicom.ermodeller.conceptual.Entity) getEntity().getModel();
             cz.omnicom.ermodeller.conceptual.Entity oldChild = (cz.omnicom.ermodeller.conceptual.Entity) getUniqueKey().getOwner().getModel();

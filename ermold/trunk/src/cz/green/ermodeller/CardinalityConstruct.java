@@ -19,9 +19,9 @@ import java.awt.*;
  * <p/>
  * Its created by <code>Relation</code> method <code>createCardinality</code>.
  *
- * @see Relation#createCardinality(EntityConstruct , cz.green.event.interfaces.Manager ,int,int)
+ * @see RelationConstruct#createCardinality(EntityConstruct , cz.green.event.interfaces.Manager ,int,int)
  */
-public class Cardinality extends ConceptualObject {
+public class CardinalityConstruct extends ConceptualConstructObject {
     /**
      * The model of the cardinality -- object from the Aleš Kopecký work
      */
@@ -40,9 +40,9 @@ public class Cardinality extends ConceptualObject {
      *          Thrown by inherited constructor.
      * @throws <code>cz.green.event.ImpossibleNegativeValueException</code>
      *          Thrown by inherited constructor.
-     * @see ConceptualObject#ConceptualObject(cz.green.event.interfaces.Manager ,int,int,int,int)
+     * @see ConceptualConstructObject#ConceptualConstructObject(cz.green.event.interfaces.Manager ,int,int,int,int)
      */
-    public Cardinality(cz.omnicom.ermodeller.conceptual.Cardinality car, Manager manager, int left, int top) throws NullPointerException, ImpossibleNegativeValueException {
+    public CardinalityConstruct(cz.omnicom.ermodeller.conceptual.Cardinality car, Manager manager, int left, int top) throws NullPointerException, ImpossibleNegativeValueException {
         //inhereted constructor
         super(manager, left, top, 10, 10);
         //set as property change listener
@@ -119,14 +119,14 @@ public class Cardinality extends ConceptualObject {
     /**
      * Get the relation that this object belongs to.
      */
-    public Relation getRelation() {
+    public RelationConstruct getRelation() {
         java.util.Enumeration e = connections.elements();
         while (e.hasMoreElements()) {
             Connection c = ((Connection) e.nextElement());
-            if (c.getOne() instanceof Relation)
-                return (Relation) (c.getOne());
-            if (c.getTwo() instanceof Relation)
-                return (Relation) (c.getTwo());
+            if (c.getOne() instanceof RelationConstruct)
+                return (RelationConstruct) (c.getOne());
+            if (c.getTwo() instanceof RelationConstruct)
+                return (RelationConstruct) (c.getTwo());
         }
         return null;
     }
@@ -138,7 +138,7 @@ public class Cardinality extends ConceptualObject {
         java.util.Enumeration e = connections.elements();
         while (e.hasMoreElements()) {
             Connection c = ((Connection) e.nextElement());
-            if (c.getOne() instanceof Relation || c.getTwo() instanceof Relation)
+            if (c.getOne() instanceof RelationConstruct || c.getTwo() instanceof RelationConstruct)
                 return ((ConnectionLine) c);
         }
         return null;
@@ -309,7 +309,7 @@ public class Cardinality extends ConceptualObject {
      */
     public void handleRemoveEvent(cz.green.event.RemoveEvent event) {
         try {
-            Relation rel = getRelation();
+            RelationConstruct rel = getRelation();
             rel.removeCardinality(this);
             super.handleRemoveEvent(event);
 /*	neni mozno pouzit protoze pri decompose to chce mazat vztah, ktery je posleze smazan jinou metodou, ktera jej nenajde
@@ -610,9 +610,9 @@ public class Cardinality extends ConceptualObject {
                 ShowException d = new ShowException(null, "Error", x, true);
             }
         }
-        if (cc instanceof Relation) {
+        if (cc instanceof RelationConstruct) {
             //change the relation on which participate
-            Relation old = getRelation();
+            RelationConstruct old = getRelation();
             Connection conn = connectionTo(old);
             RelationBean cRel = (RelationBean) cc.getModel();
             try {
@@ -636,12 +636,12 @@ public class Cardinality extends ConceptualObject {
     public void transformToRelation(EntityConstruct ent, Manager man) {
         //others cardinalities decompose as new relations
         java.awt.Point p = ent.getCenter(getEntity());
-        Relation rel = Relation.createRelation(model.getSchema(), man, p.x, p.y);
+        RelationConstruct rel = RelationConstruct.createRelation(model.getSchema(), man, p.x, p.y);
         ((RelationBean) rel.getModel()).setName(model.getName());
         model.setName("");
         reconnect(getRelation());
         p = ent.getCenter(getRelation());
-        Cardinality car = rel.createCardinality(ent, manager, p.x, p.y);
+        CardinalityConstruct car = rel.createCardinality(ent, manager, p.x, p.y);
         ((cz.omnicom.ermodeller.conceptual.Cardinality) car.getModel()).setArbitrary(true);
         ((cz.omnicom.ermodeller.conceptual.Cardinality) car.getModel()).setMultiCardinality(false);
     }

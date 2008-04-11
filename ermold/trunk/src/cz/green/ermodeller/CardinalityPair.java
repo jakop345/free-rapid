@@ -11,7 +11,7 @@ import cz.green.event.interfaces.Manager;
  */
 public class CardinalityPair {
     private EntityConstruct entity = null;
-    private Relation relation = null;
+    private RelationConstruct relation = null;
 
     /**
      * Construct empty cardinality pair.
@@ -23,7 +23,7 @@ public class CardinalityPair {
     /**
      * Construct cardinality pair and sets the relation and the entity.
      */
-    public CardinalityPair(EntityConstruct ent, Relation rel) {
+    public CardinalityPair(EntityConstruct ent, RelationConstruct rel) {
         this();
         setEntity(ent);
         setRelation(rel);
@@ -37,7 +37,7 @@ public class CardinalityPair {
      * @param top     The y coordinate of the left top point of the new atribute.
      * @return The created cardinality.
      */
-    public Cardinality create(Manager manager, int left, int top) {
+    public CardinalityConstruct create(Manager manager, int left, int top) {
         if ((getRelation() == null) || (getEntity() == null))
             return null;
         return getRelation().createCardinality(getEntity(), manager, left, top);
@@ -59,7 +59,7 @@ public class CardinalityPair {
      * @return The relation.
      * @see #relation
      */
-    public Relation getRelation() {
+    public RelationConstruct getRelation() {
         return relation;
     }
 
@@ -79,7 +79,7 @@ public class CardinalityPair {
      * @param relation The relation.
      * @see #relation
      */
-    public void setRelation(Relation relation) {
+    public void setRelation(RelationConstruct relation) {
         this.relation = relation;
     }
 
