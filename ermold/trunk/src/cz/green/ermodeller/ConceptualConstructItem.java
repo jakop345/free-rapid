@@ -373,9 +373,9 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
      * @param i
      */
     public AtributeConstruct findAttributeWithPosition(int position) {
-        for (int i = 0; i < Attribs.size(); i++) {
-            if (((AtributeConstruct) Attribs.get(i)).getPosition() == position)
-                return (AtributeConstruct) Attribs.get(i);
+        for (Object Attrib : Attribs) {
+            if (((AtributeConstruct) Attrib).getPosition() == position)
+                return (AtributeConstruct) Attrib;
         }
         return null;
     }

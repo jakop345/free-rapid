@@ -1,5 +1,7 @@
 package cz.omnicom.ermodeller.conceptual.beans;
 
+import java.lang.reflect.Method;
+
 /**
  * The bean information class for cz.omnicom.ermodeller.conceptual.Entity.
  */
@@ -17,8 +19,7 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
             /* Since this method attempts to find a method by getting all methods from the class,
        this method should only be called if getMethod cannot find the method. */
             java.lang.reflect.Method methods[] = aClass.getMethods();
-            for (int index = 0; index < methods.length; index++) {
-                java.lang.reflect.Method method = methods[index];
+            for (Method method : methods) {
                 if ((method.getParameterTypes().length == parameterCount) && (method.getName().equals(methodName))) {
                     return method;
                 }

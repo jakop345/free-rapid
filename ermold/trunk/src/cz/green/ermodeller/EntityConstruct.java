@@ -1503,8 +1503,8 @@ public class EntityConstruct extends ConceptualConstructItem {
                     ALength = 0;
                     position = a.getPosition();
                     if (position > highestPKposition) highestPKposition = position;
-                    for (int j = 0; j < PKmembers.size(); j++) {
-                        pk = (AtributeConstruct) (PKmembers.get(j));
+                    for (Object PKmember : PKmembers) {
+                        pk = (AtributeConstruct) PKmember;
                         if (pk.getPosition() < position)
                             ALength += pk.getBounds().width;
                     }
@@ -1577,8 +1577,8 @@ public class EntityConstruct extends ConceptualConstructItem {
                 }
             }
         }
-        for (int i = 0; i < pks.size(); i++) {
-            ((AtributeConstruct) pks.get(i)).moveTop();
+        for (Object pk : pks) {
+            ((AtributeConstruct) pk).moveTop();
         }
     }
 
@@ -1609,8 +1609,8 @@ public class EntityConstruct extends ConceptualConstructItem {
 
         if (ISAChilds != null) {
             java.util.Vector v = new java.util.Vector(ISAChilds);
-            for (int i = 0; i < v.size(); i++) {
-                ent = (EntityConstruct) v.get(i);
+            for (Object aV : v) {
+                ent = (EntityConstruct) aV;
                 removeISAChild(ent, event);
                 to.addISAChild(ent, event);
             }
@@ -1796,8 +1796,8 @@ public class EntityConstruct extends ConceptualConstructItem {
      */
     protected void minimizeEntity(cz.green.event.ResizeEvent event) {
         if (ISAChilds != null && ISAChilds.size() > 0) {
-            for (int i = 0; i < ISAChilds.size(); i++) {
-                EntityConstruct ent = (EntityConstruct) ISAChilds.get(i);
+            for (Object ISAChild : ISAChilds) {
+                EntityConstruct ent = (EntityConstruct) ISAChild;
                 ent.minimizeEntity(event);
             }
         }

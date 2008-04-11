@@ -500,13 +500,13 @@ public abstract class ConceptualObject implements Serializable, ShowErrorListene
             // checks the name for allowed characters
             char[] nameArr = name.toCharArray();
             Vector notAllowed = new Vector();
-            for (int i = 0; i < nameArr.length; i++) {
+            for (char aNameArr : nameArr) {
                 found = false;
                 for (int j = 0; j < allowed.length && !found; j++) {
-                    found = (allowed[j] == nameArr[i]);
+                    found = (allowed[j] == aNameArr);
                 }
                 if (!found)
-                    notAllowed.addElement(nameArr[i]);
+                    notAllowed.addElement(aNameArr);
             }
             if (!notAllowed.isEmpty()) {
                 ValidationError error = new BadCharacterInNameValidationError(this, notAllowed);

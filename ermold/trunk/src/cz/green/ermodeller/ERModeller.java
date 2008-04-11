@@ -39,6 +39,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.util.Enumeration;
 import java.util.Vector;
 
 /**
@@ -1313,8 +1314,7 @@ public class ERModeller extends JFrame implements
             for (int j = 0; j < attrs.size(); j++)
                 ((Atribute) attrs.get(j)).setPosition(attrsPos.get(j));
             Vector v = d.getAllEntities();
-            for (int j = 0; j < v.size(); j++)
-                ((EntityConstruct) v.get(j)).recalculatePositionsOfAtributes();
+            for (Object aV : v) ((EntityConstruct) aV).recalculatePositionsOfAtributes();
 
         } catch (Exception e) {
             ShowException se = new ShowException(null, "Error", e, true);
@@ -1896,8 +1896,8 @@ public class ERModeller extends JFrame implements
         }
 
         Vector rels = d.getAllRelations();
-        for (int i = 0; i < rels.size(); i++) {
-            RelationConstruct rel = (RelationConstruct) rels.get(i);
+        for (Object rel1 : rels) {
+            RelationConstruct rel = (RelationConstruct) rel1;
 
             /*Check for aributes*/
 /*			if (!rel.getAtributes().isEmpty()) {
@@ -1915,7 +1915,7 @@ public class ERModeller extends JFrame implements
                 e.printStackTrace();
             }
             /* Move cardinalities to its Entities*/
-            java.util.Enumeration e = rel.getConnections().elements();
+            Enumeration e = rel.getConnections().elements();
             CardinalityConstruct car;
             while (e.hasMoreElements()) {
                 Connection c = ((Connection) e.nextElement());
@@ -1952,8 +1952,8 @@ public class ERModeller extends JFrame implements
         Vector allEntities = d.getAllEntities();
 
         setNotation(ConceptualConstructItem.UML);
-        for (int i = 0; i < allEntities.size(); i++) {
-            EntityConstruct ent = (EntityConstruct) allEntities.get(i);
+        for (Object allEntity : allEntities) {
+            EntityConstruct ent = (EntityConstruct) allEntity;
             ent.recalculatePositionsOfAtributes();
             resizeStrongAddictions(ent, ConceptualConstructItem.UML);
             if (ent.isStrongAddictionChild)
@@ -1961,8 +1961,8 @@ public class ERModeller extends JFrame implements
         }
 
         Vector rels = d.getAllRelations();
-        for (int i = 0; i < rels.size(); i++) {
-            RelationConstruct rel = (RelationConstruct) rels.get(i);
+        for (Object rel1 : rels) {
+            RelationConstruct rel = (RelationConstruct) rel1;
             int height = rel.getBounds().height, width = rel.getBounds().width;
             try {
                 rel.resize(7 - width, 7 - height, (ResizePoint.RIGHT | ResizePoint.BOTTOM), true);
@@ -1970,7 +1970,7 @@ public class ERModeller extends JFrame implements
                 e.printStackTrace();
             }
             /* Attach all cardinalities to its Entities*/
-            java.util.Enumeration e = rel.getConnections().elements();
+            Enumeration e = rel.getConnections().elements();
             CardinalityConstruct car;
             while (e.hasMoreElements()) {
                 Connection c = ((Connection) e.nextElement());

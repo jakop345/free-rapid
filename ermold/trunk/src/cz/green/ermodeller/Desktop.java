@@ -315,8 +315,8 @@ public class Desktop extends DesktopTool implements FontManager,
     public Vector getRelationsWithAttribute(boolean namesOnly) {
         Vector rels = getAllRelations();
         Vector relsWithAtributes = new Vector(3, 2);
-        for (int i = 0; i < rels.size(); ++i) {
-            RelationConstruct rel = (RelationConstruct) rels.get(i);
+        for (Object rel1 : rels) {
+            RelationConstruct rel = (RelationConstruct) rel1;
             /*Check for aributes*/
             if (!rel.getAtributes().isEmpty())
                 if (namesOnly)
@@ -333,10 +333,10 @@ public class Desktop extends DesktopTool implements FontManager,
         Vector rels = getAllRelations();
         Vector relsNoConn = new Vector(3, 2);
         int connCounter;
-        for (int i = 0; i < rels.size(); ++i) {
-            RelationConstruct rel = (RelationConstruct) rels.get(i);
+        for (Object rel1 : rels) {
+            RelationConstruct rel = (RelationConstruct) rel1;
             connCounter = 0;
-            java.util.Enumeration e = rel.getConnections().elements();
+            Enumeration e = rel.getConnections().elements();
             while (e.hasMoreElements()) {
                 Connection c = ((Connection) e.nextElement());
                 CardinalityConstruct car = null;
@@ -367,10 +367,10 @@ public class Desktop extends DesktopTool implements FontManager,
         Vector rels = getAllRelations();
         Vector relsTernary = new Vector(3, 2);
         int connCounter;
-        for (int i = 0; i < rels.size(); ++i) {
-            RelationConstruct rel = (RelationConstruct) rels.get(i);
+        for (Object rel1 : rels) {
+            RelationConstruct rel = (RelationConstruct) rel1;
             connCounter = 0;
-            java.util.Enumeration e = rel.getConnections().elements();
+            Enumeration e = rel.getConnections().elements();
             while (e.hasMoreElements()) {
                 Connection c = ((Connection) e.nextElement());
                 CardinalityConstruct car = null;
@@ -398,8 +398,8 @@ public class Desktop extends DesktopTool implements FontManager,
      */
     public void delRelsWithoutConnection() {
         Vector RC = getRelationsWithoutConnection(false);
-        for (int i = 0; i < RC.size(); i++) {
-            RelationConstruct rel = (RelationConstruct) RC.get(i);
+        for (Object aRC : RC) {
+            RelationConstruct rel = (RelationConstruct) aRC;
             rel.handleRemoveEvent(new RemoveEvent(rel.getBounds().x, rel.getBounds().y, null));
         }
     }
@@ -420,8 +420,8 @@ public class Desktop extends DesktopTool implements FontManager,
      */
     public void decomposeTernaryRels(Container place) {
         Vector TR = getTernaryRelations(false);
-        for (int i = 0; i < TR.size(); i++) {
-            RelationConstruct rel = (RelationConstruct) TR.get(i);
+        for (Object aTR : TR) {
+            RelationConstruct rel = (RelationConstruct) aTR;
             rel.decompose(new SelectItemEvent(rel.getBounds().x, rel.getBounds().x, false, place));
         }
     }
@@ -432,10 +432,10 @@ public class Desktop extends DesktopTool implements FontManager,
     public void switchAllRConnectionsCard(Container place) {
         Vector R = getAllRelations();
         Cardinality car1M, car2M;
-        for (int i = 0; i < R.size(); i++) {
-            RelationConstruct rel = (RelationConstruct) R.get(i);
+        for (Object aR : R) {
+            RelationConstruct rel = (RelationConstruct) aR;
 
-            java.util.Enumeration e = rel.getConnections().elements();
+            Enumeration e = rel.getConnections().elements();
             Vector cards = new Vector();
             while (e.hasMoreElements()) {
                 Connection c = ((Connection) e.nextElement());
@@ -472,10 +472,10 @@ public class Desktop extends DesktopTool implements FontManager,
     public void switchAllRConnectionsBoth(Container place) {
         Vector R = getAllRelations();
         Cardinality car1M, car2M;
-        for (int i = 0; i < R.size(); i++) {
-            RelationConstruct rel = (RelationConstruct) R.get(i);
+        for (Object aR : R) {
+            RelationConstruct rel = (RelationConstruct) aR;
 
-            java.util.Enumeration e = rel.getConnections().elements();
+            Enumeration e = rel.getConnections().elements();
             Vector cards = new Vector();
             while (e.hasMoreElements()) {
                 Connection c = ((Connection) e.nextElement());
