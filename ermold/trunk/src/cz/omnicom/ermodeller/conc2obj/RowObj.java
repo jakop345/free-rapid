@@ -1,5 +1,8 @@
 package cz.omnicom.ermodeller.conc2obj;
 
+import cz.omnicom.ermodeller.conc2obj.interfaces.SubObjProducer;
+import cz.omnicom.ermodeller.conc2obj.interfaces.SubTreeProducerObj;
+
 
 /**
  * Row is element of command. Commands contain only rows.

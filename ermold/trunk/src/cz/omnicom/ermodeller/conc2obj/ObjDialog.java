@@ -2,6 +2,7 @@ package cz.omnicom.ermodeller.conc2obj;
 
 import cz.green.ermodeller.AppPrefs;
 import cz.green.swing.ExtensionFileFilter;
+import cz.omnicom.ermodeller.conc2obj.interfaces.SubObjProducer;
 import cz.omnicom.ermodeller.icontree.IconNodeRenderer;
 
 import javax.swing.*;

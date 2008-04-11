@@ -1,6 +1,7 @@
 package cz.omnicom.ermodeller.conc2rela;
 
 import cz.omnicom.ermodeller.conc2obj.*;
+import cz.omnicom.ermodeller.conc2obj.interfaces.ObjSchemaProducerObj;
 import cz.omnicom.ermodeller.conc2rela.exception.*;
 import cz.omnicom.ermodeller.conceptual.*;
 import cz.omnicom.ermodeller.datatype.NestedTableDataType;

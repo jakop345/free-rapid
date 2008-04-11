@@ -1,4 +1,6 @@
-package cz.omnicom.ermodeller.conc2obj;
+package cz.omnicom.ermodeller.conc2obj.interfaces;
+
+import cz.omnicom.ermodeller.conc2obj.ColumnObj;
 
 /**
  * Object, which creates column command
