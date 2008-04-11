@@ -21,17 +21,17 @@ public class UniqueKey extends ConceptualObject {
     /**
      * The owner of the unique key
      */
-    Entity ent = null;
+    private Entity ent = null;
 
     /**
      * The model object from the Aleš Kopecký work
      */
-    cz.omnicom.ermodeller.conceptual.UniqueKey model = null;
+    private cz.omnicom.ermodeller.conceptual.UniqueKey model = null;
 
     /**
      * Determines whether the unique key is primary
      */
-    protected boolean primary = false;
+    private boolean primary = false;
 
     /**
      * Creates new unique key - sets the model, owner and also set as
@@ -327,7 +327,7 @@ public class UniqueKey extends ConceptualObject {
      *
      * @return boolean
      */
-    protected boolean hasAtribute() {
+    boolean hasAtribute() {
         for (int i = connections.size() - 1; i >= 0; i--) {
             if (((Connection) connections.elementAt(i))
                     .isConnectedTo(Atribute.class) != null) {
@@ -402,7 +402,7 @@ public class UniqueKey extends ConceptualObject {
      *
      * @param event This remove event is sent to all disposed cardinalities.
      */
-    protected void removeAllStrongAddiction(cz.green.event.RemoveEvent event) {
+    void removeAllStrongAddiction(cz.green.event.RemoveEvent event) {
         StrongAddiction sa;
         for (int i = connections.size() - 1; i >= 0; i--) {
             if ((sa = (StrongAddiction) (((Connection) connections.elementAt(i)))

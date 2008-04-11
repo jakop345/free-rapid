@@ -15,9 +15,9 @@ import java.beans.PropertyChangeSupport;
 public class LengthDataTypePanel3 extends LengthDataTypePanel {
 
     public static final String LENGTH_TYPE_CHANGED = "length_type_changed";
-    PropertyChangeSupport propertyChange = null;
+    private PropertyChangeSupport propertyChange = null;
 
-    public PropertyChangeSupport getPropertyChange() {
+    PropertyChangeSupport getPropertyChange() {
         if (propertyChange == null)
             propertyChange = new PropertyChangeSupport(this);
         return propertyChange;
@@ -27,7 +27,7 @@ public class LengthDataTypePanel3 extends LengthDataTypePanel {
         getPropertyChange().addPropertyChangeListener(listener);
     }
 
-    final ActionListener al = new ActionListener() {
+    private final ActionListener al = new ActionListener() {
         public void actionPerformed(ActionEvent ae) {
             ivjLengthDataType = (LengthDataType) getLengthDataType().clone();
 

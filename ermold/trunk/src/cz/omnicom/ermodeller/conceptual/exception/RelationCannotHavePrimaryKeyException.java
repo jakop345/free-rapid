@@ -6,7 +6,7 @@ import cz.omnicom.ermodeller.conceptual.Relation;
  * Entity cannot have primary key.
  */
 public class RelationCannotHavePrimaryKeyException extends ConceptualException {
-    Relation relation = null;
+    private Relation relation = null;
 
     /**
      * CannotHavePrimaryKey constructor comment.

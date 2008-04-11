@@ -1,7 +1,7 @@
 package cz.green.eventtool;
 
-import cz.green.event.interfaces.Manager;
 import cz.green.event.exceptions.ImpossibleNegativeValueException;
+import cz.green.event.interfaces.Manager;
 
 /**
  * This class has the same functionality as predecessor. Adds only one methods, which is caused by implementing the
@@ -13,7 +13,7 @@ public class Group extends cz.green.event.Group implements cz.green.eventtool.Pr
      *
      * @see cz.green.event.Group#Group()
      */
-    protected Group() {
+    Group() {
         super();
     }
 

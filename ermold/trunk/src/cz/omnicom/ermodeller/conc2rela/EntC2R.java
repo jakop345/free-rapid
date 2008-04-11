@@ -31,7 +31,7 @@ public abstract class EntC2R extends RelationC2R {
      *
      * @see cz.omnicom.ermodeller.conceptual.Entity
      */
-    public EntC2R(SchemaC2R aSchemaC2R, Entity aConceptualEntity) throws AlreadyContainsExceptionC2R {
+    EntC2R(SchemaC2R aSchemaC2R, Entity aConceptualEntity) throws AlreadyContainsExceptionC2R {
         super(aSchemaC2R, aConceptualEntity);
         UniqueKeyC2R uniqueKeyC2R = new UniqueKeyC2R(aSchemaC2R, this, aConceptualEntity.getPrimaryKey(), aConceptualEntity.getAtributes(), true);
         try {
@@ -68,21 +68,21 @@ public abstract class EntC2R extends RelationC2R {
      *
      * @return boolean
      */
-    protected boolean alreadyAddedToSonGraph() {
+    boolean alreadyAddedToSonGraph() {
         return getLevel() > -1;
     }
 
     /**
      * @return int
      */
-    protected int getLevel() {
+    int getLevel() {
         return level;
     }
 
     /**
      * Set unspecified level.
      */
-    protected void resetLevel() {
+    void resetLevel() {
         this.level = DEFAULT_LEVEL;
     }
 
@@ -91,7 +91,7 @@ public abstract class EntC2R extends RelationC2R {
      *
      * @param newValue int
      */
-    protected void setLevel(int newValue) {
+    void setLevel(int newValue) {
         if (newValue < -1)
             this.level = DEFAULT_LEVEL;
         else

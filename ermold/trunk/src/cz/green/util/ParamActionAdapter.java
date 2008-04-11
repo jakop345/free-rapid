@@ -6,8 +6,8 @@ import java.awt.event.ActionEvent;
  * This type was created by Jiri Mares.
  */
 public class ParamActionAdapter extends ActionAdapter {
-    protected Object param = null;
-    protected Class paramType = null;
+    private Object param = null;
+    private Class paramType = null;
 
     /**
      * ParamActionAdopter constructor comment.

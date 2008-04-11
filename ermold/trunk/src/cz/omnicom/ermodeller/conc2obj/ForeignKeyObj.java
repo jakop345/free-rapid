@@ -69,7 +69,7 @@ public class ForeignKeyObj extends ConstraintObj {
      *
      * @return java.lang.String
      */
-    public String getAtributesString() {
+    String getAtributesString() {
         String result = "(";
         for (Enumeration elements = fromAtributesC2R.elements(); elements.hasMoreElements();) {
             result += ((AtributeC2R) elements.nextElement()).getNameC2R();
@@ -94,7 +94,7 @@ public class ForeignKeyObj extends ConstraintObj {
      *
      * @return cz.omnicom.ermodeller.conc2rela.NameC2R
      */
-    public NameC2R getName() {
+    NameC2R getName() {
         return name;
     }
 

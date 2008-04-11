@@ -17,7 +17,7 @@ public class GeneralNumberDataTypePanel extends DataTypePanel implements FocusLi
      *
      * @see javax.swing.Timer
      */
-    protected class TimerListener implements ActionListener {
+    private class TimerListener implements ActionListener {
         public void actionPerformed(ActionEvent anEvent) {
             if (value == PRECISION) {
                 if (direction == UP)
@@ -41,26 +41,26 @@ public class GeneralNumberDataTypePanel extends DataTypePanel implements FocusLi
      *
      * @see javax.swing.Timer
      */
-    protected Timer timer = null;
+    private Timer timer = null;
     /**
      * Increase or decrease.
      */
-    protected int direction;
+    private int direction;
     /**
      * Change precision or scale.
      */
-    protected int value;
-    protected static final int DOWN = 1;
-    protected static final int UP = 2;
-    protected static final int PRECISION = 1;
-    protected static final int SCALE = 2;
-    protected JButton ivjPrecisionDownButton = null;
-    protected JLabel ivjPrecisionLabel = null;
-    protected JButton ivjPrecisionUpButton = null;
-    protected JButton ivjScaleDownButton = null;
-    protected JLabel ivjScaleLabel = null;
+    private int value;
+    private static final int DOWN = 1;
+    private static final int UP = 2;
+    private static final int PRECISION = 1;
+    private static final int SCALE = 2;
+    private JButton ivjPrecisionDownButton = null;
+    private JLabel ivjPrecisionLabel = null;
+    private JButton ivjPrecisionUpButton = null;
+    private JButton ivjScaleDownButton = null;
+    private JLabel ivjScaleLabel = null;
     protected JTextField ivjScaleTextField = null;
-    protected JButton ivjScaleUpButton = null;
+    private JButton ivjScaleUpButton = null;
     protected JTextField ivjPrecisionTextField = null;
     protected GeneralNumberDataType ivjGeneralNumberDataType = null;
 
@@ -106,7 +106,7 @@ public class GeneralNumberDataTypePanel extends DataTypePanel implements FocusLi
      * @param arg1 java.awt.event.MouseEvent
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    protected void connEtoC10(java.awt.event.MouseEvent arg1) {
+    void connEtoC10(java.awt.event.MouseEvent arg1) {
         try {
             // user code begin {1}
             // user code end
@@ -126,7 +126,7 @@ public class GeneralNumberDataTypePanel extends DataTypePanel implements FocusLi
      * @param arg1 java.awt.event.MouseEvent
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    protected void connEtoC11(java.awt.event.MouseEvent arg1) {
+    void connEtoC11(java.awt.event.MouseEvent arg1) {
         try {
             // user code begin {1}
             // user code end
@@ -146,7 +146,7 @@ public class GeneralNumberDataTypePanel extends DataTypePanel implements FocusLi
      * @param arg1 java.awt.event.MouseEvent
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    protected void connEtoC12(java.awt.event.MouseEvent arg1) {
+    void connEtoC12(java.awt.event.MouseEvent arg1) {
         try {
             // user code begin {1}
             // user code end
@@ -166,7 +166,7 @@ public class GeneralNumberDataTypePanel extends DataTypePanel implements FocusLi
      * @param arg1 java.awt.event.MouseEvent
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    protected void connEtoC5(java.awt.event.MouseEvent arg1) {
+    void connEtoC5(java.awt.event.MouseEvent arg1) {
         try {
             // user code begin {1}
             // user code end
@@ -186,7 +186,7 @@ public class GeneralNumberDataTypePanel extends DataTypePanel implements FocusLi
      * @param arg1 java.awt.event.MouseEvent
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    protected void connEtoC6(java.awt.event.MouseEvent arg1) {
+    void connEtoC6(java.awt.event.MouseEvent arg1) {
         try {
             // user code begin {1}
             // user code end
@@ -206,7 +206,7 @@ public class GeneralNumberDataTypePanel extends DataTypePanel implements FocusLi
      * @param arg1 java.awt.event.MouseEvent
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    protected void connEtoC7(java.awt.event.MouseEvent arg1) {
+    void connEtoC7(java.awt.event.MouseEvent arg1) {
         try {
             // user code begin {1}
             // user code end
@@ -226,7 +226,7 @@ public class GeneralNumberDataTypePanel extends DataTypePanel implements FocusLi
      * @param arg1 java.awt.event.MouseEvent
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    protected void connEtoC8(java.awt.event.MouseEvent arg1) {
+    void connEtoC8(java.awt.event.MouseEvent arg1) {
         try {
             // user code begin {1}
             // user code end
@@ -246,7 +246,7 @@ public class GeneralNumberDataTypePanel extends DataTypePanel implements FocusLi
      * @param arg1 java.awt.event.MouseEvent
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    protected void connEtoC9(java.awt.event.MouseEvent arg1) {
+    void connEtoC9(java.awt.event.MouseEvent arg1) {
         try {
             // user code begin {1}
             // user code end
@@ -610,7 +610,7 @@ public class GeneralNumberDataTypePanel extends DataTypePanel implements FocusLi
      *
      * @return javax.swing.Timer
      */
-    protected Timer getTimer() {
+    Timer getTimer() {
         if (timer == null) {
             timer = new Timer(100, new TimerListener());
             timer.setInitialDelay(500);
@@ -808,7 +808,7 @@ public class GeneralNumberDataTypePanel extends DataTypePanel implements FocusLi
      *
      * @see #timer
      */
-    protected void precisionDownButton_MousePressed(java.awt.event.MouseEvent mouseEvent) {
+    void precisionDownButton_MousePressed(java.awt.event.MouseEvent mouseEvent) {
         direction = DOWN;
         value = PRECISION;
         getTimer().restart();
@@ -819,7 +819,7 @@ public class GeneralNumberDataTypePanel extends DataTypePanel implements FocusLi
      *
      * @see #timer
      */
-    protected void precisionDownButton_MouseReleased(java.awt.event.MouseEvent mouseEvent) {
+    void precisionDownButton_MouseReleased(java.awt.event.MouseEvent mouseEvent) {
         getTimer().stop();
     }
 
@@ -828,7 +828,7 @@ public class GeneralNumberDataTypePanel extends DataTypePanel implements FocusLi
      *
      * @see #timer
      */
-    protected void precisionUpButton_MousePressed(java.awt.event.MouseEvent mouseEvent) {
+    void precisionUpButton_MousePressed(java.awt.event.MouseEvent mouseEvent) {
         direction = UP;
         value = PRECISION;
         getTimer().restart();
@@ -839,7 +839,7 @@ public class GeneralNumberDataTypePanel extends DataTypePanel implements FocusLi
      *
      * @see #timer
      */
-    protected void precisionUpButton_MouseReleased(java.awt.event.MouseEvent mouseEvent) {
+    void precisionUpButton_MouseReleased(java.awt.event.MouseEvent mouseEvent) {
         getTimer().stop();
     }
 
@@ -865,7 +865,7 @@ public class GeneralNumberDataTypePanel extends DataTypePanel implements FocusLi
      *
      * @see #timer
      */
-    protected void scaleDownButton_MousePressed(java.awt.event.MouseEvent mouseEvent) {
+    void scaleDownButton_MousePressed(java.awt.event.MouseEvent mouseEvent) {
         direction = DOWN;
         value = SCALE;
         getTimer().restart();
@@ -876,7 +876,7 @@ public class GeneralNumberDataTypePanel extends DataTypePanel implements FocusLi
      *
      * @see #timer
      */
-    protected void scaleDownButton_MouseReleased(java.awt.event.MouseEvent mouseEvent) {
+    void scaleDownButton_MouseReleased(java.awt.event.MouseEvent mouseEvent) {
         getTimer().stop();
     }
 
@@ -885,7 +885,7 @@ public class GeneralNumberDataTypePanel extends DataTypePanel implements FocusLi
      *
      * @see #timer
      */
-    protected void scaleUpButton_MousePressed(java.awt.event.MouseEvent mouseEvent) {
+    void scaleUpButton_MousePressed(java.awt.event.MouseEvent mouseEvent) {
         direction = UP;
         value = SCALE;
         getTimer().restart();
@@ -896,7 +896,7 @@ public class GeneralNumberDataTypePanel extends DataTypePanel implements FocusLi
      *
      * @see #timer
      */
-    protected void scaleUpButton_MouseReleased(java.awt.event.MouseEvent mouseEvent) {
+    void scaleUpButton_MouseReleased(java.awt.event.MouseEvent mouseEvent) {
         getTimer().stop();
     }
 
@@ -915,7 +915,7 @@ public class GeneralNumberDataTypePanel extends DataTypePanel implements FocusLi
     /**
      * Invoked when a key has been pressed.
      */
-    public void updateFields(ComponentEvent e) {
+    protected void updateFields(ComponentEvent e) {
         int i;
         Integer in;
 

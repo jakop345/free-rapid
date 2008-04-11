@@ -41,7 +41,7 @@ public class SQLDialog extends JDialog implements java.awt.event.ActionListener,
      * Constructor
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    public SQLDialog() {
+    private SQLDialog() {
         super();
         initialize();
     }
@@ -81,7 +81,7 @@ public class SQLDialog extends JDialog implements java.awt.event.ActionListener,
     /**
      * Closes and disposes the dialog.
      */
-    public void closeButton_ActionEvents() {
+    void closeButton_ActionEvents() {
         setVisible(false);
     }
 
@@ -595,7 +595,7 @@ public class SQLDialog extends JDialog implements java.awt.event.ActionListener,
      * @return cz.omnicom.ermodeller.sql.SchemaSQL
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    public SchemaSQL getSchemaSQL() {
+    SchemaSQL getSchemaSQL() {
         if (ivjSchemaSQL == null) {
             try {
                 ivjSchemaSQL = new cz.omnicom.ermodeller.sql.SchemaSQL();
@@ -776,7 +776,7 @@ public class SQLDialog extends JDialog implements java.awt.event.ActionListener,
     /**
      * Opens save dialog and saves the SQL script.
      */
-    public void saveButton_ActionPerformed(java.awt.event.ActionEvent actionEvent) throws java.io.IOException {
+    void saveButton_ActionPerformed(java.awt.event.ActionEvent actionEvent) throws java.io.IOException {
         FileWriter fileOutStream;
         PrintWriter dataOutStream;
 
@@ -851,7 +851,7 @@ public class SQLDialog extends JDialog implements java.awt.event.ActionListener,
     /**
      * Comment
      */
-    public void sendButton_ActionPerformed(java.awt.event.ActionEvent actionEvent) {
+    void sendButton_ActionPerformed(java.awt.event.ActionEvent actionEvent) {
         Object object = getRoot().getUserObject();
         SchemaSQL schemaSQL;
         String sql;
@@ -910,7 +910,7 @@ public class SQLDialog extends JDialog implements java.awt.event.ActionListener,
     /**
      * Listenes for selection change in the tree and displays regarding SQL command.
      */
-    public void sQLTree_ValueChanged(javax.swing.event.TreeSelectionEvent treeSelectionEvent) {
+    void sQLTree_ValueChanged(javax.swing.event.TreeSelectionEvent treeSelectionEvent) {
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) (treeSelectionEvent.getPath().getLastPathComponent());
         Object o = node.getUserObject();
         if (o instanceof SubSQLProducer)
@@ -937,7 +937,7 @@ public class SQLDialog extends JDialog implements java.awt.event.ActionListener,
     /**
      * Comment
      */
-    public void viewButton_ActionEvents() {
+    void viewButton_ActionEvents() {
         connection.showLog();
     }
 }

@@ -1,7 +1,7 @@
 package cz.green.eventtool;
 
-import cz.green.event.interfaces.Manager;
 import cz.green.event.exceptions.ImpossibleNegativeValueException;
+import cz.green.event.interfaces.Manager;
 
 /**
  * This class has the same functionality as predecessor. Adds only one methods, which is caused by implementing the
@@ -58,7 +58,7 @@ public class Window extends cz.green.event.Window implements cz.green.eventtool.
      *
      * @see cz.green.event.Window#Window()
      */
-    protected Window() {
+    Window() {
         super();
     }
 

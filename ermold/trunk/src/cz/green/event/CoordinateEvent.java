@@ -28,7 +28,7 @@ public abstract class CoordinateEvent implements Event {
      * @param comp           The new value for component property.
      * @see #component
      */
-    public CoordinateEvent(int x, int y, java.awt.Component comp) {
+    protected CoordinateEvent(int x, int y, java.awt.Component comp) {
         super();
         this.x = x;
         this.y = y;

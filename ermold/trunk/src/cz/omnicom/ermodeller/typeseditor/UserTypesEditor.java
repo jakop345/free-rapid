@@ -18,17 +18,17 @@ import java.util.Enumeration;
 
 public class UserTypesEditor extends JDialog implements ItemListener, PropertyChangeListener {
 
-    protected JButton buttOK = null;
+    private JButton buttOK = null;
     protected JButton buttEdit = null;
-    protected JButton buttDelete = null;
-    protected JTextField nameTextField = null;
-    protected JComboBox typeComboBox = null;
-    protected JLabel nameLabel = null;
-    protected JLabel editLabel = null;
-    protected JRadioButton newRadioButton = null;
-    protected JRadioButton editRadioButton = null;
-    protected ButtonGroup buttonGroup = null;
-    protected JCheckBox checkBox = null;
+    private JButton buttDelete = null;
+    private JTextField nameTextField = null;
+    private JComboBox typeComboBox = null;
+    private JLabel nameLabel = null;
+    private JLabel editLabel = null;
+    private JRadioButton newRadioButton = null;
+    private JRadioButton editRadioButton = null;
+    private ButtonGroup buttonGroup = null;
+    private JCheckBox checkBox = null;
 
     private boolean creating = true;
     private boolean objectDuplicity = false;
@@ -39,16 +39,16 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
     /**
      * list of all user defined types
      */
-    protected UserTypeStorageVector typesVector = null;
-    protected UserTypesEditorPanel userTypesEditorPanel = null;
+    private UserTypeStorageVector typesVector = null;
+    private UserTypesEditorPanel userTypesEditorPanel = null;
 
     protected JDialog chooseDialog = null;
-    protected UserTypeStorage actualUserTypeStorage = null;
-    protected DataType actualType = null;
+    private UserTypeStorage actualUserTypeStorage = null;
+    private DataType actualType = null;
 
-    protected static final char[] LEGAL_CHARS = {'_', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
+    private static final char[] LEGAL_CHARS = {'_', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
 
-    final ChangeListener newButtonListener = new ChangeListener() {
+    private final ChangeListener newButtonListener = new ChangeListener() {
         public void stateChanged(ChangeEvent e) {
             //System.out.println("new changed!");
             if (getNewRadioButton().isSelected() && !creating) {
@@ -66,7 +66,7 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
         }
     };
 
-    final ChangeListener editButtonListener = new ChangeListener() {
+    private final ChangeListener editButtonListener = new ChangeListener() {
         public void stateChanged(ChangeEvent e) {
             //System.out.println("edit changed!");
             if (getEditRadioButton().isSelected()) {
@@ -89,7 +89,7 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
         }
     };
 
-    final DocumentListener documentListener = new DocumentListener() {
+    private final DocumentListener documentListener = new DocumentListener() {
         public void changedUpdate(DocumentEvent e) {
             if (getNameTextField().getText().length() == 0) {
                 getButtOK().setEnabled(false);
@@ -112,7 +112,7 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
         }
     };
 
-    final ActionListener buttOKListener = new ActionListener() {
+    private final ActionListener buttOKListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             String aName = getNameTextField().getText();
             if (actualType instanceof ObjectDataType) {
@@ -164,7 +164,7 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
         }
     };
 
-    final ActionListener buttDeleteListener = new ActionListener() {
+    private final ActionListener buttDeleteListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             //System.out.println("Delete pressed!!!");
             int choice;
@@ -206,7 +206,7 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
          }
      };
      */
-    final MouseListener textFieldMouseListener = new MouseListener() {
+    private final MouseListener textFieldMouseListener = new MouseListener() {
         public void mousePressed(MouseEvent e) {
             if (!getNewRadioButton().isSelected())
                 getNewRadioButton().doClick();
@@ -243,7 +243,7 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
         initConnections();
     }
 
-    public void initConnections() {
+    void initConnections() {
         getNewRadioButton().addChangeListener(newButtonListener);
         getEditRadioButton().addChangeListener(editButtonListener);
         getTypeComboBox().addItemListener(this);
@@ -254,7 +254,7 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
         //getButtEdit().addActionListener(buttEditListener);
     }
 
-    public void addItems() {
+    void addItems() {
         getContentPane().add(getButtOK());
         //getContentPane().add(getButtEdit());
         getContentPane().add(getButtDelete());
@@ -293,7 +293,7 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
         DataType.removeAllFromObjectNames();
     }
 
-    protected JCheckBox getCheckBox() {
+    JCheckBox getCheckBox() {
         if (checkBox == null) {
             checkBox = new JCheckBox("Do not show this warning next time");
             checkBox.setVisible(true);
@@ -306,7 +306,7 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
         return checkBox;
     }
 
-    public JButton getButtOK() {
+    JButton getButtOK() {
         if (buttOK == null) {
             buttOK = new JButton("OK");
             buttOK.setBounds(40, 250, 70, 25);
@@ -326,7 +326,7 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
          return buttEdit;
      }
      */
-    public JButton getButtDelete() {
+    JButton getButtDelete() {
         if (buttDelete == null) {
             buttDelete = new JButton("Delete");
             buttDelete.setBounds(120, 250, 70, 25);
@@ -335,7 +335,7 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
         return buttDelete;
     }
 
-    public JTextField getNameTextField() {
+    JTextField getNameTextField() {
         if (nameTextField == null) {
             nameTextField = new JTextField();
             nameTextField.setBounds(40, 60, 150, 25);
@@ -343,7 +343,7 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
         return nameTextField;
     }
 
-    public JLabel getNameLabel() {
+    JLabel getNameLabel() {
         if (nameLabel == null) {
             nameLabel = new JLabel("New type name");
             nameLabel.setSize(100, 25);
@@ -352,7 +352,7 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
         return nameLabel;
     }
 
-    public JLabel getEditLabel() {
+    JLabel getEditLabel() {
         if (editLabel == null) {
             editLabel = new JLabel("Select type");
             editLabel.setSize(100, 25);
@@ -361,7 +361,7 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
         return editLabel;
     }
 
-    public JRadioButton getNewRadioButton() {
+    JRadioButton getNewRadioButton() {
         if (newRadioButton == null) {
             newRadioButton = new JRadioButton("Add a new type", true);
             newRadioButton.setSize(150, 25);
@@ -370,7 +370,7 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
         return newRadioButton;
     }
 
-    public JRadioButton getEditRadioButton() {
+    JRadioButton getEditRadioButton() {
         if (editRadioButton == null) {
             editRadioButton = new JRadioButton("Edit / delete existing type", false);
             editRadioButton.setSize(190, 25);
@@ -379,7 +379,7 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
         return editRadioButton;
     }
 
-    public ButtonGroup getButtonGroup() {
+    ButtonGroup getButtonGroup() {
         if (buttonGroup == null) {
             buttonGroup = new ButtonGroup();
             buttonGroup.add(getEditRadioButton());
@@ -388,7 +388,7 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
         return buttonGroup;
     }
 
-    public JComboBox getTypeComboBox() {
+    JComboBox getTypeComboBox() {
         if (typeComboBox == null) {
             typeComboBox = new JComboBox();
             typeComboBox.setSize(150, 25);
@@ -399,7 +399,7 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
         return typeComboBox;
     }
 
-    public UserTypesEditorPanel getUserTypesEditorPanel() {
+    UserTypesEditorPanel getUserTypesEditorPanel() {
         if (userTypesEditorPanel == null) {
             userTypesEditorPanel = new UserTypesEditorPanel(this);
             java.awt.Dimension dimension = userTypesEditorPanel.getPreferredSize();
@@ -429,7 +429,7 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
         return BorderFactory.createTitledBorder("Data type");
     }
 
-    public void addAllTypesToCombo() {
+    void addAllTypesToCombo() {
         getTypeComboBox().removeAllItems();
         for (int i = 0; i < getTypesVector().getSize(); i++) {
             getTypeComboBox().addItem(getTypesVector().getTypeAt(i).getTypeName());

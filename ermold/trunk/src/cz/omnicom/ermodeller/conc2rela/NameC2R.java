@@ -32,7 +32,7 @@ public class NameC2R {
      * @param aString java.lang.String
      * @return java.lang.String
      */
-    protected String convertToValidString(String aString) {
+    String convertToValidString(String aString) {
         if (aString == null)
             return null;
         String result = aString.replace(' ', '_').replace('\t', '_');

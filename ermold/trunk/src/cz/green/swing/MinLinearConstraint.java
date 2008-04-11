@@ -2,7 +2,7 @@ package cz.green.swing;
 
 
 public class MinLinearConstraint extends LinearConstraint {
-    protected int min = 0;
+    private int min = 0;
 
     public MinLinearConstraint() {
         super();

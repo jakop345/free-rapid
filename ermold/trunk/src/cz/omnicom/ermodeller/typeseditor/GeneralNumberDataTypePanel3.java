@@ -16,9 +16,9 @@ import java.beans.PropertyChangeSupport;
 public class GeneralNumberDataTypePanel3 extends GeneralNumberDataTypePanel {
 
     public static final String TYPE_CHANGED = "number_type_changed";
-    PropertyChangeSupport propertyChange = null;
+    private PropertyChangeSupport propertyChange = null;
 
-    public PropertyChangeSupport getPropertyChange() {
+    PropertyChangeSupport getPropertyChange() {
         if (propertyChange == null)
             propertyChange = new PropertyChangeSupport(this);
         return propertyChange;
@@ -28,7 +28,7 @@ public class GeneralNumberDataTypePanel3 extends GeneralNumberDataTypePanel {
         getPropertyChange().addPropertyChangeListener(listener);
     }
 
-    final ActionListener al = new ActionListener() {
+    private final ActionListener al = new ActionListener() {
         public void actionPerformed(ActionEvent ae) {
             ivjGeneralNumberDataType = (GeneralNumberDataType) getGeneralNumberDataType().clone();
 

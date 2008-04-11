@@ -24,7 +24,7 @@ public abstract class ListByConceptualExceptionC2R extends ExceptionC2R {
      */
     String listName = null;
 
-    public static final int ATRIBUTES_LIST = 1;
+    private static final int ATRIBUTES_LIST = 1;
     public static final int RELATIONS_LIST = 2;
     public static final int UNIQUEKEYS_LIST = 3;
 
@@ -35,7 +35,7 @@ public abstract class ListByConceptualExceptionC2R extends ExceptionC2R {
      * @param aConceptualObject cz.omnicom.ermodeller.conceptual.ConceptualObject
      * @param aListSpec         int
      */
-    public ListByConceptualExceptionC2R(ObjectC2R anOwnerObjectC2R, ConceptualObject aConceptualObject, int aListSpec) {
+    ListByConceptualExceptionC2R(ObjectC2R anOwnerObjectC2R, ConceptualObject aConceptualObject, int aListSpec) {
         ownerObjectC2R = anOwnerObjectC2R;
         conceptualObject = aConceptualObject;
         listName = resolveListName(aListSpec);

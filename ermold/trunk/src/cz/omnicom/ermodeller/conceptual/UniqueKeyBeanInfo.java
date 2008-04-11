@@ -3,13 +3,13 @@ package cz.omnicom.ermodeller.conceptual;
 /**
  * The bean information class for cz.omnicom.ermodeller.conceptual.UniqueKey.
  */
-public class UniqueKeyBeanInfo extends java.beans.SimpleBeanInfo {
+class UniqueKeyBeanInfo extends java.beans.SimpleBeanInfo {
     /**
      * Gets the atributes property descriptor.
      *
      * @return java.beans.PropertyDescriptor
      */
-    public java.beans.PropertyDescriptor atributesPropertyDescriptor() {
+    java.beans.PropertyDescriptor atributesPropertyDescriptor() {
         java.beans.PropertyDescriptor aDescriptor = null;
         try {
             try {
@@ -52,7 +52,7 @@ public class UniqueKeyBeanInfo extends java.beans.SimpleBeanInfo {
      *
      * @return java.beans.PropertyDescriptor
      */
-    public java.beans.PropertyDescriptor entityPropertyDescriptor() {
+    java.beans.PropertyDescriptor entityPropertyDescriptor() {
         java.beans.PropertyDescriptor aDescriptor = null;
         try {
             try {
@@ -109,7 +109,7 @@ public class UniqueKeyBeanInfo extends java.beans.SimpleBeanInfo {
      * @param parameterCount int
      * @return java.lang.reflect.Method
      */
-    public static java.lang.reflect.Method findMethod(java.lang.Class aClass, java.lang.String methodName, int parameterCount) {
+    private static java.lang.reflect.Method findMethod(java.lang.Class aClass, java.lang.String methodName, int parameterCount) {
         try {
             /* Since this method attempts to find a method by getting all methods from the class,
        this method should only be called if getMethod cannot find the method. */
@@ -159,7 +159,7 @@ public class UniqueKeyBeanInfo extends java.beans.SimpleBeanInfo {
      *
      * @return java.lang.Class
      */
-    public static java.lang.Class getBeanClass() {
+    private static java.lang.Class getBeanClass() {
         return cz.omnicom.ermodeller.conceptual.UniqueKey.class;
     }
 

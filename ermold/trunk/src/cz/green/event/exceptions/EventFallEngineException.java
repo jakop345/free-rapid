@@ -7,7 +7,7 @@ public class EventFallEngineException extends Exception {
     /**
      * Inherited default constructor.
      */
-    public EventFallEngineException() {
+    EventFallEngineException() {
         super();
     }
 
@@ -16,7 +16,7 @@ public class EventFallEngineException extends Exception {
      *
      * @param <code>s</code> The passed message.
      */
-    public EventFallEngineException(String s) {
+    EventFallEngineException(String s) {
         super(s);
     }
 }

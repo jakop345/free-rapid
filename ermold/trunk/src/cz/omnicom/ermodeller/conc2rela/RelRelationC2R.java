@@ -5,7 +5,7 @@ import cz.omnicom.ermodeller.conceptual.Relation;
 /**
  * Relation created from conceptual relation.
  */
-public class RelRelationC2R extends RelC2R {
+class RelRelationC2R extends RelC2R {
     /**
      * Constructor.
      *

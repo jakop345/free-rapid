@@ -12,7 +12,7 @@ public class PreferencesPanel extends javax.swing.JPanel {
     private javax.swing.JTextField ivjURLField = null;
     private javax.swing.JTextField ivjUserField = null;
     private cz.omnicom.ermodeller.sql.SQLConnection connection = null;
-    final IvjEventHandler ivjEventHandler = new IvjEventHandler();
+    private final IvjEventHandler ivjEventHandler = new IvjEventHandler();
     private java.lang.String Sql;
     private javax.swing.JButton cancelButton = null;
     private javax.swing.JButton OKButton = null;
@@ -45,7 +45,7 @@ public class PreferencesPanel extends javax.swing.JPanel {
     /**
      * SendSQL constructor comment.
      */
-    public PreferencesPanel() {
+    private PreferencesPanel() {
         super();
         initialize();
     }
@@ -53,7 +53,7 @@ public class PreferencesPanel extends javax.swing.JPanel {
     /**
      * Comment
      */
-    public void cancelButton_ActionPerformed(java.awt.event.ActionEvent actionEvent) {
+    void cancelButton_ActionPerformed(java.awt.event.ActionEvent actionEvent) {
         getDriverField().setText(connection.getDriver());
         getURLField().setText(connection.getUrl());
         getUserField().setText(connection.getUser());
@@ -687,7 +687,7 @@ public class PreferencesPanel extends javax.swing.JPanel {
     /**
      * Comment
      */
-    public void jButton6_ActionEvents() {
+    void jButton6_ActionEvents() {
         connection.showLog();
     }
 
@@ -746,7 +746,7 @@ public class PreferencesPanel extends javax.swing.JPanel {
     /**
      * Comment
      */
-    public void oKButton_ActionPerformed(java.awt.event.ActionEvent actionEvent) {
+    void oKButton_ActionPerformed(java.awt.event.ActionEvent actionEvent) {
         connection.setDriver(getDriverField().getText());
         connection.setUrl(getURLField().getText());
         connection.setUser(getUserField().getText());
@@ -813,7 +813,7 @@ public class PreferencesPanel extends javax.swing.JPanel {
         Sql = newSql;
     }
 
-    public void test() {
+    void test() {
         connection.test(getDriverField().getText(), getURLField().getText(), getUserField().getText(), new String(getPasswordField().getPassword()));
     }
 }

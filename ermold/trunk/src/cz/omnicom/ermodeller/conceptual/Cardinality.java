@@ -36,11 +36,11 @@ public class Cardinality extends ConceptualObject {
     /**
      * Connected entity.
      */
-    protected Entity entity = null;
+    private Entity entity = null;
     /**
      * Connected relation.
      */
-    protected Relation relation = null;
+    private Relation relation = null;
     /**
      * Tells, if the entity has to be always in the relation.
      */
@@ -55,10 +55,10 @@ public class Cardinality extends ConceptualObject {
      */
     private boolean fieldGlue = false;
 
-    public static final String RELATION_PROPERTY_CHANGE = "relation";
+    private static final String RELATION_PROPERTY_CHANGE = "relation";
     public static final String MULTICARDINALITY_PROPERTY_CHANGE = "multiCardinality";
     public static final String GLUE_PROPERTY_CHANGE = "glue";
-    public static final String ENTITY_PROPERTY_CHANGE = "entity";
+    private static final String ENTITY_PROPERTY_CHANGE = "entity";
     public static final String ARBITRARY_PROPERTY_CHANGE = "arbitrary";
 
     /**
@@ -185,7 +185,7 @@ public class Cardinality extends ConceptualObject {
      *
      * @return cz.omnicom.ermodeller.conceptual.Relation
      */
-    public Relation getRelation() {
+    Relation getRelation() {
         return relation;
     }
 

@@ -6,8 +6,8 @@ import javax.swing.filechooser.FileFilter;
  * This type was created by Jiri Mares
  */
 public class ExtensionFileFilter extends FileFilter {
-    protected final String description;
-    protected final String extension;
+    private final String description;
+    private final String extension;
 
     /**
      * This method was created by Jiri Mares

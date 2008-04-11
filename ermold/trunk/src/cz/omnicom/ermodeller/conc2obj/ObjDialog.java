@@ -41,7 +41,7 @@ public class ObjDialog extends JDialog implements java.awt.event.ActionListener,
      * Constructor
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    public ObjDialog() {
+    private ObjDialog() {
         super();
         initialize();
     }
@@ -81,7 +81,7 @@ public class ObjDialog extends JDialog implements java.awt.event.ActionListener,
     /**
      * Closes and disposes the dialog.
      */
-    public void closeButton_ActionEvents() {
+    void closeButton_ActionEvents() {
         setVisible(false);
     }
 
@@ -595,7 +595,7 @@ public class ObjDialog extends JDialog implements java.awt.event.ActionListener,
      * @return cz.omnicom.ermodeller.sql.SchemaSQL
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    public SchemaObj getSchemaObj() {
+    SchemaObj getSchemaObj() {
         if (ivjSchemaObj == null) {
             try {
                 ivjSchemaObj = new cz.omnicom.ermodeller.conc2obj.SchemaObj();
@@ -776,7 +776,7 @@ public class ObjDialog extends JDialog implements java.awt.event.ActionListener,
     /**
      * Opens save dialog and saves the SQL script.
      */
-    public void saveButton_ActionPerformed(java.awt.event.ActionEvent actionEvent) throws java.io.IOException {
+    void saveButton_ActionPerformed(java.awt.event.ActionEvent actionEvent) throws java.io.IOException {
         FileWriter fileOutStream;
         PrintWriter dataOutStream;
 
@@ -850,7 +850,7 @@ public class ObjDialog extends JDialog implements java.awt.event.ActionListener,
     /**
      * Comment
      */
-    public void sendButton_ActionPerformed(java.awt.event.ActionEvent actionEvent) {
+    void sendButton_ActionPerformed(java.awt.event.ActionEvent actionEvent) {
         Object object = getRoot().getUserObject();
         SchemaObj schemaSQL;
         String sql;
@@ -909,7 +909,7 @@ public class ObjDialog extends JDialog implements java.awt.event.ActionListener,
     /**
      * Listenes for selection change in the tree and displays regarding SQL command.
      */
-    public void objTree_ValueChanged(javax.swing.event.TreeSelectionEvent treeSelectionEvent) {
+    void objTree_ValueChanged(javax.swing.event.TreeSelectionEvent treeSelectionEvent) {
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) (treeSelectionEvent.getPath().getLastPathComponent());
         Object o = node.getUserObject();
         if (o instanceof SubObjProducer)
@@ -936,7 +936,7 @@ public class ObjDialog extends JDialog implements java.awt.event.ActionListener,
     /**
      * Comment
      */
-    public void viewButton_ActionEvents() {
+    void viewButton_ActionEvents() {
         connection.showLog();
     }
 }

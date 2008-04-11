@@ -12,28 +12,28 @@ public abstract class DataType implements Cloneable, Serializable {
     /**
      * Listeners for PropertyChange event.
      */
-    protected transient PropertyChangeSupport propertyChange;
+    private transient PropertyChangeSupport propertyChange;
 
     /**
      * list of available user datatypes
      */
-    protected static final Vector<String> typeNames = new Vector<String>(0);
-    protected static boolean typeNamesChanged = false;
+    private static final Vector<String> typeNames = new Vector<String>(0);
+    private static boolean typeNamesChanged = false;
 
     /**
      * list of nested tables already created
      */
-    protected static final Vector<String> nestedNames = new Vector<String>(0);
+    private static final Vector<String> nestedNames = new Vector<String>(0);
 
     /**
      * list of varrays already created
      */
-    protected static final Vector<String> varrayNames = new Vector<String>(0);
+    private static final Vector<String> varrayNames = new Vector<String>(0);
 
     /**
      * list of objects already created
      */
-    protected static final Vector<String> objectNames = new Vector<String>(0);
+    private static final Vector<String> objectNames = new Vector<String>(0);
 
     public static void addToVarrayNames(String name) {
         varrayNames.addElement(name);
@@ -140,7 +140,7 @@ public abstract class DataType implements Cloneable, Serializable {
     /**
      * The firePropertyChange method was generated to support the propertyChange field.
      */
-    public void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
+    void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
         getPropertyChange().firePropertyChange(propertyName, oldValue, newValue);
     }
 
@@ -154,7 +154,7 @@ public abstract class DataType implements Cloneable, Serializable {
     /**
      * Accessor for the propertyChange field.
      */
-    protected PropertyChangeSupport getPropertyChange() {
+    PropertyChangeSupport getPropertyChange() {
         if (propertyChange == null)
             propertyChange = new PropertyChangeSupport(this);
         return propertyChange;

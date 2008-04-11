@@ -11,18 +11,18 @@ public class UserTypeStorageVector {
 
     public static final String ADD_PROPERTYCHANGE = "TYPE_ADD";
     public static final String REMOVE_PROPERTYCHANGE = "TYPE_REMOVE";
-    public static final String ADD_TO_PROPERTYCHANGE = "TYPE_ADD_TO";
+    private static final String ADD_TO_PROPERTYCHANGE = "TYPE_ADD_TO";
     public static final int DIRECT = 1;
     public static final int INDIRECT = 0;
 
-    protected Vector userTypeStorageVector = null;
-    protected transient PropertyChangeSupport propertyChange = null;
+    private Vector userTypeStorageVector = null;
+    private transient PropertyChangeSupport propertyChange = null;
 
     public UserTypeStorageVector() {
         userTypeStorageVector = new Vector(0);
     }
 
-    public PropertyChangeSupport getPropertyChange() {
+    PropertyChangeSupport getPropertyChange() {
         if (propertyChange == null)
             propertyChange = new PropertyChangeSupport(this);
         return propertyChange;

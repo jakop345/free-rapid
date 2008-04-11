@@ -61,7 +61,7 @@ public class ColumnUniqueObj extends RowObj {
      *
      * @return java.lang.String
      */
-    public String getNameString() {
+    String getNameString() {
         String pom = "";
         for (int i = 0; i < uniqueKeysC2R.size(); i++) {
             AtributeC2R a = (AtributeC2R) uniqueKeysC2R.get(i);

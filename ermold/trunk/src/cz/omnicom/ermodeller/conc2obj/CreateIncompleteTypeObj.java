@@ -14,7 +14,7 @@ public class CreateIncompleteTypeObj extends CreateTypeObj {
     /**
      * name of the type
      */
-    String name = null;
+    private String name = null;
 
     /**
      * Constructor.

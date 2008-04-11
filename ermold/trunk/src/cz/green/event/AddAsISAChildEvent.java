@@ -13,11 +13,11 @@ public class AddAsISAChildEvent extends cz.green.event.CoordinateEvent {
     /**
      * The item dragging over receiver of the event
      */
-    protected Item item = null;
+    private Item item = null;
     /**
      * The mode of this event
      */
-    protected boolean add = true;
+    private boolean add = true;
 
     /**
      * Constructs the event as instance of the <code>CoordinateEvent</code> class, set the dragging item
@@ -26,7 +26,7 @@ public class AddAsISAChildEvent extends cz.green.event.CoordinateEvent {
      * @param item The dragging item over
      * @see cz.green.event.CoordinateEvent#CoordinateEvent(int, int, java.awt.Component)
      */
-    public AddAsISAChildEvent(int x, int y, Item item, java.awt.Component comp) {
+    private AddAsISAChildEvent(int x, int y, Item item, java.awt.Component comp) {
         super(x, y, comp);
         this.item = item;
     }

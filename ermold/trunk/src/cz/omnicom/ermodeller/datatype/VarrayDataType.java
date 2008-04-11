@@ -5,14 +5,14 @@ import java.beans.PropertyChangeListener;
 
 public class VarrayDataType extends DataType implements PropertyChangeListener {
 
-    static final public int MINIMUM_LENGTH = 1;
-    static final public int MAXIMUM_LENGTH = 2000;
-    static final public int DEFAULT_LENGTH = 255;
+    private static final int MINIMUM_LENGTH = 1;
+    private static final int MAXIMUM_LENGTH = 2000;
+    private static final int DEFAULT_LENGTH = 255;
 
     public static final String LENGTH_PROPERTY_CHANGE = "length";
 
-    protected int length;
-    protected DataType dataType;
+    private int length;
+    private DataType dataType;
 
     public VarrayDataType() {
         super();

@@ -10,7 +10,7 @@ public class SelectItemEvent extends SelectItemExEvent {
      *
      * @see SelectItemExEvent
      */
-    protected boolean selected = false;
+    private boolean selected = false;
 
     /**
      * Default constructor.

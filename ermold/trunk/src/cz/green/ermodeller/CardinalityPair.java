@@ -9,14 +9,14 @@ import cz.green.event.interfaces.Manager;
  *
  * @see Container#addingCardinality(cz.green.ermodeller.CardinalityPair)
  */
-public class CardinalityPair {
+class CardinalityPair {
     private Entity entity = null;
     private Relation relation = null;
 
     /**
      * Construct empty cardinality pair.
      */
-    public CardinalityPair() {
+    private CardinalityPair() {
         super();
     }
 
@@ -49,7 +49,7 @@ public class CardinalityPair {
      * @return The entity.
      * @see #entity
      */
-    public Entity getEntity() {
+    Entity getEntity() {
         return entity;
     }
 
@@ -59,7 +59,7 @@ public class CardinalityPair {
      * @return The relation.
      * @see #relation
      */
-    public Relation getRelation() {
+    Relation getRelation() {
         return relation;
     }
 
@@ -69,7 +69,7 @@ public class CardinalityPair {
      * @param entity The entity.
      * @see #entity
      */
-    public void setEntity(Entity entity) {
+    void setEntity(Entity entity) {
         this.entity = entity;
     }
 
@@ -79,7 +79,7 @@ public class CardinalityPair {
      * @param relation The relation.
      * @see #relation
      */
-    public void setRelation(Relation relation) {
+    void setRelation(Relation relation) {
         this.relation = relation;
     }
 

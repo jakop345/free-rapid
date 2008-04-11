@@ -6,75 +6,199 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/ORCheck.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/ORCheck.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/Cardinality.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/Cardinality.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/Cardinality.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/Cardinality.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/LengthDataTypePanel.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/LengthDataTypePanel.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/LengthDataTypePanel3.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/LengthDataTypePanel3.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/event/ChangeZOrderEvent.java" afterPath="$PROJECT_DIR$/src/cz/green/event/ChangeZOrderEvent.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/UserTypeStorage.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/UserTypeStorage.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/MultiCardinalityEditor.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/MultiCardinalityEditor.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/icontree/IconNode.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/icontree/IconNode.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/eventtool/ConnectionArrow.java" afterPath="$PROJECT_DIR$/src/cz/green/eventtool/ConnectionArrow.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/exception/ListByConceptualExceptionC2R.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/exception/ListByConceptualExceptionC2R.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/errorlog/ErrorLogDialog.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/errorlog/ErrorLogDialog.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/CreateIncompleteTypeSQL.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/CreateIncompleteTypeSQL.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/SQLFileFilter.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/SQLFileFilter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/ConstraintsDialog.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/ConstraintsDialog.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/Atribute.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/Atribute.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/EntC2R.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/EntC2R.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/CardinalityCustomizer.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/CardinalityCustomizer.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/LogSQL.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/LogSQL.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/SQLConnection.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/SQLConnection.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/event/SelectedItems.java" afterPath="$PROJECT_DIR$/src/cz/green/event/SelectedItems.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/util/IntervalMethods.java" afterPath="$PROJECT_DIR$/src/cz/green/util/IntervalMethods.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/swing/ShowException.java" afterPath="$PROJECT_DIR$/src/cz/green/swing/ShowException.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/VarrayNestedTypeEditor.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/VarrayNestedTypeEditor.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/DragOverEvent.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/DragOverEvent.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/AlterReferenceType.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/AlterReferenceType.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/DataTypePanel.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/DataTypePanel.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/DropCommandSQL.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/DropCommandSQL.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/CardinalityPair.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/CardinalityPair.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/GeneralNumberDataTypePanel2.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/GeneralNumberDataTypePanel2.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/eventtool/ConnectableWindow.java" afterPath="$PROJECT_DIR$/src/cz/green/eventtool/ConnectableWindow.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/swing/LinearConstraint.java" afterPath="$PROJECT_DIR$/src/cz/green/swing/LinearConstraint.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/util/ParamActionAdapter.java" afterPath="$PROJECT_DIR$/src/cz/green/util/ParamActionAdapter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/SchemaSQL.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/SchemaSQL.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/exception/ListExceptionC2R.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/exception/ListExceptionC2R.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/SQLConnection.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/SQLConnection.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/ObjectC2R.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/ObjectC2R.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/PopupMenuEvent.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/PopupMenuEvent.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/event/AddIdentificationDependencyEvent.java" afterPath="$PROJECT_DIR$/src/cz/green/event/AddIdentificationDependencyEvent.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/GenerateDialog.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/GenerateDialog.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/ObjectTypeEditor.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/ObjectTypeEditor.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/DropTypeObj.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/DropTypeObj.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/ConceptualObject.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/ConceptualObject.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/AtributeGroupVectorObj.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/AtributeGroupVectorObj.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/GlueControlPartOfCheckObj.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/GlueControlPartOfCheckObj.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/GeneralNumberDataTypePanel.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/GeneralNumberDataTypePanel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/errorlog/ShowErrorEvent.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/errorlog/ShowErrorEvent.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/GeneralNumberDataTypePanel3.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/GeneralNumberDataTypePanel3.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/event/Window.java" afterPath="$PROJECT_DIR$/src/cz/green/event/Window.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/swing/ConstantConstraint.java" afterPath="$PROJECT_DIR$/src/cz/green/swing/ConstantConstraint.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/util/WindowCloser.java" afterPath="$PROJECT_DIR$/src/cz/green/util/WindowCloser.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/TypeEditor.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/TypeEditor.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/ORCheckObj.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/ORCheckObj.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/ERModeller.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/ERModeller.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/MultiCardinalityEditor.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/MultiCardinalityEditor.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/eventtool/DGroup.java" afterPath="$PROJECT_DIR$/src/cz/green/eventtool/DGroup.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/RelC2R.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/RelC2R.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/Atribute.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/Atribute.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/GlueControlPartOfCheck.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/GlueControlPartOfCheck.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/Relation.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/Relation.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/UserTypeStorageVector.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/UserTypeStorageVector.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/eventtool/PrintPreviewDialog.java" afterPath="$PROJECT_DIR$/src/cz/green/eventtool/PrintPreviewDialog.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/UserTypesEditor.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/UserTypesEditor.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/EntRelationC2R.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/EntRelationC2R.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/OptionsDialog.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/OptionsDialog.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/exception/MustHave2ConnectionsException.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/exception/MustHave2ConnectionsException.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/event/Group.java" afterPath="$PROJECT_DIR$/src/cz/green/event/Group.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/eventtool/Container.java" afterPath="$PROJECT_DIR$/src/cz/green/eventtool/Container.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/GlueRecord.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/GlueRecord.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/AtributeC2R.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/AtributeC2R.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/ConstraintsDialog.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/ConstraintsDialog.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/BooleanEditor.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/BooleanEditor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/ERDocument.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/ERDocument.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/Atribute.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/Atribute.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/NestedTableStorageObj.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/NestedTableStorageObj.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/EntC2R.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/EntC2R.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/errorlog/ConceptualObjectValidationError.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/errorlog/ConceptualObjectValidationError.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/eventtool/PropertyList.java" afterPath="$PROJECT_DIR$/src/cz/green/eventtool/PropertyList.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/CardinalityBeanInfo.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/CardinalityBeanInfo.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/LogSQL.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/LogSQL.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/ConceptualConstructBeanInfo.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/ConceptualConstructBeanInfo.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/SQLConnection.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/SQLConnection.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/AtributeGroupVector.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/AtributeGroupVector.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/errorlog/ShowErrorSupport.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/errorlog/ShowErrorSupport.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/swing/CountLayout.java" afterPath="$PROJECT_DIR$/src/cz/green/swing/CountLayout.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/FixedCharDataType.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/FixedCharDataType.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/CreateTypeWithRowsObj.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/CreateTypeWithRowsObj.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/UserDefinedDataTypePanel.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/UserDefinedDataTypePanel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/eventtool/Desktop.java" afterPath="$PROJECT_DIR$/src/cz/green/eventtool/Desktop.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ermodeler.iws" afterPath="$PROJECT_DIR$/ermodeler.iws" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/errorlog/ConceptualObjectVectorValidationError.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/errorlog/ConceptualObjectVectorValidationError.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/Entity.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/Entity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/DataType.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/DataType.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/VarrayDataTypePanel2.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/VarrayDataTypePanel2.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/LogSQLObj.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/LogSQLObj.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/swing/CountLayout.java" afterPath="$PROJECT_DIR$/src/cz/green/swing/CountLayout.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/DropAboveEvent.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/DropAboveEvent.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/errorlog/BadCharacterInNameValidationError.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/errorlog/BadCharacterInNameValidationError.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/event/SelectItemEvent.java" afterPath="$PROJECT_DIR$/src/cz/green/event/SelectItemEvent.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/Container.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/Container.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/TXTFileFilter.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/TXTFileFilter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/NameC2R.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/NameC2R.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/GeneralNumberDataType.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/GeneralNumberDataType.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/SchemaObj.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/SchemaObj.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/util/BadDimensionException.java" afterPath="$PROJECT_DIR$/src/cz/green/util/BadDimensionException.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/eventtool/ResolutionDialog.java" afterPath="$PROJECT_DIR$/src/cz/green/eventtool/ResolutionDialog.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/ConceptualConstruct.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/ConceptualConstruct.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/LengthDataType.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/LengthDataType.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/Schema.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/Schema.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/SchemaBeanInfo.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/SchemaBeanInfo.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/UniqueKeyBeanInfo.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/UniqueKeyBeanInfo.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/UniqueKeyC2R.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/UniqueKeyC2R.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/errorlog/ValidationError.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/errorlog/ValidationError.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/GeneralNumberDataTypePanel2.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/GeneralNumberDataTypePanel2.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/UniqueKey.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/UniqueKey.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/CreateIncompleteTypeObj.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/CreateIncompleteTypeObj.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/AtributeNameC2R.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/AtributeNameC2R.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/EditorDialog.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/EditorDialog.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/ColumnUniqueObj.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/ColumnUniqueObj.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/ExMovingEvent.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/ExMovingEvent.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/EntityBeanInfo.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/EntityBeanInfo.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/util/IntervalMethodsException.java" afterPath="$PROJECT_DIR$/src/cz/green/util/IntervalMethodsException.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/exception/CannotHavePrimaryKeyException.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/exception/CannotHavePrimaryKeyException.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/SchemaC2R.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/SchemaC2R.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/PreferencesPanel.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/PreferencesPanel.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/AtributeBeanInfo.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/AtributeBeanInfo.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/NestedTableStorageSQL.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/NestedTableStorageSQL.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/swing/ExtensionFileFilter.java" afterPath="$PROJECT_DIR$/src/cz/green/swing/ExtensionFileFilter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/AboutDialog.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/AboutDialog.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/ChangeNotationDialog.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/ChangeNotationDialog.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/errorlog/BadFirstCharacterInNameValidationError.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/errorlog/BadFirstCharacterInNameValidationError.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/ConceptualObjectBeanInfo.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/ConceptualObjectBeanInfo.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/SQLConnection.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/SQLConnection.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/Entity.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/Entity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/ObjectTypeEditor.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/ObjectTypeEditor.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/VarrayDataType.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/VarrayDataType.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/event/AddAsISAChildEvent.java" afterPath="$PROJECT_DIR$/src/cz/green/event/AddAsISAChildEvent.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/swing/SimpleBoundsConstraint.java" afterPath="$PROJECT_DIR$/src/cz/green/swing/SimpleBoundsConstraint.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/CreateTypeWithoutRowsObj.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/CreateTypeWithoutRowsObj.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/ElementOfRelationC2R.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/ElementOfRelationC2R.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/NestedTableDataType.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/NestedTableDataType.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/event/Container.java" afterPath="$PROJECT_DIR$/src/cz/green/event/Container.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/NestedTableDataTypePanel2.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/NestedTableDataTypePanel2.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/LengthDataTypePanel2.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/LengthDataTypePanel2.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/GluedRelationRecord.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/GluedRelationRecord.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/errorlog/ConflictsDialog.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/errorlog/ConflictsDialog.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/LengthDataTypePanel.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/LengthDataTypePanel.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/CommandWithRowsObj.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/CommandWithRowsObj.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/AtributeGroupVectorObj.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/AtributeGroupVectorObj.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/GeneralNumberDataTypePanel.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/GeneralNumberDataTypePanel.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/EntForeignKeyC2R.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/EntForeignKeyC2R.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/AlterAddCommandObj.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/AlterAddCommandObj.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/GeneralNumberDataTypePanel3.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/GeneralNumberDataTypePanel3.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/ObjectDataTypePanel2.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/ObjectDataTypePanel2.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/exception/RelationCannotHavePrimaryKeyException.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/exception/RelationCannotHavePrimaryKeyException.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/exception/ListException.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/exception/ListException.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/TXTFileFilterObj.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/TXTFileFilterObj.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/UserTypesEditor.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/UserTypesEditor.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/Relation.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/Relation.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/eventtool/ShowProperty.java" afterPath="$PROJECT_DIR$/src/cz/green/eventtool/ShowProperty.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/ForeignKeySQL.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/ForeignKeySQL.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/UserTypesEditorPanel.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/UserTypesEditorPanel.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/ERDocument.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/ERDocument.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/AppPrefs.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/AppPrefs.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/RelationC2R.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/RelationC2R.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/event/exceptions/EventFallEngineException.java" afterPath="$PROJECT_DIR$/src/cz/green/event/exceptions/EventFallEngineException.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/event/Desktop.java" afterPath="$PROJECT_DIR$/src/cz/green/event/Desktop.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/ConceptualConstructBeanInfo.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/ConceptualConstructBeanInfo.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/swing/SelectUI.java" afterPath="$PROJECT_DIR$/src/cz/green/swing/SelectUI.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/CreateTypeWithRowsSQL.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/CreateTypeWithRowsSQL.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/event/AddConnectionEvent.java" afterPath="$PROJECT_DIR$/src/cz/green/event/AddConnectionEvent.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/Entity.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/Entity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/DataType.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/DataType.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/util/ArrayList.java" afterPath="$PROJECT_DIR$/src/cz/green/util/ArrayList.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/LogSQLObj.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/LogSQLObj.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/exception/ISAChildCannotHavePrimaryKeyException.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/exception/ISAChildCannotHavePrimaryKeyException.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/eventtool/PrintPreview.java" afterPath="$PROJECT_DIR$/src/cz/green/eventtool/PrintPreview.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/CommandSQL.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/CommandSQL.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/UniqueKeyBeanInfo.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/UniqueKeyBeanInfo.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/errorlog/ValidationError.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/errorlog/ValidationError.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/CreateTypeWithoutRowsSQL.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/CreateTypeWithoutRowsSQL.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/event/SelectItemExEvent.java" afterPath="$PROJECT_DIR$/src/cz/green/event/SelectItemExEvent.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/Varchar2DataType.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/Varchar2DataType.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/errorlog/UndefinedDataTypeValidationError.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/errorlog/UndefinedDataTypeValidationError.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/AboutDialog.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/AboutDialog.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/eventtool/Group.java" afterPath="$PROJECT_DIR$/src/cz/green/eventtool/Group.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/util/WrongIntervalException.java" afterPath="$PROJECT_DIR$/src/cz/green/util/WrongIntervalException.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/ConceptualObjectBeanInfo.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/ConceptualObjectBeanInfo.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/Desktop.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/Desktop.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/ObjFileFilter.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/ObjFileFilter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/Cardinality.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/Cardinality.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/ORCheck.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/ORCheck.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/util/ActionAdapter.java" afterPath="$PROJECT_DIR$/src/cz/green/util/ActionAdapter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/eventtool/CustomizerBean.java" afterPath="$PROJECT_DIR$/src/cz/green/eventtool/CustomizerBean.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/GlueControlPartOfCheckObj.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/GlueControlPartOfCheckObj.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/event/CoordinateEvent.java" afterPath="$PROJECT_DIR$/src/cz/green/event/CoordinateEvent.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/ConceptualObject.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/ConceptualObject.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/event/Window.java" afterPath="$PROJECT_DIR$/src/cz/green/event/Window.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/Atribute.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/Atribute.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/GlueControlPartOfCheck.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/GlueControlPartOfCheck.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/StrongAddictionPair.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/StrongAddictionPair.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/StrongAddiction.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/StrongAddiction.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/GlueRecord.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/GlueRecord.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/DropTypeSQL.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/DropTypeSQL.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/TabCreatorObj.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/TabCreatorObj.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/BooleanEditor.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/BooleanEditor.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/eventtool/PropertyListDialog.java" afterPath="$PROJECT_DIR$/src/cz/green/eventtool/PropertyListDialog.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/ObjectDataType.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/ObjectDataType.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/DropCommandObj.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/DropCommandObj.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/ElementOfRelC2R.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/ElementOfRelC2R.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/AtributeGroupVector.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/AtributeGroupVector.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/ExMoveEvent.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/ExMoveEvent.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/ConceptualConstruct.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/ConceptualConstruct.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/event/AddRelWithConnsEvent.java" afterPath="$PROJECT_DIR$/src/cz/green/event/AddRelWithConnsEvent.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/UniqueKey.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/UniqueKey.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ermodeler.iws" afterPath="$PROJECT_DIR$/ermodeler.iws" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/swing/ResizingConstrain.java" afterPath="$PROJECT_DIR$/src/cz/green/swing/ResizingConstrain.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/RelationBeanInfo.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/RelationBeanInfo.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/CommandObj.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/CommandObj.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/VarrayDataTypePanel2.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/VarrayDataTypePanel2.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/eventtool/ResolutionDialog.java" afterPath="$PROJECT_DIR$/src/cz/green/eventtool/ResolutionDialog.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/event/ResizePoint.java" afterPath="$PROJECT_DIR$/src/cz/green/event/ResizePoint.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/DataTypeEditor.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/DataTypeEditor.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/UniqueKeyC2R.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/UniqueKeyC2R.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/SQLDialog.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/SQLDialog.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/eventtool/Window.java" afterPath="$PROJECT_DIR$/src/cz/green/eventtool/Window.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/RelRelationC2R.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/RelRelationC2R.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/swing/ExtensionFileFilter.java" afterPath="$PROJECT_DIR$/src/cz/green/swing/ExtensionFileFilter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/ObjDialog.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/ObjDialog.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/util/SybaseDB.java" afterPath="$PROJECT_DIR$/src/cz/green/util/SybaseDB.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/ChangeNotationDialog.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/ChangeNotationDialog.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/swing/MinLinearConstraint.java" afterPath="$PROJECT_DIR$/src/cz/green/swing/MinLinearConstraint.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/errorlog/BadFirstCharacterInNameValidationError.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/errorlog/BadFirstCharacterInNameValidationError.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/ForeignKeyObj.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/ForeignKeyObj.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/Entity.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/Entity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/CommandWithRowsSQL.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/CommandWithRowsSQL.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/util/Range.java" afterPath="$PROJECT_DIR$/src/cz/green/util/Range.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/eventtool/ConnectionLine.java" afterPath="$PROJECT_DIR$/src/cz/green/eventtool/ConnectionLine.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/util/BrowserControl.java" afterPath="$PROJECT_DIR$/src/cz/green/util/BrowserControl.java" />
     </list>
     <ignored path="ermodeler.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -138,82 +262,75 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="ConstraintsDialog.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cz/green/ermodeller/ConstraintsDialog.java">
+      <file leaf-file-name="BadDimensionException.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/green/util/BadDimensionException.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="116" column="4" selection-start="3971" selection-end="3971" vertical-scroll-proportion="0.39208633">
+            <state line="13" column="22" selection-start="349" selection-end="349" vertical-scroll-proportion="0.14748201">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Group.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cz/green/event/Group.java">
+      <file leaf-file-name="BadFirstCharacterInNameValidationError.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/errorlog/BadFirstCharacterInNameValidationError.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="134" column="4" selection-start="4821" selection-end="4821" vertical-scroll-proportion="0.14232902">
+            <state line="11" column="23" selection-start="309" selection-end="309" vertical-scroll-proportion="0.17446043">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Atribute.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cz/green/ermodeller/Atribute.java">
+      <file leaf-file-name="WindowCloser.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/green/util/WindowCloser.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="123" column="100" selection-start="5574" selection-end="5574" vertical-scroll-proportion="0.14232902">
+            <state line="7" column="19" selection-start="190" selection-end="190" vertical-scroll-proportion="0.14748201">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AtributeC2R.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/AtributeC2R.java">
+      <file leaf-file-name="Window.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/green/eventtool/Window.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="49" column="43" selection-start="1742" selection-end="1742" vertical-scroll-proportion="0.14232902">
+            <state line="60" column="4" selection-start="1711" selection-end="1711" vertical-scroll-proportion="0.14232902">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GeneralNumberDataTypePanel.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/GeneralNumberDataTypePanel.java">
+      <file leaf-file-name="VarrayNestedTypeEditor.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/VarrayNestedTypeEditor.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="923" column="20" selection-start="31602" selection-end="31602" vertical-scroll-proportion="0.14232902">
+            <state line="215" column="5" selection-start="8930" selection-end="8930" vertical-scroll-proportion="0.38848922">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="LengthDataTypePanel2.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/LengthDataTypePanel2.java">
+      <file leaf-file-name="Desktop.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/green/ermodeller/Desktop.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="81" column="16" selection-start="2683" selection-end="2683" vertical-scroll-proportion="0.35791367">
+            <state line="585" column="56" selection-start="20910" selection-end="20910" vertical-scroll-proportion="0.14232902">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ConceptualConstruct.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/green/ermodeller/ConceptualConstruct.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="144" column="29" selection-start="5742" selection-end="5742" vertical-scroll-proportion="0.2051756">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ERModeller.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cz/green/ermodeller/ERModeller.java">
+      <file leaf-file-name="Entity.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/green/ermodeller/Entity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1263" column="0" selection-start="50564" selection-end="50564" vertical-scroll-proportion="0.33086875">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SchemaC2R.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/SchemaC2R.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="104" column="44" selection-start="3245" selection-end="3245" vertical-scroll-proportion="0.5970425">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Container.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/cz/green/eventtool/Container.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="74" column="27" selection-start="2854" selection-end="2854" vertical-scroll-proportion="0.5970425">
+            <state line="575" column="0" selection-start="22614" selection-end="22614" vertical-scroll-proportion="0.5841035">
               <folding />
             </state>
           </provider>
@@ -222,7 +339,18 @@
       <file leaf-file-name="Container.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/cz/green/ermodeller/Container.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="317" column="30" selection-start="9415" selection-end="9415" vertical-scroll-proportion="0.27726433">
+            <state line="394" column="51" selection-start="12058" selection-end="12058" vertical-scroll-proportion="12.380776">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="UniqueKey.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/green/ermodeller/UniqueKey.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="212" column="36" selection-start="7134" selection-end="7134" vertical-scroll-proportion="0.26978418">
               <folding />
             </state>
           </provider>
@@ -774,7 +902,7 @@
     <option name="PERFORM_EDIT_IN_BACKGROUND" value="true" />
     <option name="PERFORM_ADD_REMOVE_IN_BACKGROUND" value="true" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="optimalizace zbytecnosti" />
+    <option name="LAST_COMMIT_MESSAGE" value="optimalizace boolean promennych" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="REFORMAT_BEFORE_FILE_COMMIT" value="false" />
@@ -790,6 +918,7 @@
     <MESSAGE value="zjednodusovani, odstranovani warningu 1" />
     <MESSAGE value="odstraneni zbytecnych stredniku" />
     <MESSAGE value="optimalizace zbytecnosti" />
+    <MESSAGE value="optimalizace boolean promennych" />
   </component>
   <component name="XPathView.XPathProjectComponent">
     <history />
@@ -800,85 +929,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/cz/green/ermodeller/ConceptualObject.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="103" column="4" selection-start="4032" selection-end="4032" vertical-scroll-proportion="-0.2532189">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/green/eventtool/Desktop.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="100" selection-start="978" selection-end="978" vertical-scroll-proportion="0.3304721">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/EntC2R.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="34" column="73" selection-start="1182" selection-end="1182" vertical-scroll-proportion="0.3304721">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/RelC2R.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="131" column="65" selection-start="4227" selection-end="4227" vertical-scroll-proportion="0.3304721">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/BooleanEditor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="34" selection-start="536" selection-end="536" vertical-scroll-proportion="0.23428571">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/green/ermodeller/ChangeNotationDialog.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="290" column="4" selection-start="11682" selection-end="11682" vertical-scroll-proportion="0.23428571">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/green/ermodeller/ConstraintsDialog.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="116" column="4" selection-start="3971" selection-end="3971" vertical-scroll-proportion="0.39208633">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/green/event/Group.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="134" column="4" selection-start="4821" selection-end="4821" vertical-scroll-proportion="0.14232902">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/green/ermodeller/Atribute.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="123" column="100" selection-start="5574" selection-end="5574" vertical-scroll-proportion="0.14232902">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/AtributeC2R.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="49" column="43" selection-start="1742" selection-end="1742" vertical-scroll-proportion="0.14232902">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/GeneralNumberDataTypePanel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="923" column="20" selection-start="31602" selection-end="31602" vertical-scroll-proportion="0.14232902">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/LengthDataTypePanel2.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="81" column="16" selection-start="2683" selection-end="2683" vertical-scroll-proportion="0.35791367">
@@ -886,30 +936,111 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/green/eventtool/Container.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="74" column="27" selection-start="2854" selection-end="2854" vertical-scroll-proportion="1.3862661">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/EntRelationC2R.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="21" column="81" selection-start="814" selection-end="814" vertical-scroll-proportion="0.58093524">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/cz/green/ermodeller/ERModeller.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1263" column="0" selection-start="50564" selection-end="50564" vertical-scroll-proportion="0.33086875">
+        <state line="1263" column="0" selection-start="50510" selection-end="50510" vertical-scroll-proportion="0.33086875">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/SchemaC2R.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="104" column="44" selection-start="3245" selection-end="3245" vertical-scroll-proportion="0.5970425">
+        <state line="684" column="62" selection-start="31093" selection-end="31093" vertical-scroll-proportion="0.14232902">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/errorlog/BadCharacterInNameValidationError.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="19" selection-start="356" selection-end="356" vertical-scroll-proportion="0.14748201">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/green/util/BadDimensionException.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="22" selection-start="349" selection-end="349" vertical-scroll-proportion="0.14748201">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/errorlog/BadFirstCharacterInNameValidationError.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="11" column="23" selection-start="309" selection-end="309" vertical-scroll-proportion="0.17446043">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/green/util/WindowCloser.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="19" selection-start="190" selection-end="190" vertical-scroll-proportion="0.14748201">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/green/eventtool/Window.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="60" column="4" selection-start="1711" selection-end="1711" vertical-scroll-proportion="0.14232902">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/green/ermodeller/Desktop.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="585" column="56" selection-start="20910" selection-end="20910" vertical-scroll-proportion="0.14232902">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/green/ermodeller/UniqueKey.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="212" column="36" selection-start="7134" selection-end="7134" vertical-scroll-proportion="0.26978418">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/green/ermodeller/ConceptualConstruct.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="144" column="29" selection-start="5742" selection-end="5742" vertical-scroll-proportion="0.2051756">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/green/ermodeller/Entity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="575" column="0" selection-start="22614" selection-end="22614" vertical-scroll-proportion="0.5841035">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/cz/green/ermodeller/Container.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="317" column="30" selection-start="9415" selection-end="9415" vertical-scroll-proportion="0.27726433">
-          <folding />
+        <state line="394" column="51" selection-start="12058" selection-end="12058" vertical-scroll-proportion="12.380776">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/green/eventtool/Container.java">
+    <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/VarrayNestedTypeEditor.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="74" column="27" selection-start="2854" selection-end="2854" vertical-scroll-proportion="0.5970425">
+        <state line="215" column="5" selection-start="8930" selection-end="8930" vertical-scroll-proportion="0.38848922">
           <folding />
         </state>
       </provider>

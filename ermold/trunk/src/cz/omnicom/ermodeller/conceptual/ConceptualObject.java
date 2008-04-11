@@ -20,13 +20,13 @@ public abstract class ConceptualObject implements Serializable, ShowErrorListene
     /**
      * ID of the object.
      */
-    protected int fieldID = 0;
+    int fieldID = 0;
     /**
      * Listeners of the PropertyChange event.
      *
      * @see java.beans.PropertyChangeSupport
      */
-    protected transient PropertyChangeSupport propertyChange = null;
+    private transient PropertyChangeSupport propertyChange = null;
     /**
      * Schema owner of the object.
      *
@@ -54,9 +54,9 @@ public abstract class ConceptualObject implements Serializable, ShowErrorListene
      */
     private String fieldComment = "";
 
-    public static final String SCHEMA_PROPERTY_CHANGE = "schema";
+    private static final String SCHEMA_PROPERTY_CHANGE = "schema";
     public static final String NAME_PROPERTY_CHANGE = "name";
-    public static final String COMMENT_PROPERTY_CHANGE = "comment";
+    private static final String COMMENT_PROPERTY_CHANGE = "comment";
 
     /**
      * <code>ConceptualObjectNameController</code> class is used when checking unicity
@@ -65,7 +65,7 @@ public abstract class ConceptualObject implements Serializable, ShowErrorListene
      *
      * @see #checkVectorForNameDuplicity
      */
-    protected class ConceptualObjectNameController {
+    class ConceptualObjectNameController {
         /**
          * Is the enclosed object already in some error.
          */
@@ -150,7 +150,7 @@ public abstract class ConceptualObject implements Serializable, ShowErrorListene
      * </pre>
      * </blockquote>
      */
-    protected synchronized void empty() {
+    synchronized void empty() {
         setErrorLogList(null);
     }
 
@@ -161,7 +161,7 @@ public abstract class ConceptualObject implements Serializable, ShowErrorListene
      * @param vector java.util.Vector
      * @see #empty
      */
-    protected static final void emptyConceptualVector(Vector vector) {
+    static final void emptyConceptualVector(Vector vector) {
         synchronized (vector) {
             for (Enumeration elements = vector.elements(); elements.hasMoreElements();) {
                 // Each object must be emptied.
@@ -175,7 +175,7 @@ public abstract class ConceptualObject implements Serializable, ShowErrorListene
     /**
      * The firePropertyChange method was generated to support the propertyChange field.
      */
-    public void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
+    void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
         getPropertyChange().firePropertyChange(propertyName, oldValue, newValue);
 
         // invalidation of all errors connected to this object
@@ -185,7 +185,7 @@ public abstract class ConceptualObject implements Serializable, ShowErrorListene
     /**
      * Firing ShowError event.
      */
-    public void fireShowError(ShowErrorEvent evt) {
+    void fireShowError(ShowErrorEvent evt) {
         getShowError().fireShowError(evt);
     }
 
@@ -205,7 +205,7 @@ public abstract class ConceptualObject implements Serializable, ShowErrorListene
      * @return cz.omnicom.ermodeller.errorlog.ErrorLogList
      * @see #errorLogList
      */
-    protected ErrorLogList getErrorLogList() {
+    ErrorLogList getErrorLogList() {
         if (errorLogList == null)
             errorLogList = new ErrorLogList();
         return errorLogList;
@@ -243,7 +243,7 @@ public abstract class ConceptualObject implements Serializable, ShowErrorListene
     /**
      * Accessor for the propertyChange field.
      */
-    protected PropertyChangeSupport getPropertyChange() {
+    PropertyChangeSupport getPropertyChange() {
         if (propertyChange == null)
             propertyChange = new PropertyChangeSupport(this);
         return propertyChange;
@@ -252,7 +252,7 @@ public abstract class ConceptualObject implements Serializable, ShowErrorListene
     /**
      * Accessor for the showError field.
      */
-    protected ShowErrorSupport getShowError() {
+    ShowErrorSupport getShowError() {
         if (showError == null)
             showError = new ShowErrorSupport(this);
         return showError;
@@ -295,7 +295,7 @@ public abstract class ConceptualObject implements Serializable, ShowErrorListene
      * @return list of errors
      * @see cz.omnicom.ermodeller.errorlog.ErrorLogList
      */
-    protected static final ErrorLogList checkVectorForNameDuplicity(Vector vectorToCheck, Class aValidationErrorClass) throws InstantiationException, IllegalAccessException {
+    static final ErrorLogList checkVectorForNameDuplicity(Vector vectorToCheck, Class aValidationErrorClass) throws InstantiationException, IllegalAccessException {
         ErrorLogList errorLogList = new ErrorLogList();
         synchronized (vectorToCheck) {
             for (int i = 0; i < vectorToCheck.size(); i++) {
@@ -361,7 +361,7 @@ public abstract class ConceptualObject implements Serializable, ShowErrorListene
      * @see #setValidated
      * @see #setErrorLogList
      */
-    protected void setAllUnvalidated() {
+    void setAllUnvalidated() {
         setValidated(false);
         setErrorLogList(new ErrorLogList());
     }
@@ -386,7 +386,7 @@ public abstract class ConceptualObject implements Serializable, ShowErrorListene
      * @param newValue cz.omnicom.ermodeller.errorlog.ErrorLogList
      * @see cz.omnicom.ermodeller.errorlog.ValidationError#removeShowErrorListener
      */
-    protected void setErrorLogList(ErrorLogList newValue) {
+    void setErrorLogList(ErrorLogList newValue) {
         // pro kazdou chybu se musi odregistrovat this objekt z listeners chyby
         for (Enumeration errors = getErrorLogList().elements(); errors.hasMoreElements();) {
             ((ValidationError) errors.nextElement()).removeShowErrorListener(this);
@@ -430,7 +430,7 @@ public abstract class ConceptualObject implements Serializable, ShowErrorListene
      * @param schema The new value for the property.
      * @see #getSchema
      */
-    public void setSchema(Schema schema) {
+    void setSchema(Schema schema) {
         Schema oldValue = fieldSchema;
         fieldSchema = schema;
         firePropertyChange(SCHEMA_PROPERTY_CHANGE, oldValue, schema);
@@ -474,7 +474,7 @@ public abstract class ConceptualObject implements Serializable, ShowErrorListene
      *
      * @see cz.omnicom.ermodeller.conceptual.ConceptualObject#validate
      */
-    protected synchronized ErrorLogList valid() throws CheckNameDuplicityValidationException {
+    synchronized ErrorLogList valid() throws CheckNameDuplicityValidationException {
         ErrorLogList errorLogList = new ErrorLogList();
         String name = getName();
         if (name == null || name.length() < 1) {

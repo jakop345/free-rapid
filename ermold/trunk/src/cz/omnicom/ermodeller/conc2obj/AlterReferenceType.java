@@ -10,7 +10,7 @@ import javax.swing.*;
  */
 public class AlterReferenceType extends CommandObj {
 
-    AtributeC2R atribute = null;
+    private AtributeC2R atribute = null;
 
 
     /**

@@ -20,7 +20,7 @@ public class OptionsDialog extends javax.swing.JDialog {
     private javax.swing.JTextField ivjUserField = null;
 
     private cz.omnicom.ermodeller.sql.SQLConnection connection = null;
-    final IvjEventHandler ivjEventHandler = new IvjEventHandler();
+    private final IvjEventHandler ivjEventHandler = new IvjEventHandler();
     private java.lang.String Sql;
 
     private javax.swing.JButton cancelButton = null;
@@ -88,10 +88,10 @@ public class OptionsDialog extends javax.swing.JDialog {
     JLabel auth3Label = new JLabel();
     JLabel auth4Label = new JLabel();
     JLabel auth5Label = new JLabel();
-    final JTabbedPane jTabbedPane1 = new JTabbedPane();
+    private final JTabbedPane jTabbedPane1 = new JTabbedPane();
     JTabbedPane jTabbedPane2 = new JTabbedPane();
     GridBagLayout gridBagLayout1 = new GridBagLayout();
-    cz.green.ermodeller.ERModeller erm = null;
+    private cz.green.ermodeller.ERModeller erm = null;
 
     /**
      * OptionsDialog constructor comment.
@@ -1406,7 +1406,7 @@ public class OptionsDialog extends javax.swing.JDialog {
     /**
      * Comment
      */
-    public void jButton6_ActionEvents() {
+    void jButton6_ActionEvents() {
         connection.showLog();
     }
 
@@ -1511,7 +1511,7 @@ public class OptionsDialog extends javax.swing.JDialog {
     /**
      * Comment
      */
-    public void ForegroundButton_ActionPerformed() {
+    void ForegroundButton_ActionPerformed() {
         Color newColor = JColorChooser.showDialog(
                 OptionsDialog.this,
                 "Choose Background Color",
@@ -1522,7 +1522,7 @@ public class OptionsDialog extends javax.swing.JDialog {
     /**
      * Comment
      */
-    public void BackgroundButton_ActionPerformed() {
+    void BackgroundButton_ActionPerformed() {
         Color newColor = JColorChooser.showDialog(
                 OptionsDialog.this,
                 "Choose Background Color",
@@ -1533,7 +1533,7 @@ public class OptionsDialog extends javax.swing.JDialog {
     /**
      * Comment
      */
-    public void objectBackgroundButton_ActionPerformed() {
+    void objectBackgroundButton_ActionPerformed() {
         Color newColor = JColorChooser.showDialog(
                 OptionsDialog.this,
                 "Choose Background Color",
@@ -1544,7 +1544,7 @@ public class OptionsDialog extends javax.swing.JDialog {
     /**
      * Comment
      */
-    public void selectedObjectButton_ActionPerformed() {
+    void selectedObjectButton_ActionPerformed() {
         Color newColor = JColorChooser.showDialog(
                 OptionsDialog.this,
                 "Choose Background Color",
@@ -1601,7 +1601,7 @@ public class OptionsDialog extends javax.swing.JDialog {
         Sql = newSql;
     }
 
-    public void test() {
+    void test() {
         connection.test(getDriverField().getText(), getURLField().getText(), getUserField().getText(), new String(getPasswordField().getPassword()));
     }
 }

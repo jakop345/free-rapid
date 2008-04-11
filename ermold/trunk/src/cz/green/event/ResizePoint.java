@@ -22,11 +22,11 @@ public class ResizePoint {
     /**
      * This constant is used for defining the <code>direction</code>.
      */
-    public final static int XCOORDINATE = 1;
+    private final static int XCOORDINATE = 1;
     /**
      * This constant is used for defining the <code>direction</code>.
      */
-    public final static int YCOORDINATE = 2;
+    private final static int YCOORDINATE = 2;
     /**
      * This constant is used for moving left border.
      */

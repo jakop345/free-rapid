@@ -4,8 +4,8 @@ import java.awt.*;
 import java.util.Hashtable;
 
 public class CountLayout implements LayoutManager2 {
-    protected final Hashtable comps = new Hashtable();
-    protected Dimension min = new Dimension(0, 0);
+    private final Hashtable comps = new Hashtable();
+    private Dimension min = new Dimension(0, 0);
 
     public CountLayout() {
     }
@@ -42,7 +42,7 @@ public class CountLayout implements LayoutManager2 {
      * @param parent java.awt.Container
      * @return java.awt.Dimension
      */
-    protected Dimension increaseInsets(Container parent, Dimension dim) {
+    Dimension increaseInsets(Container parent, Dimension dim) {
         Insets i = parent.getInsets();
         dim.height += i.top + i.bottom;
         dim.width += i.left + i.right;

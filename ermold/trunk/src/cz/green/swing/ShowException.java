@@ -13,7 +13,7 @@ public class ShowException extends JDialog {
     private JButton detailButton = null;
     private boolean detailed = false;
     private JLabel message = null;
-    protected Throwable th = null;
+    private Throwable th = null;
     private JTextArea detail = null;
 
     /**
@@ -59,7 +59,7 @@ public class ShowException extends JDialog {
      *
      * @return javax.swing.JButton
      */
-    public JButton getCloseButton() {
+    JButton getCloseButton() {
         if (closeButton == null) {
             closeButton = new JButton("Close");
             closeButton.setMnemonic('c');
@@ -77,7 +77,7 @@ public class ShowException extends JDialog {
      *
      * @return javax.swing.JTextArea
      */
-    public JTextArea getDetail() {
+    JTextArea getDetail() {
         if (detail == null) {
             java.io.StringWriter os = null;
             try {
@@ -97,7 +97,7 @@ public class ShowException extends JDialog {
      *
      * @return javax.swing.JButton
      */
-    public JButton getDetailButton() {
+    JButton getDetailButton() {
         if (detailButton == null) {
             detailButton = new JButton("");
             try {
@@ -113,7 +113,7 @@ public class ShowException extends JDialog {
      *
      * @return boolean
      */
-    public boolean getDetailed() {
+    boolean getDetailed() {
         return detailed;
     }
 
@@ -122,7 +122,7 @@ public class ShowException extends JDialog {
      *
      * @return javax.swing.JLabel
      */
-    public JLabel getMessage() {
+    JLabel getMessage() {
         if (message == null) {
             message = new JLabel(th.getMessage());
 //		message.setHorizontalTextPosition(JLabel.CENTER);
@@ -136,7 +136,7 @@ public class ShowException extends JDialog {
      *
      * @param newValue boolean
      */
-    public void setDetailed(boolean detailed) {
+    void setDetailed(boolean detailed) {
         this.detailed = detailed;
         getDetailButton().setText(detailed ? "Hide more" : "Show more");
         getDetailButton().setMnemonic('m');

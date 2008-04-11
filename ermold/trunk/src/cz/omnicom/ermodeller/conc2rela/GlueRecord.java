@@ -41,7 +41,7 @@ public class GlueRecord implements CheckRowProducer {
      *
      * @param aGluedRelationRecord cz.omnicom.ermodeller.conc2rela.GluedRelationRecord
      */
-    protected void addGluedRelationC2R(GluedRelationRecord aGluedRelationRecord) {
+    void addGluedRelationC2R(GluedRelationRecord aGluedRelationRecord) {
         getGluedRelationsC2R().addElement(aGluedRelationRecord);
     }
 
@@ -50,7 +50,7 @@ public class GlueRecord implements CheckRowProducer {
      *
      * @param aGluedRelationRecord cz.omnicom.ermodeller.conc2rela.GluedRelationRecord
      */
-    protected void addNotGluedRelationC2R(GluedRelationRecord aNotGluedRelationRecord) {
+    void addNotGluedRelationC2R(GluedRelationRecord aNotGluedRelationRecord) {
         getNotGluedRelationsC2R().addElement(aNotGluedRelationRecord);
     }
 
@@ -69,7 +69,7 @@ public class GlueRecord implements CheckRowProducer {
      * @param aAtributesC2R atributes
      * @return IsNotNullAtributeGroupVector
      */
-    public static IsNotNullAtributeGroupVector createNotNullVecAtributes(Vector aAtributesC2R) {
+    private static IsNotNullAtributeGroupVector createNotNullVecAtributes(Vector aAtributesC2R) {
         if (aAtributesC2R.isEmpty())
             return null;
         IsNotNullAtributeGroupVector result = new IsNotNullAtributeGroupVector();
@@ -89,7 +89,7 @@ public class GlueRecord implements CheckRowProducer {
      * @param aAtributesC2R atributes
      * @return IsNotNullAtributeGroupVector
      */
-    public static IsNullAtributeGroupVector createNullVecAtributes(Vector aAtributesC2R) {
+    private static IsNullAtributeGroupVector createNullVecAtributes(Vector aAtributesC2R) {
         if (aAtributesC2R.isEmpty())
             return null;
         IsNullAtributeGroupVector result = new IsNullAtributeGroupVector();
@@ -105,7 +105,7 @@ public class GlueRecord implements CheckRowProducer {
      *
      * @return cz.omnicom.ermodeller.sql.ORCheck
      */
-    protected ORCheck createORCheck() {
+    ORCheck createORCheck() {
         ORCheck orCheck = new ORCheck();
 
         // create check - all atributes (recently not null) are not null
@@ -192,7 +192,7 @@ public class GlueRecord implements CheckRowProducer {
     /**
      * @return java.util.Vector
      */
-    protected Vector getSkeletAtributesC2R() {
+    Vector getSkeletAtributesC2R() {
         return skeletAtributesC2R;
     }
 }

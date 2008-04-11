@@ -23,7 +23,7 @@ public class DataTypeEditor extends JPanel implements java.awt.event.ActionListe
      * @see cz.omnicom.ermodeller.datatype.DataTypePanel
      */
     private DataTypePanel dataTypePanel = null;
-    protected transient PropertyChangeSupport propertyChange;
+    private transient PropertyChangeSupport propertyChange;
     private JPanel ivjDataTypePanel = null;
     private Border ivjDataTypePanelGroupBox = null;
     private JRadioButton ivjDateRadioButton = null;
@@ -327,7 +327,7 @@ public class DataTypeEditor extends JPanel implements java.awt.event.ActionListe
     /**
      * The firePropertyChange method was generated to support the propertyChange field.
      */
-    public void firePropertyChange() {
+    void firePropertyChange() {
         getPropertyChange().firePropertyChange("", null, null);
     }
 
@@ -588,7 +588,7 @@ public class DataTypeEditor extends JPanel implements java.awt.event.ActionListe
     /**
      * Accessor for the propertyChange field.
      */
-    protected PropertyChangeSupport getPropertyChange() {
+    PropertyChangeSupport getPropertyChange() {
         if (propertyChange == null)
             propertyChange = new PropertyChangeSupport(this);
         return propertyChange;

@@ -42,7 +42,7 @@ public class EntForeignKeyC2R extends ElementOfRelationC2R implements SQLConstra
      * @throws cz.omnicom.ermodeller.conc2rela.AlreadyContainsExceptionC2R
      *
      */
-    protected void addForeignAtributeC2R(AtributeC2R anAtributeC2R) throws AlreadyContainsExceptionC2R {
+    void addForeignAtributeC2R(AtributeC2R anAtributeC2R) throws AlreadyContainsExceptionC2R {
         if (getAtributesC2R().contains(anAtributeC2R))
             throw new AlreadyContainsExceptionC2R(this, anAtributeC2R, ListExceptionC2R.ATRIBUTES_LIST);
 
@@ -71,7 +71,7 @@ public class EntForeignKeyC2R extends ElementOfRelationC2R implements SQLConstra
     /**
      * @return cz.omnicom.ermodeller.conc2rela.PrimaryKeyC2R
      */
-    public PrimaryKeyC2R getForeignPrimaryKeyC2R() {
+    PrimaryKeyC2R getForeignPrimaryKeyC2R() {
         return foreignPrimaryKeyC2R;
     }
 }

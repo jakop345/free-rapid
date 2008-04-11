@@ -27,7 +27,7 @@ public class Desktop extends Group implements ContainerDesktop, java.io.Serializ
      * @see SelectItemEvent
      * @see SelectItemExEvent
      */
-    transient protected SelectItemEvent preSelectEvent = null;
+    private transient SelectItemEvent preSelectEvent = null;
     /**
      * This property stores any previous event. It is useful, when we handle
      * <code>MovingEvent</code> and <code>ResizingEvent</code>, because we have to say, who is the
@@ -37,13 +37,13 @@ public class Desktop extends Group implements ContainerDesktop, java.io.Serializ
      * @see ResizingEvent
      * @see fallAndHandleEvent(int, int, cz.green.event.interfaces.Event )
      */
-    transient protected cz.green.event.interfaces.Event preEvent = null;
+    private transient cz.green.event.interfaces.Event preEvent = null;
     /**
      * The selected items. This items is draw by <code>paintSelected</code>
      * method. This object gives me functionality adding, removing items,
      * removing all items and getting the focused item.
      */
-    transient protected SelectedItems selectedItems = null;
+    private transient SelectedItems selectedItems = null;
     /**
      * This rectangle contains the area that we hace to repaint according to the
      * last change of selected item(s). When we do first repainting (element or
@@ -52,7 +52,7 @@ public class Desktop extends Group implements ContainerDesktop, java.io.Serializ
      * @see selectItem( cz.green.event.interfaces.SelectableItem , boolean)
      * @see selectItemEx( cz.green.event.interfaces.SelectableItem , boolean)
      */
-    transient protected Rectangle selRect = null;
+    private transient Rectangle selRect = null;
     /**
      * In this property we stores the array of resize rectangles. When cursor moves accross,
      * we have to change the cursor to resize cursor. In this situation may user change
@@ -61,7 +61,7 @@ public class Desktop extends Group implements ContainerDesktop, java.io.Serializ
      * @see ResizeRectangle
      * @see PaintableItem#getResizePoints()
      */
-    transient protected ResizeRectangle[] rects;
+    private transient ResizeRectangle[] rects;
     /**
      * This property stores index of the actual using resize rectangle. Using this property
      * and <code>rects</code> we can desided into which direction we change the size
@@ -69,7 +69,7 @@ public class Desktop extends Group implements ContainerDesktop, java.io.Serializ
      *
      * @see Desktop.rects
      */
-    transient protected int resizing = -1;
+    private transient int resizing = -1;
     /**
      * This property stores the actual scale rate for displaying all components.
      * The value <code>1</code> indicates no scale. When scale goes up the components
@@ -303,7 +303,7 @@ public class Desktop extends Group implements ContainerDesktop, java.io.Serializ
      *
      * @return The color for XOR mode.
      */
-    public Color getXORColor() {
+    Color getXORColor() {
         return Color.black;
     }
 
@@ -362,7 +362,7 @@ public class Desktop extends Group implements ContainerDesktop, java.io.Serializ
      * @param y The y coordinate of the event.
      * @return Was the cursor changed?
      */
-    public boolean changeResizeCursor(int x, int y) {
+    boolean changeResizeCursor(int x, int y) {
         int cursorStyle;
         ResizeRectangle r = getActualResizeRect(x, y);
         Cursor cursor;
@@ -443,7 +443,7 @@ public class Desktop extends Group implements ContainerDesktop, java.io.Serializ
      *
      * @param <code>g</code> Graphics where to draw selected item.
      */
-    protected void paintSelectedItem(Graphics g) {
+    void paintSelectedItem(Graphics g) {
         if (!selectedItems.isEmpty()) { //is anythng selected
             //		selected.paintSelected(g); //draw it
             //for focused selected element draw all resize rectangles

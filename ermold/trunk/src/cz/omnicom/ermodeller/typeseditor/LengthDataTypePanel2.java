@@ -12,7 +12,7 @@ import java.awt.event.ComponentEvent;
  */
 public class LengthDataTypePanel2 extends LengthDataTypePanel {
 
-    final ActionListener al = new ActionListener() {
+    private final ActionListener al = new ActionListener() {
         public void actionPerformed(ActionEvent ae) {
             ivjLengthDataType = (LengthDataType) getLengthDataType().clone();
 

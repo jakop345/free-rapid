@@ -11,7 +11,7 @@ public class DropTypeObj extends CommandObj {
     /**
      * name of the type
      */
-    String name = null;
+    private String name = null;
 
     /**
      * Constructor.

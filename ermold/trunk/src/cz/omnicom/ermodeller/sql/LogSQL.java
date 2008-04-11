@@ -17,7 +17,7 @@ public class LogSQL extends javax.swing.JDialog {
     }
 
     private javax.swing.JButton ivjClearButton = null;
-    final IvjEventHandler ivjEventHandler = new IvjEventHandler();
+    private final IvjEventHandler ivjEventHandler = new IvjEventHandler();
     private javax.swing.JPanel ivjJDialogContentPane = null;
     private javax.swing.JScrollPane ivjJScrollPane1 = null;
     private javax.swing.JTextArea ivjJTextArea1 = null;
@@ -122,7 +122,7 @@ public class LogSQL extends javax.swing.JDialog {
     /**
      * Comment
      */
-    public void clearButton_ActionPerformed(java.awt.event.ActionEvent actionEvent) {
+    void clearButton_ActionPerformed(java.awt.event.ActionEvent actionEvent) {
         clear();
     }
 

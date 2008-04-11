@@ -28,11 +28,11 @@ public class Atribute extends ConceptualObject {
     /**
      * The owner of the atribute
      */
-    ConceptualConstruct cc = null;
+    private ConceptualConstruct cc = null;
     /**
      * The model of the atribute - object from the Aleš Kopecký work.
      */
-    cz.omnicom.ermodeller.conceptual.Atribute model = null;
+    private cz.omnicom.ermodeller.conceptual.Atribute model = null;
     /**
      * Flag; true - Atribute is first member of Primary key
      */
@@ -95,7 +95,7 @@ public class Atribute extends ConceptualObject {
      *
      * @return The counted size.
      */
-    protected java.awt.Dimension countSize() {
+    java.awt.Dimension countSize() {
 //	String name = (ACTUAL_NOTATION != ConceptualConstruct.UML) ? model.getName() : (model.getName() + ": " + model.getDataType().toDescriptionString());
         String name = model.getName();
         java.awt.FontMetrics fm;
@@ -224,7 +224,7 @@ public class Atribute extends ConceptualObject {
      * <p/>
      * It is used to chnge odrer of atributes in binary and UML notation
      */
-    public void moveToPosition(int newPosition) {
+    void moveToPosition(int newPosition) {
         int actualPosition = getPosition();
         if (newPosition == actualPosition) return;
         if (newPosition > actualPosition) {

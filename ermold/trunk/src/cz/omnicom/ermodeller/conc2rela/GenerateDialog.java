@@ -16,8 +16,8 @@ public class GenerateDialog extends JDialog implements ActionListener, ItemListe
     private JPanel ivjJPanel1 = null;
     private JCheckBox ivjshortenCheckBox = null;
     private boolean result = GENDIALOG_CANCEL;
-    public static final boolean GENDIALOG_CANCEL = false;
-    public static final boolean GENDIALOG_OK = true;
+    private static final boolean GENDIALOG_CANCEL = false;
+    private static final boolean GENDIALOG_OK = true;
     private JPanel ivjDownPanel = null;
     private JPanel ivjJPanel11 = null;
     private GridLayout ivjJPanel11GridLayout = null;
@@ -31,7 +31,7 @@ public class GenerateDialog extends JDialog implements ActionListener, ItemListe
      * Constructor
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    public GenerateDialog() {
+    private GenerateDialog() {
         super();
         initialize();
     }
@@ -66,7 +66,7 @@ public class GenerateDialog extends JDialog implements ActionListener, ItemListe
     /**
      * Comment
      */
-    public void cancelButton_ActionPerformed1(java.awt.event.ActionEvent actionEvent) {
+    void cancelButton_ActionPerformed1(java.awt.event.ActionEvent actionEvent) {
         result = GENDIALOG_CANCEL;
         dispose();
     }
@@ -174,7 +174,7 @@ public class GenerateDialog extends JDialog implements ActionListener, ItemListe
     /**
      * Comment
      */
-    public void dropCheckBox_ItemStateChanged(java.awt.event.ItemEvent itemEvent) {
+    void dropCheckBox_ItemStateChanged(java.awt.event.ItemEvent itemEvent) {
         setGenDrop(itemEvent.getStateChange() == ItemEvent.SELECTED);
     }
 
@@ -466,7 +466,7 @@ public class GenerateDialog extends JDialog implements ActionListener, ItemListe
     /**
      * Comment
      */
-    public void glueCheckBox_ItemStateChanged(java.awt.event.ItemEvent itemEvent) {
+    void glueCheckBox_ItemStateChanged(java.awt.event.ItemEvent itemEvent) {
         setDefaultGlue(itemEvent.getStateChange() == ItemEvent.DESELECTED);
     }
 
@@ -578,7 +578,7 @@ public class GenerateDialog extends JDialog implements ActionListener, ItemListe
     /**
      * Comment
      */
-    public void oKButton_ActionPerformed(java.awt.event.ActionEvent actionEvent) {
+    void oKButton_ActionPerformed(java.awt.event.ActionEvent actionEvent) {
         result = GENDIALOG_OK;
         dispose();
     }
@@ -611,7 +611,7 @@ public class GenerateDialog extends JDialog implements ActionListener, ItemListe
     /**
      * Comment
      */
-    public void shortenCheckBox_ItemStateChanged(java.awt.event.ItemEvent itemEvent) {
+    void shortenCheckBox_ItemStateChanged(java.awt.event.ItemEvent itemEvent) {
         setShortenPrefixes(itemEvent.getStateChange() == ItemEvent.SELECTED);
     }
 }

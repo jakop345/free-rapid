@@ -13,7 +13,7 @@ public class DropAboveEvent extends DragOverEvent {
      * When receiver do some opertion with drpped item then sets this
      * atribute to <code>true</code>
      */
-    protected boolean dropped = false;
+    private boolean dropped = false;
 
     /**
      * Same as inherited one.

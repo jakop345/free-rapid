@@ -65,7 +65,7 @@ public class ORCheck implements SubSQLProducer, SubTreeProducer {
      *
      * @return javax.swing.Icon
      */
-    public Icon getIcon() {
+    Icon getIcon() {
         return new ImageIcon(ClassLoader.getSystemResource("img/orcheck.gif"));
     }
 
@@ -74,7 +74,7 @@ public class ORCheck implements SubSQLProducer, SubTreeProducer {
      *
      * @return java.util.Vector
      */
-    public Vector getORParts() {
+    Vector getORParts() {
         return orParts;
     }
 

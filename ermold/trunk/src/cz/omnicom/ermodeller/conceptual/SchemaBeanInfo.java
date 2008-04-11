@@ -3,13 +3,13 @@ package cz.omnicom.ermodeller.conceptual;
 /**
  * The bean information class for cz.omnicom.ermodeller.conceptual.Schema.
  */
-public class SchemaBeanInfo extends java.beans.SimpleBeanInfo {
+class SchemaBeanInfo extends java.beans.SimpleBeanInfo {
     /**
      * Gets the entities property descriptor.
      *
      * @return java.beans.PropertyDescriptor
      */
-    public java.beans.PropertyDescriptor entitiesPropertyDescriptor() {
+    java.beans.PropertyDescriptor entitiesPropertyDescriptor() {
         java.beans.PropertyDescriptor aDescriptor = null;
         try {
             try {
@@ -55,7 +55,7 @@ public class SchemaBeanInfo extends java.beans.SimpleBeanInfo {
      * @param parameterCount int
      * @return java.lang.reflect.Method
      */
-    public static java.lang.reflect.Method findMethod(java.lang.Class aClass, java.lang.String methodName, int parameterCount) {
+    private static java.lang.reflect.Method findMethod(java.lang.Class aClass, java.lang.String methodName, int parameterCount) {
         try {
             /* Since this method attempts to find a method by getting all methods from the class,
        this method should only be called if getMethod cannot find the method. */
@@ -105,7 +105,7 @@ public class SchemaBeanInfo extends java.beans.SimpleBeanInfo {
      *
      * @return java.lang.Class
      */
-    public static java.lang.Class getBeanClass() {
+    private static java.lang.Class getBeanClass() {
         return cz.omnicom.ermodeller.conceptual.Schema.class;
     }
 
@@ -198,7 +198,7 @@ public class SchemaBeanInfo extends java.beans.SimpleBeanInfo {
      *
      * @return java.beans.PropertyDescriptor
      */
-    public java.beans.PropertyDescriptor relationsPropertyDescriptor() {
+    java.beans.PropertyDescriptor relationsPropertyDescriptor() {
         java.beans.PropertyDescriptor aDescriptor = null;
         try {
             try {

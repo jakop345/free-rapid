@@ -5,7 +5,7 @@ package cz.green.util;
  * and it is not possible. Wrong interval means for example that start point
  * is greater than end point.
  */
-public class WrongIntervalException extends IntervalMethodsException {
+class WrongIntervalException extends IntervalMethodsException {
 
     /**
      * WrongIntervalException constructor.

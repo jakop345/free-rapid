@@ -67,7 +67,7 @@ public class NestedTableStorageObj extends RowObj {
      *
      * @return java.lang.String
      */
-    public String getNameString() {
+    String getNameString() {
         return atribute;
     }
 

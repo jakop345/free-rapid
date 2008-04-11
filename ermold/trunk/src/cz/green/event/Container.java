@@ -61,12 +61,12 @@ public class Container extends JComponent implements MouseListener, MouseMotionL
     /**
      * The actual resize rectangle
      */
-    protected ResizeRectangle actResizeRect = null;
+    private ResizeRectangle actResizeRect = null;
 
     /**
      * Default constructor. Creates object the specified size.
      */
-    public Container(int width, int height) {
+    protected Container(int width, int height) {
         super();
         Dimension dim = new Dimension(width, height);
         setSize(dim);
@@ -130,7 +130,7 @@ public class Container extends JComponent implements MouseListener, MouseMotionL
      *
      * @return cz.green.event.ContainerDesktop
      */
-    public ContainerDesktop getDesktop() {
+    protected ContainerDesktop getDesktop() {
                 Rectangle r = getBounds();
                 desktop = new cz.green.event.Desktop(this, r.x, r.y, r.width, r.height);
 
@@ -157,7 +157,7 @@ public class Container extends JComponent implements MouseListener, MouseMotionL
      *         is (not) in resize mode.
      * @see Desktop#getActualResizeRect(int, int)
      */
-    public boolean isResizeMode(int x, int y) {
+    boolean isResizeMode(int x, int y) {
         return ((actResizeRect = desktop.getActualResizeRect(x, y)) != null);
     }
 
@@ -304,7 +304,7 @@ public class Container extends JComponent implements MouseListener, MouseMotionL
     /**
      * Set the new scale.
      */
-    public float setScale(float scale) {
+    protected float setScale(float scale) {
         desktop.setScale(scale);
         Rectangle r = desktop.getBounds();
         setSize(r.getSize());

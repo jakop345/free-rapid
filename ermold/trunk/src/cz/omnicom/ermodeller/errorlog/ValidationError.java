@@ -49,7 +49,7 @@ public abstract class ValidationError implements TreeSelectionListener {
 
         protected abstract void fireShowError();
 
-        protected ShowErrorSupport getShowError() {
+        ShowErrorSupport getShowError() {
             if (this.showError == null)
                 this.showError = new ShowErrorSupport(this);
             return this.showError;
@@ -63,7 +63,7 @@ public abstract class ValidationError implements TreeSelectionListener {
         /**
          * Sets valid to <code>newValue</code>
          */
-        protected void setValid(boolean newValue) {
+        void setValid(boolean newValue) {
             this.valid = newValue;
         }
 
@@ -152,7 +152,7 @@ public abstract class ValidationError implements TreeSelectionListener {
      *
      * @param aShowErrorListener cz.omnicom.ermodeller.errorlog.ShowErrorListener
      */
-    public synchronized void addShowErrorListener(ShowErrorListener aShowErrorListener) {
+    synchronized void addShowErrorListener(ShowErrorListener aShowErrorListener) {
         getShowError().addShowErrorListener(aShowErrorListener);
     }
 
@@ -193,7 +193,7 @@ public abstract class ValidationError implements TreeSelectionListener {
     /**
      * Accessor for the showError field.
      */
-    protected ShowErrorSupport getShowError() {
+    ShowErrorSupport getShowError() {
         if (showError == null)
             showError = new ShowErrorSupport(this);
         return showError;
@@ -216,7 +216,7 @@ public abstract class ValidationError implements TreeSelectionListener {
      *
      * @return javax.swing.tree.DefaultMutableTreeNode
      */
-    protected DefaultMutableTreeNode getTopNode() {
+    DefaultMutableTreeNode getTopNode() {
         return topNode;
     }
 

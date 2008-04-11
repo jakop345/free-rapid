@@ -11,9 +11,9 @@ import javax.swing.*;
  */
 public class AlterAddCommandObj extends CommandObj {
 
-    AtributeC2R atribute = null;
+    private AtributeC2R atribute = null;
 
-    RelationC2R relation = null;
+    private RelationC2R relation = null;
 
     /**
      * AlterCommand constructor.

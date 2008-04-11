@@ -1,10 +1,10 @@
 package cz.green.swing;
 
 public class ConstantConstraint implements Constraint {
-    protected int start = 0;
-    protected int size = 0;
+    int start = 0;
+    int size = 0;
 
-    public ConstantConstraint() {
+    ConstantConstraint() {
     }
 
     public ConstantConstraint(int start, int size) {

@@ -15,9 +15,9 @@ import java.beans.PropertyChangeListener;
  */
 public class NestedTableDataTypePanel2 extends DataTypePanel implements ActionListener, PropertyChangeListener {
 
-    protected NestedTableDataType ivjNestedTableDataType = null;
-    protected JLabel ivjTypeLabel = null;
-    protected JButton typeButton = null;
+    private NestedTableDataType ivjNestedTableDataType = null;
+    private JLabel ivjTypeLabel = null;
+    private JButton typeButton = null;
     private VarrayNestedTypeEditor nestedTypeEditor = null;
     private UserTypeStorageVector userTypeStorageVector = null;
 
@@ -25,7 +25,7 @@ public class NestedTableDataTypePanel2 extends DataTypePanel implements ActionLi
      * Constructor
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    public NestedTableDataTypePanel2() {
+    private NestedTableDataTypePanel2() {
         super();
         initialize();
     }
@@ -48,7 +48,7 @@ public class NestedTableDataTypePanel2 extends DataTypePanel implements ActionLi
         ((UserTypesEditorPanel) getDataTypeEditor()).getEditor().setActualType(getNestedTableDataType());
     }
 
-    protected void connEtoM3(java.awt.event.ActionEvent arg1) {
+    void connEtoM3(java.awt.event.ActionEvent arg1) {
         EditorDialog d = ((UserTypesEditorPanel) getDataTypeEditor()).getEditorDialog();
         d.setOKButtonVisible(false);
         d.setVisible(true);
@@ -57,7 +57,7 @@ public class NestedTableDataTypePanel2 extends DataTypePanel implements ActionLi
         //getNestedTypeEditor().updateJComboBox(userTypeStorageVector);
     }
 
-    protected VarrayNestedTypeEditor getNestedTypeEditor() {
+    VarrayNestedTypeEditor getNestedTypeEditor() {
         if (nestedTypeEditor == null) {
             //System.out.println("VarrayTypeEditor byl null");
             nestedTypeEditor = new VarrayNestedTypeEditor(userTypeStorageVector);
@@ -76,7 +76,7 @@ public class NestedTableDataTypePanel2 extends DataTypePanel implements ActionLi
      * @return cz.omnicom.ermodeller.datatype.LengthDataType
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    protected NestedTableDataType getNestedTableDataType() {
+    NestedTableDataType getNestedTableDataType() {
         if (ivjNestedTableDataType == null) {
             try {
                 ivjNestedTableDataType = new cz.omnicom.ermodeller.datatype.NestedTableDataType();
@@ -87,7 +87,7 @@ public class NestedTableDataTypePanel2 extends DataTypePanel implements ActionLi
         return ivjNestedTableDataType;
     }
 
-    protected javax.swing.JLabel getTypeLabel() {
+    javax.swing.JLabel getTypeLabel() {
         if (ivjTypeLabel == null) {
             try {
                 ivjTypeLabel = new javax.swing.JLabel();
@@ -110,7 +110,7 @@ public class NestedTableDataTypePanel2 extends DataTypePanel implements ActionLi
         return new Dimension(140, 110);
     }
 
-    protected JButton getTypeButton() {
+    JButton getTypeButton() {
         if (typeButton == null) {
             typeButton = new JButton();
             typeButton.setBounds(5, 26, 130, 25);
@@ -125,7 +125,7 @@ public class NestedTableDataTypePanel2 extends DataTypePanel implements ActionLi
      *
      * @param exception java.lang.Throwable
      */
-    protected void handleException(Throwable exception) {
+    void handleException(Throwable exception) {
 
         /* Uncomment the following lines to print uncaught exceptions to stdout */
         // System.out.println("--------- UNCAUGHT EXCEPTION ---------");
@@ -136,7 +136,7 @@ public class NestedTableDataTypePanel2 extends DataTypePanel implements ActionLi
      * Initializes connections
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    protected void initConnections() {
+    void initConnections() {
         //System.out.println("initConnections()");
         getTypeButton().addActionListener(this);
     }
@@ -145,7 +145,7 @@ public class NestedTableDataTypePanel2 extends DataTypePanel implements ActionLi
      * Initialize the class.
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    protected void initialize() {
+    void initialize() {
         try {
             setName("NestedTableDataTypePanel");
             setLayout(null);

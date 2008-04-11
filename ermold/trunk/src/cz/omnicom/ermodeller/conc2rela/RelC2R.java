@@ -42,7 +42,7 @@ public abstract class RelC2R extends RelationC2R {
      * @param aConceptualRelation corresponding conceptual relation
      * @see cz.omnicom.ermodeller.conceptual.Relation
      */
-    public RelC2R(SchemaC2R aSchemaC2R, Relation aConceptualRelation) {
+    RelC2R(SchemaC2R aSchemaC2R, Relation aConceptualRelation) {
         super(aSchemaC2R, aConceptualRelation);
     }
 
@@ -53,7 +53,7 @@ public abstract class RelC2R extends RelationC2R {
      * @throws cz.omnicom.ermodeller.conc2rela.exception.AlreadyContainsExceptionC2R
      *
      */
-    protected void addRelForeignKeyC2R(RelForeignKeyC2R aRelForeignKeyC2R) throws AlreadyContainsExceptionC2R {
+    void addRelForeignKeyC2R(RelForeignKeyC2R aRelForeignKeyC2R) throws AlreadyContainsExceptionC2R {
         if (getRelForeignKeysC2R().contains(aRelForeignKeyC2R))
             throw new AlreadyContainsExceptionC2R(this, aRelForeignKeyC2R, ListExceptionC2R.REL_FKS_LIST);
 
@@ -105,7 +105,7 @@ public abstract class RelC2R extends RelationC2R {
     /**
      * @return cz.omnicom.ermodeller.conc2rela.GlueRecord
      */
-    protected GlueRecord getGlueRecord() {
+    GlueRecord getGlueRecord() {
         return glueRecord;
     }
 
@@ -129,7 +129,7 @@ public abstract class RelC2R extends RelationC2R {
      *
      * @see cz.omnicom.ermodeller.conc2rela.RelForeignKeyC2R
      */
-    protected Vector glueC2R() throws AlreadyContainsExceptionC2R {
+    Vector glueC2R() throws AlreadyContainsExceptionC2R {
 
         Vector gluedRelationsC2R = new Vector();
         Vector relFKsToRemove = new Vector();
@@ -354,7 +354,7 @@ public abstract class RelC2R extends RelationC2R {
      *
      * @return int
      */
-    protected int howManyGluings() {
+    int howManyGluings() {
         int result = 0;
         for (Enumeration elements = getRelForeignKeysC2R().elements(); elements.hasMoreElements();) {
             RelForeignKeyC2R relForeignKeyC2R = (RelForeignKeyC2R) elements.nextElement();
@@ -367,7 +367,7 @@ public abstract class RelC2R extends RelationC2R {
     /**
      * Remove relational foreign key - after gluing through this one.
      */
-    protected void removeRelForeignKeyC2R(RelForeignKeyC2R aRelForeignKeyC2R) throws WasNotFoundExceptionC2R {
+    void removeRelForeignKeyC2R(RelForeignKeyC2R aRelForeignKeyC2R) throws WasNotFoundExceptionC2R {
         if (!getRelForeignKeysC2R().removeElement(aRelForeignKeyC2R))
             throw new WasNotFoundExceptionC2R(this, aRelForeignKeyC2R, ListExceptionC2R.REL_FKS_LIST);
     }
@@ -377,7 +377,7 @@ public abstract class RelC2R extends RelationC2R {
      *
      * @param newValue boolean
      */
-    protected void setGlued(boolean newValue) {
+    void setGlued(boolean newValue) {
         this.glued = newValue;
     }
 }

@@ -8,21 +8,21 @@ import java.awt.*;
  * event occurs and the instance of the <code>PopupMenu</code> class to adds to it
  * some items and display.
  */
-public class PopupMenuEvent extends cz.green.event.CoordinateEvent {
+class PopupMenuEvent extends cz.green.event.CoordinateEvent {
     /**
      * The x coordinate the popup event. This is the real display coordinate not
      * after translation using the current scale
      */
-    protected int realX = 0;
+    private int realX = 0;
     /**
      * The y coordinate the popup event. This is the real display coordinate not
      * after translation using the current scale
      */
-    protected int realY = 0;
+    private int realY = 0;
     /**
      * The menu into which to put items and display.
      */
-    protected JPopupMenu menu = null;
+    private JPopupMenu menu = null;
 
     /**
      * Construct the <code>PopupMenuEvent</code> using the inherited constructor

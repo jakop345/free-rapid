@@ -1,7 +1,7 @@
 package cz.green.ermodeller;
 
-import cz.green.swing.ShowException;
 import cz.green.event.interfaces.Manager;
+import cz.green.swing.ShowException;
 
 /**
  * This class exists to hold entity, which would like to participate on the relation (also held).
@@ -9,14 +9,14 @@ import cz.green.event.interfaces.Manager;
  *
  * @see Container#addingCardinality(cz.green.ermodeller.CardinalityPair)
  */
-public class StrongAddictionPair {
+class StrongAddictionPair {
     private Entity entity = null;
     private UniqueKey uniqueKey = null;
 
     /**
      * Construct empty cardinality pair.
      */
-    public StrongAddictionPair() {
+    private StrongAddictionPair() {
         super();
     }
 
@@ -56,7 +56,7 @@ public class StrongAddictionPair {
      * @return The entity.
      * @see #entity
      */
-    public Entity getEntity() {
+    Entity getEntity() {
         return entity;
     }
 
@@ -66,7 +66,7 @@ public class StrongAddictionPair {
      * @return The relation.
      * @see #relation
      */
-    public UniqueKey getUniqueKey() {
+    UniqueKey getUniqueKey() {
         return uniqueKey;
     }
 
@@ -76,7 +76,7 @@ public class StrongAddictionPair {
      * @param entity The entity.
      * @see #entity
      */
-    public void setEntity(Entity entity) {
+    void setEntity(Entity entity) {
         this.entity = entity;
     }
 
@@ -86,7 +86,7 @@ public class StrongAddictionPair {
      * @param relation The relation.
      * @see #relation
      */
-    public void setUniqueKey(UniqueKey uniqueKey) {
+    void setUniqueKey(UniqueKey uniqueKey) {
         this.uniqueKey = uniqueKey;
     }
 }

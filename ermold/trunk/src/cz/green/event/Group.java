@@ -46,7 +46,7 @@ public class Group extends Window implements Manager, java.io.Serializable {
      *
      * @see #repaintItem(Item)
      */
-    transient protected Rectangle repaint = null;
+    private transient Rectangle repaint = null;
 
     /**
      * This parameter less constructor is needed for desktop creating.
@@ -357,7 +357,7 @@ public class Group extends Window implements Manager, java.io.Serializable {
      * @throws <code>cz.green.event.engine.ItemNotInsideManagerException</code>
      *          If the items lies out of the group manager.
      */
-    protected void isMostLeftItemIn(int dimension, int[] interval) throws ItemNotInsideManagerException {
+    void isMostLeftItemIn(int dimension, int[] interval) throws ItemNotInsideManagerException {
         if (wins.size() == 0) //empty group -> all is ok
             return;
         try {
@@ -380,7 +380,7 @@ public class Group extends Window implements Manager, java.io.Serializable {
      * @throws <code>cz.green.event.engine.ItemNotInsideManagerException</code>
      *          If the items lies out of the group manager.
      */
-    protected void isMostRightItemIn(int dimension, int[] interval) throws ItemNotInsideManagerException {
+    void isMostRightItemIn(int dimension, int[] interval) throws ItemNotInsideManagerException {
         if (wins.size() == 0) //empty group -> all is ok
             return;
         try {
@@ -456,7 +456,7 @@ public class Group extends Window implements Manager, java.io.Serializable {
      * @param <code>recount</code> Specifies, whether we have to reconstruct the event tree struction.
      * @see move(int, int, boolean)
      */
-    protected void moveItems(int dx, int dy, boolean recount) {
+    void moveItems(int dx, int dy, boolean recount) {
         java.util.Enumeration e = wins.elements();
         while (e.hasMoreElements()) {
             ((Item) e.nextElement()).managerMoves(dx, dy, recount);

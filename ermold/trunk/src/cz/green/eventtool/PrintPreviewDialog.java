@@ -55,25 +55,25 @@ public class PrintPreviewDialog extends JDialog implements ItemListener, KeyList
     /**
      * The PrintJob class specified by user, which selectes printer and set it up.
      */
-    protected java.awt.PrintJob printJob = null;
+    private java.awt.PrintJob printJob = null;
     /**
      * The desktop of printed schema
      */
-    protected ContainerDesktop desktop = null;
+    private ContainerDesktop desktop = null;
     /**
      * The name of the current printing job
      */
-    protected String jobName = "";
+    private String jobName = "";
     /**
      * Font for printing desktop. This font should be used for printing. The size of the font can be change according to
      * the scale of the printing
      */
-    protected java.awt.Font printFont = null;
+    private java.awt.Font printFont = null;
     /**
      * Determines printing (<code>true</code>) or saving as image (<code>false</code>).
      */
-    protected boolean print = true;
-    protected Frame parent = null;
+    private boolean print = true;
+    private Frame parent = null;
     private JPanel ivjJDialogContentPane = null;
     //	private java.lang.String defDir;
     private java.lang.String fileName;
@@ -135,7 +135,7 @@ public class PrintPreviewDialog extends JDialog implements ItemListener, KeyList
      *
      * @param b Determine whether enable or disable.
      */
-    public void customZoomEnabler(boolean b) {
+    void customZoomEnabler(boolean b) {
         getZoomTextField().setEnabled(b);
         getZoom().setEnabled(b);
     }
@@ -360,7 +360,7 @@ public class PrintPreviewDialog extends JDialog implements ItemListener, KeyList
     /**
      * Prints the schema in the selected printer.
      */
-    protected void print() {
+    void print() {
         if (desktop != null) {
             float scale = 1;
             try {
@@ -423,7 +423,7 @@ public class PrintPreviewDialog extends JDialog implements ItemListener, KeyList
     /**
      * This method was created by Jiri Mares
      */
-    protected void saveAsImage() {
+    void saveAsImage() {
         //com.ibm.imageconversion.BMPEncoder bmp;
         if (desktop != null) {
             float scale = 1;
@@ -581,7 +581,7 @@ public class PrintPreviewDialog extends JDialog implements ItemListener, KeyList
      * Set the correct work regime for in-placed <code>PrintPreview</code> component. User want to do fit page or select
      * its own scale.
      */
-    public void zoomItemStateChanged() {
+    void zoomItemStateChanged() {
         boolean customZoom = getCustomButton().isSelected();
         customZoomEnabler(customZoom);
         if (customZoom) {

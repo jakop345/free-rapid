@@ -1,14 +1,14 @@
 package cz.green.swing;
 
 public class LinearConstraint extends ConstantConstraint {
-    protected double startMultiplier = 0.0;
-    protected double sizeMultiplier = 0.0;
+    private double startMultiplier = 0.0;
+    double sizeMultiplier = 0.0;
 
-    public LinearConstraint() {
+    LinearConstraint() {
         super();
     }
 
-    public LinearConstraint(double startMultiplier, double sizeMultiplier) {
+    LinearConstraint(double startMultiplier, double sizeMultiplier) {
         super();
         this.startMultiplier = startMultiplier;
         this.sizeMultiplier = sizeMultiplier;
@@ -21,7 +21,7 @@ public class LinearConstraint extends ConstantConstraint {
         this.sizeMultiplier = sizeMultiplier;
     }
 
-    public LinearConstraint(int startConstant, int sizeConstant) {
+    LinearConstraint(int startConstant, int sizeConstant) {
         super(startConstant, sizeConstant);
     }
 

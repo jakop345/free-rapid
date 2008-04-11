@@ -8,5 +8,5 @@ public abstract class CommandSQL implements SubSQLProducer, SubTreeProducer {
     /**
      * @return javax.swing.Icon
      */
-    public abstract javax.swing.Icon getIcon();
+    protected abstract javax.swing.Icon getIcon();
 }

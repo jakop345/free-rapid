@@ -319,7 +319,7 @@ public class CardinalityCustomizer extends JPanel implements ActionListener, Ite
     /**
      * Accessor for the propertyChange field.
      */
-    protected PropertyChangeSupport getPropertyChange() {
+    PropertyChangeSupport getPropertyChange() {
         if (propertyChange == null)
             propertyChange = new PropertyChangeSupport(this);
         return propertyChange;

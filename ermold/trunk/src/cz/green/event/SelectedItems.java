@@ -1,7 +1,9 @@
 package cz.green.event;
 
+import cz.green.event.interfaces.Invokable;
+import cz.green.event.interfaces.PaintableItem;
+import cz.green.event.interfaces.SelectableItem;
 import cz.green.util.MoveArrayList;
-import cz.green.event.interfaces.*;
 
 import java.awt.*;
 
@@ -13,7 +15,7 @@ public class SelectedItems implements SelectableItem {
     /**
      * Stores all selected items
      */
-    protected MoveArrayList elems = null;
+    private MoveArrayList elems = null;
 
     /**
      * Creates empty list of selected items.

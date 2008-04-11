@@ -69,7 +69,7 @@ public abstract class RelationC2R extends ObjectC2R implements SQLCreateCommandP
      * @param aConceptualConstruct corresponding conceptual construct
      * @see cz.omnicom.ermodeller.conceptual.ConceptualConstruct
      */
-    public RelationC2R(SchemaC2R aSchemaC2R, ConceptualConstruct aConceptualConstruct) {
+    RelationC2R(SchemaC2R aSchemaC2R, ConceptualConstruct aConceptualConstruct) {
         super(new NameC2R(aConceptualConstruct.getName()), aSchemaC2R);
         conceptualConstruct = aConceptualConstruct;
 
@@ -103,7 +103,7 @@ public abstract class RelationC2R extends ObjectC2R implements SQLCreateCommandP
      * @throws cz.omnicom.ermodeller.conc2rela.exception.AlreadyContainsExceptionC2R
      *
      */
-    protected void addEntForeignKeyC2R(EntForeignKeyC2R aEntForeignKeyC2R) throws AlreadyContainsExceptionC2R {
+    void addEntForeignKeyC2R(EntForeignKeyC2R aEntForeignKeyC2R) throws AlreadyContainsExceptionC2R {
         if (getEntForeignKeysC2R().contains(aEntForeignKeyC2R))
             throw new AlreadyContainsExceptionC2R(this, aEntForeignKeyC2R, ListExceptionC2R.ENT_FKS_LIST);
 
@@ -435,7 +435,7 @@ public abstract class RelationC2R extends ObjectC2R implements SQLCreateCommandP
      * @param uniqueKeyC2R cz.omnicom.ermodeller.conc2rela.UniqueKeyC2R
      * @return boolean
      */
-    protected boolean isPrimaryKeyC2R(UniqueKeyC2R uniqueKeyC2R) {
+    boolean isPrimaryKeyC2R(UniqueKeyC2R uniqueKeyC2R) {
         if (getPrimaryKeyC2R() == null)
             return false;
         return getPrimaryKeyC2R().isPrimaryKey(uniqueKeyC2R);

@@ -13,51 +13,51 @@ import java.lang.reflect.Method;
 /**
  * This is panel with all editable properties of one component.
  */
-public class PropertyList extends JComponent implements Scrollable, PropertyChangeListener {
+class PropertyList extends JComponent implements Scrollable, PropertyChangeListener {
     /**
      * Adjustable class to scroll this panel
      */
-    protected Adjustable scroll = null;
+    private Adjustable scroll = null;
     /**
      * The bean to edit its properties
      */
-    protected Object bean = null;
+    private Object bean = null;
     /**
      * Property descriptors to all bean properties
      */
-    protected PropertyDescriptor[] properties = null;
+    private PropertyDescriptor[] properties = null;
     /**
      * Property editors for each property that has its editor, others are <code>null</code>
      */
-    protected PropertyEditor[] editors = null;
+    private PropertyEditor[] editors = null;
     /**
      * The values of all readable properties, others are <code>null</code>
      */
-    protected Object[] values = null;
+    private Object[] values = null;
     /**
      * The instances ShowProperty for all readable, writable a editable (has its editor) properties
      * of editting bean
      *
      * @see ShowProperty
      */
-    protected ShowProperty[] views = null;
+    private ShowProperty[] views = null;
     /**
      * The labels with names of all properties
      */
-    protected JLabel[] labels = null;
+    private JLabel[] labels = null;
     /**
      * Determines whether the panel consists also hidden properties
      */
-    protected boolean showHidden = false;
+    private boolean showHidden = false;
     /**
      * Determines whether the panel consists also expert properties
      */
-    protected boolean showExpert = false;
-    protected int height = 0;
-    protected boolean customizable = false;
-    protected Class customizerClass = null;
-    protected String beanName = "";
-    protected Frame parent = null;
+    private boolean showExpert = false;
+    private int height = 0;
+    private boolean customizable = false;
+    private Class customizerClass = null;
+    private String beanName = "";
+    private Frame parent = null;
 
     /**
      * Construct the Property list with no associated scrollbar.
@@ -74,7 +74,7 @@ public class PropertyList extends JComponent implements Scrollable, PropertyChan
      *
      * @param scroller The associated scrollbar.
      */
-    public PropertyList(Frame parent, Adjustable scroller) {
+    private PropertyList(Frame parent, Adjustable scroller) {
         super();
         setLayout(new CountLayout());
         scroll = scroller;
@@ -143,7 +143,7 @@ public class PropertyList extends JComponent implements Scrollable, PropertyChan
     /**
      * This method was created by Jiri Mares
      */
-    public void modifyPropertyChangeListener(Object bean, boolean add) {
+    void modifyPropertyChangeListener(Object bean, boolean add) {
         if (bean == null)
             return;
         Class cls = bean.getClass();
@@ -363,7 +363,7 @@ public class PropertyList extends JComponent implements Scrollable, PropertyChan
      * @see #showExpert
      * @see #showHidden
      */
-    protected void showProperties() {
+    void showProperties() {
         removeAll();
         if (views == null || labels == null)
             return;

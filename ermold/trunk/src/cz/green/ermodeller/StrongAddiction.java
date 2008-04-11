@@ -20,8 +20,8 @@ import java.awt.*;
  */
 public class StrongAddiction extends ConceptualObject {
     public static final int SIZE = 6;
-    cz.green.ermodeller.Entity parent;
-    cz.green.ermodeller.Entity child;
+    private cz.green.ermodeller.Entity parent;
+    private cz.green.ermodeller.Entity child;
 
     /**
      * StrongAddiction constructor comment.
@@ -35,7 +35,7 @@ public class StrongAddiction extends ConceptualObject {
      * @throws cz.green.event.exceptions.ImpossibleNegativeValueException
      *                                        The exception description.
      */
-    public StrongAddiction(Entity parent, Entity son, Manager manager, int left, int top) throws NullPointerException, ImpossibleNegativeValueException {
+    private StrongAddiction(Entity parent, Entity son, Manager manager, int left, int top) throws NullPointerException, ImpossibleNegativeValueException {
         super(manager, left - (SIZE / 2), top - (SIZE / 2), SIZE, SIZE);
         this.parent = parent;
         this.child = son;
@@ -561,7 +561,7 @@ public class StrongAddiction extends ConceptualObject {
         return parent;
     }
 
-    public cz.green.ermodeller.Entity getChild() {
+    cz.green.ermodeller.Entity getChild() {
         return child;
     }
 }

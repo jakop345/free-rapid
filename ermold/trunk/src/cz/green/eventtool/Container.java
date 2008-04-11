@@ -14,7 +14,7 @@ public class Container extends cz.green.event.Container {
      *
      * @see cz.green.event.Container#Container(int, int, int, int)
      */
-    public Container(int width, int height) {
+    protected Container(int width, int height) {
         super(width, height);
     }
 
@@ -42,7 +42,7 @@ public class Container extends cz.green.event.Container {
      *                             If file contains unknow class. For example doesn't contains schema, but other classes.
      * @see cz.green.event.Desktop#init(cz.green.event.Container)
      */
-    public void loadFromFile(String fileName) throws java.io.IOException, ClassNotFoundException {
+    protected void loadFromFile(String fileName) throws java.io.IOException, ClassNotFoundException {
         java.io.FileInputStream f = null;
         try {
             f = new java.io.FileInputStream(fileName);

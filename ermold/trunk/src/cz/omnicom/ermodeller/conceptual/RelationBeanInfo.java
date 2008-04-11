@@ -3,7 +3,7 @@ package cz.omnicom.ermodeller.conceptual;
 /**
  * The bean information class for cz.omnicom.ermodeller.conceptual.Relation.
  */
-public class RelationBeanInfo extends java.beans.SimpleBeanInfo {
+class RelationBeanInfo extends java.beans.SimpleBeanInfo {
     /**
      * Find the method by comparing (name & parameter size) against the methods in the class.
      *

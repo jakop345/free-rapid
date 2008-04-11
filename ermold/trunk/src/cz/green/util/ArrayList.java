@@ -15,7 +15,7 @@ public class ArrayList extends Vector {
     /**
      * Constructs an empty ArrayList.
      */
-    public ArrayList() {
+    ArrayList() {
         super();
     }
 
@@ -24,7 +24,7 @@ public class ArrayList extends Vector {
      *
      * @param initialCapacity the initial capacity of the ArrayList.
      */
-    public ArrayList(int initialCapacity) {
+    ArrayList(int initialCapacity) {
         super(initialCapacity);
     }
 
@@ -36,7 +36,7 @@ public class ArrayList extends Vector {
      * @param capacityIncrement the amount by which the capacity is
      *                          increased when the ArrayList overflows.
      */
-    public ArrayList(int initialCapacity, int capacityIncrement) {
+    ArrayList(int initialCapacity, int capacityIncrement) {
         super(initialCapacity, capacityIncrement);
     }
 

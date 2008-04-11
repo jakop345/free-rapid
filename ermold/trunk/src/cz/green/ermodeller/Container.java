@@ -4,9 +4,8 @@ import cz.green.event.AddAsISAChildEvent;
 import cz.green.event.AddConnectionEvent;
 import cz.green.event.AddIdentificationDependencyEvent;
 import cz.green.event.AddRelWithConnsEvent;
-import cz.green.event.exceptions.ImpossibleNegativeValueException;
-import cz.green.event.interfaces.Item;
 import cz.green.event.interfaces.ContainerDesktop;
+import cz.green.event.interfaces.Item;
 import cz.green.eventtool.Window;
 import cz.omnicom.ermodeller.errorlog.ShowErrorEvent;
 import cz.omnicom.ermodeller.errorlog.ShowErrorListener;
@@ -44,7 +43,7 @@ public class Container extends cz.green.eventtool.Container implements ModeSwitc
     /**
      * The adding group state.
      */
-    public final static int ADDING_IDENT_DEPENDENCY = 19;
+    private final static int ADDING_IDENT_DEPENDENCY = 19;
     /**
      * The adding atribute state.
      */
@@ -76,11 +75,11 @@ public class Container extends cz.green.eventtool.Container implements ModeSwitc
     /**
      * Helpful for some work modes
      */
-    protected Object object = null;
+    private Object object = null;
     /**
      * The shown popup menu
      */
-    protected JPopupMenu menu = null;
+    private JPopupMenu menu = null;
     /**
      * Holds the font metrics the current font
      */
@@ -97,7 +96,7 @@ public class Container extends cz.green.eventtool.Container implements ModeSwitc
     /**
      * Editor of Cosntraints
      */
-    ConstraintsDialog constDialog;
+    private ConstraintsDialog constDialog;
 
     /**
      * Calls the inherited constructor, but has one more parameter.
@@ -311,14 +310,10 @@ public class Container extends cz.green.eventtool.Container implements ModeSwitc
      */
     public ContainerDesktop getDesktop() {
         if (desktop == null) {
-            try {
                 java.awt.Rectangle r = getBounds();
                 desktop = new Desktop(this, r.x, r.y, r.width, r.height);
                 ((Desktop) desktop).addShowErrorListener(this);
 //			propEditing(true);
-            } catch (ImpossibleNegativeValueException e) {
-                return null;
-            }
         }
         return desktop;
     }
@@ -567,7 +562,7 @@ public class Container extends cz.green.eventtool.Container implements ModeSwitc
      * @param realY Real container y coordinate
      * @see PopupMenuEvent
      */
-    protected void popupAction(int x, int y, int realX, int realY) {
+    void popupAction(int x, int y, int realX, int realY) {
         desktop.fallAndHandleEvent(x, y, new PopupMenuEvent(x, y, realX, realY, this, menu));
     }
 

@@ -18,46 +18,46 @@ public class Entity extends ConceptualConstruct {
     /**
      * Holds the group of atributes as a primary key of the <code>Entity</code>.
      */
-    protected final Vector primaryKey = new Vector();
+    private final Vector primaryKey = new Vector();
     /**
      * Constraints of <code>Entity</code>.
      */
-    protected String constraints = "";
+    private String constraints = "";
     /**
      * Parent in ISA hierarchy (superentity of this <code>Entity</code>).
      */
-    protected Entity isaParent = null;
+    private Entity isaParent = null;
     /**
      * Sons in ISA hierarchy (subentities of this one).
      */
-    protected Vector isaSons = new Vector();
+    private Vector isaSons = new Vector();
     /**
      * <code>Entities</code> which this <code>Entity</code> is addicted to.
      */
-    protected Vector strongAddictionsParents = new Vector();
+    private Vector strongAddictionsParents = new Vector();
     /**
      * <code>Entities</code> which are addicted to this <code>Entity</code>.
      */
-    protected Vector strongAddictionsSons = new Vector();
+    private Vector strongAddictionsSons = new Vector();
     /**
      * Unique keys held by construct.
      *
      * @see cz.omnicom.ermodeller.conceptual.UniqueKey
      */
-    protected Vector uniqueKeys = new Vector();
+    private Vector uniqueKeys = new Vector();
 
     private static final int NO_SUBSET = 0;
     private static final int FIRST_SUBSET = 1;
     private static final int SECOND_SUBSET = 2;
     private static final int BOTH_SUBSET = 3;
 
-    public static final String PRIMARYKEY_PROPERTY_CHANGE = "primaryKey";
-    public static final String CONSTRAINTS_PROPERTY_CHANGE = "constraints";
-    public static final String ISASONS_PROPERTY_CHANGE = "isaSons";
-    public static final String ISAPARENTS_PROPERTY_CHANGE = "isaParent";
-    public static final String UNIQUEKEYS_PROPERTY_CHANGE = "uniqueKeys";
-    public static final String STRONGADDICTIONSSONS_PROPERTY_CHANGE = "strongAddictionsSons";
-    public static final String STRONGADDICTIONSPARENTS_PROPERTY_CHANGE = "strongAddictionsParents";
+    private static final String PRIMARYKEY_PROPERTY_CHANGE = "primaryKey";
+    private static final String CONSTRAINTS_PROPERTY_CHANGE = "constraints";
+    private static final String ISASONS_PROPERTY_CHANGE = "isaSons";
+    private static final String ISAPARENTS_PROPERTY_CHANGE = "isaParent";
+    private static final String UNIQUEKEYS_PROPERTY_CHANGE = "uniqueKeys";
+    private static final String STRONGADDICTIONSSONS_PROPERTY_CHANGE = "strongAddictionsSons";
+    private static final String STRONGADDICTIONSPARENTS_PROPERTY_CHANGE = "strongAddictionsParents";
 
     /**
      * Adds the ISA son to the <code>Entity</code>.

@@ -40,7 +40,7 @@ public class VarrayNestedTypeEditor extends TypeEditor implements PropertyChange
         //System.out.println("VarrayNestedTypeEditor constructor 2");
     }
 
-    protected void initialize() {
+    void initialize() {
         setLayout(null);
         //setBackground(java.awt.Color.red);
         add(getJComboBox());
@@ -49,7 +49,7 @@ public class VarrayNestedTypeEditor extends TypeEditor implements PropertyChange
         integerSelected();
     }
 
-    protected void initConnections() {
+    void initConnections() {
         getJComboBox().addItemListener(this);
     }
 
@@ -98,7 +98,7 @@ public class VarrayNestedTypeEditor extends TypeEditor implements PropertyChange
         return new Dimension(200, 200);
     }
 
-    protected JLabel getTypeLabel() {
+    JLabel getTypeLabel() {
         if (typeLabel == null) {
             typeLabel = new JLabel("Type of items");
             typeLabel.setBounds(5, 0, 105, 15);
@@ -106,7 +106,7 @@ public class VarrayNestedTypeEditor extends TypeEditor implements PropertyChange
         return typeLabel;
     }
 
-    protected JComboBox getJComboBox() {
+    JComboBox getJComboBox() {
         if (ivjJComboBox == null) {
             ivjJComboBox = new JComboBox();
             ivjJComboBox.setToolTipText("Select type");
@@ -189,7 +189,7 @@ public class VarrayNestedTypeEditor extends TypeEditor implements PropertyChange
         }
     }
 
-    protected void generalNumberSelected() {
+    void generalNumberSelected() {
         dataType = new GeneralNumberDataType();
         if (dataTypePanel != null)
             remove(dataTypePanel);
@@ -202,7 +202,7 @@ public class VarrayNestedTypeEditor extends TypeEditor implements PropertyChange
         add(dataTypePanel);
     }
 
-    protected void charSelected() {
+    void charSelected() {
         dataType = new FixedCharDataType();
         if (dataTypePanel != null)
             remove(dataTypePanel);
@@ -215,7 +215,7 @@ public class VarrayNestedTypeEditor extends TypeEditor implements PropertyChange
         add(dataTypePanel);
     }
 
-    protected void varchar2Selected() {
+    void varchar2Selected() {
         dataType = new Varchar2DataType();
         if (dataTypePanel != null)
             remove(dataTypePanel);
@@ -228,25 +228,25 @@ public class VarrayNestedTypeEditor extends TypeEditor implements PropertyChange
         add(dataTypePanel);
     }
 
-    protected void dateSelected() {
+    void dateSelected() {
         dataType = new DateDataType();
         if (dataTypePanel != null)
             remove(dataTypePanel);
     }
 
-    protected void floatSelected() {
+    void floatSelected() {
         dataType = new FloatDataType();
         if (dataTypePanel != null)
             remove(dataTypePanel);
     }
 
-    protected void userDefinedSelected() {
+    void userDefinedSelected() {
         dataType = new UserDefinedDataType((String) (getJComboBox().getSelectedItem()));
         if (dataTypePanel != null)
             remove(dataTypePanel);
     }
 
-    protected void integerSelected() {
+    void integerSelected() {
         dataType = new IntegerDataType();
         if (dataTypePanel != null)
             remove(dataTypePanel);

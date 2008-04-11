@@ -235,7 +235,7 @@ public class SchemaSQL implements SubSQLProducer, SubTreeProducer {
      *
      * @return java.util.Vector
      */
-    protected Vector getAlterAddCommands() {
+    Vector getAlterAddCommands() {
         if (alterAddCommands == null)
             alterAddCommands = new Vector();
         return alterAddCommands;
@@ -246,7 +246,7 @@ public class SchemaSQL implements SubSQLProducer, SubTreeProducer {
      *
      * @return java.util.Vector
      */
-    protected Vector getCreateCommands() {
+    Vector getCreateCommands() {
         if (createCommands == null)
             createCommands = new Vector();
         return createCommands;
@@ -257,7 +257,7 @@ public class SchemaSQL implements SubSQLProducer, SubTreeProducer {
      *
      * @return java.util.Vector
      */
-    protected Vector getDropCommands() {
+    Vector getDropCommands() {
         if (dropCommands == null)
             dropCommands = new Vector();
         return dropCommands;
@@ -268,7 +268,7 @@ public class SchemaSQL implements SubSQLProducer, SubTreeProducer {
      *
      * @return java.util.Vector
      */
-    protected Vector getCreateTypes() {
+    Vector getCreateTypes() {
         if (createTypes == null)
             createTypes = new Vector();
         return createTypes;
@@ -279,7 +279,7 @@ public class SchemaSQL implements SubSQLProducer, SubTreeProducer {
      *
      * @return java.util.Vector
      */
-    protected Vector getCreateIncompleteTypes() {
+    Vector getCreateIncompleteTypes() {
         if (createIncompleteTypes == null)
             createIncompleteTypes = new Vector();
         return createIncompleteTypes;
@@ -290,7 +290,7 @@ public class SchemaSQL implements SubSQLProducer, SubTreeProducer {
      *
      * @return java.util.Vector
      */
-    protected Vector getDropTypes() {
+    Vector getDropTypes() {
         if (dropTypes == null)
             dropTypes = new Vector();
         return dropTypes;
@@ -306,7 +306,7 @@ public class SchemaSQL implements SubSQLProducer, SubTreeProducer {
      *
      * @return javax.swing.Icon
      */
-    public Icon getIcon() {
+    Icon getIcon() {
         return new ImageIcon(ClassLoader.getSystemResource("img/sqlschema.gif"));
     }
 

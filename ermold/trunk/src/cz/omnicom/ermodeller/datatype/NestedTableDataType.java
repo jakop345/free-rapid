@@ -5,7 +5,7 @@ import java.beans.PropertyChangeListener;
 
 public class NestedTableDataType extends DataType implements PropertyChangeListener {
 
-    protected DataType dataType = null;
+    private DataType dataType = null;
 
     public NestedTableDataType() {
         super();
@@ -19,7 +19,7 @@ public class NestedTableDataType extends DataType implements PropertyChangeListe
         //System.out.println("NestedTableDataType constructor -> type set to "+dataType.toString());
     }
 
-    public void setType(DataType type) {
+    void setType(DataType type) {
         dataType = type;
         //System.out.println("NestedTableDataType.setType() to "+dataType.toString());
     }

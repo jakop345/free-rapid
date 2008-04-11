@@ -8,9 +8,9 @@ import java.beans.PropertyChangeSupport;
  * Node in the tree with user icon.
  */
 public class IconNode extends javax.swing.tree.DefaultMutableTreeNode {
-    protected Icon icon;
-    protected transient PropertyChangeSupport propertyChange;
-    public static final String ICON_PROPERTY_CHANGE = "icon";
+    private Icon icon;
+    private transient PropertyChangeSupport propertyChange;
+    private static final String ICON_PROPERTY_CHANGE = "icon";
 
     /**
      * This method was created in VisualAge.
@@ -40,7 +40,7 @@ public class IconNode extends javax.swing.tree.DefaultMutableTreeNode {
     /**
      * The firePropertyChange method was generated to support the propertyChange field.
      */
-    public void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
+    void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
         getPropertyChange().firePropertyChange(propertyName, oldValue, newValue);
     }
 
@@ -56,7 +56,7 @@ public class IconNode extends javax.swing.tree.DefaultMutableTreeNode {
     /**
      * Accessor for the propertyChange field.
      */
-    protected PropertyChangeSupport getPropertyChange() {
+    PropertyChangeSupport getPropertyChange() {
         if (propertyChange == null)
             propertyChange = new java.beans.PropertyChangeSupport(this);
         return propertyChange;

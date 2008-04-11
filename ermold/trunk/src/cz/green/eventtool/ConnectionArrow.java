@@ -1,8 +1,8 @@
 package cz.green.eventtool;
 
-import cz.green.event.interfaces.PaintableManager;
-import cz.green.event.interfaces.Manager;
 import cz.green.event.exceptions.ImpossibleNegativeValueException;
+import cz.green.event.interfaces.Manager;
+import cz.green.event.interfaces.PaintableManager;
 
 /**
  * Has the same functionalitz as ancestor, but adds one important thing. At the and (by first
@@ -20,11 +20,11 @@ public class ConnectionArrow extends ConnectionLine {
     /**
      * Polygon, that held the arrow shape
      */
-    transient protected java.awt.Polygon arrow = null;
+    private transient java.awt.Polygon arrow = null;
     /**
      * Polygon, that held the diamond shape
      */
-    transient protected java.awt.Polygon diamond = null;
+    private transient java.awt.Polygon diamond = null;
 
     /**
      * Same functionality as inhereted.
@@ -134,7 +134,7 @@ public class ConnectionArrow extends ConnectionLine {
         }
     }
 
-    public boolean isStrongAddictionChild() {
+    boolean isStrongAddictionChild() {
         return strongAddictionChild;
     }
 

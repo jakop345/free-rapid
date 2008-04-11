@@ -1,14 +1,14 @@
 package cz.green.ermodeller;
 
+import cz.green.event.exceptions.ImpossibleNegativeValueException;
+import cz.green.event.interfaces.Invokable;
+import cz.green.event.interfaces.Item;
+import cz.green.event.interfaces.Manager;
+import cz.green.event.interfaces.PaintableManager;
 import cz.green.eventtool.Connection;
 import cz.green.eventtool.ConnectionLine;
 import cz.green.eventtool.ConnectionManager;
 import cz.green.swing.ShowException;
-import cz.green.event.interfaces.Invokable;
-import cz.green.event.interfaces.PaintableManager;
-import cz.green.event.interfaces.Item;
-import cz.green.event.interfaces.Manager;
-import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.omnicom.ermodeller.conceptual.exception.ParameterCannotBeNullException;
 import cz.omnicom.ermodeller.conceptual.exception.WasNotFoundException;
 
@@ -24,7 +24,7 @@ public class ConceptualConstruct extends ConceptualObject {
     /**
      * All attributes
      */
-    protected java.util.Vector Attribs = new java.util.Vector(3, 2);
+    java.util.Vector Attribs = new java.util.Vector(3, 2);
 
 
     /**
@@ -32,7 +32,7 @@ public class ConceptualConstruct extends ConceptualObject {
      *
      * @see ConceptualObject#ConceptualObject(cz.green.event.interfaces.Manager , int, int, int, int)
      */
-    public ConceptualConstruct(Manager manager, int left, int top, int width, int height) throws NullPointerException, ImpossibleNegativeValueException {
+    ConceptualConstruct(Manager manager, int left, int top, int width, int height) throws NullPointerException, ImpossibleNegativeValueException {
         super(manager, left, top, width, height);
     }
 
@@ -126,7 +126,7 @@ public class ConceptualConstruct extends ConceptualObject {
      * Can work only with atributes (moving atributes between conceptual consatructs) and cardinalities
      * (reconnecting the cardinalities).
      */
-    public void handleDragOverEvent(DragOverEvent event) {
+    void handleDragOverEvent(DragOverEvent event) {
         if (selected && event.getAdd())
             return;
         Item item = event.getItem();
@@ -159,7 +159,7 @@ public class ConceptualConstruct extends ConceptualObject {
      * @see #moveAtribute(cz.green.ermodeller.Atribute)
      * @see Cardinality#reconnect(cz.green.ermodeller.ConceptualConstruct)
      */
-    public void handleDropAboveEvent(DropAboveEvent event) {
+    void handleDropAboveEvent(DropAboveEvent event) {
         if (selected && event.getAdd())
             return;
 //	event.getComponent().setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -268,7 +268,7 @@ public class ConceptualConstruct extends ConceptualObject {
      * @param cc The new owner of all atributes.
      * @see #moveAtribute(Atribute)
      */
-    protected void reconnectAllAtributes(ConceptualConstruct cc) {
+    void reconnectAllAtributes(ConceptualConstruct cc) {
         Atribute atr;
         for (int i = connections.size() - 1; i >= 0; i--) {
             if ((atr = (Atribute) ((Connection) connections.elementAt(i)).isConnectedTo(Atribute.class)) != null)
@@ -283,7 +283,7 @@ public class ConceptualConstruct extends ConceptualObject {
      * @param cc The new participant of the cardinality.
      * @see Entity#compact(cz.green.ermodeller.Entity, cz.green.event.CoordinateEvent)
      */
-    protected void reconnectAllCardinalities(ConceptualConstruct cc) {
+    void reconnectAllCardinalities(ConceptualConstruct cc) {
         Connection c;
         for (int i = connections.size() - 1; i >= 0; i--) {
             c = (Connection) connections.elementAt(i);
@@ -360,7 +360,7 @@ public class ConceptualConstruct extends ConceptualObject {
      *
      * @param event This remove event is sent to all disposed cardinalities.
      */
-    protected void removeCardinalities(cz.green.event.RemoveEvent event) {
+    void removeCardinalities(cz.green.event.RemoveEvent event) {
         Cardinality car;
         for (int i = connections.size() - 1; i >= 0; i--) {
             if ((car = (Cardinality) (((Connection) connections.elementAt(i))).isConnectedTo(Cardinality.class)) != null)
@@ -379,7 +379,7 @@ public class ConceptualConstruct extends ConceptualObject {
         return null;
     }
 
-    protected java.awt.Point getAbsoluteCenter(ConceptualObject co) {
+    java.awt.Point getAbsoluteCenter(ConceptualObject co) {
         return new java.awt.Point((getBounds().x + getBounds().width / 2 + co.getBounds().x + co.getBounds().width / 2) / 2,
                 (getBounds().y + getBounds().height / 2 + co.getBounds().y + co.getBounds().height / 2) / 2);
     }

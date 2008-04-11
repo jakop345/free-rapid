@@ -88,7 +88,7 @@ public class BrowserControl {
      *
      * @return true if this application is running under a Windows OS
      */
-    public static boolean isWindowsPlatform() {
+    private static boolean isWindowsPlatform() {
         String os = System.getProperty("os.name");
         return (os != null && os.startsWith(WIN_ID));
     }

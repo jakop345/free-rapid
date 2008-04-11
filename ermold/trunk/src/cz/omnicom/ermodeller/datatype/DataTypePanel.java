@@ -16,7 +16,7 @@ public abstract class DataTypePanel extends JPanel {
     /*misto DataTypeEditor je JPanel*/
     private JPanel dataTypeEditor = null;
 
-    public JPanel getDataTypeEditor() {
+    protected JPanel getDataTypeEditor() {
         return dataTypeEditor;
     }
 

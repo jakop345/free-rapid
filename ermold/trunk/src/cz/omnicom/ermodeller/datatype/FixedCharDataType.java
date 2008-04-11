@@ -4,9 +4,9 @@ package cz.omnicom.ermodeller.datatype;
  * Fixed char datatype.
  */
 public class FixedCharDataType extends LengthDataType {
-    static final public int MINIMUM_LENGTH = 1;
-    static final public int MAXIMUM_LENGTH = 255;
-    static final public int DEFAULT_LENGTH = MINIMUM_LENGTH;
+    private static final int MINIMUM_LENGTH = 1;
+    private static final int MAXIMUM_LENGTH = 255;
+    private static final int DEFAULT_LENGTH = MINIMUM_LENGTH;
 
     /**
      * CharDataType constructor.

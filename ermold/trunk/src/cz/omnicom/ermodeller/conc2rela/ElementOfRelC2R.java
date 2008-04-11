@@ -16,7 +16,7 @@ public abstract class ElementOfRelC2R extends ObjectC2R {
      * @param aSchemaC2R cz.omnicom.ermodeller.conc2rela.SchemaC2R
      * @param aRelC2R    cz.omnicom.ermodeller.conc2rela.RelC2R
      */
-    public ElementOfRelC2R(NameC2R aNameC2R, SchemaC2R aSchemaC2R, RelC2R aRelC2R) {
+    ElementOfRelC2R(NameC2R aNameC2R, SchemaC2R aSchemaC2R, RelC2R aRelC2R) {
         super(aNameC2R, aSchemaC2R);
         this.relC2R = aRelC2R;
     }

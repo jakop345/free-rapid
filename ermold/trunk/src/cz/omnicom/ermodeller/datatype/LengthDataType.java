@@ -12,7 +12,7 @@ public class LengthDataType extends DataType implements Serializable {
     private int fieldLength;
 
     public static final String LENGTH_PROPERTY_CHANGE = "length";
-    LengthDataTypePanel panel;
+    private LengthDataTypePanel panel;
 
     /**
      * Decrease length.

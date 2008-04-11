@@ -17,7 +17,7 @@ public class ObjectTypeEditor extends TypeEditor implements PropertyChangeListen
     public static final String DATATYPE_PROPERTY_CHANGE = "datatype_prop_change";
     public static final String NAME_PROPERTY_CHANGE = "name_prop_change";
     public static final String CONFIRM_NAME_PROPERTY_CHANGE = "confirm_name_prop_change";
-    protected static final char[] LEGAL_CHARS = {'_', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
+    private static final char[] LEGAL_CHARS = {'_', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
     /**
      * number of instances already created
      */
@@ -45,14 +45,14 @@ public class ObjectTypeEditor extends TypeEditor implements PropertyChangeListen
         updateJComboBox(utsv);
     }
 
-    protected void initialize() {
+    void initialize() {
         setLayout(null);
         addItems();
         initConnections();
         integerSelected();
     }
 
-    protected void addItems() {
+    void addItems() {
         add(getNameLabel());
         add(getNameTextField());
         add(getJComboBox());
@@ -60,7 +60,7 @@ public class ObjectTypeEditor extends TypeEditor implements PropertyChangeListen
         add(getDuplicityLabel());
     }
 
-    protected void initConnections() {
+    void initConnections() {
         getJComboBox().addItemListener(this);
         getNameTextField().getDocument().addDocumentListener(this);
     }
@@ -154,7 +154,7 @@ public class ObjectTypeEditor extends TypeEditor implements PropertyChangeListen
         return new Dimension(200, 205);
     }
 
-    protected JLabel getNameLabel() {
+    JLabel getNameLabel() {
         if (nameLabel == null) {
             nameLabel = new JLabel("Name of item");
             nameLabel.setBounds(5, 0, 80, 15);
@@ -162,7 +162,7 @@ public class ObjectTypeEditor extends TypeEditor implements PropertyChangeListen
         return nameLabel;
     }
 
-    protected JLabel getDuplicityLabel() {
+    JLabel getDuplicityLabel() {
         if (duplicityLabel == null) {
             duplicityLabel = new JLabel("DUPLICITY !!!");
             duplicityLabel.setVisible(false);
@@ -172,7 +172,7 @@ public class ObjectTypeEditor extends TypeEditor implements PropertyChangeListen
         return duplicityLabel;
     }
 
-    protected JTextField getNameTextField() {
+    JTextField getNameTextField() {
         if (nameTextField == null) {
             nameTextField = new JTextField();
             nameTextField.setBounds(5, 17, 105, 20);
@@ -181,7 +181,7 @@ public class ObjectTypeEditor extends TypeEditor implements PropertyChangeListen
         return nameTextField;
     }
 
-    protected JLabel getTypeLabel() {
+    JLabel getTypeLabel() {
         if (typeLabel == null) {
             typeLabel = new JLabel("Type of items");
             typeLabel.setBounds(5, 40, 105, 15);
@@ -189,7 +189,7 @@ public class ObjectTypeEditor extends TypeEditor implements PropertyChangeListen
         return typeLabel;
     }
 
-    protected JComboBox getJComboBox() {
+    JComboBox getJComboBox() {
         if (ivjJComboBox == null) {
             ivjJComboBox = new JComboBox();
             ivjJComboBox.setToolTipText("Select type");
@@ -221,12 +221,12 @@ public class ObjectTypeEditor extends TypeEditor implements PropertyChangeListen
             }
     }
 
-    public void addToJComboBox(UserTypeStorage uts) {
+    void addToJComboBox(UserTypeStorage uts) {
         if (objectDataType != uts.getDataType())
             getJComboBox().addItem(uts.getTypeName());
     }
 
-    public void removeFromJComboBox(UserTypeStorage uts) {
+    void removeFromJComboBox(UserTypeStorage uts) {
         if (((String) getJComboBox().getSelectedItem()).equals(uts.getTypeName())) {
             getJComboBox().setSelectedItem("Integer");
             integerSelected();
@@ -269,7 +269,7 @@ public class ObjectTypeEditor extends TypeEditor implements PropertyChangeListen
         }
     }
 
-    protected void generalNumberSelected() {
+    void generalNumberSelected() {
         dataType = new GeneralNumberDataType();
         if (dataTypePanel != null)
             remove(dataTypePanel);
@@ -282,7 +282,7 @@ public class ObjectTypeEditor extends TypeEditor implements PropertyChangeListen
         add(dataTypePanel);
     }
 
-    protected void charSelected() {
+    void charSelected() {
         dataType = new FixedCharDataType();
         if (dataTypePanel != null)
             remove(dataTypePanel);
@@ -295,7 +295,7 @@ public class ObjectTypeEditor extends TypeEditor implements PropertyChangeListen
         add(dataTypePanel);
     }
 
-    protected void varchar2Selected() {
+    void varchar2Selected() {
         dataType = new Varchar2DataType();
         if (dataTypePanel != null)
             remove(dataTypePanel);
@@ -308,25 +308,25 @@ public class ObjectTypeEditor extends TypeEditor implements PropertyChangeListen
         add(dataTypePanel);
     }
 
-    protected void dateSelected() {
+    void dateSelected() {
         dataType = new DateDataType();
         if (dataTypePanel != null)
             remove(dataTypePanel);
     }
 
-    protected void floatSelected() {
+    void floatSelected() {
         dataType = new FloatDataType();
         if (dataTypePanel != null)
             remove(dataTypePanel);
     }
 
-    protected void userDefinedSelected() {
+    void userDefinedSelected() {
         dataType = new UserDefinedDataType((String) (getJComboBox().getSelectedItem()));
         if (dataTypePanel != null)
             remove(dataTypePanel);
     }
 
-    protected void integerSelected() {
+    void integerSelected() {
         dataType = new IntegerDataType();
         if (dataTypePanel != null)
             remove(dataTypePanel);

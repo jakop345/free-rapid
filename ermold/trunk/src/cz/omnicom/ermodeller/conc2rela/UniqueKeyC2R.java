@@ -107,7 +107,7 @@ public class UniqueKeyC2R extends ElementOfRelationC2R implements SQLConstraintP
     /**
      * @return cz.omnicom.ermodeller.conceptual.UniqueKey
      */
-    protected Vector getConceptualUniqueKey() {
+    Vector getConceptualUniqueKey() {
         return conceptualUniqueKey;
     }
 

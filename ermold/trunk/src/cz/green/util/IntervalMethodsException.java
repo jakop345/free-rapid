@@ -10,7 +10,7 @@ public class IntervalMethodsException extends Exception {
      *
      * @see java.lang.Exception#Exception()
      */
-    public IntervalMethodsException() {
+    IntervalMethodsException() {
         super();
     }
 
@@ -20,7 +20,7 @@ public class IntervalMethodsException extends Exception {
      * @param s
      * @see java.lang.Exception#Exception(java.lang.String)
      */
-    public IntervalMethodsException(String s) {
+    IntervalMethodsException(String s) {
         super(s);
     }
 }

@@ -2,12 +2,12 @@ package cz.green.util;
 
 import java.awt.*;
 
-public class Range {
-    public static final int X = 1;
-    public static final int Y = 2;
+class Range {
+    private static final int X = 1;
+    private static final int Y = 2;
 
-    public int start = 0;
-    public int size = 0;
+    private int start = 0;
+    private int size = 0;
 
     public Range() {
     }

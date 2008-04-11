@@ -10,17 +10,17 @@ public class AboutDialog extends javax.swing.JDialog {
     private javax.swing.JPanel ivjJDialogContentPane = null;
 //    private cz.omnicom.ermodeller.sql.SQLConnection connection = null;
 
-    final JLabel AppNameLabel = new JLabel();
-    final JLabel VersionLabel = new JLabel();
-    final JLabel AuthorLabel = new JLabel();
-    final JLabel auth1Label = new JLabel();
-    final JLabel auth2Label = new JLabel();
-    final JLabel auth3Label = new JLabel();
-    final JLabel auth4Label = new JLabel();
-    final JLabel auth5Label = new JLabel();
-    final JLabel auth6Label = new JLabel();
+    private final JLabel AppNameLabel = new JLabel();
+    private final JLabel VersionLabel = new JLabel();
+    private final JLabel AuthorLabel = new JLabel();
+    private final JLabel auth1Label = new JLabel();
+    private final JLabel auth2Label = new JLabel();
+    private final JLabel auth3Label = new JLabel();
+    private final JLabel auth4Label = new JLabel();
+    private final JLabel auth5Label = new JLabel();
+    private final JLabel auth6Label = new JLabel();
     JTabbedPane jTabbedPane1 = new JTabbedPane();
-    final GridBagLayout gridBagLayout1 = new GridBagLayout();
+    private final GridBagLayout gridBagLayout1 = new GridBagLayout();
 
     /**
      * AboutDialog constructor comment.

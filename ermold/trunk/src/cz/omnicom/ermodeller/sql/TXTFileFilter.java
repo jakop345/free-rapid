@@ -8,8 +8,8 @@ import java.io.File;
  *
  * @see javax.swing.filechooser.FileFilter;
  */
-public class TXTFileFilter extends FileFilter {
-    final static String TXT = "txt";
+class TXTFileFilter extends FileFilter {
+    private final static String TXT = "txt";
 
     /**
      * Accept all directories and all *.txt files.

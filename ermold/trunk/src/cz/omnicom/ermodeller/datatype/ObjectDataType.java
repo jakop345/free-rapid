@@ -11,11 +11,11 @@ public class ObjectDataType extends DataType {
     /**
      * items in this object
      */
-    protected UserTypeStorageVector itemVector = null;
+    private UserTypeStorageVector itemVector = null;
     /**
      * all user defined types
      */
-    protected UserTypeStorageVector typesVector = null;
+    private UserTypeStorageVector typesVector = null;
 
     /**
      * tells whether this object is being tested for containing nested table

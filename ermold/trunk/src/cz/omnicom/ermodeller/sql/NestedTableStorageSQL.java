@@ -67,7 +67,7 @@ public class NestedTableStorageSQL extends RowSQL {
      *
      * @return java.lang.String
      */
-    public String getNameString() {
+    String getNameString() {
         return atribute;
     }
 
