@@ -13,7 +13,7 @@ import cz.green.event.interfaces.ContainerDesktop;
 import cz.green.event.interfaces.Item;
 import cz.green.eventtool.Window;
 import cz.omnicom.ermodeller.errorlog.ShowErrorEvent;
-import cz.omnicom.ermodeller.errorlog.ShowErrorListener;
+import cz.omnicom.ermodeller.errorlog.interfaces.ShowErrorListener;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;

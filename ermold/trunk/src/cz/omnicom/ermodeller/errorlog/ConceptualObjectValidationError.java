@@ -2,6 +2,7 @@ package cz.omnicom.ermodeller.errorlog;
 
 import cz.omnicom.ermodeller.conceptual.ConceptualObject;
 import cz.omnicom.ermodeller.conceptual.Schema;
+import cz.omnicom.ermodeller.errorlog.interfaces.ShowErrorListener;
 
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.tree.DefaultMutableTreeNode;

@@ -15,7 +15,7 @@ import cz.green.eventtool.PropertyListDialog;
 import cz.green.util.ActionAdapter;
 import cz.green.util.ParamActionAdapter;
 import cz.omnicom.ermodeller.conceptual.RelationBean;
-import cz.omnicom.ermodeller.errorlog.ShowErrorListener;
+import cz.omnicom.ermodeller.errorlog.interfaces.ShowErrorListener;
 import cz.omnicom.ermodeller.typeseditor.UserTypeStorage;
 import cz.omnicom.ermodeller.typeseditor.UserTypeStorageVector;
 

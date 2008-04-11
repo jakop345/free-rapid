@@ -47,7 +47,7 @@ public class Schema extends ConceptualObject {
      * This method was created by Jiri Mares
      */
     public Schema() {
-        setName("ISchema");
+        setName("Schema");
     }
 
     /**

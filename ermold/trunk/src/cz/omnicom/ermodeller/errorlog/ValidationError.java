@@ -2,6 +2,7 @@ package cz.omnicom.ermodeller.errorlog;
 
 import cz.omnicom.ermodeller.conceptual.ConceptualObject;
 import cz.omnicom.ermodeller.conceptual.Schema;
+import cz.omnicom.ermodeller.errorlog.interfaces.ShowErrorListener;
 import cz.omnicom.ermodeller.icontree.IconNode;
 
 import javax.swing.*;

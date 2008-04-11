@@ -1,5 +1,7 @@
 package cz.omnicom.ermodeller.errorlog;
 
+import cz.omnicom.ermodeller.errorlog.interfaces.ShowErrorListener;
+
 import java.io.Serializable;
 import java.util.Vector;
 

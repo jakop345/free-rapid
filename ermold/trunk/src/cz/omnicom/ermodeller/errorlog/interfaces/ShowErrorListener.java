@@ -1,4 +1,6 @@
-package cz.omnicom.ermodeller.errorlog;
+package cz.omnicom.ermodeller.errorlog.interfaces;
+
+import cz.omnicom.ermodeller.errorlog.ShowErrorEvent;
 
 /**
  * Interface to implement ShowError event listener.

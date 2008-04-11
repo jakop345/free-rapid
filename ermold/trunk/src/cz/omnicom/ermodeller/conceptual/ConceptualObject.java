@@ -2,6 +2,8 @@ package cz.omnicom.ermodeller.conceptual;
 
 import cz.omnicom.ermodeller.errorlog.*;
 import cz.omnicom.ermodeller.errorlog.exception.CheckNameDuplicityValidationException;
+import cz.omnicom.ermodeller.errorlog.interfaces.ShowErrorListener;
+import cz.omnicom.ermodeller.errorlog.interfaces.Validatable;
 
 import javax.swing.*;
 import java.beans.PropertyChangeSupport;
