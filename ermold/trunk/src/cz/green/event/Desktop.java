@@ -13,7 +13,7 @@ import java.awt.*;
  * <p/>
  * This class as atribute some component is the best way to show all functionality.
  */
-public class Desktop extends Group implements ContainerDesktop, java.io.Serializable {
+public class Desktop extends GroupWindow implements ContainerDesktop, java.io.Serializable {
     /**
      * Stores the last <code>SelectItemEvent</code> event. This event is stored because
      * when we clicked in the selected item and made no move, this item is deselected.
@@ -130,16 +130,16 @@ public class Desktop extends Group implements ContainerDesktop, java.io.Serializ
      * <p/>
      * The event <code>MouseMoveEvent</code> is directly handled by desktop.
      *
-     * @see Group#fallAndHandleEvent(int, int, cz.green.event.interfaces.Event)
+     * @see GroupWindow#fallAndHandleEvent(int, int, cz.green.event.interfaces.Event)
      * @see Desktop.preEvent
      * @see Desktop.preSelectEvent
      * @see Desktop.selected
      * @see ResizingEvent
      * @see ResizeRectangle
-     * @see Group.receiver
+     * @see GroupWindow.receiver
      * @see SelectedItems#focusedElement()
      * @see MovingEvent
-     * @see Group.receiver
+     * @see GroupWindow.receiver
      * @see SelectItemExEvent
      * @see Desktop.preSelectEvent
      * @see MouseMoveEvent

@@ -268,9 +268,9 @@ public class ContainerComponent extends JComponent implements MouseListener, Mou
                 }
                 try {
                     if (workMode == ADDING_GROUP)
-                        desktop.fallAndHandleEvent(cooX, cooY, new AddItemEvent(cooX, cooY, new Group(desktop, cooX, cooY, x - cooX, y - cooY), this));
+                        desktop.fallAndHandleEvent(cooX, cooY, new AddItemEvent(cooX, cooY, new GroupWindow(desktop, cooX, cooY, x - cooX, y - cooY), this));
                     else
-                        desktop.fallAndHandleEvent(cooX, cooY, new AddItemEvent(cooX, cooY, new Window(desktop, cooX, cooY, x - cooX, y - cooY), this));
+                        desktop.fallAndHandleEvent(cooX, cooY, new AddItemEvent(cooX, cooY, new WindowItem(desktop, cooX, cooY, x - cooX, y - cooY), this));
                 } catch (Exception ex) {
                     return;
                 }

@@ -48,7 +48,7 @@ public class DGroupTool extends GroupTool implements ConnectionManager {
      * then counts the new needed size to hold all old items and the new one. Try to resize by method
      * <code>doResize</code>. When all finished alright, then invokes inherited method.
      *
-     * @see cz.green.event.Group#add(cz.green.event.interfaces.Item)
+     * @see cz.green.event.GroupWindow#add(cz.green.event.interfaces.Item)
      * @see #doResize(int[][])
      * @see #itemsBounds()
      */
@@ -141,7 +141,7 @@ public class DGroupTool extends GroupTool implements ConnectionManager {
      * @throws cz.green.event.exceptions.ItemNotInsideManagerException
      *          Thrown when manager give no
      *          permition to resize.
-     * @see cz.green.event.Group#itemMoveDimension(int, int[])
+     * @see cz.green.event.GroupWindow#itemMoveDimension(int, int[])
      */
     protected void doResize(int[][] r) throws ItemNotInsideManagerException {
         boolean recount = false, ask0 = false, ask1 = false;
@@ -260,8 +260,8 @@ public class DGroupTool extends GroupTool implements ConnectionManager {
      *
      * @return The size necessary to hold all items. When the group contain no elements, then
      *         returns <code>null</code>.
-     * @see cz.green.event.Window#mostLeft(int)
-     * @see cz.green.event.Window#mostRight(int)
+     * @see cz.green.event.WindowItem#mostLeft(int)
+     * @see cz.green.event.WindowItem#mostRight(int)
      */
     protected int[][] itemsBounds() {
         int[][] r = new int[2][2];

@@ -18,7 +18,7 @@ import java.awt.*;
  *
  * @see Item
  */
-public class Window implements Item, java.io.Serializable {
+public class WindowItem implements Item, java.io.Serializable {
     /**
      * Field <code>tree</code> contains links to other EventTree2DItems.
      * in the first dimension has two items (dimesion x and y) and in the
@@ -87,7 +87,7 @@ public class Window implements Item, java.io.Serializable {
      * for desktops, because they don't need to know his manager, because they
      * are manager itselfs.
      */
-    protected Window() {
+    protected WindowItem() {
         super();
         tree = new Item[2][2];
         rect = new int[2][2];
@@ -105,7 +105,7 @@ public class Window implements Item, java.io.Serializable {
      *          if one of <code>left</code>, <code>right</code>,
      *          <code>width</code> or <code>height</code> is negative.
      */
-    public Window(Manager manager, int left, int top, int width, int height) throws ImpossibleNegativeValueException, NullPointerException {
+    public WindowItem(Manager manager, int left, int top, int width, int height) throws ImpossibleNegativeValueException, NullPointerException {
         this();
         if (manager == null)
             throw new NullPointerException();

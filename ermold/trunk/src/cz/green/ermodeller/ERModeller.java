@@ -1,10 +1,7 @@
 package cz.green.ermodeller;
 
 import cz.green.ermodeller.interfaces.FontManager;
-import cz.green.event.MoveEvent;
-import cz.green.event.ResizeEvent;
-import cz.green.event.ResizePoint;
-import cz.green.event.ResizeRectangle;
+import cz.green.event.*;
 import cz.green.event.exceptions.ItemNotInsideManagerException;
 import cz.green.eventtool.PrintPreviewDialog;
 import cz.green.eventtool.PropertyListDialog;
@@ -220,10 +217,10 @@ public class ERModeller extends JFrame implements
         ConceptualConstruct.SHOW_PK_IN_UML = AppPrefs.getProperty(AppPrefs.GENERAL_PKSHOWUML, Consts.DEF_GENERAL_PKSHOWUML);
         ConceptualConstruct.SHOW_SHORTEN_CARD_IN_UML = AppPrefs.getProperty(AppPrefs.GENERAL_SHORTEN_CARDS_UML, Consts.DEF_GENERAL_SHORTEN_CARDS_UML);
 
-        cz.green.event.Window.OBJECT_FOREGROUND_COLOR = AppPrefs.getProperty(AppPrefs.COLORS_OBJECT_FG, Consts.DEF_COLORS_OBJECT_FG);
-        cz.green.event.Window.OBJECT_BACKGROUND_COLOR = AppPrefs.getProperty(AppPrefs.COLORS_OBJECT_BG, Consts.DEF_COLORS_OBJECT_BG);
-        cz.green.event.Window.SELECTED_OBJECT_BACKGROUND_COLOR = AppPrefs.getProperty(AppPrefs.COLORS_SELOBJECT_BG, Consts.DEF_COLORS_SELOBJECT_BG);
-        cz.green.event.Window.BACKGROUND_COLOR = AppPrefs.getProperty(AppPrefs.COLORS_BG, Consts.DEF_COLORS_BG);
+        WindowItem.OBJECT_FOREGROUND_COLOR = AppPrefs.getProperty(AppPrefs.COLORS_OBJECT_FG, Consts.DEF_COLORS_OBJECT_FG);
+        WindowItem.OBJECT_BACKGROUND_COLOR = AppPrefs.getProperty(AppPrefs.COLORS_OBJECT_BG, Consts.DEF_COLORS_OBJECT_BG);
+        WindowItem.SELECTED_OBJECT_BACKGROUND_COLOR = AppPrefs.getProperty(AppPrefs.COLORS_SELOBJECT_BG, Consts.DEF_COLORS_SELOBJECT_BG);
+        WindowItem.BACKGROUND_COLOR = AppPrefs.getProperty(AppPrefs.COLORS_BG, Consts.DEF_COLORS_BG);
     }
 
     /**
@@ -240,10 +237,10 @@ public class ERModeller extends JFrame implements
 
         AppPrefs.storeProperty(AppPrefs.GENERAL_PKSHOWUML, ConceptualConstruct.SHOW_PK_IN_UML);
         AppPrefs.storeProperty(AppPrefs.GENERAL_SHORTEN_CARDS_UML, ConceptualConstruct.SHOW_SHORTEN_CARD_IN_UML);
-        AppPrefs.storeProperty(AppPrefs.COLORS_OBJECT_FG, cz.green.event.Window.OBJECT_FOREGROUND_COLOR);
-        AppPrefs.storeProperty(AppPrefs.COLORS_OBJECT_BG, cz.green.event.Window.OBJECT_BACKGROUND_COLOR);
-        AppPrefs.storeProperty(AppPrefs.COLORS_SELOBJECT_BG, cz.green.event.Window.SELECTED_OBJECT_BACKGROUND_COLOR);
-        AppPrefs.storeProperty(AppPrefs.COLORS_BG, cz.green.event.Window.BACKGROUND_COLOR);
+        AppPrefs.storeProperty(AppPrefs.COLORS_OBJECT_FG, WindowItem.OBJECT_FOREGROUND_COLOR);
+        AppPrefs.storeProperty(AppPrefs.COLORS_OBJECT_BG, WindowItem.OBJECT_BACKGROUND_COLOR);
+        AppPrefs.storeProperty(AppPrefs.COLORS_SELOBJECT_BG, WindowItem.SELECTED_OBJECT_BACKGROUND_COLOR);
+        AppPrefs.storeProperty(AppPrefs.COLORS_BG, WindowItem.BACKGROUND_COLOR);
         AppPrefs.store();
     }
 

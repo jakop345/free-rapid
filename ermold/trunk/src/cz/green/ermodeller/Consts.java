@@ -1,5 +1,7 @@
 package cz.green.ermodeller;
 
+import cz.green.event.WindowItem;
+
 import java.awt.*;
 
 /**
@@ -47,19 +49,19 @@ public class Consts {
     /**
      * default color value for foreground of the object
      */
-    public static final Color DEF_COLORS_OBJECT_FG = cz.green.event.Window.OBJECT_FOREGROUND_COLOR;
+    public static final Color DEF_COLORS_OBJECT_FG = WindowItem.OBJECT_FOREGROUND_COLOR;
     /**
      * default color value for background of the object
      */
-    public static final Color DEF_COLORS_OBJECT_BG = cz.green.event.Window.OBJECT_BACKGROUND_COLOR;
+    public static final Color DEF_COLORS_OBJECT_BG = WindowItem.OBJECT_BACKGROUND_COLOR;
     /**
      * default color value for background of the selected object
      */
-    public static final Color DEF_COLORS_SELOBJECT_BG = cz.green.event.Window.SELECTED_OBJECT_BACKGROUND_COLOR;
+    public static final Color DEF_COLORS_SELOBJECT_BG = WindowItem.SELECTED_OBJECT_BACKGROUND_COLOR;
     /**
      * default color value for background of canvas
      */
-    public static final Color DEF_COLORS_BG = cz.green.event.Window.BACKGROUND_COLOR;
+    public static final Color DEF_COLORS_BG = WindowItem.BACKGROUND_COLOR;
     /**
      * default directory for load&store
      */

@@ -1,5 +1,6 @@
 package cz.green.eventtool;
 
+import cz.green.event.WindowItem;
 import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.interfaces.Manager;
 import cz.green.eventtool.interfaces.Printable;
@@ -8,7 +9,7 @@ import cz.green.eventtool.interfaces.Printable;
  * This class has the same functionality as predecessor. Adds only one methods, which is caused by implementing the
  * interface <code>Printable</code>. Implementing this interface caused the possibility to be printed.
  */
-public class Window extends cz.green.event.Window implements Printable {
+public class Window extends WindowItem implements Printable {
     /**
      * The level of details - show full details
      */
@@ -57,7 +58,7 @@ public class Window extends cz.green.event.Window implements Printable {
     /**
      * Is needful for creating desktop.
      *
-     * @see cz.green.event.Window#Window()
+     * @see cz.green.event.WindowItem#WindowItem()
      */
     protected Window() {
         super();
@@ -66,7 +67,7 @@ public class Window extends cz.green.event.Window implements Printable {
     /**
      * Calls the derived constructor.
      *
-     * @see cz.green.event.Window#Window(cz.green.event.interfaces.Manager , int, int, int, int)
+     * @see cz.green.event.WindowItem#WindowItem(cz.green.event.interfaces.Manager , int, int, int, int)
      */
     public Window(Manager manager, int left, int top, int width, int height) throws NullPointerException, ImpossibleNegativeValueException {
         super(manager, left, top, width, height);

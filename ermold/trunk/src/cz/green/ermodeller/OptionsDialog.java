@@ -1,5 +1,6 @@
 package cz.green.ermodeller;
 
+import cz.green.event.WindowItem;
 import cz.omnicom.ermodeller.sql.SQLConnection;
 
 import javax.swing.*;
@@ -380,7 +381,7 @@ public class OptionsDialog extends javax.swing.JDialog {
             try {
                 foregroundColorButton = new javax.swing.JButton();
                 foregroundColorButton.setName("ForegroundColorButton");
-                foregroundColorButton.setBackground(cz.green.event.Window.OBJECT_FOREGROUND_COLOR);
+                foregroundColorButton.setBackground(WindowItem.OBJECT_FOREGROUND_COLOR);
             } catch (java.lang.Throwable ivjExc) {
                 handleException(ivjExc);
             }
@@ -399,7 +400,7 @@ public class OptionsDialog extends javax.swing.JDialog {
             try {
                 backgroundColorButton = new javax.swing.JButton();
                 backgroundColorButton.setName("BackgroundColorButton");
-                backgroundColorButton.setBackground(cz.green.event.Window.BACKGROUND_COLOR);
+                backgroundColorButton.setBackground(WindowItem.BACKGROUND_COLOR);
             } catch (java.lang.Throwable ivjExc) {
                 handleException(ivjExc);
             }
@@ -418,7 +419,7 @@ public class OptionsDialog extends javax.swing.JDialog {
             try {
                 objectBackgroundColorButton = new javax.swing.JButton();
                 objectBackgroundColorButton.setName("ObjectBackgroundColorButton");
-                objectBackgroundColorButton.setBackground(cz.green.event.Window.OBJECT_BACKGROUND_COLOR);
+                objectBackgroundColorButton.setBackground(WindowItem.OBJECT_BACKGROUND_COLOR);
             } catch (java.lang.Throwable ivjExc) {
                 handleException(ivjExc);
             }
@@ -437,7 +438,7 @@ public class OptionsDialog extends javax.swing.JDialog {
             try {
                 selectedObjectColorButton = new javax.swing.JButton();
                 selectedObjectColorButton.setName("SelectedObjectBackgroundColorButton");
-                selectedObjectColorButton.setBackground(cz.green.event.Window.SELECTED_OBJECT_BACKGROUND_COLOR);
+                selectedObjectColorButton.setBackground(WindowItem.SELECTED_OBJECT_BACKGROUND_COLOR);
             } catch (java.lang.Throwable ivjExc) {
                 handleException(ivjExc);
             }
@@ -1417,10 +1418,10 @@ public class OptionsDialog extends javax.swing.JDialog {
         ivjCodingField.setSelectedItem(encod);
         ivjPkUMLField.setSelectedIndex(ConceptualConstruct.SHOW_PK_IN_UML);
         ivjCardUMLField.setSelectedIndex(ConceptualConstruct.SHOW_SHORTEN_CARD_IN_UML);
-        foregroundColorButton.setBackground(cz.green.event.Window.OBJECT_FOREGROUND_COLOR);
-        backgroundColorButton.setBackground(cz.green.event.Window.BACKGROUND_COLOR);
-        objectBackgroundColorButton.setBackground(cz.green.event.Window.OBJECT_BACKGROUND_COLOR);
-        selectedObjectColorButton.setBackground(cz.green.event.Window.SELECTED_OBJECT_BACKGROUND_COLOR);
+        foregroundColorButton.setBackground(WindowItem.OBJECT_FOREGROUND_COLOR);
+        backgroundColorButton.setBackground(WindowItem.BACKGROUND_COLOR);
+        objectBackgroundColorButton.setBackground(WindowItem.OBJECT_BACKGROUND_COLOR);
+        selectedObjectColorButton.setBackground(WindowItem.SELECTED_OBJECT_BACKGROUND_COLOR);
 
     }
 
@@ -1465,7 +1466,7 @@ public class OptionsDialog extends javax.swing.JDialog {
 		aSendSQL.setModal(true);
 		try {
 			Class aCloserClass = Class.forName("com.ibm.uvm.abt.edit.WindowCloser");
-			Class parmTypes[] = { java.awt.Window.class };
+			Class parmTypes[] = { java.awt.WindowItem.class };
 			Object parms[] = { aSendSQL };
 			java.lang.reflect.Constructor aCtor = aCloserClass.getConstructor(parmTypes);
 			aCtor.newInstance(parms);
@@ -1499,10 +1500,10 @@ public class OptionsDialog extends javax.swing.JDialog {
         AppPrefs.storeProperty(AppPrefs.GENERAL_DEFNOTATION, ivjNotationField.getSelectedIndex());
         ConceptualConstruct.SHOW_PK_IN_UML = ivjPkUMLField.getSelectedIndex();
         ConceptualConstruct.SHOW_SHORTEN_CARD_IN_UML = ivjCardUMLField.getSelectedIndex();
-        cz.green.event.Window.OBJECT_FOREGROUND_COLOR = foregroundColorButton.getBackground();
-        cz.green.event.Window.BACKGROUND_COLOR = backgroundColorButton.getBackground();
-        cz.green.event.Window.OBJECT_BACKGROUND_COLOR = objectBackgroundColorButton.getBackground();
-        cz.green.event.Window.SELECTED_OBJECT_BACKGROUND_COLOR = selectedObjectColorButton.getBackground();
+        WindowItem.OBJECT_FOREGROUND_COLOR = foregroundColorButton.getBackground();
+        WindowItem.BACKGROUND_COLOR = backgroundColorButton.getBackground();
+        WindowItem.OBJECT_BACKGROUND_COLOR = objectBackgroundColorButton.getBackground();
+        WindowItem.SELECTED_OBJECT_BACKGROUND_COLOR = selectedObjectColorButton.getBackground();
 
         erm.repaint();
         erm.writeUserConfigFile(connection.getDriver(), connection.getUrl(), connection.getUser());

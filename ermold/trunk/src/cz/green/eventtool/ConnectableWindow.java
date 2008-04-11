@@ -30,7 +30,7 @@ public class ConnectableWindow extends Window implements Connectable {
     /**
      * The same functionality as inhereted constructor and constructs the connections.
      *
-     * @see cz.green.eventtool.Window#Window(cz.green.event.interfaces.Manager , int, int, int, int)
+     * @see cz.green.eventtool.Window#WindowItem(cz.green.event.interfaces.Manager , int, int, int, int)
      * @see java.util.Vector
      */
     public ConnectableWindow(Manager manager, int left, int top, int width, int height) throws NullPointerException, ImpossibleNegativeValueException {

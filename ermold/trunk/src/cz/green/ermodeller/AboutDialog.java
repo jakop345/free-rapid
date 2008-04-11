@@ -149,7 +149,7 @@ public class AboutDialog extends javax.swing.JDialog {
 //            aSendSQL.setModal(true);
 //            try {
 //                Class aCloserClass = Class.forName("com.ibm.uvm.abt.edit.WindowCloser");
-//                Class parmTypes[] = {java.awt.Window.class};
+//                Class parmTypes[] = {java.awt.WindowItem.class};
 //                Object parms[] = {aSendSQL};
 //                java.lang.reflect.Constructor aCtor = aCloserClass.getConstructor(parmTypes);
 //                aCtor.newInstance(parms);
