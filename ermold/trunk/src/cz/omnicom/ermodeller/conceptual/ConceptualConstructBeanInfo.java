@@ -24,7 +24,6 @@ public class ConceptualConstructBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aGetMethod = findMethod(getBeanClass(), "getAtributes", 0);
                 }
-                ;
                 java.lang.reflect.Method aSetMethod = null;
                 aDescriptor = new java.beans.PropertyDescriptor("atributes"
                         , aGetMethod, aSetMethod);
@@ -34,7 +33,6 @@ public class ConceptualConstructBeanInfo extends java.beans.SimpleBeanInfo {
                 aDescriptor = new java.beans.PropertyDescriptor("atributes"
                         , getBeanClass());
             }
-            ;
             aDescriptor.setBound(true);
             /* aDescriptor.setConstrained(false); */
             /* aDescriptor.setDisplayName("atributes"); */
@@ -46,7 +44,6 @@ public class ConceptualConstructBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return aDescriptor;
     }
 
@@ -70,7 +67,6 @@ public class ConceptualConstructBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aGetMethod = findMethod(getBeanClass(), "getCardinalities", 0);
                 }
-                ;
                 java.lang.reflect.Method aSetMethod = null;
                 aDescriptor = new java.beans.PropertyDescriptor("cardinalities"
                         , aGetMethod, aSetMethod);
@@ -80,7 +76,6 @@ public class ConceptualConstructBeanInfo extends java.beans.SimpleBeanInfo {
                 aDescriptor = new java.beans.PropertyDescriptor("cardinalities"
                         , getBeanClass());
             }
-            ;
             aDescriptor.setBound(true);
             /* aDescriptor.setConstrained(false); */
             /* aDescriptor.setDisplayName("cardinalities"); */
@@ -92,7 +87,6 @@ public class ConceptualConstructBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return aDescriptor;
     }
 
@@ -177,7 +171,6 @@ public class ConceptualConstructBeanInfo extends java.beans.SimpleBeanInfo {
             /* aDescriptor.setValue("hidden-state", Boolean.FALSE); */
         } catch (Throwable exception) {
         }
-        ;
         return aDescriptor;
     }
 
@@ -194,7 +187,6 @@ public class ConceptualConstructBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return null;
     }
 
@@ -211,7 +203,6 @@ public class ConceptualConstructBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return null;
     }
 
@@ -230,7 +221,6 @@ public class ConceptualConstructBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return null;
     }
 

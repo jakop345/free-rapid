@@ -356,7 +356,6 @@ public class PropertyList extends JComponent implements Scrollable, PropertyChan
         dialog.pack();
         dialog.setLocationRelativeTo(parent);
         dialog.setVisible(true);
-        ;
     }
 
     /**

@@ -70,7 +70,6 @@ public class SelectUI extends JPanel {
         } catch (java.lang.Throwable ivjExc) {
             handleException(ivjExc);
         }
-        ;
         return ivjButtonPanelFlowLayout;
     }
 
@@ -196,7 +195,6 @@ public class SelectUI extends JPanel {
         } catch (java.lang.Throwable ivjExc) {
             handleException(ivjExc);
         }
-        ;
         return ivjSelectUIBorderLayout;
     }
 

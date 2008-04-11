@@ -476,7 +476,6 @@ public class ERModeller extends JFrame implements
             mode.setToolTipText("Display current working mode");
             mode.setPreferredSize(new Dimension(28, 28));
         }
-        ;
         return mode;
     }
 
@@ -495,7 +494,6 @@ public class ERModeller extends JFrame implements
             } catch (ClassCastException x) {
             }
         }
-        ;
         return place;
     }
 
@@ -526,7 +524,6 @@ public class ERModeller extends JFrame implements
             scrollPane = new JScrollPane(getPlace());
             scrollPane.setPreferredSize(new Dimension(150, 200));
         }
-        ;
         return scrollPane;
     }
 
@@ -780,7 +777,6 @@ public class ERModeller extends JFrame implements
                     getToolBarButton("img/help.gif", "Open the help", getPlace(),
                             "help"));
         }
-        ;
         return toolBar;
     }
 
@@ -1471,7 +1467,6 @@ public class ERModeller extends JFrame implements
     public void lookFeel() {
         JDialog dialog = SelectUI.getSelectUIDialog(this);
         dialog.setVisible(true);
-        ;
     }
 
     /**
@@ -1572,7 +1567,6 @@ public class ERModeller extends JFrame implements
             d.setFileName(fileName);
         if (d.selectPrintJob())
             d.setVisible(true);
-        ;
     }
 
     /**

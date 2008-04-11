@@ -105,7 +105,6 @@ public class PropertyListDialog extends JDialog implements ItemListener {
         if (customizer == null) {
             customizer = new JButton("Customize ...");
         }
-        ;
         return customizer;
     }
 
@@ -116,7 +115,6 @@ public class PropertyListDialog extends JDialog implements ItemListener {
         if (expertCheck == null) {
             expertCheck = new JCheckBox("Show expert features");
         }
-        ;
         return expertCheck;
     }
 
@@ -127,7 +125,6 @@ public class PropertyListDialog extends JDialog implements ItemListener {
         if (hiddenCheck == null) {
             hiddenCheck = new JCheckBox("Show hidden features");
         }
-        ;
         return hiddenCheck;
     }
 
@@ -139,7 +136,6 @@ public class PropertyListDialog extends JDialog implements ItemListener {
         if (properties == null) {
             properties = new PropertyList(parent);
         }
-        ;
         return properties;
     }
 
@@ -153,7 +149,6 @@ public class PropertyListDialog extends JDialog implements ItemListener {
             scroller.setViewportView(getProperties());
             scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         }
-        ;
         return scroller;
     }
 
@@ -211,5 +206,5 @@ public class PropertyListDialog extends JDialog implements ItemListener {
      */
     public void setCustomizeable(boolean custom) {
         getCustomizer().setEnabled(custom);
-}
+    }
 }

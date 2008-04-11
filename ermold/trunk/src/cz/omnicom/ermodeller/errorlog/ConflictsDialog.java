@@ -1394,7 +1394,6 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
                 aCtor.newInstance(parms);
             } catch (java.lang.Throwable exc) {
             }
-            ;
             aErrorLogDialog.setVisible(true);
         } catch (Throwable exception) {
             System.err.println("Exception occurred in main() of javax.swing.JDialog");
@@ -1596,8 +1595,8 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
                 } else {
                     getRenameField().setText(conceptualObject.getName());
                     getRenameField1().setText(conceptualObject.getName());
-			}
-	}
-	ivjJPanel1.repaint();
-}
+                }
+        }
+        ivjJPanel1.repaint();
+    }
 }

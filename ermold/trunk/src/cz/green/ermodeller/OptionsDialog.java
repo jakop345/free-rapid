@@ -77,10 +77,7 @@ public class OptionsDialog extends javax.swing.JDialog {
                 connEtoC10();
         }
 
-        ;
     }
-
-    ;
 
     //private java.lang.String defDir;
     JLabel AppNameLabel = new JLabel();
@@ -1234,7 +1231,6 @@ public class OptionsDialog extends javax.swing.JDialog {
         } catch (java.lang.Throwable ivjExc) {
             handleException(ivjExc);
         }
-        ;
         return ivjJPanel1FlowLayout;
     }
 
@@ -1607,5 +1603,5 @@ public class OptionsDialog extends javax.swing.JDialog {
 
     public void test() {
         connection.test(getDriverField().getText(), getURLField().getText(), getUserField().getText(), new String(getPasswordField().getPassword()));
-}
+    }
 }

@@ -24,7 +24,6 @@ public class SchemaBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aGetMethod = findMethod(getBeanClass(), "getEntities", 0);
                 }
-                ;
                 java.lang.reflect.Method aSetMethod = null;
                 aDescriptor = new java.beans.PropertyDescriptor("entities"
                         , aGetMethod, aSetMethod);
@@ -34,7 +33,6 @@ public class SchemaBeanInfo extends java.beans.SimpleBeanInfo {
                 aDescriptor = new java.beans.PropertyDescriptor("entities"
                         , getBeanClass());
             }
-            ;
             aDescriptor.setBound(true);
             /* aDescriptor.setConstrained(false); */
             /* aDescriptor.setDisplayName("entities"); */
@@ -46,7 +44,6 @@ public class SchemaBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return aDescriptor;
     }
 
@@ -131,7 +128,6 @@ public class SchemaBeanInfo extends java.beans.SimpleBeanInfo {
             /* aDescriptor.setValue("hidden-state", Boolean.FALSE); */
         } catch (Throwable exception) {
         }
-        ;
         return aDescriptor;
     }
 
@@ -148,7 +144,6 @@ public class SchemaBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return null;
     }
 
@@ -165,7 +160,6 @@ public class SchemaBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return null;
     }
 
@@ -184,7 +178,6 @@ public class SchemaBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return null;
     }
 
@@ -220,7 +213,6 @@ public class SchemaBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aGetMethod = findMethod(getBeanClass(), "getRelations", 0);
                 }
-                ;
                 java.lang.reflect.Method aSetMethod = null;
                 aDescriptor = new java.beans.PropertyDescriptor("relations"
                         , aGetMethod, aSetMethod);
@@ -230,7 +222,6 @@ public class SchemaBeanInfo extends java.beans.SimpleBeanInfo {
                 aDescriptor = new java.beans.PropertyDescriptor("relations"
                         , getBeanClass());
             }
-            ;
             aDescriptor.setBound(true);
             /* aDescriptor.setConstrained(false); */
             /* aDescriptor.setDisplayName("relations"); */
@@ -242,7 +233,6 @@ public class SchemaBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return aDescriptor;
     }
 }

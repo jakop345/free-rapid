@@ -24,7 +24,6 @@ public class CardinalityBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aGetMethod = findMethod(getBeanClass(), "getArbitrary", 0);
                 }
-                ;
                 java.lang.reflect.Method aSetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
@@ -37,7 +36,6 @@ public class CardinalityBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aSetMethod = findMethod(getBeanClass(), "setArbitrary", 1);
                 }
-                ;
                 aDescriptor = new java.beans.PropertyDescriptor("2arbitrary"
                         , aGetMethod, aSetMethod);
             } catch (Throwable exception) {
@@ -46,7 +44,6 @@ public class CardinalityBeanInfo extends java.beans.SimpleBeanInfo {
                 aDescriptor = new java.beans.PropertyDescriptor("2arbitrary"
                         , getBeanClass());
             }
-            ;
             aDescriptor.setBound(true);
             /* aDescriptor.setConstrained(false); */
             aDescriptor.setPropertyEditorClass(cz.omnicom.ermodeller.conceptual.BooleanEditor.class);
@@ -83,7 +80,6 @@ public class CardinalityBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aGetMethod = findMethod(getBeanClass(), "getEntity", 0);
                 }
-                ;
                 java.lang.reflect.Method aSetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
@@ -96,7 +92,6 @@ public class CardinalityBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aSetMethod = findMethod(getBeanClass(), "setEntity", 1);
                 }
-                ;
                 aDescriptor = new java.beans.PropertyDescriptor("entity"
                         , aGetMethod, aSetMethod);
             } catch (Throwable exception) {
@@ -105,7 +100,6 @@ public class CardinalityBeanInfo extends java.beans.SimpleBeanInfo {
                 aDescriptor = new java.beans.PropertyDescriptor("entity"
                         , getBeanClass());
             }
-            ;
             aDescriptor.setBound(true);
             /* aDescriptor.setConstrained(false); */
             /* aDescriptor.setDisplayName("entity"); */
@@ -117,7 +111,6 @@ public class CardinalityBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return aDescriptor;
     }
 
@@ -202,7 +195,6 @@ public class CardinalityBeanInfo extends java.beans.SimpleBeanInfo {
             /* aDescriptor.setValue("hidden-state", Boolean.FALSE); */
         } catch (Throwable exception) {
         }
-        ;
         return aDescriptor;
     }
 
@@ -219,7 +211,6 @@ public class CardinalityBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return null;
     }
 
@@ -236,7 +227,6 @@ public class CardinalityBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return null;
     }
 
@@ -257,7 +247,6 @@ public class CardinalityBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return null;
     }
 
@@ -293,7 +282,6 @@ public class CardinalityBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aGetMethod = findMethod(getBeanClass(), "getMultiCardinality", 0);
                 }
-                ;
                 java.lang.reflect.Method aSetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
@@ -306,7 +294,6 @@ public class CardinalityBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aSetMethod = findMethod(getBeanClass(), "setMultiCardinality", 1);
                 }
-                ;
                 aDescriptor = new java.beans.PropertyDescriptor("3multiCardinality"
                         , aGetMethod, aSetMethod);
             } catch (Throwable exception) {
@@ -315,7 +302,6 @@ public class CardinalityBeanInfo extends java.beans.SimpleBeanInfo {
                 aDescriptor = new java.beans.PropertyDescriptor("3multiCardinality"
                         , getBeanClass());
             }
-            ;
             aDescriptor.setBound(true);
             /* aDescriptor.setConstrained(false); */
             aDescriptor.setPropertyEditorClass(cz.omnicom.ermodeller.conceptual.MultiCardinalityEditor.class);
@@ -328,7 +314,6 @@ public class CardinalityBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return aDescriptor;
     }
 
@@ -352,7 +337,6 @@ public class CardinalityBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aGetMethod = findMethod(getBeanClass(), "getRelation", 0);
                 }
-                ;
                 java.lang.reflect.Method aSetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
@@ -365,7 +349,6 @@ public class CardinalityBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aSetMethod = findMethod(getBeanClass(), "setRelation", 1);
                 }
-                ;
                 aDescriptor = new java.beans.PropertyDescriptor("relation"
                         , aGetMethod, aSetMethod);
             } catch (Throwable exception) {
@@ -374,7 +357,6 @@ public class CardinalityBeanInfo extends java.beans.SimpleBeanInfo {
                 aDescriptor = new java.beans.PropertyDescriptor("relation"
                         , getBeanClass());
             }
-            ;
             aDescriptor.setBound(true);
             /* aDescriptor.setConstrained(false); */
             /* aDescriptor.setDisplayName("relation"); */
@@ -386,7 +368,6 @@ public class CardinalityBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return aDescriptor;
     }
 }

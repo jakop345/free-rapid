@@ -24,7 +24,6 @@ public class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aGetMethod = findMethod(getBeanClass(), "getComment", 0);
                 }
-                ;
                 java.lang.reflect.Method aSetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
@@ -37,7 +36,6 @@ public class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aSetMethod = findMethod(getBeanClass(), "setComment", 1);
                 }
-                ;
                 aDescriptor = new java.beans.PropertyDescriptor("9comment"
                         , aGetMethod, aSetMethod);
             } catch (Throwable exception) {
@@ -46,7 +44,6 @@ public class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
                 aDescriptor = new java.beans.PropertyDescriptor("9comment"
                         , getBeanClass());
             }
-            ;
             aDescriptor.setBound(true);
             /* aDescriptor.setConstrained(false); */
             aDescriptor.setDisplayName("Comment");
@@ -58,7 +55,6 @@ public class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return aDescriptor;
     }
 
@@ -143,7 +139,6 @@ public class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
             /* aDescriptor.setValue("hidden-state", Boolean.FALSE); */
         } catch (Throwable exception) {
         }
-        ;
         return aDescriptor;
     }
 
@@ -161,7 +156,6 @@ public class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return null;
     }
 
@@ -178,7 +172,6 @@ public class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return null;
     }
 
@@ -199,7 +192,6 @@ public class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return null;
     }
 
@@ -235,7 +227,6 @@ public class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aGetMethod = findMethod(getBeanClass(), "getID", 0);
                 }
-                ;
                 java.lang.reflect.Method aSetMethod = null;
                 aDescriptor = new java.beans.PropertyDescriptor("id"
                         , aGetMethod, aSetMethod);
@@ -245,7 +236,6 @@ public class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
                 aDescriptor = new java.beans.PropertyDescriptor("id"
                         , getBeanClass());
             }
-            ;
             aDescriptor.setBound(true);
             /* aDescriptor.setConstrained(false); */
             aDescriptor.setDisplayName("ID");
@@ -257,7 +247,6 @@ public class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return aDescriptor;
     }
 
@@ -281,7 +270,6 @@ public class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aGetMethod = findMethod(getBeanClass(), "getName", 0);
                 }
-                ;
                 java.lang.reflect.Method aSetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
@@ -294,7 +282,6 @@ public class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aSetMethod = findMethod(getBeanClass(), "setName", 1);
                 }
-                ;
                 aDescriptor = new java.beans.PropertyDescriptor("1name"
                         , aGetMethod, aSetMethod);
             } catch (Throwable exception) {
@@ -303,7 +290,6 @@ public class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
                 aDescriptor = new java.beans.PropertyDescriptor("1name"
                         , getBeanClass());
             }
-            ;
             aDescriptor.setBound(true);
             /* aDescriptor.setConstrained(false); */
             aDescriptor.setDisplayName("Name");
@@ -315,7 +301,6 @@ public class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return aDescriptor;
     }
 
@@ -343,7 +328,6 @@ public class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     anAddMethod = findMethod(getBeanClass(), "addPropertyChangeListener", 1);
                 }
-                ;
                 java.lang.reflect.Method aRemoveMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
@@ -356,7 +340,6 @@ public class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aRemoveMethod = findMethod(getBeanClass(), "removePropertyChangeListener", 1);
                 }
-                ;
                 aDescriptor = new java.beans.EventSetDescriptor(
                         "propertyChange",
                         java.beans.PropertyChangeListener.class,
@@ -373,7 +356,6 @@ public class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
                         "addPropertyChangeListener",
                         "removePropertyChangeListener");
             }
-            ;
             /* aDescriptor.setUnicast(false); */
             /* aDescriptor.setDisplayName("propertyChange"); */
             /* aDescriptor.setShortDescription("propertyChange"); */
@@ -383,7 +365,6 @@ public class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return aDescriptor;
     }
 
@@ -408,7 +389,6 @@ public class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
                 handleException(exception);
                 aMethod = findMethod((java.beans.PropertyChangeListener.class), "propertyChange", 1);
             }
-            ;
             try {
                 /* Try creating the method descriptor with parameter descriptors. */
                 java.beans.ParameterDescriptor aParameterDescriptor1 = new java.beans.ParameterDescriptor();
@@ -423,7 +403,6 @@ public class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
                 handleException(exception);
                 aDescriptor = new java.beans.MethodDescriptor(aMethod);
             }
-            ;
             aDescriptor.setDisplayName("propertyChange.propertyChange(java.beans.PropertyChangeEvent)");
             /* aDescriptor.setShortDescription("propertyChange.propertyChange(java.beans.PropertyChangeEvent)"); */
             /* aDescriptor.setExpert(false); */
@@ -432,7 +411,6 @@ public class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return aDescriptor;
     }
 
@@ -456,7 +434,6 @@ public class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aGetMethod = findMethod(getBeanClass(), "getSchema", 0);
                 }
-                ;
                 java.lang.reflect.Method aSetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
@@ -469,7 +446,6 @@ public class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aSetMethod = findMethod(getBeanClass(), "setSchema", 1);
                 }
-                ;
                 aDescriptor = new java.beans.PropertyDescriptor("schema"
                         , aGetMethod, aSetMethod);
             } catch (Throwable exception) {
@@ -478,7 +454,6 @@ public class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
                 aDescriptor = new java.beans.PropertyDescriptor("schema"
                         , getBeanClass());
             }
-            ;
             aDescriptor.setBound(true);
             /* aDescriptor.setConstrained(false); */
             /* aDescriptor.setDisplayName("schema"); */
@@ -490,7 +465,6 @@ public class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return aDescriptor;
     }
 }

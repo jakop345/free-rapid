@@ -391,7 +391,6 @@ public class GenerateDialog extends JDialog implements ActionListener, ItemListe
         } catch (java.lang.Throwable ivjExc) {
             handleException(ivjExc);
         }
-        ;
         return ivjJPanel11GridLayout;
     }
 
@@ -569,7 +568,6 @@ public class GenerateDialog extends JDialog implements ActionListener, ItemListe
                 aCtor.newInstance(parms);
             } catch (java.lang.Throwable exc) {
             }
-            ;
             aGenerateDialog.setVisible(true);
         } catch (Throwable exception) {
             System.err.println("Exception occurred in main() of javax.swing.JDialog");

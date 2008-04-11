@@ -85,7 +85,6 @@ public class ResolutionDialog extends JDialog implements KeyListener {
             cancelButton = new JButton("Cancel");
             cancelButton.setPreferredSize(new java.awt.Dimension(71, 23));
         }
-        ;
         return cancelButton;
     }
 
@@ -97,7 +96,6 @@ public class ResolutionDialog extends JDialog implements KeyListener {
             okButton = new JButton("OK");
             okButton.setPreferredSize(new java.awt.Dimension(71, 23));
         }
-        ;
         return okButton;
     }
 
@@ -117,7 +115,6 @@ public class ResolutionDialog extends JDialog implements KeyListener {
         if (xLabel == null) {
             xLabel = new JLabel("X:");
         }
-        ;
         return xLabel;
     }
 
@@ -128,7 +125,6 @@ public class ResolutionDialog extends JDialog implements KeyListener {
         if (xText == null) {
             xText = new JTextField();
         }
-        ;
         return xText;
     }
 
@@ -139,7 +135,6 @@ public class ResolutionDialog extends JDialog implements KeyListener {
         if (yLabel == null) {
             yLabel = new JLabel("Y:");
         }
-        ;
         return yLabel;
     }
 
@@ -150,7 +145,6 @@ public class ResolutionDialog extends JDialog implements KeyListener {
         if (yText == null) {
             yText = new JTextField();
         }
-        ;
         return yText;
     }
 
@@ -210,5 +204,5 @@ public class ResolutionDialog extends JDialog implements KeyListener {
         this.resolution = res;
         getXText().setText(Integer.toString(res.width));
         getYText().setText(Integer.toString(res.height));
-}
+    }
 }

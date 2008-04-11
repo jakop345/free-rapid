@@ -409,7 +409,6 @@ public class ErrorLogDialog extends JDialog implements java.awt.event.ActionList
                 aCtor.newInstance(parms);
             } catch (java.lang.Throwable exc) {
             }
-            ;
             aErrorLogDialog.setVisible(true);
         } catch (Throwable exception) {
             System.err.println("Exception occurred in main() of javax.swing.JDialog");
@@ -452,5 +451,5 @@ public class ErrorLogDialog extends JDialog implements java.awt.event.ActionList
         ivjErrorLogList = (aErrorLogList == null) ? new ErrorLogList() : aErrorLogList;
         // Creates and inserts new error tree
         createTree(getRoot());
-}
+    }
 }

@@ -38,10 +38,8 @@ public class PreferencesPanel extends javax.swing.JPanel {
                 connEtoC6();
         }
 
-        ;
     }
 
-    ;
     private java.lang.String defDir;
 
     /**
@@ -518,7 +516,6 @@ public class PreferencesPanel extends javax.swing.JPanel {
         } catch (java.lang.Throwable ivjExc) {
             handleException(ivjExc);
         }
-        ;
         return ivjJPanel1FlowLayout;
     }
 
@@ -738,8 +735,7 @@ public class PreferencesPanel extends javax.swing.JPanel {
                 aCtor.newInstance(parms);
             } catch (java.lang.Throwable exc) {
             }
-            ;
-//		aSendSQL.pack();
+            //		aSendSQL.pack();
             aSendSQL.setVisible(true);
         } catch (Throwable exception) {
             System.err.println("Exception occurred in main() of javax.swing.JDialog");

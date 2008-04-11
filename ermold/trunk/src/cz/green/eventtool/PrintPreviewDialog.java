@@ -148,7 +148,6 @@ public class PrintPreviewDialog extends JDialog implements ItemListener, KeyList
             customZoomButton = new JRadioButton("Custom zoom");
             customZoomButton.setSelected(true);
         }
-        ;
         return customZoomButton;
     }
 
@@ -169,7 +168,6 @@ public class PrintPreviewDialog extends JDialog implements ItemListener, KeyList
         if (fitPageButton == null) {
             fitPageButton = new JRadioButton("FitPage");
         }
-        ;
         return fitPageButton;
     }
 
@@ -203,7 +201,6 @@ public class PrintPreviewDialog extends JDialog implements ItemListener, KeyList
         if (printButton == null) {
             printButton = new JButton("Close (print)");
         }
-        ;
         return printButton;
     }
 
@@ -214,7 +211,6 @@ public class PrintPreviewDialog extends JDialog implements ItemListener, KeyList
         if (printPreview == null) {
             printPreview = new PrintPreview();
         }
-        ;
         return printPreview;
     }
 
@@ -225,7 +221,6 @@ public class PrintPreviewDialog extends JDialog implements ItemListener, KeyList
         if (resolutionButton == null) {
             resolutionButton = new JButton("Image resolution");
         }
-        ;
         return resolutionButton;
     }
 
@@ -236,7 +231,6 @@ public class PrintPreviewDialog extends JDialog implements ItemListener, KeyList
         if (zoom == null) {
             zoom = new JLabel("Zoom [%]:");
         }
-        ;
         return zoom;
     }
 
@@ -252,7 +246,6 @@ public class PrintPreviewDialog extends JDialog implements ItemListener, KeyList
             zoomSelection.add(getFitPageButton());
             zoomSelection.add(getCustomButton());
         }
-        ;
         return zoomSelection;
     }
 
@@ -264,7 +257,6 @@ public class PrintPreviewDialog extends JDialog implements ItemListener, KeyList
             zoomTextField = new JTextField("ZoomTextField");
             zoomTextField.setText("100");
         }
-        ;
         return zoomTextField;
     }
 
@@ -354,10 +346,8 @@ public class PrintPreviewDialog extends JDialog implements ItemListener, KeyList
                     System.exit(0);
                 }
 
-                ;
             });
             aPrintPreviewDialog.setVisible(true);
-            ;
             java.awt.Insets insets = aPrintPreviewDialog.getInsets();
             aPrintPreviewDialog.setSize(aPrintPreviewDialog.getWidth() + insets.left + insets.right, aPrintPreviewDialog.getHeight() + insets.top + insets.bottom);
             aPrintPreviewDialog.setVisible(true);
@@ -427,7 +417,6 @@ public class PrintPreviewDialog extends JDialog implements ItemListener, KeyList
         java.awt.Dimension dim = getPrintPreview().getPageSize();
         rd.setResolution(new java.awt.Dimension(dim.width, dim.height));
         rd.setVisible(true);
-        ;
         getPrintPreview().setPageSize(rd.getResolution());
     }
 

@@ -85,7 +85,6 @@ public class RelationBeanInfo extends java.beans.SimpleBeanInfo {
             /* aDescriptor.setValue("hidden-state", Boolean.FALSE); */
         } catch (Throwable exception) {
         }
-        ;
         return aDescriptor;
     }
 
@@ -102,7 +101,6 @@ public class RelationBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return null;
     }
 
@@ -119,7 +117,6 @@ public class RelationBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return null;
     }
 
@@ -136,7 +133,6 @@ public class RelationBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return null;
     }
 

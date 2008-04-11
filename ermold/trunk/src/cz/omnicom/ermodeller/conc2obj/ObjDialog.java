@@ -348,7 +348,6 @@ public class ObjDialog extends JDialog implements java.awt.event.ActionListener,
         } catch (java.lang.Throwable ivjExc) {
             handleException(ivjExc);
         }
-        ;
         return ivjJDialogContentPaneBorderLayout;
     }
 
@@ -377,7 +376,6 @@ public class ObjDialog extends JDialog implements java.awt.event.ActionListener,
                 handleException(ivjExc);
             }
         }
-        ;
         return ivjJFileChooser2;
     }
 
@@ -422,7 +420,6 @@ public class ObjDialog extends JDialog implements java.awt.event.ActionListener,
         } catch (java.lang.Throwable ivjExc) {
             handleException(ivjExc);
         }
-        ;
         return ivjJPanel1GridLayout;
     }
 
@@ -677,7 +674,6 @@ public class ObjDialog extends JDialog implements java.awt.event.ActionListener,
         } catch (java.lang.Throwable ivjExc) {
             handleException(ivjExc);
         }
-        ;
         return ivjSVPanelGridLayout;
     }
 
@@ -770,7 +766,6 @@ public class ObjDialog extends JDialog implements java.awt.event.ActionListener,
                 aCtor.newInstance(parms);
             } catch (java.lang.Throwable exc) {
             }
-            ;
             aSQLDialog.setVisible(true);
         } catch (Throwable exception) {
             System.err.println("Exception occurred in main() of javax.swing.JDialog");

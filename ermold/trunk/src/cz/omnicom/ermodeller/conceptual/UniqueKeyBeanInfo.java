@@ -24,7 +24,6 @@ public class UniqueKeyBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aGetMethod = findMethod(getBeanClass(), "getAtributes", 0);
                 }
-                ;
                 java.lang.reflect.Method aSetMethod = null;
                 aDescriptor = new java.beans.PropertyDescriptor("atributes"
                         , aGetMethod, aSetMethod);
@@ -34,7 +33,6 @@ public class UniqueKeyBeanInfo extends java.beans.SimpleBeanInfo {
                 aDescriptor = new java.beans.PropertyDescriptor("atributes"
                         , getBeanClass());
             }
-            ;
             aDescriptor.setBound(true);
             /* aDescriptor.setConstrained(false); */
             /* aDescriptor.setDisplayName("atributes"); */
@@ -46,7 +44,6 @@ public class UniqueKeyBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return aDescriptor;
     }
 
@@ -70,7 +67,6 @@ public class UniqueKeyBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aGetMethod = findMethod(getBeanClass(), "getEntity", 0);
                 }
-                ;
                 java.lang.reflect.Method aSetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
@@ -83,7 +79,6 @@ public class UniqueKeyBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aSetMethod = findMethod(getBeanClass(), "setEntity", 1);
                 }
-                ;
                 aDescriptor = new java.beans.PropertyDescriptor("entity"
                         , aGetMethod, aSetMethod);
             } catch (Throwable exception) {
@@ -92,7 +87,6 @@ public class UniqueKeyBeanInfo extends java.beans.SimpleBeanInfo {
                 aDescriptor = new java.beans.PropertyDescriptor("entity"
                         , getBeanClass());
             }
-            ;
             aDescriptor.setBound(true);
             /* aDescriptor.setConstrained(false); */
             /* aDescriptor.setDisplayName("entity"); */
@@ -104,7 +98,6 @@ public class UniqueKeyBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return aDescriptor;
     }
 
@@ -189,7 +182,6 @@ public class UniqueKeyBeanInfo extends java.beans.SimpleBeanInfo {
             /* aDescriptor.setValue("hidden-state", Boolean.FALSE); */
         } catch (Throwable exception) {
         }
-        ;
         return aDescriptor;
     }
 
@@ -206,7 +198,6 @@ public class UniqueKeyBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return null;
     }
 
@@ -223,7 +214,6 @@ public class UniqueKeyBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return null;
     }
 
@@ -242,7 +232,6 @@ public class UniqueKeyBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return null;
     }
 

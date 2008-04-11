@@ -505,7 +505,6 @@ public class CardinalityCustomizer extends JPanel implements ActionListener, Ite
                 aCtor.newInstance(parms);
             } catch (java.lang.Throwable exc) {
             }
-            ;
             aCardinalityCustomizer.setVisible(true);
         } catch (Throwable exception) {
             System.err.println("Exception occurred in main() of java.awt.Frame");

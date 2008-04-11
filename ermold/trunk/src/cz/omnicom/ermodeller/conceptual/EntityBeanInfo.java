@@ -85,7 +85,6 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
             /* aDescriptor.setValue("hidden-state", Boolean.FALSE); */
         } catch (Throwable exception) {
         }
-        ;
         return aDescriptor;
     }
 
@@ -102,7 +101,6 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return null;
     }
 
@@ -119,7 +117,6 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return null;
     }
 
@@ -142,7 +139,6 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return null;
     }
 
@@ -178,7 +174,6 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aGetMethod = findMethod(getBeanClass(), "getISAParent", 0);
                 }
-                ;
                 java.lang.reflect.Method aSetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
@@ -191,7 +186,6 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aSetMethod = findMethod(getBeanClass(), "setISAParent", 1);
                 }
-                ;
                 aDescriptor = new java.beans.PropertyDescriptor("ISAParent"
                         , aGetMethod, aSetMethod);
             } catch (Throwable exception) {
@@ -200,7 +194,6 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
                 aDescriptor = new java.beans.PropertyDescriptor("ISAParent"
                         , getBeanClass());
             }
-            ;
             aDescriptor.setBound(true);
             /* aDescriptor.setConstrained(false); */
             /* aDescriptor.setDisplayName("ISAParent"); */
@@ -212,7 +205,6 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return aDescriptor;
     }
 
@@ -236,7 +228,6 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aGetMethod = findMethod(getBeanClass(), "getISASons", 0);
                 }
-                ;
                 java.lang.reflect.Method aSetMethod = null;
                 aDescriptor = new java.beans.PropertyDescriptor("ISASons"
                         , aGetMethod, aSetMethod);
@@ -246,7 +237,6 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
                 aDescriptor = new java.beans.PropertyDescriptor("ISASons"
                         , getBeanClass());
             }
-            ;
             aDescriptor.setBound(true);
             /* aDescriptor.setConstrained(false); */
             /* aDescriptor.setDisplayName("ISASons"); */
@@ -258,7 +248,6 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return aDescriptor;
     }
 
@@ -285,7 +274,6 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aSetMethod = findMethod(getBeanClass(), "setPrimaryKey", 1);
                 }
-                ;
                 aDescriptor = new java.beans.PropertyDescriptor("primaryKey"
                         , aGetMethod, aSetMethod);
             } catch (Throwable exception) {
@@ -294,7 +282,6 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
                 aDescriptor = new java.beans.PropertyDescriptor("primaryKey"
                         , getBeanClass());
             }
-            ;
             aDescriptor.setBound(true);
             /* aDescriptor.setConstrained(false); */
             /* aDescriptor.setDisplayName("primaryKey"); */
@@ -306,7 +293,6 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return aDescriptor;
     }
 
@@ -330,7 +316,6 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aGetMethod = findMethod(getBeanClass(), "getStrongAddictionsParents", 0);
                 }
-                ;
                 java.lang.reflect.Method aSetMethod = null;
                 aDescriptor = new java.beans.PropertyDescriptor("strongAddictionsParents"
                         , aGetMethod, aSetMethod);
@@ -340,7 +325,6 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
                 aDescriptor = new java.beans.PropertyDescriptor("strongAddictionsParents"
                         , getBeanClass());
             }
-            ;
             aDescriptor.setBound(true);
             /* aDescriptor.setConstrained(false); */
             /* aDescriptor.setDisplayName("strongAddictionsParents"); */
@@ -352,7 +336,6 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return aDescriptor;
     }
 
@@ -376,7 +359,6 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aGetMethod = findMethod(getBeanClass(), "getStrongAddictionsSons", 0);
                 }
-                ;
                 java.lang.reflect.Method aSetMethod = null;
                 aDescriptor = new java.beans.PropertyDescriptor("strongAddictionsSons"
                         , aGetMethod, aSetMethod);
@@ -386,7 +368,6 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
                 aDescriptor = new java.beans.PropertyDescriptor("strongAddictionsSons"
                         , getBeanClass());
             }
-            ;
             aDescriptor.setBound(true);
             /* aDescriptor.setConstrained(false); */
             /* aDescriptor.setDisplayName("strongAddictionsSons"); */
@@ -398,7 +379,6 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return aDescriptor;
     }
 
@@ -422,7 +402,6 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aGetMethod = findMethod(getBeanClass(), "getUniqueKeys", 0);
                 }
-                ;
                 java.lang.reflect.Method aSetMethod = null;
                 aDescriptor = new java.beans.PropertyDescriptor("uniqueKeys"
                         , aGetMethod, aSetMethod);
@@ -432,7 +411,6 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
                 aDescriptor = new java.beans.PropertyDescriptor("uniqueKeys"
                         , getBeanClass());
             }
-            ;
             aDescriptor.setBound(true);
             /* aDescriptor.setConstrained(false); */
             /* aDescriptor.setDisplayName("uniqueKeys"); */
@@ -444,7 +422,6 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return aDescriptor;
     }
 }

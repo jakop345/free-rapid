@@ -14,10 +14,8 @@ public class LogSQLObj extends javax.swing.JDialog {
                 connEtoC1(e);
         }
 
-        ;
     }
 
-    ;
     private javax.swing.JButton ivjClearButton = null;
     IvjEventHandler ivjEventHandler = new IvjEventHandler();
     private javax.swing.JPanel ivjJDialogContentPane = null;
@@ -305,9 +303,8 @@ public class LogSQLObj extends javax.swing.JDialog {
                     System.exit(0);
                 }
 
-                ;
             });
-            aLogSQL.setVisible(true);;
+            aLogSQL.setVisible(true);
             java.awt.Insets insets = aLogSQL.getInsets();
             aLogSQL.setSize(aLogSQL.getWidth() + insets.left + insets.right, aLogSQL.getHeight() + insets.top + insets.bottom);
             aLogSQL.setVisible(true);

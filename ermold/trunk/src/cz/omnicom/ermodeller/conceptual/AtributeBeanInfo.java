@@ -24,7 +24,6 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aGetMethod = findMethod(getBeanClass(), "getArbitrary", 0);
                 }
-                ;
                 java.lang.reflect.Method aSetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
@@ -37,7 +36,6 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aSetMethod = findMethod(getBeanClass(), "setArbitrary", 1);
                 }
-                ;
                 aDescriptor = new java.beans.PropertyDescriptor("4arbitrary"
                         , aGetMethod, aSetMethod);
             } catch (Throwable exception) {
@@ -46,7 +44,6 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
                 aDescriptor = new java.beans.PropertyDescriptor("4arbitrary"
                         , getBeanClass());
             }
-            ;
             aDescriptor.setBound(true);
             /* aDescriptor.setConstrained(false); */
             aDescriptor.setPropertyEditorClass(cz.omnicom.ermodeller.conceptual.BooleanEditor.class);
@@ -59,7 +56,6 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return aDescriptor;
     }
 
@@ -83,7 +79,6 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aGetMethod = findMethod(getBeanClass(), "isUnique", 0);
                 }
-                ;
                 java.lang.reflect.Method aSetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
@@ -96,7 +91,6 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aSetMethod = findMethod(getBeanClass(), "setUnique", 1);
                 }
-                ;
                 aDescriptor = new java.beans.PropertyDescriptor("3unique"
                         , aGetMethod, aSetMethod);
             } catch (Throwable exception) {
@@ -105,7 +99,6 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
                 aDescriptor = new java.beans.PropertyDescriptor("3unique"
                         , getBeanClass());
             }
-            ;
             aDescriptor.setBound(true);
             /* aDescriptor.setConstrained(false); */
             aDescriptor.setPropertyEditorClass(cz.omnicom.ermodeller.conceptual.BooleanEditor.class);
@@ -118,7 +111,6 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return aDescriptor;
     }
 
@@ -142,7 +134,6 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aGetMethod = findMethod(getBeanClass(), "isPrimary", 0);
                 }
-                ;
                 java.lang.reflect.Method aSetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
@@ -155,7 +146,6 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aSetMethod = findMethod(getBeanClass(), "setPrimary", 1);
                 }
-                ;
                 aDescriptor = new java.beans.PropertyDescriptor("2primary"
                         , aGetMethod, aSetMethod);
             } catch (Throwable exception) {
@@ -164,7 +154,6 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
                 aDescriptor = new java.beans.PropertyDescriptor("2primary"
                         , getBeanClass());
             }
-            ;
             aDescriptor.setBound(true);
             /* aDescriptor.setConstrained(false); */
             aDescriptor.setPropertyEditorClass(cz.omnicom.ermodeller.conceptual.BooleanEditor.class);
@@ -177,7 +166,6 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return aDescriptor;
     }
 
@@ -201,7 +189,6 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aGetMethod = findMethod(getBeanClass(), "getConstruct", 0);
                 }
-                ;
                 java.lang.reflect.Method aSetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
@@ -214,7 +201,6 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aSetMethod = findMethod(getBeanClass(), "setConstruct", 1);
                 }
-                ;
                 aDescriptor = new java.beans.PropertyDescriptor("construct"
                         , aGetMethod, aSetMethod);
             } catch (Throwable exception) {
@@ -223,7 +209,6 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
                 aDescriptor = new java.beans.PropertyDescriptor("construct"
                         , getBeanClass());
             }
-            ;
             aDescriptor.setBound(true);
             /* aDescriptor.setConstrained(false); */
             /* aDescriptor.setDisplayName("construct"); */
@@ -235,7 +220,6 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return aDescriptor;
     }
 
@@ -259,7 +243,6 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aGetMethod = findMethod(getBeanClass(), "getDataType", 0);
                 }
-                ;
                 java.lang.reflect.Method aSetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
@@ -272,7 +255,6 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
                     handleException(exception);
                     aSetMethod = findMethod(getBeanClass(), "setDataType", 1);
                 }
-                ;
                 aDescriptor = new java.beans.PropertyDescriptor("5dataType"
                         , aGetMethod, aSetMethod);
             } catch (Throwable exception) {
@@ -281,7 +263,6 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
                 aDescriptor = new java.beans.PropertyDescriptor("5dataType"
                         , getBeanClass());
             }
-            ;
             aDescriptor.setBound(true);
             /* aDescriptor.setConstrained(false); */
             aDescriptor.setPropertyEditorClass(cz.omnicom.ermodeller.datatype.DataTypeEditor.class);
@@ -294,7 +275,6 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return aDescriptor;
     }
 
@@ -379,7 +359,6 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
             /* aDescriptor.setValue("hidden-state", Boolean.FALSE); */
         } catch (Throwable exception) {
         }
-        ;
         return aDescriptor;
     }
 
@@ -396,7 +375,6 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return null;
     }
 
@@ -413,7 +391,6 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return null;
     }
 
@@ -435,7 +412,6 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return null;
     }
 
@@ -472,7 +448,6 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
                 handleException(exception);
                 aMethod = findMethod((java.beans.PropertyChangeListener.class), "propertyChange", 1);
             }
-            ;
             try {
                 /* Try creating the method descriptor with parameter descriptors. */
                 java.beans.ParameterDescriptor aParameterDescriptor1 = new java.beans.ParameterDescriptor();
@@ -487,7 +462,6 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
                 handleException(exception);
                 aDescriptor = new java.beans.MethodDescriptor(aMethod);
             }
-            ;
             aDescriptor.setDisplayName("propertyChange.propertyChange(java.beans.PropertyChangeEvent)");
             /* aDescriptor.setShortDescription("propertyChange.propertyChange(java.beans.PropertyChangeEvent)"); */
             /* aDescriptor.setExpert(false); */
@@ -496,7 +470,6 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
         return aDescriptor;
     }
 }
