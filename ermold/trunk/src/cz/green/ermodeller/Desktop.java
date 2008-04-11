@@ -409,8 +409,8 @@ public class Desktop extends DesktopTool implements FontManager,
      */
     public void decomposeRelsWithAtributes(Container place) {
         Vector RA = getRelationsWithAttribute(false);
-        for (int i = 0; i < RA.size(); i++) {
-            Relation rel = (Relation) RA.get(i);
+        for (Object aRA : RA) {
+            Relation rel = (Relation) aRA;
             rel.decompose(new SelectItemEvent(rel.getBounds().x, rel.getBounds().x, false, place));
         }
     }
@@ -511,10 +511,10 @@ public class Desktop extends DesktopTool implements FontManager,
      * Switch all connetions to the other side of relationship
      */
     public void switchAllRConnectionsArb(Container place) {
-        Vector R = getAllRelations();
+        Vector allRelations = getAllRelations();
         cz.omnicom.ermodeller.conceptual.Cardinality car1M, car2M;
-        for (int i = 0; i < R.size(); i++) {
-            Relation rel = (Relation) R.get(i);
+        for (Object allRelation : allRelations) {
+            Relation rel = (Relation) allRelation;
 
             java.util.Enumeration e = rel.getConnections().elements();
             Vector cards = new Vector();
