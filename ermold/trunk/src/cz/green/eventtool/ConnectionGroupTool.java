@@ -5,6 +5,7 @@ import cz.green.event.exceptions.ItemNotInsideManagerException;
 import cz.green.event.interfaces.Item;
 import cz.green.event.interfaces.Manager;
 import cz.green.event.interfaces.PaintableItem;
+import cz.green.eventtool.interfaces.Printable;
 
 /**
  * This group holds connections and all others elements that don't want to handle

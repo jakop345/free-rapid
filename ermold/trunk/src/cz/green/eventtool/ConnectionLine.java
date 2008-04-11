@@ -6,6 +6,8 @@ import cz.green.event.ResizePoint;
 import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.interfaces.Manager;
 import cz.green.event.interfaces.PaintableManager;
+import cz.green.eventtool.interfaces.Connectable;
+import cz.green.eventtool.interfaces.Connection;
 
 import java.awt.*;
 
@@ -143,7 +145,7 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
      * Gets the first connected connectable window.
      *
      * @return The connectable window.
-     * @see Connection#getOne()
+     * @see cz.green.eventtool.interfaces.Connection#getOne()
      */
     public Connectable getOne() {
         return one;
@@ -528,7 +530,7 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
      * Sets the second connected connectable window.
      *
      * @return The connectable window.
-     * @see Connection#setTwo()
+     * @see cz.green.eventtool.interfaces.Connection#setTwo()
      */
     public void setTwo(Connectable newValue) {
         if (newValue == null)

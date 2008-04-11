@@ -1,4 +1,4 @@
-package cz.green.eventtool;
+package cz.green.eventtool.interfaces;
 
 import cz.green.event.interfaces.Item;
 
@@ -8,7 +8,7 @@ import cz.green.event.interfaces.Item;
  *
  * @see Connectable
  */
-public interface Connection extends Item, cz.green.eventtool.Printable {
+public interface Connection extends Item, Printable {
     /**
      * Disconnects itself from connectable window and before it disconnects both
      * connectable windows from this connection using method <code>removeConnection</code>.

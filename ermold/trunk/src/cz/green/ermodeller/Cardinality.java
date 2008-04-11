@@ -6,8 +6,8 @@ import cz.green.event.exceptions.ItemNotInsideManagerException;
 import cz.green.event.interfaces.Item;
 import cz.green.event.interfaces.Manager;
 import cz.green.event.interfaces.PaintableManager;
-import cz.green.eventtool.Connection;
 import cz.green.eventtool.ConnectionLine;
+import cz.green.eventtool.interfaces.Connection;
 import cz.green.swing.ShowException;
 import cz.omnicom.ermodeller.conceptual.RelationBean;
 

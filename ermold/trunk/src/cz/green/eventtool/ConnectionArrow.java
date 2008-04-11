@@ -3,6 +3,7 @@ package cz.green.eventtool;
 import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.interfaces.Manager;
 import cz.green.event.interfaces.PaintableManager;
+import cz.green.eventtool.interfaces.Connectable;
 
 /**
  * Has the same functionalitz as ancestor, but adds one important thing. At the and (by first

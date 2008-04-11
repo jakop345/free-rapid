@@ -1,4 +1,4 @@
-package cz.green.eventtool;
+package cz.green.eventtool.interfaces;
 
 /**
  * All classes which want to have the opportunity to be printed should

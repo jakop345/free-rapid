@@ -10,6 +10,9 @@ import cz.green.event.interfaces.Item;
 import cz.green.event.interfaces.Manager;
 import cz.green.event.interfaces.PaintableItem;
 import cz.green.event.interfaces.PaintableManager;
+import cz.green.eventtool.interfaces.Connection;
+import cz.green.eventtool.interfaces.ConnectionManager;
+import cz.green.eventtool.interfaces.Printable;
 import cz.green.swing.ShowException;
 
 /**
@@ -103,7 +106,7 @@ public class DGroupTool extends GroupTool implements ConnectionManager {
      * Simply calls the manager method <code>addCommectionToMain</code>.
      *
      * @param conn The adding connection.
-     * @see ConnationManager#addConnectionToMain(Connection)
+     * @see ConnationManager#addConnectionToMain(cz.green.eventtool.interfaces.Connection)
      */
     public void addConnectionToMain(Connection conn) {
         ((ConnectionManager) manager).addConnectionToMain(conn);

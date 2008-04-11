@@ -1,4 +1,4 @@
-package cz.green.eventtool;
+package cz.green.eventtool.interfaces;
 
 /**
  * All used groups and desktops with schema using connection hould implements.

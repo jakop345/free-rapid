@@ -2,12 +2,13 @@ package cz.green.eventtool;
 
 import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.interfaces.Manager;
+import cz.green.eventtool.interfaces.Printable;
 
 /**
  * This class has the same functionality as predecessor. Adds only one methods, which is caused by implementing the
  * interface <code>Printable</code>. Implementing this interface caused the possibility to be printed.
  */
-public class GroupTool extends cz.green.event.Group implements cz.green.eventtool.Printable {
+public class GroupTool extends cz.green.event.Group implements Printable {
     /**
      * Is needful for creating desktop.
      *

@@ -5,6 +5,9 @@ import cz.green.event.exceptions.ItemNotInsideManagerException;
 import cz.green.event.exceptions.ValueOutOfRangeException;
 import cz.green.event.interfaces.Item;
 import cz.green.event.interfaces.PaintableManager;
+import cz.green.eventtool.interfaces.Connection;
+import cz.green.eventtool.interfaces.ConnectionManager;
+import cz.green.eventtool.interfaces.Printable;
 
 /**
  * This class has the same functionality as predecessor. Adds only one methods, which is caused by implementing the

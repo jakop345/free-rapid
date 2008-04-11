@@ -7,10 +7,10 @@ import cz.green.event.exceptions.ItemNotInsideManagerException;
 import cz.green.event.interfaces.Item;
 import cz.green.event.interfaces.Manager;
 import cz.green.event.interfaces.PaintableManager;
-import cz.green.eventtool.Connection;
 import cz.green.eventtool.ConnectionArrow;
-import cz.green.eventtool.ConnectionManager;
-import cz.green.eventtool.Printable;
+import cz.green.eventtool.interfaces.Connection;
+import cz.green.eventtool.interfaces.ConnectionManager;
+import cz.green.eventtool.interfaces.Printable;
 import cz.green.swing.ShowException;
 
 import javax.swing.*;

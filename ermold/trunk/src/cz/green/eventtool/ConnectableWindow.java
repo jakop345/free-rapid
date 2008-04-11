@@ -4,6 +4,8 @@ import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.exceptions.ItemNotInsideManagerException;
 import cz.green.event.interfaces.Manager;
 import cz.green.event.interfaces.PaintableManager;
+import cz.green.eventtool.interfaces.Connectable;
+import cz.green.eventtool.interfaces.Connection;
 
 import java.util.Vector;
 
@@ -140,7 +142,7 @@ public class ConnectableWindow extends Window implements Connectable {
      * Counts the center point of the rectangle.
      *
      * @return The center.
-     * @see Connectable#getCenter()
+     * @see cz.green.eventtool.interfaces.Connectable#getCenter()
      */
     public java.awt.Point getCenter() {
         java.awt.Rectangle r;
@@ -158,7 +160,7 @@ public class ConnectableWindow extends Window implements Connectable {
      *
      * @param direction The center of the other connected element.
      * @return The real border.
-     * @see Connectable#getRealBorder(java.awt.Point)
+     * @see cz.green.eventtool.interfaces.Connectable#getRealBorder(java.awt.Point)
      */
     public java.awt.Point getRealBorder(java.awt.Point direction) {
         java.awt.Point center = getRealCenter();
@@ -194,7 +196,7 @@ public class ConnectableWindow extends Window implements Connectable {
      * <code>getBound</code>.
      *
      * @return The real center.
-     * @see Connectable#getRealCenter()
+     * @see cz.green.eventtool.interfaces.Connectable#getRealCenter()
      */
     public java.awt.Point getRealCenter() {
         java.awt.Rectangle r = getRealBounds();

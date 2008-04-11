@@ -4,9 +4,9 @@ import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.interfaces.Item;
 import cz.green.event.interfaces.Manager;
 import cz.green.event.interfaces.PaintableManager;
-import cz.green.eventtool.Connection;
 import cz.green.eventtool.ConnectionLine;
-import cz.green.eventtool.ConnectionManager;
+import cz.green.eventtool.interfaces.Connection;
+import cz.green.eventtool.interfaces.ConnectionManager;
 import cz.green.swing.ShowException;
 
 import javax.swing.*;

@@ -1,6 +1,7 @@
 package cz.green.eventtool;
 
 import cz.green.event.interfaces.ContainerDesktop;
+import cz.green.eventtool.interfaces.Printable;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;

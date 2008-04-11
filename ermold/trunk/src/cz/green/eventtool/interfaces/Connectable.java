@@ -1,4 +1,4 @@
-package cz.green.eventtool;
+package cz.green.eventtool.interfaces;
 
 /**
  * This interface have to implement all items, that have to be connectable. This items
