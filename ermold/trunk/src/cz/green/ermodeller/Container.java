@@ -11,6 +11,7 @@ import cz.green.event.AddRelWithConnsEvent;
 import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.interfaces.ContainerDesktop;
 import cz.green.event.interfaces.Item;
+import cz.green.eventtool.ContainerTool;
 import cz.green.eventtool.Window;
 import cz.omnicom.ermodeller.errorlog.ShowErrorEvent;
 import cz.omnicom.ermodeller.errorlog.interfaces.ShowErrorListener;
@@ -22,7 +23,7 @@ import java.awt.event.KeyEvent;
  * This class has the same functionality as its predecessor. Adds many new work regimes, help functionality and font
  * management.
  */
-public class Container extends cz.green.eventtool.Container implements ModeSwitcher, FontManager, ShowErrorListener {
+public class Container extends ContainerTool implements ModeSwitcher, FontManager, ShowErrorListener {
     /**
      * The adding entity state.
      */
@@ -107,7 +108,7 @@ public class Container extends cz.green.eventtool.Container implements ModeSwitc
      * Calls the inherited constructor, but has one more parameter.
      *
      * @param helpURL Specify the page which is open as help.
-     * @see cz.green.eventtool.Container#Container(int,int,int,int)
+     * @see cz.green.eventtool.ContainerTool#Container(int,int,int,int)
      */
     public Container(int width, int height) {
         super(width, height);

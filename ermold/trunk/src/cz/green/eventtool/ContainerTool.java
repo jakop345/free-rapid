@@ -9,13 +9,13 @@ import cz.green.eventtool.interfaces.Printable;
  * needful for saving and loading schema to (from) a stream and the third is useful for printing
  * schema.
  */
-public class Container extends cz.green.event.Container {
+public class ContainerTool extends cz.green.event.Container {
     /**
      * Same constructor as deriver one.
      *
      * @see cz.green.event.Container#Container(int, int, int, int)
      */
-    public Container(int width, int height) {
+    public ContainerTool(int width, int height) {
         super(width, height);
     }
 
