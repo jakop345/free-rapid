@@ -1,5 +1,6 @@
 package cz.green.ermodeller;
 
+import cz.green.ermodeller.interfaces.ViewController;
 import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.interfaces.Manager;
 import cz.green.event.interfaces.PaintableManager;
@@ -141,7 +142,7 @@ public class ConceptualObject extends ConnectableWindow implements ViewControlle
      * Should be overriden to get model object
      *
      * @return <code>nul</code>
-     * @see ViewController#getModel()
+     * @see cz.green.ermodeller.interfaces.ViewController#getModel()
      */
     public Object getModel() {
         return null;

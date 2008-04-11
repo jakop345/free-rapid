@@ -1,5 +1,9 @@
 package cz.green.ermodeller;
 
+import cz.green.ermodeller.interfaces.FontManager;
+import cz.green.ermodeller.interfaces.ModelFinder;
+import cz.green.ermodeller.interfaces.Schema;
+import cz.green.ermodeller.interfaces.ViewController;
 import cz.green.event.RemoveEvent;
 import cz.green.event.SelectItemEvent;
 import cz.green.event.SelectItemExEvent;
@@ -118,7 +122,7 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
      * Creates the new entity with exact size. Invokes the static entity's method
      * <code>createEntity</code>.
      *
-     * @see Schema#createEntity(int, int, EntityConstruct)
+     * @see cz.green.ermodeller.interfaces.Schema#createEntity(int, int, EntityConstruct)
      */
     public EntityConstruct createEntity(int x, int y, int width, int height, EntityConstruct old) {
         return EntityConstruct.createEntity(model, this, x, y, width, height, old);
@@ -148,7 +152,7 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
      * Creates the new relation. Invokes the static relation's method
      * <code>createRelation</code>.
      *
-     * @see Schema#createRelation(int, int)
+     * @see cz.green.ermodeller.interfaces.Schema#createRelation(int, int)
      */
     public Relation createRelation(int x, int y) {
         return Relation.createRelation(model, this, x, y);

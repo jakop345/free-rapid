@@ -1,6 +1,8 @@
 package cz.green.ermodeller;
 
 
+import cz.green.ermodeller.interfaces.FontManager;
+import cz.green.ermodeller.interfaces.Schema;
 import cz.green.event.*;
 import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.exceptions.ItemNotInsideManagerException;

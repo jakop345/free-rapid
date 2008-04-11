@@ -1,4 +1,4 @@
-package cz.green.ermodeller;
+package cz.green.ermodeller.interfaces;
 
 /**
  * This interface enebles the font managment. Implements the

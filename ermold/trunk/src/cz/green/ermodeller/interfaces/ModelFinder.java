@@ -1,4 +1,4 @@
-package cz.green.ermodeller;
+package cz.green.ermodeller.interfaces;
 
 import cz.green.event.SelectItemExEvent;
 

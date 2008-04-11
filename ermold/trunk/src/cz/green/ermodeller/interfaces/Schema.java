@@ -1,4 +1,7 @@
-package cz.green.ermodeller;
+package cz.green.ermodeller.interfaces;
+
+import cz.green.ermodeller.EntityConstruct;
+import cz.green.ermodeller.Relation;
 
 /**
  * This interface adds the functionality for adding the new relations and entities.

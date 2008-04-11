@@ -1,5 +1,8 @@
-package cz.green.ermodeller;
+package cz.green.ermodeller.interfaces;
 
+import cz.green.ermodeller.CardinalityPair;
+import cz.green.ermodeller.ConceptualConstruct;
+import cz.green.ermodeller.EntityConstruct;
 import cz.green.event.interfaces.Item;
 
 /**

@@ -1,5 +1,6 @@
 package cz.green.ermodeller;
 
+import cz.green.ermodeller.interfaces.FontManager;
 import cz.green.event.MoveEvent;
 import cz.green.event.ResizeEvent;
 import cz.green.event.ResizePoint;

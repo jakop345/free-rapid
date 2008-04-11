@@ -1,5 +1,9 @@
 package cz.green.ermodeller;
 
+import cz.green.ermodeller.interfaces.FontManager;
+import cz.green.ermodeller.interfaces.ModeSwitcher;
+import cz.green.ermodeller.interfaces.ModelFinder;
+import cz.green.ermodeller.interfaces.Schema;
 import cz.green.event.AddAsISAChildEvent;
 import cz.green.event.AddConnectionEvent;
 import cz.green.event.AddIdentificationDependencyEvent;

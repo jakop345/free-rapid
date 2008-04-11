@@ -1,5 +1,8 @@
 package cz.green.ermodeller;
 
+import cz.green.ermodeller.interfaces.FontManager;
+import cz.green.ermodeller.interfaces.ModelFinder;
+import cz.green.ermodeller.interfaces.ViewController;
 import cz.green.event.SelectItemExEvent;
 import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.interfaces.Item;

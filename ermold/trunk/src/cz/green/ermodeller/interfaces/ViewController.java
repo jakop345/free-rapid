@@ -1,4 +1,4 @@
-package cz.green.ermodeller;
+package cz.green.ermodeller.interfaces;
 
 /**
  * All classes that has its models should implements this interface.
