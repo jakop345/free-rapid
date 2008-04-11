@@ -11,6 +11,7 @@ import cz.green.event.SelectItemExEvent;
 import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.interfaces.Item;
 import cz.green.event.interfaces.PaintableItem;
+import cz.green.eventtool.DesktopTool;
 import cz.green.eventtool.dialogs.PropertyListDialog;
 import cz.green.eventtool.interfaces.Connection;
 import cz.green.util.ActionAdapter;
@@ -27,7 +28,7 @@ import java.util.Vector;
 /**
  * Adds new needful functionality for realiying the ER modeller.
  */
-public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
+public class Desktop extends DesktopTool implements FontManager,
         ISchema, ViewController, ModelFinder {
     /**
      * The model - object from Aleš Kopecký work
@@ -40,7 +41,7 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
     /**
      * Call inhereted constructor and creates the model - schema.
      *
-     * @see cz.green.eventtool.Desktop#Desktop(cz.green.event.ContainerComponent , int,
+     * @see cz.green.eventtool.DesktopTool#DesktopGroupWindow(cz.green.event.ContainerComponent , int,
      *      int, int, int)
      */
     public Desktop(ContainerComponent place, int left, int top,

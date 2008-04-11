@@ -22,7 +22,7 @@ import java.awt.*;
  * @see Item
  * @see Manager
  */
-public class GroupWindow extends WindowItem implements Manager, java.io.Serializable {
+public class GroupWindowItem extends WindowItem implements Manager, java.io.Serializable {
     /**
      * Array of all item stored in this manager. The first in this array is the most under and
      * vice versa. It is caused by need to redraw all items from the under to the top.
@@ -51,7 +51,7 @@ public class GroupWindow extends WindowItem implements Manager, java.io.Serializ
     /**
      * This parameter less constructor is needed for desktop creating.
      */
-    protected GroupWindow() {
+    protected GroupWindowItem() {
         super();
         wins = new MoveArrayList(getArraySize(), getIncrement());
     }
@@ -63,7 +63,7 @@ public class GroupWindow extends WindowItem implements Manager, java.io.Serializ
      *
      * @see WindowItem#WindowItem(cz.green.event.interfaces.Manager , int, int, int, int)
      */
-    public GroupWindow(Manager manager, int left, int top, int width, int height) throws NullPointerException, ImpossibleNegativeValueException {
+    public GroupWindowItem(Manager manager, int left, int top, int width, int height) throws NullPointerException, ImpossibleNegativeValueException {
         super(manager, left, top, width, height);
         wins = new MoveArrayList(getArraySize(), getIncrement());
     }
@@ -136,7 +136,7 @@ public class GroupWindow extends WindowItem implements Manager, java.io.Serializ
      * Returns the starting window array size.
      *
      * @return The size.
-     * @see GroupWindow.wins
+     * @see GroupWindowItem.wins
      */
     private int getArraySize() {
         return 50;
@@ -156,7 +156,7 @@ public class GroupWindow extends WindowItem implements Manager, java.io.Serializ
      * to store all items, by this value is expanded.
      *
      * @return The size.
-     * @see GroupWindow.wins
+     * @see GroupWindowItem.wins
      */
     private int getIncrement() {
         return 5;
@@ -222,7 +222,7 @@ public class GroupWindow extends WindowItem implements Manager, java.io.Serializ
      * (manager). Where to place decides the <code>top</code> parameter.
      *
      * @see Manager#changeZOrder(cz.green.event.interfaces.Item , boolean)
-     * @see GroupWindow.wins
+     * @see GroupWindowItem.wins
      */
     public void changeZOrder(Item item, boolean top) {
         if (item == null)
@@ -283,7 +283,7 @@ public class GroupWindow extends WindowItem implements Manager, java.io.Serializ
      * This methods invokes event handler for specified <code>receiver</code>.
      *
      * @see Invokable#invokeEventHandler(cz.green.event.interfaces.Event)
-     * @see GroupWindow.receiver
+     * @see GroupWindowItem.receiver
      */
     public boolean invokeEventHandler(cz.green.event.interfaces.Event event) {
         Invokable i = receiver;
@@ -298,7 +298,7 @@ public class GroupWindow extends WindowItem implements Manager, java.io.Serializ
      * Is the specified <code>item</code> at the bottom of all items?
      *
      * @see Manager#isBottom(cz.green.event.interfaces.Item)
-     * @see GroupWindow.wins
+     * @see GroupWindowItem.wins
      */
     public boolean isBottom(Item item) {
         return (item.equals(wins.firstElement()));
@@ -398,7 +398,7 @@ public class GroupWindow extends WindowItem implements Manager, java.io.Serializ
      * Is the specified <code>item</code> at the top of all items?
      *
      * @see Manager#isTop(cz.green.event.interfaces.Item)
-     * @see GroupWindow.wins
+     * @see GroupWindowItem.wins
      */
     public boolean isTop(Item item) {
         return (item.equals(wins.lastElement()));

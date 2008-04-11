@@ -13,7 +13,7 @@ import java.awt.*;
  * <p/>
  * This class as atribute some component is the best way to show all functionality.
  */
-public class Desktop extends GroupWindow implements ContainerDesktop, java.io.Serializable {
+public class DesktopGroupWindow extends GroupWindowItem implements ContainerDesktop, java.io.Serializable {
     /**
      * Stores the last <code>SelectItemEvent</code> event. This event is stored because
      * when we clicked in the selected item and made no move, this item is deselected.
@@ -67,7 +67,7 @@ public class Desktop extends GroupWindow implements ContainerDesktop, java.io.Se
      * and <code>rects</code> we can desided into which direction we change the size
      * of the specified item. It is <code>-1</code> when we use no resize rectangle.
      *
-     * @see Desktop.rects
+     * @see DesktopGroupWindow.rects
      */
     transient protected int resizing = -1;
     /**
@@ -88,7 +88,7 @@ public class Desktop extends GroupWindow implements ContainerDesktop, java.io.Se
      *          If <code>left</code>, <code>top</code>, <code>width</code> or
      *          <code>height</code> is less than zero.
      */
-    public Desktop(ContainerComponent place, int left, int top, int width, int height) {
+    public DesktopGroupWindow(ContainerComponent place, int left, int top, int width, int height) {
         super();
         manager = this;
         paintPlace = place;
@@ -130,18 +130,18 @@ public class Desktop extends GroupWindow implements ContainerDesktop, java.io.Se
      * <p/>
      * The event <code>MouseMoveEvent</code> is directly handled by desktop.
      *
-     * @see GroupWindow#fallAndHandleEvent(int, int, cz.green.event.interfaces.Event)
-     * @see Desktop.preEvent
-     * @see Desktop.preSelectEvent
-     * @see Desktop.selected
+     * @see GroupWindowItem#fallAndHandleEvent(int, int, cz.green.event.interfaces.Event)
+     * @see DesktopGroupWindow.preEvent
+     * @see DesktopGroupWindow.preSelectEvent
+     * @see DesktopGroupWindow.selected
      * @see ResizingEvent
      * @see ResizeRectangle
-     * @see GroupWindow.receiver
+     * @see GroupWindowItem.receiver
      * @see SelectedItems#focusedElement()
      * @see MovingEvent
-     * @see GroupWindow.receiver
+     * @see GroupWindowItem.receiver
      * @see SelectItemExEvent
-     * @see Desktop.preSelectEvent
+     * @see DesktopGroupWindow.preSelectEvent
      * @see MouseMoveEvent
      */
     public boolean fallAndHandleEvent(int x, int y, Event event) {
@@ -406,8 +406,8 @@ public class Desktop extends GroupWindow implements ContainerDesktop, java.io.Se
      * to new object SelectedItems.
      *
      * @param c The container where this desktop will be painted.
-     * @see Desktop.paintPlace
-     * @see Desktop.selected
+     * @see DesktopGroupWindow.paintPlace
+     * @see DesktopGroupWindow.selected
      * @see SelectedItems
      * @see ContainerComponent
      */
@@ -540,7 +540,7 @@ public class Desktop extends GroupWindow implements ContainerDesktop, java.io.Se
     /**
      * Selects the specified <code>item</code>.
      *
-     * @see Desktop.selected
+     * @see DesktopGroupWindow.selected
      */
     public boolean selectItem(SelectableItem item, boolean add) {
         if (selectedItems.containsElement(item)) { //item is already selected -> do nothing
@@ -567,7 +567,7 @@ public class Desktop extends GroupWindow implements ContainerDesktop, java.io.Se
     /**
      * Selects the specified <code>item</code>.
      *
-     * @see Desktop.selected
+     * @see DesktopGroupWindow.selected
      */
     public void selectItemEx(SelectableItem item, boolean add) {
         boolean set = false;

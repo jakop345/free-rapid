@@ -11,7 +11,7 @@ import java.awt.event.*;
  * <code>cz.green.Desktop</code>. We implements method
  * <code>paint</code> for drawing the desktop, methods for handling mouse events and changing the state.
  *
- * @see Desktop
+ * @see DesktopGroupWindow
  */
 public class ContainerComponent extends JComponent implements MouseListener, MouseMotionListener, KeyListener {
     /**
@@ -132,7 +132,7 @@ public class ContainerComponent extends JComponent implements MouseListener, Mou
      */
     public ContainerDesktop getDesktop() {
         Rectangle r = getBounds();
-        desktop = new cz.green.event.Desktop(this, r.x, r.y, r.width, r.height);
+        desktop = new DesktopGroupWindow(this, r.x, r.y, r.width, r.height);
 
         return desktop;
     }
@@ -155,7 +155,7 @@ public class ContainerComponent extends JComponent implements MouseListener, Mou
      * @param <code>>y</code> The y coordinate the mouse position.
      * @return <code>true</code> (<code>false</code>) if the component
      *         is (not) in resize mode.
-     * @see Desktop#getActualResizeRect(int, int)
+     * @see DesktopGroupWindow#getActualResizeRect(int, int)
      */
     public boolean isResizeMode(int x, int y) {
         return ((actResizeRect = desktop.getActualResizeRect(x, y)) != null);
@@ -268,7 +268,7 @@ public class ContainerComponent extends JComponent implements MouseListener, Mou
                 }
                 try {
                     if (workMode == ADDING_GROUP)
-                        desktop.fallAndHandleEvent(cooX, cooY, new AddItemEvent(cooX, cooY, new GroupWindow(desktop, cooX, cooY, x - cooX, y - cooY), this));
+                        desktop.fallAndHandleEvent(cooX, cooY, new AddItemEvent(cooX, cooY, new GroupWindowItem(desktop, cooX, cooY, x - cooX, y - cooY), this));
                     else
                         desktop.fallAndHandleEvent(cooX, cooY, new AddItemEvent(cooX, cooY, new WindowItem(desktop, cooX, cooY, x - cooX, y - cooY), this));
                 } catch (Exception ex) {

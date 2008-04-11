@@ -1,6 +1,6 @@
 package cz.green.eventtool;
 
-import cz.green.event.GroupWindow;
+import cz.green.event.GroupWindowItem;
 import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.interfaces.Manager;
 import cz.green.eventtool.interfaces.Printable;
@@ -9,11 +9,11 @@ import cz.green.eventtool.interfaces.Printable;
  * This class has the same functionality as predecessor. Adds only one methods, which is caused by implementing the
  * interface <code>Printable</code>. Implementing this interface caused the possibility to be printed.
  */
-public class GroupTool extends GroupWindow implements Printable {
+public class GroupTool extends GroupWindowItem implements Printable {
     /**
      * Is needful for creating desktop.
      *
-     * @see cz.green.event.GroupWindow#GroupWindow()
+     * @see cz.green.event.GroupWindowItem#GroupWindowItem()
      */
     protected GroupTool() {
         super();
@@ -22,7 +22,7 @@ public class GroupTool extends GroupWindow implements Printable {
     /**
      * Calls the derived constructor.
      *
-     * @see cz.green.event.GroupWindow#GroupWindow(cz.green.event.interfaces.Manager , int, int, int, int)
+     * @see cz.green.event.GroupWindowItem#GroupWindowItem(cz.green.event.interfaces.Manager , int, int, int, int)
      */
     public GroupTool(Manager manager, int left, int top, int width, int height) throws NullPointerException, ImpossibleNegativeValueException {
         super(manager, left, top, width, height);

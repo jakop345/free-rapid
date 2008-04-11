@@ -1,6 +1,7 @@
 package cz.green.eventtool;
 
 import cz.green.event.ContainerComponent;
+import cz.green.event.DesktopGroupWindow;
 import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.exceptions.ItemNotInsideManagerException;
 import cz.green.event.exceptions.ValueOutOfRangeException;
@@ -13,7 +14,7 @@ import cz.green.eventtool.interfaces.Printable;
  * This class has the same functionality as predecessor. Adds only one methods, which is caused by implementing the
  * interface <code>Printable</code>. Implementing this interface caused the possibility to be printed.
  */
-public class Desktop extends cz.green.event.Desktop implements ConnectionManager, Printable {
+public class DesktopTool extends DesktopGroupWindow implements ConnectionManager, Printable {
     /**
      * Group with connections
      */
@@ -22,9 +23,9 @@ public class Desktop extends cz.green.event.Desktop implements ConnectionManager
     /**
      * Calls the derived constructor.
      *
-     * @see cz.green.event.Desktop#Desktop(cz.green.event.ContainerComponent , int, int, int, int)
+     * @see cz.green.event.DesktopGroupWindow#DesktopGroupWindow(cz.green.event.ContainerComponent , int, int, int, int)
      */
-    public Desktop(ContainerComponent place, int left, int top, int width, int height) {
+    public DesktopTool(ContainerComponent place, int left, int top, int width, int height) {
         super(place, left, top, width, height);
     }
 

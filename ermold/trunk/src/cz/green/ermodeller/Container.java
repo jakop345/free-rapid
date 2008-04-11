@@ -370,7 +370,7 @@ public class Container extends ContainerToolComponent implements ModeSwitcher, F
      * @throws java.lang.ClassNotFoundException
      *                             If file contains unknow class. For example doesn't contains schema, but other
      *                             classes.
-     * @see cz.green.event.Desktop#init(cz.green.event.ContainerComponent)
+     * @see cz.green.event.DesktopGroupWindow#init(cz.green.event.ContainerComponent)
      */
     public void loadFromFile(String fileName) throws java.io.IOException, ClassNotFoundException {
         super.loadFromFile(fileName);
@@ -458,7 +458,7 @@ public class Container extends ContainerToolComponent implements ModeSwitcher, F
  */
     public void mouseReleased(java.awt.event.MouseEvent e) {
         requestFocus();
-        int x, y, pom;
+        int x, y;
         float scale = desktop.getScale();
         x = (int) (e.getX() * scale);
         y = (int) (e.getY() * scale);

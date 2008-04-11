@@ -1,6 +1,7 @@
 package cz.green.eventtool;
 
 import cz.green.event.ContainerComponent;
+import cz.green.event.DesktopGroupWindow;
 import cz.green.event.interfaces.ContainerDesktop;
 import cz.green.eventtool.interfaces.Printable;
 
@@ -29,7 +30,7 @@ public class ContainerToolComponent extends ContainerComponent {
     public ContainerDesktop getDesktop() {
         if (desktop == null) {
             java.awt.Rectangle r = getBounds();
-            desktop = new Desktop(this, r.x, r.y, r.width, r.height);
+            desktop = new DesktopTool(this, r.x, r.y, r.width, r.height);
         }
         return desktop;
     }
@@ -42,14 +43,14 @@ public class ContainerToolComponent extends ContainerComponent {
      * @throws java.io.IOException If file doesn't exist or occur other file error.
      * @throws java.lang.ClassNotFoundException
      *                             If file contains unknow class. For example doesn't contains schema, but other classes.
-     * @see cz.green.event.Desktop#init(cz.green.event.ContainerComponent)
+     * @see cz.green.event.DesktopGroupWindow#init(cz.green.event.ContainerComponent)
      */
     public void loadFromFile(String fileName) throws java.io.IOException, ClassNotFoundException {
         java.io.FileInputStream f = null;
         try {
             f = new java.io.FileInputStream(fileName);
             java.io.ObjectInputStream s = new java.io.ObjectInputStream(f);
-            cz.green.event.Desktop d = (cz.green.event.Desktop) s.readObject();
+            DesktopGroupWindow d = (DesktopGroupWindow) s.readObject();
             d.init(this);
             desktop = d;
             setScale(d.getScale());
