@@ -4,7 +4,6 @@ import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.interfaces.Invokable;
 import cz.green.event.interfaces.Item;
 import cz.green.event.interfaces.Manager;
-import cz.green.event.interfaces.PaintableManager;
 import cz.green.eventtool.ConnectionLine;
 import cz.green.eventtool.interfaces.Connection;
 import cz.green.eventtool.interfaces.ConnectionManager;
@@ -76,11 +75,11 @@ public class ConceptualConstruct extends ConceptualObject {
             Atribute atr = new Atribute(cAtr, this, manager, left, top);
             manager.add(atr);
             //repaint atribute
-            ((PaintableManager) manager).repaintItem(atr);
+            (manager).repaintItem(atr);
             //create connection
             Connection conn = new ConnectionLine(manager, atr, this);
             ((ConnectionManager) manager).addConnection(conn);
-            ((PaintableManager) manager).repaintItem(conn);
+            (manager).repaintItem(conn);
             if (Attribs == null)
                 Attribs = new java.util.Vector(3, 2);
             Attribs.addElement(atr);
@@ -328,11 +327,11 @@ public class ConceptualConstruct extends ConceptualObject {
             atr.setOwner(this);
             //puts into new manager
             manager.add(atr);
-            ((PaintableManager) manager).repaintItem(atr);
+            (manager).repaintItem(atr);
             //create new connection
             Connection conn = new ConnectionLine(manager, atr, this);
             ((ConnectionManager) manager).addConnection(conn);
-            ((PaintableManager) manager).repaintItem(conn);
+            (manager).repaintItem(conn);
             Attribs.addElement(atr);
             atr.setPosition(Attribs.size());
         } catch (Throwable x) {

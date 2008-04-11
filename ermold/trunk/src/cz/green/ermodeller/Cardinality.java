@@ -5,7 +5,6 @@ import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.exceptions.ItemNotInsideManagerException;
 import cz.green.event.interfaces.Item;
 import cz.green.event.interfaces.Manager;
-import cz.green.event.interfaces.PaintableManager;
 import cz.green.eventtool.ConnectionLine;
 import cz.green.eventtool.interfaces.Connection;
 import cz.green.swing.ShowException;
@@ -241,7 +240,7 @@ public class Cardinality extends ConceptualObject {
             dy = eventDy;
         }
         if (paintedFast) {
-            ((PaintableManager) manager).repaintItemFast(this);
+            (manager).repaintItemFast(this);
         } else {
             paintedFast = true;
             rectangle = getBounds();
@@ -250,7 +249,7 @@ public class Cardinality extends ConceptualObject {
             move(dx, dy, false);
         } catch (ItemNotInsideManagerException e) {
         } finally {
-            ((PaintableManager) manager).repaintItemFast(this);
+            (manager).repaintItemFast(this);
         }
     }
 
@@ -287,7 +286,7 @@ public class Cardinality extends ConceptualObject {
             dy = event.getDy();
         }
         if (paintedFast) {
-            ((PaintableManager) manager).repaintItemFast(this);
+            (manager).repaintItemFast(this);
             paintedFast = false;
         } else {
             rectangle = getBounds();
@@ -298,9 +297,9 @@ public class Cardinality extends ConceptualObject {
             if (rectangle != null) {
                 r = rectangle;
                 rectangle = null;
-                ((PaintableManager) manager).repaintRectangle(r.x, r.y, r.width, r.height);
+                (manager).repaintRectangle(r.x, r.y, r.width, r.height);
             }
-            ((PaintableManager) manager).repaintItem(this);
+            (manager).repaintItem(this);
         } catch (ItemNotInsideManagerException e) {
         }
     }
@@ -554,7 +553,7 @@ public class Cardinality extends ConceptualObject {
             } catch (ItemNotInsideManagerException ex) {
             }
             b = b.union(getBounds());
-            ((PaintableManager) manager).repaintRectangle(b.x, b.y, b.width, b.height);
+            (manager).repaintRectangle(b.x, b.y, b.width, b.height);
         }
         if (e.getPropertyName().equals("arbitrary")) {
             ConnectionLine conn = getRelationConnectionLine();
@@ -565,7 +564,7 @@ public class Cardinality extends ConceptualObject {
             }
         }
         java.awt.Rectangle b = getBounds();
-        ((PaintableManager) manager).repaintRectangle(b.x, b.y, b.width, b.height);
+        (manager).repaintRectangle(b.x, b.y, b.width, b.height);
 
     }
 

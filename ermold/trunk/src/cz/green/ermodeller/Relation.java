@@ -6,7 +6,6 @@ import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.exceptions.ItemNotInsideManagerException;
 import cz.green.event.interfaces.Item;
 import cz.green.event.interfaces.Manager;
-import cz.green.event.interfaces.PaintableManager;
 import cz.green.eventtool.ConnectableWindow;
 import cz.green.eventtool.ConnectionLine;
 import cz.green.eventtool.interfaces.Connection;
@@ -155,11 +154,11 @@ public class Relation extends ConceptualConstruct {
             //connects it to the relation
             Connection conn = new ConnectionLine(manager, car, this);
             ((ConnectionManager) manager).addConnection(conn);
-            ((PaintableManager) manager).repaintItem(conn);
+            (manager).repaintItem(conn);
             //connects it to the entity
             conn = new ConnectionLine(manager, car, ent);
             ((ConnectionManager) manager).addConnection(conn);
-            ((PaintableManager) manager).repaintItem(conn);
+            (manager).repaintItem(conn);
             return car;
         } catch (Throwable x) {
             ShowException d = new ShowException(null, "Error", x, true);
@@ -718,7 +717,7 @@ public class Relation extends ConceptualConstruct {
                         0, 0, 0, 0, cz.green.event.ResizePoint.BOTTOM
                         | cz.green.event.ResizePoint.RIGHT);
                 this.resizeRelation(new ResizeEvent(0, 0, 0, 0, rr, null));
-                ((PaintableManager) manager).repaintRectangle(r.x,
+                (manager).repaintRectangle(r.x,
                         r.y, r.width, r.height);
             }
         }

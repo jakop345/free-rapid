@@ -6,7 +6,6 @@ import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.exceptions.ItemNotInsideManagerException;
 import cz.green.event.interfaces.Item;
 import cz.green.event.interfaces.Manager;
-import cz.green.event.interfaces.PaintableManager;
 import cz.green.eventtool.ConnectionArrow;
 import cz.green.eventtool.interfaces.Connection;
 import cz.green.eventtool.interfaces.ConnectionManager;
@@ -96,19 +95,19 @@ public class StrongAddiction extends ConceptualObject {
             cChild.addStrongAddictionParent(cPar);
             StrongAddiction sa = new StrongAddiction(parent, child, man, left, top);
             man.add(sa);
-            ((PaintableManager) man).repaintItem(sa);
+            (man).repaintItem(sa);
             //create connection to unique key
             Connection conn = new ConnectionArrow(man, sa, child);
             ((ConnectionArrow) conn).setStrongAddicted(true);
             ((ConnectionArrow) conn).setStrongAddictionChild(true);
             ((ConnectionManager) man).addConnectionToMain(conn);
-            ((PaintableManager) man).repaintItem(conn);
+            (man).repaintItem(conn);
             //create connection to entity
             conn = new ConnectionArrow(man, sa, parent);
             ((ConnectionArrow) conn).setStrongAddicted(true);
             ((ConnectionArrow) conn).setStrongAddictionChild(false);
             ((ConnectionManager) man).addConnectionToMain(conn);
-            ((PaintableManager) man).repaintItem(conn);
+            (man).repaintItem(conn);
             sa.moveStrongAddiction(new ExMovingEvent(sa.getBounds().x, sa.getBounds().x, 0, 0, null, false));
             return sa;
         } catch (Throwable x) {
@@ -260,7 +259,7 @@ public class StrongAddiction extends ConceptualObject {
 	}
 */
         if (paintedFast) {
-            ((PaintableManager) manager).repaintItemFast(this);
+            (manager).repaintItemFast(this);
         } else {
             paintedFast = true;
             rectangle = getBounds();
@@ -269,7 +268,7 @@ public class StrongAddiction extends ConceptualObject {
             move(dx, dy, false);
         } catch (ItemNotInsideManagerException e) {
         } finally {
-            ((PaintableManager) manager).repaintItemFast(this);
+            (manager).repaintItemFast(this);
         }
     }
 
@@ -305,7 +304,7 @@ public class StrongAddiction extends ConceptualObject {
 		dy = event.getDy();
 	}*/
         if (paintedFast) {
-            ((PaintableManager) manager).repaintItemFast(this);
+            (manager).repaintItemFast(this);
             paintedFast = false;
         } else {
             rectangle = getBounds();
@@ -316,9 +315,9 @@ public class StrongAddiction extends ConceptualObject {
             if (rectangle != null) {
                 r = rectangle;
                 rectangle = null;
-                ((PaintableManager) manager).repaintRectangle(r.x, r.y, r.width, r.height);
+                (manager).repaintRectangle(r.x, r.y, r.width, r.height);
             }
-            ((PaintableManager) manager).repaintItem(this);
+            (manager).repaintItem(this);
         } catch (ItemNotInsideManagerException e) {
         }
     }

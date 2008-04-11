@@ -85,7 +85,7 @@ public class ConnectableWindow extends Window implements Connectable {
      *                repainted its stored bounds, if <code>false</code> thay are only repainted.
      */
     protected void finishConnFastRepaint(boolean recount) {
-        PaintableManager m = (PaintableManager) manager;
+        PaintableManager m = manager;
         java.util.Enumeration e;
         e = connections.elements();
         if (recount) {
@@ -280,7 +280,7 @@ public class ConnectableWindow extends Window implements Connectable {
      * @see #connPaintedFast
      */
     protected void startConnFastRepaint() {
-        PaintableManager m = (PaintableManager) manager;
+        PaintableManager m = manager;
         java.util.Enumeration e;
         e = connections.elements();
         if (connPaintedFast) {

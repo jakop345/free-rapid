@@ -3,7 +3,6 @@ package cz.green.ermodeller;
 import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.interfaces.Item;
 import cz.green.event.interfaces.Manager;
-import cz.green.event.interfaces.PaintableManager;
 import cz.green.eventtool.ConnectionLine;
 import cz.green.eventtool.interfaces.Connectable;
 import cz.green.eventtool.interfaces.Connection;
@@ -74,7 +73,7 @@ public class UniqueKey extends ConceptualObject {
                     .getModel()));
             Connection conn = new ConnectionLine(manager, this, atr);
             ((ConnectionManager) manager).addConnection(conn);
-            ((PaintableManager) manager).repaintItem(conn);
+            (manager).repaintItem(conn);
         } catch (Throwable x) {
             ShowException d = new ShowException(null, "Error", x, true);
         }
@@ -425,7 +424,7 @@ public class UniqueKey extends ConceptualObject {
                     .getModel()));
             Connection conn = new ConnectionLine(manager, this, atr);
             ((ConnectionManager) manager).addConnection(conn);
-            ((PaintableManager) manager).repaintItem(conn);
+            (manager).repaintItem(conn);
         } catch (Throwable x) {
             ShowException d = new ShowException(null, "Error", x, true);
         }
@@ -445,7 +444,7 @@ public class UniqueKey extends ConceptualObject {
             try {
 //PŠ				ent.setPrimary((UniqueKey) null);
                 this.primary = false;
-                ((PaintableManager) manager).repaintItem(this);
+                (manager).repaintItem(this);
             } catch (ClassCastException e) {
             }
         } catch (Throwable x) {
@@ -477,7 +476,7 @@ public class UniqueKey extends ConceptualObject {
             }
         }
         this.primary = false;
-        ((PaintableManager) manager).repaintItem(this);
+        (manager).repaintItem(this);
     }
 
     /**

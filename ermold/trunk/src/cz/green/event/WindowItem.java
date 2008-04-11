@@ -261,7 +261,7 @@ public class WindowItem implements Item, java.io.Serializable {
      */
     public Rectangle getBounds() {
         int[][] r = rect;
-        float scale = ((PaintableManager) manager).getScale();
+        float scale = (manager).getScale();
         return new Rectangle((int) (r[0][0] / scale), (int) (r[1][0] / scale),
                 (int) ((r[0][1] - r[0][0]) / scale), (int) ((r[1][1] - r[1][0]) / scale));
     }
@@ -295,7 +295,7 @@ public class WindowItem implements Item, java.io.Serializable {
         int[][] r = hRect;
         if (r == null)
             r = rect;
-        float scale = ((PaintableManager) manager).getScale();
+        float scale = (manager).getScale();
         return new Rectangle((int) (r[0][0] / scale), (int) (r[1][0] / scale), (int) ((r[0][1] - r[0][0]) / scale), (int) ((r[1][1] - r[1][0]) / scale));
     }
 
@@ -339,8 +339,8 @@ public class WindowItem implements Item, java.io.Serializable {
     public void handleAddItemEvent(AddItemEvent event) {
         try {
             manager.add(event.getItem());
-            ((PaintableManager) manager).selectItemEx(null, false);
-            ((PaintableManager) manager).repaintItem((PaintableItem) event.getItem());
+            (manager).selectItemEx(null, false);
+            (manager).repaintItem((PaintableItem) event.getItem());
         } catch (ItemNotInsideManagerException e) {
         }
     }
@@ -357,10 +357,10 @@ public class WindowItem implements Item, java.io.Serializable {
         boolean top = event.getTop();
         manager.changeZOrder(this, top);
         if (top) {
-            ((PaintableManager) manager).repaintItem(this);
+            (manager).repaintItem(this);
         } else {
             Rectangle r = getBounds();
-            ((PaintableManager) manager).repaintRectangle(r.x, r.y, r.width, r.height);
+            (manager).repaintRectangle(r.x, r.y, r.width, r.height);
         }
     }
 
@@ -385,7 +385,7 @@ public class WindowItem implements Item, java.io.Serializable {
      */
     public void handleMoveEvent(MoveEvent event) {
         if (paintedFast) {
-            ((PaintableManager) manager).repaintItemFast(this);
+            (manager).repaintItemFast(this);
             paintedFast = false;
         } else {
             rectangle = getBounds();
@@ -395,9 +395,9 @@ public class WindowItem implements Item, java.io.Serializable {
             if (rectangle != null) {
                 Rectangle r = rectangle;
                 rectangle = null;
-                ((PaintableManager) manager).repaintRectangle(r.x, r.y, r.width, r.height);
+                (manager).repaintRectangle(r.x, r.y, r.width, r.height);
             }
-            ((PaintableManager) manager).repaintItem(this);
+            (manager).repaintItem(this);
         } catch (ItemNotInsideManagerException e) {
         }
     }
@@ -412,7 +412,7 @@ public class WindowItem implements Item, java.io.Serializable {
      */
     public void handleMovingEvent(MovingEvent event) {
         if (paintedFast) {
-            ((PaintableManager) manager).repaintItemFast(this);
+            (manager).repaintItemFast(this);
         } else {
             paintedFast = true;
             rectangle = getBounds();
@@ -421,7 +421,7 @@ public class WindowItem implements Item, java.io.Serializable {
             move(event.getDx(), event.getDy(), false);
         } catch (ItemNotInsideManagerException e) {
         } finally {
-            ((PaintableManager) manager).repaintItemFast(this);
+            (manager).repaintItemFast(this);
         }
     }
 
@@ -436,8 +436,8 @@ public class WindowItem implements Item, java.io.Serializable {
     public void handleRemoveEvent(RemoveEvent event) {
         Rectangle r = getBounds();
         manager.remove(this);
-        ((PaintableManager) manager).selectItemEx(null, false);
-        ((PaintableManager) manager).repaintRectangle(r.x, r.y, r.width, r.height);
+        (manager).selectItemEx(null, false);
+        (manager).repaintRectangle(r.x, r.y, r.width, r.height);
     }
 
     /**
@@ -452,7 +452,7 @@ public class WindowItem implements Item, java.io.Serializable {
      */
     public void handleResizeEvent(ResizeEvent event) {
         if (paintedFast) {
-            ((PaintableManager) manager).repaintItemFast(this);
+            (manager).repaintItemFast(this);
             paintedFast = false;
         } else {
             rectangle = getBounds();
@@ -466,7 +466,7 @@ public class WindowItem implements Item, java.io.Serializable {
             } else {
                 r = getBounds();
             }
-            ((PaintableManager) manager).repaintRectangle(r.x, r.y, r.width, r.height);
+            (manager).repaintRectangle(r.x, r.y, r.width, r.height);
         } catch (ItemNotInsideManagerException e) {
         }
     }
@@ -480,7 +480,7 @@ public class WindowItem implements Item, java.io.Serializable {
      */
     public void handleResizingEvent(ResizingEvent event) {
         if (paintedFast) {
-            ((PaintableManager) manager).repaintItemFast(this);
+            (manager).repaintItemFast(this);
         } else {
             paintedFast = true;
             rectangle = getBounds();
@@ -489,7 +489,7 @@ public class WindowItem implements Item, java.io.Serializable {
             resize(event.getDx(), event.getDy(), event.getResizeRect().direction, false);
         } catch (ItemNotInsideManagerException e) {
         } finally {
-            ((PaintableManager) manager).repaintItemFast(this);
+            (manager).repaintItemFast(this);
         }
     }
 
@@ -510,7 +510,7 @@ public class WindowItem implements Item, java.io.Serializable {
         event.setSelected(selected);
         if (selected) {
             manager.changeZOrder(this, true);
-            ((PaintableManager) manager).repaintItem(this);
+            (manager).repaintItem(this);
         }
     }
 
@@ -523,8 +523,8 @@ public class WindowItem implements Item, java.io.Serializable {
      * @see PaintableManager#selectItemEx(cz.green.event.interfaces.SelectableItem , boolean)
      */
     public void handleSelectItemExEvent(SelectItemExEvent event) {
-        ((PaintableManager) manager).selectItemEx(this, event.getAddItem());
-        ((PaintableManager) manager).repaintItem(this);
+        (manager).selectItemEx(this, event.getAddItem());
+        (manager).repaintItem(this);
     }
 
     /**

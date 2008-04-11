@@ -5,7 +5,6 @@ import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.exceptions.ItemNotInsideManagerException;
 import cz.green.event.exceptions.ValueOutOfRangeException;
 import cz.green.event.interfaces.Item;
-import cz.green.event.interfaces.PaintableManager;
 import cz.green.eventtool.interfaces.Connection;
 import cz.green.eventtool.interfaces.ConnectionManager;
 import cz.green.eventtool.interfaces.Printable;
@@ -76,7 +75,7 @@ public class Desktop extends cz.green.event.Desktop implements ConnectionManager
             bottom = i.mostRight(1);
         } catch (ValueOutOfRangeException e) {
         }
-        float scale = ((PaintableManager) manager).getScale();
+        float scale = (manager).getScale();
         return new java.awt.Rectangle((int) (r[0][0] / scale), (int) (r[1][0] / scale), (int) ((right - r[0][0]) / scale), (int) ((bottom - r[1][0]) / scale));
     }
 

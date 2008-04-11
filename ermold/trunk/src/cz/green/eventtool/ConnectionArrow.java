@@ -2,7 +2,6 @@ package cz.green.eventtool;
 
 import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.interfaces.Manager;
-import cz.green.event.interfaces.PaintableManager;
 import cz.green.eventtool.interfaces.Connectable;
 
 /**
@@ -69,7 +68,7 @@ public class ConnectionArrow extends ConnectionLine {
             arrow.xpoints[0] = borderOne.x;
             arrow.ypoints[0] = borderOne.y;
             double alfa = Math.atan((double) (borderOne.y - borderTwo.y) / ((double) (borderOne.x - borderTwo.x)));
-            float scale = ((PaintableManager) manager).getScale();
+            float scale = (manager).getScale();
             if (borderOne.x < borderTwo.x)
                 alfa += Math.PI;
             alfa += Math.PI / 6;

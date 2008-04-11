@@ -261,7 +261,7 @@ public class ConceptualObject extends ConnectableWindow implements ViewControlle
      */
     public void propertyChange(java.beans.PropertyChangeEvent e) {
         java.awt.Rectangle b = getBounds();
-        ((PaintableManager) manager).repaintRectangle(b.x, b.y, b.width, b.height);
+        (manager).repaintRectangle(b.x, b.y, b.width, b.height);
     }
 
     /**

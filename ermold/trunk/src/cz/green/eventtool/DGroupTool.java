@@ -9,7 +9,6 @@ import cz.green.event.exceptions.ValueOutOfRangeException;
 import cz.green.event.interfaces.Item;
 import cz.green.event.interfaces.Manager;
 import cz.green.event.interfaces.PaintableItem;
-import cz.green.event.interfaces.PaintableManager;
 import cz.green.eventtool.interfaces.Connection;
 import cz.green.eventtool.interfaces.ConnectionManager;
 import cz.green.eventtool.interfaces.Printable;
@@ -127,7 +126,7 @@ public class DGroupTool extends GroupTool implements ConnectionManager {
                 //resize onlky if there is some items
                 doResize(itemsBounds());
             }
-            //		((PaintableManager) manager).repaintItem(this);
+            //		(manager).repaintItem(this);
         } catch (ItemNotInsideManagerException e) {
             //when execution is here - very bad
         }
@@ -184,7 +183,7 @@ public class DGroupTool extends GroupTool implements ConnectionManager {
             hRect = null;
             //update tree links
             manager.countAllLinksToTop(this);
-            //		((PaintableManager) manager).repaintItem(this);
+            //		(manager).repaintItem(this);
         }
     }
 
@@ -200,7 +199,7 @@ public class DGroupTool extends GroupTool implements ConnectionManager {
      */
     public void handleSelectItemEvent(SelectItemEvent event) {
         manager.changeZOrder(this, true);
-        ((PaintableManager) manager).repaintItem(this);
+        (manager).repaintItem(this);
     }
 
     /**

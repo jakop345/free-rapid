@@ -676,11 +676,11 @@ public class EntityConstruct extends ConceptualConstruct {
             // create unique key
             UniqueKey uq = new UniqueKey(cUq, this, manager, left, top);
             manager.add(uq);
-            ((PaintableManager) manager).repaintItem(uq);
+            (manager).repaintItem(uq);
             // create the connection to the
             Connection conn = new ConnectionLine(manager, uq, this);
             ((ConnectionManager) manager).addConnection(conn);
-            ((PaintableManager) manager).repaintItem(conn);
+            (manager).repaintItem(conn);
             return uq;
         } catch (Throwable x) {
             ShowException d = new ShowException(null, "Error", x, true);
@@ -1324,7 +1324,7 @@ public class EntityConstruct extends ConceptualConstruct {
         final Stroke stroke = updateStrokeWithAliasing(g);
         //setDefaultSize(e, fm);
 
-        int diff = (int) (EntityConstruct.getDIFFERENCE() / ((PaintableManager) getManager()).getScale());
+        int diff = (int) (EntityConstruct.getDIFFERENCE() / (getManager()).getScale());
         if (isSelected())
             g.setColor(getSelectedBackgroundColor());
         else
@@ -1385,7 +1385,7 @@ public class EntityConstruct extends ConceptualConstruct {
         java.awt.FontMetrics fm = g.getFontMetrics();
         String name = model.getName();
         java.awt.Rectangle r = getBounds();
-        int diff = (int) (EntityConstruct.getDIFFERENCE() / ((PaintableManager) getManager()).getScale());
+        int diff = (int) (EntityConstruct.getDIFFERENCE() / (getManager()).getScale());
         g.setColor(getEntityForegroundColor());
         g.drawRect(r.x, r.y, r.width, r.height);
         switch (ACTUAL_NOTATION) {
@@ -1447,7 +1447,7 @@ public class EntityConstruct extends ConceptualConstruct {
                     0, 0, 0, 0, cz.green.event.ResizePoint.BOTTOM
                     | cz.green.event.ResizePoint.RIGHT);
             this.resizeEntity(new ResizeEvent(getBounds().x, getBounds().y, 0, 0, rr, null));
-            ((PaintableManager) manager).repaintRectangle(r.x,
+            (manager).repaintRectangle(r.x,
                     r.y, r.width, r.height);
             return;
         }
@@ -1455,13 +1455,13 @@ public class EntityConstruct extends ConceptualConstruct {
             java.util.Vector v = (java.util.Vector) e.getNewValue();
             if (isStrongAddictionChild && (v.size() == 0)) {
                 isStrongAddictionChild = false;
-                ((PaintableManager) manager).repaintRectangle(
+                (manager).repaintRectangle(
                         r.x, r.y, r.width, r.height);
                 return;
             }
             if (!isStrongAddictionChild && (v.size() != 0)) {
                 isStrongAddictionChild = true;
-                ((PaintableManager) manager).repaintRectangle(
+                (manager).repaintRectangle(
                         r.x, r.y, r.width, r.height);
             }
         }
@@ -1676,7 +1676,7 @@ public class EntityConstruct extends ConceptualConstruct {
         try {
             ent.resetISAParent(((Container) event.getComponent()).getDesktop());
             ISAChilds.removeElementAt(index);
-            PaintableManager m = ((PaintableManager) manager);
+            PaintableManager m = (manager);
             moveChilds(event);
             m.repaintItem(this);
         } catch (Throwable x) {
@@ -1909,7 +1909,7 @@ public class EntityConstruct extends ConceptualConstruct {
             }
             //((cz.green.event.interfaces.PaintableManager) manager).repaintItem(a);
         }
-        ((PaintableManager) manager).repaintItem(this);
+        (manager).repaintItem(this);
     }
 
     /**

@@ -7,7 +7,6 @@ import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.exceptions.ItemNotInsideManagerException;
 import cz.green.event.interfaces.Item;
 import cz.green.event.interfaces.Manager;
-import cz.green.event.interfaces.PaintableManager;
 import cz.green.eventtool.ConnectionLine;
 import cz.green.eventtool.interfaces.Connection;
 import cz.green.eventtool.interfaces.ConnectionManager;
@@ -752,7 +751,7 @@ public class Atribute extends ConceptualObject {
                         0, 0, 0, 0, cz.green.event.ResizePoint.BOTTOM
                         | cz.green.event.ResizePoint.RIGHT);
                 ((EntityConstruct) getOwner()).resizeEntity(new ResizeEvent(0, 0, 0, 0, rr, null));
-                ((PaintableManager) manager).repaintItem(this);
+                (manager).repaintItem(this);
             }
         }
         if (e.getPropertyName().equals("primary")) {
@@ -785,7 +784,7 @@ public class Atribute extends ConceptualObject {
             } catch (ItemNotInsideManagerException ex) {
             }
             b = b.union(getBounds());
-            ((PaintableManager) manager).repaintRectangle(b.x, b.y, b.width, b.height);
+            (manager).repaintRectangle(b.x, b.y, b.width, b.height);
             if (ACTUAL_NOTATION == UML || ACTUAL_NOTATION == BINARY) {
                 if (getOwner() instanceof EntityConstruct) {
                     cz.green.event.ResizeRectangle rr = new cz.green.event.ResizeRectangle(
@@ -797,7 +796,7 @@ public class Atribute extends ConceptualObject {
         } else {
             //jinak ho prekresli
             java.awt.Rectangle b = getBounds();
-            ((PaintableManager) manager).repaintItem(this);
+            (manager).repaintItem(this);
         }
     }
 
@@ -850,7 +849,7 @@ public class Atribute extends ConceptualObject {
             try {
                 Connection c = new ConnectionLine(manager, this, cc);
                 ((ConnectionManager) manager).addConnection(c);
-                ((PaintableManager) manager).repaintItem(c);
+                (manager).repaintItem(c);
             } catch (ImpossibleNegativeValueException e) {
             }
         }
