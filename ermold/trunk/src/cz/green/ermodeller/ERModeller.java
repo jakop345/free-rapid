@@ -1,6 +1,7 @@
 package cz.green.ermodeller;
 
 import cz.green.ermodeller.dialogs.AboutDialog;
+import cz.green.ermodeller.dialogs.ChangeNotationDialog;
 import cz.green.ermodeller.dialogs.OptionsDialog;
 import cz.green.ermodeller.interfaces.FontManager;
 import cz.green.event.*;
@@ -488,7 +489,7 @@ public class ERModeller extends JFrame implements
      *
      * @see Container
      */
-    Container getPlace() {
+    public Container getPlace() {
         if (place == null) {
             place = new Container(2500, 2500);
             place.setName("Place");
