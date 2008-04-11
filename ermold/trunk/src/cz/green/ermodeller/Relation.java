@@ -1,6 +1,11 @@
 package cz.green.ermodeller;
 
 import cz.green.event.*;
+import cz.green.event.exceptions.ImpossibleNegativeValueException;
+import cz.green.event.exceptions.ItemNotInsideManagerException;
+import cz.green.event.interfaces.Item;
+import cz.green.event.interfaces.PaintableManager;
+import cz.green.event.interfaces.Manager;
 import cz.green.eventtool.ConnectableWindow;
 import cz.green.eventtool.Connection;
 import cz.green.eventtool.ConnectionLine;
@@ -38,9 +43,9 @@ public class Relation extends ConceptualConstruct {
      *          Thrown by inherited constructor.
      * @throws <code>cz.green.event.ImpossibleNegativeValueException</code>
      *          Thrown by inherited constructor.
-     * @see ConceptualConstruct#ConceptualConstruct(cz.green.event.Manager, int, int, int, int)
+     * @see ConceptualConstruct#ConceptualConstruct(cz.green.event.interfaces.Manager , int, int, int, int)
      */
-    protected Relation(cz.omnicom.ermodeller.conceptual.Relation rel, cz.green.event.Manager manager, int left, int top) throws NullPointerException, cz.green.event.ImpossibleNegativeValueException {
+    protected Relation(cz.omnicom.ermodeller.conceptual.Relation rel, Manager manager, int left, int top) throws NullPointerException, ImpossibleNegativeValueException {
         super(manager, left, top, 0, 0);
         rel.addPropertyChangeListener(this);
         String name = (model = rel).getName();
@@ -116,7 +121,7 @@ public class Relation extends ConceptualConstruct {
      * @param top     The y coordinate of the left top point of the new cardinality.
      * @return The new cradinality.
      */
-    public Cardinality createCardinality(Entity ent, cz.green.event.Manager manager, int left, int top) {
+    public Cardinality createCardinality(Entity ent, Manager manager, int left, int top) {
         Cardinality car;
         try {
             //creates new model - cardinality
@@ -148,11 +153,11 @@ public class Relation extends ConceptualConstruct {
             //connects it to the relation
             Connection conn = new ConnectionLine(manager, car, this);
             ((ConnectionManager) manager).addConnection(conn);
-            ((cz.green.event.PaintableManager) manager).repaintItem(conn);
+            ((PaintableManager) manager).repaintItem(conn);
             //connects it to the entity
             conn = new ConnectionLine(manager, car, ent);
             ((ConnectionManager) manager).addConnection(conn);
-            ((cz.green.event.PaintableManager) manager).repaintItem(conn);
+            ((PaintableManager) manager).repaintItem(conn);
             return car;
         } catch (Throwable x) {
             ShowException d = new ShowException(null, "Error", x, true);
@@ -161,7 +166,7 @@ public class Relation extends ConceptualConstruct {
         return car;
     }
 
-    /*public Cardinality createCardinality(Entity ent, cz.green.event.Manager manager, int left, int top, boolean toTheMiddle) throws ItemNotInsideManagerException {
+    /*public Cardinality createCardinality(Entity ent, cz.green.event.interfaces.Manager manager, int left, int top, boolean toTheMiddle) throws ItemNotInsideManagerException {
         Cardinality car = createCardinality(ent, manager, left, top);
         car.move(-car.getBounds().width/2, -car.getBounds().height/2, false);
         return null;
@@ -185,7 +190,7 @@ public class Relation extends ConceptualConstruct {
         addMenuItem(menu, "Decompose", "img/mDRelation.gif", this, "decompose", event, cz.green.event.CoordinateEvent.class);
         //addMenuItem(menu, "Compose with relation", "mCompEntity.gif", event.getComponent(), "composingRelation", this, cz.green.ermodeller.Relation.class);
         if (ACTUAL_NOTATION == CHEN)
-            addMenuItem(menu, "Compose with", "img/mCompEntity.gif", event.getComponent(), "removing", this, cz.green.event.Item.class);
+            addMenuItem(menu, "Compose with", "img/mCompEntity.gif", event.getComponent(), "removing", this, Item.class);
         if (ACTUAL_NOTATION == CHEN)
             addMenuItem(menu, "Readjust size", "img/mReadjustSizeRel.gif", this, "minimizeSize", event, cz.green.event.CoordinateEvent.class);
         return menu;
@@ -209,7 +214,7 @@ public class Relation extends ConceptualConstruct {
      * @param top     The y coordinate of the left top point of the new relation.
      * @return The new created relation.
      */
-    static public Relation createRelation(cz.omnicom.ermodeller.conceptual.Schema schema, cz.green.event.Manager manager, int left, int right) {
+    static public Relation createRelation(cz.omnicom.ermodeller.conceptual.Schema schema, Manager manager, int left, int right) {
         try {
             //creates the new DGroup instance
             DGroup group = new DGroup(manager, left, right, 0, 0);
@@ -236,7 +241,7 @@ public class Relation extends ConceptualConstruct {
      * @param top     The y coordinate of the left top point of the new relation.
      * @return The new created relation.
      */
-    static public Relation createRelation(cz.omnicom.ermodeller.conceptual.Schema schema, cz.green.event.Manager manager, int left, int top, int width, int height) {
+    static public Relation createRelation(cz.omnicom.ermodeller.conceptual.Schema schema, Manager manager, int left, int top, int width, int height) {
         Relation rel;
         rel = createRelation(schema, manager, left, top);
         java.awt.Rectangle r = rel.getBounds();
@@ -282,7 +287,7 @@ public class Relation extends ConceptualConstruct {
     public void decompose(cz.green.event.CoordinateEvent event) {
 //	if (!decomposable()) return;
 
-        cz.green.event.Manager man = ((Container) event.getComponent()).getDesktop();
+        Manager man = ((Container) event.getComponent()).getDesktop();
         try {
             Entity ent = transformToEntity(man);
             boolean create = false;
@@ -429,7 +434,7 @@ public class Relation extends ConceptualConstruct {
     public void handleDragOverEvent(DragOverEvent event) {
         if (selected && event.getAdd())
             return;
-        cz.green.event.Item item = event.getItem();
+        Item item = event.getItem();
         if (item instanceof Entity) {
             if (event.getAdd()) {
                 event.getComponent().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -448,7 +453,7 @@ public class Relation extends ConceptualConstruct {
     public void handleAddConnectionEvent(AddConnectionEvent event) throws ItemNotInsideManagerException {
         if (selected && event.getAdd())
             return;
-        cz.green.event.Item item = event.getItem();
+        Item item = event.getItem();
         if (item instanceof Entity) {
             String name = new String();
             if (ACTUAL_NOTATION != ConceptualConstruct.CHEN) {
@@ -485,7 +490,7 @@ public class Relation extends ConceptualConstruct {
     public void handleDropAboveEvent(DropAboveEvent event) {
         if (selected && event.getAdd())
             return;
-        cz.green.event.Item item = event.getItem();
+        Item item = event.getItem();
         if (item instanceof Entity) {
             if (event.getAdd()) {
                 Entity ent = (Entity) item;
@@ -598,7 +603,7 @@ public class Relation extends ConceptualConstruct {
     /**
      * Overrides the method because has different shape.
      *
-     * @see cz.green.event.Item#isIn(int, int)
+     * @see cz.green.event.interfaces.Item#isIn(int, int)
      */
     public boolean isIn(int x, int y) {
         if (super.isIn(x, y)) {
@@ -711,7 +716,7 @@ public class Relation extends ConceptualConstruct {
                         0, 0, 0, 0, cz.green.event.ResizePoint.BOTTOM
                         | cz.green.event.ResizePoint.RIGHT);
                 this.resizeRelation(new ResizeEvent(0, 0, 0, 0, rr, null));
-                ((cz.green.event.PaintableManager) manager).repaintRectangle(r.x,
+                ((PaintableManager) manager).repaintRectangle(r.x,
                         r.y, r.width, r.height);
             }
             return;
@@ -784,7 +789,7 @@ public class Relation extends ConceptualConstruct {
      *
      * @param event Useful for sending the remove event to some objects.
      */
-    protected Entity transformToEntity(cz.green.event.Manager man) {
+    protected Entity transformToEntity(Manager man) {
         int[][] r = getRect();
         Entity ent = Entity.createEntity(model.getSchema(), man, r[0][0], r[1][0], null);
         ((cz.omnicom.ermodeller.conceptual.Entity) ent.getModel()).setName(model.getName());

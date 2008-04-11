@@ -1,5 +1,7 @@
 package cz.green.event;
 
+import cz.green.event.interfaces.Item;
+
 /**
  * This event is send to the item when other item is dragging over it. Carry information
  * about the dragging item and whether this event is in add or remove event.
@@ -11,7 +13,7 @@ public class AddConnectionEvent extends cz.green.event.CoordinateEvent {
     /**
      * The item dragging over receiver of the event
      */
-    protected cz.green.event.Item item = null;
+    protected Item item = null;
     /**
      * The mode of this event
      */
@@ -24,7 +26,7 @@ public class AddConnectionEvent extends cz.green.event.CoordinateEvent {
      * @param item The dragging item over
      * @see cz.green.event.CoordinateEvent#CoordinateEvent(int, int, java.awt.Component)
      */
-    public AddConnectionEvent(int x, int y, cz.green.event.Item item, java.awt.Component comp) {
+    public AddConnectionEvent(int x, int y, Item item, java.awt.Component comp) {
         super(x, y, comp);
         this.item = item;
     }
@@ -37,7 +39,7 @@ public class AddConnectionEvent extends cz.green.event.CoordinateEvent {
      * @param add  Determines the regime of the event - if <ccode>tru</code> then the regime is adding.
      * @see cz.green.event.CoordinateEvent#CoordinateEvent(int, int, java.awt.Component)
      */
-    public AddConnectionEvent(int x, int y, cz.green.event.Item item, java.awt.Component comp, boolean add) {
+    public AddConnectionEvent(int x, int y, Item item, java.awt.Component comp, boolean add) {
         this(x, y, item, comp);
         this.add = add;
     }
@@ -52,7 +54,7 @@ public class AddConnectionEvent extends cz.green.event.CoordinateEvent {
      * @param item  The dragging item over
      * @see cz.green.event.CoordinateEvent#CoordinateEvent(int, int, java.awt.Component)
      */
-    public AddConnectionEvent(cz.green.event.CoordinateEvent event, cz.green.event.Item item) {
+    public AddConnectionEvent(cz.green.event.CoordinateEvent event, Item item) {
         this(event.getX(), event.getY(), item, event.getComponent());
     }
 
@@ -67,7 +69,7 @@ public class AddConnectionEvent extends cz.green.event.CoordinateEvent {
      * @param add   Determines the regime of the event - if <ccode>tru</code> then the regime is adding.
      * @see cz.green.event.CoordinateEvent#CoordinateEvent(int, int, java.awt.Component)
      */
-    public AddConnectionEvent(cz.green.event.CoordinateEvent event, cz.green.event.Item item, boolean add) {
+    public AddConnectionEvent(cz.green.event.CoordinateEvent event, Item item, boolean add) {
         this(event.getX(), event.getY(), item, event.getComponent(), add);
     }
 
@@ -85,7 +87,7 @@ public class AddConnectionEvent extends cz.green.event.CoordinateEvent {
      *
      * @return The dragging item.
      */
-    public cz.green.event.Item getItem() {
+    public Item getItem() {
         return item;
     }
 
@@ -103,7 +105,7 @@ public class AddConnectionEvent extends cz.green.event.CoordinateEvent {
      *
      * @param item The dragging item.
      */
-    public void setItem(cz.green.event.Item item) {
+    public void setItem(Item item) {
         this.item = item;
     }
 

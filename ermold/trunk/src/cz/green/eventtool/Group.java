@@ -1,5 +1,8 @@
 package cz.green.eventtool;
 
+import cz.green.event.interfaces.Manager;
+import cz.green.event.exceptions.ImpossibleNegativeValueException;
+
 /**
  * This class has the same functionality as predecessor. Adds only one methods, which is caused by implementing the
  * interface <code>Printable</code>. Implementing this interface caused the possibility to be printed.
@@ -17,9 +20,9 @@ public class Group extends cz.green.event.Group implements cz.green.eventtool.Pr
     /**
      * Calls the derived constructor.
      *
-     * @see cz.green.event.Group#Group(cz.green.event.Manager, int, int, int, int)
+     * @see cz.green.event.Group#Group(cz.green.event.interfaces.Manager , int, int, int, int)
      */
-    public Group(cz.green.event.Manager manager, int left, int top, int width, int height) throws NullPointerException, cz.green.event.ImpossibleNegativeValueException {
+    public Group(Manager manager, int left, int top, int width, int height) throws NullPointerException, ImpossibleNegativeValueException {
         super(manager, left, top, width, height);
     }
 

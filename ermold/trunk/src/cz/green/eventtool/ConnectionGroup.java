@@ -1,5 +1,11 @@
 package cz.green.eventtool;
 
+import cz.green.event.interfaces.PaintableItem;
+import cz.green.event.interfaces.Item;
+import cz.green.event.interfaces.Manager;
+import cz.green.event.exceptions.ItemNotInsideManagerException;
+import cz.green.event.exceptions.ImpossibleNegativeValueException;
+
 /**
  * This group holds connections and all others elements that don't want to handle
  * event. According to the event fall mechanism it is not sets as reciver the events.
@@ -15,9 +21,9 @@ public class ConnectionGroup extends Group {
     /**
      * Simply calls only inherited constructor.
      *
-     * @see cz.green.eventtool.Group#Group(cz.green.event.Manager, int, int, int, int)
+     * @see cz.green.eventtool.Group#Group(cz.green.event.interfaces.Manager , int, int, int, int)
      */
-    public ConnectionGroup(cz.green.event.Manager manager, int left, int top, int width, int height) throws NullPointerException, cz.green.event.ImpossibleNegativeValueException {
+    public ConnectionGroup(Manager manager, int left, int top, int width, int height) throws NullPointerException, ImpossibleNegativeValueException {
         super(manager, left, top, width, height);
     }
 
@@ -25,7 +31,7 @@ public class ConnectionGroup extends Group {
      * Adds <code>item</code> to the top of this group (manager). Doesn't detect the overlapping this group
      * by added window.
      */
-    public void add(cz.green.event.Item item) throws cz.green.event.ItemNotInsideManagerException {
+    public void add(Item item) throws ItemNotInsideManagerException {
         int size = wins.size();
         item.manager(this);
         wins.add(size, item);
@@ -52,7 +58,7 @@ public class ConnectionGroup extends Group {
         //paint all included element
         java.util.Enumeration e = wins.elements();
         while (e.hasMoreElements()) {
-            ((cz.green.event.PaintableItem) e.nextElement()).paint(g);
+            ((PaintableItem) e.nextElement()).paint(g);
         }
     }
 
@@ -63,7 +69,7 @@ public class ConnectionGroup extends Group {
         //paint all included element
         java.util.Enumeration e = wins.elements();
         while (e.hasMoreElements()) {
-            ((cz.green.event.PaintableItem) e.nextElement()).paintFast(g);
+            ((PaintableItem) e.nextElement()).paintFast(g);
         }
     }
 

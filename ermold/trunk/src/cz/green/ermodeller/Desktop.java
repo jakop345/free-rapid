@@ -1,6 +1,9 @@
 package cz.green.ermodeller;
 
 import cz.green.event.*;
+import cz.green.event.exceptions.ImpossibleNegativeValueException;
+import cz.green.event.interfaces.Item;
+import cz.green.event.interfaces.PaintableItem;
 import cz.green.eventtool.Connection;
 import cz.green.eventtool.PropertyListDialog;
 import cz.green.util.ActionAdapter;
@@ -34,7 +37,7 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
      */
     public Desktop(cz.green.event.Container place, int left, int top,
                    int width, int height)
-            throws cz.green.event.ImpossibleNegativeValueException {
+            throws ImpossibleNegativeValueException {
         super(place, left, top, width, height);
         model = new cz.omnicom.ermodeller.conceptual.Schema();
         pcs = new java.beans.PropertyChangeSupport(this);
@@ -66,7 +69,7 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
         Entity e1 = getEntity(eM1.getID()), e2 = getEntity(eM2.getID());
 
         e2.composeEntity(e1, new cz.green.ermodeller.DragOverEvent(0, 0,
-                (cz.green.event.Item) e1, getPaintPlace()));
+                (Item) e1, getPaintPlace()));
     }
 
     /**
@@ -106,7 +109,7 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
         Relation r1 = getRelation(rM1.getID()), r2 = getRelation(rM2.getID());
 
         r2.composeRelation(r1, new cz.green.ermodeller.DragOverEvent(0, 0,
-                (cz.green.event.Item) r1, getPaintPlace()));
+                (Item) r1, getPaintPlace()));
     }
 
     /**
@@ -701,8 +704,8 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
      *
      * @param <code>event</code> Event with all needed values.
      * @see SelectItemEvent
-     * @see PaintableManager#selectItem(cz.green.event.SelectableItem, boolean)
-     * @see Manager#changeZOrder(cz.green.event.Item, boolean)
+     * @see cz.green.event.interfaces.PaintableManager#selectItem(cz.green.event.interfaces.SelectableItem , boolean)
+     * @see cz.green.event.interfaces.Manager#changeZOrder(cz.green.event.interfaces.Item , boolean)
      */
     public void handleSelectItemEvent(cz.green.event.SelectItemEvent event) {
         super.handleSelectItemEvent(event);
@@ -803,7 +806,7 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
      *
      * @see #connections
      */
-    public void repaintItem(cz.green.event.PaintableItem item) {
+    public void repaintItem(PaintableItem item) {
         super.repaintItem(item);
         if (connections != null)
             connections.paint(getPaintPlace().getGraphics());

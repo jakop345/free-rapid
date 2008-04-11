@@ -1,4 +1,4 @@
-package cz.green.event;
+package cz.green.event.interfaces;
 
 /**
  * This is the superclass for all event handled by this event fall mechanism.

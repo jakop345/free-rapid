@@ -1,5 +1,11 @@
 package cz.green.eventtool;
 
+import cz.green.event.interfaces.Item;
+import cz.green.event.interfaces.PaintableManager;
+import cz.green.event.exceptions.ValueOutOfRangeException;
+import cz.green.event.exceptions.ImpossibleNegativeValueException;
+import cz.green.event.exceptions.ItemNotInsideManagerException;
+
 /**
  * This class has the same functionality as predecessor. Adds only one methods, which is caused by implementing the
  * interface <code>Printable</code>. Implementing this interface caused the possibility to be printed.
@@ -15,7 +21,7 @@ public class Desktop extends cz.green.event.Desktop implements ConnectionManager
      *
      * @see cz.green.event.Desktop#Desktop(cz.green.event.Container, int, int, int, int)
      */
-    public Desktop(cz.green.event.Container place, int left, int top, int width, int height) throws cz.green.event.ImpossibleNegativeValueException {
+    public Desktop(cz.green.event.Container place, int left, int top, int width, int height) throws ImpossibleNegativeValueException {
         super(place, left, top, width, height);
     }
 
@@ -28,14 +34,14 @@ public class Desktop extends cz.green.event.Desktop implements ConnectionManager
         if (connections == null) {
             try {
                 connections = new ConnectionGroup(manager, 0, 0, 0, 0);
-            } catch (cz.green.event.ImpossibleNegativeValueException e) {
+            } catch (ImpossibleNegativeValueException e) {
                 //when execution is here -> it is very bad
                 return;
             }
         }
         try {
             connections.add(conn);
-        } catch (cz.green.event.ItemNotInsideManagerException e) {
+        } catch (ItemNotInsideManagerException e) {
         }
     }
 
@@ -59,14 +65,14 @@ public class Desktop extends cz.green.event.Desktop implements ConnectionManager
         if (wins.size() <= 0) {
             return new java.awt.Rectangle((int) (r[0][0] / scale), (int) (r[1][0] / scale), (int) ((r[0][0] + 1) / scale), (int) ((r[1][0] + 1) / scale));
         }
-        cz.green.event.Item i = (cz.green.event.Item) wins.last();
+        Item i = (Item) wins.last();
         int right = rect[0][1], bottom = rect[1][1];
         try {
             right = i.mostRight(0);
             bottom = i.mostRight(1);
-        } catch (cz.green.event.ValueOutOfRangeException e) {
+        } catch (ValueOutOfRangeException e) {
         }
-        float scale = ((cz.green.event.PaintableManager) manager).getScale();
+        float scale = ((PaintableManager) manager).getScale();
         return new java.awt.Rectangle((int) (r[0][0] / scale), (int) (r[1][0] / scale), (int) ((right - r[0][0]) / scale), (int) ((bottom - r[1][0]) / scale));
     }
 

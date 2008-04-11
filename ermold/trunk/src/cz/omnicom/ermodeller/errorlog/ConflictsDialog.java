@@ -94,7 +94,7 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
                 Object o = getComposeModel().getSelectedItem();
                 if (conceptualObject instanceof cz.omnicom.ermodeller.conceptual.Entity) {
                     ent = desktop.getEntity(((cz.omnicom.ermodeller.conceptual.ConceptualConstruct) o).getID());
-                    //ent.composeEntity(desktop.getEntity(i),new cz.green.ermodeller.DragOverEvent(0,0,(cz.green.event.Item)desktop.getEntity(i),desktop.getPaintPlace()));
+                    //ent.composeEntity(desktop.getEntity(i),new cz.green.ermodeller.DragOverEvent(0,0,(cz.green.event.interfaces.Item)desktop.getEntity(i),desktop.getPaintPlace()));
                     desktop.composeEntity((cz.omnicom.ermodeller.conceptual.Entity) conceptualObject, (cz.omnicom.ermodeller.conceptual.Entity) o);
                 } else {
                     rel = desktop.getRelation(((cz.omnicom.ermodeller.conceptual.ConceptualConstruct) o).getID());

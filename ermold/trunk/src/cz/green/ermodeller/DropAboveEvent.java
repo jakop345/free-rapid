@@ -1,5 +1,7 @@
 package cz.green.ermodeller;
 
+import cz.green.event.interfaces.Item;
+
 /**
  * Has the same meaning as <code>DragOverEvent</code> but informs about dropping the item above
  * the receiver.
@@ -16,36 +18,36 @@ public class DropAboveEvent extends DragOverEvent {
     /**
      * Same as inherited one.
      *
-     * @see DragOverEvent#DragOverEvent(int, int, cz.green.event.Item, java.awt.Component)
+     * @see DragOverEvent#DragOverEvent(int, int, cz.green.event.interfaces.Item , java.awt.Component)
      */
-    public DropAboveEvent(int x, int y, cz.green.event.Item item, java.awt.Component comp) {
+    public DropAboveEvent(int x, int y, Item item, java.awt.Component comp) {
         super(x, y, item, comp);
     }
 
     /**
      * Same as inherited one.
      *
-     * @see DragOverEvent#DragOverEvent(int, int, cz.green.event.Item, java.awt.Component, boolean)
+     * @see DragOverEvent#DragOverEvent(int, int, cz.green.event.interfaces.Item , java.awt.Component, boolean)
      */
-    public DropAboveEvent(int x, int y, cz.green.event.Item item, java.awt.Component comp, boolean add) {
+    public DropAboveEvent(int x, int y, Item item, java.awt.Component comp, boolean add) {
         super(x, y, item, comp, add);
     }
 
     /**
      * Same as inherited one.
      *
-     * @see DragOverEvent#DragOverEvent(cz.green.event.CoordinateEvent, cz.green.event.Item)
+     * @see DragOverEvent#DragOverEvent(cz.green.event.CoordinateEvent, cz.green.event.interfaces.Item)
      */
-    public DropAboveEvent(cz.green.event.CoordinateEvent event, cz.green.event.Item item) {
+    public DropAboveEvent(cz.green.event.CoordinateEvent event, Item item) {
         super(event, item);
     }
 
     /**
      * Same as inherited one.
      *
-     * @see DragOverEvent#DragOverEvent(cz.green.event.CoordinateEvent, cz.green.event.Item)
+     * @see DragOverEvent#DragOverEvent(cz.green.event.CoordinateEvent, cz.green.event.interfaces.Item)
      */
-    public DropAboveEvent(cz.green.event.CoordinateEvent event, cz.green.event.Item item, boolean add) {
+    public DropAboveEvent(cz.green.event.CoordinateEvent event, Item item, boolean add) {
         super(event, item, add);
     }
 

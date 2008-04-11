@@ -1,4 +1,6 @@
-package cz.green.event;
+package cz.green.event.interfaces;
+
+import cz.green.event.exceptions.ItemNotInsideManagerException;
 
 /**
  * This interface methods have to implement object, that woulds like to

@@ -1,12 +1,14 @@
 package cz.green.eventtool;
 
+import cz.green.event.interfaces.Item;
+
 /**
  * Interface for connections. The object that are connected to two instances of the interface
  * <code>Connectable</code>. Gives many important functions to the connectable windows.
  *
  * @see Connectable
  */
-public interface Connection extends cz.green.event.Item, cz.green.eventtool.Printable {
+public interface Connection extends Item, cz.green.eventtool.Printable {
     /**
      * Disconnects itself from connectable window and before it disconnects both
      * connectable windows from this connection using method <code>removeConnection</code>.

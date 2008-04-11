@@ -1,5 +1,9 @@
 package cz.green.eventtool;
 
+import cz.green.event.interfaces.PaintableManager;
+import cz.green.event.interfaces.Manager;
+import cz.green.event.exceptions.ImpossibleNegativeValueException;
+
 /**
  * Has the same functionalitz as ancestor, but adds one important thing. At the and (by first
  * connected window) paints the arrow.
@@ -25,9 +29,9 @@ public class ConnectionArrow extends ConnectionLine {
     /**
      * Same functionality as inhereted.
      *
-     * @see ConnectionLine#ConnectionLine(cz.green.event.Manager, cz.green.ermodeller.Connectable, cz.green.ermodeller.Connectable)
+     * @see ConnectionLine#ConnectionLine(cz.green.event.interfaces.Manager , cz.green.ermodeller.Connectable, cz.green.ermodeller.Connectable)
      */
-    public ConnectionArrow(cz.green.event.Manager manager, Connectable one, Connectable two) throws NullPointerException, cz.green.event.ImpossibleNegativeValueException {
+    public ConnectionArrow(Manager manager, Connectable one, Connectable two) throws NullPointerException, ImpossibleNegativeValueException {
         super(manager, one, two);
     }
 
@@ -64,7 +68,7 @@ public class ConnectionArrow extends ConnectionLine {
             arrow.xpoints[0] = borderOne.x;
             arrow.ypoints[0] = borderOne.y;
             double alfa = Math.atan((double) (borderOne.y - borderTwo.y) / ((double) (borderOne.x - borderTwo.x)));
-            float scale = ((cz.green.event.PaintableManager) manager).getScale();
+            float scale = ((PaintableManager) manager).getScale();
             if (borderOne.x < borderTwo.x)
                 alfa += Math.PI;
             alfa += Math.PI / 6;

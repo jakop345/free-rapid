@@ -1,4 +1,4 @@
-package cz.green.event;
+package cz.green.event.interfaces;
 
 /**
  * This interface determine the methods needed for manager of

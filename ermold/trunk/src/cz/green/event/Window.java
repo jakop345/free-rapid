@@ -3,6 +3,10 @@ package cz.green.event;
 import cz.green.util.BadDimensionException;
 import cz.green.util.IntervalMethods;
 import cz.green.util.IntervalMethodsException;
+import cz.green.event.interfaces.*;
+import cz.green.event.exceptions.ValueOutOfRangeException;
+import cz.green.event.exceptions.ItemNotInsideManagerException;
+import cz.green.event.exceptions.ImpossibleNegativeValueException;
 
 import java.awt.*;
 
@@ -120,7 +124,7 @@ public class Window implements Item, java.io.Serializable {
      * already built event tree.
      *
      * @param <code>item</code> The next <code>item</code> in the actual manager order.
-     * @see Item#countLinks(cz.green.event.Item)
+     * @see Item#countLinks(cz.green.event.interfaces.Item)
      */
     public void countLinks(Item item) {
         if (item == null) {
@@ -153,7 +157,7 @@ public class Window implements Item, java.io.Serializable {
      * @param <code>item</code> The next <code>item</code> in the actual manager order.
      * @param <code>to</code>   Specify which links have to be recount. If the link is equal to
      *                          <code>to</code> then is recaount.
-     * @see Item#countLinksTo(cz.green.event.Item, cz.green.event.Item)
+     * @see Item#countLinksTo(cz.green.event.interfaces.Item , cz.green.event.interfaces.Item)
      */
     public void countLinksTo(Item item, Item to) {
         if (item == null) {
@@ -256,7 +260,7 @@ public class Window implements Item, java.io.Serializable {
      * its manager for the scale and counts the bounds according to the actual scale.
      *
      * @return Rectangle, where this window situated is.
-     * @see PaintableItem#getBounds()
+     * @see cz.green.event.interfaces.PaintableItem#getBounds()
      * @see PaintableManager#getScale()
      */
     public Rectangle getBounds() {
@@ -288,7 +292,7 @@ public class Window implements Item, java.io.Serializable {
      * its manager for the scale and counts the bounds according to the actual scale.
      *
      * @return Rectangle, where this window situated is.
-     * @see PaintableItem#getBounds()
+     * @see cz.green.event.interfaces.PaintableItem#getBounds()
      * @see PaintableManager#getScale()
      */
     public Rectangle getRealBounds() {
@@ -351,7 +355,7 @@ public class Window implements Item, java.io.Serializable {
      * and the forces the reapinting.
      *
      * @param <code>event</code> Event with all needed values.
-     * @see Manager#changeZOrder(cz.green.event.Item, boolean)
+     * @see Manager#changeZOrder(cz.green.event.interfaces.Item , boolean)
      * @see ChangeZOrderEvent
      */
     public void handleChangeZOrderEvent(ChangeZOrderEvent event) {
@@ -434,7 +438,7 @@ public class Window implements Item, java.io.Serializable {
      * the rectangle, where the item was situated.
      *
      * @param <code>event</code> Cary no information.
-     * @see Manager#remove(cz.green.event.Item)
+     * @see Manager#remove(cz.green.event.interfaces.Item)
      */
     public void handleRemoveEvent(RemoveEvent event) {
         Rectangle r = getBounds();
@@ -451,7 +455,7 @@ public class Window implements Item, java.io.Serializable {
      * @param <code>event</code> The event.
      * @see ResizeEvent
      * @see ResizeEvent
-     * @see MovableItem
+     * @see cz.green.event.interfaces.MovableItem
      */
     public void handleResizeEvent(ResizeEvent event) {
         if (paintedFast) {
@@ -505,8 +509,8 @@ public class Window implements Item, java.io.Serializable {
      *
      * @param <code>event</code> Event with all needed values.
      * @see SelectItemEvent
-     * @see PaintableManager#selectItem(cz.green.event.SelectableItem, boolean)
-     * @see Manager#changeZOrder(cz.green.event.Item, boolean)
+     * @see PaintableManager#selectItem(cz.green.event.interfaces.SelectableItem , boolean)
+     * @see Manager#changeZOrder(cz.green.event.interfaces.Item , boolean)
      */
     public void handleSelectItemEvent(SelectItemEvent event) {
         if (!selectable)
@@ -525,7 +529,7 @@ public class Window implements Item, java.io.Serializable {
      *
      * @param <code>event</code> Event with all needed values.
      * @see SelectItemExEvent
-     * @see PaintableManager#selectItemEx(cz.green.event.SelectableItem, boolean)
+     * @see PaintableManager#selectItemEx(cz.green.event.interfaces.SelectableItem , boolean)
      */
     public void handleSelectItemExEvent(SelectItemExEvent event) {
         ((PaintableManager) manager).selectItemEx(this, event.getAddItem());
@@ -542,7 +546,7 @@ public class Window implements Item, java.io.Serializable {
      *         If everything finish unrubly than returns <code>true</code>.
      *         Otherways, returns <code>false</code>.
      */
-    public boolean invokeEventHandler(Event event) {
+    public boolean invokeEventHandler(cz.green.event.interfaces.Event event) {
         java.lang.reflect.Method handler = null;
         Class[] parameterTypes = new Class[1];
         Object[] parameters = new Object[1];
@@ -607,7 +611,7 @@ public class Window implements Item, java.io.Serializable {
      * for item that is situated in <code>where</code> according to the
      * <code>interval</code>.
      *
-     * @see cz.green.event.Item#itemIn(int, int[], int, int)
+     * @see cz.green.event.interfaces.Item#itemIn(int, int[], int, int)
      */
     public Item itemIn(int dimension, int[] interval, int where, int myPosition) throws cz.green.util.BadDimensionException, ValueOutOfRangeException {
         Item item = this;
@@ -668,7 +672,7 @@ public class Window implements Item, java.io.Serializable {
      * Moves item by specified <code>dx</code> (<code>dy</code>)
      * in horizontal (vertical) direction.
      *
-     * @see MovableItem#managerMoves(int, int, boolean)
+     * @see cz.green.event.interfaces.MovableItem#managerMoves(int, int, boolean)
      */
     public void managerMoves(int dx, int dy, boolean recount) {
         try {
@@ -770,7 +774,7 @@ public class Window implements Item, java.io.Serializable {
     /**
      * This method paints this window.
      *
-     * @see PaintableItem#paint(java.awt.Graphics)
+     * @see cz.green.event.interfaces.PaintableItem#paint(java.awt.Graphics)
      */
     public void paint(java.awt.Graphics g) {
         //paint item

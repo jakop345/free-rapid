@@ -1,4 +1,4 @@
-package cz.green.event;
+package cz.green.event.exceptions;
 
 /**
  * Super class all exceptions thrown by classes from this package.

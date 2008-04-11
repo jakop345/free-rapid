@@ -1,4 +1,4 @@
-package cz.green.event;
+package cz.green.event.exceptions;
 
 /**
  * This class informs about situation, that somebody tries to add

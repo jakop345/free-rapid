@@ -4,6 +4,9 @@ import cz.green.eventtool.ConnectableWindow;
 import cz.green.eventtool.PropertyListDialog;
 import cz.green.util.ActionAdapter;
 import cz.green.util.ParamActionAdapter;
+import cz.green.event.interfaces.PaintableManager;
+import cz.green.event.interfaces.Manager;
+import cz.green.event.exceptions.ImpossibleNegativeValueException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,9 +22,9 @@ public class ConceptualObject extends ConnectableWindow implements ViewControlle
     /**
      * The same functionality as inhereted constructor.
      *
-     * @see ConnectableWindow#ConnectableWindow(cz.green.event.Manager,int,int,int,int)
+     * @see ConnectableWindow#ConnectableWindow(cz.green.event.interfaces.Manager ,int,int,int,int)
      */
-    public ConceptualObject(cz.green.event.Manager manager, int left, int top, int width, int height) throws NullPointerException, cz.green.event.ImpossibleNegativeValueException {
+    public ConceptualObject(Manager manager, int left, int top, int width, int height) throws NullPointerException, ImpossibleNegativeValueException {
         super(manager, left, top, width, height);
     }
 
@@ -120,7 +123,7 @@ public class ConceptualObject extends ConnectableWindow implements ViewControlle
      * @param cc The second conceptual construct (first is <code>this</code>).
      * @return The center point between <code>this</code> and <code>cc</code>
      * @see Relation#decompose(cz.green.event.CoordinateEvent)
-     * @see Entity#decompose(cz.green.ermodeller.Entity,cz.green.event.Manager)
+     * @see Entity#decompose(cz.green.ermodeller.Entity, cz.green.event.interfaces.Manager)
      */
     protected java.awt.Point getCenter(ConceptualObject co) {
         int[][] r1 = getRect(), r2 = co.getRect();
@@ -231,8 +234,8 @@ public class ConceptualObject extends ConnectableWindow implements ViewControlle
      *
      * @param <code>event</code> Event with all needed values.
      * @see SelectItemEvent
-     * @see PaintableManager#selectItem(cz.green.event.SelectableItem,boolean)
-     * @see Manager#changeZOrder(cz.green.event.Item,boolean)
+     * @see PaintableManager#selectItem(cz.green.event.interfaces.SelectableItem ,boolean)
+     * @see Manager#changeZOrder(cz.green.event.interfaces.Item ,boolean)
      */
     public void handleSelectItemEvent(cz.green.event.SelectItemEvent event) {
         super.handleSelectItemEvent(event);
@@ -257,7 +260,7 @@ public class ConceptualObject extends ConnectableWindow implements ViewControlle
      */
     public void propertyChange(java.beans.PropertyChangeEvent e) {
         java.awt.Rectangle b = getBounds();
-        ((cz.green.event.PaintableManager) manager).repaintRectangle(b.x, b.y, b.width, b.height);
+        ((PaintableManager) manager).repaintRectangle(b.x, b.y, b.width, b.height);
     }
 
     /**

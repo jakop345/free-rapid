@@ -1,4 +1,6 @@
-package cz.green.event;
+package cz.green.event.interfaces;
+
+import cz.green.event.exceptions.ValueOutOfRangeException;
 
 /**
  * This interface methods have to implement all object in the event tree.

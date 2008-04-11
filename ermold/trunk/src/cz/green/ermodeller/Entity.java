@@ -2,6 +2,12 @@ package cz.green.ermodeller;
 
 
 import cz.green.event.*;
+import cz.green.event.exceptions.ImpossibleNegativeValueException;
+import cz.green.event.exceptions.ItemNotInsideManagerException;
+import cz.green.event.interfaces.Item;
+import cz.green.event.interfaces.Invokable;
+import cz.green.event.interfaces.PaintableManager;
+import cz.green.event.interfaces.Manager;
 import cz.green.eventtool.Connection;
 import cz.green.eventtool.ConnectionLine;
 import cz.green.eventtool.ConnectionManager;
@@ -85,7 +91,7 @@ public class Entity extends ConceptualConstruct {
      */
     protected int PKwidth = 0;
 
-    protected cz.green.event.Manager EntManager;
+    protected Manager EntManager;
 
 
     /**
@@ -99,12 +105,12 @@ public class Entity extends ConceptualConstruct {
      *          Thrown by inherited constructor.
      * @throws <code>cz.green.event.ImpossibleNegativeValueException</code>
      *          Thrown by inherited constructor.
-     * @see ConceptualConstruct#ConceptualConstruct(cz.green.event.Manager,int,int,int,int)
+     * @see ConceptualConstruct#ConceptualConstruct(cz.green.event.interfaces.Manager ,int,int,int,int)
      */
     protected Entity(cz.omnicom.ermodeller.conceptual.Entity ent,
-                     cz.green.event.Manager manager, int left, int top)
+                     Manager manager, int left, int top)
             throws NullPointerException,
-            cz.green.event.ImpossibleNegativeValueException {
+            ImpossibleNegativeValueException {
         super(manager, left, top, 0, 0);
         ent.addPropertyChangeListener(this);
         String name = (model = ent).getName();
@@ -518,7 +524,7 @@ public class Entity extends ConceptualConstruct {
      */
     static public Entity createEntity(
             cz.omnicom.ermodeller.conceptual.Schema schema,
-            cz.green.event.Manager manager, int left, int top, int width, int height, Entity old) {
+            Manager manager, int left, int top, int width, int height, Entity old) {
         Entity ent;
         ent = createEntity(schema, manager, left, top, old);
         java.awt.Rectangle r = ent.getBounds();
@@ -545,7 +551,7 @@ public class Entity extends ConceptualConstruct {
      */
     static public Entity createEntity(
             cz.omnicom.ermodeller.conceptual.Schema schema,
-            cz.green.event.Manager manager, int left, int top, Entity old) {
+            Manager manager, int left, int top, Entity old) {
         try {
             // creates the new DGroup instance
             DGroup group = new DGroup(manager, left, top, 0, 0);
@@ -613,7 +619,7 @@ public class Entity extends ConceptualConstruct {
                 this, "decomposeUsingRelation", event.getComponent(),
                 Container.class);
         addMenuItem(menu, "Compose entity with ...", "img/mCompEntity.gif", event
-                .getComponent(), "removing", this, cz.green.event.Item.class);
+                .getComponent(), "removing", this, Item.class);
         // addMenuItem(menu, "Compose with entity", "mCompEntity.gif",
         // event.getComponent(), "composingEntity", this,
         // cz.green.ermodeller.Entity.class);
@@ -667,11 +673,11 @@ public class Entity extends ConceptualConstruct {
             // create unique key
             UniqueKey uq = new UniqueKey(cUq, this, manager, left, top);
             manager.add(uq);
-            ((cz.green.event.PaintableManager) manager).repaintItem(uq);
+            ((PaintableManager) manager).repaintItem(uq);
             // create the connection to the
             Connection conn = new ConnectionLine(manager, uq, this);
             ((ConnectionManager) manager).addConnection(conn);
-            ((cz.green.event.PaintableManager) manager).repaintItem(conn);
+            ((PaintableManager) manager).repaintItem(conn);
             return uq;
         } catch (Throwable x) {
             ShowException d = new ShowException(null, "Error", x, true);
@@ -686,7 +692,7 @@ public class Entity extends ConceptualConstruct {
      * @param ent     The new entity.
      * @param manager The desktop.
      */
-    protected void decompose(Entity ent, cz.green.event.Manager man) {
+    protected void decompose(Entity ent, Manager man) {
         java.awt.Point p = getAbsoluteCenter(ent);
         if (decomposeAsRelation) {
             try {
@@ -797,7 +803,7 @@ public class Entity extends ConceptualConstruct {
     public void handleDragOverEvent(DragOverEvent event) {
         if (selected && event.getAdd())
             return;
-        cz.green.event.Item item = event.getItem();
+        Item item = event.getItem();
         if (item instanceof Entity) {
             if (event.getAdd()) {
                 if ((item != this)
@@ -844,7 +850,7 @@ public class Entity extends ConceptualConstruct {
 
     public void handleAddIdentificationDependencyEvent(cz.green.event.AddIdentificationDependencyEvent event) {
         float scale = getManager().getScale();
-        cz.green.event.Item item = event.getItem();
+        Item item = event.getItem();
         java.awt.Point p = getAbsoluteCenter((Entity) item);
         StrongAddiction sa = StrongAddiction.createStrongAddiction(this, (Entity) item, ((Entity) item).getManager(), (int) (p.x * scale), (int) (p.y * scale));
         sa.moveStrongAddiction(new ExMovingEvent((int) (p.x * scale), (int) (p.y * scale), 0, 0, null, false));
@@ -854,13 +860,13 @@ public class Entity extends ConceptualConstruct {
         if (selected && event.getAdd())
             return;
         float scale = getManager().getScale();
-        cz.green.event.Item item = event.getItem();
+        Item item = event.getItem();
         java.awt.Point p = getAbsoluteCenter((Entity) item);
         Cardinality car;
         if (item instanceof Entity) {
             if (item != this) {
-                cz.green.event.Manager man = ((Entity) item).getManager();
-                cz.green.event.Manager man2 = getManager();
+                Manager man = ((Entity) item).getManager();
+                Manager man2 = getManager();
                 Relation rel = Relation.createRelation(model.getSchema(), EntManager, (int) (p.x * scale), (int) (p.y * scale));
                 rel.handleMoveEvent(new MoveEvent(rel.getBounds().x, rel.getBounds().y, -rel.getBounds().width / 2, -rel.getBounds().height / 2, null));
                 p = ((Entity) item).getAbsoluteCenter(rel);
@@ -878,7 +884,7 @@ public class Entity extends ConceptualConstruct {
                     car.moveCardinality(new ExMovingEvent((int) (p.x * scale), (int) (p.y * scale), 0, 0, null, false));
                 }
             } else {
-                cz.green.event.Manager man = getManager();
+                Manager man = getManager();
                 Relation rel = Relation.createRelation(model.getSchema(), man, (int) ((p.x + SELFRELATIONDISTANCE) * scale), (int) ((p.y + SELFRELATIONDISTANCE) * scale));
                 if (ACTUAL_NOTATION == ConceptualConstruct.CHEN) {
                     car = rel.createCardinality((Entity) item, man, (int) ((p.x + SELFRELATIONDISTANCE) * scale) + rel.getBounds().width / 2, (int) (p.y * scale) + ((Entity) item).getBounds().height / 2);
@@ -900,7 +906,7 @@ public class Entity extends ConceptualConstruct {
         if (selected && event.getAdd())
             return;
         float scale = getManager().getScale();
-        cz.green.event.Item item = event.getItem();
+        Item item = event.getItem();
         if (item instanceof Relation) {
             Relation rel = (Relation) item;
             String name = new String();
@@ -931,7 +937,7 @@ public class Entity extends ConceptualConstruct {
     }
 
     public void handleAddAsISAChildEvent(cz.green.event.AddAsISAChildEvent event) {
-        cz.green.event.Item item = event.getItem();
+        Item item = event.getItem();
         if (item instanceof Entity) {
             if ((item != this) && ((ISAChilds == null) || (ISAChilds.indexOf(item) == -1))) {
                 addISAChild((Entity) item, event);
@@ -946,7 +952,7 @@ public class Entity extends ConceptualConstruct {
     public void handleDropAboveEvent(DropAboveEvent event) {
         if (selected && event.getAdd())
             return;
-        cz.green.event.Item item = event.getItem();
+        Item item = event.getItem();
         if (item instanceof Entity) {
             // entity over
             if (event.getAdd()) {
@@ -1315,7 +1321,7 @@ public class Entity extends ConceptualConstruct {
         final Stroke stroke = updateStrokeWithAliasing(g);
         //setDefaultSize(e, fm);
 
-        int diff = (int) (Entity.getDIFFERENCE() / ((cz.green.event.PaintableManager) getManager()).getScale());
+        int diff = (int) (Entity.getDIFFERENCE() / ((PaintableManager) getManager()).getScale());
         if (isSelected())
             g.setColor(getSelectedBackgroundColor());
         else
@@ -1376,7 +1382,7 @@ public class Entity extends ConceptualConstruct {
         java.awt.FontMetrics fm = g.getFontMetrics();
         String name = model.getName();
         java.awt.Rectangle r = getBounds();
-        int diff = (int) (Entity.getDIFFERENCE() / ((cz.green.event.PaintableManager) getManager()).getScale());
+        int diff = (int) (Entity.getDIFFERENCE() / ((PaintableManager) getManager()).getScale());
         g.setColor(getEntityForegroundColor());
         g.drawRect(r.x, r.y, r.width, r.height);
         switch (ACTUAL_NOTATION) {
@@ -1438,7 +1444,7 @@ public class Entity extends ConceptualConstruct {
                     0, 0, 0, 0, cz.green.event.ResizePoint.BOTTOM
                     | cz.green.event.ResizePoint.RIGHT);
             this.resizeEntity(new ResizeEvent(getBounds().x, getBounds().y, 0, 0, rr, null));
-            ((cz.green.event.PaintableManager) manager).repaintRectangle(r.x,
+            ((PaintableManager) manager).repaintRectangle(r.x,
                     r.y, r.width, r.height);
             return;
         }
@@ -1446,13 +1452,13 @@ public class Entity extends ConceptualConstruct {
             java.util.Vector v = (java.util.Vector) e.getNewValue();
             if (isStrongAddictionChild && (v.size() == 0)) {
                 isStrongAddictionChild = false;
-                ((cz.green.event.PaintableManager) manager).repaintRectangle(
+                ((PaintableManager) manager).repaintRectangle(
                         r.x, r.y, r.width, r.height);
                 return;
             }
             if (!isStrongAddictionChild && (v.size() != 0)) {
                 isStrongAddictionChild = true;
-                ((cz.green.event.PaintableManager) manager).repaintRectangle(
+                ((PaintableManager) manager).repaintRectangle(
                         r.x, r.y, r.width, r.height);
                 return;
             }
@@ -1518,7 +1524,7 @@ public class Entity extends ConceptualConstruct {
                     e1.printStackTrace();
                 }
             }
-            //((cz.green.event.PaintableManager) manager).repaintItem(this);
+            //((cz.green.event.interfaces.PaintableManager) manager).repaintItem(this);
             PKwidth = PKlength;
             /* adjust size of entity */
             cz.green.event.ResizeRectangle rr = new cz.green.event.ResizeRectangle(
@@ -1552,7 +1558,7 @@ public class Entity extends ConceptualConstruct {
             this.resizeEntity(new ResizeEvent(getBounds().x, getBounds().y, 0, 0, rr, null));
             moveChilds(new ResizeEvent(getBounds().x, getBounds().y, 0, 0, rr, null));
         }
-        //((cz.green.event.PaintableManager) manager).repaintItem(this);
+        //((cz.green.event.interfaces.PaintableManager) manager).repaintItem(this);
         getManager().repaintItem(this);
     }
 
@@ -1669,7 +1675,7 @@ public class Entity extends ConceptualConstruct {
         try {
             ent.resetISAParent(((Container) event.getComponent()).getDesktop());
             ISAChilds.removeElementAt(index);
-            cz.green.event.PaintableManager m = ((cz.green.event.PaintableManager) manager);
+            PaintableManager m = ((PaintableManager) manager);
             moveChilds(event);
             m.repaintItem(this);
         } catch (Throwable x) {
@@ -1735,21 +1741,21 @@ public class Entity extends ConceptualConstruct {
      *
      * @param man Manager where to put the entity manager.
      */
-    protected void resetISAParent(cz.green.event.Manager man)
+    protected void resetISAParent(Manager man)
             throws WasNotFoundException {
         try {
             model.setISAParent(null);
             ((DGroup) manager)
                     .handleRemoveEvent(new cz.green.event.RemoveEvent(0, 0,
                             null));
-            man.add((cz.green.event.Item) manager);
+            man.add((Item) manager);
             ISAParent = null;
         } catch (Throwable x) {
             ShowException d = new ShowException(null, "Error", x, true);
         }
     }
 
-    /*	public void minimize(int where, boolean recount) throws cz.green.event.ItemNotInsideManagerException {
+    /*	public void minimize(int where, boolean recount) throws cz.green.event.exceptions.ItemNotInsideManagerException {
 
         try {
             super.resize(7 - width, 7 - height, (ResizePoint.RIGHT | ResizePoint.BOTTOM), true);
@@ -1864,7 +1870,7 @@ public class Entity extends ConceptualConstruct {
      * @param y     Where to have to be y coordinate of the left top point.
      * @param event Necessary to construct the remove event.
      */
-    protected void setISAParent(cz.green.event.Manager man, Entity ent, int x,
+    protected void setISAParent(Manager man, Entity ent, int x,
                                 int y, cz.green.event.CoordinateEvent event)
             throws WasNotFoundException, CycleWouldAppearException,
             ItemNotInsideManagerException, CannotHavePrimaryKeyException,
@@ -1877,8 +1883,8 @@ public class Entity extends ConceptualConstruct {
         int[][] source = getRect();
         int dx = x - source[0][0], dy = y - source[1][0];
         handleMoveEvent(new cz.green.event.MoveEvent(event.getX(), event.getY(), dx, dy, event.getComponent()));
-        ((cz.green.event.Invokable) manager).invokeEventHandler(new cz.green.event.RemoveEvent(0, 0, null));
-        man.add((cz.green.event.Item) manager);
+        ((Invokable) manager).invokeEventHandler(new cz.green.event.RemoveEvent(0, 0, null));
+        man.add((Item) manager);
         ISAParent = ent;
         setAsISAChild = true;
     }
@@ -1901,9 +1907,9 @@ public class Entity extends ConceptualConstruct {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
-            //((cz.green.event.PaintableManager) manager).repaintItem(a);
+            //((cz.green.event.interfaces.PaintableManager) manager).repaintItem(a);
         }
-        ((cz.green.event.PaintableManager) manager).repaintItem(this);
+        ((PaintableManager) manager).repaintItem(this);
     }
 
     /**

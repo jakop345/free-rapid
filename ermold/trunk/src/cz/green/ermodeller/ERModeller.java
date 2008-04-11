@@ -1,6 +1,7 @@
 package cz.green.ermodeller;
 
 import cz.green.event.*;
+import cz.green.event.exceptions.ItemNotInsideManagerException;
 import cz.green.eventtool.Connection;
 import cz.green.eventtool.PrintPreviewDialog;
 import cz.green.eventtool.PropertyListDialog;

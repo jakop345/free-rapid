@@ -1,4 +1,4 @@
-package cz.green.event;
+package cz.green.event.exceptions;
 
 /**
  * Some value is out of range says this exception.

@@ -2,9 +2,9 @@ package cz.green.eventtool;
 
 import cz.green.ermodeller.ConceptualConstruct;
 import cz.green.ermodeller.Consts;
-import cz.green.event.ImpossibleNegativeValueException;
-import cz.green.event.Manager;
-import cz.green.event.PaintableManager;
+import cz.green.event.exceptions.ImpossibleNegativeValueException;
+import cz.green.event.interfaces.Manager;
+import cz.green.event.interfaces.PaintableManager;
 import cz.green.event.ResizePoint;
 
 import java.awt.*;
@@ -482,7 +482,7 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
     /**
      * If there is stored bounds, then repaint it.
      *
-     * @see cz.green.event.PaintableManager#repaintRectangle(int, int, int, int)
+     * @see cz.green.event.interfaces.PaintableManager#repaintRectangle(int, int, int, int)
      */
     public void repaintStoredBounds() {
         if (rectangle != null) {

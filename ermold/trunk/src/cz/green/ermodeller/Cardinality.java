@@ -1,7 +1,10 @@
 package cz.green.ermodeller;
 
-import cz.green.event.ItemNotInsideManagerException;
-import cz.green.event.PaintableManager;
+import cz.green.event.exceptions.ItemNotInsideManagerException;
+import cz.green.event.exceptions.ImpossibleNegativeValueException;
+import cz.green.event.interfaces.PaintableManager;
+import cz.green.event.interfaces.Item;
+import cz.green.event.interfaces.Manager;
 import cz.green.eventtool.Connection;
 import cz.green.eventtool.ConnectionLine;
 import cz.green.swing.ShowException;
@@ -15,7 +18,7 @@ import java.awt.*;
  * <p/>
  * Its created by <code>Relation</code> method <code>createCardinality</code>.
  *
- * @see Relation#createCardinality(cz.green.ermodeller.Entity,cz.green.event.Manager,int,int)
+ * @see Relation#createCardinality(cz.green.ermodeller.Entity, cz.green.event.interfaces.Manager ,int,int)
  */
 public class Cardinality extends ConceptualObject {
     /**
@@ -36,9 +39,9 @@ public class Cardinality extends ConceptualObject {
      *          Thrown by inherited constructor.
      * @throws <code>cz.green.event.ImpossibleNegativeValueException</code>
      *          Thrown by inherited constructor.
-     * @see ConceptualObject#ConceptualObject(cz.green.event.Manager,int,int,int,int)
+     * @see ConceptualObject#ConceptualObject(cz.green.event.interfaces.Manager ,int,int,int,int)
      */
-    public Cardinality(cz.omnicom.ermodeller.conceptual.Cardinality car, cz.green.event.Manager manager, int left, int top) throws NullPointerException, cz.green.event.ImpossibleNegativeValueException {
+    public Cardinality(cz.omnicom.ermodeller.conceptual.Cardinality car, Manager manager, int left, int top) throws NullPointerException, ImpossibleNegativeValueException {
         //inhereted constructor
         super(manager, left, top, 10, 10);
         //set as property change listener
@@ -153,7 +156,7 @@ public class Cardinality extends ConceptualObject {
     public void handleDragOverEvent(DragOverEvent event) {
         if (selected && event.getAdd())
             return;
-        cz.green.event.Item item = event.getItem();
+        Item item = event.getItem();
         if (item instanceof ConceptualConstruct) {
             if (event.getAdd()) {
                 ConceptualConstruct cc = (ConceptualConstruct) item;
@@ -173,7 +176,7 @@ public class Cardinality extends ConceptualObject {
     public void handleDropAboveEvent(DropAboveEvent event) {
         if (selected && event.getAdd())
             return;
-        cz.green.event.Item item = event.getItem();
+        Item item = event.getItem();
         if (item instanceof ConceptualConstruct) {
             if (event.getAdd()) {
                 ConceptualConstruct cc = (ConceptualConstruct) item;
@@ -548,10 +551,10 @@ public class Cardinality extends ConceptualObject {
             java.awt.Rectangle b = getBounds();
             try {
                 resize(dx, dy, cz.green.event.ResizePoint.RIGHT | cz.green.event.ResizePoint.BOTTOM, true);
-            } catch (cz.green.event.ItemNotInsideManagerException ex) {
+            } catch (ItemNotInsideManagerException ex) {
             }
             b = b.union(getBounds());
-            ((cz.green.event.PaintableManager) manager).repaintRectangle(b.x, b.y, b.width, b.height);
+            ((PaintableManager) manager).repaintRectangle(b.x, b.y, b.width, b.height);
         }
         if (e.getPropertyName().equals("arbitrary")) {
             ConnectionLine conn = getRelationConnectionLine();
@@ -562,7 +565,7 @@ public class Cardinality extends ConceptualObject {
             }
         }
         java.awt.Rectangle b = getBounds();
-        ((cz.green.event.PaintableManager) manager).repaintRectangle(b.x, b.y, b.width, b.height);
+        ((PaintableManager) manager).repaintRectangle(b.x, b.y, b.width, b.height);
 
     }
 
@@ -632,7 +635,7 @@ public class Cardinality extends ConceptualObject {
     /**
      * This method was created by Jiri Mares
      */
-    public void transformToRelation(Entity ent, cz.green.event.Manager man) {
+    public void transformToRelation(Entity ent, Manager man) {
         //others cardinalities decompose as new relations
         java.awt.Point p = ent.getCenter(getEntity());
         Relation rel = Relation.createRelation(model.getSchema(), man, p.x, p.y);
@@ -648,7 +651,7 @@ public class Cardinality extends ConceptualObject {
     /**
      * This method was created by Jiri Mares
      */
-    public void transformToStrongAddiction(Entity son, cz.green.event.Manager man) {
+    public void transformToStrongAddiction(Entity son, Manager man) {
         //java.awt.Point p = son.getCenter(getEntity());
 //	StrongAddiction.createStrongAddiction(getEntity(), son, son.getManager(), p.x, p.y);
         StrongAddiction.createStrongAddiction(getEntity(), son, son.getManager(), getBounds().x, getBounds().y);

@@ -1,7 +1,9 @@
 package cz.green.ermodeller;
 
-import cz.green.event.Item;
+import cz.green.event.interfaces.Item;
+import cz.green.event.interfaces.Manager;
 import cz.green.event.SelectItemExEvent;
+import cz.green.event.exceptions.ImpossibleNegativeValueException;
 
 import java.util.Vector;
 
@@ -21,9 +23,9 @@ public class DGroup extends cz.green.eventtool.DGroup implements FontManager, Mo
     /**
      * Simply calls the inherited constructor.
      *
-     * @see cz.green.eventtool.Group#Group(cz.green.event.Manager, int, int, int, int)
+     * @see cz.green.eventtool.Group#Group(cz.green.event.interfaces.Manager , int, int, int, int)
      */
-    public DGroup(cz.green.event.Manager manager, int left, int top, int width, int height) throws NullPointerException, cz.green.event.ImpossibleNegativeValueException {
+    public DGroup(Manager manager, int left, int top, int width, int height) throws NullPointerException, ImpossibleNegativeValueException {
         super(manager, left, top, width, height);
     }
 

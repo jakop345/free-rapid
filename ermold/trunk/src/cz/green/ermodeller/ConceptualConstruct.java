@@ -4,6 +4,11 @@ import cz.green.eventtool.Connection;
 import cz.green.eventtool.ConnectionLine;
 import cz.green.eventtool.ConnectionManager;
 import cz.green.swing.ShowException;
+import cz.green.event.interfaces.Invokable;
+import cz.green.event.interfaces.PaintableManager;
+import cz.green.event.interfaces.Item;
+import cz.green.event.interfaces.Manager;
+import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.omnicom.ermodeller.conceptual.exception.ParameterCannotBeNullException;
 import cz.omnicom.ermodeller.conceptual.exception.WasNotFoundException;
 
@@ -25,9 +30,9 @@ public class ConceptualConstruct extends ConceptualObject {
     /**
      * The same functionality as inhereted constructor.
      *
-     * @see ConceptualObject#ConceptualObject(cz.green.event.Manager, int, int, int, int)
+     * @see ConceptualObject#ConceptualObject(cz.green.event.interfaces.Manager , int, int, int, int)
      */
-    public ConceptualConstruct(cz.green.event.Manager manager, int left, int top, int width, int height) throws NullPointerException, cz.green.event.ImpossibleNegativeValueException {
+    public ConceptualConstruct(Manager manager, int left, int top, int width, int height) throws NullPointerException, ImpossibleNegativeValueException {
         super(manager, left, top, width, height);
     }
 
@@ -71,11 +76,11 @@ public class ConceptualConstruct extends ConceptualObject {
             Atribute atr = new Atribute(cAtr, this, manager, left, top);
             manager.add(atr);
             //repaint atribute
-            ((cz.green.event.PaintableManager) manager).repaintItem(atr);
+            ((PaintableManager) manager).repaintItem(atr);
             //create connection
             Connection conn = new ConnectionLine(manager, atr, this);
             ((ConnectionManager) manager).addConnection(conn);
-            ((cz.green.event.PaintableManager) manager).repaintItem(conn);
+            ((PaintableManager) manager).repaintItem(conn);
             if (Attribs == null)
                 Attribs = new java.util.Vector(3, 2);
             Attribs.addElement(atr);
@@ -124,7 +129,7 @@ public class ConceptualConstruct extends ConceptualObject {
     public void handleDragOverEvent(DragOverEvent event) {
         if (selected && event.getAdd())
             return;
-        cz.green.event.Item item = event.getItem();
+        Item item = event.getItem();
         if (item instanceof Atribute) {
             if (event.getAdd()) {
                 Atribute atr = (Atribute) item;
@@ -158,7 +163,7 @@ public class ConceptualConstruct extends ConceptualObject {
         if (selected && event.getAdd())
             return;
 //	event.getComponent().setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        cz.green.event.Item item = event.getItem();
+        Item item = event.getItem();
         if (item instanceof Atribute) {
             if (event.getAdd()) {
                 //move atribute
@@ -236,13 +241,13 @@ public class ConceptualConstruct extends ConceptualObject {
     public void handleRemoveEvent(cz.green.event.RemoveEvent event) {
         removeCardinalities(event);
         super.handleRemoveEvent(event);
-        ((cz.green.event.Invokable) manager).invokeEventHandler(event);
+        ((Invokable) manager).invokeEventHandler(event);
     }
 
     /**
      * Selectes this item and passes the event to the manager.
      *
-     * @see cz.green.event.PaintableManager#selectItem(cz.green.event.SelectableItem, boolean)
+     * @see cz.green.event.interfaces.PaintableManager#selectItem(cz.green.event.interfaces.SelectableItem , boolean)
      * @see DGroup#handleSelectItemEvent(cz.green.event.SelectItemEvent)
      */
     public void handleSelectItemEvent(cz.green.event.SelectItemEvent event) {
@@ -323,11 +328,11 @@ public class ConceptualConstruct extends ConceptualObject {
             atr.setOwner(this);
             //puts into new manager
             manager.add(atr);
-            ((cz.green.event.PaintableManager) manager).repaintItem(atr);
+            ((PaintableManager) manager).repaintItem(atr);
             //create new connection
             Connection conn = new ConnectionLine(manager, atr, this);
             ((ConnectionManager) manager).addConnection(conn);
-            ((cz.green.event.PaintableManager) manager).repaintItem(conn);
+            ((PaintableManager) manager).repaintItem(conn);
             Attribs.addElement(atr);
             atr.setPosition(Attribs.size());
         } catch (Throwable x) {

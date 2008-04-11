@@ -1,5 +1,8 @@
 package cz.green.eventtool;
 
+import cz.green.event.interfaces.ContainerDesktop;
+import cz.green.event.exceptions.ImpossibleNegativeValueException;
+
 
 /**
  * This class has the same functionality as its predecessor. Adds three new functions. Two are
@@ -22,12 +25,12 @@ public class Container extends cz.green.event.Container {
      *
      * @return cz.green.event.ContainerDesktop
      */
-    public cz.green.event.ContainerDesktop getDesktop() {
+    public ContainerDesktop getDesktop() {
         if (desktop == null) {
             try {
                 java.awt.Rectangle r = getBounds();
                 desktop = new Desktop(this, r.x, r.y, r.width, r.height);
-            } catch (cz.green.event.ImpossibleNegativeValueException e) {
+            } catch (ImpossibleNegativeValueException e) {
                 return null;
             }
         }

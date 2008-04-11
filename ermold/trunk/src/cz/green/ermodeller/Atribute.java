@@ -2,6 +2,11 @@ package cz.green.ermodeller;
 
 import cz.green.event.MoveEvent;
 import cz.green.event.ResizeEvent;
+import cz.green.event.exceptions.ItemNotInsideManagerException;
+import cz.green.event.exceptions.ImpossibleNegativeValueException;
+import cz.green.event.interfaces.Manager;
+import cz.green.event.interfaces.PaintableManager;
+import cz.green.event.interfaces.Item;
 import cz.green.eventtool.Connection;
 import cz.green.eventtool.ConnectionLine;
 import cz.green.eventtool.ConnectionManager;
@@ -48,9 +53,9 @@ public class Atribute extends ConceptualObject {
      *          Thrown by inherited constructor.
      * @throws <code>cz.green.event.ImpossibleNegativeValueException</code>
      *          Thrown by inherited constructor.
-     * @see ConceptualObject#ConceptualObject(cz.green.event.Manager,int,int,int,int)
+     * @see ConceptualObject#ConceptualObject(cz.green.event.interfaces.Manager ,int,int,int,int)
      */
-    public Atribute(cz.omnicom.ermodeller.conceptual.Atribute atr, ConceptualConstruct cc, cz.green.event.Manager manager, int left, int top) throws NullPointerException, cz.green.event.ImpossibleNegativeValueException {
+    public Atribute(cz.omnicom.ermodeller.conceptual.Atribute atr, ConceptualConstruct cc, Manager manager, int left, int top) throws NullPointerException, ImpossibleNegativeValueException {
         super(manager, left, top, 50, 50);
         //set model
         this.cc = cc;
@@ -136,7 +141,7 @@ public class Atribute extends ConceptualObject {
             }
         }
 /*PŠif (isInUniqueKey())
-		addMenuItem(menu, "Remove from unique key", "mDisconnect.gif", event.getComponent(), "removing", this, cz.green.event.Item.class);
+		addMenuItem(menu, "Remove from unique key", "mDisconnect.gif", event.getComponent(), "removing", this, cz.green.event.interfaces.Item.class);
 	else
 		if (getOwner() instanceof Entity)
 		addMenuItem(menu, "Add to unique key", "mUKey.gif", this, "createUnique", this, Atribute.class);
@@ -364,7 +369,7 @@ public class Atribute extends ConceptualObject {
     public void handleDragOverEvent(DragOverEvent event) {
         if (selected && event.getAdd())
             return;
-        cz.green.event.Item item = event.getItem();
+        Item item = event.getItem();
         if (item instanceof UniqueKey) {
             //over me is unique key
             if (event.getAdd()) {
@@ -392,7 +397,7 @@ public class Atribute extends ConceptualObject {
     public void handleDropAboveEvent(DropAboveEvent event) {
         if (selected && event.getAdd())
             return;
-        cz.green.event.Item item = event.getItem();
+        Item item = event.getItem();
         if (item instanceof UniqueKey) {
             //above is unique key
             if (event.getAdd()) {
@@ -746,7 +751,7 @@ public class Atribute extends ConceptualObject {
                         0, 0, 0, 0, cz.green.event.ResizePoint.BOTTOM
                         | cz.green.event.ResizePoint.RIGHT);
                 ((Entity) getOwner()).resizeEntity(new ResizeEvent(0, 0, 0, 0, rr, null));
-                ((cz.green.event.PaintableManager) manager).repaintItem(this);
+                ((PaintableManager) manager).repaintItem(this);
             }
         }
         if (e.getPropertyName().equals("primary")) {
@@ -776,10 +781,10 @@ public class Atribute extends ConceptualObject {
                     resize(dx, 0, cz.green.event.ResizePoint.RIGHT, true);
                 if (dy != 0)
                     resize(0, dy, cz.green.event.ResizePoint.BOTTOM, true);
-            } catch (cz.green.event.ItemNotInsideManagerException ex) {
+            } catch (ItemNotInsideManagerException ex) {
             }
             b = b.union(getBounds());
-            ((cz.green.event.PaintableManager) manager).repaintRectangle(b.x, b.y, b.width, b.height);
+            ((PaintableManager) manager).repaintRectangle(b.x, b.y, b.width, b.height);
             if (ACTUAL_NOTATION == UML || ACTUAL_NOTATION == BINARY) {
                 if (getOwner() instanceof Entity) {
                     cz.green.event.ResizeRectangle rr = new cz.green.event.ResizeRectangle(
@@ -791,7 +796,7 @@ public class Atribute extends ConceptualObject {
         } else {
             //jinak ho prekresli
             java.awt.Rectangle b = getBounds();
-            ((cz.green.event.PaintableManager) manager).repaintItem(this);
+            ((PaintableManager) manager).repaintItem(this);
         }
     }
 
@@ -844,8 +849,8 @@ public class Atribute extends ConceptualObject {
             try {
                 Connection c = new ConnectionLine(manager, this, cc);
                 ((ConnectionManager) manager).addConnection(c);
-                ((cz.green.event.PaintableManager) manager).repaintItem(c);
-            } catch (cz.green.event.ImpossibleNegativeValueException e) {
+                ((PaintableManager) manager).repaintItem(c);
+            } catch (ImpossibleNegativeValueException e) {
             }
         }
     }

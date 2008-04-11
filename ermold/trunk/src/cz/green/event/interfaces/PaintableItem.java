@@ -1,4 +1,6 @@
-package cz.green.event;
+package cz.green.event.interfaces;
+
+import cz.green.event.ResizePoint;
 
 import java.awt.*;
 
@@ -36,7 +38,7 @@ public interface PaintableItem {
      * interval from <code>0</code> to <code>1</code>.
      *
      * @return Array of all Recize points.
-     * @see ResizePoint
+     * @see cz.green.event.ResizePoint
      */
     ResizePoint[] getResizePoints();
 

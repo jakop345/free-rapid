@@ -1,5 +1,10 @@
 package cz.green.eventtool;
 
+import cz.green.event.interfaces.PaintableManager;
+import cz.green.event.interfaces.Manager;
+import cz.green.event.exceptions.ItemNotInsideManagerException;
+import cz.green.event.exceptions.ImpossibleNegativeValueException;
+
 import java.util.Vector;
 
 /**
@@ -23,10 +28,10 @@ public class ConnectableWindow extends Window implements Connectable {
     /**
      * The same functionality as inhereted constructor and constructs the connections.
      *
-     * @see cz.green.eventtool.Window#Window(cz.green.event.Manager, int, int, int, int)
+     * @see cz.green.eventtool.Window#Window(cz.green.event.interfaces.Manager , int, int, int, int)
      * @see java.util.Vector
      */
-    public ConnectableWindow(cz.green.event.Manager manager, int left, int top, int width, int height) throws NullPointerException, cz.green.event.ImpossibleNegativeValueException {
+    public ConnectableWindow(Manager manager, int left, int top, int width, int height) throws NullPointerException, ImpossibleNegativeValueException {
         super(manager, left, top, width, height);
         connections = new Vector(5, 3);
     }
@@ -78,7 +83,7 @@ public class ConnectableWindow extends Window implements Connectable {
      *                repainted its stored bounds, if <code>false</code> thay are only repainted.
      */
     protected void finishConnFastRepaint(boolean recount) {
-        cz.green.event.PaintableManager m = (cz.green.event.PaintableManager) manager;
+        PaintableManager m = (PaintableManager) manager;
         java.util.Enumeration e;
         e = connections.elements();
         if (recount) {
@@ -235,7 +240,7 @@ public class ConnectableWindow extends Window implements Connectable {
      * @see #startConnFastRepaint()
      * @see #finishConnFastRepaint(boolean)
      */
-    public void move(int dx, int dy, boolean recount) throws cz.green.event.ItemNotInsideManagerException {
+    public void move(int dx, int dy, boolean recount) throws ItemNotInsideManagerException {
         startConnFastRepaint();
         super.move(dx, dy, recount);
         finishConnFastRepaint(recount);
@@ -259,7 +264,7 @@ public class ConnectableWindow extends Window implements Connectable {
      * @see #startConnFastRepaint()
      * @see #finishConnFastRepaint(boolean)
      */
-    public void resize(int dx, int dy, int where, boolean recount) throws cz.green.event.ItemNotInsideManagerException {
+    public void resize(int dx, int dy, int where, boolean recount) throws ItemNotInsideManagerException {
         startConnFastRepaint();
         super.resize(dx, dy, where, recount);
         finishConnFastRepaint(recount);
@@ -273,7 +278,7 @@ public class ConnectableWindow extends Window implements Connectable {
      * @see #connPaintedFast
      */
     protected void startConnFastRepaint() {
-        cz.green.event.PaintableManager m = (cz.green.event.PaintableManager) manager;
+        PaintableManager m = (PaintableManager) manager;
         java.util.Enumeration e;
         e = connections.elements();
         if (connPaintedFast) {

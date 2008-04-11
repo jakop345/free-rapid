@@ -1,5 +1,7 @@
 package cz.green.event;
 
+import cz.green.event.interfaces.Item;
+
 /**
  * This is event for adding item to the manager.
  */

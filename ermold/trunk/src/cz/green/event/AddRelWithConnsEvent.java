@@ -1,5 +1,7 @@
 package cz.green.event;
 
+import cz.green.event.interfaces.Item;
+
 /**
  * This event is send to the item when adding relation with booth connections to entities occures.
  * <p/>
@@ -10,7 +12,7 @@ public class AddRelWithConnsEvent extends cz.green.event.CoordinateEvent {
     /**
      * The item dragging over receiver of the event
      */
-    protected cz.green.event.Item item = null;
+    protected Item item = null;
     /**
      * The mode of this event
      */
@@ -23,7 +25,7 @@ public class AddRelWithConnsEvent extends cz.green.event.CoordinateEvent {
      * @param item
      * @see cz.green.event.CoordinateEvent#CoordinateEvent(int, int, java.awt.Component)
      */
-    public AddRelWithConnsEvent(int x, int y, cz.green.event.Item item, java.awt.Component comp) {
+    public AddRelWithConnsEvent(int x, int y, Item item, java.awt.Component comp) {
         super(x, y, comp);
         this.item = item;
     }
@@ -36,7 +38,7 @@ public class AddRelWithConnsEvent extends cz.green.event.CoordinateEvent {
      * @param add  Determines the regime of the event - if <ccode>tru</code> then the regime is adding.
      * @see cz.green.event.CoordinateEvent#CoordinateEvent(int, int, java.awt.Component)
      */
-    public AddRelWithConnsEvent(int x, int y, cz.green.event.Item item, java.awt.Component comp, boolean add) {
+    public AddRelWithConnsEvent(int x, int y, Item item, java.awt.Component comp, boolean add) {
         this(x, y, item, comp);
         this.add = add;
     }
@@ -51,7 +53,7 @@ public class AddRelWithConnsEvent extends cz.green.event.CoordinateEvent {
      * @param item  The dragging item over
      * @see cz.green.event.CoordinateEvent#CoordinateEvent(int, int, java.awt.Component)
      */
-    public AddRelWithConnsEvent(cz.green.event.CoordinateEvent event, cz.green.event.Item item) {
+    public AddRelWithConnsEvent(cz.green.event.CoordinateEvent event, Item item) {
         this(event.getX(), event.getY(), item, event.getComponent());
     }
 
@@ -66,7 +68,7 @@ public class AddRelWithConnsEvent extends cz.green.event.CoordinateEvent {
      * @param add   Determines the regime of the event - if <ccode>tru</code> then the regime is adding.
      * @see cz.green.event.CoordinateEvent#CoordinateEvent(int, int, java.awt.Component)
      */
-    public AddRelWithConnsEvent(cz.green.event.CoordinateEvent event, cz.green.event.Item item, boolean add) {
+    public AddRelWithConnsEvent(cz.green.event.CoordinateEvent event, Item item, boolean add) {
         this(event.getX(), event.getY(), item, event.getComponent(), add);
     }
 
@@ -84,7 +86,7 @@ public class AddRelWithConnsEvent extends cz.green.event.CoordinateEvent {
      *
      * @return The dragging item.
      */
-    public cz.green.event.Item getItem() {
+    public Item getItem() {
         return item;
     }
 
@@ -102,7 +104,7 @@ public class AddRelWithConnsEvent extends cz.green.event.CoordinateEvent {
      *
      * @param item The dragging item.
      */
-    public void setItem(cz.green.event.Item item) {
+    public void setItem(Item item) {
         this.item = item;
     }
 

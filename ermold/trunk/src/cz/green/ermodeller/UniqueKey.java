@@ -4,6 +4,10 @@ import cz.green.eventtool.Connection;
 import cz.green.eventtool.ConnectionLine;
 import cz.green.eventtool.ConnectionManager;
 import cz.green.swing.ShowException;
+import cz.green.event.interfaces.PaintableManager;
+import cz.green.event.interfaces.Manager;
+import cz.green.event.interfaces.Item;
+import cz.green.event.exceptions.ImpossibleNegativeValueException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,13 +47,13 @@ public class UniqueKey extends ConceptualObject {
      *          constructor.
      * @throws <code>cz.green.event.ImpossibleNegativeValueException</code>
      *          Thrown by inherited constructor.
-     * @see ConceptualObject#ConceptualObject(cz.green.event.Manager, int, int,
+     * @see ConceptualObject#ConceptualObject(cz.green.event.interfaces.Manager , int, int,
      *      int, int)
      */
     public UniqueKey(cz.omnicom.ermodeller.conceptual.UniqueKey uq, Entity ent,
-                     cz.green.event.Manager manager, int left, int top)
+                     Manager manager, int left, int top)
             throws NullPointerException,
-            cz.green.event.ImpossibleNegativeValueException {
+            ImpossibleNegativeValueException {
         super(manager, left, top, 10, 10);
         this.ent = ent;
         uq.addPropertyChangeListener(this);
@@ -68,7 +72,7 @@ public class UniqueKey extends ConceptualObject {
                     .getModel()));
             Connection conn = new ConnectionLine(manager, this, atr);
             ((ConnectionManager) manager).addConnection(conn);
-            ((cz.green.event.PaintableManager) manager).repaintItem(conn);
+            ((PaintableManager) manager).repaintItem(conn);
         } catch (Throwable x) {
             ShowException d = new ShowException(null, "Error", x, true);
         }
@@ -128,7 +132,7 @@ public class UniqueKey extends ConceptualObject {
         if (hasAtribute()) {
             addMenuItem(menu, "Remove atribute", "img/mDisconnect.gif", event
                     .getComponent(), "removing", this,
-                    cz.green.event.Item.class);
+                    Item.class);
         }
         if (getPrimary())
             addMenuItem(menu, "Reset primary", "img/mResetPrimary.gif", this,
@@ -200,7 +204,7 @@ public class UniqueKey extends ConceptualObject {
     public void handleDragOverEvent(DragOverEvent event) {
         if (selected && event.getAdd())
             return;
-        cz.green.event.Item item = event.getItem();
+        Item item = event.getItem();
         if (item instanceof Atribute) {
             if (event.getAdd()) {
                 Atribute atr = (Atribute) item;
@@ -248,7 +252,7 @@ public class UniqueKey extends ConceptualObject {
     public void handleDropAboveEvent(DropAboveEvent event) {
         if (selected && event.getAdd())
             return;
-        cz.green.event.Item item = event.getItem();
+        Item item = event.getItem();
         event.getComponent().setCursor(
                 new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         if (item instanceof Atribute) {
@@ -419,7 +423,7 @@ public class UniqueKey extends ConceptualObject {
                     .getModel()));
             Connection conn = new ConnectionLine(manager, this, atr);
             ((ConnectionManager) manager).addConnection(conn);
-            ((cz.green.event.PaintableManager) manager).repaintItem(conn);
+            ((PaintableManager) manager).repaintItem(conn);
         } catch (Throwable x) {
             ShowException d = new ShowException(null, "Error", x, true);
         }
@@ -439,7 +443,7 @@ public class UniqueKey extends ConceptualObject {
             try {
 //PŠ				ent.setPrimary((UniqueKey) null);
                 this.primary = false;
-                ((cz.green.event.PaintableManager) manager).repaintItem(this);
+                ((PaintableManager) manager).repaintItem(this);
             } catch (ClassCastException e) {
             }
         } catch (Throwable x) {
@@ -471,7 +475,7 @@ public class UniqueKey extends ConceptualObject {
             }
         }
         this.primary = false;
-        ((cz.green.event.PaintableManager) manager).repaintItem(this);
+        ((PaintableManager) manager).repaintItem(this);
     }
 
     /**
@@ -485,7 +489,7 @@ public class UniqueKey extends ConceptualObject {
             try {
 //PŠ				ent.setPrimary(this);
                 this.primary = true;
-                ((cz.green.event.PaintableManager) manager).repaintItem(this);
+                ((PaintableManager) manager).repaintItem(this);
             } catch (ClassCastException e) {
             }
         } catch (Throwable x) {

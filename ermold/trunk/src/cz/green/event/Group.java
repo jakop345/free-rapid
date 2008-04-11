@@ -4,6 +4,10 @@ import cz.green.util.BadDimensionException;
 import cz.green.util.IntervalMethods;
 import cz.green.util.IntervalMethodsException;
 import cz.green.util.MoveArrayList;
+import cz.green.event.interfaces.*;
+import cz.green.event.exceptions.ItemNotInsideManagerException;
+import cz.green.event.exceptions.ValueOutOfRangeException;
+import cz.green.event.exceptions.ImpossibleNegativeValueException;
 
 import java.awt.*;
 
@@ -57,7 +61,7 @@ public class Group extends Window implements Manager, java.io.Serializable {
      * and <code>right</code> parameters) and size (by <code>width</code> and <code>height</code>
      * parameters).
      *
-     * @see Window#Window(cz.green.event.Manager, int, int, int, int)
+     * @see Window#Window(cz.green.event.interfaces.Manager , int, int, int, int)
      */
     public Group(Manager manager, int left, int top, int width, int height) throws NullPointerException, ImpossibleNegativeValueException {
         super(manager, left, top, width, height);
@@ -67,7 +71,7 @@ public class Group extends Window implements Manager, java.io.Serializable {
     /**
      * Adds <code>item</code> to the top of this group (manager).
      *
-     * @see Manager#add(cz.green.event.Item)
+     * @see Manager#add(cz.green.event.interfaces.Item)
      */
     public void add(Item item) throws ItemNotInsideManagerException {
         try {
@@ -91,7 +95,7 @@ public class Group extends Window implements Manager, java.io.Serializable {
     /**
      * This methods recounts all links from the <code>item</code> to the top.
      *
-     * @see Manager#countAllLinksToTop(cz.green.event.Item)
+     * @see Manager#countAllLinksToTop(cz.green.event.interfaces.Item)
      */
     public void countAllLinksToTop(Item item) {
         if (item == null)
@@ -122,11 +126,11 @@ public class Group extends Window implements Manager, java.io.Serializable {
      * event is really situated in this group (method <code>isIn</code>) and if is, then
      * invoces the <code>invokeEventHandler</code>.
      *
-     * @see Manager#fallAndHandleEvent(int, int, cz.green.event.Event)
+     * @see Manager#fallAndHandleEvent(int, int, cz.green.event.interfaces.Event)
      * @see isIn(int,int)
-     * @see invokeEventHandler(cz.green.event.Event)
+     * @see invokeEventHandler( cz.green.event.interfaces.Event )
      */
-    public boolean fallAndHandleEvent(int x, int y, Event event) {
+    public boolean fallAndHandleEvent(int x, int y, cz.green.event.interfaces.Event event) {
         return manager.fallAndHandleEvent(x, y, event);
     }
 
@@ -203,8 +207,8 @@ public class Group extends Window implements Manager, java.io.Serializable {
      * to this manager, displays it and clears the selected items list.
      *
      * @param <code>event</code> Event with all needed properties.
-     * @see Manager#add(cz.green.event.Item)
-     * @see PaintableManager#repaintItem(cz.green.event.PaintableItem)
+     * @see Manager#add(cz.green.event.interfaces.Item)
+     * @see PaintableManager#repaintItem(cz.green.event.interfaces.PaintableItem)
      */
     public void handleAddItemEvent(AddItemEvent event) {
         try {
@@ -220,7 +224,7 @@ public class Group extends Window implements Manager, java.io.Serializable {
      * Moves <code>item</code> to the top (bottom) in this group
      * (manager). Where to place decides the <code>top</code> parameter.
      *
-     * @see Manager#changeZOrder(cz.green.event.Item, boolean)
+     * @see Manager#changeZOrder(cz.green.event.interfaces.Item , boolean)
      * @see Group.wins
      */
     public void changeZOrder(Item item, boolean top) {
@@ -281,10 +285,10 @@ public class Group extends Window implements Manager, java.io.Serializable {
     /**
      * This methods invokes event handler for specified <code>receiver</code>.
      *
-     * @see Invokable#invokeEventHandler(cz.green.event.Event)
+     * @see Invokable#invokeEventHandler(cz.green.event.interfaces.Event)
      * @see Group.receiver
      */
-    public boolean invokeEventHandler(Event event) {
+    public boolean invokeEventHandler(cz.green.event.interfaces.Event event) {
         Invokable i = receiver;
         receiver = null;
         if ((i == null) || (i == this))
@@ -296,7 +300,7 @@ public class Group extends Window implements Manager, java.io.Serializable {
     /**
      * Is the specified <code>item</code> at the bottom of all items?
      *
-     * @see Manager#isBottom(cz.green.event.Item)
+     * @see Manager#isBottom(cz.green.event.interfaces.Item)
      * @see Group.wins
      */
     public boolean isBottom(Item item) {
@@ -396,7 +400,7 @@ public class Group extends Window implements Manager, java.io.Serializable {
     /**
      * Is the specified <code>item</code> at the top of all items?
      *
-     * @see Manager#isTop(cz.green.event.Item)
+     * @see Manager#isTop(cz.green.event.interfaces.Item)
      * @see Group.wins
      */
     public boolean isTop(Item item) {
@@ -500,7 +504,7 @@ public class Group extends Window implements Manager, java.io.Serializable {
      * Removes the specified <code>item</code> from this group (manager). Also reconstruts the
      * event tree struction.
      *
-     * @see Manager#remove(cz.green.event.Item)
+     * @see cz.green.event.interfaces.Manager#remove(cz.green.event.interfaces.Item)
      */
     public void remove(Item item) {
         if (item == null)
@@ -527,7 +531,7 @@ public class Group extends Window implements Manager, java.io.Serializable {
      * This method calls the same manager method. If there is some rectangle to repaint stored
      * in atribute repaint, it repaints its also. The manager paints the <code>item</code>.
      *
-     * @see PaintableManager#repaintItem(cz.green.event.PaintableItem)
+     * @see PaintableManager#repaintItem(cz.green.event.interfaces.PaintableItem)
      * @see #repaint
      */
     public void repaintItem(PaintableItem item) {
@@ -542,7 +546,7 @@ public class Group extends Window implements Manager, java.io.Serializable {
     /**
      * This method calls the manager method paintFast to paint fast the <code>item</code>.
      *
-     * @see PaintableManager#repaintItemFast(cz.green.event.PaintableItem)
+     * @see PaintableManager#repaintItemFast(cz.green.event.interfaces.PaintableItem)
      */
     public void repaintItemFast(PaintableItem item) {
         ((PaintableManager) manager).repaintItemFast(item);
@@ -622,7 +626,7 @@ public class Group extends Window implements Manager, java.io.Serializable {
      * This methods invokes manager <code>selectItem</code> method
      * to set selected a <code>item</code>.
      *
-     * @see PaintableManager#selectItem(cz.green.event.SelectableItem, boolean)
+     * @see PaintableManager#selectItem(cz.green.event.interfaces.SelectableItem , boolean)
      */
     public boolean selectItem(SelectableItem item, boolean add) {
         return (((PaintableManager) manager).selectItem(item, add));
@@ -632,7 +636,7 @@ public class Group extends Window implements Manager, java.io.Serializable {
      * This methods invokes manager <code>selectItemEx</code> method
      * to set selected a <code>item</code>.
      *
-     * @see PaintableManager#selectItemEx(cz.green.event.SelectableItem, boolean)
+     * @see PaintableManager#selectItemEx(cz.green.event.interfaces.SelectableItem , boolean)
      */
     public void selectItemEx(SelectableItem item, boolean add) {
         ((PaintableManager) manager).selectItemEx(item,add);

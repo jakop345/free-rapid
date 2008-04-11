@@ -1,5 +1,7 @@
 package cz.green.ermodeller;
 
+import cz.green.event.interfaces.Item;
+
 /**
  * This class has the same functionality as its predecessor. Adds many new work regimes, help functionality
  * and font management.
@@ -66,7 +68,7 @@ public interface ModeSwitcher {
      *
      * @param item This item is sent as item with DragOverEvent and DropAboveEvent.
      */
-    public boolean removing(cz.green.event.Item item);
+    public boolean removing(Item item);
 
     /**
      * Set normal working regime.

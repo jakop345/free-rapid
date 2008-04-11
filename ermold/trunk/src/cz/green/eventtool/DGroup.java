@@ -1,6 +1,13 @@
 package cz.green.eventtool;
 
 import cz.green.event.*;
+import cz.green.event.exceptions.ItemNotInsideManagerException;
+import cz.green.event.exceptions.ImpossibleNegativeValueException;
+import cz.green.event.exceptions.ValueOutOfRangeException;
+import cz.green.event.interfaces.Item;
+import cz.green.event.interfaces.PaintableItem;
+import cz.green.event.interfaces.Manager;
+import cz.green.event.interfaces.PaintableManager;
 import cz.green.swing.ShowException;
 
 /**
@@ -24,9 +31,9 @@ public class DGroup extends Group implements ConnectionManager {
     /**
      * Simply calls the inherited constructor.
      *
-     * @see cz.green.eventtool.Group#Group(cz.green.event.Manager, int, int, int, int)
+     * @see cz.green.eventtool.Group#Group(cz.green.event.interfaces.Manager , int, int, int, int)
      */
-    public DGroup(cz.green.event.Manager manager, int left, int top, int width, int height) throws NullPointerException, cz.green.event.ImpossibleNegativeValueException {
+    public DGroup(Manager manager, int left, int top, int width, int height) throws NullPointerException, ImpossibleNegativeValueException {
         super(manager, left, top, width, height);
     }
 
@@ -36,7 +43,7 @@ public class DGroup extends Group implements ConnectionManager {
      * then counts the new needed size to hold all old items and the new one. Try to resize by method
      * <code>doResize</code>. When all finished alright, then invokes inherited method.
      *
-     * @see cz.green.event.Group#add(cz.green.event.Item)
+     * @see cz.green.event.Group#add(cz.green.event.interfaces.Item)
      * @see #doResize(int[][])
      * @see #itemsBounds()
      */
@@ -79,7 +86,7 @@ public class DGroup extends Group implements ConnectionManager {
             try {
                 //when connection greoup doesn't exists
                 connections = new ConnectionGroup(manager, 0, 0, 0, 0);
-            } catch (cz.green.event.ImpossibleNegativeValueException e) {
+            } catch (ImpossibleNegativeValueException e) {
                 //when execution is here -> it is very bad
                 return;
             }
@@ -127,7 +134,7 @@ public class DGroup extends Group implements ConnectionManager {
      * if it can then simply resize and count all links to top.
      *
      * @param r The new size to fit all items.
-     * @throws cz.green.event.ItemNotInsideManagerException
+     * @throws cz.green.event.exceptions.ItemNotInsideManagerException
      *          Thrown when manager give no
      *          permition to resize.
      * @see cz.green.event.Group#itemMoveDimension(int, int[])

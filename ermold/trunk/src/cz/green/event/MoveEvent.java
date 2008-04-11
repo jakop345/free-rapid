@@ -47,7 +47,7 @@ public class MoveEvent extends CoordinateEvent {
     /**
      * This method determine whether the event will be passed to all selected items or not.
      *
-     * @see Event#passToSelected()
+     * @see cz.green.event.interfaces.Event#passToSelected()
      */
     public boolean passToSelected() {
         return true;

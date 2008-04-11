@@ -1,4 +1,4 @@
-package cz.green.event;
+package cz.green.event.exceptions;
 
 /**
  * This exception gives info about not wanted negative value.

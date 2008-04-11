@@ -1,4 +1,4 @@
-package cz.green.event;
+package cz.green.event.interfaces;
 
 /**
  * This interface is used for items, that can handle event. Has only one methods, that looks in

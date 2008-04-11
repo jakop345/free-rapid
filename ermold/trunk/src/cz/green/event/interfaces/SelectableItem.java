@@ -1,4 +1,4 @@
-package cz.green.event;
+package cz.green.event.interfaces;
 
 /**
  * All classes, that can be selected, must implement this interface.

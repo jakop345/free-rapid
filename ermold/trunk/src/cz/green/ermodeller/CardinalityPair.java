@@ -1,5 +1,7 @@
 package cz.green.ermodeller;
 
+import cz.green.event.interfaces.Manager;
+
 
 /**
  * This class exists to hold entity, which would like to participate on the relation (also held).
@@ -35,7 +37,7 @@ public class CardinalityPair {
      * @param top     The y coordinate of the left top point of the new atribute.
      * @return The created cardinality.
      */
-    public Cardinality create(cz.green.event.Manager manager, int left, int top) {
+    public Cardinality create(Manager manager, int left, int top) {
         if ((getRelation() == null) || (getEntity() == null))
             return null;
         return getRelation().createCardinality(getEntity(), manager, left, top);

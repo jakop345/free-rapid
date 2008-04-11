@@ -1,4 +1,6 @@
-package cz.green.event;
+package cz.green.event.interfaces;
+
+import cz.green.event.exceptions.ItemNotInsideManagerException;
 
 /**
  * This interface specify methods for moving and resizing the item.
@@ -44,7 +46,7 @@ public interface MovableItem {
      * @param <code>recount</code> Determine, if you wanted to recoun links in event tree or not.
      * @throws <code>cz.green.event.engine.ItemNotInsideManagerException</code>
      *          If <code>true</code> the links in event tree are recounted, otherways not.
-     * @see ResizePoint
+     * @see cz.green.event.ResizePoint
      */
     void resize(int dx, int dy, int where, boolean recount) throws ItemNotInsideManagerException;
 }

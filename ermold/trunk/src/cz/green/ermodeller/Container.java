@@ -4,6 +4,9 @@ import cz.green.event.AddAsISAChildEvent;
 import cz.green.event.AddConnectionEvent;
 import cz.green.event.AddIdentificationDependencyEvent;
 import cz.green.event.AddRelWithConnsEvent;
+import cz.green.event.exceptions.ImpossibleNegativeValueException;
+import cz.green.event.interfaces.Item;
+import cz.green.event.interfaces.ContainerDesktop;
 import cz.green.eventtool.Window;
 import cz.omnicom.ermodeller.errorlog.ShowErrorEvent;
 import cz.omnicom.ermodeller.errorlog.ShowErrorListener;
@@ -306,14 +309,14 @@ public class Container extends cz.green.eventtool.Container implements ModeSwitc
      *
      * @return The desktop.
      */
-    public cz.green.event.ContainerDesktop getDesktop() {
+    public ContainerDesktop getDesktop() {
         if (desktop == null) {
             try {
                 java.awt.Rectangle r = getBounds();
                 desktop = new Desktop(this, r.x, r.y, r.width, r.height);
                 ((Desktop) desktop).addShowErrorListener(this);
 //			propEditing(true);
-            } catch (cz.green.event.ImpossibleNegativeValueException e) {
+            } catch (ImpossibleNegativeValueException e) {
                 return null;
             }
         }
@@ -416,7 +419,7 @@ public class Container extends cz.green.eventtool.Container implements ModeSwitc
                 float scale = desktop.getScale();
                 int x = (int) (e.getX() * scale);
                 int y = (int) (e.getY() * scale);
-                desktop.fallAndHandleEvent(x, y, new DragOverEvent(x, y, (cz.green.event.Item) object, this, false));
+                desktop.fallAndHandleEvent(x, y, new DragOverEvent(x, y, (Item) object, this, false));
                 break;
         }
     }
@@ -460,7 +463,7 @@ public class Container extends cz.green.eventtool.Container implements ModeSwitc
                 case COMPOSING_ENTITY:
                     setWorkMode(WORKING);
                     setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-                    desktop.fallAndHandleEvent(x, y, new DropAboveEvent(x, y, (cz.green.event.Item) object, this, false));
+                    desktop.fallAndHandleEvent(x, y, new DropAboveEvent(x, y, (Item) object, this, false));
 //				((ConceptualConstruct) object).createAtribute(x, y);
                     break;
                 case COMPOSING_RELATION:
@@ -491,7 +494,7 @@ public class Container extends cz.green.eventtool.Container implements ModeSwitc
                 case REMOVING:
                     setWorkMode(WORKING);
                     setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-                    desktop.fallAndHandleEvent(x, y, new DropAboveEvent(x, y, (cz.green.event.Item) object, this, false));
+                    desktop.fallAndHandleEvent(x, y, new DropAboveEvent(x, y, (Item) object, this, false));
                     break;
                 case ADDING_RELATION:
                     setWorkMode(WORKING);
@@ -508,22 +511,22 @@ public class Container extends cz.green.eventtool.Container implements ModeSwitc
                 case ADDING_RELATION_AND_CONNECTION:
                     setWorkMode(WORKING);
                     setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-                    desktop.fallAndHandleEvent(x, y, new AddRelWithConnsEvent(x, y, (cz.green.event.Item) object, this, false));
+                    desktop.fallAndHandleEvent(x, y, new AddRelWithConnsEvent(x, y, (Item) object, this, false));
                     break;
                 case ADDING_CONNECTION:
                     setWorkMode(WORKING);
                     setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-                    desktop.fallAndHandleEvent(x, y, new AddConnectionEvent(x, y, (cz.green.event.Item) object, this, false));
+                    desktop.fallAndHandleEvent(x, y, new AddConnectionEvent(x, y, (Item) object, this, false));
                     break;
                 case ADDING_IDENT_DEPENDENCY:
                     setWorkMode(WORKING);
                     setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-                    desktop.fallAndHandleEvent(x, y, new AddIdentificationDependencyEvent(x, y, (cz.green.event.Item) object, this, false));
+                    desktop.fallAndHandleEvent(x, y, new AddIdentificationDependencyEvent(x, y, (Item) object, this, false));
                     break;
                 case ADDING_AS_ISA_CHILD:
                     setWorkMode(WORKING);
                     setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-                    desktop.fallAndHandleEvent(x, y, new AddAsISAChildEvent(x, y, (cz.green.event.Item) object, this, false));
+                    desktop.fallAndHandleEvent(x, y, new AddAsISAChildEvent(x, y, (Item) object, this, false));
                     break;
                 case ADDING_ENTITY:
                     setWorkMode(WORKING);
@@ -590,7 +593,7 @@ public class Container extends cz.green.eventtool.Container implements ModeSwitc
      *
      * @param item This item is sent as item with DragOverEvent and DropAboveEvent.
      */
-    public boolean removing(cz.green.event.Item item) {
+    public boolean removing(Item item) {
         this.object = item;
         setWorkMode(REMOVING);
         return true;

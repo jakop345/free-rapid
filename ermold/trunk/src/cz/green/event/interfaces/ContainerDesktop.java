@@ -1,9 +1,11 @@
-package cz.green.event;
+package cz.green.event.interfaces;
+
+import cz.green.event.ResizeRectangle;
 
 /**
  * This method set the desktop scale and position to can see all selected items.
  */
-public interface ContainerDesktop extends cz.green.event.Manager {
+public interface ContainerDesktop extends Manager {
     /**
      * This method set the desktop scale and position to can see all selected items.
      */

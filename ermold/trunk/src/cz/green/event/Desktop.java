@@ -1,6 +1,9 @@
 package cz.green.event;
 
 import cz.green.util.MoveArrayList;
+import cz.green.event.interfaces.*;
+import cz.green.event.interfaces.Event;
+import cz.green.event.exceptions.ImpossibleNegativeValueException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,9 +36,9 @@ public class Desktop extends Group implements ContainerDesktop, java.io.Serializ
      *
      * @see MovingEvent
      * @see ResizingEvent
-     * @see fallAndHandleEvent(int, int, cz.green.event.Event)
+     * @see fallAndHandleEvent(int, int, cz.green.event.interfaces.Event )
      */
-    transient protected Event preEvent = null;
+    transient protected cz.green.event.interfaces.Event preEvent = null;
     /**
      * The selected items. This items is draw by <code>paintSelected</code>
      * method. This object gives me functionality adding, removing items,
@@ -47,8 +50,8 @@ public class Desktop extends Group implements ContainerDesktop, java.io.Serializ
      * last change of selected item(s). When we do first repainting (element or
      * rectangle) we repaint also this rectangle.
      *
-     * @see selectItem(cz.green.event.SelectableItem, boolean)
-     * @see selectItemEx(cz.green.event.SelectableItem, boolean)
+     * @see selectItem( cz.green.event.interfaces.SelectableItem , boolean)
+     * @see selectItemEx( cz.green.event.interfaces.SelectableItem , boolean)
      */
     transient protected Rectangle selRect = null;
     /**
@@ -128,7 +131,7 @@ public class Desktop extends Group implements ContainerDesktop, java.io.Serializ
      * <p/>
      * The event <code>MouseMoveEvent</code> is directly handled by desktop.
      *
-     * @see Group#fallAndHandleEvent(int, int, cz.green.event.Event)
+     * @see Group#fallAndHandleEvent(int, int, cz.green.event.interfaces.Event)
      * @see Desktop.preEvent
      * @see Desktop.preSelectEvent
      * @see Desktop.selected
@@ -142,8 +145,8 @@ public class Desktop extends Group implements ContainerDesktop, java.io.Serializ
      * @see Desktop.preSelectEvent
      * @see MouseMoveEvent
      */
-    public boolean fallAndHandleEvent(int x, int y, cz.green.event.Event event) {
-        cz.green.event.Event help = preEvent;
+    public boolean fallAndHandleEvent(int x, int y, Event event) {
+        Event help = preEvent;
         preEvent = event;
         if (event.passToSelected()) {
             receiver = selectedItems;
@@ -280,7 +283,7 @@ public class Desktop extends Group implements ContainerDesktop, java.io.Serializ
     /**
      * Returns actual scale.
      *
-     * @see PaintableManager#getScale()
+     * @see cz.green.event.interfaces.PaintableManager#getScale()
      */
     public float getScale() {
         return scale;

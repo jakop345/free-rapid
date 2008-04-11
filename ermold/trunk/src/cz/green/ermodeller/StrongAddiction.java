@@ -1,9 +1,10 @@
 package cz.green.ermodeller;
 
-import cz.green.event.ItemNotInsideManagerException;
-import cz.green.event.PaintableItem;
-import cz.green.event.PaintableManager;
+import cz.green.event.exceptions.ItemNotInsideManagerException;
+import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.ResizePoint;
+import cz.green.event.interfaces.PaintableManager;
+import cz.green.event.interfaces.*;
 import cz.green.eventtool.Connection;
 import cz.green.eventtool.ConnectionArrow;
 import cz.green.eventtool.ConnectionManager;
@@ -30,10 +31,10 @@ public class StrongAddiction extends ConceptualObject {
      * @param width   int
      * @param height  int
      * @throws java.lang.NullPointerException The exception description.
-     * @throws cz.green.event.ImpossibleNegativeValueException
+     * @throws cz.green.event.exceptions.ImpossibleNegativeValueException
      *                                        The exception description.
      */
-    public StrongAddiction(Entity parent, Entity son, cz.green.event.Manager manager, int left, int top) throws NullPointerException, cz.green.event.ImpossibleNegativeValueException {
+    public StrongAddiction(Entity parent, Entity son, Manager manager, int left, int top) throws NullPointerException, ImpossibleNegativeValueException {
         super(manager, left - (SIZE / 2), top - (SIZE / 2), SIZE, SIZE);
         this.parent = parent;
         this.child = son;
@@ -84,7 +85,7 @@ public class StrongAddiction extends ConceptualObject {
      *
      * @param ent Strong addiction Parent.
      */
-    static public StrongAddiction createStrongAddiction(Entity parent, Entity child, cz.green.event.Manager man, int left, int top) {
+    static public StrongAddiction createStrongAddiction(Entity parent, Entity child, Manager man, int left, int top) {
         try {
             if (ACTUAL_NOTATION == UML)
                 man = parent.getManager();
@@ -93,19 +94,19 @@ public class StrongAddiction extends ConceptualObject {
             cChild.addStrongAddictionParent(cPar);
             StrongAddiction sa = new StrongAddiction(parent, child, man, left, top);
             man.add(sa);
-            ((cz.green.event.PaintableManager) man).repaintItem(sa);
+            ((PaintableManager) man).repaintItem(sa);
             //create connection to unique key
             Connection conn = new ConnectionArrow(man, sa, child);
             ((ConnectionArrow) conn).setStrongAddicted(true);
             ((ConnectionArrow) conn).setStrongAddictionChild(true);
             ((ConnectionManager) man).addConnectionToMain(conn);
-            ((cz.green.event.PaintableManager) man).repaintItem(conn);
+            ((PaintableManager) man).repaintItem(conn);
             //create connection to entity
             conn = new ConnectionArrow(man, sa, parent);
             ((ConnectionArrow) conn).setStrongAddicted(true);
             ((ConnectionArrow) conn).setStrongAddictionChild(false);
             ((ConnectionManager) man).addConnectionToMain(conn);
-            ((cz.green.event.PaintableManager) man).repaintItem(conn);
+            ((PaintableManager) man).repaintItem(conn);
             sa.moveStrongAddiction(new ExMovingEvent(sa.getBounds().x, sa.getBounds().x, 0, 0, null, false));
             return sa;
         } catch (Throwable x) {
@@ -135,7 +136,7 @@ public class StrongAddiction extends ConceptualObject {
      * according to the bounds of this item.
      *
      * @see ResizePoint
-     * @see PaintableItem#getResizePoints()
+     * @see cz.green.event.interfaces.PaintableItem#getResizePoints()
      */
     public ResizePoint[] getResizePoints() {
         return null;
@@ -163,7 +164,7 @@ public class StrongAddiction extends ConceptualObject {
     public void handleDragOverEvent(DragOverEvent event) {
         if (selected && event.getAdd())
             return;
-        cz.green.event.Item item = event.getItem();
+        Item item = event.getItem();
         if (item instanceof Entity) {
             if (event.getAdd()) {
                 if (this.connectionTo(item) == null) {
@@ -182,7 +183,7 @@ public class StrongAddiction extends ConceptualObject {
     public void handleDropAboveEvent(DropAboveEvent event) {
         if (selected && event.getAdd())
             return;
-        cz.green.event.Item item = event.getItem();
+        Item item = event.getItem();
         if (item instanceof Entity) {
             if (event.getAdd()) {
                 if (this.connectionTo(item) == null) {
@@ -330,7 +331,7 @@ public class StrongAddiction extends ConceptualObject {
     /**
      * This method paints this window.
      *
-     * @see PaintableItem#paint(java.awt.Graphics)
+     * @see cz.green.event.interfaces.PaintableItem#paint(java.awt.Graphics)
      */
     public void paint(java.awt.Graphics g) {
         //paint item
@@ -417,7 +418,7 @@ public class StrongAddiction extends ConceptualObject {
 /**
  * Paints window bud only board. Don't fills the entire window area.
  *
- * @see PaintableItem#paintFast(java.awt.Graphics)
+ * @see cz.green.event.interfaces.PaintableItem#paintFast(java.awt.Graphics)
  */
 //public void paintFast(java.awt.Graphics g) {
 

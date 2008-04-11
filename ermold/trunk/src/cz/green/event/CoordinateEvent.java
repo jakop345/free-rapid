@@ -1,5 +1,7 @@
 package cz.green.event;
 
+import cz.green.event.interfaces.Event;
+
 /**
  * This is abstract class for all events, that have to know
  * coordinates, where the event appeared.

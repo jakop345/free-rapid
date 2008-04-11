@@ -38,7 +38,7 @@ public class ResizeEvent extends MoveEvent {
     /**
      * This method determine whether the event will be passed to focused item or not.
      *
-     * @see Event#passToFocused()
+     * @see cz.green.event.interfaces.Event#passToFocused()
      */
     public boolean passToFocused() {
         return true;

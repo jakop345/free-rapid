@@ -4,6 +4,7 @@ import cz.green.ermodeller.AppPrefs;
 import cz.green.ermodeller.Consts;
 import cz.green.swing.*;
 import cz.green.util.ActionAdapter;
+import cz.green.event.interfaces.ContainerDesktop;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -58,7 +59,7 @@ public class PrintPreviewDialog extends JDialog implements ItemListener, KeyList
     /**
      * The desktop of printed schema
      */
-    protected cz.green.event.ContainerDesktop desktop = null;
+    protected ContainerDesktop desktop = null;
     /**
      * The name of the current printing job
      */
@@ -543,7 +544,7 @@ public class PrintPreviewDialog extends JDialog implements ItemListener, KeyList
      * <code>setDesktop</code>.
      *
      * @return <code>True</code> (<code>false</code>) if all finished ok (bad).
-     * @see #setDesktop(cz.green.event.ContainerDesktop,java.awt.Font)
+     * @see #setDesktop(cz.green.event.interfaces.ContainerDesktop ,java.awt.Font)
      */
     public boolean selectPrintJob() {
         String[] options = {"Image", "Print"};
@@ -571,7 +572,7 @@ public class PrintPreviewDialog extends JDialog implements ItemListener, KeyList
      *
      * @param desktop The desktop to print and view its print preview.
      */
-    public void setDesktop(cz.green.event.ContainerDesktop desktop, java.awt.Font font) {
+    public void setDesktop(ContainerDesktop desktop, java.awt.Font font) {
         getPrintPreview().setDesktop(this.desktop = desktop, this.printFont = font);
     }
 

@@ -1,6 +1,7 @@
 package cz.green.event;
 
 import cz.green.util.MoveArrayList;
+import cz.green.event.interfaces.*;
 
 import java.awt.*;
 
@@ -161,9 +162,9 @@ public class SelectedItems implements SelectableItem {
     /**
      * Invokes invokeEventHandler for all items in the list.
      *
-     * @see Invokable#invokeEventHandler(cz.green.event.Event)
+     * @see Invokable#invokeEventHandler(cz.green.event.interfaces.Event)
      */
-    public boolean invokeEventHandler(Event event) {
+    public boolean invokeEventHandler(cz.green.event.interfaces.Event event) {
         java.util.Vector v = (java.util.Vector) elems.clone();
         java.util.Enumeration e = v.elements();
         while (e.hasMoreElements()) {
@@ -184,7 +185,7 @@ public class SelectedItems implements SelectableItem {
     /**
      * Paint all items in the list. The first inserted item is painted first.
      *
-     * @see PaintableItem#paint(java.awt.Graphics)
+     * @see cz.green.event.interfaces.PaintableItem#paint(java.awt.Graphics)
      */
     public void paint(java.awt.Graphics g) {
         java.util.Enumeration e = elems.elements();

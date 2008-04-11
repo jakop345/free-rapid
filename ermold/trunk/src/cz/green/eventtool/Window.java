@@ -1,5 +1,8 @@
 package cz.green.eventtool;
 
+import cz.green.event.interfaces.Manager;
+import cz.green.event.exceptions.ImpossibleNegativeValueException;
+
 /**
  * This class has the same functionality as predecessor. Adds only one methods, which is caused by implementing the
  * interface <code>Printable</code>. Implementing this interface caused the possibility to be printed.
@@ -62,9 +65,9 @@ public class Window extends cz.green.event.Window implements cz.green.eventtool.
     /**
      * Calls the derived constructor.
      *
-     * @see cz.green.event.Window#Window(cz.green.event.Manager, int, int, int, int)
+     * @see cz.green.event.Window#Window(cz.green.event.interfaces.Manager , int, int, int, int)
      */
-    public Window(cz.green.event.Manager manager, int left, int top, int width, int height) throws NullPointerException, cz.green.event.ImpossibleNegativeValueException {
+    public Window(Manager manager, int left, int top, int width, int height) throws NullPointerException, ImpossibleNegativeValueException {
         super(manager, left, top, width, height);
     }
 

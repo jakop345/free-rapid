@@ -1,5 +1,8 @@
 package cz.green.event;
 
+import cz.green.event.interfaces.ContainerDesktop;
+import cz.green.event.exceptions.ImpossibleNegativeValueException;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -41,7 +44,7 @@ public class Container extends JComponent implements MouseListener, MouseMotionL
     /**
      * The inserted desktop.
      *
-     * @see Manager
+     * @see cz.green.event.interfaces.Manager
      */
     protected ContainerDesktop desktop = null;
     /**

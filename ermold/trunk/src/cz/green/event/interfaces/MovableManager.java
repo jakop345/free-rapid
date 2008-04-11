@@ -1,4 +1,6 @@
-package cz.green.event;
+package cz.green.event.interfaces;
+
+import cz.green.event.exceptions.ItemNotInsideManagerException;
 
 /**
  * This mathods have to implement manager which have to store
