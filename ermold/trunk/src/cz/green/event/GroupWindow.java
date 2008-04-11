@@ -188,7 +188,7 @@ public class GroupWindow extends WindowItem implements Manager, java.io.Serializ
      * @see PaintableManager#getScale()
      */
     public float getScale() {
-        return ((PaintableManager) manager).getScale();
+        return manager.getScale();
     }
 
     /**
@@ -212,7 +212,7 @@ public class GroupWindow extends WindowItem implements Manager, java.io.Serializ
         try {
             add(event.getItem());
             selectItemEx(null, false);
-            repaintItem((PaintableItem) event.getItem());
+            repaintItem(event.getItem());
         } catch (ItemNotInsideManagerException e) {
         }
     }
@@ -478,7 +478,6 @@ public class GroupWindow extends WindowItem implements Manager, java.io.Serializ
         g.fillRect(r.x, r.y, r.width, r.height);
         g.setColor(getForegroundColor());
         g.drawRect(r.x, r.y, r.width, r.height);
-        r = null;
         //paint all included element
         java.util.Enumeration e = wins.elements();
         while (e.hasMoreElements()) {
@@ -494,7 +493,6 @@ public class GroupWindow extends WindowItem implements Manager, java.io.Serializ
     public void paintFast(java.awt.Graphics g) {
         Rectangle r = getRealBounds();
         g.drawRect(r.x, r.y, r.width, r.height);
-        r = null;
     }
 
     /**
@@ -534,10 +532,10 @@ public class GroupWindow extends WindowItem implements Manager, java.io.Serializ
     public void repaintItem(PaintableItem item) {
         if (repaint != null) {
             Rectangle r = repaint;
-            ((PaintableManager) manager).repaintRectangle(r.x, r.y, r.width, r.height);
+            manager.repaintRectangle(r.x, r.y, r.width, r.height);
             repaint = null;
         }
-        ((PaintableManager) manager).repaintItem(item);
+        manager.repaintItem(item);
     }
 
     /**
@@ -546,7 +544,7 @@ public class GroupWindow extends WindowItem implements Manager, java.io.Serializ
      * @see PaintableManager#repaintItemFast(cz.green.event.interfaces.PaintableItem)
      */
     public void repaintItemFast(PaintableItem item) {
-        ((PaintableManager) manager).repaintItemFast(item);
+        manager.repaintItemFast(item);
     }
 
     /**
@@ -559,10 +557,10 @@ public class GroupWindow extends WindowItem implements Manager, java.io.Serializ
     public void repaintRectangle(int x, int y, int width, int height) {
         if (repaint != null) {
             Rectangle r = repaint;
-            ((PaintableManager) manager).repaintRectangle(r.x, r.y, r.width, r.height);
+            manager.repaintRectangle(r.x, r.y, r.width, r.height);
             repaint = null;
         }
-        ((PaintableManager) manager).repaintRectangle(x, y, width, height);
+        manager.repaintRectangle(x, y, width, height);
     }
 
     /**
@@ -626,7 +624,7 @@ public class GroupWindow extends WindowItem implements Manager, java.io.Serializ
      * @see PaintableManager#selectItem(cz.green.event.interfaces.SelectableItem , boolean)
      */
     public boolean selectItem(SelectableItem item, boolean add) {
-        return (((PaintableManager) manager).selectItem(item, add));
+        return (manager.selectItem(item, add));
     }
 
     /**
@@ -636,6 +634,6 @@ public class GroupWindow extends WindowItem implements Manager, java.io.Serializ
      * @see PaintableManager#selectItemEx(cz.green.event.interfaces.SelectableItem , boolean)
      */
     public void selectItemEx(SelectableItem item, boolean add) {
-        ((PaintableManager) manager).selectItemEx(item, add);
+        manager.selectItemEx(item, add);
     }
 }

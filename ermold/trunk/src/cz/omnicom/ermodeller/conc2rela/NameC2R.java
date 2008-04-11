@@ -35,8 +35,7 @@ public class NameC2R {
     protected String convertToValidString(String aString) {
         if (aString == null)
             return null;
-        String result = aString.replace(' ', '_').replace('\t', '_');
-        return result;
+        return aString.replace(' ', '_').replace('\t', '_');
     }
 
     /**

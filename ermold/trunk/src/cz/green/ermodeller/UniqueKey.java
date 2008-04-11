@@ -5,12 +5,14 @@ import cz.green.event.interfaces.Item;
 import cz.green.event.interfaces.Manager;
 import cz.green.event.interfaces.PaintableManager;
 import cz.green.eventtool.ConnectionLine;
+import cz.green.eventtool.interfaces.Connectable;
 import cz.green.eventtool.interfaces.Connection;
 import cz.green.eventtool.interfaces.ConnectionManager;
 import cz.green.swing.ShowException;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Vector;
 
 /**
  * This class represents the unique key. Every unikey key has its model - object
@@ -150,8 +152,8 @@ public class UniqueKey extends ConceptualObject {
      *
      * @return boolean
      */
-    public java.util.Vector getAtributes() {
-        java.util.Vector v = new java.util.Vector();
+    public Vector<Connectable> getAtributes() {
+        Vector<Connectable> v = new java.util.Vector<Connectable>();
 
         for (int i = connections.size() - 1; i >= 0; i--) {
             if (((Connection) connections.elementAt(i))
@@ -489,7 +491,7 @@ public class UniqueKey extends ConceptualObject {
             try {
 //PŠ				ent.setPrimary(this);
                 this.primary = true;
-                ((PaintableManager) manager).repaintItem(this);
+                manager.repaintItem(this);
             } catch (ClassCastException e) {
             }
         } catch (Throwable x) {
