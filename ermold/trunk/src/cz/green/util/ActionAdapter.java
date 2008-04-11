@@ -7,13 +7,13 @@ import java.lang.reflect.Method;
  * This type was created by Jiri Mares.
  */
 public class ActionAdapter implements java.awt.event.ActionListener {
-    Object destination = null;
-    Method handler = null;
+    protected Object destination = null;
+    protected Method handler = null;
 
     /**
      * MenuActionAdaptor constructor comment.
      */
-    ActionAdapter(Object destination) {
+    public ActionAdapter(Object destination) {
         this.destination = destination;
     }
 

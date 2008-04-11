@@ -7,11 +7,11 @@ public class BadDimensionException extends IntervalMethodsException {
     /**
      * This field stores the wrong dimension.
      */
-    private final int wrongDimension;
+    protected final int wrongDimension;
     /**
      * This field stores the required dimension.
      */
-    private final int requiredDimension;
+    protected final int requiredDimension;
 
     /**
      * This methods constructs the object.

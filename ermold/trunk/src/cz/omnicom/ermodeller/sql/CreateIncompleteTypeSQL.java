@@ -14,7 +14,7 @@ public class CreateIncompleteTypeSQL extends CreateTypeSQL {
     /**
      * name of the type
      */
-    private String name = null;
+    String name = null;
 
     /**
      * Constructor.
@@ -57,5 +57,5 @@ public class CreateIncompleteTypeSQL extends CreateTypeSQL {
      */
     public String toString() {
         return "Create type " + name;
-}
+    }
 }

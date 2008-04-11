@@ -9,7 +9,7 @@ import java.util.Vector;
 /**
  * Property editor for the <code>DataType</code> beans.
  */
-class ChangeNotationDialog extends JDialog implements java.awt.event.ActionListener {
+public class ChangeNotationDialog extends JDialog implements java.awt.event.ActionListener {
     /**
      * Datatype to be edited.
      * @see cz.omnicom.ermodeller.datatype.DataType
@@ -21,18 +21,18 @@ class ChangeNotationDialog extends JDialog implements java.awt.event.ActionListe
      */
     private JTextArea DescriptionTA = null;
     private final cz.omnicom.ermodeller.conceptual.Entity Cent = null;
-    private final JButton OKbutton = new JButton();
-    private final JButton CancelButton = new JButton();
-    private final JLabel DecomposeLabel = new JLabel();
-    private final JLabel DecomposeLabel2 = new JLabel();
-    private final JLabel DeleteLabel = new JLabel();
-    private final JList AtrRList = new JList();
-    private final JList DelRList = new JList();
-    private final JLabel ChangeLabel = new JLabel();
+    final JButton OKbutton = new JButton();
+    final JButton CancelButton = new JButton();
+    final JLabel DecomposeLabel = new JLabel();
+    final JLabel DecomposeLabel2 = new JLabel();
+    final JLabel DeleteLabel = new JLabel();
+    final JList AtrRList = new JList();
+    final JList DelRList = new JList();
+    final JLabel ChangeLabel = new JLabel();
     JLabel ChangeFromLabel = new JLabel();
-    private final JLabel ChangeToLabel = new JLabel();
-    private final JList TernaryRList = new JList();
-    private final ERModeller Erm;
+    final JLabel ChangeToLabel = new JLabel();
+    final JList TernaryRList = new JList();
+    final ERModeller Erm;
     private final int NextNotation;
     private static final int NextPosition = 0;
 

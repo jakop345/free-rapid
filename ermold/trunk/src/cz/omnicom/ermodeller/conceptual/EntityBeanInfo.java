@@ -3,7 +3,7 @@ package cz.omnicom.ermodeller.conceptual;
 /**
  * The bean information class for cz.omnicom.ermodeller.conceptual.Entity.
  */
-class EntityBeanInfo extends java.beans.SimpleBeanInfo {
+public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
     /**
      * Find the method by comparing (name & parameter size) against the methods in the class.
      *
@@ -12,7 +12,7 @@ class EntityBeanInfo extends java.beans.SimpleBeanInfo {
      * @param parameterCount int
      * @return java.lang.reflect.Method
      */
-    private static java.lang.reflect.Method findMethod(java.lang.Class aClass, java.lang.String methodName, int parameterCount) {
+    public static java.lang.reflect.Method findMethod(java.lang.Class aClass, java.lang.String methodName, int parameterCount) {
         try {
             /* Since this method attempts to find a method by getting all methods from the class,
        this method should only be called if getMethod cannot find the method. */
@@ -62,7 +62,7 @@ class EntityBeanInfo extends java.beans.SimpleBeanInfo {
      *
      * @return java.lang.Class
      */
-    private static java.lang.Class getBeanClass() {
+    public static java.lang.Class getBeanClass() {
         return cz.omnicom.ermodeller.conceptual.Entity.class;
     }
 
@@ -159,7 +159,7 @@ class EntityBeanInfo extends java.beans.SimpleBeanInfo {
      *
      * @return java.beans.PropertyDescriptor
      */
-    java.beans.PropertyDescriptor ISAParentPropertyDescriptor() {
+    public java.beans.PropertyDescriptor ISAParentPropertyDescriptor() {
         java.beans.PropertyDescriptor aDescriptor = null;
         try {
             try {
@@ -213,7 +213,7 @@ class EntityBeanInfo extends java.beans.SimpleBeanInfo {
      *
      * @return java.beans.PropertyDescriptor
      */
-    java.beans.PropertyDescriptor ISASonsPropertyDescriptor() {
+    public java.beans.PropertyDescriptor ISASonsPropertyDescriptor() {
         java.beans.PropertyDescriptor aDescriptor = null;
         try {
             try {
@@ -256,7 +256,7 @@ class EntityBeanInfo extends java.beans.SimpleBeanInfo {
      *
      * @return java.beans.PropertyDescriptor
      */
-    java.beans.PropertyDescriptor primaryKeyPropertyDescriptor() {
+    public java.beans.PropertyDescriptor primaryKeyPropertyDescriptor() {
         java.beans.PropertyDescriptor aDescriptor = null;
         try {
             try {
@@ -301,7 +301,7 @@ class EntityBeanInfo extends java.beans.SimpleBeanInfo {
      *
      * @return java.beans.PropertyDescriptor
      */
-    java.beans.PropertyDescriptor strongAddictionsParentsPropertyDescriptor() {
+    public java.beans.PropertyDescriptor strongAddictionsParentsPropertyDescriptor() {
         java.beans.PropertyDescriptor aDescriptor = null;
         try {
             try {
@@ -344,7 +344,7 @@ class EntityBeanInfo extends java.beans.SimpleBeanInfo {
      *
      * @return java.beans.PropertyDescriptor
      */
-    java.beans.PropertyDescriptor strongAddictionsSonsPropertyDescriptor() {
+    public java.beans.PropertyDescriptor strongAddictionsSonsPropertyDescriptor() {
         java.beans.PropertyDescriptor aDescriptor = null;
         try {
             try {
@@ -387,7 +387,7 @@ class EntityBeanInfo extends java.beans.SimpleBeanInfo {
      *
      * @return java.beans.PropertyDescriptor
      */
-    java.beans.PropertyDescriptor uniqueKeysPropertyDescriptor() {
+    public java.beans.PropertyDescriptor uniqueKeysPropertyDescriptor() {
         java.beans.PropertyDescriptor aDescriptor = null;
         try {
             try {

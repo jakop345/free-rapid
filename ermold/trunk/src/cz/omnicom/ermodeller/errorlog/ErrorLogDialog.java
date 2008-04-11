@@ -27,7 +27,7 @@ public class ErrorLogDialog extends JDialog implements java.awt.event.ActionList
      * Constructor
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    private ErrorLogDialog() {
+    public ErrorLogDialog() {
         super();
         initialize();
     }
@@ -63,7 +63,7 @@ public class ErrorLogDialog extends JDialog implements java.awt.event.ActionList
     /**
      * Hide the dialog.
      */
-    void closeButton_ActionEvents() {
+    public void closeButton_ActionEvents() {
         setVisible(false);
     }
 
@@ -204,7 +204,7 @@ public class ErrorLogDialog extends JDialog implements java.awt.event.ActionList
      * @return cz.omnicom.ermodeller.errorlog.ErrorLogList
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    ErrorLogList getErrorLogList() {
+    public ErrorLogList getErrorLogList() {
         if (ivjErrorLogList == null) {
             try {
                 ivjErrorLogList = new cz.omnicom.ermodeller.errorlog.ErrorLogList();
@@ -426,7 +426,7 @@ public class ErrorLogDialog extends JDialog implements java.awt.event.ActionList
         getErrorTree().repaint();
     }
 
-    void refresh() {
+    public void refresh() {
         try {
             setErrorLogList(((cz.omnicom.ermodeller.conceptual.Schema) desktop.getModel()).checkConsistency());
         }

@@ -58,7 +58,7 @@ public class Cardinality extends ConceptualObject {
      *
      * @return The counted size needful for holding.
      */
-    java.awt.Dimension countSize() {
+    protected java.awt.Dimension countSize() {
         String name = model.getName();
         java.awt.FontMetrics fm;
         try {
@@ -133,7 +133,7 @@ public class Cardinality extends ConceptualObject {
     /**
      * Get the connection line ro relation that this object belongs to.
      */
-    ConnectionLine getRelationConnectionLine() {
+    public ConnectionLine getRelationConnectionLine() {
         java.util.Enumeration e = connections.elements();
         while (e.hasMoreElements()) {
             Connection c = ((Connection) e.nextElement());
@@ -587,7 +587,7 @@ public class Cardinality extends ConceptualObject {
      * @param cc Whether instance of the <code>Entity</code> changes the entity otherwise (instance <code>Relation</code>)
      *           change the relation.
      */
-    void reconnect(ConceptualConstruct cc) {
+    protected void reconnect(ConceptualConstruct cc) {
         if (cc instanceof Entity) {
             //changes the participating entity
             Entity old = getEntity();

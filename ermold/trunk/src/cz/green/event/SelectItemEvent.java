@@ -10,7 +10,7 @@ public class SelectItemEvent extends SelectItemExEvent {
      *
      * @see SelectItemExEvent
      */
-    private boolean selected = false;
+    protected boolean selected = false;
 
     /**
      * Default constructor.
@@ -39,5 +39,5 @@ public class SelectItemEvent extends SelectItemExEvent {
      */
     public void setSelected(boolean sel) {
         this.selected = sel;
-}
+    }
 }

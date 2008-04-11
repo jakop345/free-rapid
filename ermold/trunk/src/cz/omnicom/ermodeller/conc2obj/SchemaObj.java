@@ -282,7 +282,7 @@ public class SchemaObj implements SubObjProducer, SubTreeProducerObj {
      *
      * @return java.util.Vector
      */
-    Vector getAlterAddCommands() {
+    protected Vector getAlterAddCommands() {
         if (alterAddCommands == null)
             alterAddCommands = new Vector();
         return alterAddCommands;
@@ -293,7 +293,7 @@ public class SchemaObj implements SubObjProducer, SubTreeProducerObj {
      *
      * @return java.util.Vector
      */
-    Vector getCreateCommands() {
+    protected Vector getCreateCommands() {
         if (createCommands == null)
             createCommands = new Vector();
         return createCommands;
@@ -304,7 +304,7 @@ public class SchemaObj implements SubObjProducer, SubTreeProducerObj {
      *
      * @return java.util.Vector
      */
-    Vector getDropCommands() {
+    protected Vector getDropCommands() {
         if (dropCommands == null)
             dropCommands = new Vector();
         return dropCommands;
@@ -315,7 +315,7 @@ public class SchemaObj implements SubObjProducer, SubTreeProducerObj {
      *
      * @return java.util.Vector
      */
-    Vector getCreateTypes() {
+    protected Vector getCreateTypes() {
         if (createTypes == null)
             createTypes = new Vector();
         return createTypes;
@@ -326,7 +326,7 @@ public class SchemaObj implements SubObjProducer, SubTreeProducerObj {
      *
      * @return java.util.Vector
      */
-    Vector getCreateIncompleteTypes() {
+    protected Vector getCreateIncompleteTypes() {
         if (createIncompleteTypes == null)
             createIncompleteTypes = new Vector();
         return createIncompleteTypes;
@@ -337,7 +337,7 @@ public class SchemaObj implements SubObjProducer, SubTreeProducerObj {
      *
      * @return java.util.Vector
      */
-    Vector getDropTypes() {
+    protected Vector getDropTypes() {
         if (dropTypes == null)
             dropTypes = new Vector();
         return dropTypes;
@@ -348,7 +348,7 @@ public class SchemaObj implements SubObjProducer, SubTreeProducerObj {
      *
      * @return java.util.Vector
      */
-    Vector getCommandTypesObj() {
+    protected Vector getCommandTypesObj() {
         if (createCommandTypesObj == null)
             createCommandTypesObj = new Vector();
         return createCommandTypesObj;
@@ -359,7 +359,7 @@ public class SchemaObj implements SubObjProducer, SubTreeProducerObj {
      *
      * @return java.util.Vector
      */
-    Vector getReferenceTypesObj() {
+    protected Vector getReferenceTypesObj() {
         if (alterReferenceTypes == null)
             alterReferenceTypes = new Vector();
         return alterReferenceTypes;
@@ -377,7 +377,7 @@ public class SchemaObj implements SubObjProducer, SubTreeProducerObj {
      *
      * @return javax.swing.Icon
      */
-    Icon getIcon() {
+    public Icon getIcon() {
         return new ImageIcon(ClassLoader.getSystemResource("img/sqlschema.gif"));
     }
 
@@ -397,5 +397,5 @@ public class SchemaObj implements SubObjProducer, SubTreeProducerObj {
      */
     public String toString() {
         return "Object relation commands in the schema";//schemaC2R.getNameC2R();
-}
+    }
 }

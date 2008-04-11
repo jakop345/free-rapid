@@ -101,7 +101,7 @@ public class GlueControlPartOfCheckObj extends PartOfCheckObj {
      *
      * @return java.util.Vector
      */
-    Vector getGroups() {
+    public Vector getGroups() {
         return groups;
     }
 
@@ -119,7 +119,7 @@ public class GlueControlPartOfCheckObj extends PartOfCheckObj {
      *
      * @return java.util.Vector
      */
-    Vector getSubORChecks() {
+    public Vector getSubORChecks() {
         return subORChecks;
     }
 
@@ -130,5 +130,5 @@ public class GlueControlPartOfCheckObj extends PartOfCheckObj {
      */
     public String toString() {
         return "          ";
-}
+    }
 }

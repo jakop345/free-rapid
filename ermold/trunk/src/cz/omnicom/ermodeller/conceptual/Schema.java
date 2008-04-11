@@ -20,13 +20,13 @@ public class Schema extends ConceptualObject {
      *
      * @see cz.omnicom.ermodeller.conceptual.Entity
      */
-    private Vector entities = new Vector();
+    protected Vector entities = new Vector();
     /**
      * All relations in the schema.
      *
      * @see cz.omnicom.ermodeller.conceptual.Relation
      */
-    private Vector relations = new Vector();
+    protected Vector relations = new Vector();
     /**
      * Counters for generating unique names of objects.
      */
@@ -35,8 +35,8 @@ public class Schema extends ConceptualObject {
     private int fieldEntityIDCounter = 0;
     private int fieldRelationIDCounter = 0;
 
-    private static final String ENTITIES_PROPERTY_CHANGE = "entities";
-    private static final String RELATIONS_PROPERTY_CHANGE = "relations";
+    public static final String ENTITIES_PROPERTY_CHANGE = "entities";
+    public static final String RELATIONS_PROPERTY_CHANGE = "relations";
     private boolean changed = false;
     /**
      * ID of the first composed object
@@ -184,7 +184,7 @@ public class Schema extends ConceptualObject {
      *
      * @return The cardinalityIDCounter property value.
      */
-    final int getCardinalityIDCounter() {
+    protected final int getCardinalityIDCounter() {
         return ++fieldCardinalityIDCounter;
     }
 
@@ -217,7 +217,7 @@ public class Schema extends ConceptualObject {
      *
      * @return The entityIDCounter property value.
      */
-    final int getEntityIDCounter() {
+    protected final int getEntityIDCounter() {
         return ++fieldEntityIDCounter;
     }
 
@@ -237,7 +237,7 @@ public class Schema extends ConceptualObject {
      *
      * @return The relationIDCounter property value.
      */
-    final int getRelationIDCounter() {
+    protected final int getRelationIDCounter() {
         return ++fieldRelationIDCounter;
     }
 
@@ -484,5 +484,5 @@ public class Schema extends ConceptualObject {
         pw.println("\t<notation>" + cz.green.ermodeller.ConceptualConstruct.ACTUAL_NOTATION + "</notation>");
         pw.println("\t<comment>" + getComment() + "</comment>");
         //System.out.println(getID()+"\t"+getName()+"\t"+getClass());
-}
+    }
 }

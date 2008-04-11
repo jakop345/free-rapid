@@ -41,7 +41,7 @@ public class AtributeNameC2R extends NameC2R {
      *
      * @param aNameC2R cz.omnicom.ermodeller.conc2rela.NameC2R
      */
-    void addAllPrefixes(AtributeNameC2R anAtributeNameC2R) {
+    protected void addAllPrefixes(AtributeNameC2R anAtributeNameC2R) {
         for (Enumeration elements = anAtributeNameC2R.getPrefixes().elements(); elements.hasMoreElements();) {
             this.addPrefix((String) elements.nextElement());
         }
@@ -52,7 +52,7 @@ public class AtributeNameC2R extends NameC2R {
      *
      * @param aNameC2R cz.omnicom.ermodeller.conc2rela.NameC2R
      */
-    void addAllSubNumbers(AtributeNameC2R anAtributeNameC2R) {
+    protected void addAllSubNumbers(AtributeNameC2R anAtributeNameC2R) {
         for (Enumeration elements = anAtributeNameC2R.getSubNumbers().elements(); elements.hasMoreElements();) {
             this.addSubNumber(((Integer) elements.nextElement()).intValue());
         }
@@ -80,14 +80,14 @@ public class AtributeNameC2R extends NameC2R {
     /**
      * @return Vector
      */
-    Vector getPrefixes() {
+    public Vector getPrefixes() {
         return prefixes;
     }
 
     /**
      * @return java.util.Vector
      */
-    Vector getSubNumbers() {
+    public Vector getSubNumbers() {
         return subNumbers;
     }
 

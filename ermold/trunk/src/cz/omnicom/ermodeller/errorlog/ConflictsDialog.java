@@ -63,7 +63,7 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
      * Constructor
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    private ConflictsDialog() {
+    public ConflictsDialog() {
         super();
         initialize();
     }
@@ -82,7 +82,7 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
     /**
      * Comment
      */
-    void acceptButtonAction() {
+    public void acceptButtonAction() {
         int i = conceptualObject.getID();
         cz.green.ermodeller.Entity ent;
         cz.green.ermodeller.Relation rel;
@@ -136,7 +136,7 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
     /**
      * Hide the dialog.
      */
-    void closeButton_ActionEvents() {
+    public void closeButton_ActionEvents() {
         setVisible(false);
     }
 
@@ -608,7 +608,7 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
      * @return cz.omnicom.ermodeller.errorlog.ErrorLogList
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    ErrorLogList getErrorLogList() {
+    public ErrorLogList getErrorLogList() {
         if (ivjErrorLogList == null) {
             try {
                 ivjErrorLogList = new cz.omnicom.ermodeller.errorlog.ErrorLogList();
@@ -1429,7 +1429,7 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
     /**
      * Comment
      */
-    void removeConstruct() {
+    public void removeConstruct() {
         int i;
         i = conceptualObject.getID();
         cz.green.ermodeller.ConceptualConstruct cc;
@@ -1462,7 +1462,7 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
         }
     }
 
-    void renameAll() {
+    public void renameAll() {
         ConceptualObjectVectorValidationError errV;
         ValidationError err;
         Vector objList;

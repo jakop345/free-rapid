@@ -7,9 +7,9 @@ import java.util.Enumeration;
 
 public class UserTypeStorage {
 
-    private String typeName = null;
-    private DataType dataType = null;
-    private UserTypesEditorPanel panel = null;
+    protected String typeName = null;
+    protected DataType dataType = null;
+    protected UserTypesEditorPanel panel = null;
 
     public UserTypeStorage(String name, DataType type, UserTypesEditorPanel aPanel) {
         typeName = name;

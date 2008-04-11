@@ -6,7 +6,7 @@ import cz.omnicom.ermodeller.conceptual.Entity;
  * Entity cannot have primary key.
  */
 public class CannotHavePrimaryKeyException extends ConceptualException {
-    private Entity entity = null;
+    Entity entity = null;
 
     /**
      * CannotHavePrimaryKey constructor comment.

@@ -20,11 +20,11 @@ public class ConnectionArrow extends ConnectionLine {
     /**
      * Polygon, that held the arrow shape
      */
-    private transient java.awt.Polygon arrow = null;
+    transient protected java.awt.Polygon arrow = null;
     /**
      * Polygon, that held the diamond shape
      */
-    private transient java.awt.Polygon diamond = null;
+    transient protected java.awt.Polygon diamond = null;
 
     /**
      * Same functionality as inhereted.
@@ -134,11 +134,11 @@ public class ConnectionArrow extends ConnectionLine {
         }
     }
 
-    boolean isStrongAddictionChild() {
+    public boolean isStrongAddictionChild() {
         return strongAddictionChild;
     }
 
     public void setStrongAddictionChild(boolean strongAddictionChild) {
         this.strongAddictionChild = strongAddictionChild;
-}
+    }
 }

@@ -23,7 +23,7 @@ public abstract class ObjectC2R {
      * @param aName      cz.omnicom.ermodeller.conc2rela.NameC2R
      * @param aSchemaC2R cz.omnicom.ermodeller.conc2rela.SchemaC2R
      */
-    ObjectC2R(NameC2R aName, SchemaC2R aSchemaC2R) {
+    public ObjectC2R(NameC2R aName, SchemaC2R aSchemaC2R) {
         this.nameC2R = aName;
         this.schemaC2R = aSchemaC2R;
     }
@@ -38,7 +38,7 @@ public abstract class ObjectC2R {
     /**
      * @return cz.omnicom.ermodeller.conc2rela.SchemaC2R
      */
-    SchemaC2R getSchemaC2R() {
+    public SchemaC2R getSchemaC2R() {
         return schemaC2R;
     }
 
@@ -47,7 +47,7 @@ public abstract class ObjectC2R {
      *
      * @param aNameC2R cz.omnicom.ermodeller.conc2rela.NameC2R
      */
-    void setNameC2R(NameC2R aNameC2R) {
+    protected void setNameC2R(NameC2R aNameC2R) {
         this.nameC2R = aNameC2R;
-}
+    }
 }

@@ -12,7 +12,7 @@ public class BadCharacterInNameValidationError extends ConceptualObjectValidatio
     /**
      * found bad characters.
      */
-    private Vector badChars = null;
+    Vector badChars = null;
 
     /**
      * BadCharacterInNameValidationError constructor comment.

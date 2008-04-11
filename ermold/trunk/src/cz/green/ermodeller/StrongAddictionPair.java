@@ -9,14 +9,14 @@ import cz.green.swing.ShowException;
  *
  * @see Container#addingCardinality(cz.green.ermodeller.CardinalityPair)
  */
-class StrongAddictionPair {
+public class StrongAddictionPair {
     private Entity entity = null;
     private UniqueKey uniqueKey = null;
 
     /**
      * Construct empty cardinality pair.
      */
-    private StrongAddictionPair() {
+    public StrongAddictionPair() {
         super();
     }
 
@@ -56,7 +56,7 @@ class StrongAddictionPair {
      * @return The entity.
      * @see #entity
      */
-    Entity getEntity() {
+    public Entity getEntity() {
         return entity;
     }
 
@@ -66,7 +66,7 @@ class StrongAddictionPair {
      * @return The relation.
      * @see #relation
      */
-    UniqueKey getUniqueKey() {
+    public UniqueKey getUniqueKey() {
         return uniqueKey;
     }
 
@@ -76,7 +76,7 @@ class StrongAddictionPair {
      * @param entity The entity.
      * @see #entity
      */
-    void setEntity(Entity entity) {
+    public void setEntity(Entity entity) {
         this.entity = entity;
     }
 
@@ -86,7 +86,7 @@ class StrongAddictionPair {
      * @param relation The relation.
      * @see #relation
      */
-    void setUniqueKey(UniqueKey uniqueKey) {
+    public void setUniqueKey(UniqueKey uniqueKey) {
         this.uniqueKey = uniqueKey;
     }
 }

@@ -19,7 +19,7 @@ public class UserDefinedDataTypePanel extends DataTypePanel implements ActionLis
     private PropertyChangeSupport propertyChange = null;
 
 
-    private final ActionListener refreshActionListener = new ActionListener() {
+    final ActionListener refreshActionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             String oldItem = "";
 
@@ -48,7 +48,7 @@ public class UserDefinedDataTypePanel extends DataTypePanel implements ActionLis
     /**
      * Accessor for the propertyChange field.
      */
-    PropertyChangeSupport getPropertyChange() {
+    protected PropertyChangeSupport getPropertyChange() {
         if (propertyChange == null)
             propertyChange = new PropertyChangeSupport(this);
         return propertyChange;
@@ -132,7 +132,7 @@ public class UserDefinedDataTypePanel extends DataTypePanel implements ActionLis
         return jComboBox;
     }
 
-    JButton getRefreshButton() {
+    protected JButton getRefreshButton() {
         if (refreshButton == null) {
             refreshButton = new JButton();
             refreshButton.setIcon(new ImageIcon(ClassLoader.getSystemResource("img/refresh2.gif")));

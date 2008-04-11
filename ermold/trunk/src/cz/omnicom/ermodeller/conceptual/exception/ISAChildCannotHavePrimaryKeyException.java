@@ -6,7 +6,7 @@ import cz.omnicom.ermodeller.conceptual.Entity;
  * Entity cannot have primary key.
  */
 public class ISAChildCannotHavePrimaryKeyException extends ConceptualException {
-    private Entity entity = null;
+    Entity entity = null;
 
     /**
      * CannotHavePrimaryKey constructor comment.
@@ -22,5 +22,5 @@ public class ISAChildCannotHavePrimaryKeyException extends ConceptualException {
      */
     public String getMessage() {
         return "ISA child " + entity.getName() + " cannot have primary key";
-}
+    }
 }

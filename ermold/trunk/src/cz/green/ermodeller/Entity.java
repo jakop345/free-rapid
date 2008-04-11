@@ -41,27 +41,27 @@ public class Entity extends ConceptualConstruct {
     /**
      * The model object from the Aleš Kopecký work
      */
-    private cz.omnicom.ermodeller.conceptual.Entity model = null;
+    protected cz.omnicom.ermodeller.conceptual.Entity model = null;
 
     /**
      * The primary unique key of this entity
      */
-    private final UniqueKey primary = null;
+    protected final UniqueKey primary = null;
 
     /**
      * Determine whether this entity is strong addiction child - drawn as double rect
      */
-    boolean isStrongAddictionChild = false;
+    protected boolean isStrongAddictionChild = false;
 
     /**
      * All ISA childs
      */
-    private java.util.Vector ISAChilds = null;
+    protected java.util.Vector ISAChilds = null;
 
     /**
      * Members of Primary key attributes
      */
-    java.util.Vector PKmembers = null;
+    protected java.util.Vector PKmembers = null;
 
     /** All attributes */
 //	protected java.util.Vector Attribs = null;
@@ -74,24 +74,24 @@ public class Entity extends ConceptualConstruct {
     /**
      * The ISA parent
      */
-    Entity ISAParent = null;
+    protected Entity ISAParent = null;
 
     /**
      * Was just now sets as ISA child
      */
-    private transient boolean setAsISAChild = false;
+    transient protected boolean setAsISAChild = false;
 
     /**
      * By which way to decompose this entity
      */
-    private transient boolean decomposeAsRelation = true;
+    transient protected boolean decomposeAsRelation = true;
 
     /**
      * Width of Primary Key in BINARY notation
      */
-    private int PKwidth = 0;
+    protected int PKwidth = 0;
 
-    private Manager EntManager;
+    protected Manager EntManager;
 
 
     /**
@@ -107,7 +107,7 @@ public class Entity extends ConceptualConstruct {
      *          Thrown by inherited constructor.
      * @see ConceptualConstruct#ConceptualConstruct(cz.green.event.interfaces.Manager ,int,int,int,int)
      */
-    private Entity(cz.omnicom.ermodeller.conceptual.Entity ent,
+    protected Entity(cz.omnicom.ermodeller.conceptual.Entity ent,
                      Manager manager, int left, int top)
             throws NullPointerException,
             ImpossibleNegativeValueException {
@@ -221,7 +221,7 @@ public class Entity extends ConceptualConstruct {
      * @param ent The entity with which we have to compact
      * @return Such relation or when doesn't exists null.
      */
-    Relation compactableRelation(Entity ent) {
+    protected Relation compactableRelation(Entity ent) {
         Cardinality car;
         Connection c;
         Object o;
@@ -280,7 +280,7 @@ public class Entity extends ConceptualConstruct {
      *
      * @param ev The resize event, which will be handled.
      */
-    void countMinSize(cz.green.event.ResizeEvent ev) {
+    protected void countMinSize(cz.green.event.ResizeEvent ev) {
         int r[][];
         int width = 60;
         java.awt.FontMetrics fm;
@@ -365,7 +365,7 @@ public class Entity extends ConceptualConstruct {
      * @param before The index in the ISA childs the previous entity.
      * @return Creates the event to process to the ISA child to move it to the right possition.
      */
-    cz.green.event.MovingEvent countMove(
+    protected cz.green.event.MovingEvent countMove(
             cz.green.event.CoordinateEvent e, Entity from, int before) {
         // create the event
         cz.green.event.MovingEvent mev = new cz.green.event.MovingEvent(e
@@ -421,7 +421,7 @@ public class Entity extends ConceptualConstruct {
      * @param index The index the previous ISA child.
      * @return Resize event to resize this entity.
      */
-    cz.green.event.ResizingEvent countResize(
+    protected cz.green.event.ResizingEvent countResize(
             cz.green.event.ResizeEvent e, Entity from, int index) {
         int[][] r = from.getRect();
         int[][] s = getRect();
@@ -692,7 +692,7 @@ public class Entity extends ConceptualConstruct {
      * @param ent     The new entity.
      * @param manager The desktop.
      */
-    void decompose(Entity ent, Manager man) {
+    protected void decompose(Entity ent, Manager man) {
         java.awt.Point p = getAbsoluteCenter(ent);
         if (decomposeAsRelation) {
             try {
@@ -792,7 +792,7 @@ public class Entity extends ConceptualConstruct {
     /**
      * Returns all Primary Key members of this entity
      */
-    java.util.Vector getPKmembers() {
+    public java.util.Vector getPKmembers() {
         return PKmembers;
     }
 
@@ -1147,7 +1147,7 @@ public class Entity extends ConceptualConstruct {
         recalculatePositionsOfAtributes();
     }
 
-    void moveCardinalities() {
+    public void moveCardinalities() {
         /* Move cardinalities to its Entities*/
         java.util.Enumeration e = getConnections().elements();
         Cardinality car;
@@ -1164,7 +1164,7 @@ public class Entity extends ConceptualConstruct {
         }
     }
 
-    void moveStrongAddictions() {
+    public void moveStrongAddictions() {
         /* Move cardinalities to its Entities*/
         java.util.Enumeration e = getConnections().elements();
         StrongAddiction sa;
@@ -1241,7 +1241,7 @@ public class Entity extends ConceptualConstruct {
      *
      * @param ent The new strong addiction parent.
      */
-    void changeAllStrongAddictions(Entity ent) {
+    protected void changeAllStrongAddictions(Entity ent) {
         StrongAddiction sa;
         for (int i = connections.size() - 1; i >= 0; i--) {
             if ((sa = (StrongAddiction) ((Connection) connections.elementAt(i))
@@ -1259,7 +1259,7 @@ public class Entity extends ConceptualConstruct {
      * @see #countMove(cz.green.event.CoordinateEvent,cz.green.ermodeller.Entity,int)
      * @see #handleMoveEvent(cz.green.event.MoveEvent)
      */
-    void moveChilds(cz.green.event.CoordinateEvent event) {
+    protected void moveChilds(cz.green.event.CoordinateEvent event) {
         if ((ISAChilds != null) && (ISAChilds.size() > 0)) {
             cz.green.event.MoveEvent mev;
             int max = ISAChilds.size() - 1;
@@ -1298,7 +1298,7 @@ public class Entity extends ConceptualConstruct {
      * @see #countMove(cz.green.event.CoordinateEvent,cz.green.ermodeller.Entity,int)
      * @see #handleMovingEvent(cz.green.event.MovingEvent)
      */
-    void movingChilds(cz.green.event.CoordinateEvent event) {
+    protected void movingChilds(cz.green.event.CoordinateEvent event) {
         if ((ISAChilds != null) && (ISAChilds.size() > 0)) {
             cz.green.event.MovingEvent mev;
             int max = ISAChilds.size() - 1;
@@ -1600,7 +1600,7 @@ public class Entity extends ConceptualConstruct {
     /**
      * Reconents all ISA childs to the specified entity.
      */
-    void reconnectChilds(Entity to, CoordinateEvent event) {
+    protected void reconnectChilds(Entity to, CoordinateEvent event) {
         Entity ent;
 
         if (ISAChilds != null) {
@@ -1620,7 +1620,7 @@ public class Entity extends ConceptualConstruct {
      * @see #disposeChilds(cz.green.event.RemoveEvent)
      * @see #disposeStrongAddiction()
      */
-    void removeAllStrongAddictionChilds(
+    protected void removeAllStrongAddictionChilds(
             cz.green.event.RemoveEvent event) {
         StrongAddiction sa;
         for (int i = connections.size() - 1; i >= 0; i--)
@@ -1634,7 +1634,7 @@ public class Entity extends ConceptualConstruct {
      *
      * @see UniqueKey#disposeStrongAddiction()
      */
-    void removeAllStrongAddictionParents(
+    protected void removeAllStrongAddictionParents(
             cz.green.event.RemoveEvent event) {
         if (primary != null)
             primary.removeAllStrongAddiction(event);
@@ -1647,7 +1647,7 @@ public class Entity extends ConceptualConstruct {
      * @see #disposeCardinalities(cz.green.event.RemoveEvent)
      * @see disposeStrongAddiction()
      */
-    void removeChilds(cz.green.event.RemoveEvent event) {
+    protected void removeChilds(cz.green.event.RemoveEvent event) {
         if ((ISAChilds != null) && (ISAChilds.size() > 0)) {
             java.util.Enumeration e = ISAChilds.elements();
             while (e.hasMoreElements()) {
@@ -1664,7 +1664,7 @@ public class Entity extends ConceptualConstruct {
      * @param ent   The added entity.
      * @param event Event to can post remove event.
      */
-    void removeISAChild(Entity ent, cz.green.event.CoordinateEvent event) {
+    public void removeISAChild(Entity ent, cz.green.event.CoordinateEvent event) {
         if (ISAChilds == null)
             return;
         int index = ISAChilds.indexOf(ent);
@@ -1739,7 +1739,7 @@ public class Entity extends ConceptualConstruct {
      *
      * @param man Manager where to put the entity manager.
      */
-    void resetISAParent(Manager man) {
+    protected void resetISAParent(Manager man) {
         try {
             model.setISAParent(null);
             ((DGroup) manager)
@@ -1769,7 +1769,7 @@ public class Entity extends ConceptualConstruct {
      * @see #resizeParent(cz.green.event.ResizeEvent,cz.green.ermodeller.Entity)
      * @see #moveChilds(cz.green.event.CoordinateEvent)
      */
-    void resizeEntity(cz.green.event.ResizeEvent event) {
+    protected void resizeEntity(cz.green.event.ResizeEvent event) {
         countMinSize(event);
         if (ISAParent != null) {
             ISAParent.resizeParent(event, this);
@@ -1790,7 +1790,7 @@ public class Entity extends ConceptualConstruct {
      * @see #minimizeChilds(cz.green.event.ResizeEvent,cz.green.ermodeller.Entity)
      * @see #moveChilds(cz.green.event.CoordinateEvent)
      */
-    void minimizeEntity(cz.green.event.ResizeEvent event) {
+    protected void minimizeEntity(cz.green.event.ResizeEvent event) {
         if (ISAChilds != null && ISAChilds.size() > 0) {
             for (int i = 0; i < ISAChilds.size(); i++) {
                 Entity ent = (Entity) ISAChilds.get(i);
@@ -1818,7 +1818,7 @@ public class Entity extends ConceptualConstruct {
      * @see #countResize(cz.green.event.ResizeEvent,cz.green.ermodeller.Entity,int)
      * @see #resizeEntity(cz.green.event.ResizeEvent)
      */
-    void resizeParent(cz.green.event.ResizeEvent event, Entity who) {
+    protected void resizeParent(cz.green.event.ResizeEvent event, Entity who) {
         int index = (ISAChilds != null) ? (ISAChilds.indexOf(who)) : -1;
         cz.green.event.ResizeEvent ev = countResize(event, who, index);
         resizeEntity(ev);
@@ -1832,7 +1832,7 @@ public class Entity extends ConceptualConstruct {
      * @see #resizingParent(cz.green.event.ResizingEvent,cz.green.ermodeller.Entity)
      * @see #movingChilds(cz.green.event.CoordinateEvent)
      */
-    void resizingEntity(cz.green.event.ResizingEvent event) {
+    protected void resizingEntity(cz.green.event.ResizingEvent event) {
         countMinSize(event);
         if (ISAParent != null) {
             ISAParent.resizingParent(event, this);
@@ -1852,7 +1852,7 @@ public class Entity extends ConceptualConstruct {
      * @see #countResize(cz.green.event.ResizeEvent,cz.green.ermodeller.Entity,int)
      * @see #resizeEntity(cz.green.event.ResizeEvent)
      */
-    void resizingParent(cz.green.event.ResizingEvent event, Entity who) {
+    protected void resizingParent(cz.green.event.ResizingEvent event, Entity who) {
         int index = (ISAChilds != null) ? (ISAChilds.indexOf(who)) : -1;
         cz.green.event.ResizingEvent ev = countResize(event, who, index);
         resizingEntity(ev);
@@ -1867,7 +1867,7 @@ public class Entity extends ConceptualConstruct {
      * @param y     Where to have to be y coordinate of the left top point.
      * @param event Necessary to construct the remove event.
      */
-    void setISAParent(Manager man, Entity ent, int x,
+    protected void setISAParent(Manager man, Entity ent, int x,
                                 int y, cz.green.event.CoordinateEvent event)
             throws WasNotFoundException, CycleWouldAppearException,
             ItemNotInsideManagerException, CannotHavePrimaryKeyException,
@@ -1920,7 +1920,7 @@ public class Entity extends ConceptualConstruct {
         pw.println("\t</entity>");
     }
 
-    private static int getDIFFERENCE() {
+    public static int getDIFFERENCE() {
         return DIFFERENCE;
     }
 
@@ -1977,16 +1977,16 @@ public class Entity extends ConceptualConstruct {
         this.model = model;
     }
 
-    Color getEntityBackgroundColor() {
+    public Color getEntityBackgroundColor() {
         return this.getBackgroundColor();
     }
 
-    Color getEntityForegroundColor() {
+    public Color getEntityForegroundColor() {
 
         return this.getForegroundColor();
     }
 
-    boolean isSelected() {
+    public boolean isSelected() {
         return selected;
     }
 

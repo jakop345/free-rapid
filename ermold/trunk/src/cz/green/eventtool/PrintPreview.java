@@ -11,47 +11,47 @@ import java.awt.event.MouseMotionListener;
  * This component shows all schema and his layout on the print pages. Also enable to determine
  * which page will be printed or not.
  */
-class PrintPreview extends JComponent implements MouseListener, MouseMotionListener {
+public class PrintPreview extends JComponent implements MouseListener, MouseMotionListener {
     /**
      * Desktop of the printed schema
      */
-    private ContainerDesktop desktop = null;
+    protected ContainerDesktop desktop = null;
     /**
      * Specify the size of the printer page
      */
-    private java.awt.Dimension pageSize = null;
+    protected java.awt.Dimension pageSize = null;
     /**
      * Helpful for internal computing. Holds the number of pages in each dimension to fit
      * the schema at the reserved zoom
      */
-    private java.awt.Dimension nPages = null;
+    protected java.awt.Dimension nPages = null;
     /**
      * Specify the size of the printer size at this component representation
      */
-    private java.awt.Dimension previewPageSize = null;
+    protected java.awt.Dimension previewPageSize = null;
     /**
      * Should this class to count the scale to fit whole schema to one printer page
      */
-    private boolean fitPage = false;
+    protected boolean fitPage = false;
     /**
      * The scale in which will be the schema printed
      */
-    private float printScale = 1;
+    protected float printScale = 1;
     /**
      * Two dimensional array of booleans, which says whether the page should be printed
      * (<code>true</code>) or not (<code>false</code>). The size in first dimension is the same as
      * <code>nPages.width</code> and in the second as <code>nPages.height</code>.
      */
-    private boolean[][] printPages = null;
+    protected boolean printPages[][] = null;
     /**
      * Font for printing desktop. This font should be used for printing. The size of the font
      * can be change according to the scale of the printing
      */
-    private java.awt.Font printFont = null;
+    protected java.awt.Font printFont = null;
     /**
      * Holds the last enabled or disabled page
      */
-    private java.awt.Point lastPage = null;
+    protected java.awt.Point lastPage = null;
 
     /**
      * This constructor calls the deived default constructor. Then initialize some atributes
@@ -95,7 +95,7 @@ class PrintPreview extends JComponent implements MouseListener, MouseMotionListe
      * @see #previewPageSize
      * @see #printPage
      */
-    float getPreviewScale() {
+    protected float getPreviewScale() {
         if ((pageSize == null) || (desktop == null))
             return -1;
         java.awt.Dimension dim = getSize();

@@ -69,7 +69,7 @@ public class ForeignKeySQL extends ConstraintSQL {
      *
      * @return java.lang.String
      */
-    String getAtributesString() {
+    public String getAtributesString() {
         String result = "(";
         for (Enumeration elements = fromAtributesC2R.elements(); elements.hasMoreElements();) {
             result += ((AtributeC2R) elements.nextElement()).getNameC2R();
@@ -94,7 +94,7 @@ public class ForeignKeySQL extends ConstraintSQL {
      *
      * @return cz.omnicom.ermodeller.conc2rela.NameC2R
      */
-    NameC2R getName() {
+    public NameC2R getName() {
         return name;
     }
 
@@ -106,5 +106,5 @@ public class ForeignKeySQL extends ConstraintSQL {
      */
     public String toString() {
         return "Constraint " + getName() + " Foreign Key " + getAtributesString() + " References " + toUniqueKeyC2R.getRelationC2R().getNameC2R() + toUniqueKeyC2R.getGroupString();
-}
+    }
 }

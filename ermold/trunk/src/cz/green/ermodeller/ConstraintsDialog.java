@@ -8,7 +8,7 @@ import java.awt.event.ActionListener;
 /**
  * Property editor for the <code>DataType</code> beans.
  */
-class ConstraintsDialog extends JDialog implements java.awt.event.ActionListener {
+public class ConstraintsDialog extends JDialog implements java.awt.event.ActionListener {
     /**
      * Datatype to be edited.
      * @see cz.omnicom.ermodeller.datatype.DataType
@@ -20,9 +20,9 @@ class ConstraintsDialog extends JDialog implements java.awt.event.ActionListener
      */
     private JTextArea ivjTextArea = null;
     private cz.omnicom.ermodeller.conceptual.Entity Cent = null;
-    private final JButton OKbutton = new JButton();
-    private final JButton CancelButton = new JButton();
-    private final JButton ApplyButton = new JButton();
+    final JButton OKbutton = new JButton();
+    final JButton CancelButton = new JButton();
+    final JButton ApplyButton = new JButton();
 
     /**
      * Constructor
@@ -126,14 +126,14 @@ class ConstraintsDialog extends JDialog implements java.awt.event.ActionListener
      *
      * @param java.lang.Object value
      */
-    synchronized void setValue(Object value) {
+    public synchronized void setValue(Object value) {
         Cent.setConstraints((String) value);
     }
 
-    String getValue() {
+    public String getValue() {
         // TODO Auto-generated method stub
         //value = getValue();
         return Cent.getConstraints();
-}
+    }
 
 }

@@ -11,10 +11,10 @@ import java.beans.PropertyChangeSupport;
  */
 public abstract class TypeEditor extends JPanel {
 
-    private PropertyChangeSupport propertyChange = null;
+    PropertyChangeSupport propertyChange = null;
     DataType dataType = null;
 
-    PropertyChangeSupport getPropertyChange() {
+    public PropertyChangeSupport getPropertyChange() {
         if (propertyChange == null)
             propertyChange = new PropertyChangeSupport(this);
         return propertyChange;

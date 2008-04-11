@@ -6,7 +6,7 @@ import java.util.Date;
 /**
  * This type was created in VisualAge.
  */
-class SybaseDB {
+public class SybaseDB {
     /**
      * SybaseDB constructor comment.
      */

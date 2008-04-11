@@ -12,7 +12,7 @@ import java.awt.event.KeyListener;
 /**
  * Asks user for the resolution, used when saving image to a file.
  */
-class ResolutionDialog extends JDialog implements KeyListener {
+public class ResolutionDialog extends JDialog implements KeyListener {
     /**
      * The cancel button
      */
@@ -40,7 +40,7 @@ class ResolutionDialog extends JDialog implements KeyListener {
     /**
      * The property with the choosed resolution
      */
-    private java.awt.Dimension resolution = null;
+    protected java.awt.Dimension resolution = null;
 
     /**
      * Constructs the modal dialog.
@@ -181,7 +181,7 @@ class ResolutionDialog extends JDialog implements KeyListener {
      * <b>resolution</b> property and disposes the dialog.
      * Otherwise set to the input field the old values and finished.
      */
-    void okButtonAction() {
+    public void okButtonAction() {
         try {
             if (resolution == null) {
                 resolution = new java.awt.Dimension(0, 0);

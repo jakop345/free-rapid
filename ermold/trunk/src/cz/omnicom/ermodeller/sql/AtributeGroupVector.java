@@ -117,7 +117,7 @@ public abstract class AtributeGroupVector implements SubSQLProducer, SubTreeProd
      *
      * @return java.util.Vector
      */
-    Vector getAtributes() {
+    public Vector getAtributes() {
         if (atributes == null)
             atributes = new Vector();
         return atributes;
@@ -126,13 +126,13 @@ public abstract class AtributeGroupVector implements SubSQLProducer, SubTreeProd
     /**
      * @return javax.swing.Icon
      */
-    protected abstract javax.swing.Icon getIcon();
+    public abstract javax.swing.Icon getIcon();
 
     /**
      * Returns whether check is provided like:
      * "atr IS NOT NULL".
      */
-    protected abstract boolean getIsNotNull();
+    public abstract boolean getIsNotNull();
 
     /**
      * Returns whether vector is empty ot not.

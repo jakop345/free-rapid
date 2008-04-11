@@ -21,11 +21,11 @@ public class ObjectDataTypePanel2 extends DataTypePanel implements ActionListene
     public static final String NO_CONFLICT = "no_conflict_in_object";
     public static final String DUPLICITY_CONFLICT = "duplicity_conflict_in_object";
 
-    private ObjectDataType ivjObjectDataType = null;
-    private JList itemList = null;
-    private DefaultListModel listModel = null;
-    private JLabel itemLabel = null;
-    private JScrollPane scrollPane = null;
+    protected ObjectDataType ivjObjectDataType = null;
+    protected JList itemList = null;
+    protected DefaultListModel listModel = null;
+    protected JLabel itemLabel = null;
+    protected JScrollPane scrollPane = null;
 
     private Vector objectTypeEditorVector = null;
     private UserTypeStorageVector userTypeStorageVector = null;
@@ -40,7 +40,7 @@ public class ObjectDataTypePanel2 extends DataTypePanel implements ActionListene
      * Constructor
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    private ObjectDataTypePanel2() {
+    public ObjectDataTypePanel2() {
         super();
         initialize();
     }
@@ -63,7 +63,7 @@ public class ObjectDataTypePanel2 extends DataTypePanel implements ActionListene
         ((UserTypesEditorPanel) getDataTypeEditor()).getEditor().setActualType(ivjObjectDataType);
     }
 
-    ObjectTypeEditor getObjectTypeEditor(int index) {
+    protected ObjectTypeEditor getObjectTypeEditor(int index) {
         //System.out.println("getObjectTypeEditor "+index);
         if (objectTypeEditorVector == null)
             objectTypeEditorVector = new Vector();
@@ -86,7 +86,7 @@ public class ObjectDataTypePanel2 extends DataTypePanel implements ActionListene
      * @return cz.omnicom.ermodeller.datatype.LengthDataType
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    ObjectDataType getObjectDataType() {
+    protected ObjectDataType getObjectDataType() {
         if (ivjObjectDataType == null) {
             try {
                 ivjObjectDataType = new cz.omnicom.ermodeller.datatype.ObjectDataType(userTypeStorageVector);
@@ -97,7 +97,7 @@ public class ObjectDataTypePanel2 extends DataTypePanel implements ActionListene
         return ivjObjectDataType;
     }
 
-    JLabel getItemLabel() {
+    protected JLabel getItemLabel() {
         if (itemLabel == null) {
             itemLabel = new JLabel();
             itemLabel.setText("Items in Object:");
@@ -106,7 +106,7 @@ public class ObjectDataTypePanel2 extends DataTypePanel implements ActionListene
         return itemLabel;
     }
 
-    JList getItemList() {
+    protected JList getItemList() {
         if (itemList == null) {
             itemList = new JList();
             listModel = new DefaultListModel();
@@ -118,7 +118,7 @@ public class ObjectDataTypePanel2 extends DataTypePanel implements ActionListene
         return itemList;
     }
 
-    JScrollPane getScrollPane() {
+    protected JScrollPane getScrollPane() {
         if (scrollPane == null) {
             scrollPane = new JScrollPane(getItemList());
             scrollPane.setVisible(true);
@@ -141,7 +141,7 @@ public class ObjectDataTypePanel2 extends DataTypePanel implements ActionListene
      *
      * @param exception java.lang.Throwable
      */
-    void handleException(Throwable exception) {
+    protected void handleException(Throwable exception) {
 
         /* Uncomment the following lines to print uncaught exceptions to stdout */
         // System.out.println("--------- UNCAUGHT EXCEPTION ---------");
@@ -152,7 +152,7 @@ public class ObjectDataTypePanel2 extends DataTypePanel implements ActionListene
      * Initializes connections
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    void initConnections() {
+    protected void initConnections() {
         //System.out.println("initConnections()");
         getItemList().addMouseListener(this);
         getItemList().addKeyListener(this);
@@ -162,7 +162,7 @@ public class ObjectDataTypePanel2 extends DataTypePanel implements ActionListene
      * Initialize the class.
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    void initialize() {
+    protected void initialize() {
         try {
             setName("ObjectDataTypePanel");
             setLayout(null);
@@ -204,7 +204,7 @@ public class ObjectDataTypePanel2 extends DataTypePanel implements ActionListene
         }
     }
 
-    void newClicked() {
+    protected void newClicked() {
         //zalozit ObjectTypeEditor
         EditorDialog d = ((UserTypesEditorPanel) getDataTypeEditor()).getEditorDialog();
         d.setVisible(true);
@@ -222,7 +222,7 @@ public class ObjectDataTypePanel2 extends DataTypePanel implements ActionListene
         checkForNameDuplicities();
     }
 
-    void itemListClicked(int index) {
+    protected void itemListClicked(int index) {
         EditorDialog d = ((UserTypesEditorPanel) getDataTypeEditor()).getEditorDialog();
         d.setVisible(true);
         d.removeAll();
@@ -340,7 +340,7 @@ public class ObjectDataTypePanel2 extends DataTypePanel implements ActionListene
         firePropertyChange(anEvent.getPropertyName(), anEvent.getOldValue(), anEvent.getNewValue());
     }
 
-    void checkForNameDuplicities() {
+    protected void checkForNameDuplicities() {
         firePropertyChange(NO_CONFLICT, null, null);
         for (int k = 1; k < listModel.size(); k++)
             getObjectTypeEditor(k - 1).hideDuplicityWarning();

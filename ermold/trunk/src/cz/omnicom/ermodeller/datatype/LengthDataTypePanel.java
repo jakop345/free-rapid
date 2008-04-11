@@ -11,7 +11,7 @@ import java.beans.PropertyChangeListener;
  */
 public class LengthDataTypePanel extends DataTypePanel implements FocusListener, ActionListener, MouseListener, PropertyChangeListener, KeyListener {
 
-    private class TimerListener implements ActionListener {
+    protected class TimerListener implements ActionListener {
         public void actionPerformed(ActionEvent anEvent) {
             if (direction == UP)
                 getLengthDataType().incLength();
@@ -20,15 +20,15 @@ public class LengthDataTypePanel extends DataTypePanel implements FocusListener,
         }
     }
 
-    private JTextField ivjLengthTextField = null;
-    private JButton ivjdownButton = null;
-    private JButton ivjUpButton = null;
-    private Timer timer = null;
-    private int direction;
-    private static final int DOWN = 1;
-    private static final int UP = 2;
+    protected JTextField ivjLengthTextField = null;
+    protected JButton ivjdownButton = null;
+    protected JButton ivjUpButton = null;
+    protected Timer timer = null;
+    protected int direction;
+    protected static final int DOWN = 1;
+    protected static final int UP = 2;
     protected LengthDataType ivjLengthDataType = null;
-    private JLabel ivjLengthLabel = null;
+    protected JLabel ivjLengthLabel = null;
 
     /**
      * Constructor
@@ -67,7 +67,7 @@ public class LengthDataTypePanel extends DataTypePanel implements FocusListener,
      * @param arg1 java.awt.event.MouseEvent
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    void connEtoC3(java.awt.event.MouseEvent arg1) {
+    protected void connEtoC3(java.awt.event.MouseEvent arg1) {
         try {
             // user code begin {1}
             // user code end
@@ -87,7 +87,7 @@ public class LengthDataTypePanel extends DataTypePanel implements FocusListener,
      * @param arg1 java.awt.event.MouseEvent
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    void connEtoC4(java.awt.event.MouseEvent arg1) {
+    protected void connEtoC4(java.awt.event.MouseEvent arg1) {
         try {
             // user code begin {1}
             // user code end
@@ -107,7 +107,7 @@ public class LengthDataTypePanel extends DataTypePanel implements FocusListener,
      * @param arg1 java.awt.event.MouseEvent
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    void connEtoC5(java.awt.event.MouseEvent arg1) {
+    protected void connEtoC5(java.awt.event.MouseEvent arg1) {
         try {
             // user code begin {1}
             // user code end
@@ -127,7 +127,7 @@ public class LengthDataTypePanel extends DataTypePanel implements FocusListener,
      * @param arg1 java.awt.event.MouseEvent
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    void connEtoC6(java.awt.event.MouseEvent arg1) {
+    protected void connEtoC6(java.awt.event.MouseEvent arg1) {
         try {
             // user code begin {1}
             // user code end
@@ -184,7 +184,7 @@ public class LengthDataTypePanel extends DataTypePanel implements FocusListener,
     /**
      * Comment
      */
-    void downButton_MousePressed(java.awt.event.MouseEvent mouseEvent) {
+    protected void downButton_MousePressed(java.awt.event.MouseEvent mouseEvent) {
         direction = DOWN;
         getTimer().restart();
     }
@@ -192,7 +192,7 @@ public class LengthDataTypePanel extends DataTypePanel implements FocusListener,
     /**
      * Comment
      */
-    void downButton_MouseReleased(java.awt.event.MouseEvent mouseEvent) {
+    protected void downButton_MouseReleased(java.awt.event.MouseEvent mouseEvent) {
         getTimer().stop();
     }
 
@@ -322,7 +322,7 @@ public class LengthDataTypePanel extends DataTypePanel implements FocusListener,
      *
      * @return javax.swing.Timer
      */
-    Timer getTimer() {
+    protected Timer getTimer() {
         if (timer == null) {
             timer = new Timer(100, new TimerListener());
             timer.setInitialDelay(500);
@@ -559,7 +559,7 @@ public class LengthDataTypePanel extends DataTypePanel implements FocusListener,
     /**
      * Comment
      */
-    void upButton_MousePressed(java.awt.event.MouseEvent mouseEvent) {
+    protected void upButton_MousePressed(java.awt.event.MouseEvent mouseEvent) {
         direction = UP;
         getTimer().restart();
     }
@@ -567,11 +567,11 @@ public class LengthDataTypePanel extends DataTypePanel implements FocusListener,
     /**
      * Comment
      */
-    void upButton_MouseReleased(java.awt.event.MouseEvent mouseEvent) {
+    protected void upButton_MouseReleased(java.awt.event.MouseEvent mouseEvent) {
         getTimer().stop();
     }
 
-    protected void updateFields(ComponentEvent e) {
+    public void updateFields(ComponentEvent e) {
         int i;
         Integer in;
 
@@ -589,6 +589,6 @@ public class LengthDataTypePanel extends DataTypePanel implements FocusListener,
         catch (Exception ex) {
             in = new Integer(getLengthDataType().getLength());
             getLengthTextField().setText(in.toString());
-	}
-}
+        }
+    }
 }

@@ -12,7 +12,7 @@ public class DropCommandObj extends CommandObj {
     /**
      * Corresponding relation.
      */
-    private RelationC2R relation = null;
+    RelationC2R relation = null;
 
     /**
      * Constructor.

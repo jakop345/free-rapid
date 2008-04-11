@@ -49,7 +49,7 @@ public abstract class ValidationError implements TreeSelectionListener {
 
         protected abstract void fireShowError();
 
-        ShowErrorSupport getShowError() {
+        protected ShowErrorSupport getShowError() {
             if (this.showError == null)
                 this.showError = new ShowErrorSupport(this);
             return this.showError;
@@ -63,7 +63,7 @@ public abstract class ValidationError implements TreeSelectionListener {
         /**
          * Sets valid to <code>newValue</code>
          */
-        void setValid(boolean newValue) {
+        protected void setValid(boolean newValue) {
             this.valid = newValue;
         }
 
@@ -152,7 +152,7 @@ public abstract class ValidationError implements TreeSelectionListener {
      *
      * @param aShowErrorListener cz.omnicom.ermodeller.errorlog.ShowErrorListener
      */
-    synchronized void addShowErrorListener(ShowErrorListener aShowErrorListener) {
+    public synchronized void addShowErrorListener(ShowErrorListener aShowErrorListener) {
         getShowError().addShowErrorListener(aShowErrorListener);
     }
 
@@ -193,7 +193,7 @@ public abstract class ValidationError implements TreeSelectionListener {
     /**
      * Accessor for the showError field.
      */
-    ShowErrorSupport getShowError() {
+    protected ShowErrorSupport getShowError() {
         if (showError == null)
             showError = new ShowErrorSupport(this);
         return showError;
@@ -216,7 +216,7 @@ public abstract class ValidationError implements TreeSelectionListener {
      *
      * @return javax.swing.tree.DefaultMutableTreeNode
      */
-    DefaultMutableTreeNode getTopNode() {
+    protected DefaultMutableTreeNode getTopNode() {
         return topNode;
     }
 
@@ -260,7 +260,7 @@ public abstract class ValidationError implements TreeSelectionListener {
      */
     public void valueChanged(TreeSelectionEvent e) {
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) (e.getPath().getLastPathComponent());
-	if (node == getTopNode())
-		fireShowError();
-}
+        if (node == getTopNode())
+            fireShowError();
+    }
 }

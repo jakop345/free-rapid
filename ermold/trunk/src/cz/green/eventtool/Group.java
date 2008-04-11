@@ -13,7 +13,7 @@ public class Group extends cz.green.event.Group implements cz.green.eventtool.Pr
      *
      * @see cz.green.event.Group#Group()
      */
-    Group() {
+    protected Group() {
         super();
     }
 

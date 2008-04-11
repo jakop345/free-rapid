@@ -3,13 +3,13 @@ package cz.omnicom.ermodeller.conceptual;
 /**
  * The bean information class for cz.omnicom.ermodeller.conceptual.ConceptualObject.
  */
-class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
+public class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
     /**
      * Gets the comment property descriptor.
      *
      * @return java.beans.PropertyDescriptor
      */
-    java.beans.PropertyDescriptor commentPropertyDescriptor() {
+    public java.beans.PropertyDescriptor commentPropertyDescriptor() {
         java.beans.PropertyDescriptor aDescriptor = null;
         try {
             try {
@@ -66,7 +66,7 @@ class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
      * @param parameterCount int
      * @return java.lang.reflect.Method
      */
-    private static java.lang.reflect.Method findMethod(java.lang.Class aClass, java.lang.String methodName, int parameterCount) {
+    public static java.lang.reflect.Method findMethod(java.lang.Class aClass, java.lang.String methodName, int parameterCount) {
         try {
             /* Since this method attempts to find a method by getting all methods from the class,
        this method should only be called if getMethod cannot find the method. */
@@ -116,7 +116,7 @@ class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
      *
      * @return java.lang.Class
      */
-    private static java.lang.Class getBeanClass() {
+    public static java.lang.Class getBeanClass() {
         return cz.omnicom.ermodeller.conceptual.ConceptualObject.class;
     }
 
@@ -212,7 +212,7 @@ class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
      *
      * @return java.beans.PropertyDescriptor
      */
-    java.beans.PropertyDescriptor idPropertyDescriptor() {
+    public java.beans.PropertyDescriptor idPropertyDescriptor() {
         java.beans.PropertyDescriptor aDescriptor = null;
         try {
             try {
@@ -255,7 +255,7 @@ class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
      *
      * @return java.beans.PropertyDescriptor
      */
-    java.beans.PropertyDescriptor namePropertyDescriptor() {
+    public java.beans.PropertyDescriptor namePropertyDescriptor() {
         java.beans.PropertyDescriptor aDescriptor = null;
         try {
             try {
@@ -309,7 +309,7 @@ class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
      *
      * @return java.beans.EventSetDescriptor
      */
-    java.beans.EventSetDescriptor propertyChangeEventSetDescriptor() {
+    public java.beans.EventSetDescriptor propertyChangeEventSetDescriptor() {
         java.beans.EventSetDescriptor aDescriptor = null;
         try {
             try {
@@ -373,7 +373,7 @@ class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
      *
      * @return java.beans.MethodDescriptor
      */
-    java.beans.MethodDescriptor propertyChangepropertyChange_javabeansPropertyChangeEventMethodEventDescriptor() {
+    public java.beans.MethodDescriptor propertyChangepropertyChange_javabeansPropertyChangeEventMethodEventDescriptor() {
         java.beans.MethodDescriptor aDescriptor = null;
         try {
             /* Create and return the propertyChange.propertyChange(java.beans.PropertyChangeEvent) method descriptor. */
@@ -419,7 +419,7 @@ class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
      *
      * @return java.beans.PropertyDescriptor
      */
-    java.beans.PropertyDescriptor schemaPropertyDescriptor() {
+    public java.beans.PropertyDescriptor schemaPropertyDescriptor() {
         java.beans.PropertyDescriptor aDescriptor = null;
         try {
             try {

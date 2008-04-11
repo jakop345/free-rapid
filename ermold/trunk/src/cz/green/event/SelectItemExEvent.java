@@ -8,7 +8,7 @@ public class SelectItemExEvent extends CoordinateEvent {
      * Determine, whether the receiver this event is removed from selected
      * items list or is selected only alone - creates the new list.
      */
-    private boolean addItem = false;
+    protected boolean addItem = false;
 
     /**
      * Default constructor.
@@ -30,5 +30,5 @@ public class SelectItemExEvent extends CoordinateEvent {
      */
     public boolean getAddItem() {
         return addItem;
-}
+    }
 }

@@ -15,16 +15,16 @@ public class EditorDialog extends JDialog implements ActionListener {
         initConnections();
     }
 
-    void initialize() {
+    protected void initialize() {
         getContentPane().setLayout(null);
         getContentPane().add(getOKButton());
     }
 
-    void initConnections() {
+    protected void initConnections() {
         getOKButton().addActionListener(this);
     }
 
-    JButton getOKButton() {
+    protected JButton getOKButton() {
         if (OKButton == null) {
             OKButton = new JButton("OK");
             OKButton.setBounds(65, 205, 70, 25);
@@ -63,5 +63,5 @@ public class EditorDialog extends JDialog implements ActionListener {
                 if (((ObjectTypeEditor) getContentPane().getComponent(i)).confirmName())
                     hide();
         }
-	}
+    }
 }

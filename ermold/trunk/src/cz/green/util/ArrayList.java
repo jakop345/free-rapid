@@ -7,7 +7,7 @@ import java.util.Vector;
  * Implements dynamic array of items. In JDK 1.1 is based on java.util.Vector but in JDK 1.2
  * will be implemented by java.util.ArrayList.
  *
- * @see     java.util.Vector
+ * @see java.util.Vector
  */
 
 public class ArrayList extends Vector {
@@ -15,7 +15,7 @@ public class ArrayList extends Vector {
     /**
      * Constructs an empty ArrayList.
      */
-    ArrayList() {
+    public ArrayList() {
         super();
     }
 
@@ -24,7 +24,7 @@ public class ArrayList extends Vector {
      *
      * @param initialCapacity the initial capacity of the ArrayList.
      */
-    ArrayList(int initialCapacity) {
+    public ArrayList(int initialCapacity) {
         super(initialCapacity);
     }
 
@@ -36,7 +36,7 @@ public class ArrayList extends Vector {
      * @param capacityIncrement the amount by which the capacity is
      *                          increased when the ArrayList overflows.
      */
-    ArrayList(int initialCapacity, int capacityIncrement) {
+    public ArrayList(int initialCapacity, int capacityIncrement) {
         super(initialCapacity, capacityIncrement);
     }
 

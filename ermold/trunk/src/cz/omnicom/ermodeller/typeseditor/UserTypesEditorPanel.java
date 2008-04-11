@@ -25,7 +25,7 @@ public class UserTypesEditorPanel extends JPanel implements ActionListener {
     private DataTypePanel dataTypePanel = null;
     private JPanel jPanel;
 
-    private EditorDialog editorDialog = null;
+    protected EditorDialog editorDialog = null;
 
     //protected PropertyChangeSupport propertyChange = null;
 
@@ -47,7 +47,7 @@ public class UserTypesEditorPanel extends JPanel implements ActionListener {
         setPanelContents(d);
     }
 
-    void setPanelContents(DataType d) {
+    public void setPanelContents(DataType d) {
         if (d instanceof IntegerDataType)
             getIntRadioButton().setSelected(true);
         else if (d instanceof DateDataType)
@@ -125,12 +125,12 @@ public class UserTypesEditorPanel extends JPanel implements ActionListener {
               */
     }
 
-    void addItems() {
+    public void addItems() {
         getButtonGroup();
         add(getJPanel());
     }
 
-    JPanel getJPanel() {
+    public JPanel getJPanel() {
         if (jPanel == null) {
             jPanel = new JPanel();
             jPanel.setLayout(null);
@@ -163,7 +163,7 @@ public class UserTypesEditorPanel extends JPanel implements ActionListener {
         return editorDialog;
     }
 
-    void initConnections() {
+    public void initConnections() {
         getIntRadioButton().addActionListener(this);
         getCharRadioButton().addActionListener(this);
         getVarchar2RadioButton().addActionListener(this);
@@ -216,7 +216,7 @@ public class UserTypesEditorPanel extends JPanel implements ActionListener {
         paintComponents(this.getGraphics());
     }
 
-    void intSelected() {
+    public void intSelected() {
         if (dataTypePanel != null)
             remove(dataTypePanel);
         if (editorDialog != null) {
@@ -226,7 +226,7 @@ public class UserTypesEditorPanel extends JPanel implements ActionListener {
         editor.setActualType(new IntegerDataType());
     }
 
-    void charSelected() {
+    public void charSelected() {
         if (dataTypePanel != null)
             remove(dataTypePanel);
         if (editorDialog != null) {
@@ -244,7 +244,7 @@ public class UserTypesEditorPanel extends JPanel implements ActionListener {
         add(dataTypePanel);
     }
 
-    void varchar2Selected() {
+    public void varchar2Selected() {
         if (dataTypePanel != null)
             remove(dataTypePanel);
         if (editorDialog != null) {
@@ -262,7 +262,7 @@ public class UserTypesEditorPanel extends JPanel implements ActionListener {
         add(dataTypePanel);
     }
 
-    void floatSelected() {
+    public void floatSelected() {
         if (dataTypePanel != null)
             remove(dataTypePanel);
         if (editorDialog != null) {
@@ -290,7 +290,7 @@ public class UserTypesEditorPanel extends JPanel implements ActionListener {
         add(dataTypePanel);
     }
 
-    void dateSelected() {
+    public void dateSelected() {
         if (dataTypePanel != null)
             remove(dataTypePanel);
         if (editorDialog != null) {
@@ -300,7 +300,7 @@ public class UserTypesEditorPanel extends JPanel implements ActionListener {
         editor.setActualType(new DateDataType());
     }
 
-    void objectSelected() {
+    public void objectSelected() {
         if (dataTypePanel != null)
             remove(dataTypePanel);
         if (editorDialog != null) {
@@ -320,7 +320,7 @@ public class UserTypesEditorPanel extends JPanel implements ActionListener {
         add(dataTypePanel);
     }
 
-    void varraySelected() {
+    public void varraySelected() {
         if (dataTypePanel != null)
             remove(dataTypePanel);
         if (editorDialog != null) {
@@ -339,7 +339,7 @@ public class UserTypesEditorPanel extends JPanel implements ActionListener {
         add(dataTypePanel);
     }
 
-    void nestedSelected() {
+    public void nestedSelected() {
         if (dataTypePanel != null)
             remove(dataTypePanel);
         if (editorDialog != null) {
@@ -358,7 +358,7 @@ public class UserTypesEditorPanel extends JPanel implements ActionListener {
         add(dataTypePanel);
     }
 
-    JRadioButton getIntRadioButton() {
+    public JRadioButton getIntRadioButton() {
         if (intRadioButton == null) {
             intRadioButton = new JRadioButton("Integer", true);
             intRadioButton.setSize(90, 20);
@@ -368,7 +368,7 @@ public class UserTypesEditorPanel extends JPanel implements ActionListener {
         return intRadioButton;
     }
 
-    JRadioButton getCharRadioButton() {
+    public JRadioButton getCharRadioButton() {
         if (charRadioButton == null) {
             charRadioButton = new JRadioButton("Char");
             charRadioButton.setSize(90, 20);
@@ -377,7 +377,7 @@ public class UserTypesEditorPanel extends JPanel implements ActionListener {
         return charRadioButton;
     }
 
-    JRadioButton getVarchar2RadioButton() {
+    public JRadioButton getVarchar2RadioButton() {
         if (varchar2RadioButton == null) {
             varchar2RadioButton = new JRadioButton("Variable string");
             varchar2RadioButton.setSize(120, 20);
@@ -386,7 +386,7 @@ public class UserTypesEditorPanel extends JPanel implements ActionListener {
         return varchar2RadioButton;
     }
 
-    JRadioButton getFloatRadioButton() {
+    public JRadioButton getFloatRadioButton() {
         if (floatRadioButton == null) {
             floatRadioButton = new JRadioButton("Float");
             floatRadioButton.setSize(90, 20);
@@ -395,7 +395,7 @@ public class UserTypesEditorPanel extends JPanel implements ActionListener {
         return floatRadioButton;
     }
 
-    JRadioButton getNumberRadioButton() {
+    public JRadioButton getNumberRadioButton() {
         if (numberRadioButton == null) {
             numberRadioButton = new JRadioButton("General number");
             numberRadioButton.setSize(120, 20);
@@ -404,7 +404,7 @@ public class UserTypesEditorPanel extends JPanel implements ActionListener {
         return numberRadioButton;
     }
 
-    JRadioButton getDateRadioButton() {
+    public JRadioButton getDateRadioButton() {
         if (dateRadioButton == null) {
             dateRadioButton = new JRadioButton("Date");
             dateRadioButton.setSize(90, 20);
@@ -413,7 +413,7 @@ public class UserTypesEditorPanel extends JPanel implements ActionListener {
         return dateRadioButton;
     }
 
-    JRadioButton getObjectRadioButton() {
+    public JRadioButton getObjectRadioButton() {
         if (objectRadioButton == null) {
             objectRadioButton = new JRadioButton("Object");
             objectRadioButton.setSize(90, 20);
@@ -422,7 +422,7 @@ public class UserTypesEditorPanel extends JPanel implements ActionListener {
         return objectRadioButton;
     }
 
-    JRadioButton getVarrayRadioButton() {
+    public JRadioButton getVarrayRadioButton() {
         if (varrayRadioButton == null) {
             varrayRadioButton = new JRadioButton("Varray");
             varrayRadioButton.setSize(90, 20);
@@ -431,7 +431,7 @@ public class UserTypesEditorPanel extends JPanel implements ActionListener {
         return varrayRadioButton;
     }
 
-    JRadioButton getNestedRadioButton() {
+    public JRadioButton getNestedRadioButton() {
         if (nestedRadioButton == null) {
             nestedRadioButton = new JRadioButton("Nested table");
             nestedRadioButton.setSize(120, 20);
@@ -440,7 +440,7 @@ public class UserTypesEditorPanel extends JPanel implements ActionListener {
         return nestedRadioButton;
     }
 
-    ButtonGroup getButtonGroup() {
+    public ButtonGroup getButtonGroup() {
         if (buttonGroup == null) {
             buttonGroup = new ButtonGroup();
             buttonGroup.add(getIntRadioButton());
@@ -472,5 +472,5 @@ public class UserTypesEditorPanel extends JPanel implements ActionListener {
     /* WARNING: THIS METHOD WILL BE REGENERATED. */
     private Border getDataTypePanelGroupBox() {
         return BorderFactory.createTitledBorder("Data type");
-	}
+    }
 }

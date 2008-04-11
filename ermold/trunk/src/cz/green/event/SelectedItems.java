@@ -15,7 +15,7 @@ public class SelectedItems implements SelectableItem {
     /**
      * Stores all selected items
      */
-    private MoveArrayList elems = null;
+    protected MoveArrayList elems = null;
 
     /**
      * Creates empty list of selected items.
@@ -232,5 +232,5 @@ public class SelectedItems implements SelectableItem {
      * This method was created by Jiri Mares
      */
     public void select() {
-}
+    }
 }

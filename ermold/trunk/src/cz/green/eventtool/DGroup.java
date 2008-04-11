@@ -28,14 +28,14 @@ public class DGroup extends Group implements ConnectionManager {
     /**
      * Can hold the local connections between items inside this group
      */
-    private ConnectionGroup connections = null;
+    protected ConnectionGroup connections = null;
 
     /**
      * Simply calls the inherited constructor.
      *
      * @see cz.green.eventtool.Group#Group(cz.green.event.interfaces.Manager , int, int, int, int)
      */
-    protected DGroup(Manager manager, int left, int top, int width, int height) throws NullPointerException, ImpossibleNegativeValueException {
+    public DGroup(Manager manager, int left, int top, int width, int height) throws NullPointerException, ImpossibleNegativeValueException {
         super(manager, left, top, width, height);
     }
 
@@ -140,7 +140,7 @@ public class DGroup extends Group implements ConnectionManager {
      *          permition to resize.
      * @see cz.green.event.Group#itemMoveDimension(int, int[])
      */
-    void doResize(int[][] r) throws ItemNotInsideManagerException {
+    protected void doResize(int[][] r) throws ItemNotInsideManagerException {
         boolean recount = false, ask0 = false, ask1 = false;
         int[][] h = hRect;
         if (hRect == null)
@@ -260,7 +260,7 @@ public class DGroup extends Group implements ConnectionManager {
      * @see cz.green.event.Window#mostLeft(int)
      * @see cz.green.event.Window#mostRight(int)
      */
-    int[][] itemsBounds() {
+    protected int[][] itemsBounds() {
         int[][] r = new int[2][2];
         try {
             Item i = ((Item) wins.lastElement());
@@ -372,5 +372,5 @@ public class DGroup extends Group implements ConnectionManager {
      */
     public void removeConnectionFromMain(Connection conn) {
         ((ConnectionManager) manager).removeConnectionFromMain(conn);
-}
+    }
 }

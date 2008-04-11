@@ -12,7 +12,7 @@ import java.awt.event.ComponentEvent;
  */
 public class GeneralNumberDataTypePanel2 extends GeneralNumberDataTypePanel {
 
-    private final ActionListener al = new ActionListener() {
+    final ActionListener al = new ActionListener() {
         public void actionPerformed(ActionEvent ae) {
             ivjGeneralNumberDataType = (GeneralNumberDataType) getGeneralNumberDataType().clone();
 

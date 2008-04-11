@@ -8,5 +8,5 @@ public abstract class CommandObj implements SubObjProducer, SubTreeProducerObj {
     /**
      * @return javax.swing.Icon
      */
-    protected abstract javax.swing.Icon getIcon();
+    public abstract javax.swing.Icon getIcon();
 }

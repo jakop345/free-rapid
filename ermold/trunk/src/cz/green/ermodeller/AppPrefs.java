@@ -192,7 +192,7 @@ public class AppPrefs {
      * @param key key value
      * @return string value of the property
      */
-    private static String getProperty(final String key) {
+    public static String getProperty(final String key) {
         return properties.getProperty(key);
     }
 

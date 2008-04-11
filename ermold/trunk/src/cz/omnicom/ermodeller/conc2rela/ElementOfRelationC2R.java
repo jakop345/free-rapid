@@ -16,7 +16,7 @@ public abstract class ElementOfRelationC2R extends ObjectC2R {
      * @param aSchemaC2R   cz.omnicom.ermodeller.conc2rela.SchemaC2R
      * @param aRelationC2R cz.omnicom.ermodeller.conc2rela.RelationC2R
      */
-    ElementOfRelationC2R(NameC2R aNameC2R, SchemaC2R aSchemaC2R, RelationC2R aRelationC2R) {
+    public ElementOfRelationC2R(NameC2R aNameC2R, SchemaC2R aSchemaC2R, RelationC2R aRelationC2R) {
         super(aNameC2R, aSchemaC2R);
         this.relationC2R = aRelationC2R;
     }

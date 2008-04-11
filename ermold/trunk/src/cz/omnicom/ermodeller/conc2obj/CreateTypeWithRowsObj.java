@@ -11,13 +11,13 @@ public class CreateTypeWithRowsObj extends CreateTypeObj {
     /**
      * Corresponding data type.
      */
-    private ObjectDataType objectDataType = null;
+    ObjectDataType objectDataType = null;
     /**
      * name of the type
      */
-    private String name = null;
+    String name = null;
 
-    private Vector rows = null;
+    Vector rows = null;
 
     /**
      * Constructor.
@@ -72,7 +72,7 @@ public class CreateTypeWithRowsObj extends CreateTypeObj {
      *
      * @return java.util.Vector
      */
-    Vector getRows() {
+    protected Vector getRows() {
         if (rows == null)
             rows = new Vector();
         return rows;
@@ -87,7 +87,7 @@ public class CreateTypeWithRowsObj extends CreateTypeObj {
         return getRows().isEmpty();
     }
 
-    void addColumn(ObjectTypeColumnObj aColumn) {
+    public void addColumn(ObjectTypeColumnObj aColumn) {
         addRowSQL(aColumn);
     }
 
@@ -96,7 +96,7 @@ public class CreateTypeWithRowsObj extends CreateTypeObj {
      *
      * @param aRow cz.omnicom.ermodeller.sql.RowSQL
      */
-    void addRowSQL(RowObj aRow) {
+    protected void addRowSQL(RowObj aRow) {
         if (getRows().contains(aRow)) {
 //		throw AlreadyContainsExceptionSQL();
         }
@@ -111,5 +111,5 @@ public class CreateTypeWithRowsObj extends CreateTypeObj {
      */
     public String toString() {
         return "Create type " + name + " as " + objectDataType.toString();
-}
+    }
 }

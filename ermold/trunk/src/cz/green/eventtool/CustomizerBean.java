@@ -10,7 +10,7 @@ import java.beans.Introspector;
 /**
  * This dialog present the JavaBeans Customiser to user.
  */
-class CustomizerBean extends JDialog {
+public class CustomizerBean extends JDialog {
     /**
      * This is the customizer as component.
      */
@@ -58,7 +58,7 @@ class CustomizerBean extends JDialog {
      * tries to instantied it and set the property <code>customizer</code> to this new instance. If occurs some error
      * or problem, then sets <code>customizer</code> to <code>null</code>.
      */
-    void setCustomizer(Object bean) {
+    protected void setCustomizer(Object bean) {
         try {
             BeanInfo info = Introspector.getBeanInfo(bean.getClass());
             Class customizerClass = info.getBeanDescriptor().getCustomizerClass();

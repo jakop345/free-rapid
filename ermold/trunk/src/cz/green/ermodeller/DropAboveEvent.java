@@ -13,7 +13,7 @@ public class DropAboveEvent extends DragOverEvent {
      * When receiver do some opertion with drpped item then sets this
      * atribute to <code>true</code>
      */
-    private boolean dropped = false;
+    protected boolean dropped = false;
 
     /**
      * Same as inherited one.
@@ -83,5 +83,5 @@ public class DropAboveEvent extends DragOverEvent {
         message.append(",component=").append(getComponent()).append(",item=").append(item);
         message.append(",@").append(Integer.toHexString(hashCode()));
         return new String(message);
-}
+    }
 }

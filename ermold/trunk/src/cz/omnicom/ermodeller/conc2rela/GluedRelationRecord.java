@@ -5,7 +5,7 @@ import java.util.Vector;
 /**
  * Record about gluing/not gluing the relation.
  */
-class GluedRelationRecord {
+public class GluedRelationRecord {
     /**
      * Glued/non glued relation.
      */
@@ -41,7 +41,7 @@ class GluedRelationRecord {
      *
      * @param anAtributeC2R cz.omnicom.ermodeller.conc2rela.AtributeC2R
      */
-    void addAtributeC2R(AtributeC2R anAtributeC2R) {
+    protected void addAtributeC2R(AtributeC2R anAtributeC2R) {
         getGluedAtributesC2R().addElement(anAtributeC2R);
     }
 

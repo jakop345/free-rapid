@@ -61,7 +61,7 @@ public class ColumnUniqueObj extends RowObj {
      *
      * @return java.lang.String
      */
-    String getNameString() {
+    public String getNameString() {
         String pom = "";
         for (int i = 0; i < uniqueKeysC2R.size(); i++) {
             AtributeC2R a = (AtributeC2R) uniqueKeysC2R.get(i);
@@ -78,6 +78,6 @@ public class ColumnUniqueObj extends RowObj {
      * @see #createSubSQL
      */
     public String toString() {
-        return "Unique(" + getNameString()+")";
-}
+        return "Unique(" + getNameString() + ")";
+    }
 }

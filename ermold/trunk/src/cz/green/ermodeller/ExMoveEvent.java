@@ -10,7 +10,7 @@ public class ExMoveEvent extends cz.green.event.MovingEvent {
      * Holds information that this event represents just moving (<code>true</code>) or
      * dragging (<code>false</code>)
      */
-    private boolean move = true;
+    protected boolean move = true;
 
     /**
      * Call the inherited conatructor and sets the new atribute.
@@ -42,5 +42,5 @@ public class ExMoveEvent extends cz.green.event.MovingEvent {
      */
     public void setMove(boolean move) {
         this.move = move;
-}
+    }
 }

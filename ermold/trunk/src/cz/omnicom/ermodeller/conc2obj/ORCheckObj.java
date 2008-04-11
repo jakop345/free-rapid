@@ -65,7 +65,7 @@ public class ORCheckObj implements SubObjProducer, SubTreeProducerObj {
      *
      * @return javax.swing.Icon
      */
-    Icon getIcon() {
+    public Icon getIcon() {
         return new ImageIcon(ClassLoader.getSystemResource("img/orcheck.gif"));
     }
 
@@ -74,7 +74,7 @@ public class ORCheckObj implements SubObjProducer, SubTreeProducerObj {
      *
      * @return java.util.Vector
      */
-    Vector getORParts() {
+    public Vector getORParts() {
         return orParts;
     }
 
@@ -85,5 +85,5 @@ public class ORCheckObj implements SubObjProducer, SubTreeProducerObj {
      */
     public String toString() {
         return "          ";
-}
+    }
 }

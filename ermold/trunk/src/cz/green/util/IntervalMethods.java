@@ -220,7 +220,7 @@ public abstract class IntervalMethods {
      *          if after resizing the <code>interval</code> will arise wrong interval.
      *          The start point will be greater than end point.
      */
-    private static void resizeEndTo(int[] interval, int point) throws BadDimensionException, WrongIntervalException {
+    public static void resizeEndTo(int[] interval, int point) throws BadDimensionException, WrongIntervalException {
         try {
             if (interval[0] > point)
                 throw new WrongIntervalException();
@@ -273,7 +273,7 @@ public abstract class IntervalMethods {
      *          if after resizing the <code>interval</code> will arise wrong interval.
      *          The start point will be greater than end point.
      */
-    private static void resizeStartTo(int[] interval, int point) throws BadDimensionException, WrongIntervalException {
+    public static void resizeStartTo(int[] interval, int point) throws BadDimensionException, WrongIntervalException {
         try {
             if (point > interval[1])
                 throw new WrongIntervalException();

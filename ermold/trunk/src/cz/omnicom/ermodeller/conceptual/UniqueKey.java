@@ -32,7 +32,7 @@ public class UniqueKey extends ConceptualObject {
      *
      * @see cz.omnicom.ermodeller.conceptual.Atribute
      */
-    private Vector atributes = new Vector();
+    protected Vector atributes = new Vector();
     /**
      * Owner of the unique key
      *
@@ -40,8 +40,8 @@ public class UniqueKey extends ConceptualObject {
      */
     private Entity fieldEntity = null;
 
-    private static final String ENTITY_PROPERTY_CHANGE = "entity";
-    private static final String ATRIBUTES_PROPERTY_CHANGE = "atributes";
+    public static final String ENTITY_PROPERTY_CHANGE = "entity";
+    public static final String ATRIBUTES_PROPERTY_CHANGE = "atributes";
 
     /**
      * Adds <code>anAtribute</code> to the unique key group.
@@ -108,7 +108,7 @@ public class UniqueKey extends ConceptualObject {
      * @return The entity property value.
      * @see #setEntity
      */
-    Entity getEntity() {
+    public Entity getEntity() {
         return fieldEntity;
     }
 
@@ -259,6 +259,6 @@ public class UniqueKey extends ConceptualObject {
         pw.println("\t\t<ent>" + getEntity().getID() + "</ent>");
         Vector v = getAtributes();
         for (int i = 0; i < v.size(); i++)
-            pw.println("\t\t<atr>" + ((Atribute) v.get(i)).getID()+"</atr>");
-}
+            pw.println("\t\t<atr>" + ((Atribute) v.get(i)).getID() + "</atr>");
+    }
 }

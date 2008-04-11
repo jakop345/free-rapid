@@ -1,12 +1,13 @@
 package cz.omnicom.ermodeller.conc2rela;
 
 import cz.omnicom.ermodeller.conc2rela.exception.AlreadyContainsExceptionC2R;
+import cz.omnicom.ermodeller.conc2rela.exception.WasNotFoundByConceptualExceptionC2R;
 import cz.omnicom.ermodeller.conceptual.Entity;
 
 /**
  * Relation created from conceptual entity.
  */
-class EntRelationC2R extends EntC2R {
+public class EntRelationC2R extends EntC2R {
     /**
      * EntRelation constructor.
      *
@@ -18,7 +19,7 @@ class EntRelationC2R extends EntC2R {
      *
      * @see cz.omnicom.ermodeller.conceptual.Entity
      */
-    public EntRelationC2R(SchemaC2R aSchemaC2R, Entity aConceptualEntity) throws AlreadyContainsExceptionC2R {
+    public EntRelationC2R(SchemaC2R aSchemaC2R, Entity aConceptualEntity) throws WasNotFoundByConceptualExceptionC2R, AlreadyContainsExceptionC2R {
         super(aSchemaC2R, aConceptualEntity);
     }
 }

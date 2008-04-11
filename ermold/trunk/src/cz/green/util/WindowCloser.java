@@ -5,8 +5,8 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 public class WindowCloser implements WindowListener {
-    private Window win = null;
-    private boolean exit = false;
+    protected Window win = null;
+    protected boolean exit = false;
 
     public WindowCloser(Window win) {
         this.win = win;

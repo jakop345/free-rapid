@@ -8,7 +8,7 @@ import java.sql.*;
 /**
  * Connection to the database
  */
-class SQLConnection implements Serializable {
+public class SQLConnection implements Serializable {
     private java.lang.String driver;
     private transient DatabaseMetaData dma;
     private transient Connection con;
@@ -33,7 +33,7 @@ class SQLConnection implements Serializable {
      * @param aUser   java.lang.String
      * @param aPasswd java.lang.String
      */
-    private SQLConnection(String aDriver, String aURL, String aUser, String aPasswd) {
+    public SQLConnection(String aDriver, String aURL, String aUser, String aPasswd) {
         super();
         driver = aDriver;
         url = aURL;
@@ -50,7 +50,7 @@ class SQLConnection implements Serializable {
      *
      * @param newUser java.lang.String
      */
-    void clearLog() {
+    public void clearLog() {
         log.clear();
     }
 
@@ -60,7 +60,7 @@ class SQLConnection implements Serializable {
      *
      * @param newUser java.lang.String
      */
-    void close() {
+    public void close() {
         try {
             con.close();
         } catch (Exception e) {
@@ -74,7 +74,7 @@ class SQLConnection implements Serializable {
      *
      * @param newUser java.lang.String
      */
-    void connect() {
+    public void connect() {
         try {
             Class.forName(driver);
             con = DriverManager.getConnection(url, user, passwd);
@@ -150,7 +150,7 @@ class SQLConnection implements Serializable {
      *
      * @return java.lang.String
      */
-    void log(String s) {
+    public void log(String s) {
         log.append(s + "\n");
         //System.out.println(s);
     }
@@ -258,7 +258,7 @@ class SQLConnection implements Serializable {
      *
      * @return java.lang.String
      */
-    void showLog() {
+    public void showLog() {
         if (log == null) {
             log = new LogSQLObj();
             clearLog();

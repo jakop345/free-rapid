@@ -17,13 +17,13 @@ public class SelectUI extends JPanel {
     private JPanel ivjButtonPanel = null;
     private FlowLayout ivjButtonPanelFlowLayout = null;
     private JButton ivjCancelButton = null;
-    private Component root = null;
+    protected Component root = null;
 
     /**
      * Constructor
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    private SelectUI() {
+    public SelectUI() {
         super();
         initialize();
     }
@@ -176,7 +176,7 @@ public class SelectUI extends JPanel {
      *
      * @return java.lang.String
      */
-    String getSelectedLookAndFeel() {
+    public String getSelectedLookAndFeel() {
         return (UIManager.getInstalledLookAndFeels()[getFeels().getSelectedIndex()]).getClassName();
     }
 

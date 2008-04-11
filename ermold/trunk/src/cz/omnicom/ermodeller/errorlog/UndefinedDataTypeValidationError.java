@@ -7,7 +7,7 @@ import cz.omnicom.ermodeller.conceptual.ConceptualObject;
  */
 public class UndefinedDataTypeValidationError extends ConceptualObjectValidationError {
 
-    private cz.omnicom.ermodeller.conceptual.Atribute atr = null;
+    cz.omnicom.ermodeller.conceptual.Atribute atr = null;
 
     /**
      * constructor comment.

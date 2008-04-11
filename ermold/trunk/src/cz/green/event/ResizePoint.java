@@ -22,11 +22,11 @@ public class ResizePoint {
     /**
      * This constant is used for defining the <code>direction</code>.
      */
-    private final static int XCOORDINATE = 1;
+    public final static int XCOORDINATE = 1;
     /**
      * This constant is used for defining the <code>direction</code>.
      */
-    private final static int YCOORDINATE = 2;
+    public final static int YCOORDINATE = 2;
     /**
      * This constant is used for moving left border.
      */
@@ -59,5 +59,5 @@ public class ResizePoint {
         this.x = x;
         this.y = y;
         this.direction = direction;
-}
+    }
 }

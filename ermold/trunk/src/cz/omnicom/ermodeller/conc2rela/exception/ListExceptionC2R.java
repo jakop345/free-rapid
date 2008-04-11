@@ -34,7 +34,7 @@ public abstract class ListExceptionC2R extends ExceptionC2R {
      * @param anOwnedObjectC2R cz.omnicom.ermodeller.conc2rela.ObjectC2R
      * @param aListSpec        int
      */
-    ListExceptionC2R(ObjectC2R anOwnerObjectC2R, ObjectC2R anOwnedObjectC2R, int aListSpec) {
+    public ListExceptionC2R(ObjectC2R anOwnerObjectC2R, ObjectC2R anOwnedObjectC2R, int aListSpec) {
         ownerObjectC2R = anOwnerObjectC2R;
         ownedObjectC2R = anOwnedObjectC2R;
         listName = resolveListName(aListSpec);

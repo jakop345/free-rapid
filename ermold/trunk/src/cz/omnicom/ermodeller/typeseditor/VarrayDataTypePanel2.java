@@ -15,7 +15,7 @@ import java.beans.PropertyChangeListener;
  */
 public class VarrayDataTypePanel2 extends DataTypePanel implements FocusListener, ActionListener, MouseListener, PropertyChangeListener, KeyListener {
 
-    private class TimerListener implements ActionListener {
+    protected class TimerListener implements ActionListener {
         public void actionPerformed(ActionEvent anEvent) {
             if (direction == UP)
                 getVarrayDataType().incLength();
@@ -24,18 +24,18 @@ public class VarrayDataTypePanel2 extends DataTypePanel implements FocusListener
         }
     }
 
-    private JTextField ivjLengthTextField = null;
-    private JButton ivjdownButton = null;
-    private JButton ivjUpButton = null;
-    private Timer timer = null;
-    private int direction;
-    private static final int DOWN = 1;
-    private static final int UP = 2;
-    private VarrayDataType ivjVarrayDataType = null;
-    private JLabel ivjLengthLabel = null;
-    private JLabel ivjTypeLabel = null;
+    protected JTextField ivjLengthTextField = null;
+    protected JButton ivjdownButton = null;
+    protected JButton ivjUpButton = null;
+    protected Timer timer = null;
+    protected int direction;
+    protected static final int DOWN = 1;
+    protected static final int UP = 2;
+    protected VarrayDataType ivjVarrayDataType = null;
+    protected JLabel ivjLengthLabel = null;
+    protected JLabel ivjTypeLabel = null;
     protected JComboBox ivjJComboBox = null;
-    private JButton typeButton = null;
+    protected JButton typeButton = null;
     private VarrayNestedTypeEditor varrayTypeEditor = null;
     private UserTypeStorageVector userTypeStorageVector = null;
 
@@ -43,7 +43,7 @@ public class VarrayDataTypePanel2 extends DataTypePanel implements FocusListener
      * Constructor
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    private VarrayDataTypePanel2() {
+    public VarrayDataTypePanel2() {
         super();
         initialize();
     }
@@ -78,7 +78,7 @@ public class VarrayDataTypePanel2 extends DataTypePanel implements FocusListener
      * @param arg1 java.awt.event.MouseEvent
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    void connEtoC3(java.awt.event.MouseEvent arg1) {
+    protected void connEtoC3(java.awt.event.MouseEvent arg1) {
         try {
             this.downButton_MousePressed(arg1);
         } catch (java.lang.Throwable ivjExc) {
@@ -92,7 +92,7 @@ public class VarrayDataTypePanel2 extends DataTypePanel implements FocusListener
      * @param arg1 java.awt.event.MouseEvent
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    void connEtoC4(java.awt.event.MouseEvent arg1) {
+    protected void connEtoC4(java.awt.event.MouseEvent arg1) {
         try {
             this.downButton_MouseReleased(arg1);
         } catch (java.lang.Throwable ivjExc) {
@@ -106,7 +106,7 @@ public class VarrayDataTypePanel2 extends DataTypePanel implements FocusListener
      * @param arg1 java.awt.event.MouseEvent
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    void connEtoC5(java.awt.event.MouseEvent arg1) {
+    protected void connEtoC5(java.awt.event.MouseEvent arg1) {
         try {
             this.upButton_MousePressed(arg1);
         } catch (java.lang.Throwable ivjExc) {
@@ -120,7 +120,7 @@ public class VarrayDataTypePanel2 extends DataTypePanel implements FocusListener
      * @param arg1 java.awt.event.MouseEvent
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    void connEtoC6(java.awt.event.MouseEvent arg1) {
+    protected void connEtoC6(java.awt.event.MouseEvent arg1) {
         try {
             this.upButton_MouseReleased(arg1);
         } catch (java.lang.Throwable ivjExc) {
@@ -134,7 +134,7 @@ public class VarrayDataTypePanel2 extends DataTypePanel implements FocusListener
      * @param arg1 java.awt.event.ActionEvent
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    void connEtoM1(java.awt.event.ActionEvent arg1) {
+    protected void connEtoM1(java.awt.event.ActionEvent arg1) {
         try {
             getVarrayDataType().incLength();
         } catch (java.lang.Throwable ivjExc) {
@@ -148,7 +148,7 @@ public class VarrayDataTypePanel2 extends DataTypePanel implements FocusListener
      * @param arg1 java.awt.event.ActionEvent
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    void connEtoM2(java.awt.event.ActionEvent arg1) {
+    protected void connEtoM2(java.awt.event.ActionEvent arg1) {
         try {
             getVarrayDataType().decLength();
         } catch (java.lang.Throwable ivjExc) {
@@ -156,7 +156,7 @@ public class VarrayDataTypePanel2 extends DataTypePanel implements FocusListener
         }
     }
 
-    void connEtoM3(java.awt.event.ActionEvent arg1) {
+    protected void connEtoM3(java.awt.event.ActionEvent arg1) {
         EditorDialog d = ((UserTypesEditorPanel) getDataTypeEditor()).getEditorDialog();
         d.setOKButtonVisible(false);
         d.setVisible(true);
@@ -168,7 +168,7 @@ public class VarrayDataTypePanel2 extends DataTypePanel implements FocusListener
     /**
      * Comment
      */
-    void downButton_MousePressed(java.awt.event.MouseEvent mouseEvent) {
+    protected void downButton_MousePressed(java.awt.event.MouseEvent mouseEvent) {
         direction = DOWN;
         getTimer().restart();
     }
@@ -176,7 +176,7 @@ public class VarrayDataTypePanel2 extends DataTypePanel implements FocusListener
     /**
      * Comment
      */
-    void downButton_MouseReleased(java.awt.event.MouseEvent mouseEvent) {
+    protected void downButton_MouseReleased(java.awt.event.MouseEvent mouseEvent) {
         getTimer().stop();
     }
 
@@ -193,7 +193,7 @@ public class VarrayDataTypePanel2 extends DataTypePanel implements FocusListener
         updateFields(e);
     }
 
-    VarrayNestedTypeEditor getVarrayTypeEditor() {
+    protected VarrayNestedTypeEditor getVarrayTypeEditor() {
         if (varrayTypeEditor == null) {
             //System.out.println("VarrayTypeEditor byl null");
             varrayTypeEditor = new VarrayNestedTypeEditor(userTypeStorageVector);
@@ -212,7 +212,7 @@ public class VarrayDataTypePanel2 extends DataTypePanel implements FocusListener
      * @return javax.swing.JButton
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    javax.swing.JButton getdownButton() {
+    protected javax.swing.JButton getdownButton() {
         if (ivjdownButton == null) {
             try {
                 ivjdownButton = new javax.swing.JButton();
@@ -239,7 +239,7 @@ public class VarrayDataTypePanel2 extends DataTypePanel implements FocusListener
      * @return cz.omnicom.ermodeller.datatype.LengthDataType
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    VarrayDataType getVarrayDataType() {
+    protected VarrayDataType getVarrayDataType() {
         if (ivjVarrayDataType == null) {
             try {
                 ivjVarrayDataType = new cz.omnicom.ermodeller.datatype.VarrayDataType();
@@ -256,7 +256,7 @@ public class VarrayDataTypePanel2 extends DataTypePanel implements FocusListener
      * @return javax.swing.JLabel
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    javax.swing.JLabel getLengthLabel() {
+    protected javax.swing.JLabel getLengthLabel() {
         if (ivjLengthLabel == null) {
             try {
                 ivjLengthLabel = new javax.swing.JLabel();
@@ -270,7 +270,7 @@ public class VarrayDataTypePanel2 extends DataTypePanel implements FocusListener
         return ivjLengthLabel;
     }
 
-    javax.swing.JLabel getTypeLabel() {
+    protected javax.swing.JLabel getTypeLabel() {
         if (ivjTypeLabel == null) {
             try {
                 ivjTypeLabel = new javax.swing.JLabel();
@@ -290,7 +290,7 @@ public class VarrayDataTypePanel2 extends DataTypePanel implements FocusListener
      * @return javax.swing.JTextField
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    javax.swing.JTextField getLengthTextField() {
+    protected javax.swing.JTextField getLengthTextField() {
         if (ivjLengthTextField == null) {
             try {
                 ivjLengthTextField = new javax.swing.JTextField();
@@ -320,7 +320,7 @@ public class VarrayDataTypePanel2 extends DataTypePanel implements FocusListener
      *
      * @return javax.swing.Timer
      */
-    Timer getTimer() {
+    protected Timer getTimer() {
         if (timer == null) {
             timer = new Timer(100, new TimerListener());
             timer.setInitialDelay(500);
@@ -336,7 +336,7 @@ public class VarrayDataTypePanel2 extends DataTypePanel implements FocusListener
      * @return javax.swing.JButton
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    javax.swing.JButton getUpButton() {
+    protected javax.swing.JButton getUpButton() {
         if (ivjUpButton == null) {
             try {
                 ivjUpButton = new javax.swing.JButton();
@@ -353,7 +353,7 @@ public class VarrayDataTypePanel2 extends DataTypePanel implements FocusListener
         return ivjUpButton;
     }
 
-    JButton getTypeButton() {
+    protected JButton getTypeButton() {
         if (typeButton == null) {
             typeButton = new JButton();
             typeButton.setBounds(5, 81, 130, 25);
@@ -368,7 +368,7 @@ public class VarrayDataTypePanel2 extends DataTypePanel implements FocusListener
      *
      * @param exception java.lang.Throwable
      */
-    void handleException(Throwable exception) {
+    protected void handleException(Throwable exception) {
 
         /* Uncomment the following lines to print uncaught exceptions to stdout */
         // System.out.println("--------- UNCAUGHT EXCEPTION ---------");
@@ -379,7 +379,7 @@ public class VarrayDataTypePanel2 extends DataTypePanel implements FocusListener
      * Initializes connections
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    void initConnections() {
+    protected void initConnections() {
         //System.out.println("initConnections()");
         getLengthTextField().addKeyListener(this);
         getdownButton().addMouseListener(this);
@@ -393,7 +393,7 @@ public class VarrayDataTypePanel2 extends DataTypePanel implements FocusListener
      * Initialize the class.
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    void initialize() {
+    protected void initialize() {
         try {
             setName("VarrayDataTypePanel");
             setLayout(null);
@@ -557,7 +557,7 @@ public class VarrayDataTypePanel2 extends DataTypePanel implements FocusListener
     /**
      * Comment
      */
-    void upButton_MousePressed(java.awt.event.MouseEvent mouseEvent) {
+    protected void upButton_MousePressed(java.awt.event.MouseEvent mouseEvent) {
         direction = UP;
         getTimer().restart();
     }
@@ -565,11 +565,11 @@ public class VarrayDataTypePanel2 extends DataTypePanel implements FocusListener
     /**
      * Comment
      */
-    void upButton_MouseReleased(java.awt.event.MouseEvent mouseEvent) {
+    protected void upButton_MouseReleased(java.awt.event.MouseEvent mouseEvent) {
         getTimer().stop();
     }
 
-    void updateFields(ComponentEvent e) {
+    public void updateFields(ComponentEvent e) {
         int i;
         Integer in;
 
@@ -587,6 +587,6 @@ public class VarrayDataTypePanel2 extends DataTypePanel implements FocusListener
         catch (Exception ex) {
             in = new Integer(getVarrayDataType().getLength());
             getLengthTextField().setText(in.toString());
-	}
-}
+        }
+    }
 }

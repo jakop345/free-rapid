@@ -13,13 +13,13 @@ public class GeneralNumberDataType extends DataType {
      */
     private int fieldScale;
 
-    private static final int MINIMUM_PRECISION = 1;
-    private static final int MAXIMUM_PRECISION = 38;
-    private static final int DEFAULT_PRECISION = MAXIMUM_PRECISION;
-    private GeneralNumberDataTypePanel panel;
-    private static final int MINIMUM_SCALE = -84;
-    private static final int MAXIMUM_SCALE = 128;
-    private static final int DEFAULT_SCALE = 0;
+    static final public int MINIMUM_PRECISION = 1;
+    static final public int MAXIMUM_PRECISION = 38;
+    static final public int DEFAULT_PRECISION = MAXIMUM_PRECISION;
+    GeneralNumberDataTypePanel panel;
+    static final public int MINIMUM_SCALE = -84;
+    static final public int MAXIMUM_SCALE = 128;
+    static final public int DEFAULT_SCALE = 0;
 
     public static final String PRECISION_PROPERTY_CHANGE = "precision";
     public static final String SCALE_PROPERTY_CHANGE = "scale";

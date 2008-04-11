@@ -58,7 +58,7 @@ public class Window extends cz.green.event.Window implements cz.green.eventtool.
      *
      * @see cz.green.event.Window#Window()
      */
-    Window() {
+    protected Window() {
         super();
     }
 
@@ -88,7 +88,7 @@ public class Window extends cz.green.event.Window implements cz.green.eventtool.
     public void print(java.awt.Graphics g) {
         //paint window
         java.awt.Rectangle r = getBounds();
-	g.drawRect(r.x, r.y, r.width, r.height);
-	r = null;
-}
+        g.drawRect(r.x, r.y, r.width, r.height);
+        r = null;
+    }
 }

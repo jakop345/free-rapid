@@ -24,7 +24,7 @@ public class ConceptualObject extends ConnectableWindow implements ViewControlle
      *
      * @see ConnectableWindow#ConnectableWindow(cz.green.event.interfaces.Manager ,int,int,int,int)
      */
-    ConceptualObject(Manager manager, int left, int top, int width, int height) throws NullPointerException, ImpossibleNegativeValueException {
+    public ConceptualObject(Manager manager, int left, int top, int width, int height) throws NullPointerException, ImpossibleNegativeValueException {
         super(manager, left, top, width, height);
     }
 
@@ -38,7 +38,7 @@ public class ConceptualObject extends ConnectableWindow implements ViewControlle
      * @param param       java.lang.Object
      * @param paramType   java.lang.Class
      */
-    void addMenuItem(JPopupMenu menu, String name, String icon, Object destination, String handlerName) {
+    protected void addMenuItem(JPopupMenu menu, String name, String icon, Object destination, String handlerName) {
         try {
             JMenuItem item = new JMenuItem(name, new ImageIcon(ClassLoader.getSystemResource(icon)));
 //		JMenuItem item = new JMenuItem(name, new ImageIcon(icon));
@@ -55,7 +55,7 @@ public class ConceptualObject extends ConnectableWindow implements ViewControlle
      * @param g graphics context
      * @return previous stroke
      */
-    Stroke updateStrokeWithAliasing(Graphics g) {
+    protected Stroke updateStrokeWithAliasing(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         final Stroke strokeBackup = g2.getStroke();
         g2.setStroke(new BasicStroke(Consts.STROKE_WIDTH));
@@ -71,7 +71,7 @@ public class ConceptualObject extends ConnectableWindow implements ViewControlle
      * @param strokeBackup previous stroke value
      * @see updateStrokeWithAliasing
      */
-    void updateBackupStroke(Graphics g, Stroke strokeBackup) {
+    protected void updateBackupStroke(Graphics g, Stroke strokeBackup) {
         Graphics2D g2 = (Graphics2D) g;
         g2.setStroke(strokeBackup);
         // Disable antialiasing for shapes
@@ -90,7 +90,7 @@ public class ConceptualObject extends ConnectableWindow implements ViewControlle
      * @param param       java.lang.Object
      * @param paramType   java.lang.Class
      */
-    void addMenuItem(JPopupMenu menu, String name, String icon, Object destination, String handlerName, Object param, Class paramType) {
+    protected void addMenuItem(JPopupMenu menu, String name, String icon, Object destination, String handlerName, Object param, Class paramType) {
         try {
             JMenuItem item = new JMenuItem(name, new ImageIcon(ClassLoader.getSystemResource(icon)));
 //		JMenuItem item = new JMenuItem(name, new ImageIcon(icon));
@@ -111,7 +111,7 @@ public class ConceptualObject extends ConnectableWindow implements ViewControlle
      *              call.
      * @return The filled menu.
      */
-    JPopupMenu createMenu(JPopupMenu menu, PopupMenuEvent event) {
+    protected JPopupMenu createMenu(JPopupMenu menu, PopupMenuEvent event) {
         menu.removeAll();
         //addMenuItem(menu, "Properties", "mProperty.gif", this, "propEditing", new Boolean(true), boolean.class);
         return menu;
@@ -125,7 +125,7 @@ public class ConceptualObject extends ConnectableWindow implements ViewControlle
      * @see Relation#decompose(cz.green.event.CoordinateEvent)
      * @see Entity#decompose(cz.green.ermodeller.Entity, cz.green.event.interfaces.Manager)
      */
-    java.awt.Point getCenter(ConceptualObject co) {
+    protected java.awt.Point getCenter(ConceptualObject co) {
         int[][] r1 = getRect(), r2 = co.getRect();
         return new java.awt.Point((r1[0][0] + r2[0][0]) / 2, (r1[1][0] + r2[1][0]) / 2);
     }
@@ -156,7 +156,7 @@ public class ConceptualObject extends ConnectableWindow implements ViewControlle
      * @see cz.green.event#rect
      * @see cz.green.event#hRect
      */
-    int[][] getRect() {
+    protected int[][] getRect() {
         return (hRect != null) ? hRect : rect;
     }
 
@@ -250,7 +250,7 @@ public class ConceptualObject extends ConnectableWindow implements ViewControlle
      *
      * @see #getModel()
      */
-    void propEditing(boolean show) {
+    public void propEditing(boolean show) {
         if (getModel() != null)
             PropertyListDialog.setBeanAndEdit(getModel(), ((cz.omnicom.ermodeller.conceptual.ConceptualObject) getModel()).getName(), show);
     }

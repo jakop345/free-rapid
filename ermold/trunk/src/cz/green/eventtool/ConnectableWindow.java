@@ -23,7 +23,7 @@ public class ConnectableWindow extends Window implements Connectable {
     /**
      * Determine whether the connections are already painted using paintFast method
      */
-    private transient boolean connPaintedFast = false;
+    transient protected boolean connPaintedFast = false;
 
     /**
      * The same functionality as inhereted constructor and constructs the connections.
@@ -31,7 +31,7 @@ public class ConnectableWindow extends Window implements Connectable {
      * @see cz.green.eventtool.Window#Window(cz.green.event.interfaces.Manager , int, int, int, int)
      * @see java.util.Vector
      */
-    protected ConnectableWindow(Manager manager, int left, int top, int width, int height) throws NullPointerException, ImpossibleNegativeValueException {
+    public ConnectableWindow(Manager manager, int left, int top, int width, int height) throws NullPointerException, ImpossibleNegativeValueException {
         super(manager, left, top, width, height);
         connections = new Vector(5, 3);
     }
@@ -68,7 +68,7 @@ public class ConnectableWindow extends Window implements Connectable {
      *
      * @see Connection#disconnect()
      */
-    void disconnectAll() {
+    public void disconnectAll() {
         while (connections.size() != 0) {
             ((Connection) connections.elementAt(0)).disconnect();
         }
@@ -82,7 +82,7 @@ public class ConnectableWindow extends Window implements Connectable {
      * @param recount If it is <code>true</code> then connection are repaint and are also
      *                repainted its stored bounds, if <code>false</code> thay are only repainted.
      */
-    void finishConnFastRepaint(boolean recount) {
+    protected void finishConnFastRepaint(boolean recount) {
         PaintableManager m = (PaintableManager) manager;
         java.util.Enumeration e;
         e = connections.elements();
@@ -290,7 +290,7 @@ public class ConnectableWindow extends Window implements Connectable {
             while (e.hasMoreElements()) {
                 ((Connection) e.nextElement()).saveBounds();
                 connPaintedFast = true;
-		}
-	}
-}
+            }
+        }
+    }
 }

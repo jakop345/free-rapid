@@ -15,7 +15,7 @@ public abstract class CommandWithRowsSQL extends CommandSQL {
      *
      * @see cz.omnicom.ermodeller.sql.RowSQL
      */
-    private Vector rows = new Vector();
+    Vector rows = new Vector();
     /**
      * Corresponding relation.
      *
@@ -28,7 +28,7 @@ public abstract class CommandWithRowsSQL extends CommandSQL {
      *
      * @param aRelation corresponding relation
      */
-    CommandWithRowsSQL(RelationC2R aRelation) {
+    public CommandWithRowsSQL(RelationC2R aRelation) {
         relation = aRelation;
     }
 
@@ -77,7 +77,7 @@ public abstract class CommandWithRowsSQL extends CommandSQL {
      *
      * @param aRow cz.omnicom.ermodeller.sql.RowSQL
      */
-    void addRowSQL(RowSQL aRow) {
+    protected void addRowSQL(RowSQL aRow) {
         if (getRows().contains(aRow)) {
 //		throw AlreadyContainsExceptionSQL();
         }
@@ -131,7 +131,7 @@ public abstract class CommandWithRowsSQL extends CommandSQL {
      *
      * @return java.util.Vector
      */
-    Vector getRows() {
+    protected Vector getRows() {
         if (rows == null)
             rows = new Vector();
         return rows;
@@ -144,5 +144,5 @@ public abstract class CommandWithRowsSQL extends CommandSQL {
      */
     public boolean isEmpty() {
         return getRows().isEmpty();
-}
+    }
 }

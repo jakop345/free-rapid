@@ -15,16 +15,16 @@ public class ShowProperty extends JPanel implements PropertyChangeListener, Acti
     /**
      * The propertyEditor for the edited property
      */
-    private PropertyEditor editor = null;
+    protected PropertyEditor editor = null;
     /**
      * The name of the edited property
      */
-    private String name = null;
+    protected String name = null;
     /**
      * The text field or the choice used to edit the value of the property
      */
     private Component customizer = null;
-    private Frame parent = null;
+    protected Frame parent = null;
 
     /**
      * Determine which type of the PropertyEditor is <code>editor</code> and

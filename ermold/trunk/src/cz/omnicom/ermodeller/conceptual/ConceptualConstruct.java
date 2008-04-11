@@ -26,20 +26,20 @@ public abstract class ConceptualConstruct extends ConceptualObject {
      *
      * @see cz.omnicom.ermodeller.conceptual.Atribute
      */
-    private Vector atributes = new Vector();
+    protected Vector atributes = new Vector();
     /**
      * Atributes held by construct.
      *
      * @see cz.omnicom.ermodeller.conceptual.Cardinality
      */
-    private Vector cardinalities = new Vector();
+    protected Vector cardinalities = new Vector();
     /**
      * Counter for generating unique names of objects.
      */
     private int fieldAtributeIDCounter = 0;
 
-    private static final String CARDINALITIES_PROPERTY_CHANGE = "cardinalities";
-    static final String ATRIBUTES_PROPERTY_CHANGE = "atributes";
+    public static final String CARDINALITIES_PROPERTY_CHANGE = "cardinalities";
+    public static final String ATRIBUTES_PROPERTY_CHANGE = "atributes";
 
     /**
      * Adds <code>anAtribute</code> to the list of construct's atributes.
@@ -76,7 +76,7 @@ public abstract class ConceptualConstruct extends ConceptualObject {
      *          thrown when <code>aCardinality</code> is already connected to construct.
      * @see #removeCardinality
      */
-    synchronized void addCardinality(Cardinality aCardinality) throws ParameterCannotBeNullException, AlreadyContainsException {
+    protected synchronized void addCardinality(Cardinality aCardinality) throws ParameterCannotBeNullException, AlreadyContainsException {
         if (aCardinality == null)
             throw new ParameterCannotBeNullException();
         if (containsCardinality(aCardinality))
@@ -131,7 +131,7 @@ public abstract class ConceptualConstruct extends ConceptualObject {
     /**
      * Disposes all construct's atributes.
      */
-    synchronized void disposeAllAtributes() {
+    protected synchronized void disposeAllAtributes() {
         Vector oldValue = (Vector) getAtributes().clone();
         // Disconnects each atribute from all unique keys.
         for (Enumeration elements = getAtributes().elements(); elements.hasMoreElements();) {
@@ -202,7 +202,7 @@ public abstract class ConceptualConstruct extends ConceptualObject {
      *
      * @return The atributeIDCounter property value.
      */
-    final int getAtributeIDCounter() {
+    protected final int getAtributeIDCounter() {
         return ++fieldAtributeIDCounter;
     }
 
@@ -313,7 +313,7 @@ public abstract class ConceptualConstruct extends ConceptualObject {
      *
      * @see #addAtribute
      */
-    synchronized void removeAtribute(Atribute anAtribute) throws ParameterCannotBeNullException, WasNotFoundException {
+    protected synchronized void removeAtribute(Atribute anAtribute) throws ParameterCannotBeNullException, WasNotFoundException {
         if (anAtribute == null)
             throw new ParameterCannotBeNullException();
 
@@ -345,7 +345,7 @@ public abstract class ConceptualConstruct extends ConceptualObject {
      * @see #addCardinality
      * @see #setRelation
      */
-    synchronized void removeCardinality(Cardinality aCardinality) throws ParameterCannotBeNullException, WasNotFoundException {
+    protected synchronized void removeCardinality(Cardinality aCardinality) throws ParameterCannotBeNullException, WasNotFoundException {
         if (aCardinality == null)
             throw new ParameterCannotBeNullException();
 
@@ -392,5 +392,5 @@ public abstract class ConceptualConstruct extends ConceptualObject {
             errorLogList.concatErrorLogList(entityErrors);
         }
         return errorLogList;
-}
+    }
 }

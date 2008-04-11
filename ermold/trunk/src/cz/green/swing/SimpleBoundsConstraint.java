@@ -3,8 +3,8 @@ package cz.green.swing;
 import java.awt.*;
 
 public class SimpleBoundsConstraint implements BoundsConstraint {
-    private Constraint x = null;
-    private Constraint y = null;
+    protected Constraint x = null;
+    protected Constraint y = null;
 
     public SimpleBoundsConstraint(Constraint x, Constraint y) {
         this.x = x;

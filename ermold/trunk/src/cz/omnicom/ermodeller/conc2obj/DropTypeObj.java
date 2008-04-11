@@ -11,7 +11,7 @@ public class DropTypeObj extends CommandObj {
     /**
      * name of the type
      */
-    private String name = null;
+    String name = null;
 
     /**
      * Constructor.
@@ -59,5 +59,5 @@ public class DropTypeObj extends CommandObj {
      */
     public String toString() {
         return "Drop type " + name + " FORCE";
-}
+    }
 }

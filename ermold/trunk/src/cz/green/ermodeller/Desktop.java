@@ -3,6 +3,7 @@ package cz.green.ermodeller;
 import cz.green.event.RemoveEvent;
 import cz.green.event.SelectItemEvent;
 import cz.green.event.SelectItemExEvent;
+import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.interfaces.Item;
 import cz.green.event.interfaces.PaintableItem;
 import cz.green.eventtool.Connection;
@@ -25,7 +26,7 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
     /**
      * The model - object from Aleš Kopecký work
      */
-    private cz.omnicom.ermodeller.conceptual.Schema model = null;
+    protected cz.omnicom.ermodeller.conceptual.Schema model = null;
     public JFrame ERMFrame;
 
     private transient java.beans.PropertyChangeSupport pcs = null;
@@ -37,7 +38,8 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
      *      int, int, int)
      */
     public Desktop(cz.green.event.Container place, int left, int top,
-                   int width, int height) {
+                   int width, int height)
+            throws ImpossibleNegativeValueException {
         super(place, left, top, width, height);
         model = new cz.omnicom.ermodeller.conceptual.Schema();
         pcs = new java.beans.PropertyChangeSupport(this);

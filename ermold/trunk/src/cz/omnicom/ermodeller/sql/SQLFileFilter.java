@@ -8,8 +8,8 @@ import java.io.File;
  *
  * @see javax.swing.filechooser.FileFilter;
  */
-class SQLFileFilter extends FileFilter {
-    private final static String SQL = "sql";
+public class SQLFileFilter extends FileFilter {
+    final static String SQL = "sql";
 
     /**
      * Accept all directories and all *.sql files.

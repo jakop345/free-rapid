@@ -12,7 +12,7 @@ public class DropCommandSQL extends CommandSQL {
     /**
      * Corresponding relation.
      */
-    private RelationC2R relation = null;
+    RelationC2R relation = null;
 
     /**
      * Constructor.

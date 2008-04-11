@@ -29,7 +29,7 @@ public class Relation extends ConceptualConstruct {
     /**
      * The model object - entity from Aleš Kopecký work
      */
-    cz.omnicom.ermodeller.conceptual.Relation model = null;
+    protected cz.omnicom.ermodeller.conceptual.Relation model = null;
 
     /**
      * Creates relation, counts size to fit the name of the relation.
@@ -45,7 +45,7 @@ public class Relation extends ConceptualConstruct {
      *          Thrown by inherited constructor.
      * @see ConceptualConstruct#ConceptualConstruct(cz.green.event.interfaces.Manager , int, int, int, int)
      */
-    private Relation(cz.omnicom.ermodeller.conceptual.Relation rel, Manager manager, int left, int top) throws NullPointerException, ImpossibleNegativeValueException {
+    protected Relation(cz.omnicom.ermodeller.conceptual.Relation rel, Manager manager, int left, int top) throws NullPointerException, ImpossibleNegativeValueException {
         super(manager, left, top, 0, 0);
         rel.addPropertyChangeListener(this);
         String name = (model = rel).getName();
@@ -259,7 +259,7 @@ public class Relation extends ConceptualConstruct {
      *
      * @return <code>true</code> if this relation is decomposable.
      */
-    boolean decomposable() {
+    protected boolean decomposable() {
         java.util.Vector v = new java.util.Vector(connections.size());
         Object o;
         Cardinality car;
@@ -560,7 +560,7 @@ public class Relation extends ConceptualConstruct {
      *
      * @param ev The resize event, which will be handled.
      */
-    void countMinSize(cz.green.event.ResizeEvent ev) {
+    protected void countMinSize(cz.green.event.ResizeEvent ev) {
         int r[][];
         int width = 0;
         int height = 0;
@@ -727,7 +727,7 @@ public class Relation extends ConceptualConstruct {
      *
      * @see #countMinSize(cz.green.event.ResizeEvent)
      */
-    void resizeRelation(cz.green.event.ResizeEvent event) {
+    protected void resizeRelation(cz.green.event.ResizeEvent event) {
         countMinSize(event);
         super.handleResizeEvent(event);
     }
@@ -737,7 +737,7 @@ public class Relation extends ConceptualConstruct {
      *
      * @see #countMinSize(cz.green.event.ResizeEvent)
      */
-    void resizingRelation(cz.green.event.ResizingEvent event) {
+    protected void resizingRelation(cz.green.event.ResizingEvent event) {
         countMinSize(event);
         super.handleResizingEvent(event);
     }
@@ -748,7 +748,7 @@ public class Relation extends ConceptualConstruct {
      *
      * @see #countMinSize(cz.green.event.ResizeEvent)
      */
-    void minimizeRelation(cz.green.event.ResizeEvent event) {
+    protected void minimizeRelation(cz.green.event.ResizeEvent event) {
         event.setDx(-1000);
         event.setDy(-1000);
         countMinSize(event);
@@ -788,7 +788,7 @@ public class Relation extends ConceptualConstruct {
      *
      * @param event Useful for sending the remove event to some objects.
      */
-    Entity transformToEntity(Manager man) {
+    protected Entity transformToEntity(Manager man) {
         int[][] r = getRect();
         Entity ent = Entity.createEntity(model.getSchema(), man, r[0][0], r[1][0], null);
         ((cz.omnicom.ermodeller.conceptual.Entity) ent.getModel()).setName(model.getName());

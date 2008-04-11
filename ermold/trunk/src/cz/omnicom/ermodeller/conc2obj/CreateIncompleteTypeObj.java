@@ -14,7 +14,7 @@ public class CreateIncompleteTypeObj extends CreateTypeObj {
     /**
      * name of the type
      */
-    private String name = null;
+    String name = null;
 
     /**
      * Constructor.
@@ -57,5 +57,5 @@ public class CreateIncompleteTypeObj extends CreateTypeObj {
      */
     public String toString() {
         return "Create type " + name;
-}
+    }
 }

@@ -45,12 +45,12 @@ public class Atribute extends ConceptualObject {
      */
     private DataType fieldDataType = new IntegerDataType();
 
-    private static final String PRIMARY_PROPERTY_CHANGE = "primary";
-    private static final String POSITION_PROPERTY_CHANGE = "position";
-    private static final String UNIQUE_PROPERTY_CHANGE = "unique";
-    private static final String ARBITRARY_PROPERTY_CHANGE = "arbitrary";
-    private static final String CONSTRUCT_PROPERTY_CHANGE = "construct";
-    private static final String DATATYPE_PROPERTY_CHANGE = "dataType";
+    public static final String PRIMARY_PROPERTY_CHANGE = "primary";
+    public static final String POSITION_PROPERTY_CHANGE = "position";
+    public static final String UNIQUE_PROPERTY_CHANGE = "unique";
+    public static final String ARBITRARY_PROPERTY_CHANGE = "arbitrary";
+    public static final String CONSTRUCT_PROPERTY_CHANGE = "construct";
+    public static final String DATATYPE_PROPERTY_CHANGE = "dataType";
 
     /**
      * Gets the arbitrary property (boolean) value.
@@ -286,6 +286,6 @@ public class Atribute extends ConceptualObject {
         if (cc instanceof Entity)
             pw.println("\t\t<ent>" + cc.getID() + "</ent>");
         else
-            pw.println("\t\t<rel>" + cc.getID()+"</rel>");
-}
+            pw.println("\t\t<rel>" + cc.getID() + "</rel>");
+    }
 }

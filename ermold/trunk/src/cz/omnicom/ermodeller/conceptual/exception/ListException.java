@@ -6,9 +6,9 @@ import cz.omnicom.ermodeller.conceptual.ConceptualObject;
  * Exceptions when working with lists of objects.
  */
 public abstract class ListException extends ConceptualException {
-    ConceptualObject ownedObject = null;
-    ConceptualObject ownerObject = null;
-    String listName = null;
+    protected ConceptualObject ownedObject = null;
+    protected ConceptualObject ownerObject = null;
+    protected String listName = null;
 
     public static final int ATRIBUTES_LIST = 1;
     public static final int ENTITIES_LIST = 2;
@@ -22,7 +22,7 @@ public abstract class ListException extends ConceptualException {
     /**
      * AlreadyContains constructor comment.
      */
-    ListException(ConceptualObject anOwnerObject, ConceptualObject anOwnedObject, int aListSpec) {
+    public ListException(ConceptualObject anOwnerObject, ConceptualObject anOwnedObject, int aListSpec) {
         ownedObject = anOwnedObject;
         ownerObject = anOwnerObject;
         listName = resolveListName(aListSpec);

@@ -6,7 +6,7 @@ import java.beans.PropertyEditorSupport;
  * This is property editor for the cz.omnicom.ermodeller.Boolean.
  * Boolean value true is represented by String "Unary", value false by "N-ary".
  */
-class MultiCardinalityEditor extends PropertyEditorSupport {
+public class MultiCardinalityEditor extends PropertyEditorSupport {
     /**
      * Tags showed in the properties window.
      */

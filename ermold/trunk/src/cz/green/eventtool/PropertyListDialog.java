@@ -31,8 +31,8 @@ public class PropertyListDialog extends JDialog implements ItemListener {
      */
     private JScrollPane scroller = null;
     private JButton customizer = null;
-    private static PropertyListDialog dialog = null;
-    private Frame parent = null;
+    protected static PropertyListDialog dialog = null;
+    protected Frame parent = null;
 
     /**
      * Creates the dialog and places in all components
@@ -40,7 +40,7 @@ public class PropertyListDialog extends JDialog implements ItemListener {
      * @param parent The frame where the dialog is sutuated.
      * @param title  The title of the dialog.
      */
-    private PropertyListDialog(Frame parent, boolean modal) {
+    public PropertyListDialog(Frame parent, boolean modal) {
         super(parent, "", modal);
         this.parent = parent;
         getContentPane().setMaximumSize(new Dimension(160, 300));
@@ -65,7 +65,7 @@ public class PropertyListDialog extends JDialog implements ItemListener {
      * @param parent The frame where the dialog is sutuated.
      * @param title  The title of the dialog.
      */
-    private PropertyListDialog(Frame parent, boolean modal, Object bean, String name) {
+    public PropertyListDialog(Frame parent, boolean modal, Object bean, String name) {
         this(parent, modal);
         setBean(bean, name);
     }
@@ -176,7 +176,7 @@ public class PropertyListDialog extends JDialog implements ItemListener {
      *
      * @param aBean The bean to edit.
      */
-    void setBean(Object bean, String name) {
+    public void setBean(Object bean, String name) {
         setTitle("Editing \"" + name + "\"");
         getProperties().setBean(bean, name);
         setCustomizeable(getProperties().isCustomizeable());
@@ -204,7 +204,7 @@ public class PropertyListDialog extends JDialog implements ItemListener {
      *
      * @param custom boolean
      */
-    void setCustomizeable(boolean custom) {
+    public void setCustomizeable(boolean custom) {
         getCustomizer().setEnabled(custom);
     }
 }

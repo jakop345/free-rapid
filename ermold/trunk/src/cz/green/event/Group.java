@@ -46,7 +46,7 @@ public class Group extends Window implements Manager, java.io.Serializable {
      *
      * @see #repaintItem(Item)
      */
-    private transient Rectangle repaint = null;
+    transient protected Rectangle repaint = null;
 
     /**
      * This parameter less constructor is needed for desktop creating.
@@ -357,7 +357,7 @@ public class Group extends Window implements Manager, java.io.Serializable {
      * @throws <code>cz.green.event.engine.ItemNotInsideManagerException</code>
      *          If the items lies out of the group manager.
      */
-    void isMostLeftItemIn(int dimension, int[] interval) throws ItemNotInsideManagerException {
+    protected void isMostLeftItemIn(int dimension, int[] interval) throws ItemNotInsideManagerException {
         if (wins.size() == 0) //empty group -> all is ok
             return;
         try {
@@ -380,7 +380,7 @@ public class Group extends Window implements Manager, java.io.Serializable {
      * @throws <code>cz.green.event.engine.ItemNotInsideManagerException</code>
      *          If the items lies out of the group manager.
      */
-    void isMostRightItemIn(int dimension, int[] interval) throws ItemNotInsideManagerException {
+    protected void isMostRightItemIn(int dimension, int[] interval) throws ItemNotInsideManagerException {
         if (wins.size() == 0) //empty group -> all is ok
             return;
         try {
@@ -456,7 +456,7 @@ public class Group extends Window implements Manager, java.io.Serializable {
      * @param <code>recount</code> Specifies, whether we have to reconstruct the event tree struction.
      * @see move(int, int, boolean)
      */
-    void moveItems(int dx, int dy, boolean recount) {
+    protected void moveItems(int dx, int dy, boolean recount) {
         java.util.Enumeration e = wins.elements();
         while (e.hasMoreElements()) {
             ((Item) e.nextElement()).managerMoves(dx, dy, recount);
@@ -636,6 +636,6 @@ public class Group extends Window implements Manager, java.io.Serializable {
      * @see PaintableManager#selectItemEx(cz.green.event.interfaces.SelectableItem , boolean)
      */
     public void selectItemEx(SelectableItem item, boolean add) {
-        ((PaintableManager) manager).selectItemEx(item,add);
-}
+        ((PaintableManager) manager).selectItemEx(item, add);
+    }
 }

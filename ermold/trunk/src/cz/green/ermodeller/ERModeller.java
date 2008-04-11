@@ -45,7 +45,7 @@ public class ERModeller extends JFrame implements
     /**
      * The schema file name
      */
-    private String fileName = null;
+    protected String fileName = null;
 
     /**
      * The container where the desktop paints
@@ -89,19 +89,19 @@ public class ERModeller extends JFrame implements
 
     private JLabel lodStatusLabel;
 
-    private transient ErrorLogDialog errDialog = null;
+    protected transient ErrorLogDialog errDialog = null;
 
-    private transient ConflictsDialog conflictsDialog = null;
+    protected transient ConflictsDialog conflictsDialog = null;
 
-    private transient OptionsDialog optDialog = null;
+    protected transient OptionsDialog optDialog = null;
 
-    private transient AboutDialog aboutDialog = null;
+    protected transient AboutDialog aboutDialog = null;
 
-    private transient UserTypesEditor typeEditor = null;
+    protected transient UserTypesEditor typeEditor = null;
 
-    private transient SQLDialog sqlDialog = null;
+    protected transient SQLDialog sqlDialog = null;
 
-    private transient ObjDialog objDialog = null;
+    protected transient ObjDialog objDialog = null;
 
     /**
      * Flag if schema is changed
@@ -121,17 +121,17 @@ public class ERModeller extends JFrame implements
     /**
      * Adding file as a new cts.
      */
-    private final static int NEW_CTS = 0;
+    public final static int NEW_CTS = 0;
 
     /**
      * Adding file as a new xml..
      */
-    private final static int NEW_XML = 1;
+    public final static int NEW_XML = 1;
 
     /**
      * Adding xml file into actual desktop.
      */
-    private final static int WITH_XML = 2;
+    public final static int WITH_XML = 2;
 
     /**
      * Title of the main window
@@ -209,7 +209,7 @@ public class ERModeller extends JFrame implements
     /**
      * loads configuration
      */
-    void loadDefaultConfiguration() {
+    protected void loadDefaultConfiguration() {
         final String driver = AppPrefs.getProperty(AppPrefs.DBCONNECT_DRIVER, Consts.DEF_DBCONNECT_DRIVER);
         final String url = AppPrefs.getProperty(AppPrefs.DBCONNECT_URL, Consts.DEF_DBCONNECT_URL);
         final String user = AppPrefs.getProperty(AppPrefs.DBCONNECT_USER, Consts.DEF_DBCONNECT_USER);
@@ -231,7 +231,7 @@ public class ERModeller extends JFrame implements
      * @param url    connection DB url
      * @param user   user name
      */
-    void writeUserConfigFile(String driver, String url, String user) {
+    protected void writeUserConfigFile(String driver, String url, String user) {
         AppPrefs.storeProperty(AppPrefs.DBCONNECT_DRIVER, driver);
         AppPrefs.storeProperty(AppPrefs.DBCONNECT_URL, url);
         AppPrefs.storeProperty(AppPrefs.DBCONNECT_USER, user);
@@ -903,7 +903,7 @@ public class ERModeller extends JFrame implements
     /**
      * Returns <code>true</code> if schema is changed
      */
-    boolean isChanged() {
+    public boolean isChanged() {
         Desktop d = (Desktop) (getPlace().getDesktop());
         return ((cz.omnicom.ermodeller.conceptual.Schema) d.getModel())
                 .isChanged() || changed || typeEditor.isChanged();
@@ -989,7 +989,7 @@ public class ERModeller extends JFrame implements
     /**
      * loads user data types
      */
-    void loadUserTypes(Document doc) {
+    public void loadUserTypes(Document doc) {
         DataType dt;
         String s1;
         String typeName;
@@ -1073,7 +1073,7 @@ public class ERModeller extends JFrame implements
     /**
      * Loads desktop from document model
      */
-    String loadDesktop(Desktop d, int id, Document doc) {
+    public String loadDesktop(Desktop d, int id, Document doc) {
         int i, t, l, tt, ll, w, h, notation;
         String prefix;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -1321,7 +1321,7 @@ public class ERModeller extends JFrame implements
     /**
      * Loads desktop from document model
      */
-    int loadNotation(Desktop d, int id, Document doc) {
+    public int loadNotation(Desktop d, int id, Document doc) {
         int notation = 0;
         try {
             ERDocument erdoc = new ERDocument(doc);
@@ -1341,7 +1341,7 @@ public class ERModeller extends JFrame implements
     /**
      * Loads schema from file
      */
-    void loadFromFile(String fileName, int what)
+    public void loadFromFile(String fileName, int what)
             throws java.io.IOException, ClassNotFoundException {
         int i, id;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -1523,7 +1523,7 @@ public class ERModeller extends JFrame implements
     /**
      * Minimize all objects in the schema (count visible atributes in Entities and return minimal size)
      */
-    void minimizeAll() {
+    public void minimizeAll() {
         Desktop d = (Desktop) getPlace().getDesktop();
         Vector v = d.getAllEntities();
         for (Object aV : v) {
@@ -1689,7 +1689,7 @@ public class ERModeller extends JFrame implements
     /**
      * Saves the schema to a file.
      */
-    boolean save() {
+    public boolean save() {
         int i;
         String s;
 
@@ -1994,7 +1994,7 @@ public class ERModeller extends JFrame implements
     /**
      * Sets the schema is changed
      */
-    void setChanged(boolean newChanged) {
+    public void setChanged(boolean newChanged) {
         Desktop d = (Desktop) (getPlace().getDesktop());
         ((cz.omnicom.ermodeller.conceptual.Schema) d.getModel())
                 .setChanged(newChanged);
@@ -2083,7 +2083,7 @@ public class ERModeller extends JFrame implements
     /**
      * Sets the new scale.
      */
-    void setScaleAction() {
+    public void setScaleAction() {
         getPlace().setScale(
                 ((float) 100.0)
                         / ((float) Integer.parseInt(getScale().getSelectedItem()

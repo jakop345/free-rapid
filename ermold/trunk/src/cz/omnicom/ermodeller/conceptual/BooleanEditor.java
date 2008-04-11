@@ -11,7 +11,7 @@ import java.beans.PropertyEditorSupport;
  * <p/>
  * #see java.beans.PropertyEditorSupport
  */
-class BooleanEditor extends PropertyEditorSupport {
+public class BooleanEditor extends PropertyEditorSupport {
     /**
      * Tags showed in the properties window.
      */

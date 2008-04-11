@@ -24,7 +24,7 @@ public class ConceptualConstruct extends ConceptualObject {
     /**
      * All attributes
      */
-    java.util.Vector Attribs = new java.util.Vector(3, 2);
+    protected java.util.Vector Attribs = new java.util.Vector(3, 2);
 
 
     /**
@@ -32,7 +32,7 @@ public class ConceptualConstruct extends ConceptualObject {
      *
      * @see ConceptualObject#ConceptualObject(cz.green.event.interfaces.Manager , int, int, int, int)
      */
-    ConceptualConstruct(Manager manager, int left, int top, int width, int height) throws NullPointerException, ImpossibleNegativeValueException {
+    public ConceptualConstruct(Manager manager, int left, int top, int width, int height) throws NullPointerException, ImpossibleNegativeValueException {
         super(manager, left, top, width, height);
     }
 
@@ -126,7 +126,7 @@ public class ConceptualConstruct extends ConceptualObject {
      * Can work only with atributes (moving atributes between conceptual consatructs) and cardinalities
      * (reconnecting the cardinalities).
      */
-    void handleDragOverEvent(DragOverEvent event) {
+    public void handleDragOverEvent(DragOverEvent event) {
         if (selected && event.getAdd())
             return;
         Item item = event.getItem();
@@ -159,7 +159,7 @@ public class ConceptualConstruct extends ConceptualObject {
      * @see #moveAtribute(cz.green.ermodeller.Atribute)
      * @see Cardinality#reconnect(cz.green.ermodeller.ConceptualConstruct)
      */
-    void handleDropAboveEvent(DropAboveEvent event) {
+    public void handleDropAboveEvent(DropAboveEvent event) {
         if (selected && event.getAdd())
             return;
 //	event.getComponent().setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -268,7 +268,7 @@ public class ConceptualConstruct extends ConceptualObject {
      * @param cc The new owner of all atributes.
      * @see #moveAtribute(Atribute)
      */
-    void reconnectAllAtributes(ConceptualConstruct cc) {
+    protected void reconnectAllAtributes(ConceptualConstruct cc) {
         Atribute atr;
         for (int i = connections.size() - 1; i >= 0; i--) {
             if ((atr = (Atribute) ((Connection) connections.elementAt(i)).isConnectedTo(Atribute.class)) != null)
@@ -283,7 +283,7 @@ public class ConceptualConstruct extends ConceptualObject {
      * @param cc The new participant of the cardinality.
      * @see Entity#compact(cz.green.ermodeller.Entity, cz.green.event.CoordinateEvent)
      */
-    void reconnectAllCardinalities(ConceptualConstruct cc) {
+    protected void reconnectAllCardinalities(ConceptualConstruct cc) {
         Connection c;
         for (int i = connections.size() - 1; i >= 0; i--) {
             c = (Connection) connections.elementAt(i);
@@ -360,7 +360,7 @@ public class ConceptualConstruct extends ConceptualObject {
      *
      * @param event This remove event is sent to all disposed cardinalities.
      */
-    void removeCardinalities(cz.green.event.RemoveEvent event) {
+    protected void removeCardinalities(cz.green.event.RemoveEvent event) {
         Cardinality car;
         for (int i = connections.size() - 1; i >= 0; i--) {
             if ((car = (Cardinality) (((Connection) connections.elementAt(i))).isConnectedTo(Cardinality.class)) != null)
@@ -379,7 +379,7 @@ public class ConceptualConstruct extends ConceptualObject {
         return null;
     }
 
-    java.awt.Point getAbsoluteCenter(ConceptualObject co) {
+    protected java.awt.Point getAbsoluteCenter(ConceptualObject co) {
         return new java.awt.Point((getBounds().x + getBounds().width / 2 + co.getBounds().x + co.getBounds().width / 2) / 2,
                 (getBounds().y + getBounds().height / 2 + co.getBounds().y + co.getBounds().height / 2) / 2);
     }

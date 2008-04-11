@@ -18,52 +18,52 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
     /**
      * The first connected element
      */
-    Connectable one = null;
+    protected Connectable one = null;
 
     /**
      * The second connected element
      */
-    Connectable two = null;
+    protected Connectable two = null;
 
     /**
      * Center of the first connected element
      */
-    transient java.awt.Point centerOne = null;
+    transient protected java.awt.Point centerOne = null;
 
     /**
      * Center of the second connected element
      */
-    transient java.awt.Point centerTwo = null;
+    transient protected java.awt.Point centerTwo = null;
 
     /**
      * Border of the first connected element
      */
-    transient java.awt.Point borderOne = null;
+    transient protected java.awt.Point borderOne = null;
 
     /**
      * Border of the second connected element
      */
-    transient java.awt.Point borderTwo = null;
+    transient protected java.awt.Point borderTwo = null;
 
     /**
      * Real enter of the first connected element
      */
-    private transient java.awt.Point realCenterOne = null;
+    transient protected java.awt.Point realCenterOne = null;
 
     /**
      * Real enter of the second connected element
      */
-    private transient java.awt.Point realCenterTwo = null;
+    transient protected java.awt.Point realCenterTwo = null;
 
     /**
      * Real border of the first connected element
      */
-    private transient java.awt.Point realBorderOne = null;
+    transient protected java.awt.Point realBorderOne = null;
 
     /**
      * Real border of the second connected element
      */
-    private transient java.awt.Point realBorderTwo = null;
+    transient protected java.awt.Point realBorderTwo = null;
 
     /**
      * Mandatory of cardinality which is connect through this connection line
@@ -78,7 +78,7 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
     /**
      * Flag if the connection is to strong addiction child
      */
-    boolean strongAddictionChild = false;
+    protected boolean strongAddictionChild = false;
 
     /**
      * Calls the inhereted constructor and fills all properties of this object.
@@ -205,7 +205,7 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
      * doesn't change its border points. If they have it copunts new border
      * poinrs.
      */
-    void moves() {
+    protected void moves() {
         java.awt.Point p = one.getCenter();
         boolean rp = false;
         int[][] r = rect;
@@ -321,7 +321,7 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
      * @param g graphics context
      * @return previous stroke
      */
-    Stroke updateStrokeWithAliasing(Graphics g) {
+    protected Stroke updateStrokeWithAliasing(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         final Stroke strokeBackup = g2.getStroke();
         g2.setStroke(new BasicStroke(Consts.STROKE_WIDTH));
@@ -337,7 +337,7 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
      * @param strokeBackup previous stroke value
      * @see updateStrokeWithAliasing
      */
-    void updateBackupStroke(Graphics g, Stroke strokeBackup) {
+    protected void updateBackupStroke(Graphics g, Stroke strokeBackup) {
         Graphics2D g2 = (Graphics2D) g;
         g2.setStroke(strokeBackup);
         // Disable antialiasing for shapes
@@ -460,7 +460,7 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
      *
      * @see #move()
      */
-    void realMoves() {
+    public void realMoves() {
         java.awt.Point p = one.getRealCenter();
         boolean rp = false;
         int[][] r = rect;
@@ -565,14 +565,14 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
      * @param connectionMandatory The connectionMandatory to set.
      */
     public void setConnectionMandatory(boolean connectionMandatory) {
-		this.connectionMandatory = connectionMandatory;
-	}
+        this.connectionMandatory = connectionMandatory;
+    }
 
-	public boolean isStrongAddicted() {
-		return strongAddicted;
-	}
+    public boolean isStrongAddicted() {
+        return strongAddicted;
+    }
 
-	public void setStrongAddicted(boolean strongAddicted) {
-		this.strongAddicted = strongAddicted;
-	}
+    public void setStrongAddicted(boolean strongAddicted) {
+        this.strongAddicted = strongAddicted;
+    }
 }

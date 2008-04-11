@@ -36,19 +36,19 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
     /**
      * Generate drop clauses.
      */
-    private boolean generateDrop = true;
+    protected boolean generateDrop = true;
     /**
      * Shorten prefixes.
      */
-    boolean shortenPrefixes = true;
-    int rolePrefixLength = -1;
-    private int constructPrefixLength = -1;
+    protected boolean shortenPrefixes = true;
+    protected int rolePrefixLength = -1;
+    protected int constructPrefixLength = -1;
 
 
     /**
      * Glue from user defined gluings.
      */
-    boolean userGlue = true;
+    protected boolean userGlue = true;
 
     /**
      * Used by <code>VecNumberer</code> while creating primary keys -
@@ -158,7 +158,7 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
      * @throws cz.omnicom.ermodeller.conc2rela.exception.AlreadyContainsExceptionC2R
      *
      */
-    void addRelationC2R(RelationC2R aRelationC2R) throws AlreadyContainsExceptionC2R {
+    protected void addRelationC2R(RelationC2R aRelationC2R) throws AlreadyContainsExceptionC2R {
         if (getRelationsC2R().contains(aRelationC2R))
             throw new AlreadyContainsExceptionC2R(this, aRelationC2R, ListExceptionC2R.RELATIONS_LIST);
 
@@ -210,7 +210,7 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
      * @see cz.omnicom.ermodeller.conc2rela.RelC2R
      * @see cz.omnicom.ermodeller.conc2rela.RelForeignKeyC2R
      */
-    void createForeignKeysC2R() throws WasNotFoundByConceptualExceptionC2R {
+    protected void createForeignKeysC2R() throws WasNotFoundByConceptualExceptionC2R {
         // every "relation" relation
         for (Enumeration elements = getRelationsC2R().elements(); elements.hasMoreElements();) {
             RelationC2R relationC2R = (RelationC2R) elements.nextElement();
@@ -243,7 +243,7 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
      * @return java.util.Vector
      * @see @addToLevelEntC2R
      */
-    Vector createLevelMultiTreeOfEntC2R() {
+    protected Vector createLevelMultiTreeOfEntC2R() {
         Vector sonGraph = new Vector(); // vector of vectors
         // reset level counters
         for (Enumeration elements = getRelationsC2R().elements(); elements.hasMoreElements();) {
@@ -274,7 +274,7 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
      * @see #createPrimaryKeysC2R
      * @see #feedUpOnePrimaryKeyC2R
      */
-    void createOnePrimaryKeyC2R(EntC2R aEntC2R) throws WasNotFoundByConceptualExceptionC2R {
+    protected void createOnePrimaryKeyC2R(EntC2R aEntC2R) throws WasNotFoundByConceptualExceptionC2R {
         Entity entity = (Entity) aEntC2R.getConceptualConstruct();
         UniqueKeyC2R uniqueKeyC2R = null;
         if (!entity.isISASon()) {
@@ -327,7 +327,7 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
      * @see #createOnePrimaryKeyC2R
      * @see #feedUpOnePrimaryKeyC2R
      */
-    void createPrimaryKeysC2R() throws WasNotFoundByConceptualExceptionC2R {
+    protected void createPrimaryKeysC2R() throws WasNotFoundByConceptualExceptionC2R {
         // Create multi-tree of addictions
         Vector sonGraph = createLevelMultiTreeOfEntC2R(); // vector of vectors
         // Go through multi-tree and create all primary keys
@@ -478,7 +478,7 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
      *
      * @return int
      */
-    int discoverMinCardPrefix() {
+    protected int discoverMinCardPrefix() {
         int result = 0;
         Vector names = new Vector();
         for (Enumeration relations = schema.getRelations().elements(); relations.hasMoreElements();) {
@@ -513,7 +513,7 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
      *
      * @return int
      */
-    int discoverMinConstructPrefix() {
+    protected int discoverMinConstructPrefix() {
         int result = 0;
         Vector names = new Vector();
         for (Enumeration relations = schema.getRelations().elements(); relations.hasMoreElements();) {
@@ -551,7 +551,7 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
      * @see #createForeignKeysC2R
      * @see #glueRelationsC2R
      */
-    void feedSchemaC2R(Schema aConceptualSchema) throws AlreadyContainsExceptionC2R, WasNotFoundByConceptualExceptionC2R {
+    protected void feedSchemaC2R(Schema aConceptualSchema) throws AlreadyContainsExceptionC2R, WasNotFoundByConceptualExceptionC2R {
         synchronized (aConceptualSchema) {
             // count minimum length of prefixes
             rolePrefixLength = discoverMinCardPrefix();
@@ -596,7 +596,7 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
      *
      * @param aEntRelationC2R cz.omnicom.ermodeller.conc2rela.EntRelationC2R
      */
-    void feedUpOnePrimaryKeyC2R(EntC2R aEntC2R) {
+    protected void feedUpOnePrimaryKeyC2R(EntC2R aEntC2R) {
         VecNumberer numberers = new VecNumberer();
         PrimaryKeyC2R primaryKeyC2R = aEntC2R.getPrimaryKeyC2R();
         // discovering parallel strong addictions
@@ -649,7 +649,7 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
      * @param aConstruct cz.omnicom.ermodeller.conceptual.ConceptualConstruct
      * @return cz.omnicom.ermodeller.conc2rela.RelationC2R
      */
-    RelationC2R findRelationC2RByConceptualConstruct(ConceptualConstruct aConceptualConstruct) {
+    protected RelationC2R findRelationC2RByConceptualConstruct(ConceptualConstruct aConceptualConstruct) {
         for (Enumeration elements = getRelationsC2R().elements(); elements.hasMoreElements();) {
             RelationC2R relationC2R = (RelationC2R) elements.nextElement();
             if (relationC2R.getConceptualConstruct() == aConceptualConstruct)
@@ -661,7 +661,7 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
     /**
      * @return java.util.Vector
      */
-    Vector getRelationsC2R() {
+    public Vector getRelationsC2R() {
         if (relationsC2R == null)
             relationsC2R = new Vector();
         return relationsC2R;
@@ -682,7 +682,7 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
      * @see cz.omnicom.ermodeller.conc2rela.RelC2R#glueC2R
      * @see #recoverC2R
      */
-    void glueRelationsC2R() throws AlreadyContainsExceptionC2R {
+    protected void glueRelationsC2R() throws AlreadyContainsExceptionC2R, WasNotFoundByConceptualExceptionC2R {
         Vector relations = (Vector) getRelationsC2R().clone();
         for (Enumeration elements = relations.elements(); elements.hasMoreElements();) {
             RelationC2R relationC2R = (RelationC2R) elements.nextElement();
@@ -699,7 +699,7 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
     /**
      * Generates names for foreign keys.
      */
-    void nameForeignKeys() {
+    protected void nameForeignKeys() {
         for (Enumeration relations = getRelationsC2R().elements(); relations.hasMoreElements();) {
             RelationC2R relation = (RelationC2R) relations.nextElement();
             for (Enumeration entFKs = relation.getEntForeignKeysC2R().elements(); entFKs.hasMoreElements();) {
@@ -719,7 +719,7 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
     /**
      * Generates names for primary keys.
      */
-    void namePrimaryKeys() {
+    protected void namePrimaryKeys() {
         for (Enumeration relations = getRelationsC2R().elements(); relations.hasMoreElements();) {
             RelationC2R relation = (RelationC2R) relations.nextElement();
             PrimaryKeyC2R pk = relation.getPrimaryKeyC2R();
@@ -731,7 +731,7 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
     /**
      * Generates names for unique keys.
      */
-    void nameUniqueKeys() {
+    protected void nameUniqueKeys() {
         for (Enumeration relations = getRelationsC2R().elements(); relations.hasMoreElements();) {
             RelationC2R relation = (RelationC2R) relations.nextElement();
             for (Enumeration relUNQs = relation.getUniqueKeysC2R().elements(); relUNQs.hasMoreElements();) {
@@ -748,7 +748,7 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
      *
      * @param gluedRelationsC2R java.util.Vector
      */
-    void recoverC2R(Vector gluedRelationsC2R) {
+    protected void recoverC2R(Vector gluedRelationsC2R) {
         for (Enumeration elements = gluedRelationsC2R.elements(); elements.hasMoreElements();) {
             RelationC2R relationC2R = (RelationC2R) elements.nextElement();
             try {
@@ -778,7 +778,7 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
      *
      * @param relationC2R cz.omnicom.ermodeller.conc2rela.RelationC2R
      */
-    void removeRelationC2R(RelationC2R relationC2R) throws WasNotFoundExceptionC2R {
+    protected void removeRelationC2R(RelationC2R relationC2R) throws WasNotFoundExceptionC2R {
         if (!getRelationsC2R().removeElement(relationC2R))
             throw new WasNotFoundExceptionC2R(this, relationC2R, ListExceptionC2R.RELATIONS_LIST);
     }

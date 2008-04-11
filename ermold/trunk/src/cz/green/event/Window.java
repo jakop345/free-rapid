@@ -24,7 +24,7 @@ public class Window implements Item, java.io.Serializable {
      * in the first dimension has two items (dimesion x and y) and in the
      * second dimension has two items. The window in left and right.
      */
-    private Item[][] tree = null;
+    protected Item[][] tree = null;
     /**
      * Field <code>rect</code> holds the rectangle, where this window is situated.
      */
@@ -55,7 +55,7 @@ public class Window implements Item, java.io.Serializable {
      * @see SelectableItem#deselect()
      */
     transient protected boolean selected = false;
-    private boolean selectable = true;
+    protected boolean selectable = true;
 
     /**
      * Background color
@@ -73,7 +73,7 @@ public class Window implements Item, java.io.Serializable {
     /**
      * Selected object foreground color
      */
-    protected static final Color SELECTED_OBJECT_FOREGROUND_COLOR = Color.blue;
+    public static final Color SELECTED_OBJECT_FOREGROUND_COLOR = Color.blue;
     /**
      * Object foreground color
      */
@@ -478,7 +478,7 @@ public class Window implements Item, java.io.Serializable {
      * @param <code>event</code> The event.
      * @see ResizingEvent
      */
-    protected void handleResizingEvent(ResizingEvent event) {
+    public void handleResizingEvent(ResizingEvent event) {
         if (paintedFast) {
             ((PaintableManager) manager).repaintItemFast(this);
         } else {
@@ -503,7 +503,7 @@ public class Window implements Item, java.io.Serializable {
      * @see PaintableManager#selectItem(cz.green.event.interfaces.SelectableItem , boolean)
      * @see Manager#changeZOrder(cz.green.event.interfaces.Item , boolean)
      */
-    protected void handleSelectItemEvent(SelectItemEvent event) {
+    public void handleSelectItemEvent(SelectItemEvent event) {
         if (!selectable)
             return;
         boolean selected = manager.selectItem(this, event.getAddItem());

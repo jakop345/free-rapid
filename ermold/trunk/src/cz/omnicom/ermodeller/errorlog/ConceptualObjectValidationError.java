@@ -26,7 +26,7 @@ public abstract class ConceptualObjectValidationError extends ValidationError {
      *
      * @param anObject cz.omnicom.ermodeller.conceptual.ConceptualObject
      */
-    ConceptualObjectValidationError(ConceptualObject anObject) {
+    public ConceptualObjectValidationError(ConceptualObject anObject) {
         ConceptualObjectHolder conceptualObjectHolder = new ConceptualObjectHolder(anObject);
         conceptualObjectHolder.addShowErrorListener(anObject);
         this.conceptualObjectHolder = conceptualObjectHolder;
