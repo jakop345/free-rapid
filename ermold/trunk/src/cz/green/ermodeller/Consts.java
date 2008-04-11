@@ -37,15 +37,15 @@ public class Consts {
     /**
      * default notation to use
      */
-    public static final int DEF_GENERAL_DEFNOTATION = ConceptualConstruct.CHEN;
+    public static final int DEF_GENERAL_DEFNOTATION = ConceptualConstructItem.CHEN;
     /**
      * default value for pkshowuml
      */
-    public static final int DEF_GENERAL_PKSHOWUML = ConceptualConstruct.SHOW_PK_IN_UML;
+    public static final int DEF_GENERAL_PKSHOWUML = ConceptualConstructItem.SHOW_PK_IN_UML;
     /**
      * default value for 'shorten cards uml'
      */
-    public static final int DEF_GENERAL_SHORTEN_CARDS_UML = ConceptualConstruct.SHOW_SHORTEN_CARD_IN_UML;
+    public static final int DEF_GENERAL_SHORTEN_CARDS_UML = ConceptualConstructItem.SHOW_SHORTEN_CARD_IN_UML;
     /**
      * default color value for foreground of the object
      */

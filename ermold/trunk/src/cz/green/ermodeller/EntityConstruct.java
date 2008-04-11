@@ -30,7 +30,7 @@ import java.util.Vector;
  *
  * @see DGroupTool
  */
-public class EntityConstruct extends ConceptualConstruct {
+public class EntityConstruct extends ConceptualConstructItem {
     /**
      * Points between two rect, when this entity has strong addiction parents
      */
@@ -108,7 +108,7 @@ public class EntityConstruct extends ConceptualConstruct {
      *          Thrown by inherited constructor.
      * @throws <code>cz.green.event.ImpossibleNegativeValueException</code>
      *          Thrown by inherited constructor.
-     * @see ConceptualConstruct#ConceptualConstruct(cz.green.event.interfaces.Manager ,int,int,int,int)
+     * @see ConceptualConstructItem#ConceptualConstructItem(cz.green.event.interfaces.Manager ,int,int,int,int)
      */
     protected EntityConstruct(cz.omnicom.ermodeller.conceptual.Entity ent,
                               Manager manager, int left, int top)
@@ -195,8 +195,8 @@ public class EntityConstruct extends ConceptualConstruct {
      * @param ent   The second entity.
      * @param event Needful to pass remove event.
      * @see #changeAllStrongAddictions(EntityConstruct)
-     * @see ConceptualConstruct#reconnectAllCardinalities(EntityConstruct)
-     * @see ConceptualConstruct#moveAllAtributes(EntityConstruct)
+     * @see ConceptualConstructItem#reconnectAllCardinalities(EntityConstruct)
+     * @see ConceptualConstructItem#moveAllAtributes(EntityConstruct)
      */
     protected void compact(EntityConstruct ent, cz.green.event.CoordinateEvent event) {
         EntityConstruct from, to;
@@ -312,14 +312,14 @@ public class EntityConstruct extends ConceptualConstruct {
                 }
                 break;
         }
-        if (ConceptualConstruct.ACTUAL_NOTATION != ConceptualConstruct.CHEN) {
+        if (ConceptualConstructItem.ACTUAL_NOTATION != ConceptualConstructItem.CHEN) {
             for (int i = 0; i < getAtributes().size(); i++) {
                 AtributeConstruct a = getAtributes().get(i);
                 int x = a.getBounds().width;
                 if (x > width)
                     width = x;
             }
-            if (ConceptualConstruct.ACTUAL_NOTATION == ConceptualConstruct.BINARY) {
+            if (ConceptualConstructItem.ACTUAL_NOTATION == ConceptualConstructItem.BINARY) {
                 if (PKwidth > width)
                     width = PKwidth;
             }
@@ -590,7 +590,7 @@ public class EntityConstruct extends ConceptualConstruct {
 /*		addMenuItem(menu, "Add unique key", "mUKey.gif", event.getComponent(),
 				"addingUniqueKey", this,
 				cz.green.ermodeller.ConceptualConstruct.class);*/
-        addMenuItem(menu, "Add atribute", "img/mAtribute.gif", event.getComponent(), "addingAtribute", this, cz.green.ermodeller.ConceptualConstruct.class);
+        addMenuItem(menu, "Add atribute", "img/mAtribute.gif", event.getComponent(), "addingAtribute", this, ConceptualConstructItem.class);
         addMenuItem(menu, "Add Relationship to other Entity ...", "img/mAddRelation.gif", event.getComponent(),
                 "addingRelationCon", this,
                 EntityConstruct.class);
@@ -710,7 +710,7 @@ public class EntityConstruct extends ConceptualConstruct {
                 ((cz.omnicom.ermodeller.conceptual.Cardinality) car.getModel())
                         .setMultiCardinality(false);
                 car.handleMoveEvent(new MoveEvent(car.getBounds().x, car.getBounds().y, -car.getBounds().width / 2, -car.getBounds().height / 2, null));
-                if (ACTUAL_NOTATION != ConceptualConstruct.CHEN) {
+                if (ACTUAL_NOTATION != ConceptualConstructItem.CHEN) {
                     car.model.setName(this.model.getName());
                     car.moveCardinality(new ExMovingEvent(p.x, p.y, 0, 0, null, false));
                 }
@@ -721,7 +721,7 @@ public class EntityConstruct extends ConceptualConstruct {
                 ((cz.omnicom.ermodeller.conceptual.Cardinality) car.getModel())
                         .setMultiCardinality(false);
                 car.handleMoveEvent(new MoveEvent(car.getBounds().x, car.getBounds().y, -car.getBounds().width / 2, -car.getBounds().height / 2, null));
-                if (ACTUAL_NOTATION != ConceptualConstruct.CHEN) {
+                if (ACTUAL_NOTATION != ConceptualConstructItem.CHEN) {
                     car.model.setName(ent.model.getName());
                     car.moveCardinality(new ExMovingEvent(p.x, p.y, 0, 0, null, false));
                 }
@@ -875,27 +875,27 @@ public class EntityConstruct extends ConceptualConstruct {
                 p = ((EntityConstruct) item).getAbsoluteCenter(rel);
                 car = rel.createCardinality((EntityConstruct) item, man, (int) (p.x * scale), (int) (p.y * scale));
                 car.handleMoveEvent(new MoveEvent(car.getBounds().x, car.getBounds().y, -car.getBounds().width / 2, -car.getBounds().height / 2, null));
-                if (ACTUAL_NOTATION != ConceptualConstruct.CHEN) {
+                if (ACTUAL_NOTATION != ConceptualConstructItem.CHEN) {
                     car.model.setName(this.model.getName());
                     car.moveCardinality(new ExMovingEvent((int) (p.x * scale), (int) (p.y * scale), 0, 0, null, false));
                 }
                 p = getAbsoluteCenter(rel);
                 car = rel.createCardinality(this, man2, (int) (p.x * scale), (int) (p.y * scale));
                 car.handleMoveEvent(new MoveEvent(car.getBounds().x, car.getBounds().y, -car.getBounds().width / 2, -car.getBounds().height / 2, null));
-                if (ACTUAL_NOTATION != ConceptualConstruct.CHEN) {
+                if (ACTUAL_NOTATION != ConceptualConstructItem.CHEN) {
                     car.model.setName(((EntityConstruct) item).model.getName());
                     car.moveCardinality(new ExMovingEvent((int) (p.x * scale), (int) (p.y * scale), 0, 0, null, false));
                 }
             } else {
                 Manager man = getManager();
                 RelationConstruct rel = RelationConstruct.createRelation(model.getSchema(), man, (int) ((p.x + SELFRELATIONDISTANCE) * scale), (int) ((p.y + SELFRELATIONDISTANCE) * scale));
-                if (ACTUAL_NOTATION == ConceptualConstruct.CHEN) {
+                if (ACTUAL_NOTATION == ConceptualConstructItem.CHEN) {
                     car = rel.createCardinality((EntityConstruct) item, man, (int) ((p.x + SELFRELATIONDISTANCE) * scale) + rel.getBounds().width / 2, (int) (p.y * scale) + ((EntityConstruct) item).getBounds().height / 2);
                     car.move(-car.getBounds().width / 2, -car.getBounds().height / 2, true);
                     man.repaintItem(car);
                 } else
                     car = rel.createCardinality((EntityConstruct) item, man, (int) (p.x * scale), (int) (p.y * scale));
-                if (ACTUAL_NOTATION == ConceptualConstruct.CHEN) {
+                if (ACTUAL_NOTATION == ConceptualConstructItem.CHEN) {
                     car = rel.createCardinality(this, man, (int) (p.x * scale) + ((EntityConstruct) item).getBounds().width / 2, (int) ((p.y + SELFRELATIONDISTANCE) * scale) + rel.getBounds().height / 2);
                     car.move(-car.getBounds().width / 2, -car.getBounds().height / 2, true);
                     man.repaintItem(car);
@@ -913,7 +913,7 @@ public class EntityConstruct extends ConceptualConstruct {
         if (item instanceof RelationConstruct) {
             RelationConstruct rel = (RelationConstruct) item;
             String name = "";
-            if (ACTUAL_NOTATION != ConceptualConstruct.CHEN) {
+            if (ACTUAL_NOTATION != ConceptualConstructItem.CHEN) {
                 java.util.Enumeration e = rel.getConnections().elements();
                 CardinalityConstruct car1;
                 while (e.hasMoreElements()) {
@@ -931,7 +931,7 @@ public class EntityConstruct extends ConceptualConstruct {
             java.awt.Point p = ((RelationConstruct) item).getAbsoluteCenter(this);
             CardinalityConstruct car = ((RelationConstruct) item).createCardinality(this, ((RelationConstruct) item).getManager(), (int) (p.x * scale), (int) (p.y * scale));
             car.handleMoveEvent(new MoveEvent(car.getBounds().x, car.getBounds().y, -car.getBounds().width / 2, -car.getBounds().height / 2, null));
-            if (ACTUAL_NOTATION != ConceptualConstruct.CHEN) {
+            if (ACTUAL_NOTATION != ConceptualConstructItem.CHEN) {
                 car.model.setName(this.model.getName());
                 if (name.length() > 0) car.model.setName(name);
                 car.moveCardinality(new ExMovingEvent((int) (p.x * scale), (int) (p.y * scale), 0, 0, null, false));
@@ -1343,7 +1343,7 @@ public class EntityConstruct extends ConceptualConstruct {
                 y = r.y + 5 + fm.getAscent();
                 g.drawLine(r.x, r.y + 2 * fm.getAscent(), r.x + r.width, r.y + 2
                         * fm.getAscent());
-                if (PKmembers.size() > 0 && ConceptualConstruct.ACTUAL_LOD != ConceptualConstruct.LOD_LOW) {
+                if (PKmembers.size() > 0 && ConceptualConstructItem.ACTUAL_LOD != ConceptualConstructItem.LOD_LOW) {
                     g.drawString("*", r.x + 3, r.y + 42);
                     g.drawString(" # (", r.x + 5, r.y + 40);
                     g.drawString(")", r.x + 5 + PKwidth, r.y + 40);
@@ -1353,7 +1353,7 @@ public class EntityConstruct extends ConceptualConstruct {
                 y = r.y + 5 + fm.getAscent();
                 g.drawLine(r.x, r.y + 2 * fm.getAscent(), r.x + r.width, r.y + 2
                         * fm.getAscent());
-                if (ConceptualConstruct.ACTUAL_LOD == ConceptualConstruct.LOD_FULL) {
+                if (ConceptualConstructItem.ACTUAL_LOD == ConceptualConstructItem.LOD_FULL) {
                     int height = r.y + 2 * fm.getAscent() + Attribs.size() * 20 + 8;
                     if (ISAChilds != null) {
                         for (int i = ISAChilds.size() - 1; i > -1; i--) {
@@ -1398,7 +1398,7 @@ public class EntityConstruct extends ConceptualConstruct {
                 y = r.y + 5 + fm.getAscent();
                 g.drawLine(r.x, r.y + 2 * fm.getAscent(), r.x + r.width, r.y + 2
                         * fm.getAscent());
-                if (PKmembers.size() > 0 && ConceptualConstruct.ACTUAL_LOD != ConceptualConstruct.LOD_LOW) {
+                if (PKmembers.size() > 0 && ConceptualConstructItem.ACTUAL_LOD != ConceptualConstructItem.LOD_LOW) {
                     g.drawString("*", r.x + 3, r.y + 42);
                     g.drawString(" # (", r.x + 5, r.y + 40);
                     g.drawString(")", r.x + 5 + PKwidth, r.y + 40);
@@ -1408,7 +1408,7 @@ public class EntityConstruct extends ConceptualConstruct {
                 y = r.y + 5 + fm.getAscent();
                 g.drawLine(r.x, r.y + 2 * fm.getAscent(), r.x + r.width, r.y + 2
                         * fm.getAscent());
-                if (ConceptualConstruct.ACTUAL_LOD == ConceptualConstruct.LOD_FULL) {
+                if (ConceptualConstructItem.ACTUAL_LOD == ConceptualConstructItem.LOD_FULL) {
                     int height = r.y + 2 * fm.getAscent() + Attribs.size() * 20 + 8;
                     if (ISAChilds != null) {
                         for (int i = ISAChilds.size() - 1; i > -1; i--) {
@@ -1435,7 +1435,7 @@ public class EntityConstruct extends ConceptualConstruct {
      * Invoked when some model's property change. Catch changes of the <b>name</b> and <b>strongAddictionParents</b>
      * property.
      *
-     * @see ConceptualConstruct#propertyChange(java.beans.PropertyChangeEvent);
+     * @see ConceptualConstructItem#propertyChange(java.beans.PropertyChangeEvent);
      */
     public void propertyChange(java.beans.PropertyChangeEvent e) {
         ((cz.omnicom.ermodeller.conceptual.ConceptualObject) getModel())
@@ -1588,7 +1588,7 @@ public class EntityConstruct extends ConceptualConstruct {
      * @param cc The new owner of all atributes.
      * @see #moveAtribute(AtributeConstruct)
      */
-    protected void reconnectAllAtributes(ConceptualConstruct cc) {
+    protected void reconnectAllAtributes(ConceptualConstructItem cc) {
         UniqueKeyConstruct uk;
         RemoveEvent ev = new RemoveEvent(0, 0, null);
         for (int i = connections.size() - 1; i >= 0; i--) {

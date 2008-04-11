@@ -1,9 +1,6 @@
 package cz.omnicom.ermodeller.errorlog.dialogs;
 
-import cz.green.ermodeller.AtributeConstruct;
-import cz.green.ermodeller.ConceptualConstructObject;
-import cz.green.ermodeller.EntityConstruct;
-import cz.green.ermodeller.RelationConstruct;
+import cz.green.ermodeller.*;
 import cz.omnicom.ermodeller.conceptual.RelationBean;
 import cz.omnicom.ermodeller.errorlog.ConceptualObjectVectorValidationError;
 import cz.omnicom.ermodeller.errorlog.ErrorLogList;
@@ -1440,7 +1437,7 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
     public void removeConstruct() {
         int i;
         i = conceptualObject.getID();
-        cz.green.ermodeller.ConceptualConstruct cc;
+        ConceptualConstructItem cc;
         ConceptualConstructObject co;
         cz.omnicom.ermodeller.conceptual.ConceptualConstruct ccM;
         EntityConstruct ent;

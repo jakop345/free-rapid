@@ -1,5 +1,6 @@
 package cz.omnicom.ermodeller.conceptual;
 
+import cz.green.ermodeller.ConceptualConstructItem;
 import cz.omnicom.ermodeller.conceptual.exception.ListException;
 import cz.omnicom.ermodeller.conceptual.exception.ParameterCannotBeNullException;
 import cz.omnicom.ermodeller.conceptual.exception.WasNotFoundException;
@@ -481,7 +482,7 @@ public class Schema extends ConceptualObject {
     public void write(java.io.PrintWriter pw) {
         pw.println("\t<id>" + getID() + "</id>");
         pw.println("\t<name>" + getName() + "</name>");
-        pw.println("\t<notation>" + cz.green.ermodeller.ConceptualConstruct.ACTUAL_NOTATION + "</notation>");
+        pw.println("\t<notation>" + ConceptualConstructItem.ACTUAL_NOTATION + "</notation>");
         pw.println("\t<comment>" + getComment() + "</comment>");
         //System.out.println(getID()+"\t"+getName()+"\t"+getClass());
     }

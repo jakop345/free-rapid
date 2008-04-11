@@ -235,7 +235,7 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
                 RenderingHints.VALUE_ANTIALIAS_ON);
 
         moves();
-        if (ACTUAL_NOTATION == ConceptualConstruct.BINARY) {
+        if (ACTUAL_NOTATION == ConceptualConstructItem.BINARY) {
             if ((AtributeConstruct.class.equals(one.getClass()))
                     || (AtributeConstruct.class.equals(two
                     .getClass())))
@@ -269,7 +269,7 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
             }
         }
         final Stroke stroke = updateStrokeWithAliasing(g);
-        if (ACTUAL_NOTATION == ConceptualConstruct.UML) {
+        if (ACTUAL_NOTATION == ConceptualConstructItem.UML) {
             if ((AtributeConstruct.class.equals(one.getClass()
             ))
                     || (AtributeConstruct.class.equals(two
@@ -283,7 +283,7 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
                 return;
             g.drawLine(borderOne.x, borderOne.y, borderTwo.x, borderTwo.y);
         }
-        if (ACTUAL_NOTATION == ConceptualConstruct.CHEN) {
+        if (ACTUAL_NOTATION == ConceptualConstructItem.CHEN) {
 
             switch (ACTUAL_LOD) {
                 case (LOD_FULL):
@@ -351,7 +351,7 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
      */
     public void paintFast(java.awt.Graphics g) {
         realMoves();
-        if (ACTUAL_NOTATION == ConceptualConstruct.BINARY || ACTUAL_NOTATION == ConceptualConstruct.UML)
+        if (ACTUAL_NOTATION == ConceptualConstructItem.BINARY || ACTUAL_NOTATION == ConceptualConstructItem.UML)
             if ((AtributeConstruct.class.equals(one.getClass()))
                     || (AtributeConstruct.class.equals(two.getClass()))
                     || (UniqueKeyConstruct.class.equals(two.getClass()))
@@ -370,7 +370,7 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
      */
     public void print(java.awt.Graphics g) {
         moves();
-        if (ACTUAL_NOTATION == ConceptualConstruct.BINARY) {
+        if (ACTUAL_NOTATION == ConceptualConstructItem.BINARY) {
             if ((AtributeConstruct.class.equals(one.getClass()))
                     || (AtributeConstruct.class.equals(two.getClass())))
                 return;
@@ -403,7 +403,7 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
                 }
             }
         }
-        if (ACTUAL_NOTATION == ConceptualConstruct.UML) {
+        if (ACTUAL_NOTATION == ConceptualConstructItem.UML) {
             if ((AtributeConstruct.class.equals(one.getClass()))
                     || (AtributeConstruct.class.equals(two.getClass())))
                 return;
@@ -415,7 +415,7 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
                 return;
             g.drawLine(borderOne.x, borderOne.y, borderTwo.x, borderTwo.y);
         }
-        if (ACTUAL_NOTATION == ConceptualConstruct.CHEN) {
+        if (ACTUAL_NOTATION == ConceptualConstructItem.CHEN) {
             switch (ACTUAL_LOD) {
                 case (LOD_FULL):
                     g.drawLine(borderOne.x, borderOne.y, borderTwo.x, borderTwo.y);

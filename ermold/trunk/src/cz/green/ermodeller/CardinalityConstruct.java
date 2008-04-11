@@ -158,9 +158,9 @@ public class CardinalityConstruct extends ConceptualConstructObject {
         if (selected && event.getAdd())
             return;
         Item item = event.getItem();
-        if (item instanceof ConceptualConstruct) {
+        if (item instanceof ConceptualConstructItem) {
             if (event.getAdd()) {
-                ConceptualConstruct cc = (ConceptualConstruct) item;
+                ConceptualConstructItem cc = (ConceptualConstructItem) item;
                 if (this.connectionTo(cc) == null) {
                     event.getComponent().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
                     return;
@@ -178,9 +178,9 @@ public class CardinalityConstruct extends ConceptualConstructObject {
         if (selected && event.getAdd())
             return;
         Item item = event.getItem();
-        if (item instanceof ConceptualConstruct) {
+        if (item instanceof ConceptualConstructItem) {
             if (event.getAdd()) {
-                ConceptualConstruct cc = (ConceptualConstruct) item;
+                ConceptualConstructItem cc = (ConceptualConstructItem) item;
                 if (this.connectionTo(cc) == null) {
                     reconnect(cc);
                     event.setDropped(true);
@@ -266,7 +266,7 @@ public class CardinalityConstruct extends ConceptualConstructObject {
 	int eventDx = (int) (event.getDx());
 	int eventDy = (int) (event.getDy());
 */
-        if (ConceptualConstruct.ACTUAL_NOTATION == ConceptualConstruct.BINARY || ACTUAL_NOTATION == UML) {
+        if (ConceptualConstructItem.ACTUAL_NOTATION == ConceptualConstructItem.BINARY || ACTUAL_NOTATION == UML) {
             if (cardinalityCenter.x < er.x && cardinalityCenter.y < er.y) {
                 dx = er.x - cardinalityCenter.x + r.height / 5;
                 dy = er.y - cardinalityCenter.y - r.height / 2;
@@ -588,7 +588,7 @@ public class CardinalityConstruct extends ConceptualConstructObject {
      * @param cc Whether instance of the <code>Entity</code> changes the entity otherwise (instance <code>Relation</code>)
      *           change the relation.
      */
-    protected void reconnect(ConceptualConstruct cc) {
+    protected void reconnect(ConceptualConstructItem cc) {
         if (cc instanceof EntityConstruct) {
             //changes the participating entity
             EntityConstruct old = getEntity();

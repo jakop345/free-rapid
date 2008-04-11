@@ -1,7 +1,7 @@
 package cz.green.ermodeller.interfaces;
 
 import cz.green.ermodeller.CardinalityPair;
-import cz.green.ermodeller.ConceptualConstruct;
+import cz.green.ermodeller.ConceptualConstructItem;
 import cz.green.ermodeller.EntityConstruct;
 import cz.green.event.interfaces.Item;
 
@@ -15,7 +15,7 @@ public interface ModeSwitcher {
      *
      * @param object The owner of the new atribute.
      */
-    public boolean addingAtribute(ConceptualConstruct object);
+    public boolean addingAtribute(ConceptualConstructItem object);
 
     /**
      * Set regime for adding cardinality.
@@ -52,7 +52,7 @@ public interface ModeSwitcher {
      *
      * @param object The owner of the new unique key.
      */
-    public boolean addingUniqueKey(ConceptualConstruct object);
+    public boolean addingUniqueKey(ConceptualConstructItem object);
 
     /**
      * Set regime for deleting elements.

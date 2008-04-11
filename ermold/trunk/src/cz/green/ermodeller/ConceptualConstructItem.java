@@ -19,7 +19,7 @@ import java.util.Vector;
  * This type is ancestor of the classes Entity and Relation. Makes the common functions
  * of these two types. It means all function about atributes and unique keys.
  */
-public class ConceptualConstruct extends ConceptualConstructObject {
+public class ConceptualConstructItem extends ConceptualConstructObject {
     /**
      * All attributes
      */
@@ -31,7 +31,7 @@ public class ConceptualConstruct extends ConceptualConstructObject {
      *
      * @see ConceptualConstructObject#ConceptualConstructObject(cz.green.event.interfaces.Manager , int, int, int, int)
      */
-    public ConceptualConstruct(Manager manager, int left, int top, int width, int height) throws NullPointerException, ImpossibleNegativeValueException {
+    public ConceptualConstructItem(Manager manager, int left, int top, int width, int height) throws NullPointerException, ImpossibleNegativeValueException {
         super(manager, left, top, width, height);
     }
 
@@ -42,7 +42,7 @@ public class ConceptualConstruct extends ConceptualConstructObject {
      * @param cc The object to which we looks for the connection.
      * @return The instance of the class <code>Cardinality</code> or <code>null</code>.
      */
-    protected CardinalityConstruct cardinalityWith(ConceptualConstruct cc) {
+    protected CardinalityConstruct cardinalityWith(ConceptualConstructItem cc) {
         java.util.Enumeration e = connections.elements();
         while (e.hasMoreElements()) {
             Connection c = ((Connection) e.nextElement());
@@ -84,7 +84,7 @@ public class ConceptualConstruct extends ConceptualConstructObject {
                 Attribs = new java.util.Vector(3, 2);
             Attribs.addElement(atr);
             cAtr.setPosition(Attribs.size());
-            if (this instanceof EntityConstruct && ConceptualConstruct.ACTUAL_NOTATION != ConceptualConstruct.CHEN) {
+            if (this instanceof EntityConstruct && ConceptualConstructItem.ACTUAL_NOTATION != ConceptualConstructItem.CHEN) {
                 ((EntityConstruct) this).recalculatePositionsOfAtributes();
             }
             return atr;
@@ -156,7 +156,7 @@ public class ConceptualConstruct extends ConceptualConstructObject {
      * (reconnecting the cardinalities).
      *
      * @see #moveAtribute(AtributeConstruct)
-     * @see CardinalityConstruct#reconnect(cz.green.ermodeller.ConceptualConstruct)
+     * @see CardinalityConstruct#reconnect(ConceptualConstructItem)
      */
     public void handleDropAboveEvent(DropAboveEvent event) {
         if (selected && event.getAdd())
@@ -267,7 +267,7 @@ public class ConceptualConstruct extends ConceptualConstructObject {
      * @param cc The new owner of all atributes.
      * @see #moveAtribute(AtributeConstruct)
      */
-    protected void reconnectAllAtributes(ConceptualConstruct cc) {
+    protected void reconnectAllAtributes(ConceptualConstructItem cc) {
         AtributeConstruct atr;
         for (int i = connections.size() - 1; i >= 0; i--) {
             if ((atr = (AtributeConstruct) ((Connection) connections.elementAt(i)).isConnectedTo(AtributeConstruct.class)) != null)
@@ -282,7 +282,7 @@ public class ConceptualConstruct extends ConceptualConstructObject {
      * @param cc The new participant of the cardinality.
      * @see EntityConstruct#compact(EntityConstruct , cz.green.event.CoordinateEvent)
      */
-    protected void reconnectAllCardinalities(ConceptualConstruct cc) {
+    protected void reconnectAllCardinalities(ConceptualConstructItem cc) {
         Connection c;
         for (int i = connections.size() - 1; i >= 0; i--) {
             c = (Connection) connections.elementAt(i);
@@ -310,7 +310,7 @@ public class ConceptualConstruct extends ConceptualConstructObject {
                                 javax.swing.JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            ConceptualConstruct ccFrom = atr.getOwner();
+            ConceptualConstructItem ccFrom = atr.getOwner();
             cz.omnicom.ermodeller.conceptual.ConceptualConstruct cCcFrom = (cz.omnicom.ermodeller.conceptual.ConceptualConstruct) (ccFrom.getModel());
             cz.omnicom.ermodeller.conceptual.Atribute cAtr = (cz.omnicom.ermodeller.conceptual.Atribute) (atr.getModel());
             if (ccFrom instanceof EntityConstruct)

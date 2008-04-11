@@ -153,7 +153,7 @@ public class ConceptualConstructObject extends ConnectableWindow implements View
      * two conceptual construct and to layout the ISA childs in ISA parent.
      *
      * @return The real native position and size
-     * @see #getCenter(cz.green.ermodeller.ConceptualConstruct)
+     * @see #getCenter(ConceptualConstructItem)
      * @see cz.green.event#rect
      * @see cz.green.event#hRect
      */

@@ -343,7 +343,7 @@ public class UniqueKeyConstruct extends ConceptualConstructObject {
      * crossed lines.
      */
     public void paint(java.awt.Graphics g) {
-        if (ACTUAL_NOTATION == ConceptualConstruct.BINARY)
+        if (ACTUAL_NOTATION == ConceptualConstructItem.BINARY)
             return;
         final Stroke stroke = updateStrokeWithAliasing(g);
         // paints the rectangle
@@ -369,7 +369,7 @@ public class UniqueKeyConstruct extends ConceptualConstructObject {
      * crossed lines.
      */
     public void print(java.awt.Graphics g) {
-        if (ACTUAL_NOTATION == ConceptualConstruct.BINARY)
+        if (ACTUAL_NOTATION == ConceptualConstructItem.BINARY)
             return;
         java.awt.Rectangle r = getBounds();
         g.drawRect(r.x, r.y, r.width, r.height);

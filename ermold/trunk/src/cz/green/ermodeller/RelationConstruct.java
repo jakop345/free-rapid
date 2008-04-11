@@ -26,7 +26,7 @@ import java.util.Vector;
  *
  * @see DGroupTool
  */
-public class RelationConstruct extends ConceptualConstruct {
+public class RelationConstruct extends ConceptualConstructItem {
     /**
      * The model object - entity from Aleš Kopecký work
      */
@@ -44,7 +44,7 @@ public class RelationConstruct extends ConceptualConstruct {
      *          Thrown by inherited constructor.
      * @throws <code>cz.green.event.ImpossibleNegativeValueException</code>
      *          Thrown by inherited constructor.
-     * @see ConceptualConstruct#ConceptualConstruct(cz.green.event.interfaces.Manager , int, int, int, int)
+     * @see ConceptualConstructItem#ConceptualConstructItem(cz.green.event.interfaces.Manager , int, int, int, int)
      */
     protected RelationConstruct(RelationBean rel, Manager manager, int left, int top) throws NullPointerException, ImpossibleNegativeValueException {
         super(manager, left, top, 0, 0);
@@ -54,7 +54,7 @@ public class RelationConstruct extends ConceptualConstruct {
         try {
             fm = ((FontManager) manager).getReferentFontMetrics();
             int width = fm.stringWidth(name), height = fm.getAscent();
-            if (ACTUAL_NOTATION == ConceptualConstruct.CHEN) {
+            if (ACTUAL_NOTATION == ConceptualConstructItem.CHEN) {
 //			rect[0][1] = rect[0][0] + 2 * width + height;
                 rect[0][1] = rect[0][0] + 9 * height;
                 rect[1][1] = rect[1][0] + 3 * height;
@@ -184,7 +184,7 @@ public class RelationConstruct extends ConceptualConstruct {
     protected JPopupMenu createMenu(JPopupMenu menu, PopupMenuEvent event) {
         super.createMenu(menu, event);
         if (ACTUAL_NOTATION == CHEN)
-            addMenuItem(menu, "Add atribute", "img/mAtribute.gif", event.getComponent(), "addingAtribute", this, cz.green.ermodeller.ConceptualConstruct.class);
+            addMenuItem(menu, "Add atribute", "img/mAtribute.gif", event.getComponent(), "addingAtribute", this, ConceptualConstructItem.class);
         addMenuItem(menu, "Add Connection to Entity ...", "img/mAddConnection.gif", event.getComponent(),
                 "addingConnectionToEnt", this,
                 RelationConstruct.class);
@@ -413,7 +413,7 @@ public class RelationConstruct extends ConceptualConstruct {
      */
     public cz.green.event.ResizePoint[] getResizePoints() {
         cz.green.event.ResizePoint[] r;
-        if (ConceptualConstruct.ACTUAL_NOTATION == ConceptualConstruct.CHEN) {
+        if (ConceptualConstructItem.ACTUAL_NOTATION == ConceptualConstructItem.CHEN) {
             r = new cz.green.event.ResizePoint[8];
             r[0] = new cz.green.event.ResizePoint(0, 0.5, cz.green.event.ResizePoint.LEFT);
             r[1] = new cz.green.event.ResizePoint(1, 0.5, cz.green.event.ResizePoint.RIGHT);
@@ -457,7 +457,7 @@ public class RelationConstruct extends ConceptualConstruct {
         Item item = event.getItem();
         if (item instanceof EntityConstruct) {
             String name = "";
-            if (ACTUAL_NOTATION != ConceptualConstruct.CHEN) {
+            if (ACTUAL_NOTATION != ConceptualConstructItem.CHEN) {
                 java.util.Enumeration e = getConnections().elements();
                 CardinalityConstruct car1;
                 while (e.hasMoreElements()) {
@@ -475,7 +475,7 @@ public class RelationConstruct extends ConceptualConstruct {
             java.awt.Point p = ((EntityConstruct) item).getAbsoluteCenter(this);
             CardinalityConstruct car = createCardinality((EntityConstruct) item, ((EntityConstruct) item).getManager(), p.x, p.y);
             car.handleMoveEvent(new MoveEvent(car.getBounds().x, car.getBounds().y, -car.getBounds().width / 2, -car.getBounds().height / 2, null));
-            if (ACTUAL_NOTATION != ConceptualConstruct.CHEN) {
+            if (ACTUAL_NOTATION != ConceptualConstructItem.CHEN) {
                 car.model.setName(this.model.getName());
                 if (name.length() > 0) car.model.setName(name);
                 car.moveCardinality(new ExMovingEvent(p.x, p.y, 0, 0, null, false));
@@ -705,7 +705,7 @@ public class RelationConstruct extends ConceptualConstruct {
      * Invoked when some model's property change. Catch changes of the <b>name</b>
      * and <b>strongAddictionParents</b> property.
      *
-     * @see ConceptualConstruct#propertyCHENge(java.beans.PropertyCHENgeEvent);
+     * @see ConceptualConstructItem#propertyCHENge(java.beans.PropertyCHENgeEvent);
      */
     public void propertyChange(java.beans.PropertyChangeEvent e) {
         ((cz.omnicom.ermodeller.conceptual.ConceptualObject) getModel())

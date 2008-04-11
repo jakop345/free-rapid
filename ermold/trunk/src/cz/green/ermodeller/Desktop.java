@@ -693,7 +693,7 @@ public class Desktop extends DesktopTool implements FontManager,
             item.addActionListener(new ParamActionAdapter(getPaintPlace(),
                     "addingEntity", null, EntityConstruct.class));
             menu.add(item);
-            if (ConceptualConstruct.ACTUAL_NOTATION == ConceptualConstruct.CHEN) {
+            if (ConceptualConstructItem.ACTUAL_NOTATION == ConceptualConstructItem.CHEN) {
                 item = new JMenuItem("Add relationship", new ImageIcon(ClassLoader
                         .getSystemResource("img/mRelation.gif")));
                 item.setHorizontalTextPosition(JMenuItem.RIGHT);

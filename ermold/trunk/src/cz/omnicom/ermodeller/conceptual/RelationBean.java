@@ -1,5 +1,6 @@
 package cz.omnicom.ermodeller.conceptual;
 
+import cz.green.ermodeller.ConceptualConstructItem;
 import cz.omnicom.ermodeller.conceptual.exception.AlreadyContainsException;
 import cz.omnicom.ermodeller.conceptual.exception.ParameterCannotBeNullException;
 import cz.omnicom.ermodeller.conceptual.exception.WasNotFoundException;
@@ -181,7 +182,7 @@ public class RelationBean extends ConceptualConstruct {
             error.connectErrorToObject(this);
             errorLogList.addElement(error);
         }
-        if (cz.green.ermodeller.ConceptualConstruct.ACTUAL_NOTATION != cz.green.ermodeller.ConceptualConstruct.CHEN &&
+        if (ConceptualConstructItem.ACTUAL_NOTATION != ConceptualConstructItem.CHEN &&
                 getCardinalities().size() > 2) {
             error = new HaveManyCardinalitiesValidationError(this);
             error.connectErrorToObject(this);

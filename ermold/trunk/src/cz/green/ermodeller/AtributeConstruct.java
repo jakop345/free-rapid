@@ -22,13 +22,13 @@ import java.awt.*;
  * <p/>
  * To create atribute, there is a method <code>createAtribute</code> of the <code>ConceptualConstruct</code> class.
  *
- * @see ConceptualConstruct#createAtribute(int,int)
+ * @see ConceptualConstructItem#createAtribute(int,int)
  */
 public class AtributeConstruct extends ConceptualConstructObject {
     /**
      * The owner of the atribute
      */
-    ConceptualConstruct cc = null;
+    ConceptualConstructItem cc = null;
     /**
      * The model of the atribute - object from the Aleš Kopecký work.
      */
@@ -55,7 +55,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
      *          Thrown by inherited constructor.
      * @see ConceptualConstructObject#ConceptualConstructObject(cz.green.event.interfaces.Manager ,int,int,int,int)
      */
-    public AtributeConstruct(cz.omnicom.ermodeller.conceptual.Atribute atr, ConceptualConstruct cc, Manager manager, int left, int top) throws NullPointerException, ImpossibleNegativeValueException {
+    public AtributeConstruct(cz.omnicom.ermodeller.conceptual.Atribute atr, ConceptualConstructItem cc, Manager manager, int left, int top) throws NullPointerException, ImpossibleNegativeValueException {
         super(manager, left, top, 50, 50);
         //set model
         this.cc = cc;
@@ -331,7 +331,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
     /**
      * Returns the <code>ConceptualConstruct</code> (means entity or relation) the owns this atribute.
      */
-    public ConceptualConstruct getOwner() {
+    public ConceptualConstructItem getOwner() {
         return cc;
     }
 
@@ -427,7 +427,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
      * Same as <code>handleMovingEvent</code> but remove functionality for BINARY and UML notation.
      */
     public void handleExMovingEvent(ExMovingEvent event) {
-        if (ConceptualConstruct.ACTUAL_NOTATION == ConceptualConstruct.CHEN)
+        if (ConceptualConstructItem.ACTUAL_NOTATION == ConceptualConstructItem.CHEN)
             super.handleMovingEvent(event);
     }
 
@@ -448,7 +448,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
         }
 //	this.setPosition(cc.Attribs.size());
 
-        if (ConceptualConstruct.ACTUAL_NOTATION != ConceptualConstruct.CHEN)
+        if (ConceptualConstructItem.ACTUAL_NOTATION != ConceptualConstructItem.CHEN)
             if (cc instanceof EntityConstruct) {
                 EntityConstruct ent = (EntityConstruct) cc;
                 ent.recalculatePositionsOfAtributes();
@@ -765,7 +765,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
                 if (ACTUAL_NOTATION == BINARY)
                     moveToPosition(((EntityConstruct) getOwner()).PKmembers.size() + 1);
             }
-            if (ConceptualConstruct.ACTUAL_NOTATION != ConceptualConstruct.CHEN)
+            if (ConceptualConstructItem.ACTUAL_NOTATION != ConceptualConstructItem.CHEN)
                 ((EntityConstruct) getOwner()).recalculatePositionsOfAtributes();
 
         }
@@ -860,7 +860,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
      *
      * @param cc The new owner of the atribute - entity or relation.
      */
-    public void setOwner(ConceptualConstruct cc) {
+    public void setOwner(ConceptualConstructItem cc) {
         this.cc = cc;
     }
 

@@ -198,13 +198,13 @@ public class ERModeller extends JFrame implements
 
         loadDefaultConfiguration();
         switch (AppPrefs.getProperty(AppPrefs.GENERAL_DEFNOTATION, Consts.DEF_GENERAL_DEFNOTATION)) {
-            case (ConceptualConstruct.CHEN):
+            case (ConceptualConstructItem.CHEN):
                 setChen();
                 break;
-            case (ConceptualConstruct.BINARY):
+            case (ConceptualConstructItem.BINARY):
                 setBinary();
                 break;
-            case (ConceptualConstruct.UML):
+            case (ConceptualConstructItem.UML):
                 setUML();
                 break;
         }
@@ -220,8 +220,8 @@ public class ERModeller extends JFrame implements
         final String user = AppPrefs.getProperty(AppPrefs.DBCONNECT_USER, Consts.DEF_DBCONNECT_USER);
         //optDialog.loadCfg(driver, url, user);
 
-        ConceptualConstruct.SHOW_PK_IN_UML = AppPrefs.getProperty(AppPrefs.GENERAL_PKSHOWUML, Consts.DEF_GENERAL_PKSHOWUML);
-        ConceptualConstruct.SHOW_SHORTEN_CARD_IN_UML = AppPrefs.getProperty(AppPrefs.GENERAL_SHORTEN_CARDS_UML, Consts.DEF_GENERAL_SHORTEN_CARDS_UML);
+        ConceptualConstructItem.SHOW_PK_IN_UML = AppPrefs.getProperty(AppPrefs.GENERAL_PKSHOWUML, Consts.DEF_GENERAL_PKSHOWUML);
+        ConceptualConstructItem.SHOW_SHORTEN_CARD_IN_UML = AppPrefs.getProperty(AppPrefs.GENERAL_SHORTEN_CARDS_UML, Consts.DEF_GENERAL_SHORTEN_CARDS_UML);
 
         WindowItem.OBJECT_FOREGROUND_COLOR = AppPrefs.getProperty(AppPrefs.COLORS_OBJECT_FG, Consts.DEF_COLORS_OBJECT_FG);
         WindowItem.OBJECT_BACKGROUND_COLOR = AppPrefs.getProperty(AppPrefs.COLORS_OBJECT_BG, Consts.DEF_COLORS_OBJECT_BG);
@@ -241,8 +241,8 @@ public class ERModeller extends JFrame implements
         AppPrefs.storeProperty(AppPrefs.DBCONNECT_URL, url);
         AppPrefs.storeProperty(AppPrefs.DBCONNECT_USER, user);
 
-        AppPrefs.storeProperty(AppPrefs.GENERAL_PKSHOWUML, ConceptualConstruct.SHOW_PK_IN_UML);
-        AppPrefs.storeProperty(AppPrefs.GENERAL_SHORTEN_CARDS_UML, ConceptualConstruct.SHOW_SHORTEN_CARD_IN_UML);
+        AppPrefs.storeProperty(AppPrefs.GENERAL_PKSHOWUML, ConceptualConstructItem.SHOW_PK_IN_UML);
+        AppPrefs.storeProperty(AppPrefs.GENERAL_SHORTEN_CARDS_UML, ConceptualConstructItem.SHOW_SHORTEN_CARD_IN_UML);
         AppPrefs.storeProperty(AppPrefs.COLORS_OBJECT_FG, WindowItem.OBJECT_FOREGROUND_COLOR);
         AppPrefs.storeProperty(AppPrefs.COLORS_OBJECT_BG, WindowItem.OBJECT_BACKGROUND_COLOR);
         AppPrefs.storeProperty(AppPrefs.COLORS_SELOBJECT_BG, WindowItem.SELECTED_OBJECT_BACKGROUND_COLOR);
@@ -333,13 +333,13 @@ public class ERModeller extends JFrame implements
         typeEditor.setLocationRelativeTo(this);
         typeEditor.reset();
         switch (AppPrefs.getProperty(AppPrefs.GENERAL_DEFNOTATION, Consts.DEF_GENERAL_DEFNOTATION)) {
-            case (ConceptualConstruct.CHEN):
+            case (ConceptualConstructItem.CHEN):
                 setChen();
                 break;
-            case (ConceptualConstruct.BINARY):
+            case (ConceptualConstructItem.BINARY):
                 setBinary();
                 break;
-            case (ConceptualConstruct.UML):
+            case (ConceptualConstructItem.UML):
                 setUML();
                 break;
         }
@@ -377,8 +377,8 @@ public class ERModeller extends JFrame implements
                     genDialog.setVisible(true);
                     if (genDialog.getResult()) {
 //						osetreni kardinalit
-                        if (ConceptualConstruct.ACTUAL_NOTATION != ConceptualConstruct.CHEN) {
-                            if (ConceptualConstruct.ACTUAL_NOTATION == ConceptualConstruct.BINARY)
+                        if (ConceptualConstructItem.ACTUAL_NOTATION != ConceptualConstructItem.CHEN) {
+                            if (ConceptualConstructItem.ACTUAL_NOTATION == ConceptualConstructItem.BINARY)
                                 ((Desktop) getPlace().getDesktop()).switchAllRConnectionsCard(place);
                             else ((Desktop) getPlace().getDesktop()).switchAllRConnectionsBoth(place);
                         }
@@ -390,8 +390,8 @@ public class ERModeller extends JFrame implements
                                 .getDefaultGlue());
                         sqlDialog.setSchemaSQL(schemaC2R.createSchemaSQL());
 //						osetreni kardinalit
-                        if (ConceptualConstruct.ACTUAL_NOTATION != ConceptualConstruct.CHEN) {
-                            if (ConceptualConstruct.ACTUAL_NOTATION == ConceptualConstruct.BINARY)
+                        if (ConceptualConstructItem.ACTUAL_NOTATION != ConceptualConstructItem.CHEN) {
+                            if (ConceptualConstructItem.ACTUAL_NOTATION == ConceptualConstructItem.BINARY)
                                 ((Desktop) getPlace().getDesktop()).switchAllRConnectionsCard(place);
                             else ((Desktop) getPlace().getDesktop()).switchAllRConnectionsBoth(place);
                         }
@@ -434,8 +434,8 @@ public class ERModeller extends JFrame implements
                     genDialog.setVisible(true);
                     if (genDialog.getResult()) {
                         //osetreni kardinalit
-                        if (ConceptualConstruct.ACTUAL_NOTATION != ConceptualConstruct.CHEN) {
-                            if (ConceptualConstruct.ACTUAL_NOTATION == ConceptualConstruct.BINARY)
+                        if (ConceptualConstructItem.ACTUAL_NOTATION != ConceptualConstructItem.CHEN) {
+                            if (ConceptualConstructItem.ACTUAL_NOTATION == ConceptualConstructItem.BINARY)
                                 ((Desktop) getPlace().getDesktop()).switchAllRConnectionsCard(place);
                             else ((Desktop) getPlace().getDesktop()).switchAllRConnectionsBoth(place);
                         }
@@ -446,8 +446,8 @@ public class ERModeller extends JFrame implements
                                 .getShortenPrefixes(), !genDialog
                                 .getDefaultGlue());
                         //osetreni kardinalit
-                        if (ConceptualConstruct.ACTUAL_NOTATION != ConceptualConstruct.CHEN) {
-                            if (ConceptualConstruct.ACTUAL_NOTATION == ConceptualConstruct.BINARY)
+                        if (ConceptualConstructItem.ACTUAL_NOTATION != ConceptualConstructItem.CHEN) {
+                            if (ConceptualConstructItem.ACTUAL_NOTATION == ConceptualConstructItem.BINARY)
                                 ((Desktop) getPlace().getDesktop()).switchAllRConnectionsCard(place);
                             else ((Desktop) getPlace().getDesktop()).switchAllRConnectionsBoth(place);
                         }
@@ -855,7 +855,7 @@ public class ERModeller extends JFrame implements
      * Show check and change notation dialog for changing notation to CHEN
      */
     public void checkChen() {
-        ChangeNotationDialog ccnDial = new ChangeNotationDialog(this, this, ConceptualConstruct.CHEN);
+        ChangeNotationDialog ccnDial = new ChangeNotationDialog(this, this, ConceptualConstructItem.CHEN);
         ccnDial.setLocationRelativeTo(this);
         ccnDial.setVisible(true);
     }
@@ -864,7 +864,7 @@ public class ERModeller extends JFrame implements
      * Show check and change notation dialog for changing notation to UML
      */
     public void checkUML() {
-        ChangeNotationDialog ccnDial = new ChangeNotationDialog(this, this, ConceptualConstruct.UML);
+        ChangeNotationDialog ccnDial = new ChangeNotationDialog(this, this, ConceptualConstructItem.UML);
         ccnDial.setLocationRelativeTo(this);
         ccnDial.setVisible(true);
     }
@@ -873,7 +873,7 @@ public class ERModeller extends JFrame implements
      * Show check and change notation dialog for changing notation to BINARY
      */
     public void checkBinary() {
-        ChangeNotationDialog ccnDial = new ChangeNotationDialog(this, this, ConceptualConstruct.BINARY);
+        ChangeNotationDialog ccnDial = new ChangeNotationDialog(this, this, ConceptualConstructItem.BINARY);
         ccnDial.setLocationRelativeTo(this);
         ccnDial.setVisible(true);
     }
@@ -1106,7 +1106,7 @@ public class ERModeller extends JFrame implements
         cz.omnicom.ermodeller.conceptual.Cardinality carM;
         cz.omnicom.ermodeller.conceptual.UniqueKey uniM;
         cz.omnicom.ermodeller.datatype.DataType dt;
-        ConceptualConstruct cc;
+        ConceptualConstructItem cc;
         int schemaID;
         Vector attrs = new Vector();
         Vector<Integer> attrsPos = new Vector<Integer>();
@@ -1373,7 +1373,7 @@ public class ERModeller extends JFrame implements
         cz.omnicom.ermodeller.conceptual.Cardinality carM;
         cz.omnicom.ermodeller.conceptual.UniqueKey uniM;
         cz.omnicom.ermodeller.datatype.DataType dt;
-        ConceptualConstruct cc;
+        ConceptualConstructItem cc;
         Desktop d;
 
         //parser.setAllowJavaEncodingName(true);
@@ -1410,7 +1410,7 @@ public class ERModeller extends JFrame implements
                         if (what == WITH_XML) {
                             int withNotation = loadNotation(d, id, doc);
                             //		System.out.println("act notation " + ConceptualConstruct.ACTUAL_NOTATION + ", with not " + withNotation);
-                            if (ConceptualConstruct.ACTUAL_NOTATION != withNotation) {
+                            if (ConceptualConstructItem.ACTUAL_NOTATION != withNotation) {
                                 System.out.println("different notations");
                                 repaint();
                                 javax.swing.JOptionPane
@@ -1668,13 +1668,13 @@ public class ERModeller extends JFrame implements
                         | cz.green.event.ResizePoint.RIGHT);
                 java.awt.Rectangle saR = sa.getBounds();
                 switch (nextNotation) {
-                    case (ConceptualConstruct.CHEN):
+                    case (ConceptualConstructItem.CHEN):
                         sa.handleResizeEvent(new ResizeEvent(saR.x, saR.y, -(saR.width - StrongAddiction.SIZE), -(saR.height - StrongAddiction.SIZE), rr, null));
                         break;
-                    case (ConceptualConstruct.BINARY):
+                    case (ConceptualConstructItem.BINARY):
                         sa.handleResizeEvent(new ResizeEvent(saR.x, saR.y, -(saR.width - (fm.getAscent() + fm.stringWidth("N:N"))), -(saR.height - (int) (2.25 * fm.getAscent())), rr, null));
                         break;
-                    case (ConceptualConstruct.UML):
+                    case (ConceptualConstructItem.UML):
                         sa.handleResizeEvent(new ResizeEvent(saR.x, saR.y, -(saR.width - StrongAddiction.SIZE), -(saR.height - StrongAddiction.SIZE), rr, null));
                         break;
                 }
@@ -1763,7 +1763,7 @@ public class ERModeller extends JFrame implements
      * Set display all deatails in the schema
      */
     public void setLODfull() {
-        ConceptualConstruct.ACTUAL_LOD = ConceptualConstruct.LOD_FULL;
+        ConceptualConstructItem.ACTUAL_LOD = ConceptualConstructItem.LOD_FULL;
         lodStatusLabel.setText("Full details");
         minimizeAll();
         repaint();
@@ -1773,9 +1773,9 @@ public class ERModeller extends JFrame implements
      * Set display medium details in thte schema - without atributes which are not members fo primary key
      */
     public void setLODmedium() {
-        ConceptualConstruct.ACTUAL_LOD = ConceptualConstruct.LOD_MEDIUM;
+        ConceptualConstructItem.ACTUAL_LOD = ConceptualConstructItem.LOD_MEDIUM;
         lodStatusLabel.setText("Medium details");
-        if (ConceptualConstruct.ACTUAL_NOTATION == ConceptualConstruct.UML) {
+        if (ConceptualConstructItem.ACTUAL_NOTATION == ConceptualConstructItem.UML) {
             Desktop d = (Desktop) getPlace().getDesktop();
             Vector ents = d.getAllEntities();
             for (Object ent1 : ents) {
@@ -1791,7 +1791,7 @@ public class ERModeller extends JFrame implements
      * Set display low details in the schema - without all atributes
      */
     public void setLODlow() {
-        ConceptualConstruct.ACTUAL_LOD = ConceptualConstruct.LOD_LOW;
+        ConceptualConstructItem.ACTUAL_LOD = ConceptualConstructItem.LOD_LOW;
         lodStatusLabel.setText("Low details");
         minimizeAll();
         repaint();
@@ -1804,7 +1804,7 @@ public class ERModeller extends JFrame implements
      * @param notation - new notation
      */
     private synchronized void setNotation(int notation) {
-        ConceptualConstruct.ACTUAL_NOTATION = notation;
+        ConceptualConstructItem.ACTUAL_NOTATION = notation;
     }
 
     /**
@@ -1813,16 +1813,16 @@ public class ERModeller extends JFrame implements
     public void setChen() {
         Desktop desktop = (Desktop) getPlace().getDesktop();
 
-        if (ConceptualConstruct.ACTUAL_NOTATION != ConceptualConstruct.CHEN) {
+        if (ConceptualConstructItem.ACTUAL_NOTATION != ConceptualConstructItem.CHEN) {
             desktop.decomposeTernaryRels(place);
-            if (ConceptualConstruct.ACTUAL_NOTATION == ConceptualConstruct.BINARY)
+            if (ConceptualConstructItem.ACTUAL_NOTATION == ConceptualConstructItem.BINARY)
                 desktop.switchAllRConnectionsCard(place);
             else desktop.switchAllRConnectionsBoth(place);
             setChanged(true);
 
             Vector allEntities = desktop.getAllEntities();
 
-            setNotation(ConceptualConstruct.CHEN);
+            setNotation(ConceptualConstructItem.CHEN);
 
             for (Object allEntity : allEntities) {
                 EntityConstruct ent = (EntityConstruct) allEntity;
@@ -1834,7 +1834,7 @@ public class ERModeller extends JFrame implements
                 EntityConstruct ent = (EntityConstruct) allEntity;
                 int width = mainISAParent(ent).getBounds().width;
                 ent.moveAtributesBinarytoChen(width);
-                resizeStrongAddictions(ent, ConceptualConstruct.CHEN);
+                resizeStrongAddictions(ent, ConceptualConstructItem.CHEN);
             }
             Vector rels = desktop.getAllRelations();
             for (Object rel1 : rels) {
@@ -1864,7 +1864,7 @@ public class ERModeller extends JFrame implements
         Desktop d = (Desktop) getPlace().getDesktop();
         setChanged(true);
 
-        if (ConceptualConstruct.ACTUAL_NOTATION == ConceptualConstruct.CHEN) {
+        if (ConceptualConstructItem.ACTUAL_NOTATION == ConceptualConstructItem.CHEN) {
             d.delRelsWithoutConnection();
             d.decomposeRelsWithAtributes(place);
             d.decomposeTernaryRels(place);
@@ -1879,7 +1879,7 @@ public class ERModeller extends JFrame implements
             ent.collectPKatributes();
         }
 
-        setNotation(ConceptualConstruct.BINARY);
+        setNotation(ConceptualConstructItem.BINARY);
 
         for (Object allEntity : allEntities) {
             EntityConstruct ent = (EntityConstruct) allEntity;
@@ -1892,7 +1892,7 @@ public class ERModeller extends JFrame implements
                     | ResizePoint.RIGHT);
             ent.resizeEntity(new ResizeEvent(ent.getBounds().x, ent.getBounds().y, 1, 1, rr, this));
             if (ent.isStrongAddictionChild)
-                resizeStrongAddictions(ent, ConceptualConstruct.BINARY);
+                resizeStrongAddictions(ent, ConceptualConstructItem.BINARY);
         }
 
         Vector rels = d.getAllRelations();
@@ -1941,7 +1941,7 @@ public class ERModeller extends JFrame implements
         Desktop d = (Desktop) getPlace().getDesktop();
         setChanged(true);
 
-        if (ConceptualConstruct.ACTUAL_NOTATION == ConceptualConstruct.CHEN) {
+        if (ConceptualConstructItem.ACTUAL_NOTATION == ConceptualConstructItem.CHEN) {
             d.delRelsWithoutConnection();
             d.decomposeRelsWithAtributes(place);
             d.decomposeTernaryRels(place);
@@ -1951,11 +1951,11 @@ public class ERModeller extends JFrame implements
         }
         Vector allEntities = d.getAllEntities();
 
-        setNotation(ConceptualConstruct.UML);
+        setNotation(ConceptualConstructItem.UML);
         for (int i = 0; i < allEntities.size(); i++) {
             EntityConstruct ent = (EntityConstruct) allEntities.get(i);
             ent.recalculatePositionsOfAtributes();
-            resizeStrongAddictions(ent, ConceptualConstruct.UML);
+            resizeStrongAddictions(ent, ConceptualConstructItem.UML);
             if (ent.isStrongAddictionChild)
                 setNewStrongAddictionsManager(ent);
         }
@@ -2055,16 +2055,16 @@ public class ERModeller extends JFrame implements
             if (c.getTwo() instanceof StrongAddiction) sa = ((StrongAddiction) c.getTwo());
             if (sa != null) {
                 try {
-                    switch (ConceptualConstruct.ACTUAL_NOTATION) {
-                        case (ConceptualConstruct.CHEN):
+                    switch (ConceptualConstructItem.ACTUAL_NOTATION) {
+                        case (ConceptualConstructItem.CHEN):
                             sa.getManager().remove(sa);
                             ent.getManager().add(sa);
                             break;
-                        case (ConceptualConstruct.BINARY):
+                        case (ConceptualConstructItem.BINARY):
                             sa.getManager().remove(sa);
                             ent.getManager().add(sa);
                             break;
-                        case (ConceptualConstruct.UML):
+                        case (ConceptualConstructItem.UML):
                             sa.getManager().remove(sa);
                             sa.getParent().getManager().add(sa);
                             break;

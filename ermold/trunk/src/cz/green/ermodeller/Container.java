@@ -131,7 +131,7 @@ public class Container extends ContainerToolComponent implements ModeSwitcher, F
      *
      * @param object The owner of the new atribute.
      */
-    public boolean addingAtribute(ConceptualConstruct object) {
+    public boolean addingAtribute(ConceptualConstructItem object) {
         this.object = object;
         if (Window.ACTUAL_NOTATION == Window.CHEN) {
             setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
@@ -269,7 +269,7 @@ public class Container extends ContainerToolComponent implements ModeSwitcher, F
      *
      * @param object The owner of the new unique key.
      */
-    public boolean addingUniqueKey(ConceptualConstruct object) {
+    public boolean addingUniqueKey(ConceptualConstructItem object) {
         this.object = object;
         setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
         setWorkMode(ADDING_UNIQUE_KEY);
@@ -480,7 +480,7 @@ public class Container extends ContainerToolComponent implements ModeSwitcher, F
                 case ADDING_ATRIBUTE:
                     setWorkMode(WORKING);
                     setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-                    ((ConceptualConstruct) object).createAtribute(x, y);
+                    ((ConceptualConstructItem) object).createAtribute(x, y);
                     break;
                 case ADDING_UNIQUE_KEY:
                     setWorkMode(WORKING);
