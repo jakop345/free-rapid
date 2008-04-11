@@ -466,7 +466,8 @@ public class EntityConstruct extends ConceptualConstructItem {
      */
     private int countResizeBottom(int from) {
         int l = 2 * DIFFERENCE, height = l;
-        int[][] r = getRect();
+        int[][] r;
+        getRect();
         if (from == -1) {
             try {
                 java.awt.FontMetrics fm;
@@ -818,7 +819,7 @@ public class EntityConstruct extends ConceptualConstructItem {
                 }
             } else {
                 // if (areCompactable((Entity) item)) {
-                if (((EntityConstruct) item) != this) {
+                if (item != this) {
                     event.getComponent().setCursor(
                             new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
                     return;
@@ -891,13 +892,13 @@ public class EntityConstruct extends ConceptualConstructItem {
                 Manager man = getManager();
                 RelationConstruct rel = RelationConstruct.createRelation(model.getSchema(), man, (int) ((p.x + SELFRELATIONDISTANCE) * scale), (int) ((p.y + SELFRELATIONDISTANCE) * scale));
                 if (ACTUAL_NOTATION == ConceptualConstructItem.CHEN) {
-                    car = rel.createCardinality((EntityConstruct) item, man, (int) ((p.x + SELFRELATIONDISTANCE) * scale) + rel.getBounds().width / 2, (int) (p.y * scale) + ((EntityConstruct) item).getBounds().height / 2);
+                    car = rel.createCardinality((EntityConstruct) item, man, (int) ((p.x + SELFRELATIONDISTANCE) * scale) + rel.getBounds().width / 2, (int) (p.y * scale) + item.getBounds().height / 2);
                     car.move(-car.getBounds().width / 2, -car.getBounds().height / 2, true);
                     man.repaintItem(car);
                 } else
                     car = rel.createCardinality((EntityConstruct) item, man, (int) (p.x * scale), (int) (p.y * scale));
                 if (ACTUAL_NOTATION == ConceptualConstructItem.CHEN) {
-                    car = rel.createCardinality(this, man, (int) (p.x * scale) + ((EntityConstruct) item).getBounds().width / 2, (int) ((p.y + SELFRELATIONDISTANCE) * scale) + rel.getBounds().height / 2);
+                    car = rel.createCardinality(this, man, (int) (p.x * scale) + item.getBounds().width / 2, (int) ((p.y + SELFRELATIONDISTANCE) * scale) + rel.getBounds().height / 2);
                     car.move(-car.getBounds().width / 2, -car.getBounds().height / 2, true);
                     man.repaintItem(car);
                 } else

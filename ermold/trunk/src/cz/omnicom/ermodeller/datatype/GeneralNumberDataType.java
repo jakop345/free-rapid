@@ -145,7 +145,8 @@ public class GeneralNumberDataType extends DataType {
      * @see #evaluatePrecision
      */
     public void setPrecision(int precision) {
-        int oldValue = getPrecision();
+        int oldValue;
+        getPrecision();
         synchronized (this) {
             if (!evaluatePrecision(precision))
                 return;

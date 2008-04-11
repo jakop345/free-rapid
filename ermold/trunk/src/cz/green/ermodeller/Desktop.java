@@ -8,7 +8,6 @@ import cz.green.event.ContainerComponent;
 import cz.green.event.RemoveEvent;
 import cz.green.event.SelectItemEvent;
 import cz.green.event.SelectItemExEvent;
-import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.interfaces.Item;
 import cz.green.event.interfaces.PaintableItem;
 import cz.green.eventtool.DesktopTool;
@@ -45,8 +44,7 @@ public class Desktop extends DesktopTool implements FontManager,
      *      int, int, int)
      */
     public Desktop(ContainerComponent place, int left, int top,
-                   int width, int height)
-            throws ImpossibleNegativeValueException {
+                   int width, int height) {
         super(place, left, top, width, height);
         model = new Schema();
         pcs = new java.beans.PropertyChangeSupport(this);
@@ -78,7 +76,7 @@ public class Desktop extends DesktopTool implements FontManager,
         EntityConstruct e1 = getEntity(eM1.getID()), e2 = getEntity(eM2.getID());
 
         e2.composeEntity(e1, new cz.green.ermodeller.DragOverEvent(0, 0,
-                (Item) e1, getPaintPlace()));
+                e1, getPaintPlace()));
     }
 
     /**
@@ -118,7 +116,7 @@ public class Desktop extends DesktopTool implements FontManager,
         RelationConstruct r1 = getRelation(rM1.getID()), r2 = getRelation(rM2.getID());
 
         r2.composeRelation(r1, new cz.green.ermodeller.DragOverEvent(0, 0,
-                (Item) r1, getPaintPlace()));
+                r1, getPaintPlace()));
     }
 
     /**

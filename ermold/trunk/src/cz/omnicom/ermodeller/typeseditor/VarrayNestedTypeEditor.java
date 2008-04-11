@@ -70,7 +70,7 @@ public class VarrayNestedTypeEditor extends TypeEditor implements PropertyChange
             dataTypePanel.setDataTypeEditor(this);
             Dimension dimension = dataTypePanel.getPreferredSize();
             dataTypePanel.setBounds(5, 50, dimension.width, dimension.height);
-            ((LengthDataTypePanel3) dataTypePanel).addPropertyChangeListener(this);
+            dataTypePanel.addPropertyChangeListener(this);
             add(dataTypePanel);
         } else if (dt instanceof Varchar2DataType) {
             getJComboBox().setSelectedItem("Varchar2");
@@ -79,7 +79,7 @@ public class VarrayNestedTypeEditor extends TypeEditor implements PropertyChange
             dataTypePanel.setDataTypeEditor(this);
             Dimension dimension = dataTypePanel.getPreferredSize();
             dataTypePanel.setBounds(5, 50, dimension.width, dimension.height);
-            ((LengthDataTypePanel3) dataTypePanel).addPropertyChangeListener(this);
+            dataTypePanel.addPropertyChangeListener(this);
             add(dataTypePanel);
         } else if (dt instanceof GeneralNumberDataType) {
             getJComboBox().setSelectedItem("General number");
@@ -88,7 +88,7 @@ public class VarrayNestedTypeEditor extends TypeEditor implements PropertyChange
             dataTypePanel.setDataTypeEditor(this);
             Dimension dimension = dataTypePanel.getPreferredSize();
             dataTypePanel.setBounds(5, 50, dimension.width, dimension.height);
-            ((GeneralNumberDataTypePanel3) dataTypePanel).addPropertyChangeListener(this);
+            dataTypePanel.addPropertyChangeListener(this);
             add(dataTypePanel);
         }
         getJComboBox().addItemListener(this);
@@ -147,7 +147,7 @@ public class VarrayNestedTypeEditor extends TypeEditor implements PropertyChange
     private void removeFromJComboBox(UserTypeStorage uts) {
         if (!(uts.getDataType() instanceof NestedTableDataType) &&
                 !(uts.getDataType() instanceof VarrayDataType)) {
-            if (((String) getJComboBox().getSelectedItem()).equals(uts.getTypeName())) {
+            if (getJComboBox().getSelectedItem().equals(uts.getTypeName())) {
                 getJComboBox().setSelectedItem("Integer");
                 integerSelected();
             }
@@ -156,17 +156,17 @@ public class VarrayNestedTypeEditor extends TypeEditor implements PropertyChange
     }
 
     public void itemStateChanged(ItemEvent e) {
-        if (((String) (getJComboBox().getSelectedItem())).equals("Integer"))
+        if (getJComboBox().getSelectedItem().equals("Integer"))
             integerSelected();
-        else if (((String) (getJComboBox().getSelectedItem())).equals("Date"))
+        else if (getJComboBox().getSelectedItem().equals("Date"))
             dateSelected();
-        else if (((String) (getJComboBox().getSelectedItem())).equals("Float"))
+        else if (getJComboBox().getSelectedItem().equals("Float"))
             floatSelected();
-        else if (((String) (getJComboBox().getSelectedItem())).equals("General number"))
+        else if (getJComboBox().getSelectedItem().equals("General number"))
             generalNumberSelected();
-        else if (((String) (getJComboBox().getSelectedItem())).equals("Varchar2"))
+        else if (getJComboBox().getSelectedItem().equals("Varchar2"))
             varchar2Selected();
-        else if (((String) (getJComboBox().getSelectedItem())).equals("Char"))
+        else if (getJComboBox().getSelectedItem().equals("Char"))
             charSelected();
         else
             userDefinedSelected();
@@ -198,7 +198,7 @@ public class VarrayNestedTypeEditor extends TypeEditor implements PropertyChange
         dataTypePanel.setDataTypeEditor(this);
         Dimension dimension = dataTypePanel.getPreferredSize();
         dataTypePanel.setBounds(5, 50, dimension.width, dimension.height);
-        ((GeneralNumberDataTypePanel3) dataTypePanel).addPropertyChangeListener(this);
+        dataTypePanel.addPropertyChangeListener(this);
         add(dataTypePanel);
     }
 
@@ -211,7 +211,7 @@ public class VarrayNestedTypeEditor extends TypeEditor implements PropertyChange
         dataTypePanel.setDataTypeEditor(this);
         Dimension dimension = dataTypePanel.getPreferredSize();
         dataTypePanel.setBounds(5, 50, dimension.width, dimension.height);
-        ((LengthDataTypePanel3) dataTypePanel).addPropertyChangeListener(this);
+        dataTypePanel.addPropertyChangeListener(this);
         add(dataTypePanel);
     }
 
@@ -224,7 +224,7 @@ public class VarrayNestedTypeEditor extends TypeEditor implements PropertyChange
         dataTypePanel.setDataTypeEditor(this);
         Dimension dimension = dataTypePanel.getPreferredSize();
         dataTypePanel.setBounds(5, 50, dimension.width, dimension.height);
-        ((LengthDataTypePanel3) dataTypePanel).addPropertyChangeListener(this);
+        dataTypePanel.addPropertyChangeListener(this);
         add(dataTypePanel);
     }
 

@@ -370,9 +370,7 @@ public class Entity extends ConceptualConstruct {
             if (parent.haveHigherCombinedParent(anEntity))
                 return true;
         }
-        if (isaParent == anEntity)
-            return true;
-        return isaParent != null && isaParent.haveHigherCombinedParent(anEntity);
+        return isaParent == anEntity || isaParent != null && isaParent.haveHigherCombinedParent(anEntity);
     }
 
     /**
@@ -382,11 +380,7 @@ public class Entity extends ConceptualConstruct {
      * @return boolean
      */
     private synchronized boolean haveHigherISAParent(Entity anEntity) {
-        if (anEntity == null)
-            return false;
-        if (isaParent == anEntity)
-            return true;
-        return isaParent != null && isaParent.haveHigherISAParent(anEntity);
+        return anEntity != null && (isaParent == anEntity || isaParent != null && isaParent.haveHigherISAParent(anEntity));
     }
 
     /**

@@ -340,7 +340,7 @@ public class WindowItem implements Item, java.io.Serializable {
         try {
             manager.add(event.getItem());
             (manager).selectItemEx(null, false);
-            (manager).repaintItem((PaintableItem) event.getItem());
+            (manager).repaintItem(event.getItem());
         } catch (ItemNotInsideManagerException e) {
         }
     }

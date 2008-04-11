@@ -9,7 +9,6 @@ import cz.green.event.AddAsISAChildEvent;
 import cz.green.event.AddConnectionEvent;
 import cz.green.event.AddIdentificationDependencyEvent;
 import cz.green.event.AddRelWithConnsEvent;
-import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.interfaces.ContainerDesktop;
 import cz.green.event.interfaces.Item;
 import cz.green.eventtool.ContainerToolComponent;
@@ -318,14 +317,9 @@ public class Container extends ContainerToolComponent implements ModeSwitcher, F
      */
     public ContainerDesktop getDesktop() {
         if (desktop == null) {
-            try {
-                java.awt.Rectangle r = getBounds();
-                desktop = new Desktop(this, r.x, r.y, r.width, r.height);
-                ((Desktop) desktop).addShowErrorListener(this);
-//			propEditing(true);
-            } catch (ImpossibleNegativeValueException e) {
-                return null;
-            }
+            java.awt.Rectangle r = getBounds();
+            desktop = new Desktop(this, r.x, r.y, r.width, r.height);
+            ((Desktop) desktop).addShowErrorListener(this);
         }
         return desktop;
     }

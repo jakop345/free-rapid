@@ -204,8 +204,8 @@ public class CardinalityConstruct extends ConceptualConstructObject {
         java.awt.Rectangle r = getBounds();
         int eventX = (int) (event.getX() / scale);
         int eventY = (int) (event.getY() / scale);
-        int eventDx = (int) (event.getDx());
-        int eventDy = (int) (event.getDy());
+        int eventDx = event.getDx();
+        int eventDy = event.getDy();
 //	int eventDx = (int) (event.getDx()/scale);
 //	int eventDy = (int) (event.getDy()/scale);
 
@@ -327,7 +327,7 @@ public class CardinalityConstruct extends ConceptualConstructObject {
 
     public void moveCardinality(ExMovingEvent event) {
         this.handleExMovingEvent(event);
-        this.handleExMoveEvent((ExMoveEvent) event);
+        this.handleExMoveEvent(event);
     }
 
     /**
@@ -367,8 +367,8 @@ public class CardinalityConstruct extends ConceptualConstructObject {
                 }
                 g.setColor(getForegroundColor());
                 ir = ((arbitrary) ? "1" : "0") + ":" + ((multiCard) ? "N" : "1");
-                g.drawString(ir, r.x + (int) ((r.width - fm.stringWidth(ir)) / 2), r.y + fm.getAscent());
-                g.drawString(name, r.x + (int) ((r.width - fm.stringWidth(name)) / 2), r.y + r.height);
+                g.drawString(ir, r.x + (r.width - fm.stringWidth(ir)) / 2, r.y + fm.getAscent());
+                g.drawString(name, r.x + (r.width - fm.stringWidth(name)) / 2, r.y + r.height);
                 break;
             case (BINARY):
                 if (selected) {
@@ -395,7 +395,7 @@ public class CardinalityConstruct extends ConceptualConstructObject {
                         g.drawLine(r.x, r.y + r.height / 2 - r.height / 5, r.x + r.height / 2, r.y + r.height / 2);
                         g.drawLine(r.x, r.y + r.height / 2 + r.height / 5, r.x + r.height / 2, r.y + r.height / 2);
                     }
-                    g.drawString(name, r.x + (int) ((r.width - fm.stringWidth(name))), r.y + r.height);
+                    g.drawString(name, r.x + (r.width - fm.stringWidth(name)), r.y + r.height);
                     paintLineToCardinality(g, false);
                 } else if (cardinalityCenter.y < er.y) {
                     g.drawLine(r.x + r.width / 2, r.y + r.height / 2, r.x + r.width / 2, r.y + r.height);
@@ -403,7 +403,7 @@ public class CardinalityConstruct extends ConceptualConstructObject {
                         g.drawLine(r.x + r.width / 2 - r.height / 5, r.y + r.height, r.x + r.width / 2, r.y + r.height / 2 + 1);
                         g.drawLine(r.x + r.width / 2 + r.height / 5, r.y + r.height, r.x + r.width / 2, r.y + r.height / 2 + 1);
                     }
-                    g.drawString(name, r.x + (int) ((r.width - fm.stringWidth(name)) / 2), r.y + fm.getAscent());
+                    g.drawString(name, r.x + (r.width - fm.stringWidth(name)) / 2, r.y + fm.getAscent());
                     paintLineToCardinality(g, true);
                 } else if (cardinalityCenter.y > (er.y + er.height)) {
                     g.drawLine(r.x + r.width / 2, r.y, r.x + r.width / 2, r.y + r.height / 2);
@@ -411,7 +411,7 @@ public class CardinalityConstruct extends ConceptualConstructObject {
                         g.drawLine(r.x + r.width / 2 - r.height / 5, r.y, r.x + r.width / 2, r.y + r.height / 2 - 1);
                         g.drawLine(r.x + r.width / 2 + r.height / 5, r.y, r.x + r.width / 2, r.y + r.height / 2 - 1);
                     }
-                    g.drawString(name, r.x + (int) ((r.width - fm.stringWidth(name)) / 2), r.y + r.height);
+                    g.drawString(name, r.x + (r.width - fm.stringWidth(name)) / 2, r.y + r.height);
                     paintLineToCardinality(g, false);
                 } else {
                     g.drawRect(r.x, r.y, r.width, r.height);
@@ -426,8 +426,8 @@ public class CardinalityConstruct extends ConceptualConstructObject {
                 ir = ((arbitrary) ? "1" : "0") + ".." + ((multiCard) ? "*" : "1");
                 if (SHOW_SHORTEN_CARD_IN_UML == 1 && !arbitrary && multiCard) ir = "*";
                 if (SHOW_SHORTEN_CARD_IN_UML == 1 && arbitrary && !multiCard) ir = "1";
-                g.drawString(ir, r.x + (int) ((r.width - fm.stringWidth(ir)) / 2), r.y + fm.getAscent());
-                g.drawString(name, r.x + (int) ((r.width - fm.stringWidth(name)) / 2), r.y + r.height - fm.getAscent() / 4);
+                g.drawString(ir, r.x + (r.width - fm.stringWidth(ir)) / 2, r.y + fm.getAscent());
+                g.drawString(name, r.x + (r.width - fm.stringWidth(name)) / 2, r.y + r.height - fm.getAscent() / 4);
                 break;
         }
         updateBackupStroke(g, stroke);
@@ -481,8 +481,8 @@ public class CardinalityConstruct extends ConceptualConstructObject {
             case (CHEN):
                 g.setColor(getForegroundColor());
                 ir = ((arbitrary) ? "1" : "0") + ":" + ((multiCard) ? "N" : "1");
-                g.drawString(ir, r.x + (int) ((r.width - fm.stringWidth(ir)) / 2), r.y + fm.getAscent());
-                g.drawString(name, r.x + (int) ((r.width - fm.stringWidth(name)) / 2), r.y + r.height);
+                g.drawString(ir, r.x + (r.width - fm.stringWidth(ir)) / 2, r.y + fm.getAscent());
+                g.drawString(name, r.x + (r.width - fm.stringWidth(name)) / 2, r.y + r.height);
                 break;
             case (BINARY):
                 g.setColor(getForegroundColor());
@@ -505,7 +505,7 @@ public class CardinalityConstruct extends ConceptualConstructObject {
                         g.drawLine(r.x, r.y + r.height / 2 - r.height / 5, r.x + r.height / 2, r.y + r.height / 2);
                         g.drawLine(r.x, r.y + r.height / 2 + r.height / 5, r.x + r.height / 2, r.y + r.height / 2);
                     }
-                    g.drawString(name, r.x + (int) ((r.width - fm.stringWidth(name))), r.y + r.height);
+                    g.drawString(name, r.x + (r.width - fm.stringWidth(name)), r.y + r.height);
                     paintLineToCardinality(g, false);
                 } else if (cardinalityCenter.y < er.y) {
                     g.drawLine(r.x + r.width / 2, r.y + r.height / 2, r.x + r.width / 2, r.y + r.height);
@@ -513,7 +513,7 @@ public class CardinalityConstruct extends ConceptualConstructObject {
                         g.drawLine(r.x + r.width / 2 - r.height / 5, r.y + r.height, r.x + r.width / 2, r.y + r.height / 2 + 1);
                         g.drawLine(r.x + r.width / 2 + r.height / 5, r.y + r.height, r.x + r.width / 2, r.y + r.height / 2 + 1);
                     }
-                    g.drawString(name, r.x + (int) ((r.width - fm.stringWidth(name)) / 2), r.y + fm.getAscent());
+                    g.drawString(name, r.x + (r.width - fm.stringWidth(name)) / 2, r.y + fm.getAscent());
                     paintLineToCardinality(g, true);
                 } else if (cardinalityCenter.y > (er.y + er.height)) {
                     g.drawLine(r.x + r.width / 2, r.y, r.x + r.width / 2, r.y + r.height / 2);
@@ -521,7 +521,7 @@ public class CardinalityConstruct extends ConceptualConstructObject {
                         g.drawLine(r.x + r.width / 2 - r.height / 5, r.y, r.x + r.width / 2, r.y + r.height / 2 - 1);
                         g.drawLine(r.x + r.width / 2 + r.height / 5, r.y, r.x + r.width / 2, r.y + r.height / 2 - 1);
                     }
-                    g.drawString(name, r.x + (int) ((r.width - fm.stringWidth(name)) / 2), r.y + r.height);
+                    g.drawString(name, r.x + (r.width - fm.stringWidth(name)) / 2, r.y + r.height);
                     paintLineToCardinality(g, false);
                 } else {
                     g.drawRect(r.x, r.y, r.width, r.height);
@@ -532,8 +532,8 @@ public class CardinalityConstruct extends ConceptualConstructObject {
                 ir = ((arbitrary) ? "1" : "0") + ".." + ((multiCard) ? "*" : "1");
                 if (SHOW_SHORTEN_CARD_IN_UML == 1 && !arbitrary && multiCard) ir = "*";
                 if (SHOW_SHORTEN_CARD_IN_UML == 1 && arbitrary && !multiCard) ir = "1";
-                g.drawString(ir, r.x + (int) ((r.width - fm.stringWidth(ir)) / 2), r.y + fm.getAscent());
-                g.drawString(name, r.x + (int) ((r.width - fm.stringWidth(name)) / 2), r.y + r.height - fm.getAscent() / 4);
+                g.drawString(ir, r.x + (r.width - fm.stringWidth(ir)) / 2, r.y + fm.getAscent());
+                g.drawString(name, r.x + (r.width - fm.stringWidth(name)) / 2, r.y + r.height - fm.getAscent() / 4);
                 break;
         }
         r = null;

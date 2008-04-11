@@ -1,6 +1,5 @@
 package cz.omnicom.ermodeller.typeseditor;
 
-import cz.omnicom.ermodeller.datatype.DataType;
 import cz.omnicom.ermodeller.datatype.DataTypePanel;
 import cz.omnicom.ermodeller.datatype.NestedTableDataType;
 
@@ -195,7 +194,7 @@ public class NestedTableDataTypePanel2 extends DataTypePanel implements ActionLi
         //System.out.println("propertyChange "+ anEvent.getPropertyName());
         if (anEvent.getPropertyName().equals(VarrayNestedTypeEditor.DATATYPE_PROPERTY_CHANGE)) {
             //	System.out.println("type changed to "+((DataType)anEvent.getNewValue()).toString());
-            getTypeButton().setText(((DataType) anEvent.getNewValue()).toString());
+            getTypeButton().setText(anEvent.getNewValue().toString());
             return;
         }
         // call inherited method

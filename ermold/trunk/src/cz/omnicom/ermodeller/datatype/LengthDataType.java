@@ -88,7 +88,7 @@ public class LengthDataType extends DataType implements Serializable {
      * @see #evaluateLength
      */
     public void setLength(int length) {
-        int oldValue = getLength();
+        int oldValue;
         synchronized (this) {
             if (!evaluateLength(length))
                 return;

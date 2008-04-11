@@ -46,7 +46,7 @@ public class ObjectDataType extends DataType {
         if (index >= itemVector.getSize())
             return null;
         else
-            return (UserTypeStorage) itemVector.getTypeAt(index);
+            return itemVector.getTypeAt(index);
     }
 
     public void addItem(UserTypeStorage u) {

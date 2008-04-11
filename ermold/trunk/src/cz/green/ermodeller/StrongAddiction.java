@@ -325,7 +325,7 @@ public class StrongAddiction extends ConceptualConstructObject {
 
     public void moveStrongAddiction(ExMovingEvent event) {
         this.handleExMovingEvent(event);
-        this.handleExMoveEvent((ExMoveEvent) event);
+        this.handleExMoveEvent(event);
     }
 
     /**

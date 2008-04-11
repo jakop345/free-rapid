@@ -683,7 +683,7 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
      * @see cz.omnicom.ermodeller.conc2rela.RelC2R#glueC2R
      * @see #recoverC2R
      */
-    protected void glueRelationsC2R() throws AlreadyContainsExceptionC2R, WasNotFoundByConceptualExceptionC2R {
+    protected void glueRelationsC2R() throws AlreadyContainsExceptionC2R {
         Vector relations = (Vector) getRelationsC2R().clone();
         for (Enumeration elements = relations.elements(); elements.hasMoreElements();) {
             RelationC2R relationC2R = (RelationC2R) elements.nextElement();

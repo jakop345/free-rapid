@@ -126,6 +126,7 @@ public abstract class DataType implements Cloneable, Serializable {
      * @return java.lang.Object
      * @see java.lang.Cloneable
      */
+    @Override
     public synchronized Object clone() {
         DataType dt = null;
         try {

@@ -1,6 +1,5 @@
 package cz.omnicom.ermodeller.typeseditor;
 
-import cz.omnicom.ermodeller.datatype.DataType;
 import cz.omnicom.ermodeller.datatype.DataTypePanel;
 import cz.omnicom.ermodeller.datatype.VarrayDataType;
 
@@ -61,7 +60,7 @@ public class VarrayDataTypePanel2 extends DataTypePanel implements FocusListener
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
     public void actionPerformed(java.awt.event.ActionEvent e) {
-        ivjVarrayDataType = (VarrayDataType) getVarrayDataType();//.clone();
+        ivjVarrayDataType = getVarrayDataType();//.clone();
 
         if (e.getSource() == getUpButton())
             connEtoM1(e);
@@ -529,7 +528,7 @@ public class VarrayDataTypePanel2 extends DataTypePanel implements FocusListener
         }
         if (anEvent.getPropertyName().equals(VarrayNestedTypeEditor.DATATYPE_PROPERTY_CHANGE)) {
             //	System.out.println("type changed to "+((DataType)anEvent.getNewValue()).toString());
-            getTypeButton().setText(((DataType) anEvent.getNewValue()).toString());
+            getTypeButton().setText(anEvent.getNewValue().toString());
             return;
         }
         // call inherited method
@@ -576,7 +575,7 @@ public class VarrayDataTypePanel2 extends DataTypePanel implements FocusListener
         try {
             i = Integer.parseInt(getLengthTextField().getText());
             if (getVarrayDataType().evaluateLength(i)) {
-                ivjVarrayDataType = (VarrayDataType) getVarrayDataType();//.clone();
+                ivjVarrayDataType = getVarrayDataType();//.clone();
                 getVarrayDataType().setLength(i);
                 ((UserTypesEditorPanel) getDataTypeEditor()).getEditor().setActualType(ivjVarrayDataType);
             } else {

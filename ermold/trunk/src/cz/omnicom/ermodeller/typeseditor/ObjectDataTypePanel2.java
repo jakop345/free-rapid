@@ -310,7 +310,7 @@ public class ObjectDataTypePanel2 extends DataTypePanel implements ActionListene
     public void propertyChange(PropertyChangeEvent anEvent) {
         //System.out.println("propertyChange "+ anEvent.getPropertyName());
         if (anEvent.getPropertyName().equals(ObjectTypeEditor.DATATYPE_PROPERTY_CHANGE)) {
-            type = ((DataType) anEvent.getNewValue()).toString();
+            type = anEvent.getNewValue().toString();
             dataType = (DataType) anEvent.getNewValue();
             //listModel.set(selectedItemPos, name +" : "+type);
             //getObjectDataType().getItemAt(selectedItemPos-1).setDataType((DataType)anEvent.getNewValue());

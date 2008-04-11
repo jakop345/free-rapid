@@ -326,7 +326,6 @@ public abstract class RelC2R extends RelationC2R {
                 glueRecord.addGluedRelationC2R(gluedRelationRecord);
             }
         }
-        this.glueRecord = glueRecord;
         // remove foreign keys which was glued
         for (Enumeration elements = relFKsToRemove.elements(); elements.hasMoreElements();) {
             RelForeignKeyC2R relForeignKeyC2R = (RelForeignKeyC2R) elements.nextElement();

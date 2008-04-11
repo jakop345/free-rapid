@@ -38,7 +38,8 @@ public class VarrayDataType extends DataType implements PropertyChangeListener {
     }
 
     public void setLength(int aLength) {
-        int oldValue = getLength();
+        int oldValue;
+        getLength();
         synchronized (this) {
             if (!evaluateLength(aLength))
                 return;
