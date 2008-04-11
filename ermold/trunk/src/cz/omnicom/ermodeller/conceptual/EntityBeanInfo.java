@@ -72,7 +72,7 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
      * @return java.lang.String
      */
     public static java.lang.String getBeanClassName() {
-        return "cz.omnicom.ermodeller.conceptual.Entity";
+        return cz.omnicom.ermodeller.conceptual.Entity.class.getName();
     }
 
     public java.beans.BeanDescriptor getBeanDescriptor() {

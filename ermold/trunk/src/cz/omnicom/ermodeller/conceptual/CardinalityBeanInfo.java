@@ -49,7 +49,7 @@ public class CardinalityBeanInfo extends java.beans.SimpleBeanInfo {
             ;
             aDescriptor.setBound(true);
             /* aDescriptor.setConstrained(false); */
-            aDescriptor.setPropertyEditorClass(java.lang.Class.forName("cz.omnicom.ermodeller.conceptual.BooleanEditor"));
+            aDescriptor.setPropertyEditorClass(cz.omnicom.ermodeller.conceptual.BooleanEditor.class);
             aDescriptor.setDisplayName("Mandatory");
             aDescriptor.setShortDescription("Connected entity should be always in relationship (parciality of connection).");
             /* aDescriptor.setExpert(false); */
@@ -59,7 +59,7 @@ public class CardinalityBeanInfo extends java.beans.SimpleBeanInfo {
         } catch (Throwable exception) {
             handleException(exception);
         }
-        ;
+
         return aDescriptor;
     }
 
@@ -189,7 +189,7 @@ public class CardinalityBeanInfo extends java.beans.SimpleBeanInfo {
      * @return java.lang.String
      */
     public static java.lang.String getBeanClassName() {
-        return "cz.omnicom.ermodeller.conceptual.Cardinality";
+        return cz.omnicom.ermodeller.conceptual.Cardinality.class.getName();
     }
 
     public java.beans.BeanDescriptor getBeanDescriptor() {
@@ -318,7 +318,7 @@ public class CardinalityBeanInfo extends java.beans.SimpleBeanInfo {
             ;
             aDescriptor.setBound(true);
             /* aDescriptor.setConstrained(false); */
-            aDescriptor.setPropertyEditorClass(java.lang.Class.forName("cz.omnicom.ermodeller.conceptual.MultiCardinalityEditor"));
+            aDescriptor.setPropertyEditorClass(cz.omnicom.ermodeller.conceptual.MultiCardinalityEditor.class);
             aDescriptor.setDisplayName("Arity");
             aDescriptor.setShortDescription("Cardinality of connection entity to relationship.");
             /* aDescriptor.setExpert(false); */

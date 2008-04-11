@@ -72,7 +72,7 @@ public class RelationBeanInfo extends java.beans.SimpleBeanInfo {
      * @return java.lang.String
      */
     public static java.lang.String getBeanClassName() {
-        return "cz.omnicom.ermodeller.conceptual.Relation";
+        return cz.omnicom.ermodeller.conceptual.Relation.class.getName();
     }
 
     public java.beans.BeanDescriptor getBeanDescriptor() {

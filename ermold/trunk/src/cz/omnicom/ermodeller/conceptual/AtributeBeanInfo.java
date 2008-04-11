@@ -49,7 +49,7 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
             ;
             aDescriptor.setBound(true);
             /* aDescriptor.setConstrained(false); */
-            aDescriptor.setPropertyEditorClass(java.lang.Class.forName("cz.omnicom.ermodeller.conceptual.BooleanEditor"));
+            aDescriptor.setPropertyEditorClass(cz.omnicom.ermodeller.conceptual.BooleanEditor.class);
             aDescriptor.setDisplayName("Mandatory");
             aDescriptor.setShortDescription("Mandatory of atribute");
             /* aDescriptor.setExpert(false); */
@@ -108,7 +108,7 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
             ;
             aDescriptor.setBound(true);
             /* aDescriptor.setConstrained(false); */
-            aDescriptor.setPropertyEditorClass(java.lang.Class.forName("cz.omnicom.ermodeller.conceptual.BooleanEditor"));
+            aDescriptor.setPropertyEditorClass(cz.omnicom.ermodeller.conceptual.BooleanEditor.class);
             aDescriptor.setDisplayName("Unique");
             aDescriptor.setShortDescription("Set/reset unique");
             /* aDescriptor.setExpert(false); */
@@ -167,7 +167,7 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
             ;
             aDescriptor.setBound(true);
             /* aDescriptor.setConstrained(false); */
-            aDescriptor.setPropertyEditorClass(java.lang.Class.forName("cz.omnicom.ermodeller.conceptual.BooleanEditor"));
+            aDescriptor.setPropertyEditorClass(cz.omnicom.ermodeller.conceptual.BooleanEditor.class);
             aDescriptor.setDisplayName("Primary");
             aDescriptor.setShortDescription("Set/reset atribute as member of primary key");
             /* aDescriptor.setExpert(false); */
@@ -284,7 +284,7 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
             ;
             aDescriptor.setBound(true);
             /* aDescriptor.setConstrained(false); */
-            aDescriptor.setPropertyEditorClass(java.lang.Class.forName("cz.omnicom.ermodeller.datatype.DataTypeEditor"));
+            aDescriptor.setPropertyEditorClass(cz.omnicom.ermodeller.datatype.DataTypeEditor.class);
             aDescriptor.setDisplayName("Data type");
             aDescriptor.setShortDescription("Data type of atribute.");
             /* aDescriptor.setExpert(false); */
@@ -366,7 +366,7 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
      * @return java.lang.String
      */
     public static java.lang.String getBeanClassName() {
-        return "cz.omnicom.ermodeller.conceptual.Atribute";
+        return cz.omnicom.ermodeller.conceptual.Atribute.class.getName();
     }
 
     public java.beans.BeanDescriptor getBeanDescriptor() {

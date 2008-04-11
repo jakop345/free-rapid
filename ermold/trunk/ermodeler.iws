@@ -4,7 +4,19 @@
     <option name="CUSTOM_SCOPE_NAME" value="Project Files" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" name="Default" comment="" />
+    <list default="true" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/ConceptualObjectBeanInfo.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/ConceptualObjectBeanInfo.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/EntityBeanInfo.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/EntityBeanInfo.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/swing/ShowException.java" afterPath="$PROJECT_DIR$/src/cz/green/swing/ShowException.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/RelationBeanInfo.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/RelationBeanInfo.java" />
+      <change type="DELETED" beforePath="C:\develope\ermodeler\src\cz\green\eventtool\TryApp.java" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ermodeler.iws" afterPath="$PROJECT_DIR$/ermodeler.iws" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/CardinalityBeanInfo.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/CardinalityBeanInfo.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/SchemaBeanInfo.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/SchemaBeanInfo.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/AtributeBeanInfo.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/AtributeBeanInfo.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/UniqueKeyBeanInfo.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/UniqueKeyBeanInfo.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/ConceptualConstructBeanInfo.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/ConceptualConstructBeanInfo.java" />
+    </list>
     <ignored path="ermodeler.iws" />
     <ignored path=".idea/workspace.xml" />
   </component>
@@ -66,91 +78,91 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="SelectableItem.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cz/green/event/interfaces/SelectableItem.java">
+      <file leaf-file-name="Window.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/green/eventtool/Window.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="8" column="17" selection-start="173" selection-end="173" vertical-scroll-proportion="0.43312103">
+            <state line="9" column="13" selection-start="379" selection-end="379" vertical-scroll-proportion="0.2513863">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Container.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cz/green/eventtool/Container.java">
+      <file leaf-file-name="AtributeBeanInfo.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/AtributeBeanInfo.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="27" column="11" selection-start="913" selection-end="913" vertical-scroll-proportion="0.14046822">
+            <state line="286" column="100" selection-start="13926" selection-end="13926" vertical-scroll-proportion="0.2051756">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ImpossibleNegativeValueException.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cz/green/event/exceptions/ImpossibleNegativeValueException.java">
+      <file leaf-file-name="CardinalityBeanInfo.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/CardinalityBeanInfo.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="5" column="13" selection-start="119" selection-end="119" vertical-scroll-proportion="0.28428093">
+            <state line="320" column="108" selection-start="13259" selection-end="13259" vertical-scroll-proportion="0.2051756">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ItemNotInsideManagerException.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cz/green/event/exceptions/ItemNotInsideManagerException.java">
+      <file leaf-file-name="ShowException.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/cz/green/swing/ShowException.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="6" column="13" selection-start="161" selection-end="161" vertical-scroll-proportion="0.3411371">
+            <state line="68" column="14" selection-start="2338" selection-end="2338" vertical-scroll-proportion="0.3327338">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ValueOutOfRangeException.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cz/green/event/exceptions/ValueOutOfRangeException.java">
+      <file leaf-file-name="ConceptualConstructBeanInfo.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/ConceptualConstructBeanInfo.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="5" column="13" selection-start="108" selection-end="108" vertical-scroll-proportion="0.27070063">
+            <state line="166" column="84" selection-start="6876" selection-end="6876" vertical-scroll-proportion="0.08872458">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Group.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cz/green/event/Group.java">
+      <file leaf-file-name="ConceptualObjectBeanInfo.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/ConceptualObjectBeanInfo.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="24" column="13" selection-start="807" selection-end="807" vertical-scroll-proportion="0.5618729">
+            <state line="132" column="0" selection-start="5247" selection-end="5247" vertical-scroll-proportion="0.08872458">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MouseMoveEvent.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cz/green/event/MouseMoveEvent.java">
+      <file leaf-file-name="EntityBeanInfo.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/EntityBeanInfo.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="5" column="13" selection-start="86" selection-end="86" vertical-scroll-proportion="0.27070063">
+            <state line="74" column="70" selection-start="2539" selection-end="2539" vertical-scroll-proportion="0.08872458">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Window.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/cz/green/event/Window.java">
+      <file leaf-file-name="RelationBeanInfo.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/RelationBeanInfo.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="902" column="5" selection-start="32680" selection-end="32680" vertical-scroll-proportion="4.4180603">
+            <state line="74" column="72" selection-start="2547" selection-end="2547" vertical-scroll-proportion="0.08872458">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="RemoveEvent.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cz/green/event/RemoveEvent.java">
+      <file leaf-file-name="SchemaBeanInfo.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/SchemaBeanInfo.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="5" column="13" selection-start="105" selection-end="105" vertical-scroll-proportion="0.27070063">
+            <state line="120" column="70" selection-start="4654" selection-end="4654" vertical-scroll-proportion="0.08872458">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="EventFallEngineException.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cz/green/event/exceptions/EventFallEngineException.java">
+      <file leaf-file-name="UniqueKeyBeanInfo.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/UniqueKeyBeanInfo.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="5" column="13" selection-start="124" selection-end="124" vertical-scroll-proportion="0.27070063">
+            <state line="139" column="7" selection-start="6315" selection-end="6315" vertical-scroll-proportion="0.47134936">
               <folding />
             </state>
           </provider>
@@ -195,6 +207,32 @@
         </PATH_ELEMENT>
         <PATH_ELEMENT>
           <option name="myItemId" value="cz" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="omnicom.ermodeller" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="ermodeler" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Ermodeler" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="cz" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="omnicom.ermodeller" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="conceptual" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
         </PATH_ELEMENT>
       </PATH>
@@ -639,10 +677,10 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-4" y="-4" width="1032" height="723" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
-      <window_info id="Changes" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3289256" order="8" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3289256" order="8" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" order="1" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.6446281" order="1" />
@@ -655,7 +693,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" order="1" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" order="0" />
       <window_info id="Module Dependencies" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.36847493" order="0" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.36847493" order="0" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.9520661" order="8" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" order="2" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.49752066" order="6" />
@@ -697,114 +735,114 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/cz/green/event/interfaces/Item.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="17" selection-start="242" selection-end="242" vertical-scroll-proportion="0.22753346">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/green/event/interfaces/Manager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="17" selection-start="224" selection-end="224" vertical-scroll-proportion="0.29254302">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/green/event/interfaces/MovableItem.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="17" selection-start="221" selection-end="221" vertical-scroll-proportion="0.29254302">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/green/event/interfaces/MovableManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="17" selection-start="264" selection-end="264" vertical-scroll-proportion="0.29254302">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/green/event/interfaces/PaintableItem.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="17" selection-start="306" selection-end="306" vertical-scroll-proportion="0.332696">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/green/event/interfaces/PaintableManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="17" selection-start="144" selection-end="144" vertical-scroll-proportion="0.19502868">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/green/event/interfaces/SelectableItem.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="17" selection-start="173" selection-end="173" vertical-scroll-proportion="0.43312103">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/green/eventtool/Container.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="11" selection-start="913" selection-end="913" vertical-scroll-proportion="0.14046822">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/green/event/exceptions/EventFallEngineException.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="13" selection-start="124" selection-end="124" vertical-scroll-proportion="0.27070063">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/green/event/exceptions/ImpossibleNegativeValueException.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="13" selection-start="119" selection-end="119" vertical-scroll-proportion="0.28428093">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/cz/green/event/exceptions/ItemNotInsideManagerException.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="13" selection-start="161" selection-end="161" vertical-scroll-proportion="0.3411371">
+        <state line="6" column="13" selection-start="161" selection-end="161" vertical-scroll-proportion="0.18345323">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/cz/green/event/exceptions/ValueOutOfRangeException.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="13" selection-start="108" selection-end="108" vertical-scroll-proportion="0.27070063">
+        <state line="5" column="13" selection-start="108" selection-end="108" vertical-scroll-proportion="0.1528777">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/cz/green/event/Group.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="13" selection-start="807" selection-end="807" vertical-scroll-proportion="0.5618729">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/green/event/MouseMoveEvent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="13" selection-start="86" selection-end="86" vertical-scroll-proportion="0.27070063">
+        <state line="24" column="13" selection-start="807" selection-end="807" vertical-scroll-proportion="0.31053606">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/cz/green/event/RemoveEvent.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="13" selection-start="105" selection-end="105" vertical-scroll-proportion="0.27070063">
+        <state line="5" column="13" selection-start="105" selection-end="105" vertical-scroll-proportion="0.1528777">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/green/event/MouseMoveEvent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="13" selection-start="86" selection-end="86" vertical-scroll-proportion="0.1528777">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/cz/green/event/Window.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="902" column="5" selection-start="32680" selection-end="32680" vertical-scroll-proportion="4.4180603">
+        <state line="541" column="4" selection-start="19360" selection-end="19361" vertical-scroll-proportion="0.23880596">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/green/eventtool/Window.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="13" selection-start="379" selection-end="379" vertical-scroll-proportion="0.2513863">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/ConceptualConstructBeanInfo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="166" column="84" selection-start="6876" selection-end="6876" vertical-scroll-proportion="0.08872458">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/ConceptualObjectBeanInfo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="132" column="0" selection-start="5247" selection-end="5247" vertical-scroll-proportion="0.08872458">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/EntityBeanInfo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="74" column="70" selection-start="2539" selection-end="2539" vertical-scroll-proportion="0.08872458">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/RelationBeanInfo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="74" column="72" selection-start="2547" selection-end="2547" vertical-scroll-proportion="0.08872458">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/SchemaBeanInfo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="120" column="70" selection-start="4654" selection-end="4654" vertical-scroll-proportion="0.08872458">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/UniqueKeyBeanInfo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="139" column="7" selection-start="6315" selection-end="6315" vertical-scroll-proportion="0.47134936">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/AtributeBeanInfo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="286" column="100" selection-start="13926" selection-end="13926" vertical-scroll-proportion="0.2051756">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/CardinalityBeanInfo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="320" column="108" selection-start="13259" selection-end="13259" vertical-scroll-proportion="0.2051756">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/green/swing/ShowException.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="68" column="14" selection-start="2338" selection-end="2338" vertical-scroll-proportion="0.3327338">
           <folding />
         </state>
       </provider>

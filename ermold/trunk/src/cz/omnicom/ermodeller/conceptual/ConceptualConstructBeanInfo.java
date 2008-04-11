@@ -164,7 +164,7 @@ public class ConceptualConstructBeanInfo extends java.beans.SimpleBeanInfo {
      * @return java.lang.String
      */
     public static java.lang.String getBeanClassName() {
-        return "cz.omnicom.ermodeller.conceptual.ConceptualConstruct";
+        return cz.omnicom.ermodeller.conceptual.ConceptualConstruct.class.getName();
     }
 
     public java.beans.BeanDescriptor getBeanDescriptor() {

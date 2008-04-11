@@ -47,7 +47,7 @@ public class ShowException extends JDialog {
     public ShowException(java.awt.Frame owner, String title, Throwable th, boolean show) {
         this(owner, title, th);
         if (show)
-            show();
+            setVisible(true);
     }
 
     public ShowException(Exception e) {
@@ -152,5 +152,5 @@ public class ShowException extends JDialog {
      */
     public void switchDetailed() {
         setDetailed(!getDetailed());
-}
+    }
 }

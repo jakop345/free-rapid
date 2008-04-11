@@ -176,7 +176,7 @@ public class UniqueKeyBeanInfo extends java.beans.SimpleBeanInfo {
      * @return java.lang.String
      */
     public static java.lang.String getBeanClassName() {
-        return "cz.omnicom.ermodeller.conceptual.UniqueKey";
+        return cz.omnicom.ermodeller.conceptual.UniqueKey.class.getName();
     }
 
     public java.beans.BeanDescriptor getBeanDescriptor() {

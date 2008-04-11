@@ -130,7 +130,7 @@ public class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
      * @return java.lang.String
      */
     public static java.lang.String getBeanClassName() {
-        return "cz.omnicom.ermodeller.conceptual.ConceptualObject";
+        return cz.omnicom.ermodeller.conceptual.ConceptualObject.class.getName();
     }
 
     public java.beans.BeanDescriptor getBeanDescriptor() {

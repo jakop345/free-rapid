@@ -118,7 +118,7 @@ public class SchemaBeanInfo extends java.beans.SimpleBeanInfo {
      * @return java.lang.String
      */
     public static java.lang.String getBeanClassName() {
-        return "cz.omnicom.ermodeller.conceptual.Schema";
+        return cz.omnicom.ermodeller.conceptual.Schema.class.getName();
     }
 
     public java.beans.BeanDescriptor getBeanDescriptor() {
