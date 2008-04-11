@@ -1,6 +1,7 @@
 package cz.omnicom.ermodeller.conc2rela;
 
 import cz.omnicom.ermodeller.sql.*;
+import cz.omnicom.ermodeller.sql.interfaces.CheckRowProducer;
 
 import java.util.Enumeration;
 import java.util.Vector;

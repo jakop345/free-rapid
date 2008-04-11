@@ -1,5 +1,8 @@
 package cz.omnicom.ermodeller.sql;
 
+import cz.omnicom.ermodeller.sql.interfaces.SubSQLProducer;
+import cz.omnicom.ermodeller.sql.interfaces.SubTreeProducer;
+
 
 /**
  * PartOfCheck represents any condition closed in brackets in check.

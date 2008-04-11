@@ -1,4 +1,4 @@
-package cz.omnicom.ermodeller.sql;
+package cz.omnicom.ermodeller.sql.interfaces;
 
 /**
  * Interface describes objects, which produce SQL script in String.

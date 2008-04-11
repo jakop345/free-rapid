@@ -3,7 +3,7 @@ package cz.omnicom.ermodeller.sql;
 /**
  * Creates intends added to left side of SQL string.
  *
- * @see cz.omnicom.ermodeller.sql.SubSQLProducer#createSubSQL
+ * @see cz.omnicom.ermodeller.sql.interfaces.SubSQLProducer#createSubSQL
  */
 public class TabCreator {
     /**

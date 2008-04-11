@@ -1,4 +1,4 @@
-package cz.omnicom.ermodeller.sql;
+package cz.omnicom.ermodeller.sql.interfaces;
 
 import cz.omnicom.ermodeller.icontree.IconNode;
 

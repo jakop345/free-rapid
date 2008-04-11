@@ -8,7 +8,7 @@ import cz.omnicom.ermodeller.conceptual.Atribute;
 import cz.omnicom.ermodeller.datatype.DataType;
 import cz.omnicom.ermodeller.sql.ColumnSQL;
 import cz.omnicom.ermodeller.sql.NestedTableStorageSQL;
-import cz.omnicom.ermodeller.sql.SQLColumnProducer;
+import cz.omnicom.ermodeller.sql.interfaces.SQLColumnProducer;
 
 /**
  * Atribute in relational schema.

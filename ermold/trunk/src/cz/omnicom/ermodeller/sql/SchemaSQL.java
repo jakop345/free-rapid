@@ -2,6 +2,8 @@ package cz.omnicom.ermodeller.sql;
 
 import cz.omnicom.ermodeller.conc2rela.SchemaC2R;
 import cz.omnicom.ermodeller.icontree.IconNode;
+import cz.omnicom.ermodeller.sql.interfaces.SubSQLProducer;
+import cz.omnicom.ermodeller.sql.interfaces.SubTreeProducer;
 
 import javax.swing.*;
 import java.util.Enumeration;
@@ -20,27 +22,27 @@ public class SchemaSQL implements SubSQLProducer, SubTreeProducer {
     /**
      * Commands for creating tables.
      */
-    private Vector createCommands = new Vector();
+    private Vector<CreateCommandSQL> createCommands = new Vector<CreateCommandSQL>();
     /**
      * Commands for altering tables.
      */
-    private Vector alterAddCommands = new Vector();
+    private Vector<AlterAddCommandSQL> alterAddCommands = new Vector<AlterAddCommandSQL>();
     /**
      * Commands for dropping tables.
      */
-    private Vector dropCommands = new Vector();
+    private Vector<DropCommandSQL> dropCommands = new Vector<DropCommandSQL>();
     /**
      * Commands for creating types
      */
-    private Vector createTypes = new Vector();
+    private Vector<CreateTypeSQL> createTypes = new Vector<CreateTypeSQL>();
     /**
      * Commands for creating incomplete types
      */
-    private Vector createIncompleteTypes = new Vector();
+    private Vector<CreateIncompleteTypeSQL> createIncompleteTypes = new Vector<CreateIncompleteTypeSQL>();
     /**
      * Commands for dropping types
      */
-    private Vector dropTypes = new Vector();
+    private Vector<DropTypeSQL> dropTypes = new Vector<DropTypeSQL>();
 
     private Intro intro = null;
 
@@ -157,28 +159,28 @@ public class SchemaSQL implements SubSQLProducer, SubTreeProducer {
     public String createSubSQL(int countTabs) {
         String result = "";
         result += intro.toString() + "\n";
-        for (Enumeration elements = getDropCommands().elements(); elements.hasMoreElements();) {
-            DropCommandSQL commandSQL = (DropCommandSQL) elements.nextElement();
+        for (Enumeration<DropCommandSQL> elements = getDropCommands().elements(); elements.hasMoreElements();) {
+            DropCommandSQL commandSQL = elements.nextElement();
             result += commandSQL.createSubSQL(countTabs) + ";\n" + ((elements.hasMoreElements()) ? "" : "\n");
         }
-        for (Enumeration elements = getDropTypes().elements(); elements.hasMoreElements();) {
-            DropTypeSQL commandSQL = (DropTypeSQL) elements.nextElement();
+        for (Enumeration<DropTypeSQL> elements = getDropTypes().elements(); elements.hasMoreElements();) {
+            DropTypeSQL commandSQL = elements.nextElement();
             result += commandSQL.createSubSQL(countTabs) + ";\n" + ((elements.hasMoreElements()) ? "" : "\n");
         }
-        for (Enumeration elements = getCreateIncompleteTypes().elements(); elements.hasMoreElements();) {
-            CreateIncompleteTypeSQL commandSQL = (CreateIncompleteTypeSQL) elements.nextElement();
+        for (Enumeration<CreateIncompleteTypeSQL> elements = getCreateIncompleteTypes().elements(); elements.hasMoreElements();) {
+            CreateIncompleteTypeSQL commandSQL = elements.nextElement();
             result += commandSQL.createSubSQL(countTabs) + ";\n/\n" + ((elements.hasMoreElements()) ? "" : "\n");
         }
-        for (Enumeration elements = getCreateTypes().elements(); elements.hasMoreElements();) {
-            CreateTypeSQL commandSQL = (CreateTypeSQL) elements.nextElement();
+        for (Enumeration<CreateTypeSQL> elements = getCreateTypes().elements(); elements.hasMoreElements();) {
+            CreateTypeSQL commandSQL = elements.nextElement();
             result += commandSQL.createSubSQL(countTabs) + ";\n/\n" + ((elements.hasMoreElements()) ? "" : "\n");
         }
-        for (Enumeration elements = getCreateCommands().elements(); elements.hasMoreElements();) {
-            CreateCommandSQL commandSQL = (CreateCommandSQL) elements.nextElement();
+        for (Enumeration<CreateCommandSQL> elements = getCreateCommands().elements(); elements.hasMoreElements();) {
+            CreateCommandSQL commandSQL = elements.nextElement();
             result += commandSQL.createSubSQL(countTabs) + ";\n" + ((elements.hasMoreElements()) ? "" : "\n");
         }
-        for (Enumeration elements = getAlterAddCommands().elements(); elements.hasMoreElements();) {
-            AlterAddCommandSQL commandSQL = (AlterAddCommandSQL) elements.nextElement();
+        for (Enumeration<AlterAddCommandSQL> elements = getAlterAddCommands().elements(); elements.hasMoreElements();) {
+            AlterAddCommandSQL commandSQL = elements.nextElement();
             result += commandSQL.createSubSQL(countTabs) + ";\n";
         }
         return result;
@@ -193,28 +195,28 @@ public class SchemaSQL implements SubSQLProducer, SubTreeProducer {
         IconNode top = new IconNode(this, true, getIcon());
         intro = new Intro();
         top.add(intro.createSubTree());
-        for (Enumeration elements = getDropCommands().elements(); elements.hasMoreElements();) {
-            DropCommandSQL commandSQL = (DropCommandSQL) elements.nextElement();
+        for (Enumeration<DropCommandSQL> elements = getDropCommands().elements(); elements.hasMoreElements();) {
+            DropCommandSQL commandSQL = elements.nextElement();
             top.add(commandSQL.createSubTree());
         }
-        for (Enumeration elements = getDropTypes().elements(); elements.hasMoreElements();) {
-            DropTypeSQL commandSQL = (DropTypeSQL) elements.nextElement();
+        for (Enumeration<DropTypeSQL> elements = getDropTypes().elements(); elements.hasMoreElements();) {
+            DropTypeSQL commandSQL = elements.nextElement();
             top.add(commandSQL.createSubTree());
         }
-        for (Enumeration elements = getCreateIncompleteTypes().elements(); elements.hasMoreElements();) {
-            CreateIncompleteTypeSQL commandSQL = (CreateIncompleteTypeSQL) elements.nextElement();
+        for (Enumeration<CreateIncompleteTypeSQL> elements = getCreateIncompleteTypes().elements(); elements.hasMoreElements();) {
+            CreateIncompleteTypeSQL commandSQL = elements.nextElement();
             top.add(commandSQL.createSubTree());
         }
-        for (Enumeration elements = getCreateTypes().elements(); elements.hasMoreElements();) {
-            CreateTypeSQL commandSQL = (CreateTypeSQL) elements.nextElement();
+        for (Enumeration<CreateTypeSQL> elements = getCreateTypes().elements(); elements.hasMoreElements();) {
+            CreateTypeSQL commandSQL = elements.nextElement();
             top.add(commandSQL.createSubTree());
         }
-        for (Enumeration elements = getCreateCommands().elements(); elements.hasMoreElements();) {
-            CreateCommandSQL commandSQL = (CreateCommandSQL) elements.nextElement();
+        for (Enumeration<CreateCommandSQL> elements = getCreateCommands().elements(); elements.hasMoreElements();) {
+            CreateCommandSQL commandSQL = elements.nextElement();
             top.add(commandSQL.createSubTree());
         }
-        for (Enumeration elements = getAlterAddCommands().elements(); elements.hasMoreElements();) {
-            AlterAddCommandSQL commandSQL = (AlterAddCommandSQL) elements.nextElement();
+        for (Enumeration<AlterAddCommandSQL> elements = getAlterAddCommands().elements(); elements.hasMoreElements();) {
+            AlterAddCommandSQL commandSQL = elements.nextElement();
             top.add(commandSQL.createSubTree());
         }
         return top;
@@ -235,9 +237,9 @@ public class SchemaSQL implements SubSQLProducer, SubTreeProducer {
      *
      * @return java.util.Vector
      */
-    protected Vector getAlterAddCommands() {
+    protected Vector<AlterAddCommandSQL> getAlterAddCommands() {
         if (alterAddCommands == null)
-            alterAddCommands = new Vector();
+            alterAddCommands = new Vector<AlterAddCommandSQL>();
         return alterAddCommands;
     }
 
@@ -246,9 +248,9 @@ public class SchemaSQL implements SubSQLProducer, SubTreeProducer {
      *
      * @return java.util.Vector
      */
-    protected Vector getCreateCommands() {
+    protected Vector<CreateCommandSQL> getCreateCommands() {
         if (createCommands == null)
-            createCommands = new Vector();
+            createCommands = new Vector<CreateCommandSQL>();
         return createCommands;
     }
 
@@ -257,9 +259,9 @@ public class SchemaSQL implements SubSQLProducer, SubTreeProducer {
      *
      * @return java.util.Vector
      */
-    protected Vector getDropCommands() {
+    protected Vector<DropCommandSQL> getDropCommands() {
         if (dropCommands == null)
-            dropCommands = new Vector();
+            dropCommands = new Vector<DropCommandSQL>();
         return dropCommands;
     }
 
@@ -268,9 +270,9 @@ public class SchemaSQL implements SubSQLProducer, SubTreeProducer {
      *
      * @return java.util.Vector
      */
-    protected Vector getCreateTypes() {
+    protected Vector<CreateTypeSQL> getCreateTypes() {
         if (createTypes == null)
-            createTypes = new Vector();
+            createTypes = new Vector<CreateTypeSQL>();
         return createTypes;
     }
 
@@ -279,9 +281,9 @@ public class SchemaSQL implements SubSQLProducer, SubTreeProducer {
      *
      * @return java.util.Vector
      */
-    protected Vector getCreateIncompleteTypes() {
+    protected Vector<CreateIncompleteTypeSQL> getCreateIncompleteTypes() {
         if (createIncompleteTypes == null)
-            createIncompleteTypes = new Vector();
+            createIncompleteTypes = new Vector<CreateIncompleteTypeSQL>();
         return createIncompleteTypes;
     }
 
@@ -290,9 +292,9 @@ public class SchemaSQL implements SubSQLProducer, SubTreeProducer {
      *
      * @return java.util.Vector
      */
-    protected Vector getDropTypes() {
+    protected Vector<DropTypeSQL> getDropTypes() {
         if (dropTypes == null)
-            dropTypes = new Vector();
+            dropTypes = new Vector<DropTypeSQL>();
         return dropTypes;
     }
 

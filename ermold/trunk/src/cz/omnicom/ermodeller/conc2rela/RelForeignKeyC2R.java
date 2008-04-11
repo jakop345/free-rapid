@@ -5,7 +5,7 @@ import cz.omnicom.ermodeller.conc2rela.exception.ListExceptionC2R;
 import cz.omnicom.ermodeller.conceptual.Cardinality;
 import cz.omnicom.ermodeller.sql.ConstraintSQL;
 import cz.omnicom.ermodeller.sql.ForeignKeySQL;
-import cz.omnicom.ermodeller.sql.SQLConstraintProducer;
+import cz.omnicom.ermodeller.sql.interfaces.SQLConstraintProducer;
 
 import java.util.Vector;
 

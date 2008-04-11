@@ -1,6 +1,8 @@
 package cz.omnicom.ermodeller.sql;
 
 import cz.omnicom.ermodeller.icontree.IconNode;
+import cz.omnicom.ermodeller.sql.interfaces.SubSQLProducer;
+import cz.omnicom.ermodeller.sql.interfaces.SubTreeProducer;
 
 import javax.swing.*;
 import java.util.Enumeration;
@@ -15,7 +17,7 @@ public class ORCheck implements SubSQLProducer, SubTreeProducer {
      *
      * @see cz.omnicom.ermodeller.sql.PartOfCheck
      */
-    private final Vector orParts = new Vector();
+    private final Vector<PartOfCheck> orParts = new Vector<PartOfCheck>();
 
     /**
      * Adds new part of check.
@@ -39,8 +41,8 @@ public class ORCheck implements SubSQLProducer, SubTreeProducer {
      */
     public String createSubSQL(int countTabs) {
         String result = "";
-        for (Enumeration elements = getORParts().elements(); elements.hasMoreElements();) {
-            result += ((PartOfCheck) elements.nextElement()).createSubSQL(countTabs);
+        for (Enumeration<PartOfCheck> elements = getORParts().elements(); elements.hasMoreElements();) {
+            result += (elements.nextElement()).createSubSQL(countTabs);
             if (elements.hasMoreElements())
                 result += "\n" + TabCreator.getTabs(countTabs) + "OR\n";
         }
@@ -54,8 +56,8 @@ public class ORCheck implements SubSQLProducer, SubTreeProducer {
      */
     public IconNode createSubTree() {
         IconNode top = new IconNode(this, true, getIcon());
-        for (Enumeration elements = getORParts().elements(); elements.hasMoreElements();) {
-            top.add(((PartOfCheck) elements.nextElement()).createSubTree());
+        for (Enumeration<PartOfCheck> elements = getORParts().elements(); elements.hasMoreElements();) {
+            top.add((elements.nextElement()).createSubTree());
         }
         return top;
     }
@@ -74,7 +76,7 @@ public class ORCheck implements SubSQLProducer, SubTreeProducer {
      *
      * @return java.util.Vector
      */
-    public Vector getORParts() {
+    public Vector<PartOfCheck> getORParts() {
         return orParts;
     }
 

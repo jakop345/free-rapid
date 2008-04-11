@@ -1,5 +1,8 @@
 package cz.omnicom.ermodeller.sql;
 
+import cz.omnicom.ermodeller.sql.interfaces.SubSQLProducer;
+import cz.omnicom.ermodeller.sql.interfaces.SubTreeProducer;
+
 
 /**
  * Row is element of command. Commands contain only rows.

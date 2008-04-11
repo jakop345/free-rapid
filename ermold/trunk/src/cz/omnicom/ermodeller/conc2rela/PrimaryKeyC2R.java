@@ -2,7 +2,7 @@ package cz.omnicom.ermodeller.conc2rela;
 
 import cz.omnicom.ermodeller.sql.ConstraintSQL;
 import cz.omnicom.ermodeller.sql.PrimaryKeySQL;
-import cz.omnicom.ermodeller.sql.SQLConstraintProducer;
+import cz.omnicom.ermodeller.sql.interfaces.SQLConstraintProducer;
 
 import java.util.Enumeration;
 import java.util.Vector;
@@ -110,5 +110,5 @@ public class PrimaryKeyC2R extends ElementOfRelationC2R implements SQLConstraint
      */
     public String toString() {
         return "Primary Key " + getUniqueKeyGroupC2R().getGroupString();
-}
+    }
 }

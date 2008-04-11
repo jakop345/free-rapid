@@ -11,7 +11,13 @@ import cz.omnicom.ermodeller.conceptual.ConceptualConstruct;
 import cz.omnicom.ermodeller.datatype.NestedTableDataType;
 import cz.omnicom.ermodeller.datatype.ObjectDataType;
 import cz.omnicom.ermodeller.datatype.UserDefinedDataType;
-import cz.omnicom.ermodeller.sql.*;
+import cz.omnicom.ermodeller.sql.AlterAddCommandSQL;
+import cz.omnicom.ermodeller.sql.CreateCommandSQL;
+import cz.omnicom.ermodeller.sql.DropCommandSQL;
+import cz.omnicom.ermodeller.sql.NestedTableStorageSQL;
+import cz.omnicom.ermodeller.sql.interfaces.SQLAlterAddCommandProducer;
+import cz.omnicom.ermodeller.sql.interfaces.SQLCreateCommandProducer;
+import cz.omnicom.ermodeller.sql.interfaces.SQLDropCommandProducer;
 import cz.omnicom.ermodeller.typeseditor.UserTypeStorage;
 import cz.omnicom.ermodeller.typeseditor.UserTypeStorageVector;
 

@@ -1,4 +1,6 @@
-package cz.omnicom.ermodeller.sql;
+package cz.omnicom.ermodeller.sql.interfaces;
+
+import cz.omnicom.ermodeller.sql.SchemaSQL;
 
 /**
  * Object, which creates SQL schema (sql commands)

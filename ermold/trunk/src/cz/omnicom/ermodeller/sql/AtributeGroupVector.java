@@ -2,6 +2,8 @@ package cz.omnicom.ermodeller.sql;
 
 import cz.omnicom.ermodeller.conc2rela.AtributeC2R;
 import cz.omnicom.ermodeller.icontree.IconNode;
+import cz.omnicom.ermodeller.sql.interfaces.SubSQLProducer;
+import cz.omnicom.ermodeller.sql.interfaces.SubTreeProducer;
 
 import javax.swing.*;
 import java.util.Enumeration;

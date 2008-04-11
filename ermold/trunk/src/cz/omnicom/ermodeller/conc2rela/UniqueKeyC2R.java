@@ -4,8 +4,8 @@ import cz.omnicom.ermodeller.conc2rela.exception.AlreadyContainsExceptionC2R;
 import cz.omnicom.ermodeller.conc2rela.exception.ListExceptionC2R;
 import cz.omnicom.ermodeller.conceptual.Atribute;
 import cz.omnicom.ermodeller.sql.ConstraintSQL;
-import cz.omnicom.ermodeller.sql.SQLConstraintProducer;
 import cz.omnicom.ermodeller.sql.UniqueKeySQL;
+import cz.omnicom.ermodeller.sql.interfaces.SQLConstraintProducer;
 
 import java.util.Enumeration;
 import java.util.Vector;

@@ -3,6 +3,7 @@ package cz.omnicom.ermodeller.sql;
 import cz.green.ermodeller.AppPrefs;
 import cz.green.swing.ExtensionFileFilter;
 import cz.omnicom.ermodeller.icontree.IconNodeRenderer;
+import cz.omnicom.ermodeller.sql.interfaces.SubSQLProducer;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
