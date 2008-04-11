@@ -1,5 +1,6 @@
 package cz.omnicom.ermodeller.errorlog;
 
+import cz.green.ermodeller.EntityConstruct;
 import cz.omnicom.ermodeller.icontree.IconNode;
 import cz.omnicom.ermodeller.icontree.IconNodeRenderer;
 
@@ -84,7 +85,7 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
      */
     public void acceptButtonAction() {
         int i = conceptualObject.getID();
-        cz.green.ermodeller.Entity ent;
+        EntityConstruct ent;
         cz.green.ermodeller.Relation rel;
 
         if (conceptualObject instanceof cz.omnicom.ermodeller.conceptual.ConceptualConstruct)
@@ -1435,7 +1436,7 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
         cz.green.ermodeller.ConceptualConstruct cc;
         cz.green.ermodeller.ConceptualObject co;
         cz.omnicom.ermodeller.conceptual.ConceptualConstruct ccM;
-        cz.green.ermodeller.Entity ent;
+        EntityConstruct ent;
 
         try {
             if (conceptualObject instanceof cz.omnicom.ermodeller.conceptual.Entity) {

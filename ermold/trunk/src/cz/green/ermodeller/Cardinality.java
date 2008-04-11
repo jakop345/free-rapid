@@ -18,7 +18,7 @@ import java.awt.*;
  * <p/>
  * Its created by <code>Relation</code> method <code>createCardinality</code>.
  *
- * @see Relation#createCardinality(cz.green.ermodeller.Entity, cz.green.event.interfaces.Manager ,int,int)
+ * @see Relation#createCardinality(EntityConstruct , cz.green.event.interfaces.Manager ,int,int)
  */
 public class Cardinality extends ConceptualObject {
     /**
@@ -96,14 +96,14 @@ public class Cardinality extends ConceptualObject {
     /**
      * Get the entity that participation this object represents.
      */
-    public Entity getEntity() {
+    public EntityConstruct getEntity() {
         java.util.Enumeration e = connections.elements();
         while (e.hasMoreElements()) {
             Connection c = ((Connection) e.nextElement());
-            if (c.getOne() instanceof Entity)
-                return (Entity) (c.getOne());
-            if (c.getTwo() instanceof Entity)
-                return (Entity) (c.getTwo());
+            if (c.getOne() instanceof EntityConstruct)
+                return (EntityConstruct) (c.getOne());
+            if (c.getTwo() instanceof EntityConstruct)
+                return (EntityConstruct) (c.getTwo());
         }
         return null;
     }
@@ -588,9 +588,9 @@ public class Cardinality extends ConceptualObject {
      *           change the relation.
      */
     protected void reconnect(ConceptualConstruct cc) {
-        if (cc instanceof Entity) {
+        if (cc instanceof EntityConstruct) {
             //changes the participating entity
-            Entity old = getEntity();
+            EntityConstruct old = getEntity();
             Connection conn = connectionTo(old);
             cz.omnicom.ermodeller.conceptual.Entity cEnt = (cz.omnicom.ermodeller.conceptual.Entity) cc.getModel();
             try {
@@ -632,7 +632,7 @@ public class Cardinality extends ConceptualObject {
     /**
      * This method was created by Jiri Mares
      */
-    public void transformToRelation(Entity ent, Manager man) {
+    public void transformToRelation(EntityConstruct ent, Manager man) {
         //others cardinalities decompose as new relations
         java.awt.Point p = ent.getCenter(getEntity());
         Relation rel = Relation.createRelation(model.getSchema(), man, p.x, p.y);
@@ -648,7 +648,7 @@ public class Cardinality extends ConceptualObject {
     /**
      * This method was created by Jiri Mares
      */
-    public void transformToStrongAddiction(Entity son, Manager man) {
+    public void transformToStrongAddiction(EntityConstruct son, Manager man) {
         //java.awt.Point p = son.getCenter(getEntity());
 //	StrongAddiction.createStrongAddiction(getEntity(), son, son.getManager(), p.x, p.y);
         StrongAddiction.createStrongAddiction(getEntity(), son, son.getManager(), getBounds().x, getBounds().y);

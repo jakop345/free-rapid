@@ -19,13 +19,13 @@ import java.util.Vector;
  * <code>ConnectionManager</code> iterface to be able to hold the connections. Therefore has also atribute
  * <code>connections</code>, where holds local connections.
  */
-public class DGroup extends cz.green.eventtool.DGroup implements FontManager, ModelFinder {
+public class DGroupTool extends cz.green.eventtool.DGroupTool implements FontManager, ModelFinder {
     /**
      * Simply calls the inherited constructor.
      *
-     * @see cz.green.eventtool.Group#Group(cz.green.event.interfaces.Manager , int, int, int, int)
+     * @see cz.green.eventtool.GroupTool#GroupTool(cz.green.event.interfaces.Manager , int, int, int, int)
      */
-    public DGroup(Manager manager, int left, int top, int width, int height) throws NullPointerException, ImpossibleNegativeValueException {
+    public DGroupTool(Manager manager, int left, int top, int width, int height) throws NullPointerException, ImpossibleNegativeValueException {
         super(manager, left, top, width, height);
     }
 

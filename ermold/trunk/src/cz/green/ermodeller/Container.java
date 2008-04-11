@@ -163,7 +163,7 @@ public class Container extends cz.green.eventtool.Container implements ModeSwitc
      * @param object When this adding is used for decomposition the entity, it is the former entity, otherwise it's
      *               <code>null</code>.
      */
-    public boolean addingEntity(Entity ent) {
+    public boolean addingEntity(EntityConstruct ent) {
         object = ent;
         setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
         setWorkMode(ADDING_ENTITY);
@@ -199,7 +199,7 @@ public class Container extends cz.green.eventtool.Container implements ModeSwitc
 /**
  * Set regime for adding relation with connection to 2 entities.
  */
-    public boolean addingRelationCon(Entity object) {
+    public boolean addingRelationCon(EntityConstruct object) {
         this.object = object;
         setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
         setWorkMode(ADDING_RELATION_AND_CONNECTION);
@@ -209,7 +209,7 @@ public class Container extends cz.green.eventtool.Container implements ModeSwitc
     /**
      * Set regime for adding connection.
      */
-    public boolean addingConnectionToRel(Entity object) {
+    public boolean addingConnectionToRel(EntityConstruct object) {
         this.object = object;
         setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
         setWorkMode(ADDING_CONNECTION);
@@ -219,7 +219,7 @@ public class Container extends cz.green.eventtool.Container implements ModeSwitc
     /**
      * Set regime for adding connection.
      */
-    public boolean addingIdentDependency(Entity object) {
+    public boolean addingIdentDependency(EntityConstruct object) {
         this.object = object;
         setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
         setWorkMode(ADDING_IDENT_DEPENDENCY);
@@ -229,7 +229,7 @@ public class Container extends cz.green.eventtool.Container implements ModeSwitc
     /**
      * Set regime for adding as ISA Child.
      */
-    public boolean addingAsISAChild(Entity object) {
+    public boolean addingAsISAChild(EntityConstruct object) {
         this.object = object;
         setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
         setWorkMode(ADDING_AS_ISA_CHILD);
@@ -378,7 +378,7 @@ public class Container extends cz.green.eventtool.Container implements ModeSwitc
     /**
      * Call dialog to edit Constraints.
      */
-    public void editConstraints(cz.green.ermodeller.Entity ent) {
+    public void editConstraints(EntityConstruct ent) {
         if (constDialog == null)
             constDialog = new ConstraintsDialog(((Desktop) getDesktop()).ERMFrame, (cz.omnicom.ermodeller.conceptual.Entity) ent.getModel());
         constDialog.setLocationRelativeTo(((Desktop) getDesktop()).ERMFrame);
@@ -479,7 +479,7 @@ public class Container extends cz.green.eventtool.Container implements ModeSwitc
                 case ADDING_UNIQUE_KEY:
                     setWorkMode(WORKING);
                     setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-                    ((Entity) object).createUniqueKey(x, y);
+                    ((EntityConstruct) object).createUniqueKey(x, y);
                     break;
                 case ADDING_CARDINALITY:
                     setWorkMode(WORKING);
@@ -531,7 +531,7 @@ public class Container extends cz.green.eventtool.Container implements ModeSwitc
                 case ADDING_ENTITY:
                     setWorkMode(WORKING);
                     setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-                    ((Schema) desktop).createEntity(x, y, (Entity) object);
+                    ((Schema) desktop).createEntity(x, y, (EntityConstruct) object);
                     break;
                 case MOVING:
                     setWorkMode(WORKING);

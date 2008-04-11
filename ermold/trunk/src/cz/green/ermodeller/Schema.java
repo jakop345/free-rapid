@@ -13,7 +13,7 @@ public interface Schema {
      *            Used by decomposition of the entities.
      * @return The new entity.
      */
-    Entity createEntity(int x, int y, Entity old);
+    EntityConstruct createEntity(int x, int y, EntityConstruct old);
 
     /**
      * Creates the new Relation.

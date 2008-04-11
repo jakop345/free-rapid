@@ -14,7 +14,7 @@ public class Desktop extends cz.green.event.Desktop implements ConnectionManager
     /**
      * Group with connections
      */
-    protected ConnectionGroup connections = null;
+    protected ConnectionGroupTool connections = null;
 
     /**
      * Calls the derived constructor.
@@ -33,7 +33,7 @@ public class Desktop extends cz.green.event.Desktop implements ConnectionManager
     public void addConnection(Connection conn) {
         if (connections == null) {
             try {
-                connections = new ConnectionGroup(manager, 0, 0, 0, 0);
+                connections = new ConnectionGroupTool(manager, 0, 0, 0, 0);
             } catch (ImpossibleNegativeValueException e) {
                 //when execution is here -> it is very bad
                 return;
@@ -111,5 +111,5 @@ public class Desktop extends cz.green.event.Desktop implements ConnectionManager
      */
     public void removeConnectionFromMain(Connection conn) {
         removeConnection(conn);
-}
+    }
 }

@@ -10,7 +10,7 @@ import cz.green.event.interfaces.Manager;
  * @see Container#addingCardinality(cz.green.ermodeller.CardinalityPair)
  */
 public class CardinalityPair {
-    private Entity entity = null;
+    private EntityConstruct entity = null;
     private Relation relation = null;
 
     /**
@@ -23,7 +23,7 @@ public class CardinalityPair {
     /**
      * Construct cardinality pair and sets the relation and the entity.
      */
-    public CardinalityPair(Entity ent, Relation rel) {
+    public CardinalityPair(EntityConstruct ent, Relation rel) {
         this();
         setEntity(ent);
         setRelation(rel);
@@ -49,7 +49,7 @@ public class CardinalityPair {
      * @return The entity.
      * @see #entity
      */
-    public Entity getEntity() {
+    public EntityConstruct getEntity() {
         return entity;
     }
 
@@ -69,7 +69,7 @@ public class CardinalityPair {
      * @param entity The entity.
      * @see #entity
      */
-    public void setEntity(Entity entity) {
+    public void setEntity(EntityConstruct entity) {
         this.entity = entity;
     }
 

@@ -21,7 +21,7 @@ public class UniqueKey extends ConceptualObject {
     /**
      * The owner of the unique key
      */
-    Entity ent = null;
+    EntityConstruct ent = null;
 
     /**
      * The model object from the Aleš Kopecký work
@@ -50,7 +50,7 @@ public class UniqueKey extends ConceptualObject {
      * @see ConceptualObject#ConceptualObject(cz.green.event.interfaces.Manager , int, int,
      *      int, int)
      */
-    public UniqueKey(cz.omnicom.ermodeller.conceptual.UniqueKey uq, Entity ent,
+    public UniqueKey(cz.omnicom.ermodeller.conceptual.UniqueKey uq, EntityConstruct ent,
                      Manager manager, int left, int top)
             throws NullPointerException,
             ImpossibleNegativeValueException {
@@ -85,10 +85,10 @@ public class UniqueKey extends ConceptualObject {
      * @param atr The added atribute.
      */
 
-    public void addingAtribute(Entity ent) {
+    public void addingAtribute(EntityConstruct ent) {
         try {
             // ((Container)manager).addingAtribute(ent);
-            Desktop d = (Desktop) ((DGroup) manager).getManager();
+            Desktop d = (Desktop) ((DGroupTool) manager).getManager();
         } catch (Throwable x) {
             ShowException d = new ShowException(null, "Error", x, true);
         }
@@ -102,7 +102,7 @@ public class UniqueKey extends ConceptualObject {
      * @return <code>true</code> if there is at least one other strong
      *         addiction parent.
      */
-    public boolean areOthersConnections(Entity ent) {
+    public boolean areOthersConnections(EntityConstruct ent) {
         StrongAddiction sa;
         int count = 0;
         for (int i = connections.size() - 1; i >= 0; i--) {
@@ -176,7 +176,7 @@ public class UniqueKey extends ConceptualObject {
      *
      * @return The owner.
      */
-    public Entity getOwner() {
+    public EntityConstruct getOwner() {
         return ent;
     }
 
@@ -222,9 +222,9 @@ public class UniqueKey extends ConceptualObject {
                 }
             }
         }
-        if (item instanceof Entity) {
+        if (item instanceof EntityConstruct) {
             if (event.getAdd()) {
-                Entity ent = (Entity) item;
+                EntityConstruct ent = (EntityConstruct) item;
                 if (getPrimary() && (connectionTo(ent) == null)) {
                     event.getComponent().setCursor(
                             new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -281,9 +281,9 @@ public class UniqueKey extends ConceptualObject {
                 }
             }
         }
-        if (item instanceof Entity) {
+        if (item instanceof EntityConstruct) {
             // over is entity
-            Entity ent = (Entity) item;
+            EntityConstruct ent = (EntityConstruct) item;
             if (event.getAdd()) {
                 // adding strong addiction parent
                 if (getPrimary() && (connectionTo(ent) == null)) {

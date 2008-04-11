@@ -7,13 +7,13 @@ import cz.green.event.interfaces.Manager;
  * This class has the same functionality as predecessor. Adds only one methods, which is caused by implementing the
  * interface <code>Printable</code>. Implementing this interface caused the possibility to be printed.
  */
-public class Group extends cz.green.event.Group implements cz.green.eventtool.Printable {
+public class GroupTool extends cz.green.event.Group implements cz.green.eventtool.Printable {
     /**
      * Is needful for creating desktop.
      *
      * @see cz.green.event.Group#Group()
      */
-    protected Group() {
+    protected GroupTool() {
         super();
     }
 
@@ -22,7 +22,7 @@ public class Group extends cz.green.event.Group implements cz.green.eventtool.Pr
      *
      * @see cz.green.event.Group#Group(cz.green.event.interfaces.Manager , int, int, int, int)
      */
-    public Group(Manager manager, int left, int top, int width, int height) throws NullPointerException, ImpossibleNegativeValueException {
+    public GroupTool(Manager manager, int left, int top, int width, int height) throws NullPointerException, ImpossibleNegativeValueException {
         super(manager, left, top, width, height);
     }
 

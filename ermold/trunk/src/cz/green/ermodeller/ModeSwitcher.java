@@ -27,7 +27,7 @@ public interface ModeSwitcher {
      * @param object When this adding is used for decomposition the entity, it is
      *               the former entity, otherwise it's <code>null</code>.
      */
-    public boolean addingEntity(Entity ent);
+    public boolean addingEntity(EntityConstruct ent);
 
     /**
      * Set regime for adding group.
@@ -42,7 +42,7 @@ public interface ModeSwitcher {
     /**
      * Set regime for adding relation with connection to 2 entities.
      */
-    public boolean addingRelationCon(Entity object);
+    public boolean addingRelationCon(EntityConstruct object);
 
     /**
      * Set regime for adding unique key.

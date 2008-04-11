@@ -10,7 +10,7 @@ import cz.green.swing.ShowException;
  * @see Container#addingCardinality(cz.green.ermodeller.CardinalityPair)
  */
 public class StrongAddictionPair {
-    private Entity entity = null;
+    private EntityConstruct entity = null;
     private UniqueKey uniqueKey = null;
 
     /**
@@ -23,7 +23,7 @@ public class StrongAddictionPair {
     /**
      * Construct cardinality pair and sets the relation and the entity.
      */
-    public StrongAddictionPair(Entity ent, UniqueKey uk) {
+    public StrongAddictionPair(EntityConstruct ent, UniqueKey uk) {
         this();
         setEntity(ent);
         setUniqueKey(uk);
@@ -56,7 +56,7 @@ public class StrongAddictionPair {
      * @return The entity.
      * @see #entity
      */
-    public Entity getEntity() {
+    public EntityConstruct getEntity() {
         return entity;
     }
 
@@ -76,7 +76,7 @@ public class StrongAddictionPair {
      * @param entity The entity.
      * @see #entity
      */
-    public void setEntity(Entity entity) {
+    public void setEntity(EntityConstruct entity) {
         this.entity = entity;
     }
 

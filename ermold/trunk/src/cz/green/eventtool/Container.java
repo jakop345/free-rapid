@@ -87,7 +87,7 @@ public class Container extends cz.green.event.Container {
                 }
                 try {
                     if (workMode == ADDING_GROUP)
-                        desktop.fallAndHandleEvent(cooX, cooY, new cz.green.event.AddItemEvent(cooX, cooY, new Group(desktop, cooX, cooY, x - cooX, y - cooY), this));
+                        desktop.fallAndHandleEvent(cooX, cooY, new cz.green.event.AddItemEvent(cooX, cooY, new GroupTool(desktop, cooX, cooY, x - cooX, y - cooY), this));
                     else
                         desktop.fallAndHandleEvent(cooX, cooY, new cz.green.event.AddItemEvent(cooX, cooY, new Window(desktop, cooX, cooY, x - cooX, y - cooY), this));
                 } catch (Exception ex) {

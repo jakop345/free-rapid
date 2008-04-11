@@ -752,7 +752,7 @@ public class ERModeller extends JFrame implements
             getToolBar().add(
                     getToolBarButton("img/addEntity.gif",
                             "Add the new Entity", getPlace(),
-                            "addingEntity", null, Entity.class));
+                            "addingEntity", null, EntityConstruct.class));
 /*			getToolBar().add(
 					getToolBarButton("img/addRelation.gif",
 							"Add the new Relation", getPlace(),
@@ -808,7 +808,7 @@ public class ERModeller extends JFrame implements
      * Return the TextField where the mode is shown.
      */
     private JButton getToolBarButton(String image, String toolTip,
-                                     Object object, String method, Object param, Class<Entity> paramClass) {
+                                     Object object, String method, Object param, Class<EntityConstruct> paramClass) {
         JButton but = null;
         try {
             but = new JButton();
@@ -1087,8 +1087,8 @@ public class ERModeller extends JFrame implements
         }
 
         String s;
-        Entity ent;
-        Entity child;
+        EntityConstruct ent;
+        EntityConstruct child;
         Relation rel;
         Atribute atr;
         Cardinality car;
@@ -1300,7 +1300,7 @@ public class ERModeller extends JFrame implements
                     int j = id
                             + (new Integer(erdoc.getValue("child"))).intValue();
                     ent = d.getEntity(i);
-                    child = (Entity) d.getConceptualObject(j);
+                    child = (EntityConstruct) d.getConceptualObject(j);
                     StrongAddiction.createStrongAddiction(ent, child, child.getManager(), l, t);
                 } while (erdoc.next());
             schemaM.setID(schemaID);
@@ -1309,7 +1309,7 @@ public class ERModeller extends JFrame implements
                 ((cz.omnicom.ermodeller.conceptual.Atribute) attrs.get(j)).setPosition(attrsPos.get(j));
             Vector v = d.getAllEntities();
             for (int j = 0; j < v.size(); j++)
-                ((Entity) v.get(j)).recalculatePositionsOfAtributes();
+                ((EntityConstruct) v.get(j)).recalculatePositionsOfAtributes();
 
         } catch (Exception e) {
             ShowException se = new ShowException(null, "Error", e, true);
@@ -1355,7 +1355,7 @@ public class ERModeller extends JFrame implements
         }
 
         String s;
-        Entity ent;
+        EntityConstruct ent;
         Relation rel;
         Atribute atr;
         Cardinality car;
@@ -1509,9 +1509,9 @@ public class ERModeller extends JFrame implements
      * @param ent
      * @return
      */
-    private Entity mainISAParent(Entity ent) {
+    private EntityConstruct mainISAParent(EntityConstruct ent) {
         if (ent.isSetAsISAChild()) {
-            Entity parent = ent.getISAParent();
+            EntityConstruct parent = ent.getISAParent();
             if (parent.isSetAsISAChild()) {
                 return mainISAParent(parent);
             }
@@ -1527,7 +1527,7 @@ public class ERModeller extends JFrame implements
         Desktop d = (Desktop) getPlace().getDesktop();
         Vector v = d.getAllEntities();
         for (Object aV : v) {
-            Entity ent = (Entity) aV;
+            EntityConstruct ent = (EntityConstruct) aV;
             /*Resize entity if is too small to show inside all atributes */
             ResizeRectangle rr = new ResizeRectangle(
                     0, 0, 0, 0, ResizePoint.BOTTOM
@@ -1657,7 +1657,7 @@ public class ERModeller extends JFrame implements
      * @param ent
      * @param nextNotation
      */
-    private void resizeStrongAddictions(Entity ent, int nextNotation) {
+    private void resizeStrongAddictions(EntityConstruct ent, int nextNotation) {
         java.util.Enumeration e = ent.getConnections().elements();
         java.awt.FontMetrics fm = ((FontManager) ent.getManager()).getReferentFontMetrics();
         StrongAddiction sa = null;
@@ -1782,7 +1782,7 @@ public class ERModeller extends JFrame implements
             Desktop d = (Desktop) getPlace().getDesktop();
             Vector ents = d.getAllEntities();
             for (Object ent1 : ents) {
-                Entity ent = (Entity) ent1;
+                EntityConstruct ent = (EntityConstruct) ent1;
                 ent.collectPKatributes();
             }
         }
@@ -1828,13 +1828,13 @@ public class ERModeller extends JFrame implements
             setNotation(ConceptualConstruct.CHEN);
 
             for (Object allEntity : allEntities) {
-                Entity ent = (Entity) allEntity;
+                EntityConstruct ent = (EntityConstruct) allEntity;
                 if (ent.isStrongAddictionChild)
                     setNewStrongAddictionsManager(ent);
             }
 
             for (Object allEntity : allEntities) {
-                Entity ent = (Entity) allEntity;
+                EntityConstruct ent = (EntityConstruct) allEntity;
                 int width = mainISAParent(ent).getBounds().width;
                 ent.moveAtributesBinarytoChen(width);
                 resizeStrongAddictions(ent, ConceptualConstruct.CHEN);
@@ -1878,14 +1878,14 @@ public class ERModeller extends JFrame implements
         Vector allEntities = d.getAllEntities();
 
         for (Object allEntity : allEntities) {
-            Entity ent = (Entity) allEntity;
+            EntityConstruct ent = (EntityConstruct) allEntity;
             ent.collectPKatributes();
         }
 
         setNotation(ConceptualConstruct.BINARY);
 
         for (Object allEntity : allEntities) {
-            Entity ent = (Entity) allEntity;
+            EntityConstruct ent = (EntityConstruct) allEntity;
             ent.recalculatePositionsOfAtributes();
             if (ent.isStrongAddictionChild)
                 setNewStrongAddictionsManager(ent);
@@ -1956,7 +1956,7 @@ public class ERModeller extends JFrame implements
 
         setNotation(ConceptualConstruct.UML);
         for (int i = 0; i < allEntities.size(); i++) {
-            Entity ent = (Entity) allEntities.get(i);
+            EntityConstruct ent = (EntityConstruct) allEntities.get(i);
             ent.recalculatePositionsOfAtributes();
             resizeStrongAddictions(ent, ConceptualConstruct.UML);
             if (ent.isStrongAddictionChild)
@@ -2048,7 +2048,7 @@ public class ERModeller extends JFrame implements
      *
      * @param ent
      */
-    private void setNewStrongAddictionsManager(Entity ent) {
+    private void setNewStrongAddictionsManager(EntityConstruct ent) {
         java.util.Enumeration e = ent.getConnections().elements();
         java.awt.FontMetrics fm = ((FontManager) ent.getManager()).getReferentFontMetrics();
         StrongAddiction sa = null;

@@ -1,10 +1,10 @@
 package cz.green.eventtool;
 
-import cz.green.event.interfaces.PaintableItem;
+import cz.green.event.exceptions.ImpossibleNegativeValueException;
+import cz.green.event.exceptions.ItemNotInsideManagerException;
 import cz.green.event.interfaces.Item;
 import cz.green.event.interfaces.Manager;
-import cz.green.event.exceptions.ItemNotInsideManagerException;
-import cz.green.event.exceptions.ImpossibleNegativeValueException;
+import cz.green.event.interfaces.PaintableItem;
 
 /**
  * This group holds connections and all others elements that don't want to handle
@@ -17,13 +17,13 @@ import cz.green.event.exceptions.ImpossibleNegativeValueException;
  * because there is no event falling. It caused that adding method doesn't detect the
  * overlapping of this group by the added item.
  */
-public class ConnectionGroup extends Group {
+public class ConnectionGroupTool extends GroupTool {
     /**
      * Simply calls only inherited constructor.
      *
-     * @see cz.green.eventtool.Group#Group(cz.green.event.interfaces.Manager , int, int, int, int)
+     * @see GroupTool#GroupTool(cz.green.event.interfaces.Manager , int, int, int, int)
      */
-    public ConnectionGroup(Manager manager, int left, int top, int width, int height) throws NullPointerException, ImpossibleNegativeValueException {
+    public ConnectionGroupTool(Manager manager, int left, int top, int width, int height) throws NullPointerException, ImpossibleNegativeValueException {
         super(manager, left, top, width, height);
     }
 

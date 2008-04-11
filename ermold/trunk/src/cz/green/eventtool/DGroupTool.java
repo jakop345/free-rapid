@@ -24,18 +24,18 @@ import cz.green.swing.ShowException;
  * <code>ConnectionManager</code> iterface to can hold the connections. Therefore has also atribute
  * <code>connections</code>, where holds local connections.
  */
-public class DGroup extends Group implements ConnectionManager {
+public class DGroupTool extends GroupTool implements ConnectionManager {
     /**
      * Can hold the local connections between items inside this group
      */
-    protected ConnectionGroup connections = null;
+    protected ConnectionGroupTool connections = null;
 
     /**
      * Simply calls the inherited constructor.
      *
-     * @see cz.green.eventtool.Group#Group(cz.green.event.interfaces.Manager , int, int, int, int)
+     * @see GroupTool#GroupTool(cz.green.event.interfaces.Manager , int, int, int, int)
      */
-    public DGroup(Manager manager, int left, int top, int width, int height) throws NullPointerException, ImpossibleNegativeValueException {
+    public DGroupTool(Manager manager, int left, int top, int width, int height) throws NullPointerException, ImpossibleNegativeValueException {
         super(manager, left, top, width, height);
     }
 
@@ -87,7 +87,7 @@ public class DGroup extends Group implements ConnectionManager {
         if (connections == null) {
             try {
                 //when connection greoup doesn't exists
-                connections = new ConnectionGroup(manager, 0, 0, 0, 0);
+                connections = new ConnectionGroupTool(manager, 0, 0, 0, 0);
             } catch (ImpossibleNegativeValueException e) {
                 //when execution is here -> it is very bad
                 return;

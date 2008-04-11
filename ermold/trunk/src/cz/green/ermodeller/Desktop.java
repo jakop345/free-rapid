@@ -68,7 +68,7 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
      */
     public void composeEntity(cz.omnicom.ermodeller.conceptual.Entity eM1,
                               cz.omnicom.ermodeller.conceptual.Entity eM2) {
-        Entity e1 = getEntity(eM1.getID()), e2 = getEntity(eM2.getID());
+        EntityConstruct e1 = getEntity(eM1.getID()), e2 = getEntity(eM2.getID());
 
         e2.composeEntity(e1, new cz.green.ermodeller.DragOverEvent(0, 0,
                 (Item) e1, getPaintPlace()));
@@ -83,7 +83,7 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
         cz.omnicom.ermodeller.conceptual.Atribute atrM1, atrM2;
         Atribute atr2, atr1;
         cz.omnicom.ermodeller.conceptual.Entity entM;
-        Entity ent2 = getEntity(e2.getID()), ent1 = getEntity(e1.getID());
+        EntityConstruct ent2 = getEntity(e2.getID()), ent1 = getEntity(e1.getID());
 
         for (i = 0; i < v2.size(); i++) {
             atrM2 = (cz.omnicom.ermodeller.conceptual.Atribute) v2.get(i);
@@ -118,20 +118,20 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
      * Creates the new entity with exact size. Invokes the static entity's method
      * <code>createEntity</code>.
      *
-     * @see Schema#createEntity(int, int, cz.green.ermodeller.Entity)
+     * @see Schema#createEntity(int, int, EntityConstruct)
      */
-    public Entity createEntity(int x, int y, int width, int height, Entity old) {
-        return Entity.createEntity(model, this, x, y, width, height, old);
+    public EntityConstruct createEntity(int x, int y, int width, int height, EntityConstruct old) {
+        return EntityConstruct.createEntity(model, this, x, y, width, height, old);
     }
 
     /**
      * Creates the new entity. Invokes the static entity's method
      * <code>createEntity</code>.
      *
-     * @see Schema#createEntity(int, int, cz.green.ermodeller.Entity)
+     * @see Schema#createEntity(int, int, EntityConstruct)
      */
-    public Entity createEntity(int x, int y, Entity old) {
-        return Entity.createEntity(model, this, x, y, old);
+    public EntityConstruct createEntity(int x, int y, EntityConstruct old) {
+        return EntityConstruct.createEntity(model, this, x, y, old);
     }
 
     /**
@@ -161,15 +161,15 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
         return (Atribute) getConceptualObject(aid);
     }
 
-    private Atribute getAtribute(DGroup dg, int aid) {
+    private Atribute getAtribute(DGroupTool dg, int aid) {
         int cnt = dg.getItemCount(), id;
         Item item;
         Atribute atr;
 
         for (int i = 0; i < cnt; i++) {
             item = dg.getItem(i);
-            if (item instanceof DGroup) {
-                if ((atr = getAtribute((DGroup) item, aid)) != null)
+            if (item instanceof DGroupTool) {
+                if ((atr = getAtribute((DGroupTool) item, aid)) != null)
                     return atr;
             } else {
                 id = ((cz.omnicom.ermodeller.conceptual.ConceptualObject) ((ConceptualObject) item)
@@ -200,8 +200,8 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
 
         for (int i = 0; i < cnt; i++) {
             item = getItem(i);
-            if (item instanceof DGroup) {
-                if ((co = getConceptualObject((DGroup) item, id)) != null)
+            if (item instanceof DGroupTool) {
+                if ((co = getConceptualObject((DGroupTool) item, id)) != null)
                     return co;
             } else if (!(item instanceof StrongAddiction)
                     && id == (((cz.omnicom.ermodeller.conceptual.ConceptualObject) ((ConceptualObject) item)
@@ -214,15 +214,15 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
     /**
      * Returns conceptual object with ID
      */
-    private ConceptualObject getConceptualObject(DGroup dg, int id) {
+    private ConceptualObject getConceptualObject(DGroupTool dg, int id) {
         int cnt = dg.getItemCount();
         Item item;
         ConceptualObject co = null;
 
         for (int i = 0; i < cnt; i++) {
             item = dg.getItem(i);
-            if (item instanceof DGroup) {
-                if ((co = getConceptualObject((DGroup) item, id)) != null)
+            if (item instanceof DGroupTool) {
+                if ((co = getConceptualObject((DGroupTool) item, id)) != null)
                     return co;
             } else if (!(item instanceof StrongAddiction)
                     && id == (((cz.omnicom.ermodeller.conceptual.ConceptualObject) ((ConceptualObject) item)
@@ -235,7 +235,7 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
     /**
      * Returns vector of all entities in the schema
      */
-    private Vector getAllEntities(DGroup dg) {
+    private Vector getAllEntities(DGroupTool dg) {
         int cnt;
         if (dg == null)
             cnt = getItemCount();
@@ -249,12 +249,12 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
                 item = getItem(i);
             else
                 item = dg.getItem(i);
-            if (item instanceof DGroup) {
+            if (item instanceof DGroupTool) {
                 Vector sub;
-                if ((sub = getAllEntities((DGroup) item)).size() != 0) {
+                if ((sub = getAllEntities((DGroupTool) item)).size() != 0) {
                     retval.addAll(sub);
                 }
-            } else if (item instanceof Entity)
+            } else if (item instanceof EntityConstruct)
                 retval.add(item);
         }
         return retval;
@@ -270,7 +270,7 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
     /**
      * Returns vector of all relationships in the schema
      */
-    private Vector getAllRelations(DGroup dg) {
+    private Vector getAllRelations(DGroupTool dg) {
         int cnt;
         if (dg == null)
             cnt = getItemCount();
@@ -284,9 +284,9 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
                 item = getItem(i);
             else
                 item = dg.getItem(i);
-            if (item instanceof DGroup) {
+            if (item instanceof DGroupTool) {
                 Vector sub;
-                if ((sub = getAllRelations((DGroup) item)).size() != 0) {
+                if ((sub = getAllRelations((DGroupTool) item)).size() != 0) {
                     retval.addAll(sub);
                 }
             } else if (item instanceof Relation)
@@ -546,27 +546,27 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
     /**
      * Returns entity with ID
      */
-    public Entity getEntity(int id) {
-        return (Entity) getConceptualObject(id);
+    public EntityConstruct getEntity(int id) {
+        return (EntityConstruct) getConceptualObject(id);
     }
 
     /**
      * Returns entity
      */
-    private Entity getEntity(DGroup dg, int id) {
+    private EntityConstruct getEntity(DGroupTool dg, int id) {
         int cnt = dg.getItemCount();
         Item item;
-        Entity ent = null;
+        EntityConstruct ent = null;
 
         for (int i = 0; i < cnt; i++) {
             item = dg.getItem(i);
-            if (item instanceof DGroup) {
-                if ((ent = getEntity((DGroup) item, id)) != null)
+            if (item instanceof DGroupTool) {
+                if ((ent = getEntity((DGroupTool) item, id)) != null)
                     return ent;
-            } else if (item instanceof Entity
-                    && id == (((cz.omnicom.ermodeller.conceptual.Entity) ((Entity) item)
+            } else if (item instanceof EntityConstruct
+                    && id == (((cz.omnicom.ermodeller.conceptual.Entity) ((EntityConstruct) item)
                     .getModel()).getID()))
-                return (Entity) item;
+                return (EntityConstruct) item;
         }
         return ent;
     }
@@ -578,8 +578,8 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
         int rect[] = {0, 0}, r[] = {0, 0};
         for (int i = 0; i < getItemCount(); i++) {
             Item item = getItem(i);
-            if (item instanceof DGroup) {
-                r = getHighestRect((DGroup) item);
+            if (item instanceof DGroupTool) {
+                r = getHighestRect((DGroupTool) item);
                 if (r[0] > rect[0])
                     rect[0] = r[0];
                 if (r[1] > rect[1])
@@ -594,12 +594,12 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
         return rect;
     }
 
-    private int[] getHighestRect(DGroup dg) {
+    private int[] getHighestRect(DGroupTool dg) {
         int rect[] = {0, 0}, r[] = {0, 0};
         for (int i = 0; i < dg.getItemCount(); i++) {
             Item item = dg.getItem(i);
-            if (item instanceof DGroup) {
-                r = getHighestRect((DGroup) item);
+            if (item instanceof DGroupTool) {
+                r = getHighestRect((DGroupTool) item);
                 if (r[0] > rect[0])
                     rect[0] = r[0];
                 if (r[1] > rect[1])
@@ -684,7 +684,7 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
                     .getSystemResource("img/mEntity.gif")));
             item.setHorizontalTextPosition(JMenuItem.RIGHT);
             item.addActionListener(new ParamActionAdapter(getPaintPlace(),
-                    "addingEntity", null, Entity.class));
+                    "addingEntity", null, EntityConstruct.class));
             menu.add(item);
             if (ConceptualConstruct.ACTUAL_NOTATION == ConceptualConstruct.CHEN) {
                 item = new JMenuItem("Add relationship", new ImageIcon(ClassLoader
@@ -897,20 +897,20 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
         }
         for (int i = 0; i < cnt; i++) {
             Item item = getItem(i);
-            if (item instanceof DGroup)
-                writeItem((DGroup) item, pw);
+            if (item instanceof DGroupTool)
+                writeItem((DGroupTool) item, pw);
             else
                 ((ConceptualObject) getItem(i)).write(pw);
         }
         pw.println("</schema>");
     }
 
-    private void writeItem(DGroup dg, java.io.PrintWriter pw) {
+    private void writeItem(DGroupTool dg, java.io.PrintWriter pw) {
         Item item;
         for (int j = 0; j < dg.getItemCount(); j++) {
             item = dg.getItem(j);
-            if (item instanceof DGroup)
-                writeItem((DGroup) item, pw);
+            if (item instanceof DGroupTool)
+                writeItem((DGroupTool) item, pw);
             else
                 ((ConceptualObject) item).write(pw);
         }

@@ -85,8 +85,8 @@ public class ConceptualConstruct extends ConceptualObject {
                 Attribs = new java.util.Vector(3, 2);
             Attribs.addElement(atr);
             cAtr.setPosition(Attribs.size());
-            if (this instanceof Entity && ConceptualConstruct.ACTUAL_NOTATION != ConceptualConstruct.CHEN) {
-                ((Entity) this).recalculatePositionsOfAtributes();
+            if (this instanceof EntityConstruct && ConceptualConstruct.ACTUAL_NOTATION != ConceptualConstruct.CHEN) {
+                ((EntityConstruct) this).recalculatePositionsOfAtributes();
             }
             return atr;
         } catch (Throwable x) {
@@ -171,9 +171,9 @@ public class ConceptualConstruct extends ConceptualObject {
                 if (atr.getOwner() != this) {
                     reconnectAtribute(atr);
                     if (ACTUAL_NOTATION != CHEN) {
-                        if (this instanceof Entity) ((Entity) this).recalculatePositionsOfAtributes();
-                        if (atr.getOwner() instanceof Entity)
-                            ((Entity) atr.getOwner()).recalculatePositionsOfAtributes();
+                        if (this instanceof EntityConstruct) ((EntityConstruct) this).recalculatePositionsOfAtributes();
+                        if (atr.getOwner() instanceof EntityConstruct)
+                            ((EntityConstruct) atr.getOwner()).recalculatePositionsOfAtributes();
                     }
                     event.setDropped(true);
                 }
@@ -194,7 +194,7 @@ public class ConceptualConstruct extends ConceptualObject {
     /**
      * The same handling as by ConnectableWindow but the moving is passed to the manager
      *
-     * @see DGroup#handleExMoveEvent(cz.green.ermodeller.ExMoveEvent)
+     * @see DGroupTool#handleExMoveEvent(cz.green.ermodeller.ExMoveEvent)
      */
     public void handleExMoveEvent(ExMoveEvent event) {
         DropAboveEvent ev = null;
@@ -210,7 +210,7 @@ public class ConceptualConstruct extends ConceptualObject {
             }
         }
         //passed event to the manager
-        ((DGroup) manager).handleExMoveEvent(event);
+        ((DGroupTool) manager).handleExMoveEvent(event);
         //get back the original dx
         paintedFast = false;
         if ((ev != null) && (ev.getDropped())) {
@@ -222,11 +222,11 @@ public class ConceptualConstruct extends ConceptualObject {
     /**
      * The same handling as by ConnectableWindow but the moving is passed to the manager
      *
-     * @see DGroup#handleExMovingEvent(cz.green.ermodeller.ExMovingEvent)
+     * @see DGroupTool#handleExMovingEvent(cz.green.ermodeller.ExMovingEvent)
      */
     public void handleExMovingEvent(ExMovingEvent event) {
         paintedFast = true;
-        ((DGroup) manager).handleExMovingEvent(event);
+        ((DGroupTool) manager).handleExMovingEvent(event);
         if (!event.getMove())
             manager.fallAndHandleEvent(event.getX() + event.getDx(), event.getY() + event.getDy(), new DragOverEvent(event, this));
         else
@@ -236,7 +236,7 @@ public class ConceptualConstruct extends ConceptualObject {
     /**
      * Do all needful fo destoying the conceptual construct, calls inhereted handler and passes the event to the manager.
      *
-     * @see DGroup#handleRemoveEvent(cz.green.event.RemoveEvent)
+     * @see DGroupTool#handleRemoveEvent(cz.green.event.RemoveEvent)
      */
     public void handleRemoveEvent(cz.green.event.RemoveEvent event) {
         removeCardinalities(event);
@@ -248,13 +248,13 @@ public class ConceptualConstruct extends ConceptualObject {
      * Selectes this item and passes the event to the manager.
      *
      * @see cz.green.event.interfaces.PaintableManager#selectItem(cz.green.event.interfaces.SelectableItem , boolean)
-     * @see DGroup#handleSelectItemEvent(cz.green.event.SelectItemEvent)
+     * @see DGroupTool#handleSelectItemEvent(cz.green.event.SelectItemEvent)
      */
     public void handleSelectItemEvent(cz.green.event.SelectItemEvent event) {
         boolean selected = manager.selectItem(this, event.getAddItem());
         event.setSelected(selected);
         if (selected) {
-            ((DGroup) manager).handleSelectItemEvent(event);
+            ((DGroupTool) manager).handleSelectItemEvent(event);
         }
         if (!event.getAddItem()) {
             propEditing(false);
@@ -281,7 +281,7 @@ public class ConceptualConstruct extends ConceptualObject {
      * Reconnects all cardinalities to the new conceptual construct. Used during compacting two entities.
      *
      * @param cc The new participant of the cardinality.
-     * @see Entity#compact(cz.green.ermodeller.Entity, cz.green.event.CoordinateEvent)
+     * @see EntityConstruct#compact(EntityConstruct , cz.green.event.CoordinateEvent)
      */
     protected void reconnectAllCardinalities(ConceptualConstruct cc) {
         Connection c;
@@ -314,7 +314,7 @@ public class ConceptualConstruct extends ConceptualObject {
             ConceptualConstruct ccFrom = atr.getOwner();
             cz.omnicom.ermodeller.conceptual.ConceptualConstruct cCcFrom = (cz.omnicom.ermodeller.conceptual.ConceptualConstruct) (ccFrom.getModel());
             cz.omnicom.ermodeller.conceptual.Atribute cAtr = (cz.omnicom.ermodeller.conceptual.Atribute) (atr.getModel());
-            if (ccFrom instanceof Entity)
+            if (ccFrom instanceof EntityConstruct)
 //			if(((cz.omnicom.ermodeller.conceptual.Entity)((Entity) ccFrom).getModel()).isPrimary())
                 if (((cz.omnicom.ermodeller.conceptual.Atribute) atr.getModel()).isPrimary())
                     atr.setPrimary(false);

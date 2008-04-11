@@ -123,7 +123,7 @@ public class ConceptualObject extends ConnectableWindow implements ViewControlle
      * @param cc The second conceptual construct (first is <code>this</code>).
      * @return The center point between <code>this</code> and <code>cc</code>
      * @see Relation#decompose(cz.green.event.CoordinateEvent)
-     * @see Entity#decompose(cz.green.ermodeller.Entity, cz.green.event.interfaces.Manager)
+     * @see EntityConstruct#decompose(EntityConstruct , cz.green.event.interfaces.Manager)
      */
     protected java.awt.Point getCenter(ConceptualObject co) {
         int[][] r1 = getRect(), r2 = co.getRect();

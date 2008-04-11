@@ -20,8 +20,8 @@ import java.awt.*;
  */
 public class StrongAddiction extends ConceptualObject {
     public static final int SIZE = 6;
-    cz.green.ermodeller.Entity parent;
-    cz.green.ermodeller.Entity child;
+    EntityConstruct parent;
+    EntityConstruct child;
 
     /**
      * StrongAddiction constructor comment.
@@ -35,7 +35,7 @@ public class StrongAddiction extends ConceptualObject {
      * @throws cz.green.event.exceptions.ImpossibleNegativeValueException
      *                                        The exception description.
      */
-    public StrongAddiction(Entity parent, Entity son, Manager manager, int left, int top) throws NullPointerException, ImpossibleNegativeValueException {
+    public StrongAddiction(EntityConstruct parent, EntityConstruct son, Manager manager, int left, int top) throws NullPointerException, ImpossibleNegativeValueException {
         super(manager, left - (SIZE / 2), top - (SIZE / 2), SIZE, SIZE);
         this.parent = parent;
         this.child = son;
@@ -86,7 +86,7 @@ public class StrongAddiction extends ConceptualObject {
      *
      * @param ent Strong addiction Parent.
      */
-    static public StrongAddiction createStrongAddiction(Entity parent, Entity child, Manager man, int left, int top) {
+    static public StrongAddiction createStrongAddiction(EntityConstruct parent, EntityConstruct child, Manager man, int left, int top) {
         try {
             if (ACTUAL_NOTATION == UML)
                 man = parent.getManager();
@@ -119,14 +119,14 @@ public class StrongAddiction extends ConceptualObject {
     /**
      * Get the entity that participation this object represents.
      */
-    public Entity getEntity() {
+    public EntityConstruct getEntity() {
         java.util.Enumeration e = connections.elements();
         while (e.hasMoreElements()) {
             Connection c = ((Connection) e.nextElement());
-            if (c.getOne() instanceof Entity)
-                return (Entity) (c.getOne());
-            if (c.getTwo() instanceof Entity)
-                return (Entity) (c.getTwo());
+            if (c.getOne() instanceof EntityConstruct)
+                return (EntityConstruct) (c.getOne());
+            if (c.getTwo() instanceof EntityConstruct)
+                return (EntityConstruct) (c.getTwo());
         }
         return null;
     }
@@ -166,7 +166,7 @@ public class StrongAddiction extends ConceptualObject {
         if (selected && event.getAdd())
             return;
         Item item = event.getItem();
-        if (item instanceof Entity) {
+        if (item instanceof EntityConstruct) {
             if (event.getAdd()) {
                 if (this.connectionTo(item) == null) {
                     event.getComponent().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -185,10 +185,10 @@ public class StrongAddiction extends ConceptualObject {
         if (selected && event.getAdd())
             return;
         Item item = event.getItem();
-        if (item instanceof Entity) {
+        if (item instanceof EntityConstruct) {
             if (event.getAdd()) {
                 if (this.connectionTo(item) == null) {
-                    reconnectStrongAddictionParent((Entity) item);
+                    reconnectStrongAddictionParent((EntityConstruct) item);
                     event.setDropped(true);
                 }
             }
@@ -511,7 +511,7 @@ public class StrongAddiction extends ConceptualObject {
      *
      * @param ent The removing strong addiction parent.
      */
-    public void reconnectStrongAddictionParent(Entity ent) {
+    public void reconnectStrongAddictionParent(EntityConstruct ent) {
         try {
             cz.omnicom.ermodeller.conceptual.Entity oldParent = (cz.omnicom.ermodeller.conceptual.Entity) getEntity().getModel();
             cz.omnicom.ermodeller.conceptual.Entity newParent = (cz.omnicom.ermodeller.conceptual.Entity) ent.getModel();
@@ -557,11 +557,11 @@ public class StrongAddiction extends ConceptualObject {
         pw.println("\t</strong>");
     }
 
-    public cz.green.ermodeller.Entity getParent() {
+    public EntityConstruct getParent() {
         return parent;
     }
 
-    public cz.green.ermodeller.Entity getChild() {
+    public EntityConstruct getChild() {
         return child;
     }
 }

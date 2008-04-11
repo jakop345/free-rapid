@@ -118,8 +118,8 @@ public class Atribute extends ConceptualObject {
      */
     protected JPopupMenu createMenu(JPopupMenu menu, PopupMenuEvent event) {
         super.createMenu(menu, event);
-        if (getOwner() instanceof Entity) {
-            if (((Entity) cc).ISAParent == null) {
+        if (getOwner() instanceof EntityConstruct) {
+            if (((EntityConstruct) cc).ISAParent == null) {
                 if (model.isPrimary()) {
                     addMenuItem(menu, "Reset Primary", "img/mResetPrimary.gif", this, "setPrimary", Boolean.FALSE, boolean.class);
                 } else {
@@ -167,14 +167,14 @@ public class Atribute extends ConceptualObject {
      * It is used to chnge odrer of atributes in binary and UML notation
      */
     public void moveUp() {
-        if (ACTUAL_NOTATION == BINARY && (getOwner() instanceof Entity) &&
-                getPosition() == ((Entity) cc).PKmembers.size() + 1)
+        if (ACTUAL_NOTATION == BINARY && (getOwner() instanceof EntityConstruct) &&
+                getPosition() == ((EntityConstruct) cc).PKmembers.size() + 1)
             return;
         int actualPosition = getPosition();
         Atribute upperAttr = cc.findAttributeWithPosition(actualPosition - 1);
         upperAttr.setPosition(actualPosition);
         this.setPosition(actualPosition - 1);
-        if (getOwner() instanceof Entity) ((Entity) cc).recalculatePositionsOfAtributes();
+        if (getOwner() instanceof EntityConstruct) ((EntityConstruct) cc).recalculatePositionsOfAtributes();
     }
 
     /**
@@ -183,14 +183,14 @@ public class Atribute extends ConceptualObject {
      * It is used to chnge odrer of atributes in binary and UML notation
      */
     public void moveDown() {
-        if (ACTUAL_NOTATION == BINARY && (getOwner() instanceof Entity) &&
-                getPosition() == ((Entity) cc).PKmembers.size())
+        if (ACTUAL_NOTATION == BINARY && (getOwner() instanceof EntityConstruct) &&
+                getPosition() == ((EntityConstruct) cc).PKmembers.size())
             return;
         int actualPosition = getPosition();
         Atribute upperAttr = cc.findAttributeWithPosition(actualPosition + 1);
         upperAttr.setPosition(actualPosition);
         this.setPosition(actualPosition + 1);
-        if (getOwner() instanceof Entity) ((Entity) cc).recalculatePositionsOfAtributes();
+        if (getOwner() instanceof EntityConstruct) ((EntityConstruct) cc).recalculatePositionsOfAtributes();
     }
 
     /**
@@ -199,9 +199,9 @@ public class Atribute extends ConceptualObject {
      * It is used to chnge odrer of atributes in binary and UML notation
      */
     public void moveTop() {
-        if (ACTUAL_NOTATION == BINARY && (getOwner() instanceof Entity)) {
-            if (getPosition() > ((Entity) cc).PKmembers.size())
-                moveToPosition(((Entity) cc).PKmembers.size() + 1);
+        if (ACTUAL_NOTATION == BINARY && (getOwner() instanceof EntityConstruct)) {
+            if (getPosition() > ((EntityConstruct) cc).PKmembers.size())
+                moveToPosition(((EntityConstruct) cc).PKmembers.size() + 1);
             else moveToPosition(1);
         } else moveToPosition(1);
     }
@@ -212,9 +212,9 @@ public class Atribute extends ConceptualObject {
      * It is used to chnge odrer of atributes in binary and UML notation
      */
     public void moveEnd() {
-        if (ACTUAL_NOTATION == BINARY && (getOwner() instanceof Entity)) {
-            if (getPosition() <= ((Entity) cc).PKmembers.size())
-                moveToPosition(((Entity) cc).PKmembers.size());
+        if (ACTUAL_NOTATION == BINARY && (getOwner() instanceof EntityConstruct)) {
+            if (getPosition() <= ((EntityConstruct) cc).PKmembers.size())
+                moveToPosition(((EntityConstruct) cc).PKmembers.size());
             else moveToPosition(cc.Attribs.size());
         } else moveToPosition(cc.Attribs.size());
     }
@@ -241,7 +241,7 @@ public class Atribute extends ConceptualObject {
             }
 
         this.setPosition(newPosition);
-        if (getOwner() instanceof Entity) ((Entity) cc).recalculatePositionsOfAtributes();
+        if (getOwner() instanceof EntityConstruct) ((EntityConstruct) cc).recalculatePositionsOfAtributes();
     }
 
     /**
@@ -265,7 +265,7 @@ public class Atribute extends ConceptualObject {
      */
     public void createUnique(Atribute atr) {
         int l = rect[0][0], t = rect[1][0];
-        Entity ent = (Entity) atr.getOwner();
+        EntityConstruct ent = (EntityConstruct) atr.getOwner();
         int[][] r = ent.getRect();
         if (l < r[0][0])
             l += 15;
@@ -435,7 +435,7 @@ public class Atribute extends ConceptualObject {
      * Handle remove event - the only one added function is to remove atribute from the model's objects.
      */
     public void handleRemoveEvent(cz.green.event.RemoveEvent event) {
-        if (cc instanceof Entity)
+        if (cc instanceof EntityConstruct)
             if (isPrimary())
                 setPrimary(false);
         moveEnd();
@@ -449,8 +449,8 @@ public class Atribute extends ConceptualObject {
 //	this.setPosition(cc.Attribs.size());
 
         if (ConceptualConstruct.ACTUAL_NOTATION != ConceptualConstruct.CHEN)
-            if (cc instanceof Entity) {
-                Entity ent = (Entity) cc;
+            if (cc instanceof EntityConstruct) {
+                EntityConstruct ent = (EntityConstruct) cc;
                 ent.recalculatePositionsOfAtributes();
                 if (ent.getISAChilds() != null && ent.getISAChilds().size() > 0)
                     ent.moveChilds(new MoveEvent(ent.getBounds().x, ent.getBounds().y, 0, 0, null));
@@ -746,27 +746,27 @@ public class Atribute extends ConceptualObject {
     public void propertyChange(java.beans.PropertyChangeEvent e) {
         ((cz.omnicom.ermodeller.conceptual.ConceptualObject) getModel()).setChanged(true);
         if (e.getPropertyName().equals("dataType")) {
-            if (getOwner() instanceof Entity) {
+            if (getOwner() instanceof EntityConstruct) {
                 cz.green.event.ResizeRectangle rr = new cz.green.event.ResizeRectangle(
                         0, 0, 0, 0, cz.green.event.ResizePoint.BOTTOM
                         | cz.green.event.ResizePoint.RIGHT);
-                ((Entity) getOwner()).resizeEntity(new ResizeEvent(0, 0, 0, 0, rr, null));
+                ((EntityConstruct) getOwner()).resizeEntity(new ResizeEvent(0, 0, 0, 0, rr, null));
                 ((PaintableManager) manager).repaintItem(this);
             }
         }
         if (e.getPropertyName().equals("primary")) {
             if (isPrimary()) {
-                if (!((Entity) getOwner()).PKmembers.contains(this))
-                    ((Entity) getOwner()).PKmembers.addElement(this);
+                if (!((EntityConstruct) getOwner()).PKmembers.contains(this))
+                    ((EntityConstruct) getOwner()).PKmembers.addElement(this);
                 if (ACTUAL_NOTATION == BINARY)
-                    moveToPosition(((Entity) getOwner()).PKmembers.size());
+                    moveToPosition(((EntityConstruct) getOwner()).PKmembers.size());
             } else {
-                ((Entity) getOwner()).PKmembers.removeElement(this);
+                ((EntityConstruct) getOwner()).PKmembers.removeElement(this);
                 if (ACTUAL_NOTATION == BINARY)
-                    moveToPosition(((Entity) getOwner()).PKmembers.size() + 1);
+                    moveToPosition(((EntityConstruct) getOwner()).PKmembers.size() + 1);
             }
             if (ConceptualConstruct.ACTUAL_NOTATION != ConceptualConstruct.CHEN)
-                ((Entity) getOwner()).recalculatePositionsOfAtributes();
+                ((EntityConstruct) getOwner()).recalculatePositionsOfAtributes();
 
         }
         if (e.getPropertyName().equals("name")) {
@@ -786,11 +786,11 @@ public class Atribute extends ConceptualObject {
             b = b.union(getBounds());
             ((PaintableManager) manager).repaintRectangle(b.x, b.y, b.width, b.height);
             if (ACTUAL_NOTATION == UML || ACTUAL_NOTATION == BINARY) {
-                if (getOwner() instanceof Entity) {
+                if (getOwner() instanceof EntityConstruct) {
                     cz.green.event.ResizeRectangle rr = new cz.green.event.ResizeRectangle(
                             0, 0, 0, 0, cz.green.event.ResizePoint.BOTTOM
                             | cz.green.event.ResizePoint.RIGHT);
-                    ((Entity) getOwner()).resizeEntity(new ResizeEvent(0, 0, 0, 0, rr, null));
+                    ((EntityConstruct) getOwner()).resizeEntity(new ResizeEvent(0, 0, 0, 0, rr, null));
                 }
             }
         } else {
