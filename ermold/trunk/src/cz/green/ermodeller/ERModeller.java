@@ -1132,7 +1132,7 @@ public class ERModeller extends JFrame implements
             if (s == null)
                 s = "composed";
             prefix = s + "_";
-            schemaID = id + (new Integer(erdoc.getValue("id"))).intValue();
+            schemaID = id + new Integer(erdoc.getValue("id"));
             if (erdoc.getValue("notation") != null) {
                 notation = (Integer.parseInt(erdoc.getValue("notation")));
                 switch (notation) {
@@ -1149,13 +1149,13 @@ public class ERModeller extends JFrame implements
             }
             if (erdoc.setElements("entity"))
                 do {
-                    t = tt + (new Integer(erdoc.getValue("top"))).intValue();
-                    l = ll + (new Integer(erdoc.getValue("left"))).intValue();
-                    w = (new Integer(erdoc.getValue("width"))).intValue();
-                    h = (new Integer(erdoc.getValue("height"))).intValue();
+                    t = tt + new Integer(erdoc.getValue("top"));
+                    l = ll + new Integer(erdoc.getValue("left"));
+                    w = new Integer(erdoc.getValue("width"));
+                    h = new Integer(erdoc.getValue("height"));
                     ent = d.createEntity(l, t, w, h, null);
                     ent.setID(id
-                            + (new Integer(erdoc.getValue("id"))).intValue());
+                            + new Integer(erdoc.getValue("id")));
                     entM = (cz.omnicom.ermodeller.conceptual.Entity) ent
                             .getModel();
                     s = erdoc.getValue("name");
@@ -1188,7 +1188,7 @@ public class ERModeller extends JFrame implements
                     h = new Integer(erdoc.getValue("height"));
                     rel = d.createRelation(l, t, w, h);
                     rel.setID(id
-                            + (new Integer(erdoc.getValue("id"))).intValue());
+                            + new Integer(erdoc.getValue("id")));
                     coM = (RelationBean) rel
                             .getModel();
                     s = erdoc.getValue("name");
@@ -1203,17 +1203,17 @@ public class ERModeller extends JFrame implements
 
             if (erdoc.setElements("atribute"))
                 do {
-                    t = tt + (new Integer(erdoc.getValue("top"))).intValue();
-                    l = ll + (new Integer(erdoc.getValue("left"))).intValue();
+                    t = tt + new Integer(erdoc.getValue("top"));
+                    l = ll + new Integer(erdoc.getValue("left"));
                     s = erdoc.getValue("ent");
                     if (s == null) {
                         s = erdoc.getValue("rel");
-                        cc = d.getRelation(id + (new Integer(s)).intValue());
+                        cc = d.getRelation(id + new Integer(s));
                     } else
-                        cc = d.getEntity(id + (new Integer(s)).intValue());
+                        cc = d.getEntity(id + new Integer(s));
                     atr = cc.createAtribute(l, t);
                     atr.setID(id
-                            + (new Integer(erdoc.getValue("id"))).intValue());
+                            + new Integer(erdoc.getValue("id")));
                     atrM = (cz.omnicom.ermodeller.conceptual.Atribute) atr
                             .getModel();
                     attrs.addElement(atr.getModel());
@@ -1230,25 +1230,25 @@ public class ERModeller extends JFrame implements
                     dt = extractDataType(s);
                     atrM.setDataType(dt);
                     atrM.setArbitrary(
-                            (Boolean.valueOf(erdoc.getValue("arbitrary"))).booleanValue());
+                            Boolean.valueOf(erdoc.getValue("arbitrary")));
                     atrM.setPrimary(
-                            (Boolean.valueOf(erdoc.getValue("primary"))).booleanValue());
+                            Boolean.valueOf(erdoc.getValue("primary")));
                     atrM.setUnique(
-                            (Boolean.valueOf(erdoc.getValue("uniq"))).booleanValue());
-                    attrsPos.addElement((new Integer(erdoc.getValue("position"))).intValue());
+                            Boolean.valueOf(erdoc.getValue("uniq")));
+                    attrsPos.addElement(new Integer(erdoc.getValue("position")));
                 } while (erdoc.next());
 
             if (erdoc.setElements("cardinality"))
                 do {
-                    t = tt + (new Integer(erdoc.getValue("top"))).intValue();
-                    l = ll + (new Integer(erdoc.getValue("left"))).intValue();
+                    t = tt + new Integer(erdoc.getValue("top"));
+                    l = ll + new Integer(erdoc.getValue("left"));
                     ent = d.getEntity(id
-                            + (new Integer(erdoc.getValue("ent"))).intValue());
+                            + new Integer(erdoc.getValue("ent")));
                     rel = d.getRelation(id
-                            + (new Integer(erdoc.getValue("rel"))).intValue());
+                            + new Integer(erdoc.getValue("rel")));
                     car = rel.createCardinality(ent, d, l, t);
                     car.setID(id
-                            + (new Integer(erdoc.getValue("id"))).intValue());
+                            + new Integer(erdoc.getValue("id")));
                     carM = (cz.omnicom.ermodeller.conceptual.Cardinality) car
                             .getModel();
                     s = erdoc.getValue("name");
@@ -1260,24 +1260,24 @@ public class ERModeller extends JFrame implements
                         s = "";
                     carM.setComment(s);
                     s = erdoc.getValue("arbitrary");
-                    carM.setArbitrary(Boolean.valueOf(s).booleanValue());
+                    carM.setArbitrary(Boolean.valueOf(s));
                     s = erdoc.getValue("multi");
-                    carM.setMultiCardinality(Boolean.valueOf(s).booleanValue());
+                    carM.setMultiCardinality(Boolean.valueOf(s));
                     s = erdoc.getValue("glue");
-                    carM.setGlue(Boolean.valueOf(s).booleanValue());
+                    carM.setGlue(Boolean.valueOf(s));
                 } while (erdoc.next());
 
             if (erdoc.setElements("unique"))
                 do {
-                    t = tt + (new Integer(erdoc.getValue("top"))).intValue();
-                    l = ll + (new Integer(erdoc.getValue("left"))).intValue();
+                    t = tt + new Integer(erdoc.getValue("top"));
+                    l = ll + new Integer(erdoc.getValue("left"));
                     ent = d.getEntity(id
-                            + (new Integer(erdoc.getValue("ent"))).intValue());
+                            + new Integer(erdoc.getValue("ent")));
                     ccM = (cz.omnicom.ermodeller.conceptual.Entity) ent
                             .getModel();
                     uni = ent.createUniqueKey(l, t);
                     uni.setID(id
-                            + (new Integer(erdoc.getValue("id"))).intValue());
+                            + new Integer(erdoc.getValue("id")));
                     uniM = (cz.omnicom.ermodeller.conceptual.UniqueKey) uni
                             .getModel();
                     s = erdoc.getValue("name");
@@ -1290,20 +1290,20 @@ public class ERModeller extends JFrame implements
                     uniM.setComment(s);
                     erdoc.setNode("atr");
                     while ((s = erdoc.getNextValue()) != null) {
-                        atr = d.getAtribute(id + (new Integer(s)).intValue());
+                        atr = d.getAtribute(id + new Integer(s));
                         uni.addAtribute(atr);
                     }
-                    if (Boolean.valueOf(erdoc.getValue("primary")).booleanValue())
+                    if (Boolean.valueOf(erdoc.getValue("primary")))
                         uni.setPrimary();
                 } while (erdoc.next());
 
             if (erdoc.setElements("strong"))
                 do {
-                    t = tt + (new Integer(erdoc.getValue("top"))).intValue();
-                    l = ll + (new Integer(erdoc.getValue("left"))).intValue();
-                    i = id + (new Integer(erdoc.getValue("ent"))).intValue();
+                    t = tt + new Integer(erdoc.getValue("top"));
+                    l = ll + new Integer(erdoc.getValue("left"));
+                    i = id + new Integer(erdoc.getValue("ent"));
                     int j = id
-                            + (new Integer(erdoc.getValue("child"))).intValue();
+                            + new Integer(erdoc.getValue("child"));
                     ent = d.getEntity(i);
                     child = (EntityConstruct) d.getConceptualObject(j);
                     StrongAddiction.createStrongAddiction(ent, child, child.getManager(), l, t);
@@ -1571,8 +1571,7 @@ public class ERModeller extends JFrame implements
         if (evt.getPropertyName().equals("scale")) {
             setChanged(true);
             getScale().setSelectedItem(
-                    new Integer((int) (100 / ((Float) evt.getNewValue())
-                            .floatValue())).toString());
+                    new Integer((int) (100 / (Float) evt.getNewValue())).toString());
             setScaleAction();
         }
         if (evt.getPropertyName().equals("workMode")) {

@@ -130,12 +130,12 @@ public class GeneralNumberDataTypePanel3 extends GeneralNumberDataTypePanel {
                     }
                     //((UserTypesEditorPanel)getDataTypeEditor()).getEditor().setActualType(ivjGeneralNumberDataType);
                 } else {
-                    in = new Integer(getGeneralNumberDataType().getPrecision());
+                    in = getGeneralNumberDataType().getPrecision();
                     getPrecisionTextField().setText(in.toString());
                 }
             }
             catch (Exception ex) {
-                in = new Integer(getGeneralNumberDataType().getPrecision());
+                in = getGeneralNumberDataType().getPrecision();
                 getPrecisionTextField().setText(in.toString());
             }
         if (e.getSource() == ivjScaleTextField)
@@ -149,12 +149,12 @@ public class GeneralNumberDataTypePanel3 extends GeneralNumberDataTypePanel {
                     }
                     //((UserTypesEditorPanel)getDataTypeEditor()).getEditor().setActualType(ivjGeneralNumberDataType);
                 } else {
-                    in = new Integer(getGeneralNumberDataType().getScale());
+                    in = getGeneralNumberDataType().getScale();
                     getScaleTextField().setText(in.toString());
                 }
             }
             catch (Exception ex) {
-                in = new Integer(getGeneralNumberDataType().getScale());
+                in = getGeneralNumberDataType().getScale();
                 getScaleTextField().setText(in.toString());
             }
     }

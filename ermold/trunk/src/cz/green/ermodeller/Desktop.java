@@ -829,7 +829,7 @@ public class Desktop extends DesktopTool implements FontManager,
     public float setScale(float scale) {
         float old = getScale();
         float ret = super.setScale(scale);
-        pcs.firePropertyChange("scale", new Float(old), new Float(scale));
+        pcs.firePropertyChange("scale", old, scale);
         return ret;
     }
 

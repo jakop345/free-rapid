@@ -152,7 +152,7 @@ public class GeneralNumberDataType extends DataType {
             oldValue = getPrecision();
             fieldPrecision = precision;
         }
-        firePropertyChange(PRECISION_PROPERTY_CHANGE, new Integer(oldValue), new Integer(precision));
+        firePropertyChange(PRECISION_PROPERTY_CHANGE, oldValue, precision);
     }
 
     /**
@@ -170,7 +170,7 @@ public class GeneralNumberDataType extends DataType {
             oldValue = fieldScale;
             fieldScale = scale;
         }
-        firePropertyChange(SCALE_PROPERTY_CHANGE, new Integer(oldValue), new Integer(scale));
+        firePropertyChange(SCALE_PROPERTY_CHANGE, oldValue, scale);
     }
 
     /**

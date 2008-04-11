@@ -580,12 +580,12 @@ public class VarrayDataTypePanel2 extends DataTypePanel implements FocusListener
                 getVarrayDataType().setLength(i);
                 ((UserTypesEditorPanel) getDataTypeEditor()).getEditor().setActualType(ivjVarrayDataType);
             } else {
-                in = new Integer(getVarrayDataType().getLength());
+                in = getVarrayDataType().getLength();
                 getLengthTextField().setText(in.toString());
             }
         }
         catch (Exception ex) {
-            in = new Integer(getVarrayDataType().getLength());
+            in = getVarrayDataType().getLength();
             getLengthTextField().setText(in.toString());
         }
     }

@@ -927,12 +927,12 @@ public class GeneralNumberDataTypePanel extends DataTypePanel implements FocusLi
                     getGeneralNumberDataType().setPrecision(i);
                     ((DataTypeEditor) getDataTypeEditor()).setValue(ivjGeneralNumberDataType);
                 } else {
-                    in = new Integer(getGeneralNumberDataType().getPrecision());
+                    in = getGeneralNumberDataType().getPrecision();
                     getPrecisionTextField().setText(in.toString());
                 }
             }
             catch (Exception ex) {
-                in = new Integer(getGeneralNumberDataType().getPrecision());
+                in = getGeneralNumberDataType().getPrecision();
                 getPrecisionTextField().setText(in.toString());
             }
         if (e.getSource() == ivjScaleTextField)
@@ -943,12 +943,12 @@ public class GeneralNumberDataTypePanel extends DataTypePanel implements FocusLi
                     getGeneralNumberDataType().setScale(i);
                     ((DataTypeEditor) getDataTypeEditor()).setValue(ivjGeneralNumberDataType);
                 } else {
-                    in = new Integer(getGeneralNumberDataType().getScale());
+                    in = getGeneralNumberDataType().getScale();
                     getScaleTextField().setText(in.toString());
                 }
             }
             catch (Exception ex) {
-                in = new Integer(getGeneralNumberDataType().getScale());
+                in = getGeneralNumberDataType().getScale();
                 getScaleTextField().setText(in.toString());
             }
     }

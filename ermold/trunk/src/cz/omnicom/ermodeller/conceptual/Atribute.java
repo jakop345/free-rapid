@@ -157,7 +157,7 @@ public class Atribute extends ConceptualObject {
         boolean oldValue = fieldArbitrary;
         if (isPrimary() && !arbitrary) throw new IsMemberOfPrimaryKeyException(this);
         fieldArbitrary = arbitrary;
-        firePropertyChange(ARBITRARY_PROPERTY_CHANGE, Boolean.valueOf(oldValue), Boolean.valueOf(arbitrary));
+        firePropertyChange(ARBITRARY_PROPERTY_CHANGE, oldValue, arbitrary);
     }
 
     /*
@@ -223,7 +223,7 @@ public class Atribute extends ConceptualObject {
             if (getConstruct() instanceof Entity)
                 ((Entity) getConstruct()).removeMemberOfPrimaryKey(this);
         }
-        firePropertyChange(PRIMARY_PROPERTY_CHANGE, Boolean.valueOf(oldValue), Boolean.valueOf(primary));
+        firePropertyChange(PRIMARY_PROPERTY_CHANGE, oldValue, primary);
     }
 
     /**
@@ -233,7 +233,7 @@ public class Atribute extends ConceptualObject {
         boolean oldValue = fieldUnique;
 //	if(isPrimary() && !unique) throw new IsMemberOfPrimaryKeyException(this);
         this.fieldUnique = unique;
-        firePropertyChange(UNIQUE_PROPERTY_CHANGE, Boolean.valueOf(oldValue), Boolean.valueOf(unique));
+        firePropertyChange(UNIQUE_PROPERTY_CHANGE, oldValue, unique);
     }
 
     /**
@@ -242,7 +242,7 @@ public class Atribute extends ConceptualObject {
     public void setPosition(int position) {
         int oldValue = fieldPosition;
         this.fieldPosition = position;
-        firePropertyChange(POSITION_PROPERTY_CHANGE, new Integer(oldValue), new Integer(position));
+        firePropertyChange(POSITION_PROPERTY_CHANGE, oldValue, position);
     }
 
     protected synchronized ErrorLogList valid() throws CheckNameDuplicityValidationException {

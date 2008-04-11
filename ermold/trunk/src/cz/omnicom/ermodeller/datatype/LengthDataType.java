@@ -95,7 +95,7 @@ public class LengthDataType extends DataType implements Serializable {
             oldValue = getLength();
             fieldLength = length;
         }
-        firePropertyChange(LENGTH_PROPERTY_CHANGE, new Integer(oldValue), new Integer(length));
+        firePropertyChange(LENGTH_PROPERTY_CHANGE, oldValue, length);
     }
 
     /**

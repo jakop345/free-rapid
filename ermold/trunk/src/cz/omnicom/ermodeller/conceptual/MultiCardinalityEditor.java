@@ -38,7 +38,7 @@ public class MultiCardinalityEditor extends PropertyEditorSupport {
     public String getAsText() {
         Object v = getValue();
         if (v instanceof Boolean) {
-            if (((Boolean) v).booleanValue())
+            if ((Boolean) v)
                 return tags[0];
             else
                 return tags[1];
@@ -73,7 +73,7 @@ public class MultiCardinalityEditor extends PropertyEditorSupport {
 
             } else {
                 if (text.equals(tags[1])) {
-                    if (((Boolean) v).booleanValue()) {
+                    if ((Boolean) v) {
                         setValue(Boolean.FALSE);
                     }
                 } else

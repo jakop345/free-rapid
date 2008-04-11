@@ -54,7 +54,7 @@ public class AtributeNameC2R extends NameC2R {
      */
     protected void addAllSubNumbers(AtributeNameC2R anAtributeNameC2R) {
         for (Enumeration elements = anAtributeNameC2R.getSubNumbers().elements(); elements.hasMoreElements();) {
-            this.addSubNumber(((Integer) elements.nextElement()).intValue());
+            this.addSubNumber((Integer) elements.nextElement());
         }
     }
 
@@ -74,7 +74,7 @@ public class AtributeNameC2R extends NameC2R {
      * @param aSubNumber int
      */
     public void addSubNumber(int aSubNumber) {
-        getSubNumbers().addElement(new Integer(aSubNumber));
+        getSubNumbers().addElement(aSubNumber);
     }
 
     /**

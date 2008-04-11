@@ -45,7 +45,7 @@ public class VarrayDataType extends DataType implements PropertyChangeListener {
             oldValue = getLength();
             length = aLength;
         }
-        firePropertyChange(LENGTH_PROPERTY_CHANGE, new Integer(oldValue), new Integer(aLength));
+        firePropertyChange(LENGTH_PROPERTY_CHANGE, oldValue, aLength);
     }
 
     public int getLength() {

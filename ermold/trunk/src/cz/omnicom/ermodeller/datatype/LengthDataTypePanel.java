@@ -582,12 +582,12 @@ public class LengthDataTypePanel extends DataTypePanel implements FocusListener,
                 getLengthDataType().setLength(i);
                 ((DataTypeEditor) getDataTypeEditor()).setValue(ivjLengthDataType);
             } else {
-                in = new Integer(getLengthDataType().getLength());
+                in = getLengthDataType().getLength();
                 getLengthTextField().setText(in.toString());
             }
         }
         catch (Exception ex) {
-            in = new Integer(getLengthDataType().getLength());
+            in = getLengthDataType().getLength();
             getLengthTextField().setText(in.toString());
         }
     }

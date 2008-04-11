@@ -44,7 +44,7 @@ public class BooleanEditor extends PropertyEditorSupport {
     public String getAsText() {
         Object v = getValue();
         if (v instanceof Boolean) {
-            if (((Boolean) v).booleanValue())
+            if ((Boolean) v)
                 return tags[0];
             else
                 return tags[1];
@@ -93,13 +93,13 @@ public class BooleanEditor extends PropertyEditorSupport {
         if (v instanceof Boolean) {
 
             if (text.equals(tags[0])) {
-                if (!((Boolean) v).booleanValue()) {
+                if (!(Boolean) v) {
                     setValue(Boolean.TRUE);
                 }
 
             } else {
                 if (text.equals(tags[1])) {
-                    if (((Boolean) v).booleanValue()) {
+                    if ((Boolean) v) {
                         setValue(Boolean.FALSE);
                     }
                 } else

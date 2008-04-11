@@ -85,12 +85,12 @@ public class LengthDataTypePanel2 extends LengthDataTypePanel {
                 getLengthDataType().setLength(i);
                 ((UserTypesEditorPanel) getDataTypeEditor()).getEditor().setActualType(ivjLengthDataType);
             } else {
-                in = new Integer(getLengthDataType().getLength());
+                in = getLengthDataType().getLength();
                 getLengthTextField().setText(in.toString());
             }
         }
         catch (Exception ex) {
-            in = new Integer(getLengthDataType().getLength());
+            in = getLengthDataType().getLength();
             getLengthTextField().setText(in.toString());
         }
     }

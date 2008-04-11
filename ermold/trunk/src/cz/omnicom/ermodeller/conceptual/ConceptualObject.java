@@ -506,7 +506,7 @@ public abstract class ConceptualObject implements Serializable, ShowErrorListene
                     found = (allowed[j] == nameArr[i]);
                 }
                 if (!found)
-                    notAllowed.addElement(new Character(nameArr[i]));
+                    notAllowed.addElement(nameArr[i]);
             }
             if (!notAllowed.isEmpty()) {
                 ValidationError error = new BadCharacterInNameValidationError(this, notAllowed);
