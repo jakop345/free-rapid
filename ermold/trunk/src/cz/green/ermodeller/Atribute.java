@@ -121,23 +121,23 @@ public class Atribute extends ConceptualObject {
         if (getOwner() instanceof Entity) {
             if (((Entity) cc).ISAParent == null) {
                 if (model.isPrimary()) {
-                    addMenuItem(menu, "Reset Primary", "img/mResetPrimary.gif", this, "setPrimary", new Boolean(false), boolean.class);
+                    addMenuItem(menu, "Reset Primary", "img/mResetPrimary.gif", this, "setPrimary", Boolean.FALSE, boolean.class);
                 } else {
-                    addMenuItem(menu, "Set Primary", "img/mSetPrimary.gif", this, "setPrimary", new Boolean(true), boolean.class);
+                    addMenuItem(menu, "Set Primary", "img/mSetPrimary.gif", this, "setPrimary", Boolean.TRUE, boolean.class);
                 }
             }
             if (model.isUnique() && !model.isPrimary()) {
-                addMenuItem(menu, "Reset Unique", "img/mResetUnique.gif", getModel(), "setUnique", new Boolean(false), boolean.class);
+                addMenuItem(menu, "Reset Unique", "img/mResetUnique.gif", getModel(), "setUnique", Boolean.FALSE, boolean.class);
             } else {
                 if (!model.isPrimary())
-                    addMenuItem(menu, "Set Unique", "img/mSetUnique.gif", getModel(), "setUnique", new Boolean(true), boolean.class);
+                    addMenuItem(menu, "Set Unique", "img/mSetUnique.gif", getModel(), "setUnique", Boolean.TRUE, boolean.class);
             }
         }
         if (!model.isPrimary()) {
             if (model.getArbitrary()) {
-                addMenuItem(menu, "Optional", "img/mNotMandatory.gif", getModel(), "setArbitrary", new Boolean(false), boolean.class);
+                addMenuItem(menu, "Optional", "img/mNotMandatory.gif", getModel(), "setArbitrary", Boolean.FALSE, boolean.class);
             } else {
-                addMenuItem(menu, "Mandatory", "img/mMandatory.gif", getModel(), "setArbitrary", new Boolean(true), boolean.class);
+                addMenuItem(menu, "Mandatory", "img/mMandatory.gif", getModel(), "setArbitrary", Boolean.TRUE, boolean.class);
             }
         }
 /*PŠif (isInUniqueKey())

@@ -14,7 +14,7 @@ public class NestedTableStorageObj extends RowObj {
      * @see cz.omnicom.ermodeller.conc2rela.AtributeC2R
      */
     private String atribute = null;
-    private String entityName;
+    private final String entityName;
     /**
      * tells whether nested table storage clause is being created from
      * atribute of nested table data type or from atribute of object data type

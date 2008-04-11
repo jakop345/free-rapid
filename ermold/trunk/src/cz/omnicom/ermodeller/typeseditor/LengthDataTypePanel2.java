@@ -12,7 +12,7 @@ import java.awt.event.ComponentEvent;
  */
 public class LengthDataTypePanel2 extends LengthDataTypePanel {
 
-    ActionListener al = new ActionListener() {
+    final ActionListener al = new ActionListener() {
         public void actionPerformed(ActionEvent ae) {
             ivjLengthDataType = (LengthDataType) getLengthDataType().clone();
 
@@ -79,7 +79,7 @@ public class LengthDataTypePanel2 extends LengthDataTypePanel {
         Integer in;
 
         try {
-            i = new Integer(getLengthTextField().getText()).intValue();
+            i = Integer.parseInt(getLengthTextField().getText());
             if (getLengthDataType().evaluateLength(i)) {
                 ivjLengthDataType = (LengthDataType) getLengthDataType().clone();
                 getLengthDataType().setLength(i);

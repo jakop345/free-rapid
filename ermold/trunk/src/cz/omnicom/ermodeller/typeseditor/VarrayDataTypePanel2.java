@@ -574,7 +574,7 @@ public class VarrayDataTypePanel2 extends DataTypePanel implements FocusListener
         Integer in;
 
         try {
-            i = new Integer(getLengthTextField().getText()).intValue();
+            i = Integer.parseInt(getLengthTextField().getText());
             if (getVarrayDataType().evaluateLength(i)) {
                 ivjVarrayDataType = (VarrayDataType) getVarrayDataType();//.clone();
                 getVarrayDataType().setLength(i);

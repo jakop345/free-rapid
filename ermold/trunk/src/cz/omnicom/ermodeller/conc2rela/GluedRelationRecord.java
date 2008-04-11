@@ -13,15 +13,15 @@ public class GluedRelationRecord {
     /**
      * Atributes added as foreign atributes to skelet relation.
      */
-    private Vector gluedAtributesC2R = new Vector();
+    private final Vector gluedAtributesC2R = new Vector();
     /**
      * Was relation glued.
      */
-    private boolean glued;
+    private final boolean glued;
     /**
      * Was glued (1,1) or (0,1)
      */
-    private boolean arbitraryCardinality;
+    private final boolean arbitraryCardinality;
 
     /**
      * constructor.

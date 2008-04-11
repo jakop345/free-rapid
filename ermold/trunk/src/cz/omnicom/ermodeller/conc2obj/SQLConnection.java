@@ -35,10 +35,10 @@ public class SQLConnection implements Serializable {
      */
     public SQLConnection(String aDriver, String aURL, String aUser, String aPasswd) {
         super();
-        driver = new String(aDriver);
-        url = new String(aURL);
-        user = new String(aUser);
-        passwd = new String(aPasswd);
+        driver = aDriver;
+        url = aURL;
+        user = aUser;
+        passwd = aPasswd;
         log = new LogSQLObj();
         //log.pack();
         log.setVisible(false);

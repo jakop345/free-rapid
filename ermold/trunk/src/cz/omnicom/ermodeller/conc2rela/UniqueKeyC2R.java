@@ -19,7 +19,7 @@ public class UniqueKeyC2R extends ElementOfRelationC2R implements SQLConstraintP
      *
      * @see cz.omnicom.ermodeller.conc2rela.AtributeC2R
      */
-    private Vector atributesC2R = new Vector();
+    private final Vector atributesC2R = new Vector();
     /**
      * Corresponding conceptual unique key.
      *

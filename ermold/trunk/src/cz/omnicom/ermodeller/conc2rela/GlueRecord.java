@@ -20,11 +20,11 @@ public class GlueRecord implements CheckRowProducer {
     /**
      * Glued relations records.
      */
-    private Vector gluedRelationsC2R = new Vector();
+    private final Vector gluedRelationsC2R = new Vector();
     /**
      * Not glued relations records.
      */
-    private Vector notGluedRelationsC2R = new Vector();
+    private final Vector notGluedRelationsC2R = new Vector();
 
     /**
      * Constructor.

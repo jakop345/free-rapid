@@ -20,20 +20,20 @@ public class ChangeNotationDialog extends JDialog implements java.awt.event.Acti
      * @see cz.omnicom.ermodeller.datatype.DataTypePanel
      */
     private JTextArea DescriptionTA = null;
-    private cz.omnicom.ermodeller.conceptual.Entity Cent = null;
-    JButton OKbutton = new JButton();
-    JButton CancelButton = new JButton();
-    JLabel DecomposeLabel = new JLabel();
-    JLabel DecomposeLabel2 = new JLabel();
-    JLabel DeleteLabel = new JLabel();
-    JList AtrRList = new JList();
-    JList DelRList = new JList();
-    JLabel ChangeLabel = new JLabel();
+    private final cz.omnicom.ermodeller.conceptual.Entity Cent = null;
+    final JButton OKbutton = new JButton();
+    final JButton CancelButton = new JButton();
+    final JLabel DecomposeLabel = new JLabel();
+    final JLabel DecomposeLabel2 = new JLabel();
+    final JLabel DeleteLabel = new JLabel();
+    final JList AtrRList = new JList();
+    final JList DelRList = new JList();
+    final JLabel ChangeLabel = new JLabel();
     JLabel ChangeFromLabel = new JLabel();
-    JLabel ChangeToLabel = new JLabel();
-    JList TernaryRList = new JList();
-    ERModeller Erm;
-    private int NextNotation;
+    final JLabel ChangeToLabel = new JLabel();
+    final JList TernaryRList = new JList();
+    final ERModeller Erm;
+    private final int NextNotation;
     private static final int NextPosition = 0;
 
     /**

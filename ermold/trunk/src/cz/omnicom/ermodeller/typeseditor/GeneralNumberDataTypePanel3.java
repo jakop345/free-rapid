@@ -15,7 +15,7 @@ import java.beans.PropertyChangeSupport;
  */
 public class GeneralNumberDataTypePanel3 extends GeneralNumberDataTypePanel {
 
-    public static String TYPE_CHANGED = "number_type_changed";
+    public static final String TYPE_CHANGED = "number_type_changed";
     PropertyChangeSupport propertyChange = null;
 
     public PropertyChangeSupport getPropertyChange() {
@@ -28,7 +28,7 @@ public class GeneralNumberDataTypePanel3 extends GeneralNumberDataTypePanel {
         getPropertyChange().addPropertyChangeListener(listener);
     }
 
-    ActionListener al = new ActionListener() {
+    final ActionListener al = new ActionListener() {
         public void actionPerformed(ActionEvent ae) {
             ivjGeneralNumberDataType = (GeneralNumberDataType) getGeneralNumberDataType().clone();
 
@@ -121,7 +121,7 @@ public class GeneralNumberDataTypePanel3 extends GeneralNumberDataTypePanel {
 
         if (e.getSource() == ivjPrecisionTextField)
             try {
-                i = new Integer(getPrecisionTextField().getText()).intValue();
+                i = Integer.parseInt(getPrecisionTextField().getText());
                 if (getGeneralNumberDataType().evaluatePrecision(i)) {
                     ivjGeneralNumberDataType = (GeneralNumberDataType) getGeneralNumberDataType().clone();
                     if (ivjGeneralNumberDataType.getPrecision() != i) {
@@ -140,7 +140,7 @@ public class GeneralNumberDataTypePanel3 extends GeneralNumberDataTypePanel {
             }
         if (e.getSource() == ivjScaleTextField)
             try {
-                i = new Integer(getScaleTextField().getText()).intValue();
+                i = Integer.parseInt(getScaleTextField().getText());
                 if (getGeneralNumberDataType().evaluateScale(i)) {
                     ivjGeneralNumberDataType = (GeneralNumberDataType) getGeneralNumberDataType().clone();
                     if (ivjGeneralNumberDataType.getScale() != i) {

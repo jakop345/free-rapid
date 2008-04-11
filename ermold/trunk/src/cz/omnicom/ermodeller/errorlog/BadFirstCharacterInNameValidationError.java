@@ -9,7 +9,7 @@ public class BadFirstCharacterInNameValidationError extends ConceptualObjectVali
     /**
      * found bad characters.
      */
-    char badFirstChar;
+    final char badFirstChar;
 
     /**
      * BadCharacterInNameValidationError constructor comment.

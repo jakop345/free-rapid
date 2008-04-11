@@ -455,7 +455,7 @@ public class Relation extends ConceptualConstruct {
             return;
         Item item = event.getItem();
         if (item instanceof Entity) {
-            String name = new String();
+            String name = "";
             if (ACTUAL_NOTATION != ConceptualConstruct.CHEN) {
                 java.util.Enumeration e = getConnections().elements();
                 Cardinality car1;

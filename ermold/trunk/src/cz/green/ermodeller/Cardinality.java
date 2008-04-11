@@ -81,14 +81,14 @@ public class Cardinality extends ConceptualObject {
     protected JPopupMenu createMenu(JPopupMenu menu, PopupMenuEvent event) {
         super.createMenu(menu, event);
         if (model.getArbitrary()) {
-            addMenuItem(menu, "Optional", "img/mNotMandatory.gif", getModel(), "setArbitrary", new Boolean(false), boolean.class);
+            addMenuItem(menu, "Optional", "img/mNotMandatory.gif", getModel(), "setArbitrary", Boolean.FALSE, boolean.class);
         } else {
-            addMenuItem(menu, "Mandatory", "img/mMandatory.gif", getModel(), "setArbitrary", new Boolean(true), boolean.class);
+            addMenuItem(menu, "Mandatory", "img/mMandatory.gif", getModel(), "setArbitrary", Boolean.TRUE, boolean.class);
         }
         if (model.getMultiCardinality()) {
-            addMenuItem(menu, "Unary cardinality", "img/mUnary.gif", getModel(), "setMultiCardinality", new Boolean(false), boolean.class);
+            addMenuItem(menu, "Unary cardinality", "img/mUnary.gif", getModel(), "setMultiCardinality", Boolean.FALSE, boolean.class);
         } else {
-            addMenuItem(menu, "N-ary cardinality", "img/mMulti.gif", getModel(), "setMultiCardinality", new Boolean(true), boolean.class);
+            addMenuItem(menu, "N-ary cardinality", "img/mMulti.gif", getModel(), "setMultiCardinality", Boolean.TRUE, boolean.class);
         }
         return menu;
     }

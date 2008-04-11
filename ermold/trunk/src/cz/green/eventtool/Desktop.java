@@ -1,10 +1,10 @@
 package cz.green.eventtool;
 
-import cz.green.event.interfaces.Item;
-import cz.green.event.interfaces.PaintableManager;
-import cz.green.event.exceptions.ValueOutOfRangeException;
 import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.exceptions.ItemNotInsideManagerException;
+import cz.green.event.exceptions.ValueOutOfRangeException;
+import cz.green.event.interfaces.Item;
+import cz.green.event.interfaces.PaintableManager;
 
 /**
  * This class has the same functionality as predecessor. Adds only one methods, which is caused by implementing the
@@ -21,7 +21,7 @@ public class Desktop extends cz.green.event.Desktop implements ConnectionManager
      *
      * @see cz.green.event.Desktop#Desktop(cz.green.event.Container, int, int, int, int)
      */
-    public Desktop(cz.green.event.Container place, int left, int top, int width, int height) throws ImpossibleNegativeValueException {
+    public Desktop(cz.green.event.Container place, int left, int top, int width, int height) {
         super(place, left, top, width, height);
     }
 

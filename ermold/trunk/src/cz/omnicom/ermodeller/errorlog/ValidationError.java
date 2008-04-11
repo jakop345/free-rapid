@@ -88,7 +88,7 @@ public abstract class ValidationError implements TreeSelectionListener {
          *
          * @see cz.omnicom.ermodeller.conceptual.ConceptualObject
          */
-        private ConceptualObject conceptualObject;
+        private final ConceptualObject conceptualObject;
 
         /**
          * Invalidates the holder and changes Icon of the tree node to invalid icon.

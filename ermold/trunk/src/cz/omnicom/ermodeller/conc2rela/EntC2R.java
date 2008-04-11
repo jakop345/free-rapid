@@ -1,7 +1,6 @@
 package cz.omnicom.ermodeller.conc2rela;
 
 import cz.omnicom.ermodeller.conc2rela.exception.AlreadyContainsExceptionC2R;
-import cz.omnicom.ermodeller.conc2rela.exception.WasNotFoundByConceptualExceptionC2R;
 import cz.omnicom.ermodeller.conceptual.Atribute;
 import cz.omnicom.ermodeller.conceptual.Entity;
 
@@ -32,7 +31,7 @@ public abstract class EntC2R extends RelationC2R {
      *
      * @see cz.omnicom.ermodeller.conceptual.Entity
      */
-    public EntC2R(SchemaC2R aSchemaC2R, Entity aConceptualEntity) throws WasNotFoundByConceptualExceptionC2R, AlreadyContainsExceptionC2R {
+    public EntC2R(SchemaC2R aSchemaC2R, Entity aConceptualEntity) throws AlreadyContainsExceptionC2R {
         super(aSchemaC2R, aConceptualEntity);
         UniqueKeyC2R uniqueKeyC2R = new UniqueKeyC2R(aSchemaC2R, this, aConceptualEntity.getPrimaryKey(), aConceptualEntity.getAtributes(), true);
         try {

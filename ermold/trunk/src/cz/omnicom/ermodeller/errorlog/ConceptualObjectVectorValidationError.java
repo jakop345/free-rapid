@@ -17,11 +17,11 @@ public abstract class ConceptualObjectVectorValidationError extends ValidationEr
     /**
      * Objects (holders of objects)
      */
-    private Vector conceptualObjectHolders = new Vector();
+    private final Vector conceptualObjectHolders = new Vector();
     /**
      * Objects (holders of objects)
      */
-    private Vector conceptualObjects = new Vector();
+    private final Vector conceptualObjects = new Vector();
 
     /**
      * Adds <code>anObject</code>.

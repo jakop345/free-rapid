@@ -8,7 +8,7 @@ import java.util.Vector;
  * Event carries info only about the source object.
  */
 public class ShowErrorEvent extends java.util.EventObject {
-    private Vector conceptualObjects = new Vector();
+    private final Vector conceptualObjects = new Vector();
 
     /**
      * ShowErrorStateEvent constructor comment.

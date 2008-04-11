@@ -209,7 +209,7 @@ public class Cardinality extends ConceptualObject {
     public synchronized void setArbitrary(boolean arbitrary) {
         boolean oldValue = fieldArbitrary;
         fieldArbitrary = arbitrary;
-        firePropertyChange(ARBITRARY_PROPERTY_CHANGE, new Boolean(oldValue), new Boolean(arbitrary));
+        firePropertyChange(ARBITRARY_PROPERTY_CHANGE, Boolean.valueOf(oldValue), Boolean.valueOf(arbitrary));
         if (fieldArbitrary)
             setGlue(!getMultiCardinality());
         else
@@ -285,7 +285,7 @@ public class Cardinality extends ConceptualObject {
     public synchronized void setGlue(boolean glue) {
         boolean oldValue = fieldGlue;
         fieldGlue = glue;
-        firePropertyChange(GLUE_PROPERTY_CHANGE, new Boolean(oldValue), new Boolean(glue));
+        firePropertyChange(GLUE_PROPERTY_CHANGE, Boolean.valueOf(oldValue), Boolean.valueOf(glue));
     }
 
     /**
@@ -297,7 +297,7 @@ public class Cardinality extends ConceptualObject {
     public synchronized void setMultiCardinality(boolean multiCardinality) {
         boolean oldValue = fieldMultiCardinality;
         fieldMultiCardinality = multiCardinality;
-        firePropertyChange(MULTICARDINALITY_PROPERTY_CHANGE, new Boolean(oldValue), new Boolean(multiCardinality));
+        firePropertyChange(MULTICARDINALITY_PROPERTY_CHANGE, Boolean.valueOf(oldValue), Boolean.valueOf(multiCardinality));
         if (fieldMultiCardinality)
             setGlue(false);
         else

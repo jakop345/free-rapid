@@ -20,7 +20,7 @@ public class OptionsDialog extends javax.swing.JDialog {
     private javax.swing.JTextField ivjUserField = null;
 
     private cz.omnicom.ermodeller.sql.SQLConnection connection = null;
-    IvjEventHandler ivjEventHandler = new IvjEventHandler();
+    final IvjEventHandler ivjEventHandler = new IvjEventHandler();
     private java.lang.String Sql;
 
     private javax.swing.JButton cancelButton = null;
@@ -88,7 +88,7 @@ public class OptionsDialog extends javax.swing.JDialog {
     JLabel auth3Label = new JLabel();
     JLabel auth4Label = new JLabel();
     JLabel auth5Label = new JLabel();
-    JTabbedPane jTabbedPane1 = new JTabbedPane();
+    final JTabbedPane jTabbedPane1 = new JTabbedPane();
     JTabbedPane jTabbedPane2 = new JTabbedPane();
     GridBagLayout gridBagLayout1 = new GridBagLayout();
     cz.green.ermodeller.ERModeller erm = null;

@@ -63,7 +63,7 @@ public class PrintPreviewDialog extends JDialog implements ItemListener, KeyList
     /**
      * The name of the current printing job
      */
-    protected String jobName = new String();
+    protected String jobName = "";
     /**
      * Font for printing desktop. This font should be used for printing. The size of the font can be change according to
      * the scale of the printing
@@ -339,7 +339,7 @@ public class PrintPreviewDialog extends JDialog implements ItemListener, KeyList
     public static void main(java.lang.String[] args) {
         try {
             PrintPreviewDialog aPrintPreviewDialog;
-            aPrintPreviewDialog = new PrintPreviewDialog(new java.awt.Frame(), new java.lang.String());
+            aPrintPreviewDialog = new PrintPreviewDialog(new java.awt.Frame(), "");
             aPrintPreviewDialog.setModal(true);
             aPrintPreviewDialog.addWindowListener(new java.awt.event.WindowAdapter() {
                 public void windowClosing(java.awt.event.WindowEvent e) {

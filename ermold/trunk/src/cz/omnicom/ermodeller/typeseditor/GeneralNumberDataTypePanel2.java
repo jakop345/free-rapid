@@ -12,7 +12,7 @@ import java.awt.event.ComponentEvent;
  */
 public class GeneralNumberDataTypePanel2 extends GeneralNumberDataTypePanel {
 
-    ActionListener al = new ActionListener() {
+    final ActionListener al = new ActionListener() {
         public void actionPerformed(ActionEvent ae) {
             ivjGeneralNumberDataType = (GeneralNumberDataType) getGeneralNumberDataType().clone();
 
@@ -118,7 +118,7 @@ public class GeneralNumberDataTypePanel2 extends GeneralNumberDataTypePanel {
 
         if (e.getSource() == ivjPrecisionTextField)
             try {
-                i = new Integer(getPrecisionTextField().getText()).intValue();
+                i = Integer.parseInt(getPrecisionTextField().getText());
                 if (getGeneralNumberDataType().evaluatePrecision(i)) {
                     ivjGeneralNumberDataType = (GeneralNumberDataType) getGeneralNumberDataType().clone();
                     getGeneralNumberDataType().setPrecision(i);
@@ -134,7 +134,7 @@ public class GeneralNumberDataTypePanel2 extends GeneralNumberDataTypePanel {
             }
         if (e.getSource() == ivjScaleTextField)
             try {
-                i = new Integer(getScaleTextField().getText()).intValue();
+                i = Integer.parseInt(getScaleTextField().getText());
                 if (getGeneralNumberDataType().evaluateScale(i)) {
                     ivjGeneralNumberDataType = (GeneralNumberDataType) getGeneralNumberDataType().clone();
                     getGeneralNumberDataType().setScale(i);

@@ -12,7 +12,7 @@ public class PreferencesPanel extends javax.swing.JPanel {
     private javax.swing.JTextField ivjURLField = null;
     private javax.swing.JTextField ivjUserField = null;
     private cz.omnicom.ermodeller.sql.SQLConnection connection = null;
-    IvjEventHandler ivjEventHandler = new IvjEventHandler();
+    final IvjEventHandler ivjEventHandler = new IvjEventHandler();
     private java.lang.String Sql;
     private javax.swing.JButton cancelButton = null;
     private javax.swing.JButton OKButton = null;

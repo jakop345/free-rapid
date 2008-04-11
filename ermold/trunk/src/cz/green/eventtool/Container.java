@@ -1,7 +1,6 @@
 package cz.green.eventtool;
 
 import cz.green.event.interfaces.ContainerDesktop;
-import cz.green.event.exceptions.ImpossibleNegativeValueException;
 
 
 /**
@@ -27,12 +26,8 @@ public class Container extends cz.green.event.Container {
      */
     public ContainerDesktop getDesktop() {
         if (desktop == null) {
-            try {
-                java.awt.Rectangle r = getBounds();
-                desktop = new Desktop(this, r.x, r.y, r.width, r.height);
-            } catch (ImpossibleNegativeValueException e) {
-                return null;
-            }
+            java.awt.Rectangle r = getBounds();
+            desktop = new Desktop(this, r.x, r.y, r.width, r.height);
         }
         return desktop;
     }
@@ -48,50 +43,6 @@ public class Container extends cz.green.event.Container {
      * @see cz.green.event.Desktop#init(cz.green.event.Container)
      */
     public void loadFromFile(String fileName) throws java.io.IOException, ClassNotFoundException {
-/*	Node node;
-	NodeList nl;
-	DOMParser parser = new DOMParser();
-
-	try {
-		parser.parse(fileName);
-	} catch (SAXException se) {
-		se.printStackTrace();
-	} catch (IOException ioe) {
-		ioe.printStackTrace();
-	}
-	Document doc = ((DOMParser) parser).getDocument();
-	if (doc != null) try {
-		ERDocument erdoc = new ERDocument(doc);
-		nl=doc.getElementsByTagName("schema");
-		erdoc.setNL(nl);
-		int l=(new Integer(erdoc.getValue("left"))).intValue();
-		int t=(new Integer(erdoc.getValue("top"))).intValue();
-		int w=(new Integer(erdoc.getValue("width"))).intValue();
-		int h=(new Integer(erdoc.getValue("height"))).intValue();
-		cz.green.event.Desktop d = new cz.green.event.Desktop(this,l,t,w,h);
-		desktop = d;
-		d.setScale((new Float(erdoc.getValue("scale"))).floatValue());
-		setScale(d.getScale());
-		repaint();
-	} catch (Exception e) {
-	}
-/*		nl=doc.getElementsByTagName("schema");
-		for (int i=0;i<nl.getLength();i++) {
-			node=nl.item(i);
-			System.out.println(node);
-			node=node.getFirstChild();
-			while (node!=null) {
-				if (node.getNodeType()==1) {
-					if (node.hasChildNodes())
-						System.out.println("    "+node.getNodeName()+" "+node.getFirstChild().getNodeValue());
-				}
-					node=node.getNextSibling();
-			} 
-		}
-	}
-
-	if (true) return;
-*/
         java.io.FileInputStream f = null;
         try {
             f = new java.io.FileInputStream(fileName);

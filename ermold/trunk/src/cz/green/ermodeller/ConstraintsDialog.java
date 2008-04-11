@@ -20,9 +20,9 @@ public class ConstraintsDialog extends JDialog implements java.awt.event.ActionL
      */
     private JTextArea ivjTextArea = null;
     private cz.omnicom.ermodeller.conceptual.Entity Cent = null;
-    JButton OKbutton = new JButton();
-    JButton CancelButton = new JButton();
-    JButton ApplyButton = new JButton();
+    final JButton OKbutton = new JButton();
+    final JButton CancelButton = new JButton();
+    final JButton ApplyButton = new JButton();
 
     /**
      * Constructor

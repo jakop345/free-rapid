@@ -15,7 +15,7 @@ public class BooleanEditor extends PropertyEditorSupport {
     /**
      * Tags showed in the properties window.
      */
-    private static String[] tags = {"Yes", "No"};
+    private static final String[] tags = {"Yes", "No"};
 
     /**
      * BooleanEditor constructor.

@@ -14,7 +14,7 @@ public class ShowErrorSupport implements Serializable {
     /**
      * Source object.
      */
-    private Object source;
+    private final Object source;
 
     /**
      * ShowErrorSupport constructor comment.

@@ -15,13 +15,13 @@ public class GlueControlPartOfCheck extends PartOfCheck {
      *
      * @see cz.omnicom.ermodeller.sql.AtributeGroupVector
      */
-    private Vector groups = new Vector();
+    private final Vector groups = new Vector();
     /**
      * Nested OR checks
      *
      * @see cz.omnicom.ermodeller.sql.ORCheck
      */
-    private Vector subORChecks = new Vector();
+    private final Vector subORChecks = new Vector();
 
     /**
      * Adds group of atributes.

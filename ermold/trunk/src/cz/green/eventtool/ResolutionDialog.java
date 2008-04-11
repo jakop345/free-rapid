@@ -186,8 +186,8 @@ public class ResolutionDialog extends JDialog implements KeyListener {
             if (resolution == null) {
                 resolution = new java.awt.Dimension(0, 0);
             }
-            resolution.height = new Integer(getYText().getText()).intValue();
-            resolution.width = new Integer(getXText().getText()).intValue();
+            resolution.height = Integer.parseInt(getYText().getText());
+            resolution.width = Integer.parseInt(getXText().getText());
             dispose();
         } catch (NumberFormatException ex) {
             setResolution(getResolution());

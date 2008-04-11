@@ -16,7 +16,7 @@ public abstract class ConceptualObject implements Serializable, ShowErrorListene
     /**
      * Name of the object.
      */
-    private String fieldName = new String();
+    private String fieldName = "";
     /**
      * ID of the object.
      */
@@ -52,7 +52,7 @@ public abstract class ConceptualObject implements Serializable, ShowErrorListene
     /**
      * Comment on the object
      */
-    private String fieldComment = new String();
+    private String fieldComment = "";
 
     public static final String SCHEMA_PROPERTY_CHANGE = "schema";
     public static final String NAME_PROPERTY_CHANGE = "name";
@@ -75,7 +75,7 @@ public abstract class ConceptualObject implements Serializable, ShowErrorListene
          *
          * @see cz.omnicom.ermodeller.conceptual.ConceptualObject
          */
-        private ConceptualObject conceptualObject;
+        private final ConceptualObject conceptualObject;
 
         /**
          * Constructor.

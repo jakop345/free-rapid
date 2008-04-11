@@ -26,7 +26,7 @@ public abstract class AtributeGroupVector implements SubSQLProducer, SubTreeProd
         /**
          * Control for Not Null or for beeing Null.
          */
-        boolean isNotNull;
+        final boolean isNotNull;
 
         public AtributeC2RHolder(AtributeC2R anAtributeC2R, boolean aIsNotNull) {
             this.atributeC2R = anAtributeC2R;

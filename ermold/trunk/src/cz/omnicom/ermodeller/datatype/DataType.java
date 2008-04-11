@@ -17,23 +17,23 @@ public abstract class DataType implements Cloneable, Serializable {
     /**
      * list of available user datatypes
      */
-    protected static Vector<String> typeNames = new Vector<String>(0);
+    protected static final Vector<String> typeNames = new Vector<String>(0);
     protected static boolean typeNamesChanged = false;
 
     /**
      * list of nested tables already created
      */
-    protected static Vector<String> nestedNames = new Vector<String>(0);
+    protected static final Vector<String> nestedNames = new Vector<String>(0);
 
     /**
      * list of varrays already created
      */
-    protected static Vector<String> varrayNames = new Vector<String>(0);
+    protected static final Vector<String> varrayNames = new Vector<String>(0);
 
     /**
      * list of objects already created
      */
-    protected static Vector<String> objectNames = new Vector<String>(0);
+    protected static final Vector<String> objectNames = new Vector<String>(0);
 
     public static void addToVarrayNames(String name) {
         varrayNames.addElement(name);

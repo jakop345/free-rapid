@@ -1033,20 +1033,19 @@ public class ERModeller extends JFrame implements
             name = name.substring(9, name.length() - 1);
             name = name.trim();
             dt = new Varchar2DataType();
-            ((LengthDataType) dt).setLength(new Integer(name).intValue());
+            ((LengthDataType) dt).setLength(Integer.parseInt(name));
         } else if (name.startsWith("Char")) {
             name = name.substring(5, name.length() - 1);
             name = name.trim();
             dt = new FixedCharDataType();
-            ((LengthDataType) dt).setLength(new Integer(name).intValue());
+            ((LengthDataType) dt).setLength(Integer.parseInt(name));
         } else if (name.startsWith("Number")) {
             dt = new GeneralNumberDataType();
             s1 = name.substring(7, name.indexOf(","));
-            ((GeneralNumberDataType) dt).setPrecision(new Integer(s1)
-                    .intValue());
+            ((GeneralNumberDataType) dt).setPrecision(Integer.parseInt(s1));
             name = name.substring(name.indexOf(",") + 1, name.length() - 1);
             name = name.trim();
-            ((GeneralNumberDataType) dt).setScale(new Integer(name).intValue());
+            ((GeneralNumberDataType) dt).setScale(Integer.parseInt(name));
         } else if (name.startsWith("Table of")) {
             name = name.substring(9, name.length());
             name = name.trim();
@@ -1054,7 +1053,7 @@ public class ERModeller extends JFrame implements
         } else if (name.startsWith("Varray")) {
             dt = new VarrayDataType();
             s1 = name.substring(8, name.indexOf(")"));
-            ((VarrayDataType) dt).setLength(new Integer(s1).intValue());
+            ((VarrayDataType) dt).setLength(Integer.parseInt(s1));
             name = name.substring(name.indexOf(")") + 4, name.length());
             name = name.trim();
             ((VarrayDataType) dt).setType(extractDataType(name));
@@ -1130,7 +1129,7 @@ public class ERModeller extends JFrame implements
             prefix = s + "_";
             schemaID = id + (new Integer(erdoc.getValue("id"))).intValue();
             if (erdoc.getValue("notation") != null) {
-                notation = (new Integer(erdoc.getValue("notation")).intValue());
+                notation = (Integer.parseInt(erdoc.getValue("notation")));
                 switch (notation) {
                     case 0:
                         setChen();
@@ -1226,11 +1225,11 @@ public class ERModeller extends JFrame implements
                     dt = extractDataType(s);
                     atrM.setDataType(dt);
                     atrM.setArbitrary(
-                            (new Boolean(erdoc.getValue("arbitrary"))).booleanValue());
+                            (Boolean.valueOf(erdoc.getValue("arbitrary"))).booleanValue());
                     atrM.setPrimary(
-                            (new Boolean(erdoc.getValue("primary"))).booleanValue());
+                            (Boolean.valueOf(erdoc.getValue("primary"))).booleanValue());
                     atrM.setUnique(
-                            (new Boolean(erdoc.getValue("uniq"))).booleanValue());
+                            (Boolean.valueOf(erdoc.getValue("uniq"))).booleanValue());
                     attrsPos.addElement((new Integer(erdoc.getValue("position"))).intValue());
                 } while (erdoc.next());
 
@@ -1256,11 +1255,11 @@ public class ERModeller extends JFrame implements
                         s = "";
                     carM.setComment(s);
                     s = erdoc.getValue("arbitrary");
-                    carM.setArbitrary(new Boolean(s).booleanValue());
+                    carM.setArbitrary(Boolean.valueOf(s).booleanValue());
                     s = erdoc.getValue("multi");
-                    carM.setMultiCardinality(new Boolean(s).booleanValue());
+                    carM.setMultiCardinality(Boolean.valueOf(s).booleanValue());
                     s = erdoc.getValue("glue");
-                    carM.setGlue(new Boolean(s).booleanValue());
+                    carM.setGlue(Boolean.valueOf(s).booleanValue());
                 } while (erdoc.next());
 
             if (erdoc.setElements("unique"))
@@ -1289,7 +1288,7 @@ public class ERModeller extends JFrame implements
                         atr = d.getAtribute(id + (new Integer(s)).intValue());
                         uni.addAtribute(atr);
                     }
-                    if (new Boolean(erdoc.getValue("primary")).booleanValue())
+                    if (Boolean.valueOf(erdoc.getValue("primary")).booleanValue())
                         uni.setPrimary();
                 } while (erdoc.next());
 
@@ -1329,7 +1328,7 @@ public class ERModeller extends JFrame implements
             if (!erdoc.setElements("schema"))
                 return 0;
             if (erdoc.getValue("notation") != null) {
-                notation = (new Integer(erdoc.getValue("notation")).intValue());
+                notation = (Integer.parseInt(erdoc.getValue("notation")));
             }
 
         } catch (Exception e) {

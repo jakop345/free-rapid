@@ -10,7 +10,7 @@ public class MultiCardinalityEditor extends PropertyEditorSupport {
     /**
      * Tags showed in the properties window.
      */
-    private static String[] tags = {"N-ary", "Unary"};
+    private static final String[] tags = {"N-ary", "Unary"};
 
     /**
      * MultiCardinalityEditor constructor.

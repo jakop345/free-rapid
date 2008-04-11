@@ -9,12 +9,12 @@ import org.w3c.dom.NodeList;
  */
 
 public class ERDocument {
-    private org.w3c.dom.Document doc;
+    private final org.w3c.dom.Document doc;
     //private NodeList nl;
-    private NodeList[] nodeList;
+    private final NodeList[] nodeList;
     private String name;
     //private int pos = 0;
-    private int[] position = {0, 0, 0};
+    private final int[] position = {0, 0, 0};
     private int pos1 = 0;
 
     public ERDocument(Document document) {

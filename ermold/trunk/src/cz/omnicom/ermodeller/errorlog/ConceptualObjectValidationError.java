@@ -15,11 +15,11 @@ public abstract class ConceptualObjectValidationError extends ValidationError {
     /**
      * Held object in a holder
      */
-    private ConceptualObjectHolder conceptualObjectHolder;
+    private final ConceptualObjectHolder conceptualObjectHolder;
     /**
      * Held object in a holder
      */
-    private ConceptualObject conceptualObject;
+    private final ConceptualObject conceptualObject;
 
     /**
      * Constructor.

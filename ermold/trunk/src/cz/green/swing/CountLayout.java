@@ -4,7 +4,7 @@ import java.awt.*;
 import java.util.Hashtable;
 
 public class CountLayout implements LayoutManager2 {
-    protected Hashtable comps = new Hashtable();
+    protected final Hashtable comps = new Hashtable();
     protected Dimension min = new Dimension(0, 0);
 
     public CountLayout() {

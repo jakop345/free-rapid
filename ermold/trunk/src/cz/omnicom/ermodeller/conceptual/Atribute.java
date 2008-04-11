@@ -159,7 +159,7 @@ public class Atribute extends ConceptualObject {
         boolean oldValue = fieldArbitrary;
         if (isPrimary() && !arbitrary) throw new IsMemberOfPrimaryKeyException(this);
         fieldArbitrary = arbitrary;
-        firePropertyChange(ARBITRARY_PROPERTY_CHANGE, new Boolean(oldValue), new Boolean(arbitrary));
+        firePropertyChange(ARBITRARY_PROPERTY_CHANGE, Boolean.valueOf(oldValue), Boolean.valueOf(arbitrary));
     }
 
     /*
@@ -225,7 +225,7 @@ public class Atribute extends ConceptualObject {
             if (getConstruct() instanceof Entity)
                 ((Entity) getConstruct()).removeMemberOfPrimaryKey(this);
         }
-        firePropertyChange(PRIMARY_PROPERTY_CHANGE, new Boolean(oldValue), new Boolean(primary));
+        firePropertyChange(PRIMARY_PROPERTY_CHANGE, Boolean.valueOf(oldValue), Boolean.valueOf(primary));
     }
 
     /**
@@ -235,7 +235,7 @@ public class Atribute extends ConceptualObject {
         boolean oldValue = fieldUnique;
 //	if(isPrimary() && !unique) throw new IsMemberOfPrimaryKeyException(this);
         this.fieldUnique = unique;
-        firePropertyChange(UNIQUE_PROPERTY_CHANGE, new Boolean(oldValue), new Boolean(unique));
+        firePropertyChange(UNIQUE_PROPERTY_CHANGE, Boolean.valueOf(oldValue), Boolean.valueOf(unique));
     }
 
     /**

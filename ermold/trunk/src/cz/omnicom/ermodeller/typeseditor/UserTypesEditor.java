@@ -48,7 +48,7 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
 
     protected static final char[] LEGAL_CHARS = {'_', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
 
-    ChangeListener newButtonListener = new ChangeListener() {
+    final ChangeListener newButtonListener = new ChangeListener() {
         public void stateChanged(ChangeEvent e) {
             //System.out.println("new changed!");
             if (getNewRadioButton().isSelected() && !creating) {
@@ -66,7 +66,7 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
         }
     };
 
-    ChangeListener editButtonListener = new ChangeListener() {
+    final ChangeListener editButtonListener = new ChangeListener() {
         public void stateChanged(ChangeEvent e) {
             //System.out.println("edit changed!");
             if (getEditRadioButton().isSelected()) {
@@ -89,7 +89,7 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
         }
     };
 
-    DocumentListener documentListener = new DocumentListener() {
+    final DocumentListener documentListener = new DocumentListener() {
         public void changedUpdate(DocumentEvent e) {
             if (getNameTextField().getText().length() == 0) {
                 getButtOK().setEnabled(false);
@@ -112,7 +112,7 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
         }
     };
 
-    ActionListener buttOKListener = new ActionListener() {
+    final ActionListener buttOKListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             String aName = getNameTextField().getText();
             if (actualType instanceof ObjectDataType) {
@@ -164,7 +164,7 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
         }
     };
 
-    ActionListener buttDeleteListener = new ActionListener() {
+    final ActionListener buttDeleteListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             //System.out.println("Delete pressed!!!");
             int choice;
@@ -206,7 +206,7 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
          }
      };
      */
-    MouseListener textFieldMouseListener = new MouseListener() {
+    final MouseListener textFieldMouseListener = new MouseListener() {
         public void mousePressed(MouseEvent e) {
             if (!getNewRadioButton().isSelected())
                 getNewRadioButton().doClick();

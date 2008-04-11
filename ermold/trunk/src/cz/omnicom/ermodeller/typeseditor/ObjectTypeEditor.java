@@ -33,7 +33,7 @@ public class ObjectTypeEditor extends TypeEditor implements PropertyChangeListen
     private DataType dataType = null;
     private DataTypePanel dataTypePanel = null;
     private ObjectDataType objectDataType = null;
-    private String defaultItemName;
+    private final String defaultItemName;
 
     public ObjectTypeEditor(UserTypeStorageVector utsv, ObjectDataType odt) {
         super();

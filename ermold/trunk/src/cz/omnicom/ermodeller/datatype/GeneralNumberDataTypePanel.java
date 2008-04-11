@@ -921,7 +921,7 @@ public class GeneralNumberDataTypePanel extends DataTypePanel implements FocusLi
 
         if (e.getSource() == ivjPrecisionTextField)
             try {
-                i = new Integer(getPrecisionTextField().getText()).intValue();
+                i = Integer.parseInt(getPrecisionTextField().getText());
                 if (getGeneralNumberDataType().evaluatePrecision(i)) {
                     ivjGeneralNumberDataType = (GeneralNumberDataType) getGeneralNumberDataType().clone();
                     getGeneralNumberDataType().setPrecision(i);
@@ -937,7 +937,7 @@ public class GeneralNumberDataTypePanel extends DataTypePanel implements FocusLi
             }
         if (e.getSource() == ivjScaleTextField)
             try {
-                i = new Integer(getScaleTextField().getText()).intValue();
+                i = Integer.parseInt(getScaleTextField().getText());
                 if (getGeneralNumberDataType().evaluateScale(i)) {
                     ivjGeneralNumberDataType = (GeneralNumberDataType) getGeneralNumberDataType().clone();
                     getGeneralNumberDataType().setScale(i);

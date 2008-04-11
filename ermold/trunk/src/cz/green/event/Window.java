@@ -73,7 +73,7 @@ public class Window implements Item, java.io.Serializable {
     /**
      * Selected object foreground color
      */
-    public static Color SELECTED_OBJECT_FOREGROUND_COLOR = Color.blue;
+    public static final Color SELECTED_OBJECT_FOREGROUND_COLOR = Color.blue;
     /**
      * Object foreground color
      */
@@ -545,7 +545,7 @@ public class Window implements Item, java.io.Serializable {
         //we want olny class name, withou package
         String remainder = methodName.substring(methodName.lastIndexOf('.') + 1);
         //prefix "handle" + event class name
-        methodName = new String("handle" + remainder);
+        methodName = "handle" + remainder;
         //prepare parameters types and values
         parameterTypes[0] = event.getClass();
         parameters[0] = event;

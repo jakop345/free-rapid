@@ -2,7 +2,6 @@ package cz.omnicom.ermodeller.conc2rela;
 
 import cz.omnicom.ermodeller.conc2rela.exception.AlreadyContainsExceptionC2R;
 import cz.omnicom.ermodeller.conc2rela.exception.ListExceptionC2R;
-import cz.omnicom.ermodeller.conc2rela.exception.WasNotFoundByConceptualExceptionC2R;
 import cz.omnicom.ermodeller.conc2rela.exception.WasNotFoundExceptionC2R;
 import cz.omnicom.ermodeller.conceptual.Relation;
 import cz.omnicom.ermodeller.sql.AlterAddCommandSQL;
@@ -130,7 +129,7 @@ public abstract class RelC2R extends RelationC2R {
      *
      * @see cz.omnicom.ermodeller.conc2rela.RelForeignKeyC2R
      */
-    protected Vector glueC2R() throws AlreadyContainsExceptionC2R, WasNotFoundByConceptualExceptionC2R {
+    protected Vector glueC2R() throws AlreadyContainsExceptionC2R {
 
         Vector gluedRelationsC2R = new Vector();
         Vector relFKsToRemove = new Vector();

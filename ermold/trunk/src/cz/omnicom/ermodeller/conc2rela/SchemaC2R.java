@@ -69,7 +69,7 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
          * Returns increased number
          */
         public int getNumber() {
-            return ++(this.number);
+            return ++this.number;
         }
 
         public PrimaryKeyC2R getPrimaryKeyC2R() {
@@ -620,10 +620,10 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
             for (Enumeration atributes = parentPrimaryKeyC2R.getAtributesC2R().elements(); atributes.hasMoreElements();) {
                 AtributeC2R parentAtributeC2R = (AtributeC2R) atributes.nextElement();
                 if (shortenPrefixes) {
-                    prefix = new String(parentAtributeC2R.getRelationC2R().getNameC2R().getName());
+                    prefix = parentAtributeC2R.getRelationC2R().getNameC2R().getName();
                     prefix = prefix.substring(0, (prefix.length() < this.constructPrefixLength) ? prefix.length() : this.constructPrefixLength);
                 } else
-                    prefix = new String(parentAtributeC2R.getRelationC2R().getNameC2R().getName());
+                    prefix = parentAtributeC2R.getRelationC2R().getNameC2R().getName();
                 AtributeC2R newAtributeC2R = new AtributeC2R(aEntC2R.getSchemaC2R(), aEntC2R, parentAtributeC2R.getConceptualAtribute(), prefix, parentAtributeC2R);
                 if (number > -1)
                     newAtributeC2R.addSubNumberToNameC2R(number);

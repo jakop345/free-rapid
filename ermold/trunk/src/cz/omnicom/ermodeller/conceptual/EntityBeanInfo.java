@@ -201,7 +201,7 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
             /* aDescriptor.setExpert(false); */
             aDescriptor.setHidden(true);
             /* aDescriptor.setValue("preferred", new Boolean(false)); */
-            aDescriptor.setValue("ivjDesignTimeProperty", new Boolean(false));
+            aDescriptor.setValue("ivjDesignTimeProperty", Boolean.FALSE);
         } catch (Throwable exception) {
             handleException(exception);
         }
@@ -244,7 +244,7 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
             /* aDescriptor.setExpert(false); */
             aDescriptor.setHidden(true);
             /* aDescriptor.setValue("preferred", new Boolean(false)); */
-            aDescriptor.setValue("ivjDesignTimeProperty", new Boolean(false));
+            aDescriptor.setValue("ivjDesignTimeProperty", Boolean.FALSE);
         } catch (Throwable exception) {
             handleException(exception);
         }
@@ -289,7 +289,7 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
             /* aDescriptor.setExpert(false); */
             aDescriptor.setHidden(true);
             /* aDescriptor.setValue("preferred", new Boolean(false)); */
-            aDescriptor.setValue("ivjDesignTimeProperty", new Boolean(false));
+            aDescriptor.setValue("ivjDesignTimeProperty", Boolean.FALSE);
         } catch (Throwable exception) {
             handleException(exception);
         }
@@ -332,7 +332,7 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
             /* aDescriptor.setExpert(false); */
             aDescriptor.setHidden(true);
             /* aDescriptor.setValue("preferred", new Boolean(false)); */
-            aDescriptor.setValue("ivjDesignTimeProperty", new Boolean(false));
+            aDescriptor.setValue("ivjDesignTimeProperty", Boolean.FALSE);
         } catch (Throwable exception) {
             handleException(exception);
         }
@@ -375,7 +375,7 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
             /* aDescriptor.setExpert(false); */
             aDescriptor.setHidden(true);
             /* aDescriptor.setValue("preferred", new Boolean(false)); */
-            aDescriptor.setValue("ivjDesignTimeProperty", new Boolean(false));
+            aDescriptor.setValue("ivjDesignTimeProperty", Boolean.FALSE);
         } catch (Throwable exception) {
             handleException(exception);
         }
@@ -418,7 +418,7 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
             /* aDescriptor.setExpert(false); */
             aDescriptor.setHidden(true);
             /* aDescriptor.setValue("preferred", new Boolean(false)); */
-            aDescriptor.setValue("ivjDesignTimeProperty", new Boolean(false));
+            aDescriptor.setValue("ivjDesignTimeProperty", Boolean.FALSE);
         } catch (Throwable exception) {
             handleException(exception);
         }

@@ -34,7 +34,7 @@ public class AtributeC2R extends ElementOfRelationC2R implements SQLColumnProduc
      *
      * @see cz.omnicom.ermodeller.conc2rela.RelC2R#glueC2R
      */
-    private boolean arbitraryBeforeGluing;
+    private final boolean arbitraryBeforeGluing;
 
     /**
      * Atribute constructor without prefix for normal atributes.
@@ -47,7 +47,7 @@ public class AtributeC2R extends ElementOfRelationC2R implements SQLColumnProduc
      * Atribute constructor with prefix for normal atribute.
      */
     public AtributeC2R(SchemaC2R aSchemaC2R, RelationC2R aRelationC2R, Atribute aConceptualAtribute, String aPrefix) {
-        super(new AtributeNameC2R(aPrefix, new String(aConceptualAtribute.getName())), aSchemaC2R, aRelationC2R);
+        super(new AtributeNameC2R(aPrefix, aConceptualAtribute.getName()), aSchemaC2R, aRelationC2R);
         this.arbitraryBeforeGluing = this.arbitrary = aConceptualAtribute.getArbitrary();
         this.dataType = (DataType) aConceptualAtribute.getDataType().clone();
         this.conceptualAtribute = aConceptualAtribute;

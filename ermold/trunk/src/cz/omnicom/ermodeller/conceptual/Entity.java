@@ -18,11 +18,11 @@ public class Entity extends ConceptualConstruct {
     /**
      * Holds the group of atributes as a primary key of the <code>Entity</code>.
      */
-    protected Vector primaryKey = new Vector();
+    protected final Vector primaryKey = new Vector();
     /**
      * Constraints of <code>Entity</code>.
      */
-    protected String constraints = new String();
+    protected String constraints = "";
     /**
      * Parent in ISA hierarchy (superentity of this <code>Entity</code>).
      */
@@ -1060,6 +1060,6 @@ public class Entity extends ConceptualConstruct {
     public synchronized void setConstraints(String constraints) {
         String oldValue = this.constraints;
         this.constraints = constraints;
-        firePropertyChange(CONSTRAINTS_PROPERTY_CHANGE, new String(oldValue), new String(constraints));
+        firePropertyChange(CONSTRAINTS_PROPERTY_CHANGE, oldValue, constraints);
 	}
 }

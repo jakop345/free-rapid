@@ -46,7 +46,7 @@ public class Entity extends ConceptualConstruct {
     /**
      * The primary unique key of this entity
      */
-    protected UniqueKey primary = null;
+    protected final UniqueKey primary = null;
 
     /**
      * Determine whether this entity is strong addiction child - drawn as double rect
@@ -909,7 +909,7 @@ public class Entity extends ConceptualConstruct {
         Item item = event.getItem();
         if (item instanceof Relation) {
             Relation rel = (Relation) item;
-            String name = new String();
+            String name = "";
             if (ACTUAL_NOTATION != ConceptualConstruct.CHEN) {
                 java.util.Enumeration e = rel.getConnections().elements();
                 Cardinality car1;

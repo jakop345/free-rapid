@@ -15,7 +15,7 @@ public class ORCheckObj implements SubObjProducer, SubTreeProducerObj {
      *
      * @see cz.omnicom.ermodeller.sql.PartOfCheck
      */
-    private Vector orParts = new Vector();
+    private final Vector orParts = new Vector();
 
     /**
      * Adds new part of check.

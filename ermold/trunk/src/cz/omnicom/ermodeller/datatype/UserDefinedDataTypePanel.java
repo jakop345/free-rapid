@@ -19,7 +19,7 @@ public class UserDefinedDataTypePanel extends DataTypePanel implements ActionLis
     private PropertyChangeSupport propertyChange = null;
 
 
-    ActionListener refreshActionListener = new ActionListener() {
+    final ActionListener refreshActionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             String oldItem = "";
 
