@@ -11,7 +11,7 @@ import cz.green.event.SelectItemExEvent;
 import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.interfaces.Item;
 import cz.green.event.interfaces.PaintableItem;
-import cz.green.eventtool.PropertyListDialog;
+import cz.green.eventtool.dialogs.PropertyListDialog;
 import cz.green.eventtool.interfaces.Connection;
 import cz.green.util.ActionAdapter;
 import cz.green.util.ParamActionAdapter;

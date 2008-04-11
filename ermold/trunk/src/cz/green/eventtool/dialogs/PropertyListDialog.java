@@ -1,5 +1,6 @@
-package cz.green.eventtool;
+package cz.green.eventtool.dialogs;
 
+import cz.green.eventtool.PropertyList;
 import cz.green.swing.CountLayout;
 import cz.green.swing.LinearConstraint;
 import cz.green.swing.SimpleBoundsConstraint;

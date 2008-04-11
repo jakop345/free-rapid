@@ -2,10 +2,10 @@ package cz.green.eventtool;
 
 import cz.green.ermodeller.ConceptualConstruct;
 import cz.green.ermodeller.Consts;
+import cz.green.ermodeller.EntityConstruct;
 import cz.green.event.ResizePoint;
 import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.interfaces.Manager;
-import cz.green.event.interfaces.PaintableManager;
 import cz.green.eventtool.interfaces.Connectable;
 import cz.green.eventtool.interfaces.Connection;
 
@@ -127,8 +127,8 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
         two = null;
         java.awt.Rectangle r = getBounds();
         manager.remove(this);
-        ((PaintableManager) manager).selectItemEx(null, false);
-        ((PaintableManager) manager).repaintRectangle(r.x, r.y, r.width,
+        manager.selectItemEx(null, false);
+        manager.repaintRectangle(r.x, r.y, r.width,
                 r.height);
     }
 
@@ -210,7 +210,6 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
     protected void moves() {
         java.awt.Point p = one.getCenter();
         boolean rp = false;
-        int[][] r = rect;
         if (!p.equals(centerOne)) {
             centerOne = p;
             rp = true;
@@ -239,16 +238,15 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
 
         moves();
         if (ACTUAL_NOTATION == ConceptualConstruct.BINARY) {
-            if (("class cz.green.ermodeller.Atribute".equals(one.getClass()
-                    .toString()))
-                    || ("class cz.green.ermodeller.Atribute".equals(two
-                    .getClass().toString())))
+            if ((cz.green.ermodeller.Atribute.class.equals(one.getClass()))
+                    || (cz.green.ermodeller.Atribute.class.equals(two
+                    .getClass())))
                 return;
-            if ((("class cz.green.ermodeller.Cardinality".equals(one.getClass().toString()))
-                    && ("class cz.green.ermodeller.Entity".equals(two.getClass().toString())))
+            if (((cz.green.ermodeller.Cardinality.class.equals(one.getClass()))
+                    && (EntityConstruct.class.equals(two.getClass())))
                     ||
-                    (("class cz.green.ermodeller.Cardinality".equals(two.getClass().toString()))
-                            && ("class cz.green.ermodeller.Entity".equals(one.getClass().toString()))))
+                    ((cz.green.ermodeller.Cardinality.class.equals(two.getClass()))
+                            && (EntityConstruct.class.equals(one.getClass()))))
                 return;
             float dash1[] = {6f};//default 4.5f
             float dash2[] = {333333.5f};
@@ -274,16 +272,16 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
         }
         final Stroke stroke = updateStrokeWithAliasing(g);
         if (ACTUAL_NOTATION == ConceptualConstruct.UML) {
-            if (("class cz.green.ermodeller.Atribute".equals(one.getClass()
-                    .toString()))
-                    || ("class cz.green.ermodeller.Atribute".equals(two
-                    .getClass().toString())))
+            if ((cz.green.ermodeller.Atribute.class.equals(one.getClass()
+            ))
+                    || (cz.green.ermodeller.Atribute.class.equals(two
+                    .getClass())))
                 return;
-            if ((("class cz.green.ermodeller.Cardinality".equals(one.getClass().toString()))
-                    && ("class cz.green.ermodeller.Entity".equals(two.getClass().toString())))
+            if (((cz.green.ermodeller.Cardinality.class.equals(one.getClass()))
+                    && (EntityConstruct.class.equals(two.getClass())))
                     ||
-                    (("class cz.green.ermodeller.Cardinality".equals(two.getClass().toString()))
-                            && ("class cz.green.ermodeller.Entity".equals(one.getClass().toString()))))
+                    ((cz.green.ermodeller.Cardinality.class.equals(two.getClass()))
+                            && (EntityConstruct.class.equals(one.getClass()))))
                 return;
             g.drawLine(borderOne.x, borderOne.y, borderTwo.x, borderTwo.y);
         }
@@ -294,23 +292,23 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
                     g.drawLine(borderOne.x, borderOne.y, borderTwo.x, borderTwo.y);
                 case (LOD_MEDIUM):
                     /* There are no lines to atributes */
-                    if (!(one.getClass().toString().equals(
-                            "class cz.green.ermodeller.Atribute") || two.getClass()
-                            .toString().equals("class cz.green.ermodeller.Atribute")))
+                    if (!(one.getClass().equals(
+                            cz.green.ermodeller.Atribute.class) || two.getClass()
+                            .equals(cz.green.ermodeller.Atribute.class)))
                         g.drawLine(borderOne.x, borderOne.y, borderTwo.x, borderTwo.y);
                         /* There is one end of line to atribute, so we test it hte atribute is primary */
                     else {
-                        if ((one.getClass().toString().equals("class cz.green.ermodeller.Atribute")))
+                        if ((one.getClass().equals(cz.green.ermodeller.Atribute.class)))
                             if (((cz.green.ermodeller.Atribute) getOne()).isPrimary())
                                 g.drawLine(borderOne.x, borderOne.y, borderTwo.x, borderTwo.y);
-                        if ((two.getClass().toString().equals("class cz.green.ermodeller.Atribute")))
+                        if ((two.getClass().equals(cz.green.ermodeller.Atribute.class)))
                             if (((cz.green.ermodeller.Atribute) getTwo()).isPrimary())
                                 g.drawLine(borderOne.x, borderOne.y, borderTwo.x, borderTwo.y);
                     }
                 case (LOD_LOW):
-                    if (!(one.getClass().toString().equals(
-                            "class cz.green.ermodeller.Atribute") || two.getClass()
-                            .toString().equals("class cz.green.ermodeller.Atribute")))
+                    if (!(one.getClass().equals(
+                            cz.green.ermodeller.Atribute.class) || two.getClass()
+                            .equals(cz.green.ermodeller.Atribute.class)))
                         g.drawLine(borderOne.x, borderOne.y, borderTwo.x, borderTwo.y);
             }
         }
@@ -356,14 +354,10 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
     public void paintFast(java.awt.Graphics g) {
         realMoves();
         if (ACTUAL_NOTATION == ConceptualConstruct.BINARY || ACTUAL_NOTATION == ConceptualConstruct.UML)
-            if (("class cz.green.ermodeller.Atribute".equals(one.getClass()
-                    .toString()))
-                    || ("class cz.green.ermodeller.Atribute".equals(two
-                    .getClass().toString()))
-                    || ("class cz.green.ermodeller.UniqueKey".equals(two
-                    .getClass().toString()))
-                    || ("class cz.green.ermodeller.UniqueKey".equals(one
-                    .getClass().toString())))
+            if ((cz.green.ermodeller.Atribute.class.equals(one.getClass()))
+                    || (cz.green.ermodeller.Atribute.class.equals(two.getClass()))
+                    || (cz.green.ermodeller.UniqueKey.class.equals(two.getClass()))
+                    || (cz.green.ermodeller.UniqueKey.class.equals(one.getClass())))
                 return;
 
         g.drawLine(realBorderOne.x, realBorderOne.y, realBorderTwo.x,
@@ -379,16 +373,14 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
     public void print(java.awt.Graphics g) {
         moves();
         if (ACTUAL_NOTATION == ConceptualConstruct.BINARY) {
-            if (("class cz.green.ermodeller.Atribute".equals(one.getClass()
-                    .toString()))
-                    || ("class cz.green.ermodeller.Atribute".equals(two
-                    .getClass().toString())))
+            if ((cz.green.ermodeller.Atribute.class.equals(one.getClass()))
+                    || (cz.green.ermodeller.Atribute.class.equals(two.getClass())))
                 return;
-            if ((("class cz.green.ermodeller.Cardinality".equals(one.getClass().toString()))
-                    && ("class cz.green.ermodeller.Entity".equals(two.getClass().toString())))
+            if (((cz.green.ermodeller.Cardinality.class.equals(one.getClass()))
+                    && (EntityConstruct.class.equals(two.getClass())))
                     ||
-                    (("class cz.green.ermodeller.Cardinality".equals(two.getClass().toString()))
-                            && ("class cz.green.ermodeller.Entity".equals(one.getClass().toString()))))
+                    ((cz.green.ermodeller.Cardinality.class.equals(two.getClass()))
+                            && (EntityConstruct.class.equals(one.getClass()))))
                 return;
             Graphics2D g2 = (Graphics2D) g;
             float dash1[] = {6f};//default 4.5f
@@ -414,16 +406,14 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
             }
         }
         if (ACTUAL_NOTATION == ConceptualConstruct.UML) {
-            if (("class cz.green.ermodeller.Atribute".equals(one.getClass()
-                    .toString()))
-                    || ("class cz.green.ermodeller.Atribute".equals(two
-                    .getClass().toString())))
+            if ((cz.green.ermodeller.Atribute.class.equals(one.getClass()))
+                    || (cz.green.ermodeller.Atribute.class.equals(two.getClass())))
                 return;
-            if ((("class cz.green.ermodeller.Cardinality".equals(one.getClass().toString()))
-                    && ("class cz.green.ermodeller.Entity".equals(two.getClass().toString())))
+            if (((cz.green.ermodeller.Cardinality.class.equals(one.getClass()))
+                    && (EntityConstruct.class.equals(two.getClass())))
                     ||
-                    (("class cz.green.ermodeller.Cardinality".equals(two.getClass().toString()))
-                            && ("class cz.green.ermodeller.Entity".equals(one.getClass().toString()))))
+                    ((cz.green.ermodeller.Cardinality.class.equals(two.getClass()))
+                            && (EntityConstruct.class.equals(one.getClass()))))
                 return;
             g.drawLine(borderOne.x, borderOne.y, borderTwo.x, borderTwo.y);
         }
@@ -433,23 +423,23 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
                     g.drawLine(borderOne.x, borderOne.y, borderTwo.x, borderTwo.y);
                 case (LOD_MEDIUM):
                     /* There are no lines to atributes */
-                    if (!(one.getClass().toString().equals(
-                            "class cz.green.ermodeller.Atribute") || two.getClass()
-                            .toString().equals("class cz.green.ermodeller.Atribute")))
+                    if (!(one.getClass().equals(
+                            cz.green.ermodeller.Atribute.class) || two.getClass()
+                            .equals(cz.green.ermodeller.Atribute.class)))
                         g.drawLine(borderOne.x, borderOne.y, borderTwo.x, borderTwo.y);
                         /* There is one end of line to atribute, so we test it hte atribute is primary */
                     else {
-                        if ((one.getClass().toString().equals("class cz.green.ermodeller.Atribute")))
+                        if ((one.getClass().equals(cz.green.ermodeller.Atribute.class)))
                             if (((cz.green.ermodeller.Atribute) getOne()).isPrimary())
                                 g.drawLine(borderOne.x, borderOne.y, borderTwo.x, borderTwo.y);
-                        if ((two.getClass().toString().equals("class cz.green.ermodeller.Atribute")))
+                        if ((two.getClass().equals(cz.green.ermodeller.Atribute.class)))
                             if (((cz.green.ermodeller.Atribute) getTwo()).isPrimary())
                                 g.drawLine(borderOne.x, borderOne.y, borderTwo.x, borderTwo.y);
                     }
                 case (LOD_LOW):
-                    if (!(one.getClass().toString().equals(
-                            "class cz.green.ermodeller.Atribute") || two.getClass()
-                            .toString().equals("class cz.green.ermodeller.Atribute")))
+                    if (!(one.getClass().equals(
+                            cz.green.ermodeller.Atribute.class) || two.getClass()
+                            .equals(cz.green.ermodeller.Atribute.class)))
                         g.drawLine(borderOne.x, borderOne.y, borderTwo.x, borderTwo.y);
             }
         }
@@ -465,7 +455,6 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
     public void realMoves() {
         java.awt.Point p = one.getRealCenter();
         boolean rp = false;
-        int[][] r = rect;
         if (!p.equals(realCenterOne)) {
             realCenterOne = p;
             rp = true;
@@ -490,7 +479,7 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
         if (rectangle != null) {
             java.awt.Rectangle r = rectangle;
             rectangle = null;
-            ((PaintableManager) manager).repaintRectangle(r.x, r.y, r.width,
+            manager.repaintRectangle(r.x, r.y, r.width,
                     r.height);
         }
     }

@@ -5,7 +5,7 @@ import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.interfaces.Manager;
 import cz.green.event.interfaces.PaintableManager;
 import cz.green.eventtool.ConnectableWindow;
-import cz.green.eventtool.PropertyListDialog;
+import cz.green.eventtool.dialogs.PropertyListDialog;
 import cz.green.util.ActionAdapter;
 import cz.green.util.ParamActionAdapter;
 
