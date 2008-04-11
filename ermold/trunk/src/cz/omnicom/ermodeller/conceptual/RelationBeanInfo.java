@@ -63,7 +63,7 @@ public class RelationBeanInfo extends java.beans.SimpleBeanInfo {
      * @return java.lang.Class
      */
     public static java.lang.Class getBeanClass() {
-        return cz.omnicom.ermodeller.conceptual.Relation.class;
+        return RelationBean.class;
     }
 
     /**
@@ -72,14 +72,14 @@ public class RelationBeanInfo extends java.beans.SimpleBeanInfo {
      * @return java.lang.String
      */
     public static java.lang.String getBeanClassName() {
-        return cz.omnicom.ermodeller.conceptual.Relation.class.getName();
+        return RelationBean.class.getName();
     }
 
     public java.beans.BeanDescriptor getBeanDescriptor() {
         java.beans.BeanDescriptor aDescriptor = null;
         try {
             /* Create and return the RelationBeanInfo bean descriptor. */
-            aDescriptor = new java.beans.BeanDescriptor(cz.omnicom.ermodeller.conceptual.Relation.class);
+            aDescriptor = new java.beans.BeanDescriptor(RelationBean.class);
             /* aDescriptor.setExpert(false); */
             /* aDescriptor.setHidden(false); */
             /* aDescriptor.setValue("hidden-state", Boolean.FALSE); */

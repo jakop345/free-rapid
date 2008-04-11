@@ -14,6 +14,7 @@ import cz.green.eventtool.Connection;
 import cz.green.eventtool.PropertyListDialog;
 import cz.green.util.ActionAdapter;
 import cz.green.util.ParamActionAdapter;
+import cz.omnicom.ermodeller.conceptual.RelationBean;
 import cz.omnicom.ermodeller.errorlog.ShowErrorListener;
 import cz.omnicom.ermodeller.typeseditor.UserTypeStorage;
 import cz.omnicom.ermodeller.typeseditor.UserTypeStorageVector;
@@ -110,8 +111,8 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
     /**
      * Compose Relation with
      */
-    public void composeRelation(cz.omnicom.ermodeller.conceptual.Relation rM1,
-                                cz.omnicom.ermodeller.conceptual.Relation rM2) {
+    public void composeRelation(RelationBean rM1,
+                                RelationBean rM2) {
         Relation r1 = getRelation(rM1.getID()), r2 = getRelation(rM2.getID());
 
         r2.composeRelation(r1, new cz.green.ermodeller.DragOverEvent(0, 0,
@@ -317,7 +318,7 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
             /*Check for aributes*/
             if (!rel.getAtributes().isEmpty())
                 if (namesOnly)
-                    relsWithAtributes.add(((cz.omnicom.ermodeller.conceptual.Relation) rel.getModel()).getName());
+                    relsWithAtributes.add(((RelationBean) rel.getModel()).getName());
                 else relsWithAtributes.add(rel);
         }
         return relsWithAtributes;
@@ -349,7 +350,7 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
             }
             if (connCounter <= 1) {
 //				System.out.println("Stored");
-                if (namesOnly) relsNoConn.add(((cz.omnicom.ermodeller.conceptual.Relation) rel.getModel()).getName());
+                if (namesOnly) relsNoConn.add(((RelationBean) rel.getModel()).getName());
                 else relsNoConn.add(rel);
             }
 
@@ -382,7 +383,7 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
                 }
             }
             if (connCounter > 2) {
-                if (namesOnly) relsTernary.add(((cz.omnicom.ermodeller.conceptual.Relation) rel.getModel()).getName());
+                if (namesOnly) relsTernary.add(((RelationBean) rel.getModel()).getName());
                 else relsTernary.add(rel);
             }
 

@@ -24,7 +24,7 @@ public class Schema extends ConceptualObject {
     /**
      * All relations in the schema.
      *
-     * @see cz.omnicom.ermodeller.conceptual.Relation
+     * @see RelationBean
      */
     protected Vector relations = new Vector();
     /**
@@ -90,14 +90,14 @@ public class Schema extends ConceptualObject {
      *
      * @return cz.omnicom.ermodeller.conceptual.Relation
      */
-    public synchronized Relation createRelation() {
-        Relation relation = new Relation();
-        relation.setSchema(this);
-        relation.setName("Rel" + getRelationIDCounter());
+    public synchronized RelationBean createRelation() {
+        RelationBean relationBean = new RelationBean();
+        relationBean.setSchema(this);
+        relationBean.setName("Rel" + getRelationIDCounter());
         Vector oldValue = (Vector) getRelations().clone();
-        getRelations().addElement(relation);
+        getRelations().addElement(relationBean);
         firePropertyChange(RELATIONS_PROPERTY_CHANGE, oldValue, getRelations());
-        return relation;
+        return relationBean;
     }
 
     /**
@@ -145,23 +145,23 @@ public class Schema extends ConceptualObject {
     /**
      * Removes <code>aRelation</code> from the schema.
      *
-     * @param aRelation cz.omnicom.ermodeller.conceptual.Relation
+     * @param aRelationBean cz.omnicom.ermodeller.conceptual.Relation
      * @throws cz.omnicom.ermodeller.conceptual.exception.ParameterCannotBeNullException
      *
      * @throws cz.omnicom.ermodeller.conceptual.exception.WasNotFoundException
      *
      */
-    public synchronized void disposeRelation(Relation aRelation) throws ParameterCannotBeNullException, WasNotFoundException {
-        if (aRelation == null)
+    public synchronized void disposeRelation(RelationBean aRelationBean) throws ParameterCannotBeNullException, WasNotFoundException {
+        if (aRelationBean == null)
             throw new ParameterCannotBeNullException();
 
         Vector oldValue = (Vector) getRelations().clone();
-        if (!(getRelations().removeElement(aRelation))) { // was it removed?
+        if (!(getRelations().removeElement(aRelationBean))) { // was it removed?
             // No, it wasn't found
-            throw new WasNotFoundException(this, aRelation, ListException.RELATIONS_LIST);
+            throw new WasNotFoundException(this, aRelationBean, ListException.RELATIONS_LIST);
         } else {
             // Yes
-            aRelation.empty();
+            aRelationBean.empty();
             firePropertyChange(RELATIONS_PROPERTY_CHANGE, oldValue, getRelations());
         }
     }
@@ -285,7 +285,7 @@ public class Schema extends ConceptualObject {
         ErrorLogList errorLogList = new ErrorLogList();
         Vector vectorToCheck = new Vector();
         for (Enumeration relations = getRelations().elements(); relations.hasMoreElements();) {
-            for (Enumeration cardinalities = ((Relation) relations.nextElement()).getCardinalities().elements(); cardinalities.hasMoreElements();) {
+            for (Enumeration cardinalities = ((RelationBean) relations.nextElement()).getCardinalities().elements(); cardinalities.hasMoreElements();) {
                 vectorToCheck.addElement(new ConceptualObjectNameController((Cardinality) cardinalities.nextElement()));
             }
         }
@@ -318,7 +318,7 @@ public class Schema extends ConceptualObject {
             vectorToCheck.addElement(new ConceptualObjectNameController((Entity) elements.nextElement()));
         }
         for (Enumeration elements = getRelations().elements(); elements.hasMoreElements();) {
-            vectorToCheck.addElement(new ConceptualObjectNameController((Relation) elements.nextElement()));
+            vectorToCheck.addElement(new ConceptualObjectNameController((RelationBean) elements.nextElement()));
         }
         try {
             errorLogList.concatErrorLogList(checkVectorForNameDuplicity(vectorToCheck, ConceptualConstructSameNameValidationError.class));
@@ -427,7 +427,7 @@ public class Schema extends ConceptualObject {
         }
         //    - relations
         for (Enumeration relations = getRelations().elements(); relations.hasMoreElements();) {
-            ((Relation) relations.nextElement()).setAllUnvalidated();
+            ((RelationBean) relations.nextElement()).setAllUnvalidated();
         }
         super.setAllUnvalidated();
     }
@@ -467,7 +467,7 @@ public class Schema extends ConceptualObject {
         }
         // for all relations
         for (Enumeration relations = getRelations().elements(); relations.hasMoreElements();) {
-            ErrorLogList relationErrors = ((Relation) relations.nextElement()).validate();
+            ErrorLogList relationErrors = ((RelationBean) relations.nextElement()).validate();
             errorLogList.concatErrorLogList(relationErrors);
         }
         return errorLogList;

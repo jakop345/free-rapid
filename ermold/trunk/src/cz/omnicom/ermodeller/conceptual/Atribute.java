@@ -205,8 +205,8 @@ public class Atribute extends ConceptualObject {
      *
      */
     public synchronized void setPrimary(boolean primary) throws ISAChildCannotHavePrimaryKeyException, RelationCannotHavePrimaryKeyException {
-        if (getConstruct() instanceof Relation && primary)
-            throw new RelationCannotHavePrimaryKeyException((Relation) getConstruct());
+        if (getConstruct() instanceof RelationBean && primary)
+            throw new RelationCannotHavePrimaryKeyException((RelationBean) getConstruct());
         if (getConstruct() instanceof Entity) {
             if ((((Entity) getConstruct()).getISAParent() != null) && primary)
                 throw new ISAChildCannotHavePrimaryKeyException((Entity) getConstruct());

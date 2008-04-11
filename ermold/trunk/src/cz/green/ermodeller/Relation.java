@@ -12,6 +12,7 @@ import cz.green.eventtool.Connection;
 import cz.green.eventtool.ConnectionLine;
 import cz.green.eventtool.ConnectionManager;
 import cz.green.swing.ShowException;
+import cz.omnicom.ermodeller.conceptual.RelationBean;
 import cz.omnicom.ermodeller.conceptual.exception.MustHave2ConnectionsException;
 import cz.omnicom.ermodeller.conceptual.exception.ParameterCannotBeNullException;
 
@@ -30,7 +31,7 @@ public class Relation extends ConceptualConstruct {
     /**
      * The model object - entity from Aleš Kopecký work
      */
-    protected cz.omnicom.ermodeller.conceptual.Relation model = null;
+    protected RelationBean model = null;
 
     /**
      * Creates relation, counts size to fit the name of the relation.
@@ -46,7 +47,7 @@ public class Relation extends ConceptualConstruct {
      *          Thrown by inherited constructor.
      * @see ConceptualConstruct#ConceptualConstruct(cz.green.event.interfaces.Manager , int, int, int, int)
      */
-    protected Relation(cz.omnicom.ermodeller.conceptual.Relation rel, Manager manager, int left, int top) throws NullPointerException, ImpossibleNegativeValueException {
+    protected Relation(RelationBean rel, Manager manager, int left, int top) throws NullPointerException, ImpossibleNegativeValueException {
         super(manager, left, top, 0, 0);
         rel.addPropertyChangeListener(this);
         String name = (model = rel).getName();
@@ -126,7 +127,7 @@ public class Relation extends ConceptualConstruct {
         Cardinality car;
         try {
             //creates new model - cardinality
-            cz.omnicom.ermodeller.conceptual.Relation cRel = model;
+            RelationBean cRel = model;
             cz.omnicom.ermodeller.conceptual.Entity cEnt = (cz.omnicom.ermodeller.conceptual.Entity) (ent.getModel());
             cz.omnicom.ermodeller.conceptual.Cardinality cCar = cRel.createCardinality(cEnt);
             //creates new view controller - cardinality
@@ -219,7 +220,7 @@ public class Relation extends ConceptualConstruct {
         try {
             //creates the new DGroup instance
             DGroupTool group = new DGroupTool(manager, left, right, 0, 0);
-            cz.omnicom.ermodeller.conceptual.Relation cRel = schema.createRelation();
+            RelationBean cRel = schema.createRelation();
             //creates new relation
             Relation rel = new Relation(cRel, manager, left, right);
             group.add(rel);
@@ -569,7 +570,7 @@ public class Relation extends ConceptualConstruct {
         switch (ACTUAL_NOTATION) {
             case (CHEN):
                 fm = ((FontManager) manager).getReferentFontMetrics();
-                int nameWidth = fm.stringWidth(((cz.omnicom.ermodeller.conceptual.Relation) getModel()).getName());
+                int nameWidth = fm.stringWidth(((RelationBean) getModel()).getName());
                 int nameHeight = fm.getAscent();
                 width = 2 * nameWidth + nameHeight;
                 height = 3 * nameHeight;

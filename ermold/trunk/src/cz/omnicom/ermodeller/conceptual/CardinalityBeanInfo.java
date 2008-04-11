@@ -341,7 +341,7 @@ public class CardinalityBeanInfo extends java.beans.SimpleBeanInfo {
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aSetMethodParameterTypes[] = {
-                            cz.omnicom.ermodeller.conceptual.Relation.class
+                            RelationBean.class
                     };
                     aSetMethod = getBeanClass().getMethod("setRelation", aSetMethodParameterTypes);
                 } catch (Throwable exception) {

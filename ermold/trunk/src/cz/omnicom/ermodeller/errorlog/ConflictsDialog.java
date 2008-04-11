@@ -1,6 +1,7 @@
 package cz.omnicom.ermodeller.errorlog;
 
 import cz.green.ermodeller.EntityConstruct;
+import cz.omnicom.ermodeller.conceptual.RelationBean;
 import cz.omnicom.ermodeller.icontree.IconNode;
 import cz.omnicom.ermodeller.icontree.IconNodeRenderer;
 
@@ -99,7 +100,7 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
                     desktop.composeEntity((cz.omnicom.ermodeller.conceptual.Entity) conceptualObject, (cz.omnicom.ermodeller.conceptual.Entity) o);
                 } else {
                     rel = desktop.getRelation(((cz.omnicom.ermodeller.conceptual.ConceptualConstruct) o).getID());
-                    desktop.composeRelation((cz.omnicom.ermodeller.conceptual.Relation) conceptualObject, (cz.omnicom.ermodeller.conceptual.Relation) o);
+                    desktop.composeRelation((RelationBean) conceptualObject, (RelationBean) o);
                 }
             }
         if (conceptualObject instanceof cz.omnicom.ermodeller.conceptual.Atribute)
@@ -1443,7 +1444,7 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
                 cc = desktop.getEntity(i);
                 cc.handleRemoveEvent(new cz.green.event.RemoveEvent(0, 0, desktop.getPaintPlace()));
             }
-            if (conceptualObject instanceof cz.omnicom.ermodeller.conceptual.Relation) {
+            if (conceptualObject instanceof RelationBean) {
                 cc = desktop.getRelation(i);
                 cc.handleRemoveEvent(new cz.green.event.RemoveEvent(0, 0, desktop.getPaintPlace()));
             }
@@ -1581,7 +1582,7 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
                             ivjComposeModel.addElement(co);
                     }
                 }
-                if (conceptualObject instanceof cz.omnicom.ermodeller.conceptual.Relation) {
+                if (conceptualObject instanceof RelationBean) {
                     cardL.show(getJPanel1(), "CPanel");
                     v = schema.getRelations();
                     for (i = 0; i < v.size(); i++) {

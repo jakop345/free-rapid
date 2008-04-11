@@ -15,7 +15,7 @@ import java.util.Enumeration;
  *
  * @see Cardinality
  */
-public class Relation extends ConceptualConstruct {
+public class RelationBean extends ConceptualConstruct {
     /**
      * Creates new cardinality and connects it to the construct. Parameter
      * <code>anEntity</code> is the entity which is connected through the new

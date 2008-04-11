@@ -1,18 +1,18 @@
 package cz.omnicom.ermodeller.conceptual.exception;
 
-import cz.omnicom.ermodeller.conceptual.Relation;
+import cz.omnicom.ermodeller.conceptual.RelationBean;
 
 /**
  * Entity cannot have primary key.
  */
 public class MustHave2ConnectionsException extends ConceptualException {
-    Relation relation = null;
+    RelationBean relationBean = null;
 
     /**
      * CannotHavePrimaryKey constructor comment.
      */
-    public MustHave2ConnectionsException(Relation aRelation) {
-        this.relation = aRelation;
+    public MustHave2ConnectionsException(RelationBean aRelationBean) {
+        this.relationBean = aRelationBean;
     }
 
     /**
@@ -21,6 +21,6 @@ public class MustHave2ConnectionsException extends ConceptualException {
      * @return java.lang.String
      */
     public String getMessage() {
-        return "Relationship " + relation.getName() + " can't have more than 2 connections to entities";
+        return "Relationship " + relationBean.getName() + " can't have more than 2 connections to entities";
     }
 }

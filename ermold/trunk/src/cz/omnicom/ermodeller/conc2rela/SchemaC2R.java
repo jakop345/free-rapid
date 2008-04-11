@@ -216,9 +216,9 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
             RelationC2R relationC2R = (RelationC2R) elements.nextElement();
             if (relationC2R instanceof RelC2R) {
                 RelC2R relC2R = (RelC2R) relationC2R;
-                Relation conceptualRelation = (Relation) relC2R.getConceptualConstruct();
+                RelationBean conceptualRelationBean = (RelationBean) relC2R.getConceptualConstruct();
                 // every cardinality
-                for (Enumeration cardinalities = conceptualRelation.getCardinalities().elements(); cardinalities.hasMoreElements();) {
+                for (Enumeration cardinalities = conceptualRelationBean.getCardinalities().elements(); cardinalities.hasMoreElements();) {
                     Cardinality conceptualCardinality = (Cardinality) cardinalities.nextElement();
                     Entity entity = conceptualCardinality.getEntity();
                     EntC2R entC2R = (EntC2R) findRelationC2RByConceptualConstruct(entity);
@@ -482,7 +482,7 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
         int result = 0;
         Vector names = new Vector();
         for (Enumeration relations = schema.getRelations().elements(); relations.hasMoreElements();) {
-            Vector rCards = ((Relation) relations.nextElement()).getCardinalities();
+            Vector rCards = ((RelationBean) relations.nextElement()).getCardinalities();
             for (Enumeration cards = rCards.elements(); cards.hasMoreElements();) {
                 names.addElement(((Cardinality) cards.nextElement()).getName());
             }
@@ -517,7 +517,7 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
         int result = 0;
         Vector names = new Vector();
         for (Enumeration relations = schema.getRelations().elements(); relations.hasMoreElements();) {
-            names.addElement(((Relation) relations.nextElement()).getName());
+            names.addElement(((RelationBean) relations.nextElement()).getName());
         }
         for (Enumeration entities = schema.getEntities().elements(); entities.hasMoreElements();) {
             names.addElement(((Entity) entities.nextElement()).getName());
@@ -571,7 +571,7 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
             // creates skeletons of all "relation" relations
             for (Enumeration elements = aConceptualSchema.getRelations().elements(); elements.hasMoreElements();) {
                 try {
-                    addRelationC2R(new RelRelationC2R(this, (Relation) elements.nextElement()));
+                    addRelationC2R(new RelRelationC2R(this, (RelationBean) elements.nextElement()));
                 }
                 catch (AlreadyContainsExceptionC2R e) {
                 } // cannot be thrown

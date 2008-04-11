@@ -17,7 +17,7 @@ import java.util.Vector;
  * to cardinalites.
  *
  * @see cz.omnicom.ermodeller.conceptual.Entity
- * @see cz.omnicom.ermodeller.conceptual.Relation
+ * @see RelationBean
  * @see cz.omnicom.ermodeller.conceptual.Cardinality
  */
 public abstract class ConceptualConstruct extends ConceptualObject {

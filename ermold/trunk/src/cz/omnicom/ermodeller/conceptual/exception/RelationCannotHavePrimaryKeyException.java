@@ -1,18 +1,18 @@
 package cz.omnicom.ermodeller.conceptual.exception;
 
-import cz.omnicom.ermodeller.conceptual.Relation;
+import cz.omnicom.ermodeller.conceptual.RelationBean;
 
 /**
  * Entity cannot have primary key.
  */
 public class RelationCannotHavePrimaryKeyException extends ConceptualException {
-    Relation relation = null;
+    RelationBean relationBean = null;
 
     /**
      * CannotHavePrimaryKey constructor comment.
      */
-    public RelationCannotHavePrimaryKeyException(Relation aRelation) {
-        this.relation = aRelation;
+    public RelationCannotHavePrimaryKeyException(RelationBean aRelationBean) {
+        this.relationBean = aRelationBean;
     }
 
     /**
@@ -21,6 +21,6 @@ public class RelationCannotHavePrimaryKeyException extends ConceptualException {
      * @return java.lang.String
      */
     public String getMessage() {
-        return "Relationship " + relation.getName() + " cannot have primary key";
+        return "Relationship " + relationBean.getName() + " cannot have primary key";
     }
 }

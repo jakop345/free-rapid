@@ -15,6 +15,7 @@ import cz.green.swing.ShowException;
 import cz.green.util.ActionAdapter;
 import cz.green.util.ParamActionAdapter;
 import cz.omnicom.ermodeller.conc2obj.ObjDialog;
+import cz.omnicom.ermodeller.conceptual.RelationBean;
 import cz.omnicom.ermodeller.datatype.*;
 import cz.omnicom.ermodeller.errorlog.*;
 import cz.omnicom.ermodeller.sql.SQLDialog;
@@ -1185,7 +1186,7 @@ public class ERModeller extends JFrame implements
                     rel = d.createRelation(l, t, w, h);
                     rel.setID(id
                             + (new Integer(erdoc.getValue("id"))).intValue());
-                    coM = (cz.omnicom.ermodeller.conceptual.Relation) rel
+                    coM = (RelationBean) rel
                             .getModel();
                     s = erdoc.getValue("name");
                     if (s == null)

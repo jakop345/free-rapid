@@ -3,7 +3,7 @@ package cz.omnicom.ermodeller.conc2rela;
 import cz.omnicom.ermodeller.conc2rela.exception.AlreadyContainsExceptionC2R;
 import cz.omnicom.ermodeller.conc2rela.exception.ListExceptionC2R;
 import cz.omnicom.ermodeller.conc2rela.exception.WasNotFoundExceptionC2R;
-import cz.omnicom.ermodeller.conceptual.Relation;
+import cz.omnicom.ermodeller.conceptual.RelationBean;
 import cz.omnicom.ermodeller.sql.AlterAddCommandSQL;
 import cz.omnicom.ermodeller.sql.CreateCommandSQL;
 
@@ -13,7 +13,7 @@ import java.util.Vector;
 /**
  * Super class of relations created from conceptual relations.
  *
- * @see cz.omnicom.ermodeller.conceptual.Relation
+ * @see cz.omnicom.ermodeller.conceptual.RelationBean
  */
 public abstract class RelC2R extends RelationC2R {
     /**
@@ -38,12 +38,12 @@ public abstract class RelC2R extends RelationC2R {
     /**
      * Constructor.
      *
-     * @param aSchemaC2R          owner schema
-     * @param aConceptualRelation corresponding conceptual relation
-     * @see cz.omnicom.ermodeller.conceptual.Relation
+     * @param aSchemaC2R              owner schema
+     * @param aConceptualRelationBean corresponding conceptual relation
+     * @see cz.omnicom.ermodeller.conceptual.RelationBean
      */
-    public RelC2R(SchemaC2R aSchemaC2R, Relation aConceptualRelation) {
-        super(aSchemaC2R, aConceptualRelation);
+    public RelC2R(SchemaC2R aSchemaC2R, RelationBean aConceptualRelationBean) {
+        super(aSchemaC2R, aConceptualRelationBean);
     }
 
     /**

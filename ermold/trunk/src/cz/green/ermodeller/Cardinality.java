@@ -9,6 +9,7 @@ import cz.green.event.interfaces.PaintableManager;
 import cz.green.eventtool.Connection;
 import cz.green.eventtool.ConnectionLine;
 import cz.green.swing.ShowException;
+import cz.omnicom.ermodeller.conceptual.RelationBean;
 
 import javax.swing.*;
 import java.awt.*;
@@ -614,7 +615,7 @@ public class Cardinality extends ConceptualObject {
             //change the relation on which participate
             Relation old = getRelation();
             Connection conn = connectionTo(old);
-            cz.omnicom.ermodeller.conceptual.Relation cRel = (cz.omnicom.ermodeller.conceptual.Relation) cc.getModel();
+            RelationBean cRel = (RelationBean) cc.getModel();
             try {
                 model.setRelation(cRel);
                 if (conn.getOne() == old) {
@@ -637,7 +638,7 @@ public class Cardinality extends ConceptualObject {
         //others cardinalities decompose as new relations
         java.awt.Point p = ent.getCenter(getEntity());
         Relation rel = Relation.createRelation(model.getSchema(), man, p.x, p.y);
-        ((cz.omnicom.ermodeller.conceptual.Relation) rel.getModel()).setName(model.getName());
+        ((RelationBean) rel.getModel()).setName(model.getName());
         model.setName("");
         reconnect(getRelation());
         p = ent.getCenter(getRelation());
