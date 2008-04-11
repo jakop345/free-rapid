@@ -1,7 +1,10 @@
-package cz.omnicom.ermodeller.errorlog;
+package cz.omnicom.ermodeller.errorlog.dialogs;
 
 import cz.green.ermodeller.EntityConstruct;
 import cz.omnicom.ermodeller.conceptual.RelationBean;
+import cz.omnicom.ermodeller.errorlog.ConceptualObjectVectorValidationError;
+import cz.omnicom.ermodeller.errorlog.ErrorLogList;
+import cz.omnicom.ermodeller.errorlog.ValidationError;
 import cz.omnicom.ermodeller.icontree.IconNode;
 import cz.omnicom.ermodeller.icontree.IconNodeRenderer;
 

@@ -164,7 +164,7 @@ public class Cardinality extends ConceptualObject {
      * This returns icon for invalid state.
      *
      * @return Icon represented invalid state of the atribute.
-     * @see cz.omnicom.ermodeller.errorlog.ErrorLogDialog
+     * @see cz.omnicom.ermodeller.errorlog.dialogs.ErrorLogDialog
      */
     public Icon getInvalidIcon() {
         return new ImageIcon(ClassLoader.getSystemResource("img/roleinvalid.gif"));

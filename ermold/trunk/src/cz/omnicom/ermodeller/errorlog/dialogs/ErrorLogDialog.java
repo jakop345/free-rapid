@@ -1,5 +1,7 @@
-package cz.omnicom.ermodeller.errorlog;
+package cz.omnicom.ermodeller.errorlog.dialogs;
 
+import cz.omnicom.ermodeller.errorlog.ErrorLogList;
+import cz.omnicom.ermodeller.errorlog.ValidationError;
 import cz.omnicom.ermodeller.icontree.IconNode;
 import cz.omnicom.ermodeller.icontree.IconNodeRenderer;
 

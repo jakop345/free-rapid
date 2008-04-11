@@ -1,5 +1,8 @@
-package cz.green.ermodeller;
+package cz.green.ermodeller.dialogs;
 
+import cz.green.ermodeller.AppPrefs;
+import cz.green.ermodeller.ConceptualConstruct;
+import cz.green.ermodeller.Consts;
 import cz.green.event.WindowItem;
 import cz.omnicom.ermodeller.sql.SQLConnection;
 
@@ -112,10 +115,10 @@ public class OptionsDialog extends javax.swing.JDialog {
      * @param actionEvent
      */
     private void cancelButton_ActionPerformed(java.awt.event.ActionEvent actionEvent) {
-        getDriverField().setText(connection.getDriver());
-        getURLField().setText(connection.getUrl());
-        getUserField().setText(connection.getUser());
-        getPasswordField().setText(connection.getPasswd());
+//        getDriverField().setText(connection.getDriver());
+//        getURLField().setText(connection.getUrl());
+//        getUserField().setText(connection.getUser());
+//        getPasswordField().setText(connection.getPasswd());
         this.setVisible(false);
     }
 
@@ -1346,7 +1349,7 @@ public class OptionsDialog extends javax.swing.JDialog {
 
         /* Uncomment the following lines to print uncaught exceptions to stdout */
         // System.out.println("--------- UNCAUGHT EXCEPTION ---------");
-        // exception.printStackTrace(System.out);
+        exception.printStackTrace(System.out);
     }
 
     /**
@@ -1383,22 +1386,9 @@ public class OptionsDialog extends javax.swing.JDialog {
             setSize(350, 210);
             setTitle("Options");
             setContentPane(getJDialogContentPane());
-/*      AppNameLabel.setFont(new java.awt.Font("Dialog", 1, 16));
-      AppNameLabel.setText("ER Modeller");
-      VersionLabel.setFont(new java.awt.Font("Dialog", 0, 14));
-      VersionLabel.setMaximumSize(new Dimension(74, 14));
-      VersionLabel.setMinimumSize(new Dimension(74, 14));
-      VersionLabel.setText("version: 4.0");
-      AuthorLabel.setText("Authors:");
-      auth2Label.setText("Tomáš Kremláèek");
-      auth1Label.setText("Aleš Kopecký");
- //     auth3Label.setVerifyInputWhenFocusTarget(true);
-      auth3Label.setText("Jiøí Mareš");
-      auth4Label.setText("Štìpán Ježek");
-      auth5Label.setText("Petr Šitych");
-*/
+
             initConnections();
-            this.getContentPane().add(getJDialogContentPane(), null);
+            //this.getContentPane().add(getJDialogContentPane(), null);
         } catch (java.lang.Throwable ivjExc) {
             handleException(ivjExc);
         }
@@ -1492,10 +1482,10 @@ public class OptionsDialog extends javax.swing.JDialog {
      * Comment
      */
     private void applyButton_ActionPerformed(java.awt.event.ActionEvent actionEvent) {
-        connection.setDriver(getDriverField().getText());
-        connection.setUrl(getURLField().getText());
-        connection.setUser(getUserField().getText());
-        connection.setPasswd(new String(getPasswordField().getPassword()));
+//        connection.setDriver(getDriverField().getText());
+//        connection.setUrl(getURLField().getText());
+//        connection.setUser(getUserField().getText());
+//        connection.setPasswd(new String(getPasswordField().getPassword()));
         AppPrefs.storeProperty(AppPrefs.ENCODING, (String) ivjCodingField.getSelectedItem());
         AppPrefs.storeProperty(AppPrefs.GENERAL_DEFNOTATION, ivjNotationField.getSelectedIndex());
         ConceptualConstruct.SHOW_PK_IN_UML = ivjPkUMLField.getSelectedIndex();
@@ -1506,7 +1496,8 @@ public class OptionsDialog extends javax.swing.JDialog {
         WindowItem.SELECTED_OBJECT_BACKGROUND_COLOR = selectedObjectColorButton.getBackground();
 
         erm.repaint();
-        erm.writeUserConfigFile(connection.getDriver(), connection.getUrl(), connection.getUser());
+        //erm.writeUserConfigFile(connection.getDriver(), connection.getUrl(), connection.getUser());
+        erm.writeUserConfigFile("", "", "");
     }
 
     /**

@@ -1,4 +1,4 @@
-package cz.green.ermodeller;
+package cz.green.ermodeller.dialogs;
 
 import javax.swing.*;
 import java.awt.*;

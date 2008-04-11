@@ -228,7 +228,7 @@ public abstract class ConceptualObject implements Serializable, ShowErrorListene
      * This returns icon for invalid state.
      *
      * @return Icon represented invalid state of the atribute.
-     * @see cz.omnicom.ermodeller.errorlog.ErrorLogDialog
+     * @see cz.omnicom.ermodeller.errorlog.dialogs.ErrorLogDialog
      */
     public abstract Icon getInvalidIcon();
 
@@ -285,7 +285,7 @@ public abstract class ConceptualObject implements Serializable, ShowErrorListene
      * This returns icon for valid state.
      *
      * @return Icon represented valid state of the atribute.
-     * @see cz.omnicom.ermodeller.errorlog.ErrorLogDialog
+     * @see cz.omnicom.ermodeller.errorlog.dialogs.ErrorLogDialog
      */
     public abstract Icon getValidIcon();
 

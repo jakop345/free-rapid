@@ -1,5 +1,7 @@
 package cz.green.ermodeller;
 
+import cz.green.ermodeller.dialogs.AboutDialog;
+import cz.green.ermodeller.dialogs.OptionsDialog;
 import cz.green.ermodeller.interfaces.FontManager;
 import cz.green.event.*;
 import cz.green.event.exceptions.ItemNotInsideManagerException;
@@ -14,7 +16,11 @@ import cz.green.util.ParamActionAdapter;
 import cz.omnicom.ermodeller.conc2obj.ObjDialog;
 import cz.omnicom.ermodeller.conceptual.RelationBean;
 import cz.omnicom.ermodeller.datatype.*;
-import cz.omnicom.ermodeller.errorlog.*;
+import cz.omnicom.ermodeller.errorlog.ConceptualObjectVectorValidationError;
+import cz.omnicom.ermodeller.errorlog.ErrorLogList;
+import cz.omnicom.ermodeller.errorlog.ValidationError;
+import cz.omnicom.ermodeller.errorlog.dialogs.ConflictsDialog;
+import cz.omnicom.ermodeller.errorlog.dialogs.ErrorLogDialog;
 import cz.omnicom.ermodeller.sql.SQLDialog;
 import cz.omnicom.ermodeller.typeseditor.UserTypeStorage;
 import cz.omnicom.ermodeller.typeseditor.UserTypeStorageVector;
@@ -230,7 +236,7 @@ public class ERModeller extends JFrame implements
      * @param url    connection DB url
      * @param user   user name
      */
-    protected void writeUserConfigFile(String driver, String url, String user) {
+    public void writeUserConfigFile(String driver, String url, String user) {
         AppPrefs.storeProperty(AppPrefs.DBCONNECT_DRIVER, driver);
         AppPrefs.storeProperty(AppPrefs.DBCONNECT_URL, url);
         AppPrefs.storeProperty(AppPrefs.DBCONNECT_USER, user);

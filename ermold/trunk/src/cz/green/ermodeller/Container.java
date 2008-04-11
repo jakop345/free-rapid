@@ -1,5 +1,6 @@
 package cz.green.ermodeller;
 
+import cz.green.ermodeller.dialogs.ConstraintsDialog;
 import cz.green.ermodeller.interfaces.FontManager;
 import cz.green.ermodeller.interfaces.ISchema;
 import cz.green.ermodeller.interfaces.ModeSwitcher;
