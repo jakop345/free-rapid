@@ -18,7 +18,7 @@ public class Entity extends ConceptualConstruct {
     /**
      * Holds the group of atributes as a primary key of the <code>Entity</code>.
      */
-    protected final Vector primaryKey = new Vector();
+    protected final Vector<Atribute> primaryKey = new Vector<Atribute>();
     /**
      * Constraints of <code>Entity</code>.
      */
@@ -30,21 +30,21 @@ public class Entity extends ConceptualConstruct {
     /**
      * Sons in ISA hierarchy (subentities of this one).
      */
-    protected Vector isaSons = new Vector();
+    protected Vector<Entity> isaSons = new Vector<Entity>();
     /**
      * <code>Entities</code> which this <code>Entity</code> is addicted to.
      */
-    protected Vector strongAddictionsParents = new Vector();
+    protected Vector<Entity> strongAddictionsParents = new Vector<Entity>();
     /**
      * <code>Entities</code> which are addicted to this <code>Entity</code>.
      */
-    protected Vector strongAddictionsSons = new Vector();
+    protected Vector<Entity> strongAddictionsSons = new Vector<Entity>();
     /**
      * Unique keys held by construct.
      *
      * @see cz.omnicom.ermodeller.conceptual.UniqueKey
      */
-    protected Vector uniqueKeys = new Vector();
+    protected Vector<UniqueKey> uniqueKeys = new Vector<UniqueKey>();
 
     private static final int NO_SUBSET = 0;
     private static final int FIRST_SUBSET = 1;
@@ -220,9 +220,9 @@ public class Entity extends ConceptualConstruct {
      * Disposes all ISA sons from the <code>Entity's</code> schema.
      */
     private synchronized void disposeAllISASons() {
-        for (Enumeration elements = getISASons().elements(); elements.hasMoreElements();) {
+        for (Enumeration<Entity> elements = getISASons().elements(); elements.hasMoreElements();) {
             try {
-                getSchema().disposeEntity((Entity) elements.nextElement());
+                getSchema().disposeEntity(elements.nextElement());
             }
             catch (ParameterCannotBeNullException e) {
             } // Cannot be thrown.
@@ -230,53 +230,12 @@ public class Entity extends ConceptualConstruct {
             } // Never mind, but shouldn't be thrown.
         }
     }
-/**
- * Disposes all construct's unique keys.
- * @exception cz.omnicom.ermodeller.conceptual.exception.IsStrongAddictedException
- */
-/*private synchronized void disposeAllUniqueKeys() throws IsStrongAddictedException {
-	Vector oldValue = (Vector) getUniqueKeys().clone();
-	// All unique keys removed -> also remove primary key.
-	try {
-		setPrimaryKey(null);
-	}
-	catch (IsISASonException e) {} // cannot be thrown
-	// Disconnects each unique key from construct.
-	for (Enumeration elements = getUniqueKeys().elements() ; elements.hasMoreElements() ;) {
-		try {
-			((UniqueKey) elements.nextElement()).setEntity(null);
-		}
-		catch (CannotBeResetException e) {} // cannot be thrown
-	}
-	// Construct disposes each unique key itself.
-	emptyConceptualVector(getUniqueKeys());
-	firePropertyChange(UNIQUEKEYS_PROPERTY_CHANGE, oldValue, getUniqueKeys());
-}*/
-/**
- * Removes <code>aUniqueKey</code> from the list of unique keys end disposes it.
- *
- * @param aUniqueKey cz.omnicom.ermodeller.conceptual.UniqueKey
- * @exception cz.omnicom.ermodeller.conceptual.exception.IsStrongAddictedException
- * @exception cz.omnicom.ermodeller.conceptual.exception.ParameterCannotBeNullException
- * @exception cz.omnicom.ermodeller.conceptual.exception.WasNotFoundException
- * @see #createUniqueKey
- */
-    /*public synchronized void disposeUniqueKey(UniqueKey aUniqueKey) throws ParameterCannotBeNullException, WasNotFoundException, IsStrongAddictedException {
-        if (aUniqueKey == null)
-            throw new ParameterCannotBeNullException();
 
-        try {
-            removeUniqueKey(aUniqueKey);
-            // Throws WasNotFoundException if the atribute wasn't found and then wasn't removed.
-        }
-        catch (ParameterCannotBeNullException e) {} // Cannot be thrown.
-        aUniqueKey.empty();
-    }*/
-/**
- * Empties the <code>Entity</code>.
- *
- * @see cz.omnicom.ermodeller.conceptual.ConceptualConstruct#empty
- */
+    /**
+     * Empties the <code>Entity</code>.
+     *
+     * @see cz.omnicom.ermodeller.conceptual.ConceptualConstruct#empty
+     */
     protected synchronized void empty() {
         super.empty();
         // Disposes all ISA sons
@@ -330,9 +289,9 @@ public class Entity extends ConceptualConstruct {
      *
      * @return java.util.Vector
      */
-    public Vector getISASons() {
+    public Vector<Entity> getISASons() {
         if (isaSons == null)
-            isaSons = new Vector();
+            isaSons = new Vector<Entity>();
         return isaSons;
     }
 
@@ -342,7 +301,7 @@ public class Entity extends ConceptualConstruct {
      * @return cz.omnicom.ermodeller.conceptual.UniqueKey
      * @see #setPrimaryKey
      */
-    public Vector getPrimaryKey() {
+    public Vector<Atribute> getPrimaryKey() {
         return primaryKey;
     }
 
@@ -351,9 +310,9 @@ public class Entity extends ConceptualConstruct {
      *
      * @return java.util.Vector
      */
-    public Vector getStrongAddictionsParents() {
+    public Vector<Entity> getStrongAddictionsParents() {
         if (strongAddictionsParents == null)
-            strongAddictionsParents = new Vector();
+            strongAddictionsParents = new Vector<Entity>();
         return strongAddictionsParents;
     }
 
@@ -362,9 +321,9 @@ public class Entity extends ConceptualConstruct {
      *
      * @return java.util.Vector
      */
-    public Vector getStrongAddictionsSons() {
+    public Vector<Entity> getStrongAddictionsSons() {
         if (strongAddictionsSons == null)
-            strongAddictionsSons = new Vector();
+            strongAddictionsSons = new Vector<Entity>();
         return strongAddictionsSons;
     }
 
@@ -373,9 +332,9 @@ public class Entity extends ConceptualConstruct {
      *
      * @return java.util.Vector
      */
-    public Vector getUniqueKeys() {
+    public Vector<UniqueKey> getUniqueKeys() {
         if (uniqueKeys == null)
-            uniqueKeys = new Vector();
+            uniqueKeys = new Vector<UniqueKey>();
         return uniqueKeys;
     }
 
@@ -404,8 +363,8 @@ public class Entity extends ConceptualConstruct {
         // return false;
         if (anEntity == null)
             return false;
-        for (Enumeration elements = getStrongAddictionsParents().elements(); elements.hasMoreElements();) {
-            Entity parent = (Entity) elements.nextElement();
+        for (Enumeration<Entity> elements = getStrongAddictionsParents().elements(); elements.hasMoreElements();) {
+            Entity parent = elements.nextElement();
             if (parent == anEntity)
                 return true;
             if (parent.haveHigherCombinedParent(anEntity))
@@ -444,8 +403,8 @@ public class Entity extends ConceptualConstruct {
         // return false;
         if (anEntity == null)
             return false;
-        for (Enumeration elements = getStrongAddictionsParents().elements(); elements.hasMoreElements();) {
-            Entity parent = (Entity) elements.nextElement();
+        for (Enumeration<Entity> elements = getStrongAddictionsParents().elements(); elements.hasMoreElements();) {
+            Entity parent = elements.nextElement();
             if (parent == anEntity)
                 return true;
             if (parent.haveHigherStrongAddictionParent(anEntity))
@@ -469,8 +428,8 @@ public class Entity extends ConceptualConstruct {
         // return false;
         if (anEntity == null)
             return false;
-        for (Enumeration elements = getStrongAddictionsParents().elements(); elements.hasMoreElements();) {
-            Entity parent = (Entity) elements.nextElement();
+        for (Enumeration<Entity> elements = getStrongAddictionsParents().elements(); elements.hasMoreElements();) {
+            Entity parent = elements.nextElement();
             if (anEntity.haveHigherStrongAddictionParent(parent))
                 return true;
             if (parent.haveTransitivelyStrongAddictionParent(anEntity))
@@ -521,13 +480,13 @@ public class Entity extends ConceptualConstruct {
  */
     private ErrorLogList checkUniqueKeyEquality() {
         ErrorLogList errorLogList = new ErrorLogList();
-        Vector vectorToCheck = new Vector();
-        for (Enumeration elements = getUniqueKeys().elements(); elements.hasMoreElements();) {
-            vectorToCheck.addElement(new ConceptualObjectNameController((UniqueKey) elements.nextElement()));
+        Vector<ConceptualObjectNameController> vectorToCheck = new Vector<ConceptualObjectNameController>();
+        for (Enumeration<UniqueKey> elements = getUniqueKeys().elements(); elements.hasMoreElements();) {
+            vectorToCheck.addElement(new ConceptualObjectNameController(elements.nextElement()));
         }
 
         for (int i = 0; i < vectorToCheck.size(); i++) {
-            ConceptualObjectNameController firstController = (ConceptualObjectNameController) vectorToCheck.elementAt(i);
+            ConceptualObjectNameController firstController = vectorToCheck.elementAt(i);
             if (!firstController.isAlreadyWrong()) {
                 UniqueKey firstUniqueKey = (UniqueKey) firstController.getConceptualObject();
                 Vector firstAtributes = firstUniqueKey.getAtributes();
@@ -535,7 +494,7 @@ public class Entity extends ConceptualConstruct {
                 UniqueKeyEqualValidationError error = new UniqueKeyEqualValidationError();
                 boolean errorAppeared = false;
                 for (int j = i + 1; j < vectorToCheck.size(); j++) {
-                    ConceptualObjectNameController secondController = (ConceptualObjectNameController) vectorToCheck.elementAt(j);
+                    ConceptualObjectNameController secondController = vectorToCheck.elementAt(j);
                     if (!secondController.isAlreadyWrong()) {
                         UniqueKey secondUniqueKey = (UniqueKey) secondController.getConceptualObject();
                         Vector secondAtributes = secondUniqueKey.getAtributes();
@@ -566,13 +525,13 @@ public class Entity extends ConceptualConstruct {
      */
     private ErrorLogList checkUniqueKeySubsets() {
         ErrorLogList errorLogList = new ErrorLogList();
-        Vector vectorToCheck = new Vector();
-        for (Enumeration elements = getUniqueKeys().elements(); elements.hasMoreElements();) {
-            vectorToCheck.addElement(new ConceptualObjectNameController((UniqueKey) elements.nextElement()));
+        Vector<ConceptualObjectNameController> vectorToCheck = new Vector<ConceptualObjectNameController>();
+        for (Enumeration<UniqueKey> elements = getUniqueKeys().elements(); elements.hasMoreElements();) {
+            vectorToCheck.addElement(new ConceptualObjectNameController(elements.nextElement()));
         }
 
         for (int i = 0; i < vectorToCheck.size(); i++) {
-            ConceptualObjectNameController firstController = (ConceptualObjectNameController) vectorToCheck.elementAt(i);
+            ConceptualObjectNameController firstController = vectorToCheck.elementAt(i);
             if (!firstController.isAlreadyWrong()) {
                 UniqueKey firstUniqueKey = (UniqueKey) firstController.getConceptualObject();
                 Vector firstAtributes = firstUniqueKey.getAtributes();
@@ -580,7 +539,7 @@ public class Entity extends ConceptualConstruct {
                 UniqueKeySubsetValidationError error = new UniqueKeySubsetValidationError();
                 boolean errorAppeared = false;
                 for (int j = i + 1; j < vectorToCheck.size(); j++) {
-                    ConceptualObjectNameController secondController = (ConceptualObjectNameController) vectorToCheck.elementAt(j);
+                    ConceptualObjectNameController secondController = vectorToCheck.elementAt(j);
                     if (!secondController.isAlreadyWrong()) {
                         UniqueKey secondUniqueKey = (UniqueKey) secondController.getConceptualObject();
                         Vector secondAtributes = secondUniqueKey.getAtributes();
@@ -619,7 +578,7 @@ public class Entity extends ConceptualConstruct {
     protected boolean isAtributeMemberOfPrimaryKey(Atribute anAtribute) {
         if (anAtribute == null)
             return false;
-        Vector primaryKey = getPrimaryKey();
+        Vector<Atribute> primaryKey = getPrimaryKey();
         return primaryKey != null && primaryKey.contains(anAtribute);
     }
 
@@ -698,9 +657,9 @@ public class Entity extends ConceptualConstruct {
      * Removes all strong addiction parents from the <code>Entity</code>.
      */
     private synchronized void removeAllAddictionParents() {
-        for (Enumeration elements = getStrongAddictionsParents().elements(); elements.hasMoreElements();) {
+        for (Enumeration<Entity> elements = getStrongAddictionsParents().elements(); elements.hasMoreElements();) {
             try {
-                removeStrongAddictionParent((Entity) elements.nextElement());
+                removeStrongAddictionParent(elements.nextElement());
             }
             catch (ParameterCannotBeNullException e) {
             } // Cannot be thrown.
@@ -714,9 +673,9 @@ public class Entity extends ConceptualConstruct {
      * Removes all strong addiction sons from the <code>Entity</code>.
      */
     private synchronized void removeAllAddictionSons() {
-        for (Enumeration elements = getStrongAddictionsSons().elements(); elements.hasMoreElements();) {
+        for (Enumeration<Entity> elements = getStrongAddictionsSons().elements(); elements.hasMoreElements();) {
             try {
-                ((Entity) elements.nextElement()).removeStrongAddictionParent(this);
+                (elements.nextElement()).removeStrongAddictionParent(this);
             }
             catch (ParameterCannotBeNullException e) {
             } // Cannot be thrown.
@@ -760,9 +719,9 @@ public class Entity extends ConceptualConstruct {
      * @see cz.omnicom.ermodeller.conceptual.UniqueKey#removeAtribute
      */
     private synchronized void removeAtributeFromAllUniqueKeys(Atribute anAtribute) {
-        for (Enumeration elements = getUniqueKeys().elements(); elements.hasMoreElements();) {
+        for (Enumeration<UniqueKey> elements = getUniqueKeys().elements(); elements.hasMoreElements();) {
             try {
-                ((UniqueKey) elements.nextElement()).removeAtribute(anAtribute);
+                (elements.nextElement()).removeAtribute(anAtribute);
             }
             catch (ParameterCannotBeNullException e) {
             } // Never mind.
@@ -897,8 +856,8 @@ public class Entity extends ConceptualConstruct {
     protected void setAllUnvalidated() {
         // all objects set unvalidated
         //    - uniqueKeys
-        for (Enumeration uniqueKeys = getUniqueKeys().elements(); uniqueKeys.hasMoreElements();) {
-            ((UniqueKey) uniqueKeys.nextElement()).setAllUnvalidated();
+        for (Enumeration<UniqueKey> uniqueKeys = getUniqueKeys().elements(); uniqueKeys.hasMoreElements();) {
+            (uniqueKeys.nextElement()).setAllUnvalidated();
         }
         //    - atributes are set here:
         super.setAllUnvalidated();
@@ -950,7 +909,7 @@ public class Entity extends ConceptualConstruct {
     }
 
     public synchronized void addMemberOfPrimaryKey(Atribute aMemberOfPrimaryKey) {
-        Vector oldValue = primaryKey;
+        Vector<Atribute> oldValue = primaryKey;
         primaryKey.addElement(aMemberOfPrimaryKey);
 /*	if (primaryKey != null)
 		primaryKey.setAllAtributesArbitrary();
@@ -961,7 +920,7 @@ public class Entity extends ConceptualConstruct {
     /**
      */
     public synchronized void removeMemberOfPrimaryKey(Atribute aMemberOfPrimaryKey) {
-        Vector oldValue = primaryKey;
+        Vector<Atribute> oldValue = primaryKey;
         if (primaryKey != null && primaryKey.contains(aMemberOfPrimaryKey))
             primaryKey.removeElement(aMemberOfPrimaryKey);
 /*	if (primaryKey != null)
@@ -1013,8 +972,8 @@ public class Entity extends ConceptualConstruct {
                 }
             }
         }
-        for (Enumeration elements = getUniqueKeys().elements(); elements.hasMoreElements();) {
-            ErrorLogList unqErrorLogList = ((UniqueKey) elements.nextElement()).validate();
+        for (Enumeration<UniqueKey> elements = getUniqueKeys().elements(); elements.hasMoreElements();) {
+            ErrorLogList unqErrorLogList = (elements.nextElement()).validate();
             errorLogList.concatErrorLogList(unqErrorLogList);
         }
         // unique key atributes cannot be subset of primary key atributes
