@@ -42,7 +42,7 @@ public class ShowProperty extends JPanel implements PropertyChangeListener, Acti
         this.name = name;
         setLayout(new java.awt.BorderLayout());
         String text = editor.getAsText();
-        String[] choices = null;
+        String[] choices;
         Dimension d = getSize();
         if (!editor.isPaintable()) {
             if ((editor.supportsCustomEditor()) && (text != null)) {
@@ -247,6 +247,6 @@ public class ShowProperty extends JPanel implements PropertyChangeListener, Acti
      *            and the property that has changed.
      */
     public void propertyChange(java.beans.PropertyChangeEvent evt) {
-	propertyChange();
-}
+        propertyChange();
+    }
 }

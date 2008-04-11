@@ -1,10 +1,11 @@
 package cz.green.ermodeller;
 
-import cz.green.event.exceptions.ItemNotInsideManagerException;
-import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.ResizePoint;
+import cz.green.event.exceptions.ImpossibleNegativeValueException;
+import cz.green.event.exceptions.ItemNotInsideManagerException;
+import cz.green.event.interfaces.Item;
+import cz.green.event.interfaces.Manager;
 import cz.green.event.interfaces.PaintableManager;
-import cz.green.event.interfaces.*;
 import cz.green.eventtool.Connection;
 import cz.green.eventtool.ConnectionArrow;
 import cz.green.eventtool.ConnectionManager;
@@ -47,7 +48,7 @@ public class StrongAddiction extends ConceptualObject {
     }
 
     protected java.awt.Dimension countSize() {
-        java.awt.FontMetrics fm = null;
+        java.awt.FontMetrics fm;
         fm = ((FontManager) manager).getReferentFontMetrics();
         int w2 = fm.stringWidth("N:N"), height = fm.getAscent();
         try {
@@ -217,7 +218,7 @@ public class StrongAddiction extends ConceptualObject {
      * Handle moving event and adds restrictions to BIN and UML notation
      */
     public void handleExMovingEvent(ExMovingEvent event) {
-        int dx = 0, dy = 0;
+        int dx, dy = 0;
         java.awt.Point cardinalityCenter = getCenter();
         java.awt.Rectangle er;
         er = (ACTUAL_NOTATION == UML) ? getParent().getBounds() : getChild().getBounds();
@@ -423,11 +424,12 @@ public class StrongAddiction extends ConceptualObject {
 //public void paintFast(java.awt.Graphics g) {
 
     //}
-/**
- * Prints the window. Exists because of implementing the interface Printable.
- *
- * @see Printable#print(java.awt.Graphics)
- */
+
+    /**
+     * Prints the window. Exists because of implementing the interface Printable.
+     *
+     * @see Printable#print(java.awt.Graphics)
+     */
     public void print(java.awt.Graphics g) {
         java.awt.Rectangle r = getBounds();
         switch (ACTUAL_NOTATION) {

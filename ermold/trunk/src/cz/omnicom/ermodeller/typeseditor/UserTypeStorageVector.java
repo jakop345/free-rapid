@@ -191,7 +191,7 @@ public class UserTypeStorageVector {
      * It will be used for generating SQL script
      */
     public String getTypes() {
-        int i = 0;
+        int i;
         String list = "";
 
         for (i = 0; i < getSize(); i++) {
@@ -201,9 +201,9 @@ public class UserTypeStorageVector {
             } else {
                 list = list + ",\n" + TabCreator.getTabs(1) + getTypeAt(i).getTypeName();
                 list = list + " " + getTypeAt(i).getDataType().toString();
-			}
-		}
-		return list;
-	}
-	
+            }
+        }
+        return list;
+    }
+
 }

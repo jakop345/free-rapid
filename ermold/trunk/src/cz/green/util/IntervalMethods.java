@@ -299,7 +299,7 @@ public abstract class IntervalMethods {
      *          if the <code>interval</code> has start point greater than end point.
      */
     public static int size(int[] interval) throws BadDimensionException, WrongIntervalException {
-        int size = 0;
+        int size;
         try {
             if ((size = interval[1] - interval[0]) < 0)
                 throw new WrongIntervalException();
@@ -371,7 +371,7 @@ public abstract class IntervalMethods {
                 return RIGHT;
             return IN;
         } catch (IndexOutOfBoundsException e) {
-            throw new BadDimensionException( interval.length, 2 );
-	}
-}
+            throw new BadDimensionException(interval.length, 2);
+        }
+    }
 }

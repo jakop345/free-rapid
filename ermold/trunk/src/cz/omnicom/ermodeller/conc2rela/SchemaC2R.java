@@ -494,7 +494,7 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
             for (int j = i + 1; j < names.size(); j++) {
                 String compName = (String) names.elementAt(j);
                 int compLen = (refName.length() < compName.length()) ? refName.length() : compName.length();
-                int min = 1;
+                int min;
                 boolean equal = true;
                 for (min = 1; min < compLen && equal; min++) {
                     equal = refName.regionMatches(true, 0, compName, 0, min);
@@ -529,7 +529,7 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
             for (int j = i + 1; j < names.size(); j++) {
                 String compName = (String) names.elementAt(j);
                 int compLen = (refName.length() < compName.length()) ? refName.length() : compName.length();
-                int min = 1;
+                int min;
                 boolean equal = true;
                 for (min = 1; min < compLen && equal; min++) {
                     equal = refName.regionMatches(true, 0, compName, 0, min);
@@ -783,5 +783,5 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
     protected void removeRelationC2R(RelationC2R relationC2R) throws WasNotFoundExceptionC2R {
         if (!getRelationsC2R().removeElement(relationC2R))
             throw new WasNotFoundExceptionC2R(this, relationC2R, ListExceptionC2R.RELATIONS_LIST);
-}
+    }
 }

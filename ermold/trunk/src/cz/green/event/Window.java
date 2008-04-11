@@ -1,12 +1,12 @@
 package cz.green.event;
 
+import cz.green.event.exceptions.ImpossibleNegativeValueException;
+import cz.green.event.exceptions.ItemNotInsideManagerException;
+import cz.green.event.exceptions.ValueOutOfRangeException;
+import cz.green.event.interfaces.*;
 import cz.green.util.BadDimensionException;
 import cz.green.util.IntervalMethods;
 import cz.green.util.IntervalMethodsException;
-import cz.green.event.interfaces.*;
-import cz.green.event.exceptions.ValueOutOfRangeException;
-import cz.green.event.exceptions.ItemNotInsideManagerException;
-import cz.green.event.exceptions.ImpossibleNegativeValueException;
 
 import java.awt.*;
 
@@ -466,7 +466,7 @@ public class Window implements Item, java.io.Serializable {
         }
         try {
             resize(event.getDx(), event.getDy(), event.getResizeRect().direction, true);
-            Rectangle r = null;
+            Rectangle r;
             if (rectangle != null) {
                 r = rectangle.union(getBounds());
                 rectangle = null;
@@ -547,7 +547,7 @@ public class Window implements Item, java.io.Serializable {
      *         Otherways, returns <code>false</code>.
      */
     public boolean invokeEventHandler(cz.green.event.interfaces.Event event) {
-        java.lang.reflect.Method handler = null;
+        java.lang.reflect.Method handler;
         Class[] parameterTypes = new Class[1];
         Object[] parameters = new Object[1];
         String methodName = event.getClass().getName(); //name of the event handler
@@ -710,7 +710,7 @@ public class Window implements Item, java.io.Serializable {
         if (tree[dimension][0] == null)
             return rect[dimension][0];
         else {
-            Item step = this, help = null;
+            Item step = this, help;
             while ((help = step.leftSuccessor(dimension)) != null)
                 step = help;
             return step.mostLeft(dimension);
@@ -727,7 +727,7 @@ public class Window implements Item, java.io.Serializable {
         if (tree[dimension][1] == null)
             return rect[dimension][1];
         else {
-            Item step = this, help = null;
+            Item step = this, help;
             while ((help = step.rightSuccessor(dimension)) != null)
                 step = help;
             return step.mostRight(dimension);
@@ -907,6 +907,6 @@ public class Window implements Item, java.io.Serializable {
     }
 
     public void setSelectable(boolean selectable) {
-	this.selectable = selectable;
-}
+        this.selectable = selectable;
+    }
 }

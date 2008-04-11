@@ -14,7 +14,7 @@ public class UniqueKeyBeanInfo extends java.beans.SimpleBeanInfo {
         try {
             try {
                 /* Using methods via getMethod is the faster way to create the atributes property descriptor. */
-                java.lang.reflect.Method aGetMethod = null;
+                java.lang.reflect.Method aGetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aGetMethodParameterTypes[] = {};
@@ -60,7 +60,7 @@ public class UniqueKeyBeanInfo extends java.beans.SimpleBeanInfo {
         try {
             try {
                 /* Using methods via getMethod is the faster way to create the entity property descriptor. */
-                java.lang.reflect.Method aGetMethod = null;
+                java.lang.reflect.Method aGetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aGetMethodParameterTypes[] = {};
@@ -71,7 +71,7 @@ public class UniqueKeyBeanInfo extends java.beans.SimpleBeanInfo {
                     aGetMethod = findMethod(getBeanClass(), "getEntity", 0);
                 }
                 ;
-                java.lang.reflect.Method aSetMethod = null;
+                java.lang.reflect.Method aSetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aSetMethodParameterTypes[] = {

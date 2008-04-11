@@ -168,7 +168,7 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
         try {
             try {
                 /* Using methods via getMethod is the faster way to create the ISAParent property descriptor. */
-                java.lang.reflect.Method aGetMethod = null;
+                java.lang.reflect.Method aGetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aGetMethodParameterTypes[] = {};
@@ -179,7 +179,7 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
                     aGetMethod = findMethod(getBeanClass(), "getISAParent", 0);
                 }
                 ;
-                java.lang.reflect.Method aSetMethod = null;
+                java.lang.reflect.Method aSetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aSetMethodParameterTypes[] = {
@@ -226,7 +226,7 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
         try {
             try {
                 /* Using methods via getMethod is the faster way to create the ISASons property descriptor. */
-                java.lang.reflect.Method aGetMethod = null;
+                java.lang.reflect.Method aGetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aGetMethodParameterTypes[] = {};
@@ -273,7 +273,7 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
             try {
                 /* Using methods via getMethod is the faster way to create the primaryKey property descriptor. */
                 java.lang.reflect.Method aGetMethod = null;
-                java.lang.reflect.Method aSetMethod = null;
+                java.lang.reflect.Method aSetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aSetMethodParameterTypes[] = {
@@ -320,7 +320,7 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
         try {
             try {
                 /* Using methods via getMethod is the faster way to create the strongAddictionsParents property descriptor. */
-                java.lang.reflect.Method aGetMethod = null;
+                java.lang.reflect.Method aGetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aGetMethodParameterTypes[] = {};
@@ -366,7 +366,7 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
         try {
             try {
                 /* Using methods via getMethod is the faster way to create the strongAddictionsSons property descriptor. */
-                java.lang.reflect.Method aGetMethod = null;
+                java.lang.reflect.Method aGetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aGetMethodParameterTypes[] = {};
@@ -412,7 +412,7 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
         try {
             try {
                 /* Using methods via getMethod is the faster way to create the uniqueKeys property descriptor. */
-                java.lang.reflect.Method aGetMethod = null;
+                java.lang.reflect.Method aGetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aGetMethodParameterTypes[] = {};

@@ -186,7 +186,7 @@ public class PrintPreview extends JComponent implements MouseListener, MouseMoti
             if (lastPage.x != x || lastPage.y != y) {
                 lastPage.x = x;
                 lastPage.y = y;
-                printPages[x][y] = (printPages[x][y]) ? false : true;
+                printPages[x][y] = (!printPages[x][y]);
                 repaint(x * previewPageSize.width, y * previewPageSize.height, previewPageSize.width - 1, previewPageSize.height - 1);
             }
         }
@@ -258,8 +258,8 @@ public class PrintPreview extends JComponent implements MouseListener, MouseMoti
                 java.awt.Rectangle r = new java.awt.Rectangle();
                 for (int x = 1; x <= nPages.width; x++) {
                     for (int y = 1; y <= nPages.height; y++) {
-                        r.x = 0 + (x - 1) * previewPageSize.width + 2;
-                        r.y = 0 + (y - 1) * previewPageSize.height + 2;
+                        r.x = (x - 1) * previewPageSize.width + 2;
+                        r.y = (y - 1) * previewPageSize.height + 2;
                         r.width = previewPageSize.width - 5;
                         r.height = previewPageSize.height - 5;
                         g.drawRect(r.x - 2, r.y - 2, r.width + 4, r.height + 4);
@@ -322,8 +322,8 @@ public class PrintPreview extends JComponent implements MouseListener, MouseMoti
      */
     public void setPrintScale(int newValue) {
         this.printScale = ((float) 100.0) / ((float) newValue);
-	this.fitPage = false;
-	this.printPages = null;
-	repaint();
-}
+        this.fitPage = false;
+        this.printPages = null;
+        repaint();
+    }
 }

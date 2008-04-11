@@ -2,9 +2,9 @@ package cz.green.eventtool;
 
 import cz.green.ermodeller.AppPrefs;
 import cz.green.ermodeller.Consts;
+import cz.green.event.interfaces.ContainerDesktop;
 import cz.green.swing.*;
 import cz.green.util.ActionAdapter;
-import cz.green.event.interfaces.ContainerDesktop;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -356,7 +356,8 @@ public class PrintPreviewDialog extends JDialog implements ItemListener, KeyList
 
                 ;
             });
-            aPrintPreviewDialog.setVisible(true);;
+            aPrintPreviewDialog.setVisible(true);
+            ;
             java.awt.Insets insets = aPrintPreviewDialog.getInsets();
             aPrintPreviewDialog.setSize(aPrintPreviewDialog.getWidth() + insets.left + insets.right, aPrintPreviewDialog.getHeight() + insets.top + insets.bottom);
             aPrintPreviewDialog.setVisible(true);
@@ -375,7 +376,7 @@ public class PrintPreviewDialog extends JDialog implements ItemListener, KeyList
             try {
                 scale = desktop.getScale();
                 boolean[][] printPage = getPrintPreview().getPrintPages();
-                java.awt.Graphics g = null;
+                java.awt.Graphics g;
                 java.awt.Dimension dim = printJob.getPageDimension();
                 float printScale = getPrintPreview().getPrintScale();
                 desktop.setScale(printScale);
@@ -425,7 +426,8 @@ public class PrintPreviewDialog extends JDialog implements ItemListener, KeyList
         ResolutionDialog rd = new ResolutionDialog(parent);
         java.awt.Dimension dim = getPrintPreview().getPageSize();
         rd.setResolution(new java.awt.Dimension(dim.width, dim.height));
-        rd.setVisible(true);;
+        rd.setVisible(true);
+        ;
         getPrintPreview().setPageSize(rd.getResolution());
     }
 
@@ -548,7 +550,7 @@ public class PrintPreviewDialog extends JDialog implements ItemListener, KeyList
      */
     public boolean selectPrintJob() {
         String[] options = {"Image", "Print"};
-        int option = 0;
+        int option;
         option = JOptionPane.showOptionDialog(parent, "Print schema or save it as image?", "How to print", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
         getResolutionButton().setEnabled(!(print = (option == 1)));
         switch (option) {

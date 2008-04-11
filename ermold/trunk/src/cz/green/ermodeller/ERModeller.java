@@ -1,6 +1,9 @@
 package cz.green.ermodeller;
 
-import cz.green.event.*;
+import cz.green.event.MoveEvent;
+import cz.green.event.ResizeEvent;
+import cz.green.event.ResizePoint;
+import cz.green.event.ResizeRectangle;
 import cz.green.event.exceptions.ItemNotInsideManagerException;
 import cz.green.eventtool.Connection;
 import cz.green.eventtool.PrintPreviewDialog;
@@ -254,7 +257,7 @@ public class ERModeller extends JFrame implements
      * Compose schema with file
      */
     public void compose() {
-        String fileName = "";
+        String fileName;
         try {
             JFileChooser chooser = new JFileChooser();
             chooser.setDialogTitle("Open schema");
@@ -353,7 +356,7 @@ public class ERModeller extends JFrame implements
     public void generate() {
         try {
             if (getPlace().getDesktop() instanceof Desktop) {
-                cz.omnicom.ermodeller.conc2rela.SchemaC2R schemaC2R = null;
+                cz.omnicom.ermodeller.conc2rela.SchemaC2R schemaC2R;
                 cz.omnicom.ermodeller.conceptual.Schema model = (cz.omnicom.ermodeller.conceptual.Schema) ((Desktop) getPlace()
                         .getDesktop()).getModel();
                 ErrorLogList list = model.checkConsistency();
@@ -410,7 +413,7 @@ public class ERModeller extends JFrame implements
         try {
 
             if (getPlace().getDesktop() instanceof Desktop) {
-                cz.omnicom.ermodeller.conc2rela.SchemaC2R schemaC2R = null;
+                cz.omnicom.ermodeller.conc2rela.SchemaC2R schemaC2R;
                 cz.omnicom.ermodeller.conceptual.Schema model = (cz.omnicom.ermodeller.conceptual.Schema) ((Desktop) getPlace()
                         .getDesktop()).getModel();
                 ErrorLogList list = model.checkConsistency();
@@ -883,7 +886,7 @@ public class ERModeller extends JFrame implements
     }
 
     public void exit() {
-        int option = 0;
+        int option;
         if (isChanged()) {
             option = JOptionPane.showConfirmDialog(this,
                     "Do you want to save the schema?", "Save question",
@@ -1078,7 +1081,7 @@ public class ERModeller extends JFrame implements
     public String loadDesktop(Desktop d, int id, Document doc)
             throws java.io.IOException, ClassNotFoundException {
         int i, t, l, tt, ll, w, h, notation;
-        String prefix = "";
+        String prefix;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder parser;
         try {
@@ -1100,7 +1103,7 @@ public class ERModeller extends JFrame implements
         cz.omnicom.ermodeller.conceptual.Atribute atrM;
         cz.omnicom.ermodeller.conceptual.ConceptualConstruct ccM;
         cz.omnicom.ermodeller.conceptual.Entity entM;
-        cz.omnicom.ermodeller.conceptual.Schema schemaM = null;
+        cz.omnicom.ermodeller.conceptual.Schema schemaM;
         cz.omnicom.ermodeller.conceptual.Cardinality carM;
         cz.omnicom.ermodeller.conceptual.UniqueKey uniM;
         cz.omnicom.ermodeller.datatype.DataType dt;
@@ -1347,7 +1350,7 @@ public class ERModeller extends JFrame implements
      */
     public void loadFromFile(String fileName, int what)
             throws java.io.IOException, ClassNotFoundException {
-        int i, id = 0;
+        int i, id;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder parser = null;
         try {
@@ -1368,12 +1371,12 @@ public class ERModeller extends JFrame implements
         cz.omnicom.ermodeller.conceptual.Atribute atrM;
         cz.omnicom.ermodeller.conceptual.ConceptualConstruct ccM;
         cz.omnicom.ermodeller.conceptual.Entity entM;
-        cz.omnicom.ermodeller.conceptual.Schema schemaM = null;
+        cz.omnicom.ermodeller.conceptual.Schema schemaM;
         cz.omnicom.ermodeller.conceptual.Cardinality carM;
         cz.omnicom.ermodeller.conceptual.UniqueKey uniM;
         cz.omnicom.ermodeller.datatype.DataType dt;
         ConceptualConstruct cc;
-        Desktop d = null;
+        Desktop d;
 
         //parser.setAllowJavaEncodingName(true);
 
@@ -1467,7 +1470,8 @@ public class ERModeller extends JFrame implements
      */
     public void lookFeel() {
         JDialog dialog = SelectUI.getSelectUIDialog(this);
-        dialog.setVisible(true);;
+        dialog.setVisible(true);
+        ;
     }
 
     /**
@@ -1567,7 +1571,8 @@ public class ERModeller extends JFrame implements
         if (fileName != null)
             d.setFileName(fileName);
         if (d.selectPrintJob())
-            d.setVisible(true);;
+            d.setVisible(true);
+        ;
     }
 
     /**
@@ -1822,7 +1827,8 @@ public class ERModeller extends JFrame implements
 
         if (ConceptualConstruct.ACTUAL_NOTATION != ConceptualConstruct.CHEN) {
             desktop.decomposeTernaryRels(place);
-            if (ConceptualConstruct.ACTUAL_NOTATION == ConceptualConstruct.BINARY) desktop.switchAllRConnectionsCard(place);
+            if (ConceptualConstruct.ACTUAL_NOTATION == ConceptualConstruct.BINARY)
+                desktop.switchAllRConnectionsCard(place);
             else desktop.switchAllRConnectionsBoth(place);
             setChanged(true);
 
@@ -2102,7 +2108,7 @@ public class ERModeller extends JFrame implements
     }
 
     public void windowClosing(WindowEvent e) {
-        int option = 0;
+        int option;
         if (isChanged()) {
             option = JOptionPane.showConfirmDialog(this,
                     "Do you want to save the schema?", "Save question",

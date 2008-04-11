@@ -117,10 +117,7 @@ public class ERDocument {
 
     public boolean next() {
         position[0]++;
-        if (nodeList[0].item(position[0]) != null)
-            return true;
-        else
-            return false;
+        return nodeList[0].item(position[0]) != null;
     }
 
     public boolean next(int level) {

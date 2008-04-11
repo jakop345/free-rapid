@@ -162,7 +162,7 @@ public class SQLConnection implements Serializable {
      * @param newUser java.lang.String
      */
     public void send(String s) {
-        String st = "", st1;
+        String st, st1;
         int i = 0, j;
         boolean err = false;
 

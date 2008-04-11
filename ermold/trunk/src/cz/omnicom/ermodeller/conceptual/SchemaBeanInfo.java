@@ -14,7 +14,7 @@ public class SchemaBeanInfo extends java.beans.SimpleBeanInfo {
         try {
             try {
                 /* Using methods via getMethod is the faster way to create the entities property descriptor. */
-                java.lang.reflect.Method aGetMethod = null;
+                java.lang.reflect.Method aGetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aGetMethodParameterTypes[] = {};
@@ -210,7 +210,7 @@ public class SchemaBeanInfo extends java.beans.SimpleBeanInfo {
         try {
             try {
                 /* Using methods via getMethod is the faster way to create the relations property descriptor. */
-                java.lang.reflect.Method aGetMethod = null;
+                java.lang.reflect.Method aGetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aGetMethodParameterTypes[] = {};

@@ -1,9 +1,9 @@
 package cz.green.ermodeller;
 
-import cz.green.event.interfaces.Item;
-import cz.green.event.interfaces.Manager;
 import cz.green.event.SelectItemExEvent;
 import cz.green.event.exceptions.ImpossibleNegativeValueException;
+import cz.green.event.interfaces.Item;
+import cz.green.event.interfaces.Manager;
 
 import java.util.Vector;
 
@@ -69,9 +69,9 @@ public class DGroup extends cz.green.eventtool.DGroup implements FontManager, Mo
      */
     public void isModelIn(Vector elems, SelectItemExEvent event) {
         int size = wins.size();
-        ViewController vc = null;
-        Object o = null;
-        int index = -1;
+        ViewController vc;
+        Object o;
+        int index;
         for (int i = 0; i < size; i++) {
             if (elems.size() == 0)
                 return;

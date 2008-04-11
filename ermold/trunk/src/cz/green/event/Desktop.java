@@ -1,9 +1,9 @@
 package cz.green.event;
 
-import cz.green.util.MoveArrayList;
+import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.interfaces.*;
 import cz.green.event.interfaces.Event;
-import cz.green.event.exceptions.ImpossibleNegativeValueException;
+import cz.green.util.MoveArrayList;
 
 import javax.swing.*;
 import java.awt.*;
@@ -364,7 +364,7 @@ public class Desktop extends Group implements ContainerDesktop, java.io.Serializ
      * @return Was the cursor changed?
      */
     public boolean changeResizeCursor(int x, int y) {
-        int cursorStyle = 0;
+        int cursorStyle;
         ResizeRectangle r = getActualResizeRect(x, y);
         Cursor cursor;
         if (r == null)
@@ -607,10 +607,10 @@ public class Desktop extends Group implements ContainerDesktop, java.io.Serializ
 
     /**
      * Sets actual scale.
- *
- * @return The actual scale.
- */
-public float setScale( float scale ) {
-	return ( this.scale = scale );
+     *
+     * @return The actual scale.
+     */
+    public float setScale(float scale) {
+        return (this.scale = scale );
 }
 }

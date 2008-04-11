@@ -782,7 +782,7 @@ public class ObjDialog extends JDialog implements java.awt.event.ActionListener,
      * Opens save dialog and saves the SQL script.
      */
     public void saveButton_ActionPerformed(java.awt.event.ActionEvent actionEvent) throws java.io.IOException {
-        FileWriter fileOutStream = null;
+        FileWriter fileOutStream;
         PrintWriter dataOutStream;
 
         Object object = getRoot().getUserObject();
@@ -793,7 +793,7 @@ public class ObjDialog extends JDialog implements java.awt.event.ActionListener,
             sql = schemaSQL.createSQL();
             if (sql.length() <= 0) {
                 String[] options = {"Yes", "No"};
-                int option = 0;
+                int option;
                 option = JOptionPane.showOptionDialog(this, "There are no SQL commands. Save anyway?", "Empty SQL", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
                 switch (option) {
                     case 0:

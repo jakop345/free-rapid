@@ -175,8 +175,7 @@ public abstract class RelC2R extends RelationC2R {
             //check for more than one x:1
             if (!relForeignKeyC2R.getArbitrary() && !relForeignKeyC2R.getMultiCardinality()) {
                 //if (relForeignKeyC2R==useGlue && count1<2)glue=true;
-                if (count1 < 2 && relForeignKeyC2R.getGlue() && relationC2R != this) glue = true;
-                else glue = false;
+                glue = count1 < 2 && relForeignKeyC2R.getGlue() && relationC2R != this;
             }
 
             if (glue) {
@@ -237,8 +236,7 @@ public abstract class RelC2R extends RelationC2R {
             //Zbynek Riha kontrola jestli nebylo vice 1-kovych
             if (!relForeignKeyC2R.getArbitrary() && !relForeignKeyC2R.getMultiCardinality()) {
                 //if (relForeignKeyC2R==useGlue && count1<2)glue=true;
-                if (count1 < 2 && relForeignKeyC2R.getGlue() && relationC2R != this) glue = true;
-                else glue = false;
+                glue = count1 < 2 && relForeignKeyC2R.getGlue() && relationC2R != this;
             }
 
             if (glue) {

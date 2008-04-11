@@ -26,7 +26,7 @@ public class LinearConstraint extends ConstantConstraint {
     }
 
     public int getParentSize(int compSize) {
-        int v1 = 0, v2 = 0;
+        int v1, v2;
         try {
             v1 = (int) ((double) (-start) / startMultiplier);
         } catch (ArithmeticException x) {

@@ -782,7 +782,7 @@ public class SQLDialog extends JDialog implements java.awt.event.ActionListener,
      * Opens save dialog and saves the SQL script.
      */
     public void saveButton_ActionPerformed(java.awt.event.ActionEvent actionEvent) throws java.io.IOException {
-        FileWriter fileOutStream = null;
+        FileWriter fileOutStream;
         PrintWriter dataOutStream;
 
         Object object = getRoot().getUserObject();

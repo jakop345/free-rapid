@@ -116,7 +116,7 @@ public class GeneralNumberDataTypePanel3 extends GeneralNumberDataTypePanel {
     }
 
     public void updateFields(ComponentEvent e) {
-        int i = 1;
+        int i;
         Integer in;
 
         if (e.getSource() == ivjPrecisionTextField)

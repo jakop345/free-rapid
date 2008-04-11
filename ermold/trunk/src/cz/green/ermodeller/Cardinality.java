@@ -1,10 +1,10 @@
 package cz.green.ermodeller;
 
-import cz.green.event.exceptions.ItemNotInsideManagerException;
 import cz.green.event.exceptions.ImpossibleNegativeValueException;
-import cz.green.event.interfaces.PaintableManager;
+import cz.green.event.exceptions.ItemNotInsideManagerException;
 import cz.green.event.interfaces.Item;
 import cz.green.event.interfaces.Manager;
+import cz.green.event.interfaces.PaintableManager;
 import cz.green.eventtool.Connection;
 import cz.green.eventtool.ConnectionLine;
 import cz.green.swing.ShowException;
@@ -60,7 +60,7 @@ public class Cardinality extends ConceptualObject {
      */
     protected java.awt.Dimension countSize() {
         String name = model.getName();
-        java.awt.FontMetrics fm = null;
+        java.awt.FontMetrics fm;
         try {
             fm = ((FontManager) manager).getReferentFontMetrics();
             int w1 = fm.stringWidth(name), w2 = fm.stringWidth("N:N"), height = fm.getAscent();
@@ -193,7 +193,7 @@ public class Cardinality extends ConceptualObject {
      * Handle moving event and adds restrictions to BIN and UML notation
      */
     public void handleExMovingEvent(ExMovingEvent event) {
-        int dx = 0, dy = 0;
+        int dx, dy = 0;
         float scale = getManager().getScale();
         java.awt.Point cardinalityCenter = getCenter();
         java.awt.Rectangle er = getEntity().getBounds();

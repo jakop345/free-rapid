@@ -14,7 +14,7 @@ public class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
         try {
             try {
                 /* Using methods via getMethod is the faster way to create the comment property descriptor. */
-                java.lang.reflect.Method aGetMethod = null;
+                java.lang.reflect.Method aGetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aGetMethodParameterTypes[] = {};
@@ -25,7 +25,7 @@ public class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
                     aGetMethod = findMethod(getBeanClass(), "getComment", 0);
                 }
                 ;
-                java.lang.reflect.Method aSetMethod = null;
+                java.lang.reflect.Method aSetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aSetMethodParameterTypes[] = {
@@ -225,7 +225,7 @@ public class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
         try {
             try {
                 /* Using methods via getMethod is the faster way to create the name property descriptor. */
-                java.lang.reflect.Method aGetMethod = null;
+                java.lang.reflect.Method aGetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aGetMethodParameterTypes[] = {};
@@ -271,7 +271,7 @@ public class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
         try {
             try {
                 /* Using methods via getMethod is the faster way to create the name property descriptor. */
-                java.lang.reflect.Method aGetMethod = null;
+                java.lang.reflect.Method aGetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aGetMethodParameterTypes[] = {};
@@ -282,7 +282,7 @@ public class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
                     aGetMethod = findMethod(getBeanClass(), "getName", 0);
                 }
                 ;
-                java.lang.reflect.Method aSetMethod = null;
+                java.lang.reflect.Method aSetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aSetMethodParameterTypes[] = {
@@ -331,7 +331,7 @@ public class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
                 /* Try using method descriptors to create the propertyChange event set descriptor. */
                 java.beans.MethodDescriptor eventMethodDescriptors[] = {
                         propertyChangepropertyChange_javabeansPropertyChangeEventMethodEventDescriptor()};
-                java.lang.reflect.Method anAddMethod = null;
+                java.lang.reflect.Method anAddMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class anAddMethodParameterTypes[] = {
@@ -344,7 +344,7 @@ public class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
                     anAddMethod = findMethod(getBeanClass(), "addPropertyChangeListener", 1);
                 }
                 ;
-                java.lang.reflect.Method aRemoveMethod = null;
+                java.lang.reflect.Method aRemoveMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aRemoveMethodParameterTypes[] = {
@@ -396,7 +396,7 @@ public class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
         java.beans.MethodDescriptor aDescriptor = null;
         try {
             /* Create and return the propertyChange.propertyChange(java.beans.PropertyChangeEvent) method descriptor. */
-            java.lang.reflect.Method aMethod = null;
+            java.lang.reflect.Method aMethod;
             try {
                 /* Attempt to find the method using getMethod with parameter types. */
                 java.lang.Class aParameterTypes[] = {
@@ -446,7 +446,7 @@ public class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
         try {
             try {
                 /* Using methods via getMethod is the faster way to create the schema property descriptor. */
-                java.lang.reflect.Method aGetMethod = null;
+                java.lang.reflect.Method aGetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aGetMethodParameterTypes[] = {};
@@ -457,7 +457,7 @@ public class ConceptualObjectBeanInfo extends java.beans.SimpleBeanInfo {
                     aGetMethod = findMethod(getBeanClass(), "getSchema", 0);
                 }
                 ;
-                java.lang.reflect.Method aSetMethod = null;
+                java.lang.reflect.Method aSetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aSetMethodParameterTypes[] = {

@@ -260,7 +260,7 @@ public class PropertyList extends JComponent implements Scrollable, PropertyChan
                     continue;
                 }
                 Component view = null;
-                Object value = null;
+                Object value;
                 try {
                     Object args[] = {};
                     value = getter.invoke(bean, args);
@@ -355,7 +355,8 @@ public class PropertyList extends JComponent implements Scrollable, PropertyChan
         dialog.getContentPane().add("Center", customizer);
         dialog.pack();
         dialog.setLocationRelativeTo(parent);
-        dialog.setVisible(true);;
+        dialog.setVisible(true);
+        ;
     }
 
     /**
@@ -371,7 +372,7 @@ public class PropertyList extends JComponent implements Scrollable, PropertyChan
         Dimension size = getSize(), d;
         int w = 0, y = 0;
         height = 0;
-        for (int i = 0, tmp = 0; i < properties.length; i++) {
+        for (int i = 0, tmp; i < properties.length; i++) {
             if (labels[i] == null || views[i] == null)
                 continue;
             if ((tmp = (d = labels[i].getPreferredSize()).width) > w)
@@ -391,8 +392,8 @@ public class PropertyList extends JComponent implements Scrollable, PropertyChan
                     new ConstantConstraint(5, w), new ConstantConstraint(y, height - 1)));
             add(views[i], new SimpleBoundsConstraint(
                     new LinearConstraint(w + 10, 0.0, -(w + 10), 1.0), new ConstantConstraint(y, height - 1)));
-		y += height;
-	}
-	setSize(size.width, y);
-}
+            y += height;
+        }
+        setSize(size.width, y);
+    }
 }

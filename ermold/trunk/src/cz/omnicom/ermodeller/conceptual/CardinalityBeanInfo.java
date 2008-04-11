@@ -14,7 +14,7 @@ public class CardinalityBeanInfo extends java.beans.SimpleBeanInfo {
         try {
             try {
                 /* Using methods via getMethod is the faster way to create the arbitrary property descriptor. */
-                java.lang.reflect.Method aGetMethod = null;
+                java.lang.reflect.Method aGetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aGetMethodParameterTypes[] = {};
@@ -25,7 +25,7 @@ public class CardinalityBeanInfo extends java.beans.SimpleBeanInfo {
                     aGetMethod = findMethod(getBeanClass(), "getArbitrary", 0);
                 }
                 ;
-                java.lang.reflect.Method aSetMethod = null;
+                java.lang.reflect.Method aSetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aSetMethodParameterTypes[] = {
@@ -73,7 +73,7 @@ public class CardinalityBeanInfo extends java.beans.SimpleBeanInfo {
         try {
             try {
                 /* Using methods via getMethod is the faster way to create the entity property descriptor. */
-                java.lang.reflect.Method aGetMethod = null;
+                java.lang.reflect.Method aGetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aGetMethodParameterTypes[] = {};
@@ -84,7 +84,7 @@ public class CardinalityBeanInfo extends java.beans.SimpleBeanInfo {
                     aGetMethod = findMethod(getBeanClass(), "getEntity", 0);
                 }
                 ;
-                java.lang.reflect.Method aSetMethod = null;
+                java.lang.reflect.Method aSetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aSetMethodParameterTypes[] = {
@@ -283,7 +283,7 @@ public class CardinalityBeanInfo extends java.beans.SimpleBeanInfo {
         try {
             try {
                 /* Using methods via getMethod is the faster way to create the multiCardinality property descriptor. */
-                java.lang.reflect.Method aGetMethod = null;
+                java.lang.reflect.Method aGetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aGetMethodParameterTypes[] = {};
@@ -294,7 +294,7 @@ public class CardinalityBeanInfo extends java.beans.SimpleBeanInfo {
                     aGetMethod = findMethod(getBeanClass(), "getMultiCardinality", 0);
                 }
                 ;
-                java.lang.reflect.Method aSetMethod = null;
+                java.lang.reflect.Method aSetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aSetMethodParameterTypes[] = {
@@ -342,7 +342,7 @@ public class CardinalityBeanInfo extends java.beans.SimpleBeanInfo {
         try {
             try {
                 /* Using methods via getMethod is the faster way to create the relation property descriptor. */
-                java.lang.reflect.Method aGetMethod = null;
+                java.lang.reflect.Method aGetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aGetMethodParameterTypes[] = {};
@@ -353,7 +353,7 @@ public class CardinalityBeanInfo extends java.beans.SimpleBeanInfo {
                     aGetMethod = findMethod(getBeanClass(), "getRelation", 0);
                 }
                 ;
-                java.lang.reflect.Method aSetMethod = null;
+                java.lang.reflect.Method aSetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aSetMethodParameterTypes[] = {

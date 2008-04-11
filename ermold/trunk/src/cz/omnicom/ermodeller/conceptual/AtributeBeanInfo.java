@@ -14,7 +14,7 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
         try {
             try {
                 /* Using methods via getMethod is the faster way to create the arbitrary property descriptor. */
-                java.lang.reflect.Method aGetMethod = null;
+                java.lang.reflect.Method aGetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aGetMethodParameterTypes[] = {};
@@ -25,7 +25,7 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
                     aGetMethod = findMethod(getBeanClass(), "getArbitrary", 0);
                 }
                 ;
-                java.lang.reflect.Method aSetMethod = null;
+                java.lang.reflect.Method aSetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aSetMethodParameterTypes[] = {
@@ -73,7 +73,7 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
         try {
             try {
                 /* Using methods via getMethod is the faster way to create the arbitrary property descriptor. */
-                java.lang.reflect.Method aGetMethod = null;
+                java.lang.reflect.Method aGetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aGetMethodParameterTypes[] = {};
@@ -84,7 +84,7 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
                     aGetMethod = findMethod(getBeanClass(), "isUnique", 0);
                 }
                 ;
-                java.lang.reflect.Method aSetMethod = null;
+                java.lang.reflect.Method aSetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aSetMethodParameterTypes[] = {
@@ -132,7 +132,7 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
         try {
             try {
                 /* Using methods via getMethod is the faster way to create the arbitrary property descriptor. */
-                java.lang.reflect.Method aGetMethod = null;
+                java.lang.reflect.Method aGetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aGetMethodParameterTypes[] = {};
@@ -143,7 +143,7 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
                     aGetMethod = findMethod(getBeanClass(), "isPrimary", 0);
                 }
                 ;
-                java.lang.reflect.Method aSetMethod = null;
+                java.lang.reflect.Method aSetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aSetMethodParameterTypes[] = {
@@ -191,7 +191,7 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
         try {
             try {
                 /* Using methods via getMethod is the faster way to create the construct property descriptor. */
-                java.lang.reflect.Method aGetMethod = null;
+                java.lang.reflect.Method aGetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aGetMethodParameterTypes[] = {};
@@ -202,7 +202,7 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
                     aGetMethod = findMethod(getBeanClass(), "getConstruct", 0);
                 }
                 ;
-                java.lang.reflect.Method aSetMethod = null;
+                java.lang.reflect.Method aSetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aSetMethodParameterTypes[] = {
@@ -249,7 +249,7 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
         try {
             try {
                 /* Using methods via getMethod is the faster way to create the dataType property descriptor. */
-                java.lang.reflect.Method aGetMethod = null;
+                java.lang.reflect.Method aGetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aGetMethodParameterTypes[] = {};
@@ -260,7 +260,7 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
                     aGetMethod = findMethod(getBeanClass(), "getDataType", 0);
                 }
                 ;
-                java.lang.reflect.Method aSetMethod = null;
+                java.lang.reflect.Method aSetMethod;
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aSetMethodParameterTypes[] = {
@@ -460,7 +460,7 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
         java.beans.MethodDescriptor aDescriptor = null;
         try {
             /* Create and return the propertyChange.propertyChange(java.beans.PropertyChangeEvent) method descriptor. */
-            java.lang.reflect.Method aMethod = null;
+            java.lang.reflect.Method aMethod;
             try {
                 /* Attempt to find the method using getMethod with parameter types. */
                 java.lang.Class aParameterTypes[] = {

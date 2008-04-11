@@ -235,7 +235,7 @@ public class ChangeNotationDialog extends JDialog implements java.awt.event.Acti
     }
 
     private String getFromToString() {
-        String fromToString = new String();
+        String fromToString;
         fromToString = "From ";
         switch (ConceptualConstruct.ACTUAL_NOTATION) {
             case (ConceptualConstruct.CHEN):
@@ -309,6 +309,6 @@ public class ChangeNotationDialog extends JDialog implements java.awt.event.Acti
         // TODO Auto-generated method stub
         //value = getValue();
         return Cent.getConstraints();
-}
+    }
 
 }

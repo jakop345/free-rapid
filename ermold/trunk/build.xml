@@ -36,13 +36,13 @@
         <mkdir dir="${build}/${libDirectory}"/>
         <mkdir dir="${build}/help"/>
         <copy todir="${build}">
-            <fileset dir="${etc}" includes="**/*"></fileset>
+            <fileset dir="${etc}" includes="**/*"/>
         </copy>
         <copy todir="${build}/help">
-            <fileset dir="${help}" includes="**/*"></fileset>
+            <fileset dir="${help}" includes="**/*"/>
         </copy>
         <copy todir="${build}/${libDirectory}">
-            <fileset dir="${lib}" includes="**/*"></fileset>
+            <fileset dir="${lib}" includes="**/*"/>
         </copy>
     </target>
 

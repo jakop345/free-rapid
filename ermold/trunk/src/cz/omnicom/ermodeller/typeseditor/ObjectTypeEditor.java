@@ -73,7 +73,7 @@ public class ObjectTypeEditor extends TypeEditor implements PropertyChangeListen
             JOptionPane.showOptionDialog(this, message, "ERROR", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE, null, options, options[0]);
             return false;
         }
-        for (int i = 0, j = 0; i < aName.length(); i++) {
+        for (int i = 0, j; i < aName.length(); i++) {
             boolean found = false;
             for (j = 0; j < LEGAL_CHARS.length && !found; j++) {
                 found = (aName.charAt(i) == LEGAL_CHARS[j]);
@@ -343,5 +343,5 @@ public class ObjectTypeEditor extends TypeEditor implements PropertyChangeListen
 
     public void removeUpdate(DocumentEvent e) {
         getPropertyChange().firePropertyChange(NAME_PROPERTY_CHANGE, null, getNameTextField().getText());
-	}
+    }
 }

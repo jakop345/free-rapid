@@ -1,6 +1,8 @@
 package cz.green.ermodeller;
 
-import cz.green.event.*;
+import cz.green.event.RemoveEvent;
+import cz.green.event.SelectItemEvent;
+import cz.green.event.SelectItemExEvent;
 import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.interfaces.Item;
 import cz.green.event.interfaces.PaintableItem;
@@ -248,7 +250,7 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
             else
                 item = dg.getItem(i);
             if (item instanceof DGroup) {
-                Vector sub = null;
+                Vector sub;
                 if ((sub = getAllEntities((DGroup) item)).size() != 0) {
                     retval.addAll(sub);
                 }
@@ -283,7 +285,7 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
             else
                 item = dg.getItem(i);
             if (item instanceof DGroup) {
-                Vector sub = null;
+                Vector sub;
                 if ((sub = getAllRelations((DGroup) item)).size() != 0) {
                     retval.addAll(sub);
                 }
@@ -323,7 +325,7 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
     public Vector getRelationsWithoutConnection(boolean namesOnly) {
         Vector rels = getAllRelations();
         Vector relsNoConn = new Vector(3, 2);
-        int connCounter = 0;
+        int connCounter;
         for (int i = 0; i < rels.size(); ++i) {
             Relation rel = (Relation) rels.get(i);
             connCounter = 0;
@@ -357,7 +359,7 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
     public Vector getTernaryRelations(boolean namesOnly) {
         Vector rels = getAllRelations();
         Vector relsTernary = new Vector(3, 2);
-        int connCounter = 0;
+        int connCounter;
         for (int i = 0; i < rels.size(); ++i) {
             Relation rel = (Relation) rels.get(i);
             connCounter = 0;
@@ -722,9 +724,9 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
      */
     public void isModelIn(Vector elems, SelectItemExEvent event) {
         int size = wins.size();
-        ViewController vc = null;
-        Object o = null;
-        int index = -1;
+        ViewController vc;
+        Object o;
+        int index;
         for (int i = 0; i < size; i++) {
             if (elems.size() == 0)
                 return;
@@ -901,16 +903,16 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
                 ((ConceptualObject) getItem(i)).write(pw);
         }
         pw.println("</schema>");
-	}
+    }
 
-	private void writeItem(DGroup dg, java.io.PrintWriter pw) {
-		Item item;
-		for (int j = 0; j < dg.getItemCount(); j++) {
-			item = dg.getItem(j);
-			if (item instanceof DGroup)
-				writeItem((DGroup) item, pw);
-			else
-				((ConceptualObject) item).write(pw);
-		}
-	}
+    private void writeItem(DGroup dg, java.io.PrintWriter pw) {
+        Item item;
+        for (int j = 0; j < dg.getItemCount(); j++) {
+            item = dg.getItem(j);
+            if (item instanceof DGroup)
+                writeItem((DGroup) item, pw);
+            else
+                ((ConceptualObject) item).write(pw);
+        }
+    }
 }

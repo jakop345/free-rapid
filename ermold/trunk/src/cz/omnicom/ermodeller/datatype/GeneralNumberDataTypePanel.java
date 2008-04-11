@@ -916,7 +916,7 @@ public class GeneralNumberDataTypePanel extends DataTypePanel implements FocusLi
      * Invoked when a key has been pressed.
      */
     public void updateFields(ComponentEvent e) {
-        int i = 1;
+        int i;
         Integer in;
 
         if (e.getSource() == ivjPrecisionTextField)
@@ -949,7 +949,7 @@ public class GeneralNumberDataTypePanel extends DataTypePanel implements FocusLi
             }
             catch (Exception ex) {
                 in = new Integer(getGeneralNumberDataType().getScale());
-			getScaleTextField().setText(in.toString());
-		}
-}
+                getScaleTextField().setText(in.toString());
+            }
+    }
 }

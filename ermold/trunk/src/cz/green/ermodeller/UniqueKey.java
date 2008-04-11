@@ -1,13 +1,13 @@
 package cz.green.ermodeller;
 
+import cz.green.event.exceptions.ImpossibleNegativeValueException;
+import cz.green.event.interfaces.Item;
+import cz.green.event.interfaces.Manager;
+import cz.green.event.interfaces.PaintableManager;
 import cz.green.eventtool.Connection;
 import cz.green.eventtool.ConnectionLine;
 import cz.green.eventtool.ConnectionManager;
 import cz.green.swing.ShowException;
-import cz.green.event.interfaces.PaintableManager;
-import cz.green.event.interfaces.Manager;
-import cz.green.event.interfaces.Item;
-import cz.green.event.exceptions.ImpossibleNegativeValueException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -103,7 +103,7 @@ public class UniqueKey extends ConceptualObject {
      *         addiction parent.
      */
     public boolean areOthersConnections(Entity ent) {
-        StrongAddiction sa = null;
+        StrongAddiction sa;
         int count = 0;
         for (int i = connections.size() - 1; i >= 0; i--) {
             if ((sa = (StrongAddiction) ((Connection) connections.elementAt(i))
@@ -403,7 +403,7 @@ public class UniqueKey extends ConceptualObject {
      * @param event This remove event is sent to all disposed cardinalities.
      */
     protected void removeAllStrongAddiction(cz.green.event.RemoveEvent event) {
-        StrongAddiction sa = null;
+        StrongAddiction sa;
         for (int i = connections.size() - 1; i >= 0; i--) {
             if ((sa = (StrongAddiction) (((Connection) connections.elementAt(i)))
                     .isConnectedTo(StrongAddiction.class)) != null)
@@ -462,7 +462,7 @@ public class UniqueKey extends ConceptualObject {
         if (!primary || (uk == null))
             return;
         StrongAddiction sa = null;
-        Connection c = null;
+        Connection c;
         for (int i = connections.size() - 1; i >= 0; i--) {
             if ((sa = (StrongAddiction) ((c = ((Connection) connections
                     .elementAt(i))).isConnectedTo(StrongAddiction.class))) != null) {
@@ -494,18 +494,18 @@ public class UniqueKey extends ConceptualObject {
             }
         } catch (Throwable x) {
             ShowException d = new ShowException(null, "Error", x, true);
-		}
-	}
+        }
+    }
 
-	/**
+    /**
      * Writes data for unique key into XML file
      *
      * @param pw java.io.PrintWriter
      */
-	public void write(java.io.PrintWriter pw) {
-		pw.println("\t<unique>");
-		super.write(pw);
-		pw.println("\t\t<primary>" + getPrimary() + "</primary>");
-		pw.println("\t</unique>");
+    public void write(java.io.PrintWriter pw) {
+        pw.println("\t<unique>");
+        super.write(pw);
+        pw.println("\t\t<primary>" + getPrimary() + "</primary>");
+        pw.println("\t</unique>");
 	}
 }

@@ -123,7 +123,7 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
                     return;
                 }
             }
-            for (int i = 0, j = 0; i < aName.length(); i++) {
+            for (int i = 0, j; i < aName.length(); i++) {
                 boolean found = false;
                 for (j = 0; j < LEGAL_CHARS.length && !found; j++) {
                     found = (aName.charAt(i) == LEGAL_CHARS[j]);
@@ -272,7 +272,7 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
 
     public void setTypesVector(UserTypeStorageVector v) {
         typesVector = v;
-        UserTypesEditorPanel utep = null;
+        UserTypesEditorPanel utep;
         DataType.getTypeNames().removeAllElements();
         addAllTypesToCombo();
         for (Enumeration e = typesVector.elements(); e.hasMoreElements();) {
@@ -480,6 +480,6 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
             objectDuplicity = false;
             //getDupObjectLabel().setVisible(false);
             return;
-		}
-	}
+        }
+    }
 }

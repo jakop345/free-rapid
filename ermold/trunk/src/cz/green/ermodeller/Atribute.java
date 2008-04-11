@@ -2,11 +2,11 @@ package cz.green.ermodeller;
 
 import cz.green.event.MoveEvent;
 import cz.green.event.ResizeEvent;
-import cz.green.event.exceptions.ItemNotInsideManagerException;
 import cz.green.event.exceptions.ImpossibleNegativeValueException;
+import cz.green.event.exceptions.ItemNotInsideManagerException;
+import cz.green.event.interfaces.Item;
 import cz.green.event.interfaces.Manager;
 import cz.green.event.interfaces.PaintableManager;
-import cz.green.event.interfaces.Item;
 import cz.green.eventtool.Connection;
 import cz.green.eventtool.ConnectionLine;
 import cz.green.eventtool.ConnectionManager;
@@ -98,7 +98,7 @@ public class Atribute extends ConceptualObject {
     protected java.awt.Dimension countSize() {
 //	String name = (ACTUAL_NOTATION != ConceptualConstruct.UML) ? model.getName() : (model.getName() + ": " + model.getDataType().toDescriptionString());
         String name = model.getName();
-        java.awt.FontMetrics fm = null;
+        java.awt.FontMetrics fm;
         try {
             fm = ((FontManager) manager).getReferentFontMetrics();
             int width = fm.stringWidth(name), height = fm.getAscent();

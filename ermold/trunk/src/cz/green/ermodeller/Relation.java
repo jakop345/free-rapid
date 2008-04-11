@@ -4,8 +4,8 @@ import cz.green.event.*;
 import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.exceptions.ItemNotInsideManagerException;
 import cz.green.event.interfaces.Item;
-import cz.green.event.interfaces.PaintableManager;
 import cz.green.event.interfaces.Manager;
+import cz.green.event.interfaces.PaintableManager;
 import cz.green.eventtool.ConnectableWindow;
 import cz.green.eventtool.Connection;
 import cz.green.eventtool.ConnectionLine;
@@ -49,7 +49,7 @@ public class Relation extends ConceptualConstruct {
         super(manager, left, top, 0, 0);
         rel.addPropertyChangeListener(this);
         String name = (model = rel).getName();
-        java.awt.FontMetrics fm = null;
+        java.awt.FontMetrics fm;
         try {
             fm = ((FontManager) manager).getReferentFontMetrics();
             int width = fm.stringWidth(name), height = fm.getAscent();
@@ -291,7 +291,7 @@ public class Relation extends ConceptualConstruct {
         try {
             Entity ent = transformToEntity(man);
             boolean create = false;
-            Cardinality car = null, primary = null, first = null;
+            Cardinality car, primary = null, first = null;
             //find entity with single cardinality or take the first
             for (int i = connections.size() - 1; i >= 0; i--) {
                 if ((car = (Cardinality) ((Connection) (connections.elementAt(i))).isConnectedTo(Cardinality.class)) != null) {
@@ -354,7 +354,7 @@ public class Relation extends ConceptualConstruct {
             x = -x;
         if (y < 0)
             y = -y;
-        int ry = y2;
+        int ry;
         if (x != 0) {
             float a = ((float) x2) / y2;
             ry = (int) (((float) x2) / (((float) x) / y + a));
@@ -394,7 +394,7 @@ public class Relation extends ConceptualConstruct {
             x = -x;
         if (y < 0)
             y = -y;
-        int ry = y2;
+        int ry;
         if (x != 0) {
             float a = ((float) x2) / y2;
             ry = (int) (((float) x2) / (((float) x) / y + a));
@@ -561,10 +561,10 @@ public class Relation extends ConceptualConstruct {
      * @param ev The resize event, which will be handled.
      */
     protected void countMinSize(cz.green.event.ResizeEvent ev) {
-        int r[][] = null;
+        int r[][];
         int width = 0;
         int height = 0;
-        java.awt.FontMetrics fm = null;
+        java.awt.FontMetrics fm;
         switch (ACTUAL_NOTATION) {
             case (CHEN):
                 fm = ((FontManager) manager).getReferentFontMetrics();
@@ -813,5 +813,5 @@ public class Relation extends ConceptualConstruct {
         pw.println("\t<relation>");
         super.write(pw);
         pw.println("\t</relation>");
-}
+    }
 }

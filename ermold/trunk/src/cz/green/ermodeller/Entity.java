@@ -4,10 +4,10 @@ package cz.green.ermodeller;
 import cz.green.event.*;
 import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.exceptions.ItemNotInsideManagerException;
-import cz.green.event.interfaces.Item;
 import cz.green.event.interfaces.Invokable;
-import cz.green.event.interfaces.PaintableManager;
+import cz.green.event.interfaces.Item;
 import cz.green.event.interfaces.Manager;
+import cz.green.event.interfaces.PaintableManager;
 import cz.green.eventtool.Connection;
 import cz.green.eventtool.ConnectionLine;
 import cz.green.eventtool.ConnectionManager;
@@ -116,7 +116,7 @@ public class Entity extends ConceptualConstruct {
         String name = (model = ent).getName();
         //ent.setConstraints("Žluouèký kùò");
         EntManager = manager;
-        java.awt.FontMetrics fm = null;
+        java.awt.FontMetrics fm;
         PKmembers = new java.util.Vector(3, 2);
         try {
             fm = ((FontManager) manager).getReferentFontMetrics();
@@ -281,9 +281,9 @@ public class Entity extends ConceptualConstruct {
      * @param ev The resize event, which will be handled.
      */
     protected void countMinSize(cz.green.event.ResizeEvent ev) {
-        int r[][] = null;
+        int r[][];
         int width = 60;
-        java.awt.FontMetrics fm = null;
+        java.awt.FontMetrics fm;
         fm = ((FontManager) manager).getReferentFontMetrics();
         int nameWidth = fm.stringWidth(((cz.omnicom.ermodeller.conceptual.Entity) getModel()).getName());
         if (nameWidth > width)
@@ -372,7 +372,7 @@ public class Entity extends ConceptualConstruct {
                 .getX(), e.getY(), 0, 0, e.getComponent());
         int[][] s = getRect();
         int[][] r = from.getRect();
-        int top = 0;
+        int top;
 /*		if (ConceptualConstruct.ACTUAL_NOTATION == ConceptualConstruct.BINARY) {
 		top += 20 * ((ConceptualConstruct) from).getAtributes().size(); 
 		}
@@ -380,7 +380,7 @@ public class Entity extends ConceptualConstruct {
         try {
             if (before == -1) {
                 // if it is first -> count size from the top
-                java.awt.FontMetrics fm = null;
+                java.awt.FontMetrics fm;
                 fm = ((FontManager) manager).getReferentFontMetrics();
                 top = s[1][0] + 3 * fm.getAscent();
                 if (ACTUAL_NOTATION != CHEN) {
@@ -465,7 +465,7 @@ public class Entity extends ConceptualConstruct {
         int[][] r = getRect();
         if (from == -1) {
             try {
-                java.awt.FontMetrics fm = null;
+                java.awt.FontMetrics fm;
                 fm = ((FontManager) manager).getReferentFontMetrics();
                 height = 3 * fm.getAscent();
                 if (ACTUAL_NOTATION == BINARY) {
@@ -1261,7 +1261,7 @@ public class Entity extends ConceptualConstruct {
      */
     protected void moveChilds(cz.green.event.CoordinateEvent event) {
         if ((ISAChilds != null) && (ISAChilds.size() > 0)) {
-            cz.green.event.MoveEvent mev = null;
+            cz.green.event.MoveEvent mev;
             int max = ISAChilds.size() - 1;
             for (int i = 0; i <= max; i++) {
                 Entity ent = (Entity) ISAChilds.elementAt(i);
@@ -1280,7 +1280,7 @@ public class Entity extends ConceptualConstruct {
      */
     protected void moveMinChilds(cz.green.event.CoordinateEvent event) {
         if ((ISAChilds != null) && (ISAChilds.size() > 0)) {
-            cz.green.event.MoveEvent mev = null;
+            cz.green.event.MoveEvent mev;
             int max = ISAChilds.size() - 1;
             for (int i = 0; i <= max; i++) {
                 Entity ent = (Entity) ISAChilds.elementAt(i);
@@ -1300,7 +1300,7 @@ public class Entity extends ConceptualConstruct {
      */
     protected void movingChilds(cz.green.event.CoordinateEvent event) {
         if ((ISAChilds != null) && (ISAChilds.size() > 0)) {
-            cz.green.event.MovingEvent mev = null;
+            cz.green.event.MovingEvent mev;
             int max = ISAChilds.size() - 1;
             for (int i = 0; i <= max; i++) {
                 Entity ent = (Entity) ISAChilds.elementAt(i);
@@ -1487,7 +1487,7 @@ public class Entity extends ConceptualConstruct {
      * Recalculate positions of atributes
      */
     public void recalculatePositionsOfAtributes() {
-        int PKlength = 0, ALength = 0, dx = 0, dy = 0, position = 0, highestPKposition = 0, lowestNonPKposition = getAtributes().size();
+        int PKlength = 0, ALength, dx, dy, position, highestPKposition = 0, lowestNonPKposition = getAtributes().size();
         int count = getAtributes().size();
         int PKmembersCount = getPKmembers().size();
         Atribute a, pk;
@@ -1496,8 +1496,7 @@ public class Entity extends ConceptualConstruct {
             for (int i = 0; i < count; i++) {
                 a = (getAtributes().get(i));
                 if (PKmembers.contains(a)) {
-                    if (a.getPosition() == 1) a.PKfirst = true;
-                    else a.PKfirst = false;
+                    a.PKfirst = a.getPosition() == 1;
                     ALength = 0;
                     position = a.getPosition();
                     if (position > highestPKposition) highestPKposition = position;

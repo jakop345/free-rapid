@@ -163,7 +163,7 @@ public class GeneralNumberDataType extends DataType {
      * @see #evaluateScale
      */
     public void setScale(int scale) {
-        int oldValue = fieldScale;
+        int oldValue;
         synchronized (this) {
             if (!evaluateScale(scale))
                 return;
