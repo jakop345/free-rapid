@@ -267,7 +267,6 @@ public class StrongAddiction extends ConceptualObject {
         try {
             move(dx, dy, false);
         } catch (ItemNotInsideManagerException e) {
-            return;
         } finally {
             ((PaintableManager) manager).repaintItemFast(this);
         }
@@ -320,7 +319,6 @@ public class StrongAddiction extends ConceptualObject {
             }
             ((PaintableManager) manager).repaintItem(this);
         } catch (ItemNotInsideManagerException e) {
-            return;
         }
     }
 
@@ -502,7 +500,6 @@ public class StrongAddiction extends ConceptualObject {
             }
             if (c.getTwo() == getUniqueKey()) {
                 c.setTwo(uk);
-                return;
             }
         } catch (Throwable x) {
             ShowException d = new ShowException(null, "Error", x, true);
@@ -528,7 +525,6 @@ public class StrongAddiction extends ConceptualObject {
             }
             if (c.getTwo() == getEntity()) {
                 c.setTwo(ent);
-                return;
             }
         } catch (Throwable x) {
             ShowException d = new ShowException(null, "Error", x, true);

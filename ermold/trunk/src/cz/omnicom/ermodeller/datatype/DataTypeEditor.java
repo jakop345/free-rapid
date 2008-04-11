@@ -659,7 +659,7 @@ public class DataTypeEditor extends JPanel implements java.awt.event.ActionListe
      * Initializes connections
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    private void initConnections() throws java.lang.Exception {
+    private void initConnections() {
         // user code begin {1}
         // user code end
         getFixedStringRadioButton().addActionListener(this);
@@ -794,7 +794,6 @@ public class DataTypeEditor extends JPanel implements java.awt.event.ActionListe
         if (getValue() instanceof UserDefinedDataType) {
             getUserTypeRadioButton().setSelected(true);
             /*tady asi pridat zvoleni spravne polozky do comba*/
-            return;
         }
     }
 

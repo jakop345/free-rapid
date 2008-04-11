@@ -236,7 +236,6 @@ public class ShowProperty extends JPanel implements PropertyChangeListener, Acti
         if (customizer instanceof JComboBox) {
             ((JComboBox) customizer).setSelectedItem(editor.getAsText());
             customizer.repaint();
-            return;
         }
     }
 

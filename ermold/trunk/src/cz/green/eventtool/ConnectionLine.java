@@ -2,10 +2,10 @@ package cz.green.eventtool;
 
 import cz.green.ermodeller.ConceptualConstruct;
 import cz.green.ermodeller.Consts;
+import cz.green.event.ResizePoint;
 import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.interfaces.Manager;
 import cz.green.event.interfaces.PaintableManager;
-import cz.green.event.ResizePoint;
 
 import java.awt.*;
 
@@ -259,7 +259,7 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
                 g2.setStroke(lineStroke);
                 //g.drawLine(borderOne.x, borderOne.y, borderTwo.x, borderTwo.y);
             } else {
-                if (connectionMandatory == true || strongAddicted == true)
+                if (connectionMandatory || strongAddicted)
                     g.drawLine(borderOne.x, borderOne.y, borderTwo.x, borderTwo.y);
                 else {
                     BasicStroke roundStroke = new BasicStroke(Consts.STROKE_WIDTH, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10f, dash1, 0.0f);
@@ -400,7 +400,7 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
                 g2.setStroke(lineStroke);
                 //g.drawLine(borderOne.x, borderOne.y, borderTwo.x, borderTwo.y);
             } else {
-                if (connectionMandatory == true || strongAddicted == true)
+                if (connectionMandatory || strongAddicted)
                     g.drawLine(borderOne.x, borderOne.y, borderTwo.x, borderTwo.y);
                 else {
                     BasicStroke roundStroke = new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10f, dash1, 0.0f);

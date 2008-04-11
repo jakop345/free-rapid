@@ -6,31 +6,49 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/Cardinality.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/Cardinality.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/errorlog/ConflictsDialog.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/errorlog/ConflictsDialog.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/swing/SelectUI.java" afterPath="$PROJECT_DIR$/src/cz/green/swing/SelectUI.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/LengthDataTypePanel.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/LengthDataTypePanel.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/VarrayNestedTypeEditor.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/VarrayNestedTypeEditor.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/UserDefinedDataTypePanel.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/UserDefinedDataTypePanel.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ermodeler.iws" afterPath="$PROJECT_DIR$/ermodeler.iws" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/RelationBeanInfo.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/RelationBeanInfo.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/LengthDataTypePanel3.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/LengthDataTypePanel3.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/Entity.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/Entity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/GeneralNumberDataTypePanel.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/GeneralNumberDataTypePanel.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/VarrayDataTypePanel2.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/VarrayDataTypePanel2.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/ObjectDataTypePanel2.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/ObjectDataTypePanel2.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/LogSQLObj.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/LogSQLObj.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/eventtool/ResolutionDialog.java" afterPath="$PROJECT_DIR$/src/cz/green/eventtool/ResolutionDialog.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/GeneralNumberDataTypePanel3.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/GeneralNumberDataTypePanel3.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/event/Window.java" afterPath="$PROJECT_DIR$/src/cz/green/event/Window.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/ERModeller.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/ERModeller.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/SchemaBeanInfo.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/SchemaBeanInfo.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/UniqueKeyBeanInfo.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/UniqueKeyBeanInfo.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/MultiCardinalityEditor.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/MultiCardinalityEditor.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/eventtool/DGroup.java" afterPath="$PROJECT_DIR$/src/cz/green/eventtool/DGroup.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/DataTypeEditor.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/DataTypeEditor.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/UniqueKeyC2R.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/UniqueKeyC2R.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/Atribute.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/Atribute.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/SQLDialog.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/SQLDialog.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/EntityBeanInfo.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/EntityBeanInfo.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/eventtool/PrintPreviewDialog.java" afterPath="$PROJECT_DIR$/src/cz/green/eventtool/PrintPreviewDialog.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/GeneralNumberDataTypePanel2.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/GeneralNumberDataTypePanel2.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/Relation.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/Relation.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/UserTypesEditor.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/UserTypesEditor.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/SchemaC2R.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/SchemaC2R.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/OptionsDialog.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/OptionsDialog.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/PreferencesPanel.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/PreferencesPanel.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/errorlog/ErrorLogDialog.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/errorlog/ErrorLogDialog.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/AtributeBeanInfo.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/AtributeBeanInfo.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/event/Group.java" afterPath="$PROJECT_DIR$/src/cz/green/event/Group.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/ObjDialog.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/ObjDialog.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/ConceptualObjectBeanInfo.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/ConceptualObjectBeanInfo.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/eventtool/PropertyListDialog.java" afterPath="$PROJECT_DIR$/src/cz/green/eventtool/PropertyListDialog.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/eventtool/ShowProperty.java" afterPath="$PROJECT_DIR$/src/cz/green/eventtool/ShowProperty.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/ermodeller/StrongAddiction.java" afterPath="$PROJECT_DIR$/src/cz/green/ermodeller/StrongAddiction.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/BooleanEditor.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/BooleanEditor.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/event/Desktop.java" afterPath="$PROJECT_DIR$/src/cz/green/event/Desktop.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/event/Container.java" afterPath="$PROJECT_DIR$/src/cz/green/event/Container.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/GenerateDialog.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/GenerateDialog.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/eventtool/PropertyList.java" afterPath="$PROJECT_DIR$/src/cz/green/eventtool/PropertyList.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/LogSQL.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/LogSQL.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/CardinalityBeanInfo.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/CardinalityBeanInfo.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/CardinalityCustomizer.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/CardinalityCustomizer.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/ConceptualConstructBeanInfo.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/ConceptualConstructBeanInfo.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/LogSQL.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/sql/LogSQL.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/green/eventtool/ConnectionLine.java" afterPath="$PROJECT_DIR$/src/cz/green/eventtool/ConnectionLine.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/ObjectTypeEditor.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/ObjectTypeEditor.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/LengthDataTypePanel2.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/LengthDataTypePanel2.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/NestedTableDataTypePanel2.java" afterPath="$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/NestedTableDataTypePanel2.java" />
     </list>
     <ignored path="ermodeler.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -94,93 +112,93 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="VarrayDataTypePanel2.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/VarrayDataTypePanel2.java">
+      <file leaf-file-name="Desktop.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/green/event/Desktop.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="15" column="13" selection-start="411" selection-end="411" vertical-scroll-proportion="0.14232902">
+            <state line="91" column="93" selection-start="4051" selection-end="4051" vertical-scroll-proportion="0.14232902">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ConflictsDialog.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/errorlog/ConflictsDialog.java">
+      <file leaf-file-name="OptionsDialog.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/green/ermodeller/OptionsDialog.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="95" column="105" selection-start="3554" selection-end="3554" vertical-scroll-proportion="0.17375231">
+            <state line="1356" column="35" selection-start="54170" selection-end="54170" vertical-scroll-proportion="0.14232902">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GeneralNumberDataType.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/GeneralNumberDataType.java">
+      <file leaf-file-name="AboutDialog.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/green/ermodeller/AboutDialog.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="147" column="23" selection-start="3775" selection-end="3775" vertical-scroll-proportion="0.14748201">
+            <state line="37" column="11" selection-start="998" selection-end="998" vertical-scroll-proportion="0.14748201">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AtributeC2R.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/AtributeC2R.java">
+      <file leaf-file-name="AddConnectionEvent.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/green/event/AddConnectionEvent.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="106" column="18" selection-start="3718" selection-end="3718" vertical-scroll-proportion="0.14232902">
+            <state line="71" column="11" selection-start="3017" selection-end="3017" vertical-scroll-proportion="0.26978418">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="UniqueKeyC2R.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/UniqueKeyC2R.java">
+      <file leaf-file-name="AddIdentificationDependencyEvent.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/green/event/AddIdentificationDependencyEvent.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="96" column="21" selection-start="3913" selection-end="3913" vertical-scroll-proportion="0.14232902">
+            <state line="80" column="19" selection-start="3394" selection-end="3394" vertical-scroll-proportion="0.14748201">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Entity.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cz/green/ermodeller/Entity.java">
+      <file leaf-file-name="NameC2R.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/NameC2R.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1498" column="20" selection-start="64478" selection-end="64478" vertical-scroll-proportion="0.14232902">
+            <state line="18" column="39" selection-start="353" selection-end="353" vertical-scroll-proportion="0.36151078">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Container.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/green/event/Container.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="134" column="0" selection-start="3430" selection-end="3430" vertical-scroll-proportion="0.33086875">
               <folding>
-                <marker date="1207910500718" expanded="false" signature="38:890" placeholder="..." />
+                <element signature="imports" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ERDocument.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cz/green/ermodeller/ERDocument.java">
+      <file leaf-file-name="SchemaC2R.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/SchemaC2R.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="119" column="8" selection-start="3617" selection-end="3617" vertical-scroll-proportion="0.14748201">
+            <state line="297" column="32" selection-start="12284" selection-end="12284" vertical-scroll-proportion="0.6136784">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="RelC2R.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/RelC2R.java">
+      <file leaf-file-name="ObjDialog.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/ObjDialog.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="238" column="16" selection-start="10278" selection-end="10278" vertical-scroll-proportion="0.14232902">
+            <state line="53" column="11" selection-start="1715" selection-end="1715" vertical-scroll-proportion="0.14232902">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PrintPreview.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cz/green/eventtool/PrintPreview.java">
+      <file leaf-file-name="ERModeller.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/cz/green/ermodeller/ERModeller.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="190" column="13" selection-start="6910" selection-end="6910" vertical-scroll-proportion="0.2051756">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Atribute.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/Atribute.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="217" column="36" selection-start="7456" selection-end="7456" vertical-scroll-proportion="0.39371535">
+            <state line="174" column="8" selection-start="4892" selection-end="4892" vertical-scroll-proportion="0.27726433">
               <folding />
             </state>
           </provider>
@@ -732,7 +750,7 @@
     <option name="PERFORM_EDIT_IN_BACKGROUND" value="true" />
     <option name="PERFORM_ADD_REMOVE_IN_BACKGROUND" value="true" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="zjednodusovani, odstranovani warningu 1" />
+    <option name="LAST_COMMIT_MESSAGE" value="" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_FILE_COMMIT" value="false" />
@@ -746,6 +764,7 @@
     <MESSAGE value="class for name - odstraneni refactoringu" />
     <MESSAGE value="class for name - odstraneni reflection api" />
     <MESSAGE value="zjednodusovani, odstranovani warningu 1" />
+    <MESSAGE value="odstraneni zbytecnych stredniku" />
   </component>
   <component name="XPathView.XPathProjectComponent">
     <history />
@@ -756,116 +775,116 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/cz/green/event/AddAsISAChildEvent.java">
+    <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/AtributeBeanInfo.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="56" column="11" selection-start="2214" selection-end="2214" vertical-scroll-proportion="0.33064517">
+        <state line="403" column="42" selection-start="18113" selection-end="18113" vertical-scroll-proportion="0.3304721">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/green/ermodeller/ERModeller.java">
+    <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/UniqueKeyBeanInfo.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1475" column="23" selection-start="60000" selection-end="60000" vertical-scroll-proportion="0.3304721">
+        <state line="194" column="42" selection-start="8121" selection-end="8121" vertical-scroll-proportion="0.3304721">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/green/event/Window.java">
+    <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/SchemaBeanInfo.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="207" column="16" selection-start="7540" selection-end="7540" vertical-scroll-proportion="0.3304721">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/green/ermodeller/Atribute.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="88" column="28" selection-start="4066" selection-end="4066" vertical-scroll-proportion="0.9141631">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/VarrayDataType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="40" column="23" selection-start="1028" selection-end="1028" vertical-scroll-proportion="0.33064517">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/ConceptualObject.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="219" column="15" selection-start="6483" selection-end="6483" vertical-scroll-proportion="0.22985074">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/typeseditor/VarrayDataTypePanel2.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="13" selection-start="411" selection-end="411" vertical-scroll-proportion="0.14232902">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/errorlog/ConflictsDialog.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="95" column="105" selection-start="3554" selection-end="3554" vertical-scroll-proportion="0.17375231">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/GeneralNumberDataType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="147" column="23" selection-start="3775" selection-end="3775" vertical-scroll-proportion="0.14748201">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/AtributeC2R.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="106" column="18" selection-start="3718" selection-end="3718" vertical-scroll-proportion="0.14232902">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/UniqueKeyC2R.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="96" column="21" selection-start="3913" selection-end="3913" vertical-scroll-proportion="0.14232902">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/green/ermodeller/Entity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1498" column="20" selection-start="64478" selection-end="64478" vertical-scroll-proportion="0.14232902">
-          <folding>
-            <marker date="1207910500718" expanded="false" signature="38:890" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/green/ermodeller/ERDocument.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="119" column="8" selection-start="3617" selection-end="3617" vertical-scroll-proportion="0.14748201">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/RelC2R.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="238" column="16" selection-start="10278" selection-end="10278" vertical-scroll-proportion="0.14232902">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/green/eventtool/PrintPreview.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="190" column="13" selection-start="6910" selection-end="6910" vertical-scroll-proportion="0.2051756">
+        <state line="172" column="42" selection-start="6292" selection-end="6292" vertical-scroll-proportion="0.3304721">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/Atribute.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="217" column="36" selection-start="7456" selection-end="7456" vertical-scroll-proportion="0.39371535">
+        <state line="233" column="55" selection-start="8008" selection-end="8008" vertical-scroll-proportion="0.3304721">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conceptual/CardinalityCustomizer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="434" column="35" selection-start="15717" selection-end="15717" vertical-scroll-proportion="0.22985074">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/datatype/DataTypeEditor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="661" column="35" selection-start="22508" selection-end="22508" vertical-scroll-proportion="0.22985074">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/green/event/Desktop.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="91" column="93" selection-start="4051" selection-end="4051" vertical-scroll-proportion="0.14232902">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/green/ermodeller/OptionsDialog.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1356" column="35" selection-start="54170" selection-end="54170" vertical-scroll-proportion="0.14232902">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/green/ermodeller/AboutDialog.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="37" column="11" selection-start="998" selection-end="998" vertical-scroll-proportion="0.14748201">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/green/event/AddConnectionEvent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="71" column="11" selection-start="3017" selection-end="3017" vertical-scroll-proportion="0.26978418">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/green/event/AddIdentificationDependencyEvent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="80" column="19" selection-start="3394" selection-end="3394" vertical-scroll-proportion="0.14748201">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/NameC2R.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="39" selection-start="353" selection-end="353" vertical-scroll-proportion="0.36151078">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/green/event/Container.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="134" column="0" selection-start="3430" selection-end="3430" vertical-scroll-proportion="0.33086875">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2rela/SchemaC2R.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="297" column="32" selection-start="12284" selection-end="12284" vertical-scroll-proportion="0.6136784">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/omnicom/ermodeller/conc2obj/ObjDialog.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="53" column="11" selection-start="1715" selection-end="1715" vertical-scroll-proportion="0.14232902">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/green/ermodeller/ERModeller.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="174" column="8" selection-start="4892" selection-end="4892" vertical-scroll-proportion="0.27726433">
           <folding />
         </state>
       </provider>

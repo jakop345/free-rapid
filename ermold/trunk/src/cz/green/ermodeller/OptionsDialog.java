@@ -1354,7 +1354,7 @@ public class OptionsDialog extends javax.swing.JDialog {
      * @throws java.lang.Exception The exception description.
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    private void initConnections() throws java.lang.Exception {
+    private void initConnections() {
         // user code begin {1}
         // user code end
         getCancelButton().addActionListener(ivjEventHandler);

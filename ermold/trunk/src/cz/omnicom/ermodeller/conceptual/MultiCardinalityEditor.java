@@ -73,7 +73,7 @@ public class MultiCardinalityEditor extends PropertyEditorSupport {
 
             } else {
                 if (text.equals(tags[1])) {
-                    if (((Boolean) v).booleanValue() == true) {
+                    if (((Boolean) v).booleanValue()) {
                         setValue(Boolean.FALSE);
                     }
                 } else

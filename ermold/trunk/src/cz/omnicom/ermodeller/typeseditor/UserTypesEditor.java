@@ -479,7 +479,6 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
         if (e.getPropertyName().equals(ObjectDataTypePanel2.NO_CONFLICT)) {
             objectDuplicity = false;
             //getDupObjectLabel().setVisible(false);
-            return;
         }
     }
 }

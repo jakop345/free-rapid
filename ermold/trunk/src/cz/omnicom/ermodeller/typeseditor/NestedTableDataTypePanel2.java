@@ -136,7 +136,7 @@ public class NestedTableDataTypePanel2 extends DataTypePanel implements ActionLi
      * Initializes connections
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    protected void initConnections() throws java.lang.Exception {
+    protected void initConnections() {
         //System.out.println("initConnections()");
         getTypeButton().addActionListener(this);
     }

@@ -266,7 +266,6 @@ public class ObjectTypeEditor extends TypeEditor implements PropertyChangeListen
         }
         if (e.getPropertyName().equals(UserTypeStorageVector.REMOVE_PROPERTYCHANGE)) {
             removeFromJComboBox((UserTypeStorage) e.getOldValue());
-            return;
         }
     }
 

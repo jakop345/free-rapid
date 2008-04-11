@@ -432,7 +432,7 @@ public class CardinalityCustomizer extends JPanel implements ActionListener, Ite
      * Initializes connections
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    private void initConnections() throws java.lang.Exception {
+    private void initConnections() {
         // user code begin {1}
         // user code end
         getArbitraryCheckBox().addItemListener(this);

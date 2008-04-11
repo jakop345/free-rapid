@@ -152,7 +152,7 @@ public class ObjectDataTypePanel2 extends DataTypePanel implements ActionListene
      * Initializes connections
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    protected void initConnections() throws java.lang.Exception {
+    protected void initConnections() {
         //System.out.println("initConnections()");
         getItemList().addMouseListener(this);
         getItemList().addKeyListener(this);

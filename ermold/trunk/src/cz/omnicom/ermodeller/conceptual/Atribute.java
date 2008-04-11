@@ -207,16 +207,16 @@ public class Atribute extends ConceptualObject {
      *
      */
     public synchronized void setPrimary(boolean primary) throws ISAChildCannotHavePrimaryKeyException, RelationCannotHavePrimaryKeyException {
-        if (getConstruct() instanceof Relation && primary == true)
+        if (getConstruct() instanceof Relation && primary)
             throw new RelationCannotHavePrimaryKeyException((Relation) getConstruct());
         if (getConstruct() instanceof Entity) {
-            if ((((Entity) getConstruct()).getISAParent() != null) && primary == true)
+            if ((((Entity) getConstruct()).getISAParent() != null) && primary)
                 throw new ISAChildCannotHavePrimaryKeyException((Entity) getConstruct());
         }
 
         boolean oldValue = fieldPrimary;
         this.fieldPrimary = primary;
-        if (primary == true) {
+        if (primary) {
             fieldArbitrary = true;
             fieldUnique = true;
             ((Entity) getConstruct()).addMemberOfPrimaryKey(this);
@@ -231,7 +231,7 @@ public class Atribute extends ConceptualObject {
     /**
      * @param fieldUnique The fieldUnique to set.
      */
-    public synchronized void setUnique(boolean unique) throws IsMemberOfPrimaryKeyException {
+    public synchronized void setUnique(boolean unique) {
         boolean oldValue = fieldUnique;
 //	if(isPrimary() && !unique) throw new IsMemberOfPrimaryKeyException(this);
         this.fieldUnique = unique;

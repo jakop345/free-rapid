@@ -286,8 +286,6 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
             try {
                 uniqueKeyC2R = new UniqueKeyC2R(aEntC2R.getSchemaC2R(), aEntC2R, null, null, false);
             }
-            catch (WasNotFoundByConceptualExceptionC2R e) {
-            } // cannot be thrown
             catch (AlreadyContainsExceptionC2R e) {
             } // cannot be thrown
             try {

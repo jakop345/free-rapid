@@ -1340,7 +1340,7 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
      * Initializes connections
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    private void initConnections() throws java.lang.Exception {
+    private void initConnections() {
         // user code begin {1}
         getAcceptButton().addActionListener(this);
         getAcceptButton1().addActionListener(this);

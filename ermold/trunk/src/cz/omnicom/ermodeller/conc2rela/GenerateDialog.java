@@ -486,7 +486,7 @@ public class GenerateDialog extends JDialog implements ActionListener, ItemListe
      * Initializes connections
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    private void initConnections() throws java.lang.Exception {
+    private void initConnections() {
         // user code begin {1}
         // user code end
         getGlueCheckBox().addItemListener(this);

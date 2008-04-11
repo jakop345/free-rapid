@@ -206,7 +206,7 @@ public class UserDefinedDataTypePanel extends DataTypePanel implements ActionLis
     /**
      * Initializes connections
      */
-    private void initConnections() throws java.lang.Exception {
+    private void initConnections() {
         getJComboBox().addItemListener(this);
         getJComboBox().addActionListener(this);
         getRefreshButton().addActionListener(refreshActionListener);

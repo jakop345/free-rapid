@@ -654,7 +654,7 @@ public class PreferencesPanel extends javax.swing.JPanel {
      * @throws java.lang.Exception The exception description.
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    private void initConnections() throws java.lang.Exception {
+    private void initConnections() {
         // user code begin {1}
         // user code end
         getCancelButton().addActionListener(ivjEventHandler);
@@ -791,7 +791,6 @@ public class PreferencesPanel extends javax.swing.JPanel {
  */
     public void sendButton_ActionPerformed(java.awt.event.ActionEvent actionEvent) {
         System.out.println(getSql());
-        return;
     }
 
     /**

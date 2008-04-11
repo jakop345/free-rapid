@@ -376,7 +376,7 @@ public class LengthDataTypePanel extends DataTypePanel implements FocusListener,
      * Initializes connections
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    protected void initConnections() throws java.lang.Exception {
+    protected void initConnections() {
         // user code begin {1}
         getLengthTextField().addKeyListener(this);
         // user code end

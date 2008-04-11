@@ -186,7 +186,6 @@ public class VarrayNestedTypeEditor extends TypeEditor implements PropertyChange
         }
         if (e.getPropertyName().equals(UserTypeStorageVector.REMOVE_PROPERTYCHANGE)) {
             removeFromJComboBox((UserTypeStorage) e.getOldValue());
-            return;
         }
     }
 

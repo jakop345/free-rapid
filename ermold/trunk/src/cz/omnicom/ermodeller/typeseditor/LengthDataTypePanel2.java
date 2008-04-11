@@ -57,7 +57,7 @@ public class LengthDataTypePanel2 extends LengthDataTypePanel {
      * Initializes connections
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    protected void initConnections() throws java.lang.Exception {
+    protected void initConnections() {
         getLengthTextField().addKeyListener(this);
         getdownButton().addMouseListener(this);
         getUpButton().addMouseListener(this);

@@ -1,6 +1,5 @@
 package cz.green.event;
 
-import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.interfaces.*;
 import cz.green.event.interfaces.Event;
 import cz.green.util.MoveArrayList;
@@ -89,7 +88,7 @@ public class Desktop extends Group implements ContainerDesktop, java.io.Serializ
      *          If <code>left</code>, <code>top</code>, <code>width</code> or
      *          <code>height</code> is less than zero.
      */
-    public Desktop(cz.green.event.Container place, int left, int top, int width, int height) throws ImpossibleNegativeValueException {
+    public Desktop(cz.green.event.Container place, int left, int top, int width, int height) {
         super();
         manager = this;
         paintPlace = place;

@@ -1,13 +1,13 @@
 package cz.green.event;
 
+import cz.green.event.exceptions.ImpossibleNegativeValueException;
+import cz.green.event.exceptions.ItemNotInsideManagerException;
+import cz.green.event.exceptions.ValueOutOfRangeException;
+import cz.green.event.interfaces.*;
 import cz.green.util.BadDimensionException;
 import cz.green.util.IntervalMethods;
 import cz.green.util.IntervalMethodsException;
 import cz.green.util.MoveArrayList;
-import cz.green.event.interfaces.*;
-import cz.green.event.exceptions.ItemNotInsideManagerException;
-import cz.green.event.exceptions.ValueOutOfRangeException;
-import cz.green.event.exceptions.ImpossibleNegativeValueException;
 
 import java.awt.*;
 
@@ -86,9 +86,7 @@ public class Group extends Window implements Manager, java.io.Serializable {
                 item.countLinks((Item) wins.get(size - 1));
         } //this could not apper, else it is critical situation
         catch (ValueOutOfRangeException e) {
-            return;
         } catch (BadDimensionException e) {
-            return;
         }
     }
 
@@ -216,7 +214,6 @@ public class Group extends Window implements Manager, java.io.Serializable {
             selectItemEx(null, false);
             repaintItem((PaintableItem) event.getItem());
         } catch (ItemNotInsideManagerException e) {
-            return;
         }
     }
 

@@ -302,7 +302,6 @@ public class PropertyList extends JComponent implements Scrollable, PropertyChan
             setVisible(true);
             modifyPropertyChangeListener(bean, true);
         } catch (IntrospectionException e) {
-            return;
         }
     }
 

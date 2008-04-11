@@ -1,12 +1,14 @@
 package cz.green.eventtool;
 
-import cz.green.event.*;
-import cz.green.event.exceptions.ItemNotInsideManagerException;
+import cz.green.event.ResizePoint;
+import cz.green.event.SelectItemEvent;
+import cz.green.event.SelectItemExEvent;
 import cz.green.event.exceptions.ImpossibleNegativeValueException;
+import cz.green.event.exceptions.ItemNotInsideManagerException;
 import cz.green.event.exceptions.ValueOutOfRangeException;
 import cz.green.event.interfaces.Item;
-import cz.green.event.interfaces.PaintableItem;
 import cz.green.event.interfaces.Manager;
+import cz.green.event.interfaces.PaintableItem;
 import cz.green.event.interfaces.PaintableManager;
 import cz.green.swing.ShowException;
 
@@ -125,7 +127,6 @@ public class DGroup extends Group implements ConnectionManager {
             //		((PaintableManager) manager).repaintItem(this);
         } catch (ItemNotInsideManagerException e) {
             //when execution is here - very bad
-            return;
         }
     }
 
@@ -347,7 +348,6 @@ public class DGroup extends Group implements ConnectionManager {
             doResize(r);
         } catch (ItemNotInsideManagerException e) {
             //when execution is here - it is bad
-            return;
         }
     }
 

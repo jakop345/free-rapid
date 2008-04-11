@@ -902,7 +902,7 @@ public class Entity extends ConceptualConstruct {
         }
     }
 
-    public void handleAddConnectionEvent(cz.green.event.AddConnectionEvent event) throws ItemNotInsideManagerException {
+    public void handleAddConnectionEvent(cz.green.event.AddConnectionEvent event) {
         if (selected && event.getAdd())
             return;
         float scale = getManager().getScale();
@@ -1460,7 +1460,6 @@ public class Entity extends ConceptualConstruct {
                 isStrongAddictionChild = true;
                 ((PaintableManager) manager).repaintRectangle(
                         r.x, r.y, r.width, r.height);
-                return;
             }
         }
     }
@@ -1569,7 +1568,7 @@ public class Entity extends ConceptualConstruct {
             for (int j = 0; j < count; j++) {
                 a = (getAtributes().get(j));
                 if (a.getPosition() == i) {
-                    if (a.isPrimary() == true) pks.addElement(a);
+                    if (a.isPrimary()) pks.addElement(a);
                     break;
                 }
             }
@@ -1740,8 +1739,7 @@ public class Entity extends ConceptualConstruct {
      *
      * @param man Manager where to put the entity manager.
      */
-    protected void resetISAParent(Manager man)
-            throws WasNotFoundException {
+    protected void resetISAParent(Manager man) {
         try {
             model.setISAParent(null);
             ((DGroup) manager)

@@ -247,7 +247,6 @@ public class Cardinality extends ConceptualObject {
         try {
             move(dx, dy, false);
         } catch (ItemNotInsideManagerException e) {
-            return;
         } finally {
             ((PaintableManager) manager).repaintItemFast(this);
         }
@@ -301,7 +300,6 @@ public class Cardinality extends ConceptualObject {
             }
             ((PaintableManager) manager).repaintItem(this);
         } catch (ItemNotInsideManagerException e) {
-            return;
         }
     }
 
@@ -624,7 +622,6 @@ public class Cardinality extends ConceptualObject {
                 }
                 if (conn.getTwo() == old) {
                     conn.setTwo(cc);
-                    return;
                 }
             } catch (Throwable x) {
                 ShowException d = new ShowException(null, "Error", x, true);

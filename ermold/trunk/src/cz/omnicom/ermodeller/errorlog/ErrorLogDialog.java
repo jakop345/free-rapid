@@ -363,7 +363,7 @@ public class ErrorLogDialog extends JDialog implements java.awt.event.ActionList
      * Initializes connections
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    private void initConnections() throws java.lang.Exception {
+    private void initConnections() {
         // user code begin {1}
         // user code end
         getCloseButton().addActionListener(this);

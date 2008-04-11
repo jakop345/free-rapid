@@ -450,7 +450,7 @@ public class Relation extends ConceptualConstruct {
         super.handleDragOverEvent(event);
     }
 
-    public void handleAddConnectionEvent(AddConnectionEvent event) throws ItemNotInsideManagerException {
+    public void handleAddConnectionEvent(AddConnectionEvent event) {
         if (selected && event.getAdd())
             return;
         Item item = event.getItem();
@@ -719,7 +719,6 @@ public class Relation extends ConceptualConstruct {
                 ((PaintableManager) manager).repaintRectangle(r.x,
                         r.y, r.width, r.height);
             }
-            return;
         }
     }
 

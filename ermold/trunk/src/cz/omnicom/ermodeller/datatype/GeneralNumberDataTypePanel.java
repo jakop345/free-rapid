@@ -636,7 +636,7 @@ public class GeneralNumberDataTypePanel extends DataTypePanel implements FocusLi
      * Initializes connections
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    protected void initConnections() throws java.lang.Exception {
+    protected void initConnections() {
         // user code begin {1}
         // user code end
         getPrecisionDownButton().addMouseListener(this);

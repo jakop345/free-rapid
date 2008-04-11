@@ -172,22 +172,22 @@ public class ERModeller extends JFrame implements
         getPlace().addPropertyChangeListener(this);
         getPlace().deleting();
         getPlace().working();
-//        errDialog = new ErrorLogDialog(this, new ErrorLogList());
-//        errDialog.setLocationRelativeTo(this);
-//        conflictsDialog = new ConflictsDialog(this, new ErrorLogList());
-//        conflictsDialog.setLocationRelativeTo(this);
-//        sqlDialog = new SQLDialog(this, null);
-//        sqlDialog.setLocationRelativeTo(this);
-//        objDialog = new ObjDialog(this, null);
-//        objDialog.setLocationRelativeTo(this);
-//        optDialog = new OptionsDialog(this, this);
-//        optDialog.setLocationRelativeTo(this);
-//        optDialog.pack();
-//        aboutDialog = new AboutDialog(this);
-//        aboutDialog.setLocationRelativeTo(this);
-//        aboutDialog.pack();
-//        typeEditor = new UserTypesEditor(this);
-//        typeEditor.setLocationRelativeTo(this);
+        errDialog = new ErrorLogDialog(this, new ErrorLogList());
+        errDialog.setLocationRelativeTo(this);
+        conflictsDialog = new ConflictsDialog(this, new ErrorLogList());
+        conflictsDialog.setLocationRelativeTo(this);
+        sqlDialog = new SQLDialog(this, null);
+        sqlDialog.setLocationRelativeTo(this);
+        objDialog = new ObjDialog(this, null);
+        objDialog.setLocationRelativeTo(this);
+        optDialog = new OptionsDialog(this, this);
+        optDialog.setLocationRelativeTo(this);
+        optDialog.pack();
+        aboutDialog = new AboutDialog(this);
+        aboutDialog.setLocationRelativeTo(this);
+        aboutDialog.pack();
+        typeEditor = new UserTypesEditor(this);
+        typeEditor.setLocationRelativeTo(this);
 
         ((Desktop) getPlace().getDesktop()).ERMFrame = this;
 
@@ -370,7 +370,7 @@ public class ERModeller extends JFrame implements
                             this);
                     genDialog.setLocationRelativeTo(null);
                     genDialog.setVisible(true);
-                    if (genDialog.getResult() == cz.omnicom.ermodeller.conc2rela.GenerateDialog.GENDIALOG_OK) {
+                    if (genDialog.getResult()) {
 //						osetreni kardinalit
                         if (ConceptualConstruct.ACTUAL_NOTATION != ConceptualConstruct.CHEN) {
                             if (ConceptualConstruct.ACTUAL_NOTATION == ConceptualConstruct.BINARY)
@@ -427,7 +427,7 @@ public class ERModeller extends JFrame implements
                             this);
                     genDialog.setLocationRelativeTo(null);
                     genDialog.setVisible(true);
-                    if (genDialog.getResult() == cz.omnicom.ermodeller.conc2rela.GenerateDialog.GENDIALOG_OK) {
+                    if (genDialog.getResult()) {
                         //osetreni kardinalit
                         if (ConceptualConstruct.ACTUAL_NOTATION != ConceptualConstruct.CHEN) {
                             if (ConceptualConstruct.ACTUAL_NOTATION == ConceptualConstruct.BINARY)
@@ -1074,8 +1074,7 @@ public class ERModeller extends JFrame implements
     /**
      * Loads desktop from document model
      */
-    public String loadDesktop(Desktop d, int id, Document doc)
-            throws java.io.IOException, ClassNotFoundException {
+    public String loadDesktop(Desktop d, int id, Document doc) {
         int i, t, l, tt, ll, w, h, notation;
         String prefix;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -1323,8 +1322,7 @@ public class ERModeller extends JFrame implements
     /**
      * Loads desktop from document model
      */
-    public int loadNotation(Desktop d, int id, Document doc)
-            throws java.io.IOException, ClassNotFoundException {
+    public int loadNotation(Desktop d, int id, Document doc) {
         int notation = 0;
         try {
             ERDocument erdoc = new ERDocument(doc);

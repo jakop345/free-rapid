@@ -93,13 +93,13 @@ public class BooleanEditor extends PropertyEditorSupport {
         if (v instanceof Boolean) {
 
             if (text.equals(tags[0])) {
-                if (((Boolean) v).booleanValue() == false) {
+                if (!((Boolean) v).booleanValue()) {
                     setValue(Boolean.TRUE);
                 }
 
             } else {
                 if (text.equals(tags[1])) {
-                    if (((Boolean) v).booleanValue() == true) {
+                    if (((Boolean) v).booleanValue()) {
                         setValue(Boolean.FALSE);
                     }
                 } else

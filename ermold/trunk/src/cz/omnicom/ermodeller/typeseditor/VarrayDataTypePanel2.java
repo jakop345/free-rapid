@@ -379,7 +379,7 @@ public class VarrayDataTypePanel2 extends DataTypePanel implements FocusListener
      * Initializes connections
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    protected void initConnections() throws java.lang.Exception {
+    protected void initConnections() {
         //System.out.println("initConnections()");
         getLengthTextField().addKeyListener(this);
         getdownButton().addMouseListener(this);

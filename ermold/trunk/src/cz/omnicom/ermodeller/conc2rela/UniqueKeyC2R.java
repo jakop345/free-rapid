@@ -2,7 +2,6 @@ package cz.omnicom.ermodeller.conc2rela;
 
 import cz.omnicom.ermodeller.conc2rela.exception.AlreadyContainsExceptionC2R;
 import cz.omnicom.ermodeller.conc2rela.exception.ListExceptionC2R;
-import cz.omnicom.ermodeller.conc2rela.exception.WasNotFoundByConceptualExceptionC2R;
 import cz.omnicom.ermodeller.conceptual.Atribute;
 import cz.omnicom.ermodeller.sql.ConstraintSQL;
 import cz.omnicom.ermodeller.sql.SQLConstraintProducer;
@@ -39,7 +38,7 @@ public class UniqueKeyC2R extends ElementOfRelationC2R implements SQLConstraintP
      * @throws cz.omnicom.ermodeller.conc2rela.exception.AlreadyContainsExceptionC2R
      *
      */
-    public UniqueKeyC2R(SchemaC2R aSchemaC2R, RelationC2R aRelationC2R, Vector<Atribute> primaryKeys, Vector<Atribute> uniqueKeys, boolean isPrimary) throws WasNotFoundByConceptualExceptionC2R, AlreadyContainsExceptionC2R {
+    public UniqueKeyC2R(SchemaC2R aSchemaC2R, RelationC2R aRelationC2R, Vector<Atribute> primaryKeys, Vector<Atribute> uniqueKeys, boolean isPrimary) throws AlreadyContainsExceptionC2R {
         super(null, aSchemaC2R, aRelationC2R);
 
         if (primaryKeys != null) {

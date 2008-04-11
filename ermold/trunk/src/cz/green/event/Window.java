@@ -142,9 +142,7 @@ public class Window implements Item, java.io.Serializable {
             }
         } //if occurs exception, this code is wrong
         catch (ValueOutOfRangeException e) {
-            return;
         } catch (BadDimensionException e) {
-            return;
         }
     }
 
@@ -174,9 +172,7 @@ public class Window implements Item, java.io.Serializable {
             }
         } //if occurs exception, this code is wrong
         catch (ValueOutOfRangeException e) {
-            return;
         } catch (BadDimensionException e) {
-            return;
         }
     }
 
@@ -346,7 +342,6 @@ public class Window implements Item, java.io.Serializable {
             ((PaintableManager) manager).selectItemEx(null, false);
             ((PaintableManager) manager).repaintItem((PaintableItem) event.getItem());
         } catch (ItemNotInsideManagerException e) {
-            return;
         }
     }
 
@@ -404,7 +399,6 @@ public class Window implements Item, java.io.Serializable {
             }
             ((PaintableManager) manager).repaintItem(this);
         } catch (ItemNotInsideManagerException e) {
-            return;
         }
     }
 
@@ -426,7 +420,6 @@ public class Window implements Item, java.io.Serializable {
         try {
             move(event.getDx(), event.getDy(), false);
         } catch (ItemNotInsideManagerException e) {
-            return;
         } finally {
             ((PaintableManager) manager).repaintItemFast(this);
         }
@@ -475,7 +468,6 @@ public class Window implements Item, java.io.Serializable {
             }
             ((PaintableManager) manager).repaintRectangle(r.x, r.y, r.width, r.height);
         } catch (ItemNotInsideManagerException e) {
-            return;
         }
     }
 
@@ -496,7 +488,6 @@ public class Window implements Item, java.io.Serializable {
         try {
             resize(event.getDx(), event.getDy(), event.getResizeRect().direction, false);
         } catch (ItemNotInsideManagerException e) {
-            return;
         } finally {
             ((PaintableManager) manager).repaintItemFast(this);
         }
@@ -696,7 +687,6 @@ public class Window implements Item, java.io.Serializable {
             }
         } catch (BadDimensionException e) {
             //this is very bad;
-            return;
         }
     }
 

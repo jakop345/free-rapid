@@ -1,7 +1,6 @@
 package cz.green.event;
 
 import cz.green.event.interfaces.ContainerDesktop;
-import cz.green.event.exceptions.ImpossibleNegativeValueException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -132,14 +131,9 @@ public class Container extends JComponent implements MouseListener, MouseMotionL
      * @return cz.green.event.ContainerDesktop
      */
     public ContainerDesktop getDesktop() {
-        if (desktop == null) {
-            try {
                 Rectangle r = getBounds();
                 desktop = new cz.green.event.Desktop(this, r.x, r.y, r.width, r.height);
-            } catch (ImpossibleNegativeValueException e) {
-                return null;
-            }
-        }
+
         return desktop;
     }
 
