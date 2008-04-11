@@ -15,7 +15,6 @@ import cz.green.swing.ShowException;
 import cz.green.util.ActionAdapter;
 import cz.green.util.ParamActionAdapter;
 import cz.omnicom.ermodeller.conc2obj.ObjDialog;
-import cz.omnicom.ermodeller.conceptual.EntityBean;
 import cz.omnicom.ermodeller.conceptual.RelationBean;
 import cz.omnicom.ermodeller.datatype.*;
 import cz.omnicom.ermodeller.errorlog.*;
@@ -1099,7 +1098,7 @@ public class ERModeller extends JFrame implements
         cz.omnicom.ermodeller.conceptual.ConceptualObject coM;
         cz.omnicom.ermodeller.conceptual.Atribute atrM;
         cz.omnicom.ermodeller.conceptual.ConceptualConstruct ccM;
-        EntityBean entM;
+        cz.omnicom.ermodeller.conceptual.Entity entM;
         cz.omnicom.ermodeller.conceptual.Schema schemaM;
         cz.omnicom.ermodeller.conceptual.Cardinality carM;
         cz.omnicom.ermodeller.conceptual.UniqueKey uniM;
@@ -1154,7 +1153,7 @@ public class ERModeller extends JFrame implements
                     ent = d.createEntity(l, t, w, h, null);
                     ent.setID(id
                             + (new Integer(erdoc.getValue("id"))).intValue());
-                    entM = (EntityBean) ent
+                    entM = (cz.omnicom.ermodeller.conceptual.Entity) ent
                             .getModel();
                     s = erdoc.getValue("name");
                     if (s == null)
@@ -1271,7 +1270,7 @@ public class ERModeller extends JFrame implements
                     l = ll + (new Integer(erdoc.getValue("left"))).intValue();
                     ent = d.getEntity(id
                             + (new Integer(erdoc.getValue("ent"))).intValue());
-                    ccM = (EntityBean) ent
+                    ccM = (cz.omnicom.ermodeller.conceptual.Entity) ent
                             .getModel();
                     uni = ent.createUniqueKey(l, t);
                     uni.setID(id
@@ -1366,7 +1365,7 @@ public class ERModeller extends JFrame implements
         cz.omnicom.ermodeller.conceptual.ConceptualObject coM;
         cz.omnicom.ermodeller.conceptual.Atribute atrM;
         cz.omnicom.ermodeller.conceptual.ConceptualConstruct ccM;
-        EntityBean entM;
+        cz.omnicom.ermodeller.conceptual.Entity entM;
         cz.omnicom.ermodeller.conceptual.Schema schemaM;
         cz.omnicom.ermodeller.conceptual.Cardinality carM;
         cz.omnicom.ermodeller.conceptual.UniqueKey uniM;

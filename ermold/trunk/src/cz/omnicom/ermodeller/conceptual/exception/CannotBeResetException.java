@@ -1,6 +1,6 @@
 package cz.omnicom.ermodeller.conceptual.exception;
 
-import cz.omnicom.ermodeller.conceptual.EntityBean;
+import cz.omnicom.ermodeller.conceptual.Entity;
 import cz.omnicom.ermodeller.conceptual.UniqueKey;
 
 /**
@@ -8,16 +8,16 @@ import cz.omnicom.ermodeller.conceptual.UniqueKey;
  */
 public class CannotBeResetException extends ConceptualException {
     private UniqueKey uniqueKey = null;
-    private EntityBean oldEntityBean = null;
-    private EntityBean newEntityBean = null;
+    private Entity oldEntity = null;
+    private Entity newEntity = null;
 
     /**
      * CannotBeReset constructor comment.
      */
-    public CannotBeResetException(UniqueKey aUniqueKey, EntityBean anOldEntityBean, EntityBean aNewEntityBean) {
+    public CannotBeResetException(UniqueKey aUniqueKey, Entity anOldEntity, Entity aNewEntity) {
         uniqueKey = aUniqueKey;
-        oldEntityBean = anOldEntityBean;
-        newEntityBean = aNewEntityBean;
+        oldEntity = anOldEntity;
+        newEntity = aNewEntity;
     }
 
     /**
@@ -26,6 +26,6 @@ public class CannotBeResetException extends ConceptualException {
      * @return java.lang.String
      */
     public String getMessage() {
-        return "Owner of unique key " + uniqueKey.getName() + " cannot be changed (from entity " + oldEntityBean.getName() + " to entity " + newEntityBean.getName();
+        return "Owner of unique key " + uniqueKey.getName() + " cannot be changed (from entity " + oldEntity.getName() + " to entity " + newEntity.getName();
     }
 }

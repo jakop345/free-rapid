@@ -1,11 +1,11 @@
 package cz.omnicom.ermodeller.errorlog;
 
-import cz.omnicom.ermodeller.conceptual.EntityBean;
+import cz.omnicom.ermodeller.conceptual.Entity;
 
 /**
  * Entity cannot be both ISA and strong addicted.
  *
- * @see cz.omnicom.ermodeller.conceptual.EntityBean
+ * @see cz.omnicom.ermodeller.conceptual.Entity
  */
 public class CannotBeISASonAndStrongAddictedValidationError extends ConceptualObjectValidationError {
     /**
@@ -13,7 +13,7 @@ public class CannotBeISASonAndStrongAddictedValidationError extends ConceptualOb
      *
      * @param anObject cz.omnicom.ermodeller.conceptual.Entity
      */
-    public CannotBeISASonAndStrongAddictedValidationError(EntityBean anObject) {
+    public CannotBeISASonAndStrongAddictedValidationError(Entity anObject) {
         super(anObject);
     }
 

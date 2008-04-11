@@ -14,7 +14,7 @@ import java.util.Vector;
  * it can be member of ISA hierarchy and it can be addicted to another
  * <code>Entity</code> or some <code>Entities</code> can be addicted to this one.
  */
-public class EntityBean extends ConceptualConstruct {
+public class Entity extends ConceptualConstruct {
     /**
      * Holds the group of atributes as a primary key of the <code>Entity</code>.
      */
@@ -26,7 +26,7 @@ public class EntityBean extends ConceptualConstruct {
     /**
      * Parent in ISA hierarchy (superentity of this <code>Entity</code>).
      */
-    protected EntityBean isaParent = null;
+    protected Entity isaParent = null;
     /**
      * Sons in ISA hierarchy (subentities of this one).
      */
@@ -63,17 +63,17 @@ public class EntityBean extends ConceptualConstruct {
      * Adds the ISA son to the <code>Entity</code>.
      * Is called by <code>setISAParent()</code> method.
      *
-     * @param anEntityBean cz.omnicom.ermodeller.conceptual.Entity
+     * @param anEntity cz.omnicom.ermodeller.conceptual.Entity
      * @throws cz.omnicom.ermodeller.conceptual.exception.ParameterCannotBeNullException
      *
      * @see #setISAParent
      */
-    private synchronized void addISASon(EntityBean anEntityBean) throws ParameterCannotBeNullException {
-        if (anEntityBean == null)
+    private synchronized void addISASon(Entity anEntity) throws ParameterCannotBeNullException {
+        if (anEntity == null)
             throw new ParameterCannotBeNullException();
 
         Vector oldValue = (Vector) getISASons().clone();
-        getISASons().addElement(anEntityBean);
+        getISASons().addElement(anEntity);
         firePropertyChange(ISASONS_PROPERTY_CHANGE, oldValue, getISASons());
     }
 
@@ -81,7 +81,7 @@ public class EntityBean extends ConceptualConstruct {
      * Adds the strong addiction parent <code>anEntity</code>. Also adds the <code>Entity</code>
      * to the list of strong addiction sons of <code>anEntity</code>.
      *
-     * @param anEntityBean cz.omnicom.ermodeller.conceptual.Entity
+     * @param anEntity cz.omnicom.ermodeller.conceptual.Entity
      * @throws cz.omnicom.ermodeller.conceptual.exception.ParameterCannotBeNullException
      *
      * @throws cz.omnicom.ermodeller.conceptual.exception.MustHavePrimaryKeyException
@@ -90,9 +90,9 @@ public class EntityBean extends ConceptualConstruct {
      *
      * @see #addStrongAddictionSon
      */
-    public synchronized void addStrongAddictionParent(EntityBean anEntityBean) throws ParameterCannotBeNullException, /*AlreadyAddictedException,*/ CycleWouldAppearException {
+    public synchronized void addStrongAddictionParent(Entity anEntity) throws ParameterCannotBeNullException, /*AlreadyAddictedException,*/ CycleWouldAppearException {
         // Sets bidirectional connection.
-        if (anEntityBean == null)
+        if (anEntity == null)
             throw new ParameterCannotBeNullException();
 /*  PŠ	if (getPrimaryKey() == null)
 		throw new MustHavePrimaryKeyException(this);
@@ -103,14 +103,14 @@ public class EntityBean extends ConceptualConstruct {
 		throw new AlreadyAddictedException();
 	}
 */
-        if (this == anEntityBean || /*anEntity.haveHigherStrongAddictionParent(this) || */anEntityBean.haveHigherCombinedParent(this))
+        if (this == anEntity || /*anEntity.haveHigherStrongAddictionParent(this) || */anEntity.haveHigherCombinedParent(this))
             // A cycle would appear in the Addiction graph or in combined (also ISA) graph
-            throw new CycleWouldAppearException(this, anEntityBean, CycleWouldAppearException.STRONG_ADDICTION_CYCLE);
+            throw new CycleWouldAppearException(this, anEntity, CycleWouldAppearException.STRONG_ADDICTION_CYCLE);
 
         Vector oldValue = (Vector) getStrongAddictionsParents().clone();
-        getStrongAddictionsParents().addElement(anEntityBean);
+        getStrongAddictionsParents().addElement(anEntity);
         try {
-            anEntityBean.addStrongAddictionSon(this);
+            anEntity.addStrongAddictionSon(this);
         }
         catch (ParameterCannotBeNullException e) {
         } // Cannot be thrown.
@@ -121,17 +121,17 @@ public class EntityBean extends ConceptualConstruct {
      * Adds the strong addiction son to the <code>Entity</code>.
      * Is called by <code>addStrongAddictionParent()</code> method.
      *
-     * @param anEntityBean cz.omnicom.ermodeller.conceptual.Entity
+     * @param anEntity cz.omnicom.ermodeller.conceptual.Entity
      * @throws cz.omnicom.ermodeller.conceptual.exception.ParameterCannotBeNullException
      *
      * @see #addStrongAddictionParent
      */
-    private synchronized void addStrongAddictionSon(EntityBean anEntityBean) throws ParameterCannotBeNullException {
-        if (anEntityBean == null)
+    private synchronized void addStrongAddictionSon(Entity anEntity) throws ParameterCannotBeNullException {
+        if (anEntity == null)
             throw new ParameterCannotBeNullException();
 
         Vector oldValue = (Vector) getStrongAddictionsSons().clone();
-        getStrongAddictionsSons().addElement(anEntityBean);
+        getStrongAddictionsSons().addElement(anEntity);
         firePropertyChange(STRONGADDICTIONSSONS_PROPERTY_CHANGE, oldValue, getStrongAddictionsSons());
     }
 
@@ -163,11 +163,11 @@ public class EntityBean extends ConceptualConstruct {
     /**
      * Returns whether <code>anEntity</code> is already strong addiction parent of the <code>Entity</code>.
      *
-     * @param anEntityBean cz.omnicom.ermodeller.conceptual.Entity
+     * @param anEntity cz.omnicom.ermodeller.conceptual.Entity
      * @return boolean
      */
-    private boolean containsStrongAddictionParent(EntityBean anEntityBean) {
-        return getStrongAddictionsParents().contains(anEntityBean);
+    private boolean containsStrongAddictionParent(Entity anEntity) {
+        return getStrongAddictionsParents().contains(anEntity);
     }
 
     /**
@@ -222,7 +222,7 @@ public class EntityBean extends ConceptualConstruct {
     private synchronized void disposeAllISASons() {
         for (Enumeration elements = getISASons().elements(); elements.hasMoreElements();) {
             try {
-                getSchema().disposeEntity((EntityBean) elements.nextElement());
+                getSchema().disposeEntity((Entity) elements.nextElement());
             }
             catch (ParameterCannotBeNullException e) {
             } // Cannot be thrown.
@@ -321,7 +321,7 @@ public class EntityBean extends ConceptualConstruct {
      * @return cz.omnicom.ermodeller.conceptual.Entity
      * @see #setISAParent
      */
-    public EntityBean getISAParent() {
+    public Entity getISAParent() {
         return isaParent;
     }
 
@@ -393,62 +393,62 @@ public class EntityBean extends ConceptualConstruct {
     /**
      * Returns whether there is any addiction (strong or ISA) on <code>anEntity</code> in addiction hierarchy.
      *
-     * @param anEntityBean cz.omnicom.ermodeller.conceptual.Entity
+     * @param anEntity cz.omnicom.ermodeller.conceptual.Entity
      * @return boolean
      */
-    private synchronized boolean haveHigherCombinedParent(EntityBean anEntityBean) {
+    private synchronized boolean haveHigherCombinedParent(Entity anEntity) {
         // For each strong addiction and ISA parent P {
         //    if (P == anEntity) return true;
         //    if (P.haveHigherCombinedParent(anEntity)) return true;
         // }
         // return false;
-        if (anEntityBean == null)
+        if (anEntity == null)
             return false;
         for (Enumeration elements = getStrongAddictionsParents().elements(); elements.hasMoreElements();) {
-            EntityBean parent = (EntityBean) elements.nextElement();
-            if (parent == anEntityBean)
+            Entity parent = (Entity) elements.nextElement();
+            if (parent == anEntity)
                 return true;
-            if (parent.haveHigherCombinedParent(anEntityBean))
+            if (parent.haveHigherCombinedParent(anEntity))
                 return true;
         }
-        if (isaParent == anEntityBean)
+        if (isaParent == anEntity)
             return true;
-        return isaParent != null && isaParent.haveHigherCombinedParent(anEntityBean);
+        return isaParent != null && isaParent.haveHigherCombinedParent(anEntity);
     }
 
     /**
      * Returns whether <code>Entity</code> has <code>anEntity</code> somewhere higher in the ISA hierarchy.
      *
-     * @param anEntityBean cz.omnicom.ermodeller.conceptual.Entity
+     * @param anEntity cz.omnicom.ermodeller.conceptual.Entity
      * @return boolean
      */
-    private synchronized boolean haveHigherISAParent(EntityBean anEntityBean) {
-        if (anEntityBean == null)
+    private synchronized boolean haveHigherISAParent(Entity anEntity) {
+        if (anEntity == null)
             return false;
-        if (isaParent == anEntityBean)
+        if (isaParent == anEntity)
             return true;
-        return isaParent != null && isaParent.haveHigherISAParent(anEntityBean);
+        return isaParent != null && isaParent.haveHigherISAParent(anEntity);
     }
 
     /**
      * Returns whether <code>Entity</code> has <code>anEntity</code> somewhere higher in the strong addiction hierarchy.
      *
-     * @param anEntityBean cz.omnicom.ermodeller.conceptual.Entity
+     * @param anEntity cz.omnicom.ermodeller.conceptual.Entity
      * @return boolean
      */
-    private synchronized boolean haveHigherStrongAddictionParent(EntityBean anEntityBean) {
+    private synchronized boolean haveHigherStrongAddictionParent(Entity anEntity) {
         // For each strong addiction parent P {
         //    if (P == anEntity) return true;
         //    if (P.haveHigherStrongAddictionParent(anEntity)) return true;
         // }
         // return false;
-        if (anEntityBean == null)
+        if (anEntity == null)
             return false;
         for (Enumeration elements = getStrongAddictionsParents().elements(); elements.hasMoreElements();) {
-            EntityBean parent = (EntityBean) elements.nextElement();
-            if (parent == anEntityBean)
+            Entity parent = (Entity) elements.nextElement();
+            if (parent == anEntity)
                 return true;
-            if (parent.haveHigherStrongAddictionParent(anEntityBean))
+            if (parent.haveHigherStrongAddictionParent(anEntity))
                 return true;
         }
         return false;
@@ -458,22 +458,22 @@ public class EntityBean extends ConceptualConstruct {
      * Returns whether <code>anEntity</code> has some <code>Entity's</code> strong addiction parent
      * somewhere higher in the strong addiction hierarchy.
      *
-     * @param anEntityBean cz.omnicom.ermodeller.conceptual.Entity
+     * @param anEntity cz.omnicom.ermodeller.conceptual.Entity
      * @return boolean
      */
-    private synchronized boolean haveTransitivelyStrongAddictionParent(EntityBean anEntityBean) {
+    private synchronized boolean haveTransitivelyStrongAddictionParent(Entity anEntity) {
         // For each strong addiction parent P {
         //    if (anEntity.haveHigherStrongAddictionParent(P))
         //        return true;
         // }
         // return false;
-        if (anEntityBean == null)
+        if (anEntity == null)
             return false;
         for (Enumeration elements = getStrongAddictionsParents().elements(); elements.hasMoreElements();) {
-            EntityBean parent = (EntityBean) elements.nextElement();
-            if (anEntityBean.haveHigherStrongAddictionParent(parent))
+            Entity parent = (Entity) elements.nextElement();
+            if (anEntity.haveHigherStrongAddictionParent(parent))
                 return true;
-            if (parent.haveTransitivelyStrongAddictionParent(anEntityBean))
+            if (parent.haveTransitivelyStrongAddictionParent(anEntity))
                 return true;
         }
         return false;
@@ -700,7 +700,7 @@ public class EntityBean extends ConceptualConstruct {
     private synchronized void removeAllAddictionParents() {
         for (Enumeration elements = getStrongAddictionsParents().elements(); elements.hasMoreElements();) {
             try {
-                removeStrongAddictionParent((EntityBean) elements.nextElement());
+                removeStrongAddictionParent((Entity) elements.nextElement());
             }
             catch (ParameterCannotBeNullException e) {
             } // Cannot be thrown.
@@ -716,7 +716,7 @@ public class EntityBean extends ConceptualConstruct {
     private synchronized void removeAllAddictionSons() {
         for (Enumeration elements = getStrongAddictionsSons().elements(); elements.hasMoreElements();) {
             try {
-                ((EntityBean) elements.nextElement()).removeStrongAddictionParent(this);
+                ((Entity) elements.nextElement()).removeStrongAddictionParent(this);
             }
             catch (ParameterCannotBeNullException e) {
             } // Cannot be thrown.
@@ -774,20 +774,20 @@ public class EntityBean extends ConceptualConstruct {
     /**
      * Removes ISA son <code>anEntity</code>.
      *
-     * @param anEntityBean cz.omnicom.ermodeller.conceptual.Entity
+     * @param anEntity cz.omnicom.ermodeller.conceptual.Entity
      * @throws cz.omnicom.ermodeller.conceptual.exception.ParameterCannotBeNullException
      *
      * @throws cz.omnicom.ermodeller.conceptual.exception.WasNotFoundException
      *
      */
-    private synchronized void removeISASon(EntityBean anEntityBean) throws ParameterCannotBeNullException, WasNotFoundException {
-        if (anEntityBean == null)
+    private synchronized void removeISASon(Entity anEntity) throws ParameterCannotBeNullException, WasNotFoundException {
+        if (anEntity == null)
             throw new ParameterCannotBeNullException();
 
         Vector oldValue = (Vector) getISASons().clone();
-        if (!(getISASons().removeElement(anEntityBean))) { // was it removed?
+        if (!(getISASons().removeElement(anEntity))) { // was it removed?
             // No, it wasn't found.
-            throw new WasNotFoundException(this, anEntityBean, ListException.ISA_SONS_LIST);
+            throw new WasNotFoundException(this, anEntity, ListException.ISA_SONS_LIST);
         } else {
             // Yes.
             firePropertyChange(ISASONS_PROPERTY_CHANGE, oldValue, getISASons());
@@ -798,30 +798,30 @@ public class EntityBean extends ConceptualConstruct {
      * Removes strong addiction parent <code>anEntity</code> from the <code>Entity</code> - disposes bidirectional
      * strong addiction connection.
      *
-     * @param anEntityBean cz.omnicom.ermodeller.conceptual.Entity
+     * @param anEntity cz.omnicom.ermodeller.conceptual.Entity
      * @throws cz.omnicom.ermodeller.conceptual.exception.ParameterCannotBeNullException
      *
      * @throws cz.omnicom.ermodeller.conceptual.exception.WasNotFoundException
      *
      */
-    public synchronized void removeStrongAddictionParent(EntityBean anEntityBean) throws ParameterCannotBeNullException, WasNotFoundException {
+    public synchronized void removeStrongAddictionParent(Entity anEntity) throws ParameterCannotBeNullException, WasNotFoundException {
         // Removes bidirectioanl connection.
-        if (anEntityBean == null)
+        if (anEntity == null)
             throw new ParameterCannotBeNullException();
 
         Vector oldValue = (Vector) getStrongAddictionsParents().clone();
-        if (!(getStrongAddictionsParents().removeElement(anEntityBean))) { // was it removed?
+        if (!(getStrongAddictionsParents().removeElement(anEntity))) { // was it removed?
             // No, it wasn't found.
-            throw new WasNotFoundException(this, anEntityBean, ListException.STRONG_ADDICTION_PARENTS_LIST);
+            throw new WasNotFoundException(this, anEntity, ListException.STRONG_ADDICTION_PARENTS_LIST);
         } else {
             // Yes.
             try {
-                anEntityBean.removeStrongAddictionSon(this);
+                anEntity.removeStrongAddictionSon(this);
             }
             catch (ParameterCannotBeNullException e) {
             } // Cannot be thrown.
             catch (WasNotFoundException e) {
-                getStrongAddictionsParents().addElement(anEntityBean);
+                getStrongAddictionsParents().addElement(anEntity);
                 throw e;
             }
             firePropertyChange(STRONGADDICTIONSPARENTS_PROPERTY_CHANGE, oldValue, getStrongAddictionsParents());
@@ -832,21 +832,21 @@ public class EntityBean extends ConceptualConstruct {
      * Removes strong addiction son <code>anEntity</code> from the <code>Entity</code>.
      * Is called by <code>removeStrongAddictionParent()</code> method.
      *
-     * @param anEntityBean cz.omnicom.ermodeller.conceptual.Entity
+     * @param anEntity cz.omnicom.ermodeller.conceptual.Entity
      * @throws cz.omnicom.ermodeller.conceptual.exception.ParameterCannotBeNullException
      *
      * @throws cz.omnicom.ermodeller.conceptual.exception.WasNotFoundException
      *
      * @see #removeStrongAddictionParent
      */
-    private synchronized void removeStrongAddictionSon(EntityBean anEntityBean) throws ParameterCannotBeNullException, WasNotFoundException {
-        if (anEntityBean == null)
+    private synchronized void removeStrongAddictionSon(Entity anEntity) throws ParameterCannotBeNullException, WasNotFoundException {
+        if (anEntity == null)
             throw new ParameterCannotBeNullException();
 
         Vector oldValue = (Vector) getStrongAddictionsSons().clone();
-        if (!(getStrongAddictionsSons().removeElement(anEntityBean))) { // was it removed?
+        if (!(getStrongAddictionsSons().removeElement(anEntity))) { // was it removed?
             // No, it wasn't found.
-            throw new WasNotFoundException(this, anEntityBean, ListException.STRONG_ADDICTION_SONS_LIST);
+            throw new WasNotFoundException(this, anEntity, ListException.STRONG_ADDICTION_SONS_LIST);
         } else {
             // Yes.
             firePropertyChange(STRONGADDICTIONSSONS_PROPERTY_CHANGE, oldValue, getStrongAddictionsSons());
@@ -915,7 +915,7 @@ public class EntityBean extends ConceptualConstruct {
      * @throws cz.omnicom.ermodeller.conceptual.exception.CycleWouldAppearException
      *
      */
-    public synchronized void setISAParent(EntityBean anISAParent) throws CannotHavePrimaryKeyException, WasNotFoundException, CycleWouldAppearException {
+    public synchronized void setISAParent(Entity anISAParent) throws CannotHavePrimaryKeyException, WasNotFoundException, CycleWouldAppearException {
         // Sets bidirectional connection.
         // comment - is check in validate() before generating
         if (getPrimaryKey() != null && getPrimaryKey().size() > 0) {
@@ -927,7 +927,7 @@ public class EntityBean extends ConceptualConstruct {
                 // A cycle would appear in the ISA graph or in combined graph.
                 throw new CycleWouldAppearException(this, anISAParent, CycleWouldAppearException.ISA_CYCLE);
 
-        EntityBean oldValue = isaParent;
+        Entity oldValue = isaParent;
         if (oldValue != null) {
             try {
                 oldValue.removeISASon(this);
@@ -1032,7 +1032,7 @@ public class EntityBean extends ConceptualConstruct {
     public void write(java.io.PrintWriter pw) {
         super.write(pw);
         pw.println("\t\t<constraints>" + constraints + "</constraints>");
-        EntityBean ent = getISAParent();
+        Entity ent = getISAParent();
         if (ent != null)
             pw.println("\t\t<parent>" + ent.getID() + "</parent>");
     }

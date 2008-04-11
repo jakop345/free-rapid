@@ -1,11 +1,11 @@
 package cz.omnicom.ermodeller.errorlog;
 
-import cz.omnicom.ermodeller.conceptual.EntityBean;
+import cz.omnicom.ermodeller.conceptual.Entity;
 
 /**
  * Entity should have some atribute.
  *
- * @see cz.omnicom.ermodeller.conceptual.EntityBean
+ * @see cz.omnicom.ermodeller.conceptual.Entity
  */
 public class DoesntHaveAtributeValidationError extends ConceptualObjectValidationError {
     /**
@@ -13,8 +13,8 @@ public class DoesntHaveAtributeValidationError extends ConceptualObjectValidatio
      *
      * @param anObject cz.omnicom.ermodeller.conceptual.Entity
      */
-    public DoesntHaveAtributeValidationError(EntityBean anEntityBean) {
-        super(anEntityBean);
+    public DoesntHaveAtributeValidationError(Entity anEntity) {
+        super(anEntity);
     }
 
     /**

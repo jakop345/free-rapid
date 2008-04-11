@@ -63,7 +63,7 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
      * @return java.lang.Class
      */
     public static java.lang.Class getBeanClass() {
-        return EntityBean.class;
+        return cz.omnicom.ermodeller.conceptual.Entity.class;
     }
 
     /**
@@ -72,14 +72,14 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
      * @return java.lang.String
      */
     public static java.lang.String getBeanClassName() {
-        return EntityBean.class.getName();
+        return cz.omnicom.ermodeller.conceptual.Entity.class.getName();
     }
 
     public java.beans.BeanDescriptor getBeanDescriptor() {
         java.beans.BeanDescriptor aDescriptor = null;
         try {
             /* Create and return the EntityBeanInfo bean descriptor. */
-            aDescriptor = new java.beans.BeanDescriptor(EntityBean.class);
+            aDescriptor = new java.beans.BeanDescriptor(cz.omnicom.ermodeller.conceptual.Entity.class);
             /* aDescriptor.setExpert(false); */
             /* aDescriptor.setHidden(false); */
             /* aDescriptor.setValue("hidden-state", Boolean.FALSE); */
@@ -178,7 +178,7 @@ public class EntityBeanInfo extends java.beans.SimpleBeanInfo {
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aSetMethodParameterTypes[] = {
-                            EntityBean.class
+                            cz.omnicom.ermodeller.conceptual.Entity.class
                     };
                     aSetMethod = getBeanClass().getMethod("setISAParent", aSetMethodParameterTypes);
                 } catch (Throwable exception) {

@@ -2,7 +2,7 @@ package cz.green.ermodeller;
 
 
 import cz.green.ermodeller.interfaces.FontManager;
-import cz.green.ermodeller.interfaces.Schema;
+import cz.green.ermodeller.interfaces.ISchema;
 import cz.green.event.*;
 import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.exceptions.ItemNotInsideManagerException;
@@ -14,7 +14,6 @@ import cz.green.eventtool.Connection;
 import cz.green.eventtool.ConnectionLine;
 import cz.green.eventtool.ConnectionManager;
 import cz.green.swing.ShowException;
-import cz.omnicom.ermodeller.conceptual.EntityBean;
 import cz.omnicom.ermodeller.conceptual.exception.CannotHavePrimaryKeyException;
 import cz.omnicom.ermodeller.conceptual.exception.CycleWouldAppearException;
 import cz.omnicom.ermodeller.conceptual.exception.IsISASonException;
@@ -44,7 +43,7 @@ public class EntityConstruct extends ConceptualConstruct {
     /**
      * The model object from the Aleš Kopecký work
      */
-    protected EntityBean model = null;
+    protected cz.omnicom.ermodeller.conceptual.Entity model = null;
 
     /**
      * The primary unique key of this entity
@@ -110,7 +109,7 @@ public class EntityConstruct extends ConceptualConstruct {
      *          Thrown by inherited constructor.
      * @see ConceptualConstruct#ConceptualConstruct(cz.green.event.interfaces.Manager ,int,int,int,int)
      */
-    protected EntityConstruct(EntityBean ent,
+    protected EntityConstruct(cz.omnicom.ermodeller.conceptual.Entity ent,
                               Manager manager, int left, int top)
             throws NullPointerException,
             ImpossibleNegativeValueException {
@@ -288,7 +287,7 @@ public class EntityConstruct extends ConceptualConstruct {
         int width = 60;
         java.awt.FontMetrics fm;
         fm = ((FontManager) manager).getReferentFontMetrics();
-        int nameWidth = fm.stringWidth(((EntityBean) getModel()).getName());
+        int nameWidth = fm.stringWidth(((cz.omnicom.ermodeller.conceptual.Entity) getModel()).getName());
         if (nameWidth > width)
             width = nameWidth;
         switch (ACTUAL_NOTATION) {
@@ -558,7 +557,7 @@ public class EntityConstruct extends ConceptualConstruct {
         try {
             // creates the new DGroup instance
             DGroupTool group = new DGroupTool(manager, left, top, 0, 0);
-            EntityBean cEnt = schema
+            cz.omnicom.ermodeller.conceptual.Entity cEnt = schema
                     .createEntity();
             // creates new entity
             EntityConstruct ent = new EntityConstruct(cEnt, manager, left, top);
@@ -670,7 +669,7 @@ public class EntityConstruct extends ConceptualConstruct {
     public UniqueKey createUniqueKey(int left, int top) {
         try {
             // create model - unique key
-            EntityBean cc = (EntityBean) getModel();
+            cz.omnicom.ermodeller.conceptual.Entity cc = (cz.omnicom.ermodeller.conceptual.Entity) getModel();
             cz.omnicom.ermodeller.conceptual.UniqueKey cUq = cc
                     .createUniqueKey();
             // create unique key
@@ -700,7 +699,7 @@ public class EntityConstruct extends ConceptualConstruct {
         if (decomposeAsRelation) {
             try {
                 // decompose using relation -- create new relation
-                Relation rel = ((Schema) man).createRelation(p.x, p.y);
+                Relation rel = ((ISchema) man).createRelation(p.x, p.y);
                 rel.handleMoveEvent(new MoveEvent(rel.getBounds().x, rel.getBounds().y, -rel.getBounds().width / 2, -rel.getBounds().height / 2, null));
                 p = ent.getAbsoluteCenter(rel);
                 // create new cardinalities
@@ -920,11 +919,11 @@ public class EntityConstruct extends ConceptualConstruct {
                     Connection c = ((Connection) e.nextElement());
                     if (c.getOne() instanceof Cardinality) {
                         car1 = ((Cardinality) c.getOne());
-                        name = ((EntityBean) car1.getEntity().getModel()).getName();
+                        name = ((cz.omnicom.ermodeller.conceptual.Entity) car1.getEntity().getModel()).getName();
                     }
                     if (c.getTwo() instanceof Cardinality) {
                         car1 = ((Cardinality) c.getTwo());
-                        name = ((EntityBean) car1.getEntity().getModel()).getName();
+                        name = ((cz.omnicom.ermodeller.conceptual.Entity) car1.getEntity().getModel()).getName();
                     }
                 }
             }
@@ -1878,7 +1877,7 @@ public class EntityConstruct extends ConceptualConstruct {
         if (ISAParent != null) {
             throw new IsISASonException(model);
         }
-        model.setISAParent((EntityBean) ent
+        model.setISAParent((cz.omnicom.ermodeller.conceptual.Entity) ent
                 .getModel());
         int[][] source = getRect();
         int dx = x - source[0][0], dy = y - source[1][0];
@@ -1975,7 +1974,7 @@ public class EntityConstruct extends ConceptualConstruct {
         this.setAsISAChild = setAsISAChild;
     }
 
-    public void setModel(EntityBean model) {
+    public void setModel(cz.omnicom.ermodeller.conceptual.Entity model) {
         this.model = model;
     }
 

@@ -29,14 +29,14 @@ import java.util.Enumeration;
  * To change default behavior, you must explicitly call <code>setGlue</code> method after
  * setting <code>multiCardinality</code> and <code>arbitrary</code> properties.
  *
- * @see EntityBean
+ * @see cz.omnicom.ermodeller.conceptual.Entity
  * @see RelationBean
  */
 public class Cardinality extends ConceptualObject {
     /**
      * Connected entity.
      */
-    protected EntityBean entityBean = null;
+    protected Entity entity = null;
     /**
      * Connected relation.
      */
@@ -65,12 +65,12 @@ public class Cardinality extends ConceptualObject {
      * Returns whether there is already any cardinality between <code>anEntity</code>
      * and <code>relation</code> of the <code>Cardinality</code>.
      *
-     * @param anEntityBean cz.omnicom.ermodeller.conceptual.Entity
+     * @param anEntity cz.omnicom.ermodeller.conceptual.Entity
      * @return boolean
      * @see #relationBean
      */
-    private boolean anotherCardinalityPresent(EntityBean anEntityBean) {
-        if (anEntityBean == null)
+    private boolean anotherCardinalityPresent(Entity anEntity) {
+        if (anEntity == null)
             return false;
         RelationBean relationBean = getRelation();
         if (relationBean == null)
@@ -78,8 +78,8 @@ public class Cardinality extends ConceptualObject {
         for (Enumeration elements = relationBean.getCardinalities().elements(); elements.hasMoreElements();) {
             Cardinality cardinality = (Cardinality) elements.nextElement();
             if (cardinality != this) {
-                EntityBean entityBean = cardinality.getEntity();
-                if (entityBean == anEntityBean)
+                Entity entity = cardinality.getEntity();
+                if (entity == anEntity)
                     return true;
             }
         }
@@ -92,15 +92,15 @@ public class Cardinality extends ConceptualObject {
      *
      * @param anEntity cz.omnicom.ermodeller.conceptual.Entity
      * @return boolean
-     * @see #entityBean
+     * @see #entity
      */
     private boolean anotherCardinalityPresent(RelationBean aRelationBean) {
         if (aRelationBean == null)
             return false;
-        EntityBean entityBean = getEntity();
-        if (entityBean == null)
+        Entity entity = getEntity();
+        if (entity == null)
             return false;
-        for (Enumeration elements = entityBean.getCardinalities().elements(); elements.hasMoreElements();) {
+        for (Enumeration elements = entity.getCardinalities().elements(); elements.hasMoreElements();) {
             Cardinality cardinality = (Cardinality) elements.nextElement();
             if (cardinality != this) {
                 RelationBean relationBean = cardinality.getRelation();
@@ -114,7 +114,7 @@ public class Cardinality extends ConceptualObject {
     /**
      * Disconnects cardinality from <code>entity</code> and <code>relation</code>.
      *
-     * @see #entityBean
+     * @see #entity
      * @see #relationBean
      */
     protected synchronized void empty() {
@@ -145,8 +145,8 @@ public class Cardinality extends ConceptualObject {
      * @return cz.omnicom.ermodeller.conceptual.Entity
      * @see #setEntity
      */
-    public EntityBean getEntity() {
-        return entityBean;
+    public Entity getEntity() {
+        return entity;
     }
 
     /**
@@ -225,15 +225,15 @@ public class Cardinality extends ConceptualObject {
      * If <code>anEntity</code> is null, sets no connection. If previous <code>entity</code> is null,
      * there is nothing to remove.
      *
-     * @param anEntityBean cz.omnicom.ermodeller.conceptual.Entity
+     * @param anEntity cz.omnicom.ermodeller.conceptual.Entity
      * @throws cz.omnicom.ermodeller.conceptual.exception.WasNotFoundException
      *          if old <code>entity</code> was not found when removing it.
      * @throws cz.omnicom.ermodeller.conceptual.exception.AlreadyContainsException
      *          if new <code>entity</code> is already connected to that cardinality.
      * @see #setRelation
      */
-    public synchronized void setEntity(EntityBean anEntityBean) throws WasNotFoundException, AlreadyContainsException/*, IsAlreadyConnectedException*/ {
-        EntityBean oldValue = entityBean;
+    public synchronized void setEntity(Entity anEntity) throws WasNotFoundException, AlreadyContainsException/*, IsAlreadyConnectedException*/ {
+        Entity oldValue = entity;
 /*	// If there is another cardinality, with the same relation and entity, then throws an exception.
 	if (anEntity != null) {
 		if (anotherCardinalityPresent(anEntity)) {
@@ -251,10 +251,10 @@ public class Cardinality extends ConceptualObject {
             catch (ParameterCannotBeNullException e) {
             } // Cannot be thrown.
         }
-        if (anEntityBean != null) {
+        if (anEntity != null) {
             try {
                 // Adds this cardinality to the entity.
-                anEntityBean.addCardinality(this);
+                anEntity.addCardinality(this);
             }
             catch (ParameterCannotBeNullException e) {
             } // Cannot be thrown.
@@ -272,8 +272,8 @@ public class Cardinality extends ConceptualObject {
                 throw e;
             }
         }
-        entityBean = anEntityBean;
-        firePropertyChange(ENTITY_PROPERTY_CHANGE, oldValue, entityBean);
+        entity = anEntity;
+        firePropertyChange(ENTITY_PROPERTY_CHANGE, oldValue, entity);
     }
 
     /**
@@ -368,7 +368,7 @@ public class Cardinality extends ConceptualObject {
      * @param pw java.io.PrintWriter
      */
     public void write(java.io.PrintWriter pw) {
-        EntityBean ent = getEntity();
+        Entity ent = getEntity();
         RelationBean rel = getRelation();
 
         super.write(pw);

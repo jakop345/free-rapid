@@ -2,14 +2,14 @@ package cz.omnicom.ermodeller.conc2rela;
 
 import cz.omnicom.ermodeller.conc2rela.exception.AlreadyContainsExceptionC2R;
 import cz.omnicom.ermodeller.conceptual.Atribute;
-import cz.omnicom.ermodeller.conceptual.EntityBean;
+import cz.omnicom.ermodeller.conceptual.Entity;
 
 import java.util.Vector;
 
 /**
  * Superclass of all relations created from conceptual entities.
  *
- * @see cz.omnicom.ermodeller.conceptual.EntityBean
+ * @see cz.omnicom.ermodeller.conceptual.Entity
  */
 public abstract class EntC2R extends RelationC2R {
     /**
@@ -23,17 +23,17 @@ public abstract class EntC2R extends RelationC2R {
     /**
      * EntC2R constructor.
      *
-     * @param aSchemaC2R            owner schema
-     * @param aConceptualEntityBean corresponding conceptual entity
+     * @param aSchemaC2R        owner schema
+     * @param aConceptualEntity corresponding conceptual entity
      * @throws cz.omnicom.ermodeller.conc2rela.WasNotFoundByConceptualExceptionC2R
      *
      * @throws cz.omnicom.ermodeller.conc2rela.AlreadyContainsExceptionC2R
      *
-     * @see cz.omnicom.ermodeller.conceptual.EntityBean
+     * @see cz.omnicom.ermodeller.conceptual.Entity
      */
-    public EntC2R(SchemaC2R aSchemaC2R, EntityBean aConceptualEntityBean) throws AlreadyContainsExceptionC2R {
-        super(aSchemaC2R, aConceptualEntityBean);
-        UniqueKeyC2R uniqueKeyC2R = new UniqueKeyC2R(aSchemaC2R, this, aConceptualEntityBean.getPrimaryKey(), aConceptualEntityBean.getAtributes(), true);
+    public EntC2R(SchemaC2R aSchemaC2R, Entity aConceptualEntity) throws AlreadyContainsExceptionC2R {
+        super(aSchemaC2R, aConceptualEntity);
+        UniqueKeyC2R uniqueKeyC2R = new UniqueKeyC2R(aSchemaC2R, this, aConceptualEntity.getPrimaryKey(), aConceptualEntity.getAtributes(), true);
         try {
             addUniqueKeyC2R(uniqueKeyC2R);
         }
@@ -41,12 +41,12 @@ public abstract class EntC2R extends RelationC2R {
         } // cannot be thrown
 
         boolean isUnique = false;
-        Vector<Atribute> atributes = aConceptualEntityBean.getAtributes();
+        Vector<Atribute> atributes = aConceptualEntity.getAtributes();
         for (Atribute a : atributes) {
             if (a.isUnique() && !a.isPrimary()) isUnique = true;
         }
         if (isUnique) {
-            UniqueKeyC2R uniqueKeyC2R1 = new UniqueKeyC2R(aSchemaC2R, this, aConceptualEntityBean.getAtributes(), aConceptualEntityBean.getAtributes(), false);
+            UniqueKeyC2R uniqueKeyC2R1 = new UniqueKeyC2R(aSchemaC2R, this, aConceptualEntity.getAtributes(), aConceptualEntity.getAtributes(), false);
             try {
                 addUniqueKeyC2R(uniqueKeyC2R1);
             }

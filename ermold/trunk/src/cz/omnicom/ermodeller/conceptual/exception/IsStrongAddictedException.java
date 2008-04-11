@@ -1,18 +1,18 @@
 package cz.omnicom.ermodeller.conceptual.exception;
 
-import cz.omnicom.ermodeller.conceptual.EntityBean;
+import cz.omnicom.ermodeller.conceptual.Entity;
 
 /**
  * The entity is strong addicted.
  */
 public class IsStrongAddictedException extends ConceptualException {
-    private EntityBean entityBean = null;
+    private Entity entity = null;
 
     /**
      * IsStrongAddictedException constructor comment.
      */
-    public IsStrongAddictedException(EntityBean aEntityBean) {
-        entityBean = aEntityBean;
+    public IsStrongAddictedException(Entity aEntity) {
+        entity = aEntity;
     }
 
     /**
@@ -21,6 +21,6 @@ public class IsStrongAddictedException extends ConceptualException {
      * @return java.lang.String
      */
     public String getMessage() {
-        return "Entity " + entityBean.getName() + " is strong addicted";
+        return "Entity " + entity.getName() + " is strong addicted";
     }
 }

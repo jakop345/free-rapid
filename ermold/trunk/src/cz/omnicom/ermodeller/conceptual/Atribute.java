@@ -133,7 +133,7 @@ public class Atribute extends ConceptualObject {
      * if the construct is an entity.
      *
      * @return boolean
-     * @see EntityBean#isAtributeMemberOfPrimaryKey
+     * @see cz.omnicom.ermodeller.conceptual.Entity#isAtributeMemberOfPrimaryKey
      */
 
     private boolean isMemberOfPrimaryKey() {
@@ -207,9 +207,9 @@ public class Atribute extends ConceptualObject {
     public synchronized void setPrimary(boolean primary) throws ISAChildCannotHavePrimaryKeyException, RelationCannotHavePrimaryKeyException {
         if (getConstruct() instanceof RelationBean && primary)
             throw new RelationCannotHavePrimaryKeyException((RelationBean) getConstruct());
-        if (getConstruct() instanceof EntityBean) {
-            if ((((EntityBean) getConstruct()).getISAParent() != null) && primary)
-                throw new ISAChildCannotHavePrimaryKeyException((EntityBean) getConstruct());
+        if (getConstruct() instanceof Entity) {
+            if ((((Entity) getConstruct()).getISAParent() != null) && primary)
+                throw new ISAChildCannotHavePrimaryKeyException((Entity) getConstruct());
         }
 
         boolean oldValue = fieldPrimary;
@@ -217,11 +217,11 @@ public class Atribute extends ConceptualObject {
         if (primary) {
             fieldArbitrary = true;
             fieldUnique = true;
-            ((EntityBean) getConstruct()).addMemberOfPrimaryKey(this);
+            ((Entity) getConstruct()).addMemberOfPrimaryKey(this);
         } else {
             fieldUnique = false;
-            if (getConstruct() instanceof EntityBean)
-                ((EntityBean) getConstruct()).removeMemberOfPrimaryKey(this);
+            if (getConstruct() instanceof Entity)
+                ((Entity) getConstruct()).removeMemberOfPrimaryKey(this);
         }
         firePropertyChange(PRIMARY_PROPERTY_CHANGE, Boolean.valueOf(oldValue), Boolean.valueOf(primary));
     }
@@ -281,7 +281,7 @@ public class Atribute extends ConceptualObject {
         pw.println("\t\t<uniq>" + isUnique() + "</uniq>");
         pw.println("\t\t<position>" + getPosition() + "</position>");
         ConceptualConstruct cc = getConstruct();
-        if (cc instanceof EntityBean)
+        if (cc instanceof Entity)
             pw.println("\t\t<ent>" + cc.getID() + "</ent>");
         else
             pw.println("\t\t<rel>" + cc.getID() + "</rel>");

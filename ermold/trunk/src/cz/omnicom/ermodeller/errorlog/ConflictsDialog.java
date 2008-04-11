@@ -1,7 +1,6 @@
 package cz.omnicom.ermodeller.errorlog;
 
 import cz.green.ermodeller.EntityConstruct;
-import cz.omnicom.ermodeller.conceptual.EntityBean;
 import cz.omnicom.ermodeller.conceptual.RelationBean;
 import cz.omnicom.ermodeller.icontree.IconNode;
 import cz.omnicom.ermodeller.icontree.IconNodeRenderer;
@@ -95,10 +94,10 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
                 conceptualObject.setName(getRenameField().getText());
             } else {
                 Object o = getComposeModel().getSelectedItem();
-                if (conceptualObject instanceof EntityBean) {
+                if (conceptualObject instanceof cz.omnicom.ermodeller.conceptual.Entity) {
                     ent = desktop.getEntity(((cz.omnicom.ermodeller.conceptual.ConceptualConstruct) o).getID());
                     //ent.composeEntity(desktop.getEntity(i),new cz.green.ermodeller.DragOverEvent(0,0,(cz.green.event.interfaces.Item)desktop.getEntity(i),desktop.getPaintPlace()));
-                    desktop.composeEntity((EntityBean) conceptualObject, (EntityBean) o);
+                    desktop.composeEntity((cz.omnicom.ermodeller.conceptual.Entity) conceptualObject, (cz.omnicom.ermodeller.conceptual.Entity) o);
                 } else {
                     rel = desktop.getRelation(((cz.omnicom.ermodeller.conceptual.ConceptualConstruct) o).getID());
                     desktop.composeRelation((RelationBean) conceptualObject, (RelationBean) o);
@@ -1441,7 +1440,7 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
         EntityConstruct ent;
 
         try {
-            if (conceptualObject instanceof EntityBean) {
+            if (conceptualObject instanceof cz.omnicom.ermodeller.conceptual.Entity) {
                 cc = desktop.getEntity(i);
                 cc.handleRemoveEvent(new cz.green.event.RemoveEvent(0, 0, desktop.getPaintPlace()));
             }
@@ -1574,7 +1573,7 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
                     cardL.show(getJPanel1(), "APanel");
                 }
                 schema = conceptualObject.getSchema();
-                if (conceptualObject instanceof EntityBean) {
+                if (conceptualObject instanceof cz.omnicom.ermodeller.conceptual.Entity) {
                     cardL.show(getJPanel1(), "CPanel");
                     v = schema.getEntities();
                     for (i = 0; i < v.size(); i++) {

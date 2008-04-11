@@ -12,7 +12,6 @@ import cz.green.eventtool.Connection;
 import cz.green.eventtool.ConnectionLine;
 import cz.green.eventtool.ConnectionManager;
 import cz.green.swing.ShowException;
-import cz.omnicom.ermodeller.conceptual.EntityBean;
 import cz.omnicom.ermodeller.conceptual.RelationBean;
 import cz.omnicom.ermodeller.conceptual.exception.MustHave2ConnectionsException;
 import cz.omnicom.ermodeller.conceptual.exception.ParameterCannotBeNullException;
@@ -129,7 +128,7 @@ public class Relation extends ConceptualConstruct {
         try {
             //creates new model - cardinality
             RelationBean cRel = model;
-            EntityBean cEnt = (EntityBean) (ent.getModel());
+            cz.omnicom.ermodeller.conceptual.Entity cEnt = (cz.omnicom.ermodeller.conceptual.Entity) (ent.getModel());
             cz.omnicom.ermodeller.conceptual.Cardinality cCar = cRel.createCardinality(cEnt);
             //creates new view controller - cardinality
 /*		Changed manager from desktop to ENTITY!	
@@ -466,11 +465,11 @@ public class Relation extends ConceptualConstruct {
                     Connection c = ((Connection) e.nextElement());
                     if (c.getOne() instanceof Cardinality) {
                         car1 = ((Cardinality) c.getOne());
-                        name = ((EntityBean) car1.getEntity().getModel()).getName();
+                        name = ((cz.omnicom.ermodeller.conceptual.Entity) car1.getEntity().getModel()).getName();
                     }
                     if (c.getTwo() instanceof Cardinality) {
                         car1 = ((Cardinality) c.getTwo());
-                        name = ((EntityBean) car1.getEntity().getModel()).getName();
+                        name = ((cz.omnicom.ermodeller.conceptual.Entity) car1.getEntity().getModel()).getName();
                     }
                 }
             }
@@ -794,7 +793,7 @@ public class Relation extends ConceptualConstruct {
     protected EntityConstruct transformToEntity(Manager man) {
         int[][] r = getRect();
         EntityConstruct ent = EntityConstruct.createEntity(model.getSchema(), man, r[0][0], r[1][0], null);
-        ((EntityBean) ent.getModel()).setName(model.getName());
+        ((cz.omnicom.ermodeller.conceptual.Entity) ent.getModel()).setName(model.getName());
         reconnectAllAtributes(ent);
         return ent;
     }

@@ -6,7 +6,7 @@ import cz.green.ermodeller.Relation;
 /**
  * This interface adds the functionality for adding the new relations and entities.
  */
-public interface Schema {
+public interface ISchema {
     /**
      * Creates the new Entity.
      *

@@ -1,8 +1,8 @@
 package cz.green.ermodeller;
 
 import cz.green.ermodeller.interfaces.FontManager;
+import cz.green.ermodeller.interfaces.ISchema;
 import cz.green.ermodeller.interfaces.ModelFinder;
-import cz.green.ermodeller.interfaces.Schema;
 import cz.green.ermodeller.interfaces.ViewController;
 import cz.green.event.RemoveEvent;
 import cz.green.event.SelectItemEvent;
@@ -14,7 +14,6 @@ import cz.green.eventtool.Connection;
 import cz.green.eventtool.PropertyListDialog;
 import cz.green.util.ActionAdapter;
 import cz.green.util.ParamActionAdapter;
-import cz.omnicom.ermodeller.conceptual.EntityBean;
 import cz.omnicom.ermodeller.conceptual.RelationBean;
 import cz.omnicom.ermodeller.errorlog.ShowErrorListener;
 import cz.omnicom.ermodeller.typeseditor.UserTypeStorage;
@@ -28,7 +27,7 @@ import java.util.Vector;
  * Adds new needful functionality for realiying the ER modeller.
  */
 public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
-        Schema, ViewController, ModelFinder {
+        ISchema, ViewController, ModelFinder {
     /**
      * The model - object from Aleš Kopecký work
      */
@@ -72,8 +71,8 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
     /**
      * Compose entity with..
      */
-    public void composeEntity(EntityBean eM1,
-                              EntityBean eM2) {
+    public void composeEntity(cz.omnicom.ermodeller.conceptual.Entity eM1,
+                              cz.omnicom.ermodeller.conceptual.Entity eM2) {
         EntityConstruct e1 = getEntity(eM1.getID()), e2 = getEntity(eM2.getID());
 
         e2.composeEntity(e1, new cz.green.ermodeller.DragOverEvent(0, 0,
@@ -82,13 +81,13 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
 
     /**
      */
-    public void composeEntityOld(EntityBean e1,
-                                 EntityBean e2) {
+    public void composeEntityOld(cz.omnicom.ermodeller.conceptual.Entity e1,
+                                 cz.omnicom.ermodeller.conceptual.Entity e2) {
         Vector v1 = e1.getAtributes(), v2 = e2.getAtributes();
         int i, j;
         cz.omnicom.ermodeller.conceptual.Atribute atrM1, atrM2;
         Atribute atr2, atr1;
-        EntityBean entM;
+        cz.omnicom.ermodeller.conceptual.Entity entM;
         EntityConstruct ent2 = getEntity(e2.getID()), ent1 = getEntity(e1.getID());
 
         for (i = 0; i < v2.size(); i++) {
@@ -124,7 +123,7 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
      * Creates the new entity with exact size. Invokes the static entity's method
      * <code>createEntity</code>.
      *
-     * @see cz.green.ermodeller.interfaces.Schema#createEntity(int, int, EntityConstruct)
+     * @see cz.green.ermodeller.interfaces.ISchema#createEntity(int, int, EntityConstruct)
      */
     public EntityConstruct createEntity(int x, int y, int width, int height, EntityConstruct old) {
         return EntityConstruct.createEntity(model, this, x, y, width, height, old);
@@ -134,7 +133,7 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
      * Creates the new entity. Invokes the static entity's method
      * <code>createEntity</code>.
      *
-     * @see Schema#createEntity(int, int, EntityConstruct)
+     * @see cz.green.ermodeller.interfaces.ISchema#createEntity(int, int, EntityConstruct)
      */
     public EntityConstruct createEntity(int x, int y, EntityConstruct old) {
         return EntityConstruct.createEntity(model, this, x, y, old);
@@ -144,7 +143,7 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
      * Creates the new relation. Invokes the static relation's method
      * <code>createRelation</code>.
      *
-     * @see Schema#createRelation(int, int)
+     * @see cz.green.ermodeller.interfaces.ISchema#createRelation(int, int)
      */
     public Relation createRelation(int x, int y, int width, int height) {
         return Relation.createRelation(model, this, x, y, width, height);
@@ -154,7 +153,7 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
      * Creates the new relation. Invokes the static relation's method
      * <code>createRelation</code>.
      *
-     * @see cz.green.ermodeller.interfaces.Schema#createRelation(int, int)
+     * @see cz.green.ermodeller.interfaces.ISchema#createRelation(int, int)
      */
     public Relation createRelation(int x, int y) {
         return Relation.createRelation(model, this, x, y);
@@ -570,7 +569,7 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
                 if ((ent = getEntity((DGroupTool) item, id)) != null)
                     return ent;
             } else if (item instanceof EntityConstruct
-                    && id == (((EntityBean) ((EntityConstruct) item)
+                    && id == (((cz.omnicom.ermodeller.conceptual.Entity) ((EntityConstruct) item)
                     .getModel()).getID()))
                 return (EntityConstruct) item;
         }

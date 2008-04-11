@@ -1,9 +1,9 @@
 package cz.green.ermodeller;
 
 import cz.green.ermodeller.interfaces.FontManager;
+import cz.green.ermodeller.interfaces.ISchema;
 import cz.green.ermodeller.interfaces.ModeSwitcher;
 import cz.green.ermodeller.interfaces.ModelFinder;
-import cz.green.ermodeller.interfaces.Schema;
 import cz.green.event.AddAsISAChildEvent;
 import cz.green.event.AddConnectionEvent;
 import cz.green.event.AddIdentificationDependencyEvent;
@@ -12,7 +12,6 @@ import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.interfaces.ContainerDesktop;
 import cz.green.event.interfaces.Item;
 import cz.green.eventtool.Window;
-import cz.omnicom.ermodeller.conceptual.EntityBean;
 import cz.omnicom.ermodeller.errorlog.ShowErrorEvent;
 import cz.omnicom.ermodeller.errorlog.ShowErrorListener;
 
@@ -385,7 +384,7 @@ public class Container extends cz.green.eventtool.Container implements ModeSwitc
      */
     public void editConstraints(EntityConstruct ent) {
         if (constDialog == null)
-            constDialog = new ConstraintsDialog(((Desktop) getDesktop()).ERMFrame, (EntityBean) ent.getModel());
+            constDialog = new ConstraintsDialog(((Desktop) getDesktop()).ERMFrame, (cz.omnicom.ermodeller.conceptual.Entity) ent.getModel());
         constDialog.setLocationRelativeTo(((Desktop) getDesktop()).ERMFrame);
         if (ent.getModel() != null) constDialog.setVisible(true);
     }
@@ -504,7 +503,7 @@ public class Container extends cz.green.eventtool.Container implements ModeSwitc
                 case ADDING_RELATION:
                     setWorkMode(WORKING);
                     setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-                    ((Schema) desktop).createRelation(x, y);
+                    ((ISchema) desktop).createRelation(x, y);
                     break;
 /*			case ADDING_RELATION_AND_CONNECTION_FROM_TOOLBAR :
 				setWorkMode(ADDING_RELATION_AND_CONNECTION);
@@ -536,7 +535,7 @@ public class Container extends cz.green.eventtool.Container implements ModeSwitc
                 case ADDING_ENTITY:
                     setWorkMode(WORKING);
                     setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-                    ((Schema) desktop).createEntity(x, y, (EntityConstruct) object);
+                    ((ISchema) desktop).createEntity(x, y, (EntityConstruct) object);
                     break;
                 case MOVING:
                     setWorkMode(WORKING);

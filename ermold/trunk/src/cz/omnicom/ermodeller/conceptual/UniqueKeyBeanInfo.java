@@ -71,7 +71,7 @@ public class UniqueKeyBeanInfo extends java.beans.SimpleBeanInfo {
                 try {
                     /* Attempt to find the method using getMethod with parameter types. */
                     java.lang.Class aSetMethodParameterTypes[] = {
-                            EntityBean.class
+                            cz.omnicom.ermodeller.conceptual.Entity.class
                     };
                     aSetMethod = getBeanClass().getMethod("setEntity", aSetMethodParameterTypes);
                 } catch (Throwable exception) {
