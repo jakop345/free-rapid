@@ -79,7 +79,7 @@ public class Desktop extends Group implements ContainerDesktop, java.io.Serializ
     /**
      * Where is everythink placed.
      */
-    transient private cz.green.event.Container paintPlace = null;
+    transient private ContainerComponent paintPlace = null;
 
     /**
      * Same as default cobnstructor but sets the left top point and width and height of the desktop.
@@ -88,7 +88,7 @@ public class Desktop extends Group implements ContainerDesktop, java.io.Serializ
      *          If <code>left</code>, <code>top</code>, <code>width</code> or
      *          <code>height</code> is less than zero.
      */
-    public Desktop(cz.green.event.Container place, int left, int top, int width, int height) {
+    public Desktop(ContainerComponent place, int left, int top, int width, int height) {
         super();
         manager = this;
         paintPlace = place;
@@ -253,7 +253,7 @@ public class Desktop extends Group implements ContainerDesktop, java.io.Serializ
      *
      * @return cz.green.event.engine.Container
      */
-    public Container getPaintPlace() {
+    public ContainerComponent getPaintPlace() {
         return paintPlace;
     }
 
@@ -409,9 +409,9 @@ public class Desktop extends Group implements ContainerDesktop, java.io.Serializ
      * @see Desktop.paintPlace
      * @see Desktop.selected
      * @see SelectedItems
-     * @see Container
+     * @see ContainerComponent
      */
-    public void init(Container c) {
+    public void init(ContainerComponent c) {
         paintPlace = c;
     }
 

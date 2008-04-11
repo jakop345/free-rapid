@@ -1,5 +1,6 @@
 package cz.green.eventtool;
 
+import cz.green.event.ContainerComponent;
 import cz.green.event.interfaces.ContainerDesktop;
 import cz.green.eventtool.interfaces.Printable;
 
@@ -9,13 +10,13 @@ import cz.green.eventtool.interfaces.Printable;
  * needful for saving and loading schema to (from) a stream and the third is useful for printing
  * schema.
  */
-public class ContainerTool extends cz.green.event.Container {
+public class ContainerToolComponent extends ContainerComponent {
     /**
      * Same constructor as deriver one.
      *
-     * @see cz.green.event.Container#Container(int, int, int, int)
+     * @see cz.green.event.ContainerComponent#Container(int, int, int, int)
      */
-    public ContainerTool(int width, int height) {
+    public ContainerToolComponent(int width, int height) {
         super(width, height);
     }
 
@@ -41,7 +42,7 @@ public class ContainerTool extends cz.green.event.Container {
      * @throws java.io.IOException If file doesn't exist or occur other file error.
      * @throws java.lang.ClassNotFoundException
      *                             If file contains unknow class. For example doesn't contains schema, but other classes.
-     * @see cz.green.event.Desktop#init(cz.green.event.Container)
+     * @see cz.green.event.Desktop#init(cz.green.event.ContainerComponent)
      */
     public void loadFromFile(String fileName) throws java.io.IOException, ClassNotFoundException {
         java.io.FileInputStream f = null;

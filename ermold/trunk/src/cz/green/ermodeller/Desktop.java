@@ -4,6 +4,7 @@ import cz.green.ermodeller.interfaces.FontManager;
 import cz.green.ermodeller.interfaces.ISchema;
 import cz.green.ermodeller.interfaces.ModelFinder;
 import cz.green.ermodeller.interfaces.ViewController;
+import cz.green.event.ContainerComponent;
 import cz.green.event.RemoveEvent;
 import cz.green.event.SelectItemEvent;
 import cz.green.event.SelectItemExEvent;
@@ -39,10 +40,10 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
     /**
      * Call inhereted constructor and creates the model - schema.
      *
-     * @see cz.green.eventtool.Desktop#Desktop(cz.green.event.Container, int,
+     * @see cz.green.eventtool.Desktop#Desktop(cz.green.event.ContainerComponent , int,
      *      int, int, int)
      */
-    public Desktop(cz.green.event.Container place, int left, int top,
+    public Desktop(ContainerComponent place, int left, int top,
                    int width, int height)
             throws ImpossibleNegativeValueException {
         super(place, left, top, width, height);
@@ -405,7 +406,7 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
     /**
      * Decompose all relationships which have atribute
      */
-    public void decomposeRelsWithAtributes(cz.green.ermodeller.Container place) {
+    public void decomposeRelsWithAtributes(Container place) {
         Vector RA = getRelationsWithAttribute(false);
         for (int i = 0; i < RA.size(); i++) {
             Relation rel = (Relation) RA.get(i);
@@ -416,7 +417,7 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
     /**
      * Decompose all ternary relationships
      */
-    public void decomposeTernaryRels(cz.green.ermodeller.Container place) {
+    public void decomposeTernaryRels(Container place) {
         Vector TR = getTernaryRelations(false);
         for (int i = 0; i < TR.size(); i++) {
             Relation rel = (Relation) TR.get(i);
@@ -427,7 +428,7 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
     /**
      * Switch all connetions to the other side of relationship
      */
-    public void switchAllRConnectionsCard(cz.green.ermodeller.Container place) {
+    public void switchAllRConnectionsCard(Container place) {
         Vector R = getAllRelations();
         cz.omnicom.ermodeller.conceptual.Cardinality car1M, car2M;
         for (int i = 0; i < R.size(); i++) {
@@ -467,7 +468,7 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
     /**
      * Switch all connetions to the other side of relationship
      */
-    public void switchAllRConnectionsBoth(cz.green.ermodeller.Container place) {
+    public void switchAllRConnectionsBoth(Container place) {
         Vector R = getAllRelations();
         cz.omnicom.ermodeller.conceptual.Cardinality car1M, car2M;
         for (int i = 0; i < R.size(); i++) {
@@ -508,7 +509,7 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
     /**
      * Switch all connetions to the other side of relationship
      */
-    public void switchAllRConnectionsArb(cz.green.ermodeller.Container place) {
+    public void switchAllRConnectionsArb(Container place) {
         Vector R = getAllRelations();
         cz.omnicom.ermodeller.conceptual.Cardinality car1M, car2M;
         for (int i = 0; i < R.size(); i++) {

@@ -55,7 +55,7 @@ public class ERModeller extends JFrame implements
      * @see Container
      * @see Desktop
      */
-    private cz.green.ermodeller.Container place = null;
+    private Container place = null;
 
     /**
      * Input field for the user scale
@@ -486,9 +486,9 @@ public class ERModeller extends JFrame implements
      *
      * @see Container
      */
-    cz.green.ermodeller.Container getPlace() {
+    Container getPlace() {
         if (place == null) {
-            place = new cz.green.ermodeller.Container(2500, 2500);
+            place = new Container(2500, 2500);
             place.setName("Place");
             place.setBackground(java.awt.Color.black);
             try {
@@ -1582,69 +1582,69 @@ public class ERModeller extends JFrame implements
         if (evt.getPropertyName().equals("workMode")) {
             String mode = "img/working.gif";
             switch ((Integer) evt.getNewValue()) {
-                case cz.green.event.Container.WORKING:
+                case Container.WORKING:
                     mode = "img/working.gif";
                     break;
-                case cz.green.event.Container.DELETING:
+                case Container.DELETING:
                     mode = "img/deleting.gif";
                     break;
-                case cz.green.event.Container.MOVING:
+                case Container.MOVING:
                     setChanged(true);
                     mode = "img/moving.gif";
                     break;
-                case cz.green.event.Container.RESIZING:
+                case Container.RESIZING:
                     setChanged(true);
                     mode = "img/resizing.gif";
                     break;
-                case cz.green.event.Container.ADDING_WINDOW:
+                case Container.ADDING_WINDOW:
                     setChanged(true);
                     mode = "img/aWindow.gif";
                     break;
-                case cz.green.event.Container.ADDING_GROUP:
+                case Container.ADDING_GROUP:
                     setChanged(true);
                     mode = "img/aGroup.gif";
                     break;
-                case cz.green.ermodeller.Container.ADDING_ENTITY:
+                case Container.ADDING_ENTITY:
                     setChanged(true);
                     mode = "img/aEntity.gif";
                     break;
-                case cz.green.ermodeller.Container.ADDING_RELATION:
+                case Container.ADDING_RELATION:
                     setChanged(true);
                     mode = "img/aRelation.gif";
                     break;
-                case cz.green.ermodeller.Container.ADDING_RELATION_AND_CONNECTION:
+                case Container.ADDING_RELATION_AND_CONNECTION:
                     setChanged(true);
                     mode = "img/aRelationConn.gif";
                     break;
-                case cz.green.ermodeller.Container.ADDING_CONNECTION:
+                case Container.ADDING_CONNECTION:
                     setChanged(true);
                     mode = "img/aCardinality.gif";
                     break;
-                case cz.green.ermodeller.Container.ADDING_AS_ISA_CHILD:
+                case Container.ADDING_AS_ISA_CHILD:
                     setChanged(true);
                     mode = "img/aSetISAchild.gif";
                     break;
-                case cz.green.ermodeller.Container.ADDING_ATRIBUTE:
+                case Container.ADDING_ATRIBUTE:
                     setChanged(true);
                     mode = "img/aAtribute.gif";
                     break;
-                case cz.green.ermodeller.Container.ADDING_UNIQUE_KEY:
+                case Container.ADDING_UNIQUE_KEY:
                     setChanged(true);
                     mode = "img/aUKey.gif";
                     break;
-                case cz.green.ermodeller.Container.ADDING_CARDINALITY:
+                case Container.ADDING_CARDINALITY:
                     setChanged(true);
                     mode = "img/aCardinality.gif";
                     break;
-                case cz.green.ermodeller.Container.ADDING_STRONGADDICTION:
+                case Container.ADDING_STRONGADDICTION:
                     setChanged(true);
                     mode = "img/aSAddiction.gif";
                     break;
-                case cz.green.ermodeller.Container.REMOVING:
+                case Container.REMOVING:
                     mode = "img/removing.gif";
                     break;
-                case cz.green.ermodeller.Container.COMPOSING_ENTITY:
-                case cz.green.ermodeller.Container.COMPOSING_RELATION:
+                case Container.COMPOSING_ENTITY:
+                case Container.COMPOSING_RELATION:
                     mode = "img/removing.gif";
                     break;
             }

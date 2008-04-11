@@ -87,7 +87,7 @@ public class UniqueKey extends ConceptualObject {
 
     public void addingAtribute(EntityConstruct ent) {
         try {
-            // ((ContainerTool)manager).addingAtribute(ent);
+            // ((ContainerToolComponent)manager).addingAtribute(ent);
             Desktop d = (Desktop) ((DGroupTool) manager).getManager();
         } catch (Throwable x) {
             ShowException d = new ShowException(null, "Error", x, true);

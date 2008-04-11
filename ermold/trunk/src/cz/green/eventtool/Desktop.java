@@ -1,5 +1,6 @@
 package cz.green.eventtool;
 
+import cz.green.event.ContainerComponent;
 import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.exceptions.ItemNotInsideManagerException;
 import cz.green.event.exceptions.ValueOutOfRangeException;
@@ -22,9 +23,9 @@ public class Desktop extends cz.green.event.Desktop implements ConnectionManager
     /**
      * Calls the derived constructor.
      *
-     * @see cz.green.event.Desktop#Desktop(cz.green.event.Container, int, int, int, int)
+     * @see cz.green.event.Desktop#Desktop(cz.green.event.ContainerComponent , int, int, int, int)
      */
-    public Desktop(cz.green.event.Container place, int left, int top, int width, int height) {
+    public Desktop(ContainerComponent place, int left, int top, int width, int height) {
         super(place, left, top, width, height);
     }
 

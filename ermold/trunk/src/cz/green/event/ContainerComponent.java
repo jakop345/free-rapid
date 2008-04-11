@@ -13,7 +13,7 @@ import java.awt.event.*;
  *
  * @see Desktop
  */
-public class Container extends JComponent implements MouseListener, MouseMotionListener, KeyListener {
+public class ContainerComponent extends JComponent implements MouseListener, MouseMotionListener, KeyListener {
     /**
      * The working state.
      */
@@ -66,7 +66,7 @@ public class Container extends JComponent implements MouseListener, MouseMotionL
     /**
      * Default constructor. Creates object the specified size.
      */
-    public Container(int width, int height) {
+    public ContainerComponent(int width, int height) {
         super();
         Dimension dim = new Dimension(width, height);
         setSize(dim);
