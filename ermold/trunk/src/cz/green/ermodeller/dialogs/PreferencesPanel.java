@@ -1,4 +1,4 @@
-package cz.green.ermodeller;
+package cz.green.ermodeller.dialogs;
 
 import cz.omnicom.ermodeller.sql.SQLConnection;
 

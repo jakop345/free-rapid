@@ -9,7 +9,6 @@ import cz.green.eventtool.dialogs.PrintPreviewDialog;
 import cz.green.eventtool.dialogs.PropertyListDialog;
 import cz.green.eventtool.interfaces.Connection;
 import cz.green.swing.ExtensionFileFilter;
-import cz.green.swing.SelectUI;
 import cz.green.swing.ShowException;
 import cz.green.util.ActionAdapter;
 import cz.green.util.ParamActionAdapter;
@@ -1463,13 +1462,6 @@ public class ERModeller extends JFrame implements
         }
     }
 
-    /**
-     * This method was created by Jiri Mares
-     */
-    public void lookFeel() {
-        JDialog dialog = SelectUI.getSelectUIDialog(this);
-        dialog.setVisible(true);
-    }
 
     /**
      * Starts the ER modeller as application.

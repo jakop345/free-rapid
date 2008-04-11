@@ -91,6 +91,5 @@ public class Window extends WindowItem implements Printable {
         //paint window
         java.awt.Rectangle r = getBounds();
         g.drawRect(r.x, r.y, r.width, r.height);
-        r = null;
     }
 }
