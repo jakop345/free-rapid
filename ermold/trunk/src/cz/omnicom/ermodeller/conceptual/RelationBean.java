@@ -21,7 +21,7 @@ public class RelationBean extends ConceptualConstruct {
      * <code>anEntity</code> is the entity which is connected through the new
      * cardinality to the relation.
      *
-     * @param anEntity cz.omnicom.ermodeller.conceptual.Entity
+     * @param anEntityBean cz.omnicom.ermodeller.conceptual.Entity
      * @return cz.omnicom.ermodeller.conceptual.Cardinality
      * @throws cz.omnicom.ermodeller.conceptual.exception.ParameterCannotBeNullException
      *
@@ -30,8 +30,8 @@ public class RelationBean extends ConceptualConstruct {
      * @see cz.omnicom.ermodeller.conceptual.Cardinality#setRelation
      * @see cz.omnicom.ermodeller.conceptual.Cardinality#setEntity
      */
-    public synchronized Cardinality createCardinality(Entity anEntity) throws ParameterCannotBeNullException/*, IsAlreadyConnectedException*/ {
-        if (anEntity == null)
+    public synchronized Cardinality createCardinality(EntityBean anEntityBean) throws ParameterCannotBeNullException/*, IsAlreadyConnectedException*/ {
+        if (anEntityBean == null)
             throw new ParameterCannotBeNullException();
 /*	// If an entity is in the current relation, then cannot create
 	//    new cardinality!!!!
@@ -52,7 +52,7 @@ public class RelationBean extends ConceptualConstruct {
         } // Cannot be thrown.
         try {
             // Sets bidirectional connection to entity
-            cardinality.setEntity(anEntity);
+            cardinality.setEntity(anEntityBean);
         }
         catch (WasNotFoundException e) { // Cannot be thrown.
             try {
@@ -134,14 +134,14 @@ public class RelationBean extends ConceptualConstruct {
      * Returns whether <code>anEntity</code> is already connected via some cardinality to the <code>Relation</code>
      * or not.
      *
-     * @param anEntity cz.omnicom.ermodeller.conceptual.Entity
+     * @param anEntityBean cz.omnicom.ermodeller.conceptual.Entity
      * @return boolean
      */
-    private synchronized boolean isConnectedToEntity(Entity anEntity) {
-        if (anEntity == null)
+    private synchronized boolean isConnectedToEntity(EntityBean anEntityBean) {
+        if (anEntityBean == null)
             return false;
         for (Enumeration elements = getCardinalities().elements(); elements.hasMoreElements();) {
-            if (((Cardinality) elements.nextElement()).getEntity() == anEntity)
+            if (((Cardinality) elements.nextElement()).getEntity() == anEntityBean)
                 return true;
         }
         return false;

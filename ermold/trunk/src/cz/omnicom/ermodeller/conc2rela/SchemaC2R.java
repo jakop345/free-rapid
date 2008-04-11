@@ -189,16 +189,16 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
         ((Vector) aSonGraph.elementAt(aLevel)).addElement(aEntC2R);
         aEntC2R.setLevel(aLevel);
 
-        Entity entity = (Entity) aEntC2R.getConceptualConstruct();
+        EntityBean entityBean = (EntityBean) aEntC2R.getConceptualConstruct();
         // all ISA sons
-        for (Enumeration elements = entity.getISASons().elements(); elements.hasMoreElements();) {
-            Entity son = (Entity) elements.nextElement();
+        for (Enumeration elements = entityBean.getISASons().elements(); elements.hasMoreElements();) {
+            EntityBean son = (EntityBean) elements.nextElement();
             EntC2R sonC2R = (EntC2R) findRelationC2RByConceptualConstruct(son);
             addToLevelEntC2R(sonC2R, aSonGraph, aLevel + 1);
         }
         // all strong addiction sons
-        for (Enumeration elements = entity.getStrongAddictionsSons().elements(); elements.hasMoreElements();) {
-            Entity son = (Entity) elements.nextElement();
+        for (Enumeration elements = entityBean.getStrongAddictionsSons().elements(); elements.hasMoreElements();) {
+            EntityBean son = (EntityBean) elements.nextElement();
             EntC2R sonC2R = (EntC2R) findRelationC2RByConceptualConstruct(son);
             addToLevelEntC2R(sonC2R, aSonGraph, aLevel + 1);
         }
@@ -220,10 +220,10 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
                 // every cardinality
                 for (Enumeration cardinalities = conceptualRelationBean.getCardinalities().elements(); cardinalities.hasMoreElements();) {
                     Cardinality conceptualCardinality = (Cardinality) cardinalities.nextElement();
-                    Entity entity = conceptualCardinality.getEntity();
-                    EntC2R entC2R = (EntC2R) findRelationC2RByConceptualConstruct(entity);
+                    EntityBean entityBean = conceptualCardinality.getEntity();
+                    EntC2R entC2R = (EntC2R) findRelationC2RByConceptualConstruct(entityBean);
                     if (entC2R == null)
-                        throw new WasNotFoundByConceptualExceptionC2R(this, entity, ListByConceptualExceptionC2R.RELATIONS_LIST);
+                        throw new WasNotFoundByConceptualExceptionC2R(this, entityBean, ListByConceptualExceptionC2R.RELATIONS_LIST);
                     PrimaryKeyC2R primaryKeyC2R = entC2R.getPrimaryKeyC2R();
                     try {
                         relC2R.addRelForeignKeyC2R(new RelForeignKeyC2R(relC2R.getSchemaC2R(), relC2R, conceptualCardinality, primaryKeyC2R.getUniqueKeyGroupC2R()));
@@ -257,8 +257,8 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
             RelationC2R relationC2R = (RelationC2R) elements.nextElement();
             if (relationC2R instanceof EntC2R) {
                 EntC2R entC2R = (EntC2R) relationC2R;
-                Entity entity = (Entity) entC2R.getConceptualConstruct();
-                if (!entC2R.alreadyAddedToSonGraph() && !entity.isStrongAddicted() && !entity.isISASon()) {
+                EntityBean entityBean = (EntityBean) entC2R.getConceptualConstruct();
+                if (!entC2R.alreadyAddedToSonGraph() && !entityBean.isStrongAddicted() && !entityBean.isISASon()) {
                     addToLevelEntC2R(entC2R, sonGraph, 0);
                 }
             }
@@ -275,10 +275,10 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
      * @see #feedUpOnePrimaryKeyC2R
      */
     protected void createOnePrimaryKeyC2R(EntC2R aEntC2R) throws WasNotFoundByConceptualExceptionC2R {
-        Entity entity = (Entity) aEntC2R.getConceptualConstruct();
+        EntityBean entityBean = (EntityBean) aEntC2R.getConceptualConstruct();
         UniqueKeyC2R uniqueKeyC2R = null;
-        if (!entity.isISASon()) {
-            Vector primaryKey = entity.getPrimaryKey();
+        if (!entityBean.isISASon()) {
+            Vector primaryKey = entityBean.getPrimaryKey();
             uniqueKeyC2R = aEntC2R.findUniqueKeyC2RByConceptualUniqueKey(primaryKey);
             if (uniqueKeyC2R == null)
                 throw new WasNotFoundByConceptualExceptionC2R(aEntC2R, null, ListByConceptualExceptionC2R.UNIQUEKEYS_LIST);
@@ -295,19 +295,19 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
             } // cannot be thrown
         }
         PrimaryKeyC2R primaryKeyC2R = new PrimaryKeyC2R(aEntC2R.getSchemaC2R(), aEntC2R, uniqueKeyC2R);
-        if (entity.isISASon()) {
+        if (entityBean.isISASon()) {
             // adds parent primary keys for ISA addictions
-            Entity isaParent = entity.getISAParent();
+            EntityBean isaParent = entityBean.getISAParent();
             EntC2R isaParentC2R = (EntC2R) findRelationC2RByConceptualConstruct(isaParent);
             if (isaParentC2R == null)
                 throw new WasNotFoundByConceptualExceptionC2R(this, isaParent, ListByConceptualExceptionC2R.RELATIONS_LIST);
 
             primaryKeyC2R.addParentPrimaryKeyC2R(isaParentC2R.getPrimaryKeyC2R());
         }
-        if (entity.isStrongAddicted()) {
+        if (entityBean.isStrongAddicted()) {
             // adds parent primary keys for strong addictions
-            for (Enumeration elements = entity.getStrongAddictionsParents().elements(); elements.hasMoreElements();) {
-                Entity strongAddictionParent = (Entity) elements.nextElement();
+            for (Enumeration elements = entityBean.getStrongAddictionsParents().elements(); elements.hasMoreElements();) {
+                EntityBean strongAddictionParent = (EntityBean) elements.nextElement();
                 EntC2R strongAddictionParentC2R = (EntC2R) findRelationC2RByConceptualConstruct(strongAddictionParent);
                 if (strongAddictionParentC2R == null)
                     throw new WasNotFoundByConceptualExceptionC2R(this, strongAddictionParent, ListByConceptualExceptionC2R.RELATIONS_LIST);
@@ -520,7 +520,7 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
             names.addElement(((RelationBean) relations.nextElement()).getName());
         }
         for (Enumeration entities = schema.getEntities().elements(); entities.hasMoreElements();) {
-            names.addElement(((Entity) entities.nextElement()).getName());
+            names.addElement(((EntityBean) entities.nextElement()).getName());
         }
         for (int i = 0; i < names.size(); i++) {
             String refName = (String) names.elementAt(i);
@@ -560,7 +560,7 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
             for (Enumeration elements = aConceptualSchema.getEntities().elements(); elements.hasMoreElements();) {
                 try {
                     // can throw WasNotFoundByConceptual
-                    addRelationC2R(new EntRelationC2R(this, (Entity) elements.nextElement()));
+                    addRelationC2R(new EntRelationC2R(this, (EntityBean) elements.nextElement()));
                 }
                 catch (AlreadyContainsExceptionC2R e) {
                 } // cannot be thrown

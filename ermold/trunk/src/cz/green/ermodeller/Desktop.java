@@ -14,6 +14,7 @@ import cz.green.eventtool.Connection;
 import cz.green.eventtool.PropertyListDialog;
 import cz.green.util.ActionAdapter;
 import cz.green.util.ParamActionAdapter;
+import cz.omnicom.ermodeller.conceptual.EntityBean;
 import cz.omnicom.ermodeller.conceptual.RelationBean;
 import cz.omnicom.ermodeller.errorlog.ShowErrorListener;
 import cz.omnicom.ermodeller.typeseditor.UserTypeStorage;
@@ -71,8 +72,8 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
     /**
      * Compose entity with..
      */
-    public void composeEntity(cz.omnicom.ermodeller.conceptual.Entity eM1,
-                              cz.omnicom.ermodeller.conceptual.Entity eM2) {
+    public void composeEntity(EntityBean eM1,
+                              EntityBean eM2) {
         EntityConstruct e1 = getEntity(eM1.getID()), e2 = getEntity(eM2.getID());
 
         e2.composeEntity(e1, new cz.green.ermodeller.DragOverEvent(0, 0,
@@ -81,13 +82,13 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
 
     /**
      */
-    public void composeEntityOld(cz.omnicom.ermodeller.conceptual.Entity e1,
-                                 cz.omnicom.ermodeller.conceptual.Entity e2) {
+    public void composeEntityOld(EntityBean e1,
+                                 EntityBean e2) {
         Vector v1 = e1.getAtributes(), v2 = e2.getAtributes();
         int i, j;
         cz.omnicom.ermodeller.conceptual.Atribute atrM1, atrM2;
         Atribute atr2, atr1;
-        cz.omnicom.ermodeller.conceptual.Entity entM;
+        EntityBean entM;
         EntityConstruct ent2 = getEntity(e2.getID()), ent1 = getEntity(e1.getID());
 
         for (i = 0; i < v2.size(); i++) {
@@ -569,7 +570,7 @@ public class Desktop extends cz.green.eventtool.Desktop implements FontManager,
                 if ((ent = getEntity((DGroupTool) item, id)) != null)
                     return ent;
             } else if (item instanceof EntityConstruct
-                    && id == (((cz.omnicom.ermodeller.conceptual.Entity) ((EntityConstruct) item)
+                    && id == (((EntityBean) ((EntityConstruct) item)
                     .getModel()).getID()))
                 return (EntityConstruct) item;
         }

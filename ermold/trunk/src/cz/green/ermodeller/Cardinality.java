@@ -9,6 +9,7 @@ import cz.green.event.interfaces.PaintableManager;
 import cz.green.eventtool.Connection;
 import cz.green.eventtool.ConnectionLine;
 import cz.green.swing.ShowException;
+import cz.omnicom.ermodeller.conceptual.EntityBean;
 import cz.omnicom.ermodeller.conceptual.RelationBean;
 
 import javax.swing.*;
@@ -594,7 +595,7 @@ public class Cardinality extends ConceptualObject {
             //changes the participating entity
             EntityConstruct old = getEntity();
             Connection conn = connectionTo(old);
-            cz.omnicom.ermodeller.conceptual.Entity cEnt = (cz.omnicom.ermodeller.conceptual.Entity) cc.getModel();
+            EntityBean cEnt = (EntityBean) cc.getModel();
             try {
                 model.setEntity(cEnt);
                 cc.getManager().add(this);

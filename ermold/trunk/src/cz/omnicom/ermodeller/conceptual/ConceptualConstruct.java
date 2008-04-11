@@ -16,7 +16,7 @@ import java.util.Vector;
  * in conceptual schema. It can hold atributes, unique keys, it can be connected
  * to cardinalites.
  *
- * @see cz.omnicom.ermodeller.conceptual.Entity
+ * @see EntityBean
  * @see RelationBean
  * @see cz.omnicom.ermodeller.conceptual.Cardinality
  */
@@ -175,7 +175,8 @@ public abstract class ConceptualConstruct extends ConceptualObject {
             throw new ParameterCannotBeNullException();
 
         try {
-            if (this instanceof Entity && anAtribute.isPrimary()) ((Entity) this).removeMemberOfPrimaryKey(anAtribute);
+            if (this instanceof EntityBean && anAtribute.isPrimary())
+                ((EntityBean) this).removeMemberOfPrimaryKey(anAtribute);
             removeAtribute(anAtribute);
             // Throws WasNotFoundException if the atribute wasn't found and then wasn't removed.
         }

@@ -18,7 +18,7 @@ public class Schema extends ConceptualObject {
     /**
      * All entities in the schema.
      *
-     * @see cz.omnicom.ermodeller.conceptual.Entity
+     * @see EntityBean
      */
     protected Vector entities = new Vector();
     /**
@@ -68,14 +68,14 @@ public class Schema extends ConceptualObject {
      *
      * @return cz.omnicom.ermodeller.conceptual.Entity
      */
-    public synchronized Entity createEntity() {
-        Entity entity = new Entity();
-        entity.setSchema(this);
-        entity.setName("Entity" + getEntityIDCounter());
+    public synchronized EntityBean createEntity() {
+        EntityBean entityBean = new EntityBean();
+        entityBean.setSchema(this);
+        entityBean.setName("Entity" + getEntityIDCounter());
         Vector oldValue = (Vector) getEntities().clone();
-        getEntities().addElement(entity);
+        getEntities().addElement(entityBean);
         firePropertyChange(ENTITIES_PROPERTY_CHANGE, oldValue, getEntities());
-        return entity;
+        return entityBean;
     }
 
     /**
@@ -121,23 +121,23 @@ public class Schema extends ConceptualObject {
     /**
      * Removes <code>anEntity</code> from the schema.
      *
-     * @param anEntity cz.omnicom.ermodeller.conceptual.Entity
+     * @param anEntityBean cz.omnicom.ermodeller.conceptual.Entity
      * @throws cz.omnicom.ermodeller.conceptual.exception.ParameterCannotBeNullException
      *
      * @throws cz.omnicom.ermodeller.conceptual.exception.WasNotFoundException
      *
      */
-    public synchronized void disposeEntity(Entity anEntity) throws ParameterCannotBeNullException, WasNotFoundException {
-        if (anEntity == null)
+    public synchronized void disposeEntity(EntityBean anEntityBean) throws ParameterCannotBeNullException, WasNotFoundException {
+        if (anEntityBean == null)
             throw new ParameterCannotBeNullException();
 
         Vector oldValue = (Vector) getEntities().clone();
-        if (!(getEntities().removeElement(anEntity))) { // was it removed?
+        if (!(getEntities().removeElement(anEntityBean))) { // was it removed?
             // No, it wasn't found
-            throw new WasNotFoundException(this, anEntity, ListException.ENTITIES_LIST);
+            throw new WasNotFoundException(this, anEntityBean, ListException.ENTITIES_LIST);
         } else {
             // Yes
-            anEntity.empty();
+            anEntityBean.empty();
             firePropertyChange(ENTITIES_PROPERTY_CHANGE, oldValue, getEntities());
         }
     }
@@ -315,7 +315,7 @@ public class Schema extends ConceptualObject {
         ErrorLogList errorLogList = new ErrorLogList();
         Vector vectorToCheck = new Vector();
         for (Enumeration elements = getEntities().elements(); elements.hasMoreElements();) {
-            vectorToCheck.addElement(new ConceptualObjectNameController((Entity) elements.nextElement()));
+            vectorToCheck.addElement(new ConceptualObjectNameController((EntityBean) elements.nextElement()));
         }
         for (Enumeration elements = getRelations().elements(); elements.hasMoreElements();) {
             vectorToCheck.addElement(new ConceptualObjectNameController((RelationBean) elements.nextElement()));
@@ -386,7 +386,7 @@ public class Schema extends ConceptualObject {
         ErrorLogList errorLogList = new ErrorLogList();
         Vector vectorToCheck = new Vector();
         for (Enumeration entities = getEntities().elements(); entities.hasMoreElements();) {
-            for (Enumeration uniqueKeys = ((Entity) entities.nextElement()).getUniqueKeys().elements(); uniqueKeys.hasMoreElements();) {
+            for (Enumeration uniqueKeys = ((EntityBean) entities.nextElement()).getUniqueKeys().elements(); uniqueKeys.hasMoreElements();) {
                 UniqueKey unq = (UniqueKey) uniqueKeys.nextElement();
                 if (unq.getName() == null)
                     unq.setName("");
@@ -423,7 +423,7 @@ public class Schema extends ConceptualObject {
         // all objects sets unvalidated
         //    - entities
         for (Enumeration entities = getEntities().elements(); entities.hasMoreElements();) {
-            ((Entity) entities.nextElement()).setAllUnvalidated();
+            ((EntityBean) entities.nextElement()).setAllUnvalidated();
         }
         //    - relations
         for (Enumeration relations = getRelations().elements(); relations.hasMoreElements();) {
@@ -462,7 +462,7 @@ public class Schema extends ConceptualObject {
         errorLogList.concatErrorLogList(checkNameUnicity());
         // for all entities
         for (Enumeration entities = getEntities().elements(); entities.hasMoreElements();) {
-            ErrorLogList entityErrors = ((Entity) entities.nextElement()).validate();
+            ErrorLogList entityErrors = ((EntityBean) entities.nextElement()).validate();
             errorLogList.concatErrorLogList(entityErrors);
         }
         // for all relations

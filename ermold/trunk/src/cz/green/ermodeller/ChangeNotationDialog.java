@@ -1,5 +1,7 @@
 package cz.green.ermodeller;
 
+import cz.omnicom.ermodeller.conceptual.EntityBean;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -20,7 +22,7 @@ public class ChangeNotationDialog extends JDialog implements java.awt.event.Acti
      * @see cz.omnicom.ermodeller.datatype.DataTypePanel
      */
     private JTextArea DescriptionTA = null;
-    private final cz.omnicom.ermodeller.conceptual.Entity Cent = null;
+    private final EntityBean cent = null;
     final JButton OKbutton = new JButton();
     final JButton CancelButton = new JButton();
     final JLabel DecomposeLabel = new JLabel();
@@ -302,13 +304,13 @@ public class ChangeNotationDialog extends JDialog implements java.awt.event.Acti
      * @param java.lang.Object value
      */
     public synchronized void setValue(Object value) {
-        Cent.setConstraints((String) value);
+        cent.setConstraints((String) value);
     }
 
     public String getValue() {
         // TODO Auto-generated method stub
         //value = getValue();
-        return Cent.getConstraints();
+        return cent.getConstraints();
     }
 
 }

@@ -1,14 +1,14 @@
 package cz.omnicom.ermodeller.conceptual.exception;
 
-import cz.omnicom.ermodeller.conceptual.Entity;
+import cz.omnicom.ermodeller.conceptual.EntityBean;
 
 /**
  * After adding <code>parentEntity</code> to the list of parents of
  * <code>addictedEntity</code> the cycle qould appear in addiction graph.
  */
 public class CycleWouldAppearException extends ConceptualException {
-    private Entity addictedEntity = null;
-    private Entity parentEntity = null;
+    private EntityBean addictedEntityBean = null;
+    private EntityBean parentEntityBean = null;
     private String cycleName = null;
 
     public static final int ISA_CYCLE = 1;
@@ -17,9 +17,9 @@ public class CycleWouldAppearException extends ConceptualException {
     /**
      * CycleWouldAppear constructor comment.
      */
-    public CycleWouldAppearException(Entity aAddictedEntity, Entity aParentEntity, int aCycleSpec) {
-        addictedEntity = aAddictedEntity;
-        parentEntity = aParentEntity;
+    public CycleWouldAppearException(EntityBean aAddictedEntityBean, EntityBean aParentEntityBean, int aCycleSpec) {
+        addictedEntityBean = aAddictedEntityBean;
+        parentEntityBean = aParentEntityBean;
         cycleName = resolveCycleName(aCycleSpec);
     }
 
@@ -29,7 +29,7 @@ public class CycleWouldAppearException extends ConceptualException {
      * @return java.lang.String
      */
     public String getMessage() {
-        return "After adding entity " + addictedEntity.getName() + " to list of sons of entity " + parentEntity.getName() + " would appear " + cycleName + " cycle";
+        return "After adding entity " + addictedEntityBean.getName() + " to list of sons of entity " + parentEntityBean.getName() + " would appear " + cycleName + " cycle";
     }
 
     /**

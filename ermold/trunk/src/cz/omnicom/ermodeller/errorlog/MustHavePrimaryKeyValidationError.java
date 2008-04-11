@@ -1,20 +1,20 @@
 package cz.omnicom.ermodeller.errorlog;
 
-import cz.omnicom.ermodeller.conceptual.Entity;
+import cz.omnicom.ermodeller.conceptual.EntityBean;
 
 /**
  * Entity must have primary key.
  *
- * @see cz.omnicom.ermodeller.conceptual.Entity
+ * @see cz.omnicom.ermodeller.conceptual.EntityBean
  */
 public class MustHavePrimaryKeyValidationError extends ConceptualObjectValidationError {
     /**
      * Constructor.
      *
-     * @param anEntity cz.omnicom.ermodeller.conceptual.Entity
+     * @param anEntityBean cz.omnicom.ermodeller.conceptual.Entity
      */
-    public MustHavePrimaryKeyValidationError(Entity anEntity) {
-        super(anEntity);
+    public MustHavePrimaryKeyValidationError(EntityBean anEntityBean) {
+        super(anEntityBean);
     }
 
     /**

@@ -1,18 +1,18 @@
 package cz.omnicom.ermodeller.conceptual.exception;
 
-import cz.omnicom.ermodeller.conceptual.Entity;
+import cz.omnicom.ermodeller.conceptual.EntityBean;
 
 /**
  * Entity should have primary key.
  */
 public class MustHavePrimaryKeyException extends ConceptualException {
-    private Entity entity = null;
+    private EntityBean entityBean = null;
 
     /**
      * MustHavePrimaryKey constructor comment.
      */
-    public MustHavePrimaryKeyException(Entity anEntity) {
-        entity = anEntity;
+    public MustHavePrimaryKeyException(EntityBean anEntityBean) {
+        entityBean = anEntityBean;
     }
 
     /**
@@ -21,6 +21,6 @@ public class MustHavePrimaryKeyException extends ConceptualException {
      * @return java.lang.String
      */
     public String getMessage() {
-        return "Entity " + entity.getName() + " entity should have primary key";
+        return "Entity " + entityBean.getName() + " entity should have primary key";
     }
 }

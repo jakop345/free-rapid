@@ -1,5 +1,7 @@
 package cz.green.ermodeller;
 
+import cz.omnicom.ermodeller.conceptual.EntityBean;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -19,7 +21,7 @@ public class ConstraintsDialog extends JDialog implements java.awt.event.ActionL
      * @see cz.omnicom.ermodeller.datatype.DataTypePanel
      */
     private JTextArea ivjTextArea = null;
-    private cz.omnicom.ermodeller.conceptual.Entity Cent = null;
+    private EntityBean cent = null;
     final JButton OKbutton = new JButton();
     final JButton CancelButton = new JButton();
     final JButton ApplyButton = new JButton();
@@ -28,10 +30,10 @@ public class ConstraintsDialog extends JDialog implements java.awt.event.ActionL
      * Constructor
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    public ConstraintsDialog(JFrame owner, cz.omnicom.ermodeller.conceptual.Entity ent) {
+    public ConstraintsDialog(JFrame owner, EntityBean ent) {
         super(owner, "Constraints Editor");
         initialize();
-        this.Cent = ent;
+        this.cent = ent;
     }
 
     public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -127,13 +129,13 @@ public class ConstraintsDialog extends JDialog implements java.awt.event.ActionL
      * @param java.lang.Object value
      */
     public synchronized void setValue(Object value) {
-        Cent.setConstraints((String) value);
+        cent.setConstraints((String) value);
     }
 
     public String getValue() {
         // TODO Auto-generated method stub
         //value = getValue();
-        return Cent.getConstraints();
+        return cent.getConstraints();
     }
 
 }

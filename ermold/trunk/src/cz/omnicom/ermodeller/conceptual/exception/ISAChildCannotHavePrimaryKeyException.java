@@ -1,18 +1,18 @@
 package cz.omnicom.ermodeller.conceptual.exception;
 
-import cz.omnicom.ermodeller.conceptual.Entity;
+import cz.omnicom.ermodeller.conceptual.EntityBean;
 
 /**
  * Entity cannot have primary key.
  */
 public class ISAChildCannotHavePrimaryKeyException extends ConceptualException {
-    Entity entity = null;
+    EntityBean entityBean = null;
 
     /**
      * CannotHavePrimaryKey constructor comment.
      */
-    public ISAChildCannotHavePrimaryKeyException(Entity aEntity) {
-        this.entity = aEntity;
+    public ISAChildCannotHavePrimaryKeyException(EntityBean aEntityBean) {
+        this.entityBean = aEntityBean;
     }
 
     /**
@@ -21,6 +21,6 @@ public class ISAChildCannotHavePrimaryKeyException extends ConceptualException {
      * @return java.lang.String
      */
     public String getMessage() {
-        return "ISA child " + entity.getName() + " cannot have primary key";
+        return "ISA child " + entityBean.getName() + " cannot have primary key";
     }
 }

@@ -14,6 +14,7 @@ import cz.green.eventtool.Connection;
 import cz.green.eventtool.ConnectionLine;
 import cz.green.eventtool.ConnectionManager;
 import cz.green.swing.ShowException;
+import cz.omnicom.ermodeller.conceptual.EntityBean;
 import cz.omnicom.ermodeller.conceptual.exception.CannotHavePrimaryKeyException;
 import cz.omnicom.ermodeller.conceptual.exception.CycleWouldAppearException;
 import cz.omnicom.ermodeller.conceptual.exception.IsISASonException;
@@ -43,7 +44,7 @@ public class EntityConstruct extends ConceptualConstruct {
     /**
      * The model object from the Aleš Kopecký work
      */
-    protected cz.omnicom.ermodeller.conceptual.Entity model = null;
+    protected EntityBean model = null;
 
     /**
      * The primary unique key of this entity
@@ -109,7 +110,7 @@ public class EntityConstruct extends ConceptualConstruct {
      *          Thrown by inherited constructor.
      * @see ConceptualConstruct#ConceptualConstruct(cz.green.event.interfaces.Manager ,int,int,int,int)
      */
-    protected EntityConstruct(cz.omnicom.ermodeller.conceptual.Entity ent,
+    protected EntityConstruct(EntityBean ent,
                               Manager manager, int left, int top)
             throws NullPointerException,
             ImpossibleNegativeValueException {
@@ -287,7 +288,7 @@ public class EntityConstruct extends ConceptualConstruct {
         int width = 60;
         java.awt.FontMetrics fm;
         fm = ((FontManager) manager).getReferentFontMetrics();
-        int nameWidth = fm.stringWidth(((cz.omnicom.ermodeller.conceptual.Entity) getModel()).getName());
+        int nameWidth = fm.stringWidth(((EntityBean) getModel()).getName());
         if (nameWidth > width)
             width = nameWidth;
         switch (ACTUAL_NOTATION) {
@@ -557,7 +558,7 @@ public class EntityConstruct extends ConceptualConstruct {
         try {
             // creates the new DGroup instance
             DGroupTool group = new DGroupTool(manager, left, top, 0, 0);
-            cz.omnicom.ermodeller.conceptual.Entity cEnt = schema
+            EntityBean cEnt = schema
                     .createEntity();
             // creates new entity
             EntityConstruct ent = new EntityConstruct(cEnt, manager, left, top);
@@ -669,7 +670,7 @@ public class EntityConstruct extends ConceptualConstruct {
     public UniqueKey createUniqueKey(int left, int top) {
         try {
             // create model - unique key
-            cz.omnicom.ermodeller.conceptual.Entity cc = (cz.omnicom.ermodeller.conceptual.Entity) getModel();
+            EntityBean cc = (EntityBean) getModel();
             cz.omnicom.ermodeller.conceptual.UniqueKey cUq = cc
                     .createUniqueKey();
             // create unique key
@@ -919,11 +920,11 @@ public class EntityConstruct extends ConceptualConstruct {
                     Connection c = ((Connection) e.nextElement());
                     if (c.getOne() instanceof Cardinality) {
                         car1 = ((Cardinality) c.getOne());
-                        name = ((cz.omnicom.ermodeller.conceptual.Entity) car1.getEntity().getModel()).getName();
+                        name = ((EntityBean) car1.getEntity().getModel()).getName();
                     }
                     if (c.getTwo() instanceof Cardinality) {
                         car1 = ((Cardinality) c.getTwo());
-                        name = ((cz.omnicom.ermodeller.conceptual.Entity) car1.getEntity().getModel()).getName();
+                        name = ((EntityBean) car1.getEntity().getModel()).getName();
                     }
                 }
             }
@@ -1877,7 +1878,7 @@ public class EntityConstruct extends ConceptualConstruct {
         if (ISAParent != null) {
             throw new IsISASonException(model);
         }
-        model.setISAParent((cz.omnicom.ermodeller.conceptual.Entity) ent
+        model.setISAParent((EntityBean) ent
                 .getModel());
         int[][] source = getRect();
         int dx = x - source[0][0], dy = y - source[1][0];
@@ -1974,7 +1975,7 @@ public class EntityConstruct extends ConceptualConstruct {
         this.setAsISAChild = setAsISAChild;
     }
 
-    public void setModel(cz.omnicom.ermodeller.conceptual.Entity model) {
+    public void setModel(EntityBean model) {
         this.model = model;
     }
 

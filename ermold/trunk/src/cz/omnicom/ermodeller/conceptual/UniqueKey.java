@@ -36,9 +36,9 @@ public class UniqueKey extends ConceptualObject {
     /**
      * Owner of the unique key
      *
-     * @see cz.omnicom.ermodeller.conceptual.Entity
+     * @see EntityBean
      */
-    private Entity fieldEntity = null;
+    private EntityBean fieldEntityBean = null;
 
     public static final String ENTITY_PROPERTY_CHANGE = "entity";
     public static final String ATRIBUTES_PROPERTY_CHANGE = "atributes";
@@ -108,8 +108,8 @@ public class UniqueKey extends ConceptualObject {
      * @return The entity property value.
      * @see #setEntity
      */
-    public Entity getEntity() {
-        return fieldEntity;
+    public EntityBean getEntity() {
+        return fieldEntityBean;
     }
 
     /**
@@ -141,7 +141,7 @@ public class UniqueKey extends ConceptualObject {
      * @return boolean
      */
     private boolean isPrimaryKey() {
-        if (fieldEntity == null)
+        if (fieldEntityBean == null)
             return false;
         return false;//fieldEntity.isPrimaryKey(this);
     }
@@ -184,7 +184,7 @@ public class UniqueKey extends ConceptualObject {
      * <code>Entity</code>.
      *
      * @see cz.omnicom.ermodeller.conceptual.Atribute#setArbitrary
-     * @see cz.omnicom.ermodeller.conceptual.Entity#setPrimaryKey
+     * @see EntityBean#setPrimaryKey
      */
     protected synchronized void setAllAtributesArbitrary() {
         for (Enumeration elements = getAtributes().elements(); elements.hasMoreElements();) {
@@ -205,14 +205,14 @@ public class UniqueKey extends ConceptualObject {
      * @param entity The new value for the property.
      * @see #getEntity
      */
-    public void setEntity(Entity anEntity) throws CannotBeResetException {
-        Entity oldValue = fieldEntity;
-        if (oldValue != null && anEntity != null)
+    public void setEntity(EntityBean anEntityBean) throws CannotBeResetException {
+        EntityBean oldValue = fieldEntityBean;
+        if (oldValue != null && anEntityBean != null)
             // Cannot move unique key
-            throw new CannotBeResetException(this, oldValue, anEntity);
+            throw new CannotBeResetException(this, oldValue, anEntityBean);
 
-        fieldEntity = anEntity;
-        firePropertyChange(ENTITY_PROPERTY_CHANGE, oldValue, anEntity);
+        fieldEntityBean = anEntityBean;
+        firePropertyChange(ENTITY_PROPERTY_CHANGE, oldValue, anEntityBean);
     }
 
     /**
