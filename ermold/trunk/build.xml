@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="ER Modeller" default="all" basedir=".">
+    <!-- output data directories -->
+    <property name="build" location="build"/>
+    <property name="classes" location="classes"/>
+
+    <!-- input data directories -->
+    <property name="src" location="src"/>
+    <property name="etc" location="etc"/>
+    <property name="lib" location="lib"/>
+    <property name="help" location="help"/>
+    <property name="libDirectory" value="lib"/>
+    <property name="resources" value="resources"/>
+    <property name="mainclass" value="cz.green.ermodeller.ERModeller"/>
+
+    <target name="build" depends="compile" description="building ER Modeller">
+        <fileset id="jars" dir="${lib}" includes="**/*"/>
+
+        <path id="cp">
+            <fileset refid="jars"/>
+        </path>
+
+        <pathconvert property="classpath" refid="cp" pathsep=" " dirsep="/">
+            <map from="${lib}" to="${libDirectory}"/>
+        </pathconvert>
+
+        <jar jarfile="${build}/erm.jar" compress="false">
+            <manifest>
+                <attribute name="Build-Date" value="${TODAY}"/>
+                <attribute name="Class-Path" value="${classpath}"/>
+                <attribute name="Main-Class" value="${mainclass}"/>
+            </manifest>
+            <fileset dir="${classes}" includes="**/*"/>
+            <fileset dir="${resources}" includes="**/*"/>
+        </jar>
+        <mkdir dir="${build}/${libDirectory}"/>
+        <mkdir dir="${build}/help"/>
+        <copy todir="${build}">
+            <fileset dir="${etc}" includes="**/*"></fileset>
+        </copy>
+        <copy todir="${build}/help">
+            <fileset dir="${help}" includes="**/*"></fileset>
+        </copy>
+        <copy todir="${build}/${libDirectory}">
+            <fileset dir="${lib}" includes="**/*"></fileset>
+        </copy>
+    </target>
+
+    <target name="compile" description="compiling source codes">
+        <javac srcdir="${src}" destdir="${classes}" optimize="on" target="1.5"/>
+    </target>
+
+    <target name="init" description="initialization">
+        <tstamp/>
+        <mkdir dir="${classes}"/>
+        <mkdir dir="${build}"/>
+    </target>
+
+    <target name="clean" description="clean up">
+        <delete dir="${build}"/>
+        <delete dir="${classes}"/>
+    </target>
+
+    <target name="all" depends="clean,init,compile, build" description="build all"/>
+
+    <!-- run ER Modeller -->
+
+    <target name="run">
+        <java fork="true" jar="${build}/erm.jar"/>
+    </target>
+</project>

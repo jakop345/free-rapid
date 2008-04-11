@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- ER Modeller version 4.0 schema -->
+<!DOCTYPE schema [
+<!ELEMENT schema (scale,left,top,width,height,id,name,notation,comment,usertype*,(entity*,atribute*,relation*,unique*,cardinality*,strong*)*)>
+<!ELEMENT scale (#PCDATA)>
+<!ELEMENT left (#PCDATA)>
+<!ELEMENT top (#PCDATA)>
+<!ELEMENT width (#PCDATA)>
+<!ELEMENT height (#PCDATA)>
+<!ELEMENT id (#PCDATA)>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT comment (#PCDATA)>
+<!ELEMENT usertype (typename, datatypedef)>
+<!ELEMENT entity (left,top,width,height,id,name,comment)>
+<!ELEMENT atribute (left,top,width,height,id,name,comment,datatype,arbitrary,(ent|rel))>
+<!ELEMENT relation (left,top,width,height,id,name,comment)>
+<!ELEMENT unique (left,top,width,height,id,name,comment,ent,atr*,primary)>
+<!ELEMENT cardinality (left,top,width,height,id,name,comment,ent,rel,arbitrary,multi,glue)>
+<!ELEMENT strong (left,top,width,height,ent,uni)>
+<!ELEMENT datatype (#PCDATA)>
+<!ELEMENT typename (#PCDATA)>
+<!ELEMENT datatypedef (datatype, item*)>
+<!ELEMENT item (itemname, datatype)>
+<!ELEMENT itemname (#PCDATA)>
+<!ELEMENT arbitrary (#PCDATA)>
+<!ELEMENT ent (#PCDATA)>
+<!ELEMENT rel (#PCDATA)>
+<!ELEMENT atr (#PCDATA)>
+<!ELEMENT primary (#PCDATA)>
+<!ELEMENT multi (#PCDATA)>
+<!ELEMENT glue (#PCDATA)>
+<!ELEMENT uni (#PCDATA)>
+]>
+<schema>
+	<scale>1.0</scale>
+	<left>0</left>
+	<top>0</top>
+	<width>2500</width>
+	<height>2500</height>
+	<id>6</id>
+	<name>Schema</name>
+	<notation>0</notation>
+	<comment></comment>
+	<entity>
+		<left>665</left>
+		<top>306</top>
+		<width>85</width>
+		<height>39</height>
+		<id>1</id>
+		<name>Exemplar</name>
+		<comment></comment>
+		<constraints></constraints>
+	</entity>
+	<strong>
+		<left>663</left>
+		<top>300</top>
+		<width>6</width>
+		<height>6</height>
+		<ent>0</ent>
+		<child>1</child>
+	</strong>
+	<atribute>
+		<left>846</left>
+		<top>300</top>
+		<width>104</width>
+		<height>13</height>
+		<id>3</id>
+		<name>Poradove_cislo</name>
+		<comment></comment>
+		<datatype>Integer</datatype>
+		<arbitrary>true</arbitrary>
+		<primary>true</primary>
+		<uniq>true</uniq>
+		<position>1</position>
+		<ent>1</ent>
+	</atribute>
+	<entity>
+		<left>387</left>
+		<top>248</top>
+		<width>85</width>
+		<height>39</height>
+		<id>0</id>
+		<name>Kniha</name>
+		<comment></comment>
+		<constraints></constraints>
+	</entity>
+	<atribute>
+		<left>435</left>
+		<top>208</top>
+		<width>47</width>
+		<height>13</height>
+		<id>2</id>
+		<name>ISBN</name>
+		<comment></comment>
+		<datatype>Integer</datatype>
+		<arbitrary>true</arbitrary>
+		<primary>true</primary>
+		<uniq>true</uniq>
+		<position>1</position>
+		<ent>0</ent>
+	</atribute>
+	<atribute>
+		<left>364</left>
+		<top>312</top>
+		<width>87</width>
+		<height>13</height>
+		<id>4</id>
+		<name>Nazev_knihy</name>
+		<comment></comment>
+		<datatype>Integer</datatype>
+		<arbitrary>true</arbitrary>
+		<primary>false</primary>
+		<uniq>false</uniq>
+		<position>2</position>
+		<ent>0</ent>
+	</atribute>
+	<atribute>
+		<left>251</left>
+		<top>238</top>
+		<width>44</width>
+		<height>13</height>
+		<id>5</id>
+		<name>Zanr</name>
+		<comment></comment>
+		<datatype>Integer</datatype>
+		<arbitrary>false</arbitrary>
+		<primary>false</primary>
+		<uniq>false</uniq>
+		<position>3</position>
+		<ent>0</ent>
+	</atribute>
+</schema>

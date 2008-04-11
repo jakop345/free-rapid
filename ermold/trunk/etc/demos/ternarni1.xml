@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- ER Modeller version 4.0 schema -->
+<!DOCTYPE schema [
+<!ELEMENT schema (scale,left,top,width,height,id,name,notation,comment,usertype*,(entity*,atribute*,relation*,unique*,cardinality*,strong*)*)>
+<!ELEMENT scale (#PCDATA)>
+<!ELEMENT left (#PCDATA)>
+<!ELEMENT top (#PCDATA)>
+<!ELEMENT width (#PCDATA)>
+<!ELEMENT height (#PCDATA)>
+<!ELEMENT id (#PCDATA)>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT comment (#PCDATA)>
+<!ELEMENT usertype (typename, datatypedef)>
+<!ELEMENT entity (left,top,width,height,id,name,comment)>
+<!ELEMENT atribute (left,top,width,height,id,name,comment,datatype,arbitrary,(ent|rel))>
+<!ELEMENT relation (left,top,width,height,id,name,comment)>
+<!ELEMENT unique (left,top,width,height,id,name,comment,ent,atr*,primary)>
+<!ELEMENT cardinality (left,top,width,height,id,name,comment,ent,rel,arbitrary,multi,glue)>
+<!ELEMENT strong (left,top,width,height,ent,uni)>
+<!ELEMENT datatype (#PCDATA)>
+<!ELEMENT typename (#PCDATA)>
+<!ELEMENT datatypedef (datatype, item*)>
+<!ELEMENT item (itemname, datatype)>
+<!ELEMENT itemname (#PCDATA)>
+<!ELEMENT arbitrary (#PCDATA)>
+<!ELEMENT ent (#PCDATA)>
+<!ELEMENT rel (#PCDATA)>
+<!ELEMENT atr (#PCDATA)>
+<!ELEMENT primary (#PCDATA)>
+<!ELEMENT multi (#PCDATA)>
+<!ELEMENT glue (#PCDATA)>
+<!ELEMENT uni (#PCDATA)>
+]>
+<schema>
+	<scale>1.0</scale>
+	<left>0</left>
+	<top>0</top>
+	<width>2500</width>
+	<height>2500</height>
+	<id>16</id>
+	<name>Schema</name>
+	<notation>2</notation>
+	<comment></comment>
+	<entity>
+		<left>271</left>
+		<top>386</top>
+		<width>96</width>
+		<height>59</height>
+		<id>1</id>
+		<name>A1</name>
+		<comment></comment>
+		<constraints></constraints>
+	</entity>
+	<atribute>
+		<left>276</left>
+		<top>416</top>
+		<width>36</width>
+		<height>13</height>
+		<id>5</id>
+		<name>At1</name>
+		<comment></comment>
+		<datatype>Integer</datatype>
+		<arbitrary>true</arbitrary>
+		<primary>true</primary>
+		<uniq>true</uniq>
+		<position>1</position>
+		<ent>1</ent>
+	</atribute>
+	<entity>
+		<left>541</left>
+		<top>147</top>
+		<width>96</width>
+		<height>59</height>
+		<id>2</id>
+		<name>A3</name>
+		<comment></comment>
+		<constraints></constraints>
+	</entity>
+	<atribute>
+		<left>546</left>
+		<top>177</top>
+		<width>36</width>
+		<height>13</height>
+		<id>7</id>
+		<name>At3</name>
+		<comment></comment>
+		<datatype>Integer</datatype>
+		<arbitrary>true</arbitrary>
+		<primary>true</primary>
+		<uniq>true</uniq>
+		<position>1</position>
+		<ent>2</ent>
+	</atribute>
+	<strong>
+		<left>601</left>
+		<top>206</top>
+		<width>6</width>
+		<height>6</height>
+		<ent>2</ent>
+		<child>11</child>
+	</strong>
+	<entity>
+		<left>762</left>
+		<top>402</top>
+		<width>96</width>
+		<height>59</height>
+		<id>3</id>
+		<name>A2</name>
+		<comment></comment>
+		<constraints></constraints>
+	</entity>
+	<atribute>
+		<left>767</left>
+		<top>432</top>
+		<width>36</width>
+		<height>13</height>
+		<id>6</id>
+		<name>At2</name>
+		<comment></comment>
+		<datatype>Integer</datatype>
+		<arbitrary>true</arbitrary>
+		<primary>true</primary>
+		<uniq>true</uniq>
+		<position>1</position>
+		<ent>3</ent>
+	</atribute>
+	<entity>
+		<left>520</left>
+		<top>317</top>
+		<width>76</width>
+		<height>39</height>
+		<id>11</id>
+		<name>Vztah</name>
+		<comment></comment>
+		<constraints></constraints>
+	</entity>
+	<cardinality>
+		<left>478</left>
+		<top>317</top>
+		<width>42</width>
+		<height>29</height>
+		<id>13</id>
+		<name>Vztah</name>
+		<comment></comment>
+		<ent>11</ent>
+		<rel>12</rel>
+		<arbitrary>true</arbitrary>
+		<multi>false</multi>
+		<glue>true</glue>
+	</cardinality>
+	<cardinality>
+		<left>478</left>
+		<top>317</top>
+		<width>42</width>
+		<height>29</height>
+		<id>15</id>
+		<name>Vztah</name>
+		<comment></comment>
+		<ent>11</ent>
+		<rel>14</rel>
+		<arbitrary>true</arbitrary>
+		<multi>false</multi>
+		<glue>true</glue>
+	</cardinality>
+	<relation>
+		<left>641</left>
+		<top>359</top>
+		<width>7</width>
+		<height>7</height>
+		<id>12</id>
+		<name>Role2</name>
+		<comment></comment>
+	</relation>
+	<relation>
+		<left>395</left>
+		<top>351</top>
+		<width>7</width>
+		<height>7</height>
+		<id>14</id>
+		<name>Role1</name>
+		<comment></comment>
+	</relation>
+</schema>
