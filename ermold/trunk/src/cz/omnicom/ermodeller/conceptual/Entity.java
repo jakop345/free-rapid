@@ -413,9 +413,7 @@ public class Entity extends ConceptualConstruct {
         }
         if (isaParent == anEntity)
             return true;
-        if (isaParent != null)
-            return isaParent.haveHigherCombinedParent(anEntity);
-        return false;
+        return isaParent != null && isaParent.haveHigherCombinedParent(anEntity);
     }
 
     /**
@@ -429,9 +427,7 @@ public class Entity extends ConceptualConstruct {
             return false;
         if (isaParent == anEntity)
             return true;
-        if (isaParent != null)
-            return isaParent.haveHigherISAParent(anEntity);
-        return false;
+        return isaParent != null && isaParent.haveHigherISAParent(anEntity);
     }
 
     /**
@@ -624,9 +620,7 @@ public class Entity extends ConceptualConstruct {
         if (anAtribute == null)
             return false;
         Vector primaryKey = getPrimaryKey();
-        if (primaryKey != null)
-            return primaryKey.contains(anAtribute);
-        return false;
+        return primaryKey != null && primaryKey.contains(anAtribute);
     }
 
     /**

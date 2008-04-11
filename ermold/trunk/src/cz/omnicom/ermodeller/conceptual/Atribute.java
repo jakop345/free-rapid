@@ -138,9 +138,7 @@ public class Atribute extends ConceptualObject {
 
     private boolean isMemberOfPrimaryKey() {
         ConceptualConstruct construct = getConstruct();
-        if (construct == null)
-            return false;
-        return construct.isAtributeMemberOfPrimaryKey(this);
+        return construct != null && construct.isAtributeMemberOfPrimaryKey(this);
     }
 
     /**

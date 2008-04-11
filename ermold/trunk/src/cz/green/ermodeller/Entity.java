@@ -1965,8 +1965,7 @@ public class Entity extends ConceptualConstruct {
     }
 
     public boolean isSetAsISAChild() {
-        if (ISAParent != null) return true;
-        return setAsISAChild;
+        return ISAParent != null || setAsISAChild;
     }
 
     public void setSetAsISAChild(boolean setAsISAChild) {

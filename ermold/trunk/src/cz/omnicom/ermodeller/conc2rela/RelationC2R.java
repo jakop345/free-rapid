@@ -436,9 +436,7 @@ public abstract class RelationC2R extends ObjectC2R implements SQLCreateCommandP
      * @return boolean
      */
     protected boolean isPrimaryKeyC2R(UniqueKeyC2R uniqueKeyC2R) {
-        if (getPrimaryKeyC2R() == null)
-            return false;
-        return getPrimaryKeyC2R().isPrimaryKey(uniqueKeyC2R);
+        return getPrimaryKeyC2R() != null && getPrimaryKeyC2R().isPrimaryKey(uniqueKeyC2R);
     }
 
     /**

@@ -146,9 +146,7 @@ public class UniqueKeyC2R extends ElementOfRelationC2R implements SQLConstraintP
      * @return boolean
      */
     public boolean isPrimaryKeyC2R() {
-        if (getRelationC2R() != null)
-            return getRelationC2R().isPrimaryKeyC2R(this);
-        return false;
+        return getRelationC2R() != null && getRelationC2R().isPrimaryKeyC2R(this);
     }
 
     /**

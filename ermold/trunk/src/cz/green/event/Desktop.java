@@ -167,9 +167,7 @@ public class Desktop extends Group implements ContainerDesktop, java.io.Serializ
             if (changeResizeCursor(e.getX(), e.getY()))
                 return true;
         }
-        if (!isIn(x, y))
-            return false;
-        return invokeEventHandler(event);
+        return isIn(x, y) && invokeEventHandler(event);
     }
 
     /**
