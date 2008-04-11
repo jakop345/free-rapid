@@ -2,7 +2,7 @@ package cz.omnicom.ermodeller.conc2rela;
 
 import cz.omnicom.ermodeller.conc2rela.exception.AlreadyContainsExceptionC2R;
 import cz.omnicom.ermodeller.conc2rela.exception.ListExceptionC2R;
-import cz.omnicom.ermodeller.conceptual.Atribute;
+import cz.omnicom.ermodeller.conceptual.beans.Atribute;
 import cz.omnicom.ermodeller.sql.ConstraintSQL;
 import cz.omnicom.ermodeller.sql.UniqueKeySQL;
 import cz.omnicom.ermodeller.sql.interfaces.SQLConstraintProducer;
@@ -23,7 +23,7 @@ public class UniqueKeyC2R extends ElementOfRelationC2R implements SQLConstraintP
     /**
      * Corresponding conceptual unique key.
      *
-     * @see cz.omnicom.ermodeller.conceptual.UniqueKey
+     * @see cz.omnicom.ermodeller.conceptual.beans.UniqueKey
      */
     private Vector conceptualUniqueKey = null;
 

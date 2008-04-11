@@ -4,7 +4,7 @@ import cz.omnicom.ermodeller.conc2obj.ColumnObj;
 import cz.omnicom.ermodeller.conc2obj.ColumnObjectObj;
 import cz.omnicom.ermodeller.conc2obj.ColumnReferenceObj;
 import cz.omnicom.ermodeller.conc2obj.NestedTableStorageObj;
-import cz.omnicom.ermodeller.conceptual.Atribute;
+import cz.omnicom.ermodeller.conceptual.beans.Atribute;
 import cz.omnicom.ermodeller.datatype.DataType;
 import cz.omnicom.ermodeller.sql.ColumnSQL;
 import cz.omnicom.ermodeller.sql.NestedTableStorageSQL;

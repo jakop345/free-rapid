@@ -2,7 +2,7 @@ package cz.omnicom.ermodeller.conc2rela;
 
 import cz.omnicom.ermodeller.conc2rela.exception.AlreadyContainsExceptionC2R;
 import cz.omnicom.ermodeller.conc2rela.exception.ListExceptionC2R;
-import cz.omnicom.ermodeller.conceptual.Cardinality;
+import cz.omnicom.ermodeller.conceptual.beans.Cardinality;
 import cz.omnicom.ermodeller.sql.ConstraintSQL;
 import cz.omnicom.ermodeller.sql.ForeignKeySQL;
 import cz.omnicom.ermodeller.sql.interfaces.SQLConstraintProducer;

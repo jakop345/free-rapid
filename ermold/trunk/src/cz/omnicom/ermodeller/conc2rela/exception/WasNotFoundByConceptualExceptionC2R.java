@@ -1,12 +1,12 @@
 package cz.omnicom.ermodeller.conc2rela.exception;
 
 import cz.omnicom.ermodeller.conc2rela.ObjectC2R;
-import cz.omnicom.ermodeller.conceptual.ConceptualObject;
+import cz.omnicom.ermodeller.conceptual.beans.ConceptualObject;
 
 /**
  * ObjectC2R was not found when finding by ConceptualObject
  *
- * @see cz.omnicom.ermodeller.conceptual.ConceptualObject
+ * @see cz.omnicom.ermodeller.conceptual.beans.ConceptualObject
  * @see cz.omnicom.ermodeller.conc2rela.ObjectC2R
  */
 public class WasNotFoundByConceptualExceptionC2R extends ListByConceptualExceptionC2R {

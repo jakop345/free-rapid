@@ -3,7 +3,7 @@ package cz.omnicom.ermodeller.errorlog;
 /**
  * Unique keys cannot have same names.
  *
- * @see cz.omnicom.ermodeller.conceptual.UniqueKey
+ * @see cz.omnicom.ermodeller.conceptual.beans.UniqueKey
  */
 public class UniqueKeySameNameValidationError extends ConceptualObjectVectorValidationError {
     /**

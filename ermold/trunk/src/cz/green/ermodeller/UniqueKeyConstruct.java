@@ -8,6 +8,8 @@ import cz.green.eventtool.interfaces.Connectable;
 import cz.green.eventtool.interfaces.Connection;
 import cz.green.eventtool.interfaces.ConnectionManager;
 import cz.green.swing.ShowException;
+import cz.omnicom.ermodeller.conceptual.beans.Atribute;
+import cz.omnicom.ermodeller.conceptual.beans.UniqueKey;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,7 +29,7 @@ public class UniqueKeyConstruct extends ConceptualConstructObject {
     /**
      * The model object from the Aleš Kopecký work
      */
-    cz.omnicom.ermodeller.conceptual.UniqueKey model = null;
+    UniqueKey model = null;
 
     /**
      * Determines whether the unique key is primary
@@ -51,7 +53,7 @@ public class UniqueKeyConstruct extends ConceptualConstructObject {
      * @see ConceptualConstructObject#ConceptualConstructObject(cz.green.event.interfaces.Manager , int, int,
      *      int, int)
      */
-    public UniqueKeyConstruct(cz.omnicom.ermodeller.conceptual.UniqueKey uq, EntityConstruct ent,
+    public UniqueKeyConstruct(UniqueKey uq, EntityConstruct ent,
                               Manager manager, int left, int top)
             throws NullPointerException,
             ImpossibleNegativeValueException {
@@ -69,7 +71,7 @@ public class UniqueKeyConstruct extends ConceptualConstructObject {
      */
     public void addAtribute(AtributeConstruct atr) {
         try {
-            model.addAtribute((cz.omnicom.ermodeller.conceptual.Atribute) (atr
+            model.addAtribute((Atribute) (atr
                     .getModel()));
             Connection conn = new ConnectionLine(manager, this, atr);
             ((ConnectionManager) manager).addConnection(conn);
@@ -272,7 +274,7 @@ public class UniqueKeyConstruct extends ConceptualConstructObject {
                 if (conn != null) {
                     try {
                         model
-                                .removeAtribute((cz.omnicom.ermodeller.conceptual.Atribute) (((AtributeConstruct) item)
+                                .removeAtribute((Atribute) (((AtributeConstruct) item)
                                         .getModel()));
                         conn.disconnect();
                     } catch (Throwable x) {
@@ -420,7 +422,7 @@ public class UniqueKeyConstruct extends ConceptualConstructObject {
      */
     public void removeAtribute(AtributeConstruct atr) {
         try {
-            model.addAtribute((cz.omnicom.ermodeller.conceptual.Atribute) (atr
+            model.addAtribute((Atribute) (atr
                     .getModel()));
             Connection conn = new ConnectionLine(manager, this, atr);
             ((ConnectionManager) manager).addConnection(conn);

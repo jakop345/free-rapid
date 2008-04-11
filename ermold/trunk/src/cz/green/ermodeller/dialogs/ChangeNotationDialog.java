@@ -2,6 +2,7 @@ package cz.green.ermodeller.dialogs;
 
 import cz.green.ermodeller.ConceptualConstructItem;
 import cz.green.ermodeller.ERModeller;
+import cz.omnicom.ermodeller.conceptual.beans.Entity;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,7 +24,7 @@ public class ChangeNotationDialog extends JDialog implements java.awt.event.Acti
      * @see cz.omnicom.ermodeller.datatype.DataTypePanel
      */
     private JTextArea DescriptionTA = null;
-    private final cz.omnicom.ermodeller.conceptual.Entity Cent = null;
+    private final Entity Cent = null;
     final JButton OKbutton = new JButton();
     final JButton CancelButton = new JButton();
     final JLabel DecomposeLabel = new JLabel();

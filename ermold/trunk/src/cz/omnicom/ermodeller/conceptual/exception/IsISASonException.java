@@ -1,6 +1,6 @@
 package cz.omnicom.ermodeller.conceptual.exception;
 
-import cz.omnicom.ermodeller.conceptual.Entity;
+import cz.omnicom.ermodeller.conceptual.beans.Entity;
 
 /**
  * The entity is ISA son.

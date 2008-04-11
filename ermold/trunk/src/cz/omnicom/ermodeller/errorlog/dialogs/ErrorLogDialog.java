@@ -1,5 +1,7 @@
 package cz.omnicom.ermodeller.errorlog.dialogs;
 
+import cz.omnicom.ermodeller.conceptual.beans.ConceptualObject;
+import cz.omnicom.ermodeller.conceptual.beans.Schema;
 import cz.omnicom.ermodeller.errorlog.ErrorLogList;
 import cz.omnicom.ermodeller.errorlog.ValidationError;
 import cz.omnicom.ermodeller.icontree.IconNode;
@@ -119,7 +121,7 @@ public class ErrorLogDialog extends JDialog implements java.awt.event.ActionList
         for (Enumeration errors = getErrorLogList().elements(); errors.hasMoreElements();) {
             err = (ValidationError) errors.nextElement();
             for (Enumeration objects = err.getObjects().elements(); objects.hasMoreElements();) {
-                ((cz.omnicom.ermodeller.conceptual.ConceptualObject) objects.nextElement()).addPropertyChangeListener(this);
+                ((ConceptualObject) objects.nextElement()).addPropertyChangeListener(this);
             }
             top.add(err.getSubTree());
         }
@@ -430,7 +432,7 @@ public class ErrorLogDialog extends JDialog implements java.awt.event.ActionList
 
     public void refresh() {
         try {
-            setErrorLogList(((cz.omnicom.ermodeller.conceptual.Schema) desktop.getModel()).checkConsistency());
+            setErrorLogList(((Schema) desktop.getModel()).checkConsistency());
         }
         catch (Exception e) {
             System.out.println(e);

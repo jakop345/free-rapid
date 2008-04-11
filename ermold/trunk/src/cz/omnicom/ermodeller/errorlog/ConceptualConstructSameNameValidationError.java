@@ -3,7 +3,7 @@ package cz.omnicom.ermodeller.errorlog;
 /**
  * Constructs have the same name.
  *
- * @see cz.omnicom.ermodeller.conceptual.ConceptualConstruct
+ * @see cz.omnicom.ermodeller.conceptual.beans.ConceptualConstruct
  */
 public class ConceptualConstructSameNameValidationError extends ConceptualObjectVectorValidationError {
     /**

@@ -11,6 +11,7 @@ import cz.green.eventtool.interfaces.Connection;
 import cz.green.eventtool.interfaces.ConnectionManager;
 import cz.green.eventtool.interfaces.Printable;
 import cz.green.swing.ShowException;
+import cz.omnicom.ermodeller.conceptual.beans.Entity;
 
 import javax.swing.*;
 import java.awt.*;
@@ -90,8 +91,8 @@ public class StrongAddiction extends ConceptualConstructObject {
         try {
             if (ACTUAL_NOTATION == UML)
                 man = parent.getManager();
-            cz.omnicom.ermodeller.conceptual.Entity cPar = (cz.omnicom.ermodeller.conceptual.Entity) parent.getModel();
-            cz.omnicom.ermodeller.conceptual.Entity cChild = (cz.omnicom.ermodeller.conceptual.Entity) child.getModel();
+            Entity cPar = (Entity) parent.getModel();
+            Entity cChild = (Entity) child.getModel();
             cChild.addStrongAddictionParent(cPar);
             StrongAddiction sa = new StrongAddiction(parent, child, man, left, top);
             man.add(sa);
@@ -205,8 +206,8 @@ public class StrongAddiction extends ConceptualConstructObject {
      */
     public void handleRemoveEvent(cz.green.event.RemoveEvent event) {
         try {
-            cz.omnicom.ermodeller.conceptual.Entity Cparent = (cz.omnicom.ermodeller.conceptual.Entity) parent.getModel();
-            cz.omnicom.ermodeller.conceptual.Entity Cchild = (cz.omnicom.ermodeller.conceptual.Entity) child.getModel();
+            Entity Cparent = (Entity) parent.getModel();
+            Entity Cchild = (Entity) child.getModel();
             Cchild.removeStrongAddictionParent(Cparent);
             super.handleRemoveEvent(event);
         } catch (Throwable x) {
@@ -488,9 +489,9 @@ public class StrongAddiction extends ConceptualConstructObject {
      */
     public void reconnectStrongAddictionChild(UniqueKeyConstruct uk) {
         try {
-            cz.omnicom.ermodeller.conceptual.Entity parent = (cz.omnicom.ermodeller.conceptual.Entity) getEntity().getModel();
-            cz.omnicom.ermodeller.conceptual.Entity oldChild = (cz.omnicom.ermodeller.conceptual.Entity) getUniqueKey().getOwner().getModel();
-            cz.omnicom.ermodeller.conceptual.Entity newChild = (cz.omnicom.ermodeller.conceptual.Entity) uk.getOwner().getModel();
+            Entity parent = (Entity) getEntity().getModel();
+            Entity oldChild = (Entity) getUniqueKey().getOwner().getModel();
+            Entity newChild = (Entity) uk.getOwner().getModel();
             oldChild.removeStrongAddictionParent(parent);
             newChild.addStrongAddictionParent(parent);
             Connection c = connectionTo(getUniqueKey());
@@ -513,9 +514,9 @@ public class StrongAddiction extends ConceptualConstructObject {
      */
     public void reconnectStrongAddictionParent(EntityConstruct ent) {
         try {
-            cz.omnicom.ermodeller.conceptual.Entity oldParent = (cz.omnicom.ermodeller.conceptual.Entity) getEntity().getModel();
-            cz.omnicom.ermodeller.conceptual.Entity newParent = (cz.omnicom.ermodeller.conceptual.Entity) ent.getModel();
-            cz.omnicom.ermodeller.conceptual.Entity child = (cz.omnicom.ermodeller.conceptual.Entity) getUniqueKey().getOwner().getModel();
+            Entity oldParent = (Entity) getEntity().getModel();
+            Entity newParent = (Entity) ent.getModel();
+            Entity child = (Entity) getUniqueKey().getOwner().getModel();
             child.removeStrongAddictionParent(oldParent);
             child.addStrongAddictionParent(newParent);
             Connection c = connectionTo(getEntity());
@@ -550,8 +551,8 @@ public class StrongAddiction extends ConceptualConstructObject {
         pw.print("\t\t<height>");
         pw.print(rect[1][1] - rect[1][0]);
         pw.println("</height>");
-        cz.omnicom.ermodeller.conceptual.Entity entPar = (cz.omnicom.ermodeller.conceptual.Entity) parent.getModel();
-        cz.omnicom.ermodeller.conceptual.Entity entChild = (cz.omnicom.ermodeller.conceptual.Entity) child.getModel();
+        Entity entPar = (Entity) parent.getModel();
+        Entity entChild = (Entity) child.getModel();
         pw.println("\t\t<ent>" + entPar.getID() + "</ent>");
         pw.println("\t\t<child>" + entChild.getID() + "</child>");
         pw.println("\t</strong>");

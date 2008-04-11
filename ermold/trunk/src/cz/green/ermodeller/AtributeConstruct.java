@@ -11,6 +11,9 @@ import cz.green.eventtool.ConnectionLine;
 import cz.green.eventtool.interfaces.Connection;
 import cz.green.eventtool.interfaces.ConnectionManager;
 import cz.green.swing.ShowException;
+import cz.omnicom.ermodeller.conceptual.beans.Atribute;
+import cz.omnicom.ermodeller.conceptual.beans.ConceptualObject;
+import cz.omnicom.ermodeller.conceptual.beans.UniqueKey;
 import cz.omnicom.ermodeller.datatype.DataType;
 
 import javax.swing.*;
@@ -32,7 +35,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
     /**
      * The model of the atribute - object from the Aleš Kopecký work.
      */
-    cz.omnicom.ermodeller.conceptual.Atribute model = null;
+    Atribute model = null;
     /**
      * Flag; true - Atribute is first member of Primary key
      */
@@ -55,7 +58,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
      *          Thrown by inherited constructor.
      * @see ConceptualConstructObject#ConceptualConstructObject(cz.green.event.interfaces.Manager ,int,int,int,int)
      */
-    public AtributeConstruct(cz.omnicom.ermodeller.conceptual.Atribute atr, ConceptualConstructItem cc, Manager manager, int left, int top) throws NullPointerException, ImpossibleNegativeValueException {
+    public AtributeConstruct(Atribute atr, ConceptualConstructItem cc, Manager manager, int left, int top) throws NullPointerException, ImpossibleNegativeValueException {
         super(manager, left, top, 50, 50);
         //set model
         this.cc = cc;
@@ -147,12 +150,12 @@ public class AtributeConstruct extends ConceptualConstructObject {
 		addMenuItem(menu, "Add to unique key", "mUKey.gif", this, "createUnique", this, Atribute.class);
 */
         if (ACTUAL_NOTATION != CHEN) {
-//		if (((cz.omnicom.ermodeller.conceptual.Atribute) getModel()).getPosition()>1) 
+//		if (((cz.omnicom.ermodeller.conceptual.beans.Atribute) getModel()).getPosition()>1)
             {
                 addMenuItem(menu, "Move to top", "img/mMoveTop.gif", this, "moveTop");
                 addMenuItem(menu, "Move up", "img/mMoveUp.gif", this, "moveUp");
             }
-//		if (((cz.omnicom.ermodeller.conceptual.Atribute) getModel()).getPosition() < ((Entity) getOwner()).Attribs.size()) 
+//		if (((cz.omnicom.ermodeller.conceptual.beans.Atribute) getModel()).getPosition() < ((Entity) getOwner()).Attribs.size())
             {
                 addMenuItem(menu, "Move down", "img/mMoveDown.gif", this, "moveDown");
                 addMenuItem(menu, "Move to end", "img/mMoveEnd.gif", this, "moveEnd");
@@ -248,14 +251,14 @@ public class AtributeConstruct extends ConceptualConstructObject {
      * Returns the position of atribute in entity
      */
     public int getPosition() {
-        return ((cz.omnicom.ermodeller.conceptual.Atribute) getModel()).getPosition();
+        return ((Atribute) getModel()).getPosition();
     }
 
     /**
      * Sets the position of atribute in entity
      */
     public void setPosition(int position) {
-        ((cz.omnicom.ermodeller.conceptual.Atribute) getModel()).setPosition(position);
+        ((Atribute) getModel()).setPosition(position);
     }
 
     /**
@@ -412,7 +415,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
                 Connection conn = connectionTo(item);
                 if (conn != null) {
                     try {
-                        ((cz.omnicom.ermodeller.conceptual.UniqueKey) (((UniqueKeyConstruct) item).getModel())).removeAtribute(model);
+                        ((UniqueKey) (((UniqueKeyConstruct) item).getModel())).removeAtribute(model);
                         conn.disconnect();
                     } catch (Throwable x) {
                         ShowException d = new ShowException(null, "Error", x, true);
@@ -744,7 +747,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
      * Invoked when some model's property change. Catch changes of the <b>name</b> and <b>arbitrary</b> property.
      */
     public void propertyChange(java.beans.PropertyChangeEvent e) {
-        ((cz.omnicom.ermodeller.conceptual.ConceptualObject) getModel()).setChanged(true);
+        ((ConceptualObject) getModel()).setChanged(true);
         if (e.getPropertyName().equals("dataType")) {
             if (getOwner() instanceof EntityConstruct) {
                 cz.green.event.ResizeRectangle rr = new cz.green.event.ResizeRectangle(

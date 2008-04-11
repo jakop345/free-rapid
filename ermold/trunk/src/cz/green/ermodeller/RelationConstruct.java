@@ -11,7 +11,7 @@ import cz.green.eventtool.ConnectionLine;
 import cz.green.eventtool.interfaces.Connection;
 import cz.green.eventtool.interfaces.ConnectionManager;
 import cz.green.swing.ShowException;
-import cz.omnicom.ermodeller.conceptual.RelationBean;
+import cz.omnicom.ermodeller.conceptual.beans.*;
 import cz.omnicom.ermodeller.conceptual.exception.MustHave2ConnectionsException;
 import cz.omnicom.ermodeller.conceptual.exception.ParameterCannotBeNullException;
 
@@ -30,7 +30,7 @@ public class RelationConstruct extends ConceptualConstructItem {
     /**
      * The model object - entity from Aleš Kopecký work
      */
-    protected RelationBean model = null;
+    protected Relation model = null;
 
     /**
      * Creates relation, counts size to fit the name of the relation.
@@ -46,7 +46,7 @@ public class RelationConstruct extends ConceptualConstructItem {
      *          Thrown by inherited constructor.
      * @see ConceptualConstructItem#ConceptualConstructItem(cz.green.event.interfaces.Manager , int, int, int, int)
      */
-    protected RelationConstruct(RelationBean rel, Manager manager, int left, int top) throws NullPointerException, ImpossibleNegativeValueException {
+    protected RelationConstruct(Relation rel, Manager manager, int left, int top) throws NullPointerException, ImpossibleNegativeValueException {
         super(manager, left, top, 0, 0);
         rel.addPropertyChangeListener(this);
         String name = (model = rel).getName();
@@ -126,9 +126,9 @@ public class RelationConstruct extends ConceptualConstructItem {
         CardinalityConstruct car;
         try {
             //creates new model - cardinality
-            RelationBean cRel = model;
-            cz.omnicom.ermodeller.conceptual.Entity cEnt = (cz.omnicom.ermodeller.conceptual.Entity) (ent.getModel());
-            cz.omnicom.ermodeller.conceptual.Cardinality cCar = cRel.createCardinality(cEnt);
+            Relation cRel = model;
+            Entity cEnt = (Entity) (ent.getModel());
+            Cardinality cCar = cRel.createCardinality(cEnt);
             //creates new view controller - cardinality
 /*		Changed manager from desktop to ENTITY!	
   		Cardinality car = new Cardinality(cCar, manager, left, top);
@@ -215,11 +215,11 @@ public class RelationConstruct extends ConceptualConstructItem {
      * @param top     The y coordinate of the left top point of the new relation.
      * @return The new created relation.
      */
-    static public RelationConstruct createRelation(cz.omnicom.ermodeller.conceptual.Schema schema, Manager manager, int left, int right) {
+    static public RelationConstruct createRelation(Schema schema, Manager manager, int left, int right) {
         try {
             //creates the new DGroup instance
             DGroupTool group = new DGroupTool(manager, left, right, 0, 0);
-            RelationBean cRel = schema.createRelation();
+            Relation cRel = schema.createRelation();
             //creates new relation
             RelationConstruct rel = new RelationConstruct(cRel, manager, left, right);
             group.add(rel);
@@ -242,7 +242,7 @@ public class RelationConstruct extends ConceptualConstructItem {
      * @param top     The y coordinate of the left top point of the new relation.
      * @return The new created relation.
      */
-    static public RelationConstruct createRelation(cz.omnicom.ermodeller.conceptual.Schema schema, Manager manager, int left, int top, int width, int height) {
+    static public RelationConstruct createRelation(Schema schema, Manager manager, int left, int top, int width, int height) {
         RelationConstruct rel;
         rel = createRelation(schema, manager, left, top);
         java.awt.Rectangle r = rel.getBounds();
@@ -464,11 +464,11 @@ public class RelationConstruct extends ConceptualConstructItem {
                     Connection c = ((Connection) e.nextElement());
                     if (c.getOne() instanceof CardinalityConstruct) {
                         car1 = ((CardinalityConstruct) c.getOne());
-                        name = ((cz.omnicom.ermodeller.conceptual.Entity) car1.getEntity().getModel()).getName();
+                        name = ((Entity) car1.getEntity().getModel()).getName();
                     }
                     if (c.getTwo() instanceof CardinalityConstruct) {
                         car1 = ((CardinalityConstruct) c.getTwo());
-                        name = ((cz.omnicom.ermodeller.conceptual.Entity) car1.getEntity().getModel()).getName();
+                        name = ((Entity) car1.getEntity().getModel()).getName();
                     }
                 }
             }
@@ -569,7 +569,7 @@ public class RelationConstruct extends ConceptualConstructItem {
         switch (ACTUAL_NOTATION) {
             case (CHEN):
                 fm = ((FontManager) manager).getReferentFontMetrics();
-                int nameWidth = fm.stringWidth(((RelationBean) getModel()).getName());
+                int nameWidth = fm.stringWidth(((Relation) getModel()).getName());
                 int nameHeight = fm.getAscent();
                 width = 2 * nameWidth + nameHeight;
                 height = 3 * nameHeight;
@@ -708,7 +708,7 @@ public class RelationConstruct extends ConceptualConstructItem {
      * @see ConceptualConstructItem#propertyCHENge(java.beans.PropertyCHENgeEvent);
      */
     public void propertyChange(java.beans.PropertyChangeEvent e) {
-        ((cz.omnicom.ermodeller.conceptual.ConceptualObject) getModel())
+        ((ConceptualObject) getModel())
                 .setChanged(true);
         java.awt.Rectangle r = getBounds();
         if (e.getPropertyName().equals("name")) {
@@ -781,7 +781,7 @@ public class RelationConstruct extends ConceptualConstructItem {
      *          Thrown by model objects.
      */
     public void removeCardinality(CardinalityConstruct car) throws ParameterCannotBeNullException {
-        model.disposeCardinality((cz.omnicom.ermodeller.conceptual.Cardinality) car.getModel());
+        model.disposeCardinality((Cardinality) car.getModel());
     }
 
     /**
@@ -792,7 +792,7 @@ public class RelationConstruct extends ConceptualConstructItem {
     protected EntityConstruct transformToEntity(Manager man) {
         int[][] r = getRect();
         EntityConstruct ent = EntityConstruct.createEntity(model.getSchema(), man, r[0][0], r[1][0], null);
-        ((cz.omnicom.ermodeller.conceptual.Entity) ent.getModel()).setName(model.getName());
+        ((Entity) ent.getModel()).setName(model.getName());
         reconnectAllAtributes(ent);
         return ent;
     }

@@ -3,7 +3,7 @@ package cz.omnicom.ermodeller.errorlog;
 /**
  * This type was created by Aleš Kopecký.
  *
- * @see cz.omnicom.ermodeller.conceptual.UniqueKey
+ * @see cz.omnicom.ermodeller.conceptual.beans.UniqueKey
  */
 public class UniqueKeyEqualValidationError extends ConceptualObjectVectorValidationError {
     /**

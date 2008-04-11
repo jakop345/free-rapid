@@ -8,6 +8,7 @@ import cz.green.eventtool.ConnectableWindow;
 import cz.green.eventtool.dialogs.PropertyListDialog;
 import cz.green.util.ActionAdapter;
 import cz.green.util.ParamActionAdapter;
+import cz.omnicom.ermodeller.conceptual.beans.ConceptualObject;
 
 import javax.swing.*;
 import java.awt.*;
@@ -135,7 +136,7 @@ public class ConceptualConstructObject extends ConnectableWindow implements View
      * Returns the conceptual object's ID
      */
     public int getID() {
-        return ((cz.omnicom.ermodeller.conceptual.ConceptualObject) getModel()).getID();
+        return ((ConceptualObject) getModel()).getID();
     }
 
     /**
@@ -253,7 +254,7 @@ public class ConceptualConstructObject extends ConnectableWindow implements View
      */
     public void propEditing(boolean show) {
         if (getModel() != null)
-            PropertyListDialog.setBeanAndEdit(getModel(), ((cz.omnicom.ermodeller.conceptual.ConceptualObject) getModel()).getName(), show);
+            PropertyListDialog.setBeanAndEdit(getModel(), ((ConceptualObject) getModel()).getName(), show);
     }
 
     /**
@@ -268,7 +269,7 @@ public class ConceptualConstructObject extends ConnectableWindow implements View
      * Sets conceptual object's ID
      */
     public void setID(int id) {
-        ((cz.omnicom.ermodeller.conceptual.ConceptualObject) getModel()).setID(id);
+        ((ConceptualObject) getModel()).setID(id);
     }
 
     /**
@@ -289,7 +290,7 @@ public class ConceptualConstructObject extends ConnectableWindow implements View
         pw.print("\t\t<height>");
         pw.print(rect[1][1] - rect[1][0]);
         pw.println("</height>");
-        cz.omnicom.ermodeller.conceptual.ConceptualObject co = (cz.omnicom.ermodeller.conceptual.ConceptualObject) getModel();
+        ConceptualObject co = (ConceptualObject) getModel();
         co.write(pw);
     }
 }

@@ -15,6 +15,7 @@ import cz.green.eventtool.ConnectionLine;
 import cz.green.eventtool.interfaces.Connection;
 import cz.green.eventtool.interfaces.ConnectionManager;
 import cz.green.swing.ShowException;
+import cz.omnicom.ermodeller.conceptual.beans.*;
 import cz.omnicom.ermodeller.conceptual.exception.CannotHavePrimaryKeyException;
 import cz.omnicom.ermodeller.conceptual.exception.CycleWouldAppearException;
 import cz.omnicom.ermodeller.conceptual.exception.IsISASonException;
@@ -44,7 +45,7 @@ public class EntityConstruct extends ConceptualConstructItem {
     /**
      * The model object from the Aleš Kopecký work
      */
-    protected cz.omnicom.ermodeller.conceptual.Entity model = null;
+    protected Entity model = null;
 
     /**
      * The primary unique key of this entity
@@ -110,7 +111,7 @@ public class EntityConstruct extends ConceptualConstructItem {
      *          Thrown by inherited constructor.
      * @see ConceptualConstructItem#ConceptualConstructItem(cz.green.event.interfaces.Manager ,int,int,int,int)
      */
-    protected EntityConstruct(cz.omnicom.ermodeller.conceptual.Entity ent,
+    protected EntityConstruct(Entity ent,
                               Manager manager, int left, int top)
             throws NullPointerException,
             ImpossibleNegativeValueException {
@@ -288,7 +289,7 @@ public class EntityConstruct extends ConceptualConstructItem {
         int width = 60;
         java.awt.FontMetrics fm;
         fm = ((FontManager) manager).getReferentFontMetrics();
-        int nameWidth = fm.stringWidth(((cz.omnicom.ermodeller.conceptual.Entity) getModel()).getName());
+        int nameWidth = fm.stringWidth(((Entity) getModel()).getName());
         if (nameWidth > width)
             width = nameWidth;
         switch (ACTUAL_NOTATION) {
@@ -307,7 +308,7 @@ public class EntityConstruct extends ConceptualConstructItem {
                     AtributeConstruct a = getAtributes().get(i);
                     int x = a.getBounds().width +
                             fm.stringWidth(": ") +
-                            fm.stringWidth(((cz.omnicom.ermodeller.conceptual.Atribute) a.getModel()).getDataType().toDescriptionString());
+                            fm.stringWidth(((Atribute) a.getModel()).getDataType().toDescriptionString());
                     if (x > width) width = x;
                 }
                 break;
@@ -526,7 +527,7 @@ public class EntityConstruct extends ConceptualConstructItem {
      * @return The new created entity.
      */
     static public EntityConstruct createEntity(
-            cz.omnicom.ermodeller.conceptual.Schema schema,
+            Schema schema,
             Manager manager, int left, int top, int width, int height, EntityConstruct old) {
         EntityConstruct ent;
         ent = createEntity(schema, manager, left, top, old);
@@ -553,12 +554,12 @@ public class EntityConstruct extends ConceptualConstructItem {
      * @return The new created entity.
      */
     static public EntityConstruct createEntity(
-            cz.omnicom.ermodeller.conceptual.Schema schema,
+            Schema schema,
             Manager manager, int left, int top, EntityConstruct old) {
         try {
             // creates the new DGroup instance
             DGroupTool group = new DGroupTool(manager, left, top, 0, 0);
-            cz.omnicom.ermodeller.conceptual.Entity cEnt = schema
+            Entity cEnt = schema
                     .createEntity();
             // creates new entity
             EntityConstruct ent = new EntityConstruct(cEnt, manager, left, top);
@@ -648,7 +649,7 @@ public class EntityConstruct extends ConceptualConstructItem {
      */
     /*	public void editConstraints() {
             if (constDialog == null)
-                constDialog = new ConstraintsDialog(null, (cz.omnicom.ermodeller.conceptual.Entity) getModel());
+                constDialog = new ConstraintsDialog(null, (cz.omnicom.ermodeller.conceptual.beans.Entity) getModel());
             if (getModel() != null) constDialog.setVisible(true);
         }
     */
@@ -670,8 +671,8 @@ public class EntityConstruct extends ConceptualConstructItem {
     public UniqueKeyConstruct createUniqueKey(int left, int top) {
         try {
             // create model - unique key
-            cz.omnicom.ermodeller.conceptual.Entity cc = (cz.omnicom.ermodeller.conceptual.Entity) getModel();
-            cz.omnicom.ermodeller.conceptual.UniqueKey cUq = cc
+            Entity cc = (Entity) getModel();
+            UniqueKey cUq = cc
                     .createUniqueKey();
             // create unique key
             UniqueKeyConstruct uq = new UniqueKeyConstruct(cUq, this, manager, left, top);
@@ -705,9 +706,9 @@ public class EntityConstruct extends ConceptualConstructItem {
                 p = ent.getAbsoluteCenter(rel);
                 // create new cardinalities
                 CardinalityConstruct car = rel.createCardinality(ent, man, p.x, p.y);
-                ((cz.omnicom.ermodeller.conceptual.Cardinality) car.getModel())
+                ((Cardinality) car.getModel())
                         .setArbitrary(true);
-                ((cz.omnicom.ermodeller.conceptual.Cardinality) car.getModel())
+                ((Cardinality) car.getModel())
                         .setMultiCardinality(false);
                 car.handleMoveEvent(new MoveEvent(car.getBounds().x, car.getBounds().y, -car.getBounds().width / 2, -car.getBounds().height / 2, null));
                 if (ACTUAL_NOTATION != ConceptualConstructItem.CHEN) {
@@ -716,9 +717,9 @@ public class EntityConstruct extends ConceptualConstructItem {
                 }
                 p = getAbsoluteCenter(rel);
                 car = rel.createCardinality(this, man, p.x, p.y);
-                ((cz.omnicom.ermodeller.conceptual.Cardinality) car.getModel())
+                ((Cardinality) car.getModel())
                         .setArbitrary(true);
-                ((cz.omnicom.ermodeller.conceptual.Cardinality) car.getModel())
+                ((Cardinality) car.getModel())
                         .setMultiCardinality(false);
                 car.handleMoveEvent(new MoveEvent(car.getBounds().x, car.getBounds().y, -car.getBounds().width / 2, -car.getBounds().height / 2, null));
                 if (ACTUAL_NOTATION != ConceptualConstructItem.CHEN) {
@@ -920,11 +921,11 @@ public class EntityConstruct extends ConceptualConstructItem {
                     Connection c = ((Connection) e.nextElement());
                     if (c.getOne() instanceof CardinalityConstruct) {
                         car1 = ((CardinalityConstruct) c.getOne());
-                        name = ((cz.omnicom.ermodeller.conceptual.Entity) car1.getEntity().getModel()).getName();
+                        name = ((Entity) car1.getEntity().getModel()).getName();
                     }
                     if (c.getTwo() instanceof CardinalityConstruct) {
                         car1 = ((CardinalityConstruct) c.getTwo());
-                        name = ((cz.omnicom.ermodeller.conceptual.Entity) car1.getEntity().getModel()).getName();
+                        name = ((Entity) car1.getEntity().getModel()).getName();
                     }
                 }
             }
@@ -1438,7 +1439,7 @@ public class EntityConstruct extends ConceptualConstructItem {
      * @see ConceptualConstructItem#propertyChange(java.beans.PropertyChangeEvent);
      */
     public void propertyChange(java.beans.PropertyChangeEvent e) {
-        ((cz.omnicom.ermodeller.conceptual.ConceptualObject) getModel())
+        ((ConceptualObject) getModel())
                 .setChanged(true);
         java.awt.Rectangle r = getBounds();
         if (e.getPropertyName().equals("name") ||
@@ -1699,8 +1700,8 @@ public class EntityConstruct extends ConceptualConstructItem {
     /*	public void removeUniqueKey(UniqueKey uk)
                 throws ParameterCannotBeNullException, WasNotFoundException,
                 IsStrongAddictedException {
-            cz.omnicom.ermodeller.conceptual.Entity cCc = (cz.omnicom.ermodeller.conceptual.Entity) getModel();
-            cCc.disposeUniqueKey((cz.omnicom.ermodeller.conceptual.UniqueKey) uk
+            cz.omnicom.ermodeller.conceptual.beans.Entity cCc = (cz.omnicom.ermodeller.conceptual.beans.Entity) getModel();
+            cCc.disposeUniqueKey((cz.omnicom.ermodeller.conceptual.beans.UniqueKey) uk
                     .getModel());
         }
     */
@@ -1878,7 +1879,7 @@ public class EntityConstruct extends ConceptualConstructItem {
         if (ISAParent != null) {
             throw new IsISASonException(model);
         }
-        model.setISAParent((cz.omnicom.ermodeller.conceptual.Entity) ent
+        model.setISAParent((Entity) ent
                 .getModel());
         int[][] source = getRect();
         int dx = x - source[0][0], dy = y - source[1][0];
@@ -1975,7 +1976,7 @@ public class EntityConstruct extends ConceptualConstructItem {
         this.setAsISAChild = setAsISAChild;
     }
 
-    public void setModel(cz.omnicom.ermodeller.conceptual.Entity model) {
+    public void setModel(Entity model) {
         this.model = model;
     }
 

@@ -8,6 +8,8 @@ import cz.green.eventtool.ConnectionLine;
 import cz.green.eventtool.interfaces.Connection;
 import cz.green.eventtool.interfaces.ConnectionManager;
 import cz.green.swing.ShowException;
+import cz.omnicom.ermodeller.conceptual.beans.Atribute;
+import cz.omnicom.ermodeller.conceptual.beans.ConceptualConstruct;
 import cz.omnicom.ermodeller.conceptual.exception.ParameterCannotBeNullException;
 import cz.omnicom.ermodeller.conceptual.exception.WasNotFoundException;
 
@@ -69,8 +71,8 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
     public AtributeConstruct createAtribute(int left, int top) {
         try {
             //create model - atribute
-            cz.omnicom.ermodeller.conceptual.ConceptualConstruct cCc = (cz.omnicom.ermodeller.conceptual.ConceptualConstruct) getModel();
-            cz.omnicom.ermodeller.conceptual.Atribute cAtr = cCc.createAtribute();
+            ConceptualConstruct cCc = (ConceptualConstruct) getModel();
+            Atribute cAtr = cCc.createAtribute();
             //create atribute (view-controller)
             AtributeConstruct atr = new AtributeConstruct(cAtr, this, manager, left, top);
             manager.add(atr);
@@ -311,15 +313,15 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
                 return;
             }
             ConceptualConstructItem ccFrom = atr.getOwner();
-            cz.omnicom.ermodeller.conceptual.ConceptualConstruct cCcFrom = (cz.omnicom.ermodeller.conceptual.ConceptualConstruct) (ccFrom.getModel());
-            cz.omnicom.ermodeller.conceptual.Atribute cAtr = (cz.omnicom.ermodeller.conceptual.Atribute) (atr.getModel());
+            ConceptualConstruct cCcFrom = (ConceptualConstruct) (ccFrom.getModel());
+            Atribute cAtr = (Atribute) (atr.getModel());
             if (ccFrom instanceof EntityConstruct)
-//			if(((cz.omnicom.ermodeller.conceptual.Entity)((Entity) ccFrom).getModel()).isPrimary())
-                if (((cz.omnicom.ermodeller.conceptual.Atribute) atr.getModel()).isPrimary())
+//			if(((cz.omnicom.ermodeller.conceptual.beans.Entity)((Entity) ccFrom).getModel()).isPrimary())
+                if (((Atribute) atr.getModel()).isPrimary())
                     atr.setPrimary(false);
             atr.moveEnd();
             ccFrom.Attribs.removeElement(atr);
-            ((cz.omnicom.ermodeller.conceptual.ConceptualConstruct) getModel()).moveAtribute(cCcFrom, cAtr);
+            ((ConceptualConstruct) getModel()).moveAtribute(cCcFrom, cAtr);
             //remove view-controller from the old manager
             atr.removeAtribute(new cz.green.event.RemoveEvent(0, 0, null));
 //atr.handleRemoveEvent(new cz.green.event.RemoveEvent(0, 0, null));
@@ -350,8 +352,8 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
      *          Thrown by model object.
      */
     public void removeAtribute(AtributeConstruct atr) throws ParameterCannotBeNullException, WasNotFoundException {
-        cz.omnicom.ermodeller.conceptual.ConceptualConstruct cCc = (cz.omnicom.ermodeller.conceptual.ConceptualConstruct) getModel();
-        cCc.disposeAtribute((cz.omnicom.ermodeller.conceptual.Atribute) atr.getModel());
+        ConceptualConstruct cCc = (ConceptualConstruct) getModel();
+        cCc.disposeAtribute((Atribute) atr.getModel());
     }
 
     /**

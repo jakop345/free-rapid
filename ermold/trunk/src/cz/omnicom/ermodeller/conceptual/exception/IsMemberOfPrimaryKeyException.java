@@ -1,6 +1,6 @@
 package cz.omnicom.ermodeller.conceptual.exception;
 
-import cz.omnicom.ermodeller.conceptual.Atribute;
+import cz.omnicom.ermodeller.conceptual.beans.Atribute;
 
 /**
  * The atribute is member of primary key.

@@ -14,7 +14,7 @@ import cz.green.swing.ShowException;
 import cz.green.util.ActionAdapter;
 import cz.green.util.ParamActionAdapter;
 import cz.omnicom.ermodeller.conc2obj.ObjDialog;
-import cz.omnicom.ermodeller.conceptual.RelationBean;
+import cz.omnicom.ermodeller.conceptual.beans.*;
 import cz.omnicom.ermodeller.datatype.*;
 import cz.omnicom.ermodeller.errorlog.ConceptualObjectVectorValidationError;
 import cz.omnicom.ermodeller.errorlog.ErrorLogList;
@@ -295,9 +295,9 @@ public class ERModeller extends JFrame implements
      * Shows all conflicts in the schema
      */
     public void conflicts() {
-        cz.omnicom.ermodeller.conceptual.Schema schema;
+        Schema schema;
         Desktop d = (Desktop) getPlace().getDesktop();
-        schema = (cz.omnicom.ermodeller.conceptual.Schema) d.getModel();
+        schema = (Schema) d.getModel();
         if (schema.getComposeID() > schema.getID()) {//?????????
             conflictsDialog.setID(0);
             conflictsDialog.setDesktop(d);
@@ -362,7 +362,7 @@ public class ERModeller extends JFrame implements
         try {
             if (getPlace().getDesktop() instanceof Desktop) {
                 cz.omnicom.ermodeller.conc2rela.SchemaC2R schemaC2R;
-                cz.omnicom.ermodeller.conceptual.Schema model = (cz.omnicom.ermodeller.conceptual.Schema) ((Desktop) getPlace()
+                Schema model = (Schema) ((Desktop) getPlace()
                         .getDesktop()).getModel();
                 ErrorLogList list = model.checkConsistency();
                 conflictsDialog.setErrorLogList(list);
@@ -419,7 +419,7 @@ public class ERModeller extends JFrame implements
 
             if (getPlace().getDesktop() instanceof Desktop) {
                 cz.omnicom.ermodeller.conc2rela.SchemaC2R schemaC2R;
-                cz.omnicom.ermodeller.conceptual.Schema model = (cz.omnicom.ermodeller.conceptual.Schema) ((Desktop) getPlace()
+                Schema model = (Schema) ((Desktop) getPlace()
                         .getDesktop()).getModel();
                 ErrorLogList list = model.checkConsistency();
                 conflictsDialog.setErrorLogList(list);
@@ -840,7 +840,7 @@ public class ERModeller extends JFrame implements
     public void check() {
         try {
             if (getPlace().getDesktop() instanceof Desktop) {
-                cz.omnicom.ermodeller.conceptual.Schema model = (cz.omnicom.ermodeller.conceptual.Schema) ((Desktop) getPlace()
+                Schema model = (Schema) ((Desktop) getPlace()
                         .getDesktop()).getModel();
                 errDialog.setErrorLogList(model.checkConsistency());
             }
@@ -910,7 +910,7 @@ public class ERModeller extends JFrame implements
      */
     public boolean isChanged() {
         Desktop d = (Desktop) (getPlace().getDesktop());
-        return ((cz.omnicom.ermodeller.conceptual.Schema) d.getModel())
+        return ((Schema) d.getModel())
                 .isChanged() || changed || typeEditor.isChanged();
     }
 
@@ -1098,13 +1098,13 @@ public class ERModeller extends JFrame implements
         AtributeConstruct atr;
         CardinalityConstruct car;
         UniqueKeyConstruct uni;
-        cz.omnicom.ermodeller.conceptual.ConceptualObject coM;
-        cz.omnicom.ermodeller.conceptual.Atribute atrM;
-        cz.omnicom.ermodeller.conceptual.ConceptualConstruct ccM;
-        cz.omnicom.ermodeller.conceptual.Entity entM;
-        cz.omnicom.ermodeller.conceptual.Schema schemaM;
-        cz.omnicom.ermodeller.conceptual.Cardinality carM;
-        cz.omnicom.ermodeller.conceptual.UniqueKey uniM;
+        ConceptualObject coM;
+        Atribute atrM;
+        ConceptualConstruct ccM;
+        Entity entM;
+        Schema schemaM;
+        Cardinality carM;
+        UniqueKey uniM;
         cz.omnicom.ermodeller.datatype.DataType dt;
         ConceptualConstructItem cc;
         int schemaID;
@@ -1115,7 +1115,7 @@ public class ERModeller extends JFrame implements
             ERDocument erdoc = new ERDocument(doc);
             if (!erdoc.setElements("schema"))
                 return "";
-            schemaM = (cz.omnicom.ermodeller.conceptual.Schema) d.getModel();
+            schemaM = (Schema) d.getModel();
             if (schemaM.getID() > 0) {
                 int[] r = d.getHighestRect();
                 ll = r[0] + 10;
@@ -1156,7 +1156,7 @@ public class ERModeller extends JFrame implements
                     ent = d.createEntity(l, t, w, h, null);
                     ent.setID(id
                             + new Integer(erdoc.getValue("id")));
-                    entM = (cz.omnicom.ermodeller.conceptual.Entity) ent
+                    entM = (Entity) ent
                             .getModel();
                     s = erdoc.getValue("name");
                     if (s == null)
@@ -1189,7 +1189,7 @@ public class ERModeller extends JFrame implements
                     rel = d.createRelation(l, t, w, h);
                     rel.setID(id
                             + new Integer(erdoc.getValue("id")));
-                    coM = (RelationBean) rel
+                    coM = (Relation) rel
                             .getModel();
                     s = erdoc.getValue("name");
                     if (s == null)
@@ -1214,7 +1214,7 @@ public class ERModeller extends JFrame implements
                     atr = cc.createAtribute(l, t);
                     atr.setID(id
                             + new Integer(erdoc.getValue("id")));
-                    atrM = (cz.omnicom.ermodeller.conceptual.Atribute) atr
+                    atrM = (Atribute) atr
                             .getModel();
                     attrs.addElement(atr.getModel());
                     s = erdoc.getValue("name");
@@ -1249,7 +1249,7 @@ public class ERModeller extends JFrame implements
                     car = rel.createCardinality(ent, d, l, t);
                     car.setID(id
                             + new Integer(erdoc.getValue("id")));
-                    carM = (cz.omnicom.ermodeller.conceptual.Cardinality) car
+                    carM = (Cardinality) car
                             .getModel();
                     s = erdoc.getValue("name");
                     if (s == null)
@@ -1273,12 +1273,12 @@ public class ERModeller extends JFrame implements
                     l = ll + new Integer(erdoc.getValue("left"));
                     ent = d.getEntity(id
                             + new Integer(erdoc.getValue("ent")));
-                    ccM = (cz.omnicom.ermodeller.conceptual.Entity) ent
+                    ccM = (Entity) ent
                             .getModel();
                     uni = ent.createUniqueKey(l, t);
                     uni.setID(id
                             + new Integer(erdoc.getValue("id")));
-                    uniM = (cz.omnicom.ermodeller.conceptual.UniqueKey) uni
+                    uniM = (UniqueKey) uni
                             .getModel();
                     s = erdoc.getValue("name");
                     if (s == null)
@@ -1311,7 +1311,7 @@ public class ERModeller extends JFrame implements
             schemaM.setID(schemaID);
             // System.out.println(schemaM.getID());
             for (int j = 0; j < attrs.size(); j++)
-                ((cz.omnicom.ermodeller.conceptual.Atribute) attrs.get(j)).setPosition(attrsPos.get(j));
+                ((Atribute) attrs.get(j)).setPosition(attrsPos.get(j));
             Vector v = d.getAllEntities();
             for (int j = 0; j < v.size(); j++)
                 ((EntityConstruct) v.get(j)).recalculatePositionsOfAtributes();
@@ -1365,13 +1365,13 @@ public class ERModeller extends JFrame implements
         AtributeConstruct atr;
         CardinalityConstruct car;
         UniqueKeyConstruct uni;
-        cz.omnicom.ermodeller.conceptual.ConceptualObject coM;
-        cz.omnicom.ermodeller.conceptual.Atribute atrM;
-        cz.omnicom.ermodeller.conceptual.ConceptualConstruct ccM;
-        cz.omnicom.ermodeller.conceptual.Entity entM;
-        cz.omnicom.ermodeller.conceptual.Schema schemaM;
-        cz.omnicom.ermodeller.conceptual.Cardinality carM;
-        cz.omnicom.ermodeller.conceptual.UniqueKey uniM;
+        ConceptualObject coM;
+        Atribute atrM;
+        ConceptualConstruct ccM;
+        Entity entM;
+        Schema schemaM;
+        Cardinality carM;
+        UniqueKey uniM;
         cz.omnicom.ermodeller.datatype.DataType dt;
         ConceptualConstructItem cc;
         Desktop d;
@@ -1404,7 +1404,7 @@ public class ERModeller extends JFrame implements
                         java.awt.Rectangle rb = place.getBounds();
                         d = new Desktop(place, rb.x, rb.y, rb.width, rb.height);
                         d.addShowErrorListener(place);
-                        id = ((cz.omnicom.ermodeller.conceptual.Schema) ((Desktop) place
+                        id = ((Schema) ((Desktop) place
                                 .getDesktop()).getModel()).createID();
                         id++;
                         if (what == WITH_XML) {
@@ -1424,14 +1424,14 @@ public class ERModeller extends JFrame implements
                         }
                         String prefix = loadDesktop(d, id, doc);
                         if (what == NEW_XML) {
-                            schemaM = (cz.omnicom.ermodeller.conceptual.Schema) d
+                            schemaM = (Schema) d
                                     .getModel();
                             place.addDesktop(d);
                             getPlace().getDesktop();
                             repaint();
                             break;
                         }
-                        schemaM = (cz.omnicom.ermodeller.conceptual.Schema) d
+                        schemaM = (Schema) d
                                 .getModel();
                         ErrorLogList errList = schemaM.checkConsistency();
                         if (errList.size() > 0) {
@@ -1449,7 +1449,7 @@ public class ERModeller extends JFrame implements
                         repaint();
                         ConceptualObjectVectorValidationError errV;
                         ValidationError err;
-                        schemaM = (cz.omnicom.ermodeller.conceptual.Schema) d
+                        schemaM = (Schema) d
                                 .getModel();
                         schemaM.setComposeID(id);
                         conflictsDialog.setPrefix(prefix);
@@ -1713,7 +1713,7 @@ public class ERModeller extends JFrame implements
                 }
             } else {
                 chooser.setCurrentDirectory(new File(AppPrefs.getProperty(AppPrefs.LOAD_STORE_DIR, Consts.DEF_LOAD_STORE_DIR)));
-                String name = ((cz.omnicom.ermodeller.conceptual.Schema) (((Desktop) getPlace()
+                String name = ((Schema) (((Desktop) getPlace()
                         .getDesktop()).getModel())).getName()
                         + ".xml";
                 chooser.setSelectedFile(new java.io.File(name));
@@ -1993,7 +1993,7 @@ public class ERModeller extends JFrame implements
      */
     public void setChanged(boolean newChanged) {
         Desktop d = (Desktop) (getPlace().getDesktop());
-        ((cz.omnicom.ermodeller.conceptual.Schema) d.getModel())
+        ((Schema) d.getModel())
                 .setChanged(newChanged);
         changed = newChanged;
     }

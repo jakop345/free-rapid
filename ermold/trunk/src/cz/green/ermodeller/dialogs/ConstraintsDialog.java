@@ -1,5 +1,7 @@
 package cz.green.ermodeller.dialogs;
 
+import cz.omnicom.ermodeller.conceptual.beans.Entity;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -19,7 +21,7 @@ public class ConstraintsDialog extends JDialog implements java.awt.event.ActionL
      * @see cz.omnicom.ermodeller.datatype.DataTypePanel
      */
     private JTextArea ivjTextArea = null;
-    private cz.omnicom.ermodeller.conceptual.Entity Cent = null;
+    private Entity Cent = null;
     final JButton OKbutton = new JButton();
     final JButton CancelButton = new JButton();
     final JButton ApplyButton = new JButton();
@@ -28,7 +30,7 @@ public class ConstraintsDialog extends JDialog implements java.awt.event.ActionL
      * Constructor
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    public ConstraintsDialog(JFrame owner, cz.omnicom.ermodeller.conceptual.Entity ent) {
+    public ConstraintsDialog(JFrame owner, Entity ent) {
         super(owner, "Constraints Editor");
         initialize();
         this.Cent = ent;

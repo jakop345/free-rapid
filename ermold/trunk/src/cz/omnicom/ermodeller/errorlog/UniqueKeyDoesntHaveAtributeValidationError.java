@@ -1,11 +1,11 @@
 package cz.omnicom.ermodeller.errorlog;
 
-import cz.omnicom.ermodeller.conceptual.UniqueKey;
+import cz.omnicom.ermodeller.conceptual.beans.UniqueKey;
 
 /**
  * Unique key cannot be empty.
  *
- * @see cz.omnicom.ermodeller.conceptual.UniqueKey
+ * @see cz.omnicom.ermodeller.conceptual.beans.UniqueKey
  */
 public class UniqueKeyDoesntHaveAtributeValidationError extends ConceptualObjectValidationError {
     /**

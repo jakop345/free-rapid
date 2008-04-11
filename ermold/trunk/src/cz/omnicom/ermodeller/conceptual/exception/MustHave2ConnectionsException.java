@@ -1,17 +1,17 @@
 package cz.omnicom.ermodeller.conceptual.exception;
 
-import cz.omnicom.ermodeller.conceptual.RelationBean;
+import cz.omnicom.ermodeller.conceptual.beans.Relation;
 
 /**
  * Entity cannot have primary key.
  */
 public class MustHave2ConnectionsException extends ConceptualException {
-    RelationBean relationBean = null;
+    Relation relationBean = null;
 
     /**
      * CannotHavePrimaryKey constructor comment.
      */
-    public MustHave2ConnectionsException(RelationBean aRelationBean) {
+    public MustHave2ConnectionsException(Relation aRelationBean) {
         this.relationBean = aRelationBean;
     }
 

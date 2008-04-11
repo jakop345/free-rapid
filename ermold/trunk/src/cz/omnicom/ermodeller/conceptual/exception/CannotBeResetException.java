@@ -1,7 +1,7 @@
 package cz.omnicom.ermodeller.conceptual.exception;
 
-import cz.omnicom.ermodeller.conceptual.Entity;
-import cz.omnicom.ermodeller.conceptual.UniqueKey;
+import cz.omnicom.ermodeller.conceptual.beans.Entity;
+import cz.omnicom.ermodeller.conceptual.beans.UniqueKey;
 
 /**
  * The unique key does not allow reseting entity property.

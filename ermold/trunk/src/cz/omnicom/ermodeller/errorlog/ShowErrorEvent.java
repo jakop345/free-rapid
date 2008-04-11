@@ -1,6 +1,6 @@
 package cz.omnicom.ermodeller.errorlog;
 
-import cz.omnicom.ermodeller.conceptual.ConceptualObject;
+import cz.omnicom.ermodeller.conceptual.beans.ConceptualObject;
 
 import java.util.Vector;
 

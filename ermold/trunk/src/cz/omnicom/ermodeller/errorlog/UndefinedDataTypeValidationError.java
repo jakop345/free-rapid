@@ -1,13 +1,14 @@
 package cz.omnicom.ermodeller.errorlog;
 
-import cz.omnicom.ermodeller.conceptual.ConceptualObject;
+import cz.omnicom.ermodeller.conceptual.beans.Atribute;
+import cz.omnicom.ermodeller.conceptual.beans.ConceptualObject;
 
 /**
  * Type is not defined
  */
 public class UndefinedDataTypeValidationError extends ConceptualObjectValidationError {
 
-    cz.omnicom.ermodeller.conceptual.Atribute atr = null;
+    Atribute atr = null;
 
     /**
      * constructor comment.
@@ -16,7 +17,7 @@ public class UndefinedDataTypeValidationError extends ConceptualObjectValidation
      */
     public UndefinedDataTypeValidationError(ConceptualObject anObject) {
         super(anObject);
-        atr = (cz.omnicom.ermodeller.conceptual.Atribute) anObject;
+        atr = (Atribute) anObject;
     }
 
     /**

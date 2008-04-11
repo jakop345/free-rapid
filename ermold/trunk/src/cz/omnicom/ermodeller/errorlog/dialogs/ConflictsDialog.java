@@ -1,7 +1,7 @@
 package cz.omnicom.ermodeller.errorlog.dialogs;
 
 import cz.green.ermodeller.*;
-import cz.omnicom.ermodeller.conceptual.RelationBean;
+import cz.omnicom.ermodeller.conceptual.beans.*;
 import cz.omnicom.ermodeller.errorlog.ConceptualObjectVectorValidationError;
 import cz.omnicom.ermodeller.errorlog.ErrorLogList;
 import cz.omnicom.ermodeller.errorlog.ValidationError;
@@ -21,7 +21,7 @@ import java.util.Vector;
 public class ConflictsDialog extends JDialog implements java.awt.event.ActionListener, java.beans.PropertyChangeListener, TreeSelectionListener {
     private JButton ivjCloseButton = null;
     private String prefix = null;
-    private cz.omnicom.ermodeller.conceptual.ConceptualObject conceptualObject;
+    private ConceptualObject conceptualObject;
     private cz.green.ermodeller.Desktop desktop;
     private int id = 0;
     private CardLayout cardL;
@@ -92,21 +92,21 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
         EntityConstruct ent;
         RelationConstruct rel;
 
-        if (conceptualObject instanceof cz.omnicom.ermodeller.conceptual.ConceptualConstruct)
+        if (conceptualObject instanceof ConceptualConstruct)
             if (getComposeModel().getSelectedItem().equals("none")) {
                 conceptualObject.setName(getRenameField().getText());
             } else {
                 Object o = getComposeModel().getSelectedItem();
-                if (conceptualObject instanceof cz.omnicom.ermodeller.conceptual.Entity) {
-                    ent = desktop.getEntity(((cz.omnicom.ermodeller.conceptual.ConceptualConstruct) o).getID());
+                if (conceptualObject instanceof Entity) {
+                    ent = desktop.getEntity(((ConceptualConstruct) o).getID());
                     //ent.composeEntity(desktop.getEntity(i),new cz.green.ermodeller.DragOverEvent(0,0,(cz.green.event.interfaces.Item)desktop.getEntity(i),desktop.getPaintPlace()));
-                    desktop.composeEntity((cz.omnicom.ermodeller.conceptual.Entity) conceptualObject, (cz.omnicom.ermodeller.conceptual.Entity) o);
+                    desktop.composeEntity((Entity) conceptualObject, (Entity) o);
                 } else {
-                    rel = desktop.getRelation(((cz.omnicom.ermodeller.conceptual.ConceptualConstruct) o).getID());
-                    desktop.composeRelation((RelationBean) conceptualObject, (RelationBean) o);
+                    rel = desktop.getRelation(((ConceptualConstruct) o).getID());
+                    desktop.composeRelation((Relation) conceptualObject, (Relation) o);
                 }
             }
-        if (conceptualObject instanceof cz.omnicom.ermodeller.conceptual.Atribute)
+        if (conceptualObject instanceof Atribute)
             conceptualObject.setName(getRenameField1().getText());
     }
 
@@ -211,7 +211,7 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
         for (Enumeration errors = getErrorLogList().elements(); errors.hasMoreElements();) {
             err = (ValidationError) errors.nextElement();
             for (Enumeration objects = err.getObjects().elements(); objects.hasMoreElements();) {
-                ((cz.omnicom.ermodeller.conceptual.ConceptualObject) objects.nextElement()).addPropertyChangeListener(this);
+                ((ConceptualObject) objects.nextElement()).addPropertyChangeListener(this);
             }
             top.add(err.getSubTree());
         }
@@ -1423,7 +1423,7 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
         if (desktop == null)
             System.out.println("desktop je null");
         try {
-            setErrorLogList(((cz.omnicom.ermodeller.conceptual.Schema) desktop.getModel()).checkConsistency());
+            setErrorLogList(((Schema) desktop.getModel()).checkConsistency());
         }
         catch (Exception e) {
             System.out.println(e);
@@ -1439,23 +1439,23 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
         i = conceptualObject.getID();
         ConceptualConstructItem cc;
         ConceptualConstructObject co;
-        cz.omnicom.ermodeller.conceptual.ConceptualConstruct ccM;
+        ConceptualConstruct ccM;
         EntityConstruct ent;
 
         try {
-            if (conceptualObject instanceof cz.omnicom.ermodeller.conceptual.Entity) {
+            if (conceptualObject instanceof Entity) {
                 cc = desktop.getEntity(i);
                 cc.handleRemoveEvent(new cz.green.event.RemoveEvent(0, 0, desktop.getPaintPlace()));
             }
-            if (conceptualObject instanceof RelationBean) {
+            if (conceptualObject instanceof Relation) {
                 cc = desktop.getRelation(i);
                 cc.handleRemoveEvent(new cz.green.event.RemoveEvent(0, 0, desktop.getPaintPlace()));
             }
-            if (conceptualObject instanceof cz.omnicom.ermodeller.conceptual.Cardinality) {
+            if (conceptualObject instanceof Cardinality) {
                 co = desktop.getConceptualObject(i);
                 co.handleRemoveEvent(new cz.green.event.RemoveEvent(0, 0, desktop.getPaintPlace()));
             }
-            if (conceptualObject instanceof cz.omnicom.ermodeller.conceptual.Atribute) {
+            if (conceptualObject instanceof Atribute) {
                 AtributeConstruct atr = desktop.getAtribute(i);
                 cc = atr.getOwner();
                 atr.removeAtribute(new cz.green.event.RemoveEvent(0, 0, desktop.getPaintPlace()));
@@ -1471,7 +1471,7 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
         ConceptualObjectVectorValidationError errV;
         ValidationError err;
         Vector objList;
-        cz.omnicom.ermodeller.conceptual.ConceptualObject co;
+        ConceptualObject co;
         int i, j, objID;
         String name;
         Object obj;
@@ -1484,7 +1484,7 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
             err = (ValidationError) obj;
             objList = err.getObjects();
             for (j = 0; j < objList.size(); j++) {
-                co = (cz.omnicom.ermodeller.conceptual.ConceptualObject) objList.get(j);
+                co = (ConceptualObject) objList.get(j);
                 objID = co.getID();
                 if (objID >= id) {
                     name = co.getName();
@@ -1510,7 +1510,7 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
         java.util.Vector objList;
         int cnt = aErrorLogList.size(), i, j;
         boolean compErr;
-        cz.omnicom.ermodeller.conceptual.ConceptualObject co;
+        ConceptualObject co;
 
         // Empties the old error tree
         getRoot().removeAllChildren();
@@ -1522,7 +1522,7 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
             objList = err.getObjects();
             compErr = false;
             for (j = 0; j < objList.size(); j++) {
-                co = (cz.omnicom.ermodeller.conceptual.ConceptualObject) objList.get(j);
+                co = (ConceptualObject) objList.get(j);
                 if (co.getID() >= id)
                     compErr = true;
             }
@@ -1556,8 +1556,8 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
         Object o = tp.getLastPathComponent();
         o = ((DefaultMutableTreeNode) o).getUserObject();
         int cnt = tp.getPathCount(), i;
-        cz.omnicom.ermodeller.conceptual.Schema schema;
-        cz.omnicom.ermodeller.conceptual.ConceptualObject co;
+        Schema schema;
+        ConceptualObject co;
         Vector v;
 
         ivjComposeModel.removeAllElements();
@@ -1571,25 +1571,25 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
                 break;
             case 3:
                 cardL.show(getJPanel1(), "NPanel");
-                conceptualObject = (cz.omnicom.ermodeller.conceptual.ConceptualObject) o;
-                if (conceptualObject instanceof cz.omnicom.ermodeller.conceptual.Cardinality || conceptualObject instanceof cz.omnicom.ermodeller.conceptual.Atribute) {
+                conceptualObject = (ConceptualObject) o;
+                if (conceptualObject instanceof Cardinality || conceptualObject instanceof Atribute) {
                     cardL.show(getJPanel1(), "APanel");
                 }
                 schema = conceptualObject.getSchema();
-                if (conceptualObject instanceof cz.omnicom.ermodeller.conceptual.Entity) {
+                if (conceptualObject instanceof Entity) {
                     cardL.show(getJPanel1(), "CPanel");
                     v = schema.getEntities();
                     for (i = 0; i < v.size(); i++) {
-                        co = (cz.omnicom.ermodeller.conceptual.ConceptualObject) v.get(i);
+                        co = (ConceptualObject) v.get(i);
                         if (co.getID() != conceptualObject.getID())
                             ivjComposeModel.addElement(co);
                     }
                 }
-                if (conceptualObject instanceof RelationBean) {
+                if (conceptualObject instanceof Relation) {
                     cardL.show(getJPanel1(), "CPanel");
                     v = schema.getRelations();
                     for (i = 0; i < v.size(); i++) {
-                        co = (cz.omnicom.ermodeller.conceptual.ConceptualObject) v.get(i);
+                        co = (ConceptualObject) v.get(i);
                         if (co.getID() != conceptualObject.getID())
                             ivjComposeModel.addElement(co);
                     }

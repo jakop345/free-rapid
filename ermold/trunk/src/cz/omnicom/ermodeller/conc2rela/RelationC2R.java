@@ -6,8 +6,8 @@ import cz.omnicom.ermodeller.conc2obj.DropCommandObj;
 import cz.omnicom.ermodeller.conc2obj.NestedTableStorageObj;
 import cz.omnicom.ermodeller.conc2rela.exception.AlreadyContainsExceptionC2R;
 import cz.omnicom.ermodeller.conc2rela.exception.ListExceptionC2R;
-import cz.omnicom.ermodeller.conceptual.Atribute;
-import cz.omnicom.ermodeller.conceptual.ConceptualConstruct;
+import cz.omnicom.ermodeller.conceptual.beans.Atribute;
+import cz.omnicom.ermodeller.conceptual.beans.ConceptualConstruct;
 import cz.omnicom.ermodeller.datatype.NestedTableDataType;
 import cz.omnicom.ermodeller.datatype.ObjectDataType;
 import cz.omnicom.ermodeller.datatype.UserDefinedDataType;
@@ -50,7 +50,7 @@ public abstract class RelationC2R extends ObjectC2R implements SQLCreateCommandP
     /**
      * Corresponding conceptual construct (entity or relation)
      *
-     * @see cz.omnicom.ermodeller.conceptual.ConceptualConstruct
+     * @see cz.omnicom.ermodeller.conceptual.beans.ConceptualConstruct
      */
     private ConceptualConstruct conceptualConstruct = null;
     /**
@@ -73,7 +73,7 @@ public abstract class RelationC2R extends ObjectC2R implements SQLCreateCommandP
      *
      * @param aSchemaC2R           owner schema
      * @param aConceptualConstruct corresponding conceptual construct
-     * @see cz.omnicom.ermodeller.conceptual.ConceptualConstruct
+     * @see cz.omnicom.ermodeller.conceptual.beans.ConceptualConstruct
      */
     public RelationC2R(SchemaC2R aSchemaC2R, ConceptualConstruct aConceptualConstruct) {
         super(new NameC2R(aConceptualConstruct.getName()), aSchemaC2R);

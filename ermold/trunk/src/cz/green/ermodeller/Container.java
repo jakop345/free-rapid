@@ -14,6 +14,7 @@ import cz.green.event.interfaces.ContainerDesktop;
 import cz.green.event.interfaces.Item;
 import cz.green.eventtool.ContainerToolComponent;
 import cz.green.eventtool.Window;
+import cz.omnicom.ermodeller.conceptual.beans.Entity;
 import cz.omnicom.ermodeller.errorlog.ShowErrorEvent;
 import cz.omnicom.ermodeller.errorlog.interfaces.ShowErrorListener;
 
@@ -386,7 +387,7 @@ public class Container extends ContainerToolComponent implements ModeSwitcher, F
      */
     public void editConstraints(EntityConstruct ent) {
         if (constDialog == null)
-            constDialog = new ConstraintsDialog(((Desktop) getDesktop()).ERMFrame, (cz.omnicom.ermodeller.conceptual.Entity) ent.getModel());
+            constDialog = new ConstraintsDialog(((Desktop) getDesktop()).ERMFrame, (Entity) ent.getModel());
         constDialog.setLocationRelativeTo(((Desktop) getDesktop()).ERMFrame);
         if (ent.getModel() != null) constDialog.setVisible(true);
     }

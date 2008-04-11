@@ -1,15 +1,15 @@
 package cz.omnicom.ermodeller.conc2rela;
 
 import cz.omnicom.ermodeller.conc2rela.exception.AlreadyContainsExceptionC2R;
-import cz.omnicom.ermodeller.conceptual.Atribute;
-import cz.omnicom.ermodeller.conceptual.Entity;
+import cz.omnicom.ermodeller.conceptual.beans.Atribute;
+import cz.omnicom.ermodeller.conceptual.beans.Entity;
 
 import java.util.Vector;
 
 /**
  * Superclass of all relations created from conceptual entities.
  *
- * @see cz.omnicom.ermodeller.conceptual.Entity
+ * @see cz.omnicom.ermodeller.conceptual.beans.Entity
  */
 public abstract class EntC2R extends RelationC2R {
     /**
@@ -29,7 +29,7 @@ public abstract class EntC2R extends RelationC2R {
      *
      * @throws cz.omnicom.ermodeller.conc2rela.AlreadyContainsExceptionC2R
      *
-     * @see cz.omnicom.ermodeller.conceptual.Entity
+     * @see cz.omnicom.ermodeller.conceptual.beans.Entity
      */
     public EntC2R(SchemaC2R aSchemaC2R, Entity aConceptualEntity) throws AlreadyContainsExceptionC2R {
         super(aSchemaC2R, aConceptualEntity);

@@ -3,7 +3,7 @@ package cz.omnicom.ermodeller.errorlog;
 /**
  * Unique key cannot be subset of another unique key.
  *
- * @see cz.omnicom.ermodeller.conceptual.UniqueKey
+ * @see cz.omnicom.ermodeller.conceptual.beans.UniqueKey
  */
 public class UniqueKeySubsetValidationError extends ConceptualObjectVectorValidationError {
     /**

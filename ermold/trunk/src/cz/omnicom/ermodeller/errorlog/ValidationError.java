@@ -1,7 +1,7 @@
 package cz.omnicom.ermodeller.errorlog;
 
-import cz.omnicom.ermodeller.conceptual.ConceptualObject;
-import cz.omnicom.ermodeller.conceptual.Schema;
+import cz.omnicom.ermodeller.conceptual.beans.ConceptualObject;
+import cz.omnicom.ermodeller.conceptual.beans.Schema;
 import cz.omnicom.ermodeller.errorlog.interfaces.ShowErrorListener;
 import cz.omnicom.ermodeller.icontree.IconNode;
 
@@ -14,7 +14,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
  * Superclass of errors which can be found in conceptual schema
  * while checking.
  *
- * @see cz.omnicom.ermodeller.conceptual.Schema#valid
+ * @see cz.omnicom.ermodeller.conceptual.beans.Schema#valid
  */
 public abstract class ValidationError implements TreeSelectionListener {
 
@@ -87,7 +87,7 @@ public abstract class ValidationError implements TreeSelectionListener {
         /**
          * Object that holder holds.
          *
-         * @see cz.omnicom.ermodeller.conceptual.ConceptualObject
+         * @see cz.omnicom.ermodeller.conceptual.beans.ConceptualObject
          */
         private final ConceptualObject conceptualObject;
 
@@ -95,7 +95,7 @@ public abstract class ValidationError implements TreeSelectionListener {
          * Invalidates the holder and changes Icon of the tree node to invalid icon.
          *
          * @param anObject invalidates only if the anObject is the held one
-         * @see cz.omnicom.ermodeller.conceptual.ConceptualObject
+         * @see cz.omnicom.ermodeller.conceptual.beans.ConceptualObject
          */
         protected void invalidate(Object anObject) {
             if (anObject == this.conceptualObject) {

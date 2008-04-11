@@ -1,12 +1,12 @@
 package cz.omnicom.ermodeller.errorlog;
 
-import cz.omnicom.ermodeller.conceptual.ConceptualConstruct;
+import cz.omnicom.ermodeller.conceptual.beans.ConceptualConstruct;
 
 /**
  * Construct shoul be connected to at least 2 cardinalities.
  *
- * @see cz.omnicom.ermodeller.conceptual.ConceptualConstruct
- * @see cz.omnicom.ermodeller.conceptual.Cardinality
+ * @see cz.omnicom.ermodeller.conceptual.beans.ConceptualConstruct
+ * @see cz.omnicom.ermodeller.conceptual.beans.Cardinality
  */
 public class HaveManyCardinalitiesValidationError extends ConceptualObjectValidationError {
     /**

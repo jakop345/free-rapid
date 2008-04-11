@@ -1,7 +1,7 @@
 package cz.omnicom.ermodeller.errorlog;
 
-import cz.omnicom.ermodeller.conceptual.ConceptualObject;
-import cz.omnicom.ermodeller.conceptual.Schema;
+import cz.omnicom.ermodeller.conceptual.beans.ConceptualObject;
+import cz.omnicom.ermodeller.conceptual.beans.Schema;
 import cz.omnicom.ermodeller.errorlog.interfaces.ShowErrorListener;
 
 import javax.swing.event.TreeSelectionEvent;
@@ -10,7 +10,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 /**
  * Superclass of errors, which holds only one conceptual object.
  *
- * @see cz.omnicom.ermodeller.conceptual.ConceptualObject
+ * @see cz.omnicom.ermodeller.conceptual.beans.ConceptualObject
  */
 public abstract class ConceptualObjectValidationError extends ValidationError {
     /**

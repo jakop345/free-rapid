@@ -1,13 +1,13 @@
 package cz.omnicom.ermodeller.conc2rela.exception;
 
 import cz.omnicom.ermodeller.conc2rela.ObjectC2R;
-import cz.omnicom.ermodeller.conceptual.ConceptualObject;
+import cz.omnicom.ermodeller.conceptual.beans.ConceptualObject;
 
 /**
  * Superclass of all exceptions fired by <code>ObjectC2R</code>
  * when operating with <code>ConceptualObject</code>.
  *
- * @see cz.omnicom.ermodeller.conceptual.ConceptualObject
+ * @see cz.omnicom.ermodeller.conceptual.beans.ConceptualObject
  * @see cz.omnicom.ermodeller.conc2rela.ObjectC2R
  */
 public abstract class ListByConceptualExceptionC2R extends ExceptionC2R {

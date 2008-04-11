@@ -1,11 +1,11 @@
 package cz.omnicom.ermodeller.errorlog;
 
-import cz.omnicom.ermodeller.conceptual.ConceptualObject;
+import cz.omnicom.ermodeller.conceptual.beans.ConceptualObject;
 
 /**
  * Object does not have name.
  *
- * @see cz.omnicom.ermodeller.conceptual.ConceptualObject
+ * @see cz.omnicom.ermodeller.conceptual.beans.ConceptualObject
  */
 public class DoesntHaveNameValidationError extends ConceptualObjectValidationError {
     /**

@@ -16,7 +16,7 @@ import cz.green.eventtool.dialogs.PropertyListDialog;
 import cz.green.eventtool.interfaces.Connection;
 import cz.green.util.ActionAdapter;
 import cz.green.util.ParamActionAdapter;
-import cz.omnicom.ermodeller.conceptual.RelationBean;
+import cz.omnicom.ermodeller.conceptual.beans.*;
 import cz.omnicom.ermodeller.errorlog.interfaces.ShowErrorListener;
 import cz.omnicom.ermodeller.typeseditor.UserTypeStorage;
 import cz.omnicom.ermodeller.typeseditor.UserTypeStorageVector;
@@ -33,7 +33,7 @@ public class Desktop extends DesktopTool implements FontManager,
     /**
      * The model - object from Aleš Kopecký work
      */
-    protected cz.omnicom.ermodeller.conceptual.Schema model = null;
+    protected Schema model = null;
     public JFrame ERMFrame;
 
     private transient java.beans.PropertyChangeSupport pcs = null;
@@ -48,7 +48,7 @@ public class Desktop extends DesktopTool implements FontManager,
                    int width, int height)
             throws ImpossibleNegativeValueException {
         super(place, left, top, width, height);
-        model = new cz.omnicom.ermodeller.conceptual.Schema();
+        model = new Schema();
         pcs = new java.beans.PropertyChangeSupport(this);
     }
 
@@ -73,8 +73,8 @@ public class Desktop extends DesktopTool implements FontManager,
     /**
      * Compose entity with..
      */
-    public void composeEntity(cz.omnicom.ermodeller.conceptual.Entity eM1,
-                              cz.omnicom.ermodeller.conceptual.Entity eM2) {
+    public void composeEntity(Entity eM1,
+                              Entity eM2) {
         EntityConstruct e1 = getEntity(eM1.getID()), e2 = getEntity(eM2.getID());
 
         e2.composeEntity(e1, new cz.green.ermodeller.DragOverEvent(0, 0,
@@ -83,21 +83,21 @@ public class Desktop extends DesktopTool implements FontManager,
 
     /**
      */
-    public void composeEntityOld(cz.omnicom.ermodeller.conceptual.Entity e1,
-                                 cz.omnicom.ermodeller.conceptual.Entity e2) {
+    public void composeEntityOld(Entity e1,
+                                 Entity e2) {
         Vector v1 = e1.getAtributes(), v2 = e2.getAtributes();
         int i, j;
-        cz.omnicom.ermodeller.conceptual.Atribute atrM1, atrM2;
+        Atribute atrM1, atrM2;
         AtributeConstruct atr2, atr1;
-        cz.omnicom.ermodeller.conceptual.Entity entM;
+        Entity entM;
         EntityConstruct ent2 = getEntity(e2.getID()), ent1 = getEntity(e1.getID());
 
         for (i = 0; i < v2.size(); i++) {
-            atrM2 = (cz.omnicom.ermodeller.conceptual.Atribute) v2.get(i);
+            atrM2 = (Atribute) v2.get(i);
             atr2 = getAtribute(atrM2.getID());
             atr1 = null;
             for (j = 0; j < v1.size(); j++) {
-                atrM1 = (cz.omnicom.ermodeller.conceptual.Atribute) v1.get(i);
+                atrM1 = (Atribute) v1.get(i);
                 if (atrM1.getName().equals(atrM2.getName())) {
                     atr1 = getAtribute(atrM1.getID());
                 }
@@ -113,8 +113,8 @@ public class Desktop extends DesktopTool implements FontManager,
     /**
      * Compose Relation with
      */
-    public void composeRelation(RelationBean rM1,
-                                RelationBean rM2) {
+    public void composeRelation(Relation rM1,
+                                Relation rM2) {
         RelationConstruct r1 = getRelation(rM1.getID()), r2 = getRelation(rM2.getID());
 
         r2.composeRelation(r1, new cz.green.ermodeller.DragOverEvent(0, 0,
@@ -179,7 +179,7 @@ public class Desktop extends DesktopTool implements FontManager,
                 if ((atr = getAtribute((DGroupTool) item, aid)) != null)
                     return atr;
             } else {
-                id = ((cz.omnicom.ermodeller.conceptual.ConceptualObject) ((ConceptualConstructObject) item)
+                id = ((ConceptualObject) ((ConceptualConstructObject) item)
                         .getModel()).getID();
                 if (item instanceof AtributeConstruct && aid == id)
                     return (AtributeConstruct) item;
@@ -211,7 +211,7 @@ public class Desktop extends DesktopTool implements FontManager,
                 if ((co = getConceptualObject((DGroupTool) item, id)) != null)
                     return co;
             } else if (!(item instanceof StrongAddiction)
-                    && id == (((cz.omnicom.ermodeller.conceptual.ConceptualObject) ((ConceptualConstructObject) item)
+                    && id == (((ConceptualObject) ((ConceptualConstructObject) item)
                     .getModel()).getID()))
                 return (ConceptualConstructObject) item;
         }
@@ -232,7 +232,7 @@ public class Desktop extends DesktopTool implements FontManager,
                 if ((co = getConceptualObject((DGroupTool) item, id)) != null)
                     return co;
             } else if (!(item instanceof StrongAddiction)
-                    && id == (((cz.omnicom.ermodeller.conceptual.ConceptualObject) ((ConceptualConstructObject) item)
+                    && id == (((ConceptualObject) ((ConceptualConstructObject) item)
                     .getModel()).getID()))
                 return (ConceptualConstructObject) item;
         }
@@ -320,7 +320,7 @@ public class Desktop extends DesktopTool implements FontManager,
             /*Check for aributes*/
             if (!rel.getAtributes().isEmpty())
                 if (namesOnly)
-                    relsWithAtributes.add(((RelationBean) rel.getModel()).getName());
+                    relsWithAtributes.add(((Relation) rel.getModel()).getName());
                 else relsWithAtributes.add(rel);
         }
         return relsWithAtributes;
@@ -352,7 +352,7 @@ public class Desktop extends DesktopTool implements FontManager,
             }
             if (connCounter <= 1) {
 //				System.out.println("Stored");
-                if (namesOnly) relsNoConn.add(((RelationBean) rel.getModel()).getName());
+                if (namesOnly) relsNoConn.add(((Relation) rel.getModel()).getName());
                 else relsNoConn.add(rel);
             }
 
@@ -385,7 +385,7 @@ public class Desktop extends DesktopTool implements FontManager,
                 }
             }
             if (connCounter > 2) {
-                if (namesOnly) relsTernary.add(((RelationBean) rel.getModel()).getName());
+                if (namesOnly) relsTernary.add(((Relation) rel.getModel()).getName());
                 else relsTernary.add(rel);
             }
 
@@ -431,7 +431,7 @@ public class Desktop extends DesktopTool implements FontManager,
      */
     public void switchAllRConnectionsCard(Container place) {
         Vector R = getAllRelations();
-        cz.omnicom.ermodeller.conceptual.Cardinality car1M, car2M;
+        Cardinality car1M, car2M;
         for (int i = 0; i < R.size(); i++) {
             RelationConstruct rel = (RelationConstruct) R.get(i);
 
@@ -446,8 +446,8 @@ public class Desktop extends DesktopTool implements FontManager,
                     cards.add(c.getTwo());
             }
             if (cards.size() != 2) break;
-            car1M = (cz.omnicom.ermodeller.conceptual.Cardinality) ((CardinalityConstruct) cards.get(0)).getModel();
-            car2M = (cz.omnicom.ermodeller.conceptual.Cardinality) ((CardinalityConstruct) cards.get(1)).getModel();
+            car1M = (Cardinality) ((CardinalityConstruct) cards.get(0)).getModel();
+            car2M = (Cardinality) ((CardinalityConstruct) cards.get(1)).getModel();
             String name = car1M.getName();
             String comment = car1M.getComment();
             //boolean arb = car1M.getArbitrary();
@@ -471,7 +471,7 @@ public class Desktop extends DesktopTool implements FontManager,
      */
     public void switchAllRConnectionsBoth(Container place) {
         Vector R = getAllRelations();
-        cz.omnicom.ermodeller.conceptual.Cardinality car1M, car2M;
+        Cardinality car1M, car2M;
         for (int i = 0; i < R.size(); i++) {
             RelationConstruct rel = (RelationConstruct) R.get(i);
 
@@ -486,8 +486,8 @@ public class Desktop extends DesktopTool implements FontManager,
                     cards.add(c.getTwo());
             }
             if (cards.size() != 2) break;
-            car1M = (cz.omnicom.ermodeller.conceptual.Cardinality) ((CardinalityConstruct) cards.get(0)).getModel();
-            car2M = (cz.omnicom.ermodeller.conceptual.Cardinality) ((CardinalityConstruct) cards.get(1)).getModel();
+            car1M = (Cardinality) ((CardinalityConstruct) cards.get(0)).getModel();
+            car2M = (Cardinality) ((CardinalityConstruct) cards.get(1)).getModel();
             String name = car1M.getName();
             String comment = car1M.getComment();
             boolean arb = car1M.getArbitrary();
@@ -512,7 +512,7 @@ public class Desktop extends DesktopTool implements FontManager,
      */
     public void switchAllRConnectionsArb(Container place) {
         Vector allRelations = getAllRelations();
-        cz.omnicom.ermodeller.conceptual.Cardinality car1M, car2M;
+        Cardinality car1M, car2M;
         for (Object allRelation : allRelations) {
             RelationConstruct rel = (RelationConstruct) allRelation;
 
@@ -527,8 +527,8 @@ public class Desktop extends DesktopTool implements FontManager,
                     cards.add(c.getTwo());
             }
             if (cards.size() != 2) break;
-            car1M = (cz.omnicom.ermodeller.conceptual.Cardinality) ((CardinalityConstruct) cards.get(0)).getModel();
-            car2M = (cz.omnicom.ermodeller.conceptual.Cardinality) ((CardinalityConstruct) cards.get(1)).getModel();
+            car1M = (Cardinality) ((CardinalityConstruct) cards.get(0)).getModel();
+            car2M = (Cardinality) ((CardinalityConstruct) cards.get(1)).getModel();
             String name = car1M.getName();
             String comment = car1M.getComment();
             boolean arb = car1M.getArbitrary();
@@ -571,7 +571,7 @@ public class Desktop extends DesktopTool implements FontManager,
                 if ((ent = getEntity((DGroupTool) item, id)) != null)
                     return ent;
             } else if (item instanceof EntityConstruct
-                    && id == (((cz.omnicom.ermodeller.conceptual.Entity) ((EntityConstruct) item)
+                    && id == (((Entity) ((EntityConstruct) item)
                     .getModel()).getID()))
                 return (EntityConstruct) item;
         }
@@ -777,7 +777,7 @@ public class Desktop extends DesktopTool implements FontManager,
         PropertyListDialog
                 .setBeanAndEdit(
                         getModel(),
-                        ((cz.omnicom.ermodeller.conceptual.ConceptualObject) getModel())
+                        ((ConceptualObject) getModel())
                                 .getName(), show);
     }
 
@@ -840,7 +840,7 @@ public class Desktop extends DesktopTool implements FontManager,
      */
     public void write(String encoding, UserTypeStorageVector typesVector,
                       java.io.PrintWriter pw) {
-        cz.omnicom.ermodeller.conceptual.Schema schema = (cz.omnicom.ermodeller.conceptual.Schema) getModel();
+        Schema schema = (Schema) getModel();
         float sc = getScale();
         int cnt = getItemCount();
 

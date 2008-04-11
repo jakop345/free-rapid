@@ -8,7 +8,10 @@ import cz.green.event.interfaces.Manager;
 import cz.green.eventtool.ConnectionLine;
 import cz.green.eventtool.interfaces.Connection;
 import cz.green.swing.ShowException;
-import cz.omnicom.ermodeller.conceptual.RelationBean;
+import cz.omnicom.ermodeller.conceptual.beans.Cardinality;
+import cz.omnicom.ermodeller.conceptual.beans.ConceptualObject;
+import cz.omnicom.ermodeller.conceptual.beans.Entity;
+import cz.omnicom.ermodeller.conceptual.beans.Relation;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,7 +28,7 @@ public class CardinalityConstruct extends ConceptualConstructObject {
     /**
      * The model of the cardinality -- object from the Aleš Kopecký work
      */
-    cz.omnicom.ermodeller.conceptual.Cardinality model = null;
+    Cardinality model = null;
 
     /**
      * Constructs new cardinality. Counts the size from the role name and integrit restrictions and also set as
@@ -42,7 +45,7 @@ public class CardinalityConstruct extends ConceptualConstructObject {
      *          Thrown by inherited constructor.
      * @see ConceptualConstructObject#ConceptualConstructObject(cz.green.event.interfaces.Manager ,int,int,int,int)
      */
-    public CardinalityConstruct(cz.omnicom.ermodeller.conceptual.Cardinality car, Manager manager, int left, int top) throws NullPointerException, ImpossibleNegativeValueException {
+    public CardinalityConstruct(Cardinality car, Manager manager, int left, int top) throws NullPointerException, ImpossibleNegativeValueException {
         //inhereted constructor
         super(manager, left, top, 10, 10);
         //set as property change listener
@@ -541,7 +544,7 @@ public class CardinalityConstruct extends ConceptualConstructObject {
      * always when invoken repaints the item.
      */
     public void propertyChange(java.beans.PropertyChangeEvent e) {
-        ((cz.omnicom.ermodeller.conceptual.ConceptualObject) getModel()).setChanged(true);
+        ((ConceptualObject) getModel()).setChanged(true);
         if (e.getPropertyName().equals("name")) {
             int[][] r = rect;
             java.awt.Dimension dim = countSize(), real = new java.awt.Dimension(r[0][1] - r[0][0], r[1][1] - r[1][0]);
@@ -593,7 +596,7 @@ public class CardinalityConstruct extends ConceptualConstructObject {
             //changes the participating entity
             EntityConstruct old = getEntity();
             Connection conn = connectionTo(old);
-            cz.omnicom.ermodeller.conceptual.Entity cEnt = (cz.omnicom.ermodeller.conceptual.Entity) cc.getModel();
+            Entity cEnt = (Entity) cc.getModel();
             try {
                 model.setEntity(cEnt);
                 cc.getManager().add(this);
@@ -614,7 +617,7 @@ public class CardinalityConstruct extends ConceptualConstructObject {
             //change the relation on which participate
             RelationConstruct old = getRelation();
             Connection conn = connectionTo(old);
-            RelationBean cRel = (RelationBean) cc.getModel();
+            Relation cRel = (Relation) cc.getModel();
             try {
                 model.setRelation(cRel);
                 if (conn.getOne() == old) {
@@ -637,13 +640,13 @@ public class CardinalityConstruct extends ConceptualConstructObject {
         //others cardinalities decompose as new relations
         java.awt.Point p = ent.getCenter(getEntity());
         RelationConstruct rel = RelationConstruct.createRelation(model.getSchema(), man, p.x, p.y);
-        ((RelationBean) rel.getModel()).setName(model.getName());
+        ((Relation) rel.getModel()).setName(model.getName());
         model.setName("");
         reconnect(getRelation());
         p = ent.getCenter(getRelation());
         CardinalityConstruct car = rel.createCardinality(ent, manager, p.x, p.y);
-        ((cz.omnicom.ermodeller.conceptual.Cardinality) car.getModel()).setArbitrary(true);
-        ((cz.omnicom.ermodeller.conceptual.Cardinality) car.getModel()).setMultiCardinality(false);
+        ((Cardinality) car.getModel()).setArbitrary(true);
+        ((Cardinality) car.getModel()).setMultiCardinality(false);
     }
 
     /**

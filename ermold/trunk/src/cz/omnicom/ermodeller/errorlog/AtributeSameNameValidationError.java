@@ -3,7 +3,7 @@ package cz.omnicom.ermodeller.errorlog;
 /**
  * Atributes cannot have same names.
  *
- * @see cz.omnicom.ermodeller.conceptual.Atribute
+ * @see cz.omnicom.ermodeller.conceptual.beans.Atribute
  */
 public class AtributeSameNameValidationError extends ConceptualObjectVectorValidationError {
     /**
