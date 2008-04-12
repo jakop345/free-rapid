@@ -15,6 +15,7 @@ import cz.omnicom.ermodeller.conceptual.exception.ParameterCannotBeNullException
 import cz.omnicom.ermodeller.conceptual.exception.WasNotFoundException;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.List;
 import java.util.Vector;
 
@@ -27,7 +28,7 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
     /**
      * All attributes
      */
-    protected List<AtributeConstruct> attribs = new java.util.ArrayList<AtributeConstruct>(3);
+    protected List<AttributeConstruct> attribs = new java.util.ArrayList<AttributeConstruct>(3);
 
 
     /**
@@ -70,13 +71,13 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
      * @param top  The y coordinate of the left top point of the new atribute.
      * @return The new created atribute.
      */
-    public AtributeConstruct createAtribute(int left, int top) {
+    public AttributeConstruct createAtribute(int left, int top) {
         try {
             //create model - atribute
             ConceptualConstruct cCc = (ConceptualConstruct) getModel();
             Atribute cAtr = cCc.createAtribute();
             //create atribute (view-controller)
-            AtributeConstruct atr = new AtributeConstruct(cAtr, this, manager, left, top);
+            AttributeConstruct atr = new AttributeConstruct(cAtr, this, manager, left, top);
             manager.add(atr);
             //repaint atribute
             (manager).repaintItem(atr);
@@ -93,7 +94,7 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
             }
             return atr;
         } catch (Throwable x) {
-            ShowException d = new ShowException(null, "Error", x, true);
+            new ShowException(null, "Error", x, true);
         }
         return null;
     }
@@ -114,11 +115,11 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
     /**
      * Returns all atributes of this construct
      */
-    public Vector<AtributeConstruct> getAtributes() {
-        Vector<AtributeConstruct> v = new java.util.Vector<AtributeConstruct>();
-        AtributeConstruct atr;
+    public Vector<AttributeConstruct> getAtributes() {
+        Vector<AttributeConstruct> v = new java.util.Vector<AttributeConstruct>();
+        AttributeConstruct atr;
         for (int i = connections.size() - 1; i >= 0; i--) {
-            if ((atr = (AtributeConstruct) ((Connection) connections.elementAt(i)).isConnectedTo(AtributeConstruct.class)) != null)
+            if ((atr = (AttributeConstruct) ((Connection) connections.elementAt(i)).isConnectedTo(AttributeConstruct.class)) != null)
                 v.add(atr);
         }
         return v;
@@ -133,11 +134,11 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
         if (selected && event.getAdd())
             return;
         Item item = event.getItem();
-        if (item instanceof AtributeConstruct) {
+        if (item instanceof AttributeConstruct) {
             if (event.getAdd()) {
-                AtributeConstruct atr = (AtributeConstruct) item;
+                AttributeConstruct atr = (AttributeConstruct) item;
                 if (atr.getOwner() != this) {
-                    event.getComponent().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+                    event.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                     return;
                 }
             }
@@ -146,12 +147,12 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
             if (event.getAdd()) {
                 CardinalityConstruct car = (CardinalityConstruct) item;
                 if (car.connectionTo(this) == null) {
-                    event.getComponent().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+                    event.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                     return;
                 }
             }
         }
-        event.getComponent().setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        event.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
 
     /**
@@ -159,18 +160,18 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
      * Can work only with atributes (moving atributes between conceptual consatructs) and cardinalities
      * (reconnecting the cardinalities).
      *
-     * @see #moveAtribute(AtributeConstruct)
+     * @see #moveAtribute(AttributeConstruct)
      * @see CardinalityConstruct#reconnect(ConceptualConstructItem)
      */
     public void handleDropAboveEvent(DropAboveEvent event) {
         if (selected && event.getAdd())
             return;
-//	event.getComponent().setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+//	event.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         Item item = event.getItem();
-        if (item instanceof AtributeConstruct) {
+        if (item instanceof AttributeConstruct) {
             if (event.getAdd()) {
                 //move atribute
-                AtributeConstruct atr = (AtributeConstruct) item;
+                AttributeConstruct atr = (AttributeConstruct) item;
                 if (atr.getOwner() != this) {
                     reconnectAtribute(atr);
                     final NotationType type = atr.getNotationType();
@@ -234,7 +235,7 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
         if (!event.getMove())
             manager.fallAndHandleEvent(event.getX() + event.getDx(), event.getY() + event.getDy(), new DragOverEvent(event, this));
         else
-            event.getComponent().setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+            event.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
 
     /**
@@ -270,12 +271,12 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
      * Each atribute is moved by <code>moveAtribute</code>.
      *
      * @param cc The new owner of all atributes.
-     * @see #moveAtribute(AtributeConstruct)
+     * @see #moveAtribute(AttributeConstruct)
      */
     protected void reconnectAllAtributes(ConceptualConstructItem cc) {
-        AtributeConstruct atr;
+        AttributeConstruct atr;
         for (int i = connections.size() - 1; i >= 0; i--) {
-            if ((atr = (AtributeConstruct) ((Connection) connections.elementAt(i)).isConnectedTo(AtributeConstruct.class)) != null)
+            if ((atr = (AttributeConstruct) ((Connection) connections.elementAt(i)).isConnectedTo(AttributeConstruct.class)) != null)
                 cc.reconnectAtribute(atr);
             //cc.attribs.addElement(atr);
         }
@@ -303,7 +304,7 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
      * It means moving it the model, removing from the old construct's manager, putting to the
      * new construct manager and creating the connection to the new owner.
      */
-    public void reconnectAtribute(AtributeConstruct atr) {
+    public void reconnectAtribute(AttributeConstruct atr) {
         try {
             //move model's atribute
             final NotationType type = atr.getNotationType();
@@ -341,7 +342,7 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
             attribs.add(atr);
             atr.setPosition(attribs.size());
         } catch (Throwable x) {
-            ShowException d = new ShowException(null, "Error", x, true);
+            new ShowException(null, "Error", x, true);
         }
     }
 
@@ -355,7 +356,7 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
      * @throws <code>cz.omnicom.ermodeller.conceptual.WasNotFound</code>
      *          Thrown by model object.
      */
-    public void removeAtribute(AtributeConstruct atr) throws ParameterCannotBeNullException, WasNotFoundException {
+    public void removeAtribute(AttributeConstruct atr) throws ParameterCannotBeNullException, WasNotFoundException {
         ConceptualConstruct cCc = (ConceptualConstruct) getModel();
         cCc.disposeAtribute((Atribute) atr.getModel());
     }
@@ -376,10 +377,10 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
     /**
      * @param i
      */
-    public AtributeConstruct findAttributeWithPosition(int position) {
+    public AttributeConstruct findAttributeWithPosition(int position) {
         for (Object Attrib : attribs) {
-            if (((AtributeConstruct) Attrib).getPosition() == position)
-                return (AtributeConstruct) Attrib;
+            if (((AttributeConstruct) Attrib).getPosition() == position)
+                return (AttributeConstruct) Attrib;
         }
         return null;
     }

@@ -410,7 +410,7 @@ public class ERModeller extends JFrame implements
                 }
             }
         } catch (Throwable x) {
-            ShowException d = new ShowException(null, "Error", x, true);
+            new ShowException(null, "Error", x, true);
         }
     }
 
@@ -467,7 +467,7 @@ public class ERModeller extends JFrame implements
                 }
             }
         } catch (Throwable x) {
-            ShowException d = new ShowException(null, "Error", x, true);
+            new ShowException(null, "Error", x, true);
         }
     }
 
@@ -847,7 +847,7 @@ public class ERModeller extends JFrame implements
                 errDialog.setErrorLogList(model.checkConsistency());
             }
         } catch (Throwable x) {
-            ShowException d = new ShowException(null, "Error", x, true);
+            new ShowException(null, "Error", x, true);
         }
         errDialog.setDesktop((Desktop) getPlace().getDesktop());
         errDialog.setVisible(true);
@@ -988,7 +988,7 @@ public class ERModeller extends JFrame implements
                 }
             }
         } catch (Throwable x) {
-            ShowException d = new ShowException(null, "Error", x, true);
+            new ShowException(null, "Error", x, true);
         }
         return false;
     }
@@ -1097,7 +1097,7 @@ public class ERModeller extends JFrame implements
         EntityConstruct ent;
         EntityConstruct child;
         RelationConstruct rel;
-        AtributeConstruct atr;
+        AttributeConstruct atr;
         CardinalityConstruct car;
         UniqueKeyConstruct uni;
         ConceptualObject coM;
@@ -1363,7 +1363,7 @@ public class ERModeller extends JFrame implements
         String s;
         EntityConstruct ent;
         RelationConstruct rel;
-        AtributeConstruct atr;
+        AttributeConstruct atr;
         CardinalityConstruct car;
         UniqueKeyConstruct uni;
         ConceptualObject coM;
@@ -1497,7 +1497,7 @@ public class ERModeller extends JFrame implements
             ERModeller app = new ERModeller();
             app.setVisible(true);
         } catch (Throwable x) {
-            ShowException d = new ShowException(null, "General Error", x, true);
+            new ShowException(null, "General Error", x, true);
             System.exit(1);
         }
     }
@@ -1665,8 +1665,8 @@ public class ERModeller extends JFrame implements
             if (c.getTwo() instanceof StrongAddiction) sa = ((StrongAddiction) c.getTwo());
             if (sa != null) {
                 cz.green.event.ResizeRectangle rr = new cz.green.event.ResizeRectangle(
-                        0, 0, 0, 0, cz.green.event.ResizePoint.BOTTOM
-                        | cz.green.event.ResizePoint.RIGHT);
+                        0, 0, 0, 0, ResizePoint.BOTTOM
+                        | ResizePoint.RIGHT);
                 java.awt.Rectangle saR = sa.getBounds();
                 switch (nextNotation) {
                     case CHEN:
@@ -1755,7 +1755,7 @@ public class ERModeller extends JFrame implements
                 }
             }
         } catch (Throwable x) {
-            ShowException d = new ShowException(null, "Error", x, true);
+            new ShowException(null, "Error", x, true);
         }
         return false;
     }

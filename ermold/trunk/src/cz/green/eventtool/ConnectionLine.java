@@ -239,8 +239,8 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
 
         moves();
         if (schema.getNotationType() == ConceptualConstructItem.BINARY) {
-            if ((AtributeConstruct.class.equals(one.getClass()))
-                    || (AtributeConstruct.class.equals(two
+            if ((AttributeConstruct.class.equals(one.getClass()))
+                    || (AttributeConstruct.class.equals(two
                     .getClass())))
                 return;
             if (((CardinalityConstruct.class.equals(one.getClass()))
@@ -273,9 +273,9 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
         }
         final Stroke stroke = updateStrokeWithAliasing(g);
         if (schema.getNotationType() == ConceptualConstructItem.UML) {
-            if ((AtributeConstruct.class.equals(one.getClass()
+            if ((AttributeConstruct.class.equals(one.getClass()
             ))
-                    || (AtributeConstruct.class.equals(two
+                    || (AttributeConstruct.class.equals(two
                     .getClass())))
                 return;
             if (((CardinalityConstruct.class.equals(one.getClass()))
@@ -294,22 +294,22 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
                 case (LOD_MEDIUM):
                     /* There are no lines to atributes */
                     if (!(one.getClass().equals(
-                            AtributeConstruct.class) || two.getClass()
-                            .equals(AtributeConstruct.class)))
+                            AttributeConstruct.class) || two.getClass()
+                            .equals(AttributeConstruct.class)))
                         g.drawLine(borderOne.x, borderOne.y, borderTwo.x, borderTwo.y);
                         /* There is one end of line to atribute, so we test it hte atribute is primary */
                     else {
-                        if ((one.getClass().equals(AtributeConstruct.class)))
-                            if (((AtributeConstruct) getOne()).isPrimary())
+                        if ((one.getClass().equals(AttributeConstruct.class)))
+                            if (((AttributeConstruct) getOne()).isPrimary())
                                 g.drawLine(borderOne.x, borderOne.y, borderTwo.x, borderTwo.y);
-                        if ((two.getClass().equals(AtributeConstruct.class)))
-                            if (((AtributeConstruct) getTwo()).isPrimary())
+                        if ((two.getClass().equals(AttributeConstruct.class)))
+                            if (((AttributeConstruct) getTwo()).isPrimary())
                                 g.drawLine(borderOne.x, borderOne.y, borderTwo.x, borderTwo.y);
                     }
                 case (LOD_LOW):
                     if (!(one.getClass().equals(
-                            AtributeConstruct.class) || two.getClass()
-                            .equals(AtributeConstruct.class)))
+                            AttributeConstruct.class) || two.getClass()
+                            .equals(AttributeConstruct.class)))
                         g.drawLine(borderOne.x, borderOne.y, borderTwo.x, borderTwo.y);
             }
         }
@@ -355,8 +355,8 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
     public void paintFast(java.awt.Graphics g) {
         realMoves();
         if (schema.getNotationType() == ConceptualConstructItem.BINARY || schema.getNotationType() == ConceptualConstructItem.UML)
-            if ((AtributeConstruct.class.equals(one.getClass()))
-                    || (AtributeConstruct.class.equals(two.getClass()))
+            if ((AttributeConstruct.class.equals(one.getClass()))
+                    || (AttributeConstruct.class.equals(two.getClass()))
                     || (UniqueKeyConstruct.class.equals(two.getClass()))
                     || (UniqueKeyConstruct.class.equals(one.getClass())))
                 return;
@@ -374,8 +374,8 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
     public void print(java.awt.Graphics g) {
         moves();
         if (schema.getNotationType() == ConceptualConstructItem.BINARY) {
-            if ((AtributeConstruct.class.equals(one.getClass()))
-                    || (AtributeConstruct.class.equals(two.getClass())))
+            if ((AttributeConstruct.class.equals(one.getClass()))
+                    || (AttributeConstruct.class.equals(two.getClass())))
                 return;
             if (((CardinalityConstruct.class.equals(one.getClass()))
                     && (EntityConstruct.class.equals(two.getClass())))
@@ -407,8 +407,8 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
             }
         }
         if (schema.getNotationType() == ConceptualConstructItem.UML) {
-            if ((AtributeConstruct.class.equals(one.getClass()))
-                    || (AtributeConstruct.class.equals(two.getClass())))
+            if ((AttributeConstruct.class.equals(one.getClass()))
+                    || (AttributeConstruct.class.equals(two.getClass())))
                 return;
             if (((CardinalityConstruct.class.equals(one.getClass()))
                     && (EntityConstruct.class.equals(two.getClass())))
@@ -425,22 +425,22 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
                 case (LOD_MEDIUM):
                     /* There are no lines to atributes */
                     if (!(one.getClass().equals(
-                            AtributeConstruct.class) || two.getClass()
-                            .equals(AtributeConstruct.class)))
+                            AttributeConstruct.class) || two.getClass()
+                            .equals(AttributeConstruct.class)))
                         g.drawLine(borderOne.x, borderOne.y, borderTwo.x, borderTwo.y);
                         /* There is one end of line to atribute, so we test it hte atribute is primary */
                     else {
-                        if ((one.getClass().equals(AtributeConstruct.class)))
-                            if (((AtributeConstruct) getOne()).isPrimary())
+                        if ((one.getClass().equals(AttributeConstruct.class)))
+                            if (((AttributeConstruct) getOne()).isPrimary())
                                 g.drawLine(borderOne.x, borderOne.y, borderTwo.x, borderTwo.y);
-                        if ((two.getClass().equals(AtributeConstruct.class)))
-                            if (((AtributeConstruct) getTwo()).isPrimary())
+                        if ((two.getClass().equals(AttributeConstruct.class)))
+                            if (((AttributeConstruct) getTwo()).isPrimary())
                                 g.drawLine(borderOne.x, borderOne.y, borderTwo.x, borderTwo.y);
                     }
                 case (LOD_LOW):
                     if (!(one.getClass().equals(
-                            AtributeConstruct.class) || two.getClass()
-                            .equals(AtributeConstruct.class)))
+                            AttributeConstruct.class) || two.getClass()
+                            .equals(AttributeConstruct.class)))
                         g.drawLine(borderOne.x, borderOne.y, borderTwo.x, borderTwo.y);
             }
         }

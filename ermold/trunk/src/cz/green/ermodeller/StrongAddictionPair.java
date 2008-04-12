@@ -45,7 +45,7 @@ public class StrongAddictionPair {
 //OPRAVIT!!!!
             return StrongAddiction.createStrongAddiction(getEntity(), getEntity(), manager, left, top);
         } catch (Throwable x) {
-            ShowException d = new ShowException(null, "Error", x, true);
+            new ShowException(null, "Error", x, true);
         }
         return null;
     }

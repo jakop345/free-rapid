@@ -1,6 +1,7 @@
 package cz.green.ermodeller;
 
 import cz.green.ermodeller.interfaces.FontManager;
+import cz.green.event.ResizePoint;
 import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.exceptions.ItemNotInsideManagerException;
 import cz.green.event.interfaces.Item;
@@ -165,12 +166,12 @@ public class CardinalityConstruct extends ConceptualConstructObject {
             if (event.getAdd()) {
                 ConceptualConstructItem cc = (ConceptualConstructItem) item;
                 if (this.connectionTo(cc) == null) {
-                    event.getComponent().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+                    event.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                     return;
                 }
             }
         }
-        event.getComponent().setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        event.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
 
     /**
@@ -190,7 +191,7 @@ public class CardinalityConstruct extends ConceptualConstructObject {
                 }
             }
         }
-        event.getComponent().setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        event.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
 
     /**
@@ -226,7 +227,6 @@ public class CardinalityConstruct extends ConceptualConstructObject {
                 else dy = 0;
             } else if (eventY < er.y) {
                 dx = eventDx;
-                dy = 0;
                 dy = (er.y - r.height / 2) - cardinalityCenter.y;
 //					dy = (int) (((er.y - r.height/2) - cardinalityCenter.y)/scale);
             } else if (cardinalityCenter.y > (er.y + er.height)) {
@@ -321,7 +321,7 @@ public class CardinalityConstruct extends ConceptualConstructObject {
 				rel.handleRemoveEvent(new RemoveEvent(rel.getBounds().x, rel.getBounds().y, null));
 */
         } catch (Throwable x) {
-            ShowException d = new ShowException(null, "Error", x, true);
+            new ShowException(null, "Error", x, true);
         }
     }
 
@@ -536,7 +536,6 @@ public class CardinalityConstruct extends ConceptualConstructObject {
                 g.drawString(name, r.x + (r.width - fm.stringWidth(name)) / 2, r.y + r.height - fm.getAscent() / 4);
                 break;
         }
-        r = null;
     }
 
     /**
@@ -552,7 +551,7 @@ public class CardinalityConstruct extends ConceptualConstructObject {
             int dy = dim.height - real.height;
             java.awt.Rectangle b = getBounds();
             try {
-                resize(dx, dy, cz.green.event.ResizePoint.RIGHT | cz.green.event.ResizePoint.BOTTOM, true);
+                resize(dx, dy, ResizePoint.RIGHT | ResizePoint.BOTTOM, true);
             } catch (ItemNotInsideManagerException ex) {
             }
             b = b.union(getBounds());
@@ -581,6 +580,7 @@ public class CardinalityConstruct extends ConceptualConstructObject {
         try {
             model.addPropertyChangeListener(this);
         } catch (NullPointerException e) {
+            e.printStackTrace(); //LV
         }
     }
 
@@ -610,7 +610,7 @@ public class CardinalityConstruct extends ConceptualConstructObject {
                     return;
                 }
             } catch (Throwable x) {
-                ShowException d = new ShowException(null, "Error", x, true);
+                new ShowException(null, "Error", x, true);
             }
         }
         if (cc instanceof RelationConstruct) {
@@ -628,7 +628,7 @@ public class CardinalityConstruct extends ConceptualConstructObject {
                     conn.setTwo(cc);
                 }
             } catch (Throwable x) {
-                ShowException d = new ShowException(null, "Error", x, true);
+                new ShowException(null, "Error", x, true);
             }
         }
     }
@@ -639,6 +639,7 @@ public class CardinalityConstruct extends ConceptualConstructObject {
     public void transformToRelation(EntityConstruct ent, Manager man) {
         //others cardinalities decompose as new relations
         java.awt.Point p = ent.getCenter(getEntity());
+        //noinspection SuspiciousNameCombination
         RelationConstruct rel = RelationConstruct.createRelation(model.getSchema(), man, p.x, p.y);
         ((Relation) rel.getModel()).setName(model.getName());
         model.setName("");

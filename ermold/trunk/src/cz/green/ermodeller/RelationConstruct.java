@@ -162,7 +162,7 @@ public class RelationConstruct extends ConceptualConstructItem {
             (manager).repaintItem(conn);
             return car;
         } catch (Throwable x) {
-            ShowException d = new ShowException(null, "Error", x, true);
+            new ShowException(null, "Error", x, true);
             car = null;
         }
         return car;
@@ -202,8 +202,8 @@ public class RelationConstruct extends ConceptualConstructItem {
         FontMetrics fm = ((FontManager) this.getManager()).getReferentFontMetrics();
         int width = fm.stringWidth(this.model.getName()), height = fm.getAscent();
         cz.green.event.ResizeRectangle rr = new cz.green.event.ResizeRectangle(
-                0, 0, 0, 0, cz.green.event.ResizePoint.BOTTOM
-                | cz.green.event.ResizePoint.RIGHT);
+                0, 0, 0, 0, ResizePoint.BOTTOM
+                | ResizePoint.RIGHT);
         minimizeRelation(new ResizeEvent(getBounds().x, getBounds().y, 0, 0, rr, null));
     }
 
@@ -229,7 +229,7 @@ public class RelationConstruct extends ConceptualConstructItem {
             manager.repaintItem(group);
             return rel;
         } catch (Throwable x) {
-            ShowException d = new ShowException(null, "Error", x, true);
+            new ShowException(null, "Error", x, true);
         }
         return null;
     }
@@ -334,7 +334,7 @@ public class RelationConstruct extends ConceptualConstructItem {
             //delete this relation
             handleRemoveEvent(new cz.green.event.RemoveEvent(event.getX(), event.getY(), event.getComponent()));
         } catch (Throwable x) {
-            ShowException d = new ShowException(null, "Error", x, true);
+            new ShowException(null, "Error", x, true);
         }
     }
 
@@ -421,14 +421,14 @@ public class RelationConstruct extends ConceptualConstructItem {
         cz.green.event.ResizePoint[] r;
         if (getType() == ConceptualConstructItem.CHEN) {
             r = new cz.green.event.ResizePoint[8];
-            r[0] = new cz.green.event.ResizePoint(0, 0.5, cz.green.event.ResizePoint.LEFT);
-            r[1] = new cz.green.event.ResizePoint(1, 0.5, cz.green.event.ResizePoint.RIGHT);
-            r[2] = new cz.green.event.ResizePoint(0.5, 0, cz.green.event.ResizePoint.TOP);
-            r[3] = new cz.green.event.ResizePoint(0.5, 1, cz.green.event.ResizePoint.BOTTOM);
-            r[4] = new cz.green.event.ResizePoint(0.25, 0.25, cz.green.event.ResizePoint.LEFT | cz.green.event.ResizePoint.TOP);
-            r[5] = new cz.green.event.ResizePoint(0.25, 0.75, cz.green.event.ResizePoint.LEFT | cz.green.event.ResizePoint.BOTTOM);
-            r[6] = new cz.green.event.ResizePoint(0.75, 0.75, cz.green.event.ResizePoint.RIGHT | cz.green.event.ResizePoint.BOTTOM);
-            r[7] = new cz.green.event.ResizePoint(0.75, 0.25, cz.green.event.ResizePoint.RIGHT | cz.green.event.ResizePoint.TOP);
+            r[0] = new cz.green.event.ResizePoint(0, 0.5, ResizePoint.LEFT);
+            r[1] = new cz.green.event.ResizePoint(1, 0.5, ResizePoint.RIGHT);
+            r[2] = new cz.green.event.ResizePoint(0.5, 0, ResizePoint.TOP);
+            r[3] = new cz.green.event.ResizePoint(0.5, 1, ResizePoint.BOTTOM);
+            r[4] = new cz.green.event.ResizePoint(0.25, 0.25, ResizePoint.LEFT | ResizePoint.TOP);
+            r[5] = new cz.green.event.ResizePoint(0.25, 0.75, ResizePoint.LEFT | ResizePoint.BOTTOM);
+            r[6] = new cz.green.event.ResizePoint(0.75, 0.75, ResizePoint.RIGHT | ResizePoint.BOTTOM);
+            r[7] = new cz.green.event.ResizePoint(0.75, 0.25, ResizePoint.RIGHT | ResizePoint.TOP);
             return r;
         } else return null;
     }
@@ -444,13 +444,13 @@ public class RelationConstruct extends ConceptualConstructItem {
         Item item = event.getItem();
         if (item instanceof EntityConstruct) {
             if (event.getAdd()) {
-                event.getComponent().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+                event.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 return;
             }
         }
         if (item instanceof RelationConstruct) {
             if (!event.getAdd()) {
-                event.getComponent().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+                event.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 return;
             }
         }
@@ -511,7 +511,7 @@ public class RelationConstruct extends ConceptualConstructItem {
                     event.setDropped(true);
                     return;
                 } catch (Throwable x) {
-                    ShowException d = new ShowException(null, "Error", x, true);
+                    new ShowException(null, "Error", x, true);
                 }
             }
         }
@@ -546,7 +546,7 @@ public class RelationConstruct extends ConceptualConstructItem {
             model.getSchema().disposeRelation(model);
             super.handleRemoveEvent(event);
         } catch (Throwable x) {
-            ShowException d = new ShowException(null, "Error", x, true);
+            new ShowException(null, "Error", x, true);
         }
     }
 
@@ -589,20 +589,20 @@ public class RelationConstruct extends ConceptualConstructItem {
         r = getRect();
         // test whether dx is possible, if not have to change
         int dx = width - r[0][1] + r[0][0];
-        int real = ((ev.getResizeRect().direction & cz.green.event.ResizePoint.LEFT) == cz.green.event.ResizePoint.LEFT) ? -ev
+        int real = ((ev.getResizeRect().direction & ResizePoint.LEFT) == ResizePoint.LEFT) ? -ev
                 .getDx()
                 : ev.getDx();
         if (real < dx) {
-            ev.setDx(((ev.getResizeRect().direction & cz.green.event.ResizePoint.LEFT) == cz.green.event.ResizePoint.LEFT) ? -dx
+            ev.setDx(((ev.getResizeRect().direction & ResizePoint.LEFT) == ResizePoint.LEFT) ? -dx
                     : dx);
         }
         // count max dy
         int dy = height - r[1][1] + r[1][0];
-        real = ((ev.getResizeRect().direction & cz.green.event.ResizePoint.TOP) == cz.green.event.ResizePoint.TOP) ? -ev
+        real = ((ev.getResizeRect().direction & ResizePoint.TOP) == ResizePoint.TOP) ? -ev
                 .getDy() : ev.getDy();
         // if event dy is greater - change it
         if (real < dy) {
-            ev.setDy(((ev.getResizeRect().direction & cz.green.event.ResizePoint.TOP) == cz.green.event.ResizePoint.TOP) ? -dy
+            ev.setDy(((ev.getResizeRect().direction & ResizePoint.TOP) == ResizePoint.TOP) ? -dy
                     : dy);
         }
     }
@@ -718,8 +718,8 @@ public class RelationConstruct extends ConceptualConstructItem {
         if (e.getPropertyName().equals("name")) {
             if (getType() == CHEN) {
                 cz.green.event.ResizeRectangle rr = new cz.green.event.ResizeRectangle(
-                        0, 0, 0, 0, cz.green.event.ResizePoint.BOTTOM
-                        | cz.green.event.ResizePoint.RIGHT);
+                        0, 0, 0, 0, ResizePoint.BOTTOM
+                        | ResizePoint.RIGHT);
                 this.resizeRelation(new ResizeEvent(0, 0, 0, 0, rr, null));
                 (manager).repaintRectangle(r.x,
                         r.y, r.width, r.height);

@@ -69,7 +69,7 @@ public class UniqueKeyConstruct extends ConceptualConstructObject {
      *
      * @param atr The added atribute.
      */
-    public void addAtribute(AtributeConstruct atr) {
+    public void addAtribute(AttributeConstruct atr) {
         try {
             model.addAtribute((Atribute) (atr
                     .getModel()));
@@ -77,7 +77,7 @@ public class UniqueKeyConstruct extends ConceptualConstructObject {
             ((ConnectionManager) manager).addConnection(conn);
             (manager).repaintItem(conn);
         } catch (Throwable x) {
-            ShowException d = new ShowException(null, "Error", x, true);
+            new ShowException(null, "Error", x, true);
         }
     }
 
@@ -93,7 +93,7 @@ public class UniqueKeyConstruct extends ConceptualConstructObject {
             // ((ContainerToolComponent)manager).addingAtribute(ent);
             Desktop d = (Desktop) ((DGroupTool) manager).getManager();
         } catch (Throwable x) {
-            ShowException d = new ShowException(null, "Error", x, true);
+            new ShowException(null, "Error", x, true);
         }
     }
 
@@ -158,7 +158,7 @@ public class UniqueKeyConstruct extends ConceptualConstructObject {
 
         for (int i = connections.size() - 1; i >= 0; i--) {
             if (((Connection) connections.elementAt(i))
-                    .isConnectedTo(AtributeConstruct.class) != null) {
+                    .isConnectedTo(AttributeConstruct.class) != null) {
                 v.add(((ConnectionLine) connections.elementAt(i)).getTwo());
             }
         }
@@ -208,19 +208,19 @@ public class UniqueKeyConstruct extends ConceptualConstructObject {
         if (selected && event.getAdd())
             return;
         Item item = event.getItem();
-        if (item instanceof AtributeConstruct) {
+        if (item instanceof AttributeConstruct) {
             if (event.getAdd()) {
-                AtributeConstruct atr = (AtributeConstruct) item;
+                AttributeConstruct atr = (AttributeConstruct) item;
                 if ((atr.connectionTo(this) == null)
                         && (atr.getOwner() == getOwner())) {
                     event.getComponent().setCursor(
-                            new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+                            Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                     return;
                 }
             } else {
                 if (connectionTo(item) != null) {
                     event.getComponent().setCursor(
-                            new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+                            Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                     return;
                 }
             }
@@ -230,7 +230,7 @@ public class UniqueKeyConstruct extends ConceptualConstructObject {
                 EntityConstruct ent = (EntityConstruct) item;
                 if (getPrimary() && (connectionTo(ent) == null)) {
                     event.getComponent().setCursor(
-                            new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+                            Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                     return;
                 }
             }
@@ -239,12 +239,12 @@ public class UniqueKeyConstruct extends ConceptualConstructObject {
             StrongAddiction sa = (StrongAddiction) item;
             if (event.getAdd() && getPrimary() && (sa.getUniqueKey() != this)) {
                 event.getComponent().setCursor(
-                        new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+                        Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 return;
             }
         }
         event.getComponent().setCursor(
-                new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
 
     /**
@@ -257,15 +257,15 @@ public class UniqueKeyConstruct extends ConceptualConstructObject {
             return;
         Item item = event.getItem();
         event.getComponent().setCursor(
-                new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        if (item instanceof AtributeConstruct) {
+                Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        if (item instanceof AttributeConstruct) {
             // over is atribute
             if (event.getAdd()) {
                 // add to the unique key
-                AtributeConstruct atr = (AtributeConstruct) item;
+                AttributeConstruct atr = (AttributeConstruct) item;
                 if ((atr.connectionTo(this) == null)
                         && (atr.getOwner() == getOwner())) {
-                    addAtribute((AtributeConstruct) item);
+                    addAtribute((AttributeConstruct) item);
                     event.setDropped(true);
                 }
             } else {
@@ -274,11 +274,11 @@ public class UniqueKeyConstruct extends ConceptualConstructObject {
                 if (conn != null) {
                     try {
                         model
-                                .removeAtribute((Atribute) (((AtributeConstruct) item)
+                                .removeAtribute((Atribute) (((AttributeConstruct) item)
                                         .getModel()));
                         conn.disconnect();
                     } catch (Throwable x) {
-                        ShowException d = new ShowException(null, "Error", x,
+                        new ShowException(null, "Error", x,
                                 true);
                     }
                 }
@@ -321,7 +321,7 @@ public class UniqueKeyConstruct extends ConceptualConstructObject {
 //PŠ			ent.removeUniqueKey(this);
             super.handleRemoveEvent(event);
         } catch (Throwable x) {
-            ShowException d = new ShowException(null, "Error", x, true);
+            new ShowException(null, "Error", x, true);
         }
     }
 
@@ -333,7 +333,7 @@ public class UniqueKeyConstruct extends ConceptualConstructObject {
     protected boolean hasAtribute() {
         for (int i = connections.size() - 1; i >= 0; i--) {
             if (((Connection) connections.elementAt(i))
-                    .isConnectedTo(AtributeConstruct.class) != null) {
+                    .isConnectedTo(AttributeConstruct.class) != null) {
                 return true;
             }
         }
@@ -420,7 +420,7 @@ public class UniqueKeyConstruct extends ConceptualConstructObject {
      *
      * @param atr The removing atribute.
      */
-    public void removeAtribute(AtributeConstruct atr) {
+    public void removeAtribute(AttributeConstruct atr) {
         try {
             model.addAtribute((Atribute) (atr
                     .getModel()));
@@ -428,7 +428,7 @@ public class UniqueKeyConstruct extends ConceptualConstructObject {
             ((ConnectionManager) manager).addConnection(conn);
             (manager).repaintItem(conn);
         } catch (Throwable x) {
-            ShowException d = new ShowException(null, "Error", x, true);
+            new ShowException(null, "Error", x, true);
         }
     }
 
@@ -450,7 +450,7 @@ public class UniqueKeyConstruct extends ConceptualConstructObject {
             } catch (ClassCastException e) {
             }
         } catch (Throwable x) {
-            ShowException d = new ShowException(null, "Error", x, true);
+            new ShowException(null, "Error", x, true);
         }
     }
 
@@ -496,7 +496,7 @@ public class UniqueKeyConstruct extends ConceptualConstructObject {
             } catch (ClassCastException e) {
             }
         } catch (Throwable x) {
-            ShowException d = new ShowException(null, "Error", x, true);
+            new ShowException(null, "Error", x, true);
         }
     }
 

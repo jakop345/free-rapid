@@ -3,6 +3,7 @@ package cz.green.ermodeller;
 import cz.green.ermodeller.interfaces.FontManager;
 import cz.green.event.MoveEvent;
 import cz.green.event.ResizeEvent;
+import cz.green.event.ResizePoint;
 import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.exceptions.ItemNotInsideManagerException;
 import cz.green.event.interfaces.Item;
@@ -27,7 +28,7 @@ import java.awt.*;
  *
  * @see ConceptualConstructItem#createAtribute(int,int)
  */
-public class AtributeConstruct extends ConceptualConstructObject {
+public class AttributeConstruct extends ConceptualConstructObject {
     /**
      * The owner of the atribute
      */
@@ -58,7 +59,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
      *          Thrown by inherited constructor.
      * @see ConceptualConstructObject#ConceptualConstructObject(cz.green.event.interfaces.Manager ,int,int,int,int)
      */
-    public AtributeConstruct(Atribute atr, ConceptualConstructItem cc, Manager manager, int left, int top) throws NullPointerException, ImpossibleNegativeValueException {
+    public AttributeConstruct(Atribute atr, ConceptualConstructItem cc, Manager manager, int left, int top) throws NullPointerException, ImpossibleNegativeValueException {
         super(manager, left, top, 50, 50);
         //set model
         this.cc = cc;
@@ -89,7 +90,6 @@ public class AtributeConstruct extends ConceptualConstructObject {
         if (removeElement != null) {
             //there's connection to owner --> we have to remove it
             ((Connection) removeElement).disconnect();
-            removeElement = null;
         }
     }
 
@@ -121,7 +121,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
      */
     protected JPopupMenu createMenu(JPopupMenu menu, PopupMenuEvent event) {
         super.createMenu(menu, event);
-        final NotationType type = model.getSchema().getNotationType();
+        final NotationType type = getNotationType();
         if (getOwner() instanceof EntityConstruct) {
             if (((EntityConstruct) cc).ISAParent == null) {
                 if (model.isPrimary()) {
@@ -171,11 +171,11 @@ public class AtributeConstruct extends ConceptualConstructObject {
      * It is used to chnge odrer of atributes in binary and UML notation
      */
     public void moveUp() {
-        if (getType() == BINARY && (getOwner() instanceof EntityConstruct) &&
+        if (getNotationType() == BINARY && (getOwner() instanceof EntityConstruct) &&
                 getPosition() == ((EntityConstruct) cc).PKmembers.size() + 1)
             return;
         int actualPosition = getPosition();
-        AtributeConstruct upperAttr = cc.findAttributeWithPosition(actualPosition - 1);
+        AttributeConstruct upperAttr = cc.findAttributeWithPosition(actualPosition - 1);
         upperAttr.setPosition(actualPosition);
         this.setPosition(actualPosition - 1);
         if (getOwner() instanceof EntityConstruct) ((EntityConstruct) cc).recalculatePositionsOfAtributes();
@@ -187,11 +187,11 @@ public class AtributeConstruct extends ConceptualConstructObject {
      * It is used to chnge odrer of atributes in binary and UML notation
      */
     public void moveDown() {
-        if (getType() == BINARY && (getOwner() instanceof EntityConstruct) &&
+        if (getNotationType() == BINARY && (getOwner() instanceof EntityConstruct) &&
                 getPosition() == ((EntityConstruct) cc).PKmembers.size())
             return;
         int actualPosition = getPosition();
-        AtributeConstruct upperAttr = cc.findAttributeWithPosition(actualPosition + 1);
+        AttributeConstruct upperAttr = cc.findAttributeWithPosition(actualPosition + 1);
         upperAttr.setPosition(actualPosition);
         this.setPosition(actualPosition + 1);
         if (getOwner() instanceof EntityConstruct) ((EntityConstruct) cc).recalculatePositionsOfAtributes();
@@ -203,7 +203,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
      * It is used to chnge odrer of atributes in binary and UML notation
      */
     public void moveTop() {
-        if (getType() == BINARY && (getOwner() instanceof EntityConstruct)) {
+        if (getNotationType() == BINARY && (getOwner() instanceof EntityConstruct)) {
             if (getPosition() > ((EntityConstruct) cc).PKmembers.size())
                 moveToPosition(((EntityConstruct) cc).PKmembers.size() + 1);
             else moveToPosition(1);
@@ -216,15 +216,11 @@ public class AtributeConstruct extends ConceptualConstructObject {
      * It is used to chnge odrer of atributes in binary and UML notation
      */
     public void moveEnd() {
-        if (getType() == BINARY && (getOwner() instanceof EntityConstruct)) {
+        if (getNotationType() == BINARY && (getOwner() instanceof EntityConstruct)) {
             if (getPosition() <= ((EntityConstruct) cc).PKmembers.size())
                 moveToPosition(((EntityConstruct) cc).PKmembers.size());
             else moveToPosition(cc.attribs.size());
         } else moveToPosition(cc.attribs.size());
-    }
-
-    private NotationType getType() {
-        return model.getSchema().getNotationType();
     }
 
     /**
@@ -237,13 +233,13 @@ public class AtributeConstruct extends ConceptualConstructObject {
         if (newPosition == actualPosition) return;
         if (newPosition > actualPosition) {
             for (int i = 0; i < cc.attribs.size(); i++) {
-                AtributeConstruct a = (AtributeConstruct) cc.attribs.get(i);
+                AttributeConstruct a = cc.attribs.get(i);
                 if (a.getPosition() > actualPosition && a.getPosition() <= newPosition)
                     a.setPosition(a.getPosition() - 1);
             }
         } else
             for (int i = 0; i < cc.attribs.size(); i++) {
-                AtributeConstruct a = (AtributeConstruct) cc.attribs.get(i);
+                AttributeConstruct a = cc.attribs.get(i);
                 if (a.getPosition() >= newPosition && a.getPosition() < actualPosition)
                     a.setPosition(a.getPosition() + 1);
             }
@@ -256,14 +252,14 @@ public class AtributeConstruct extends ConceptualConstructObject {
      * Returns the position of atribute in entity
      */
     public int getPosition() {
-        return ((Atribute) getModel()).getPosition();
+        return (getModel()).getPosition();
     }
 
     /**
      * Sets the position of atribute in entity
      */
     public void setPosition(int position) {
-        ((Atribute) getModel()).setPosition(position);
+        (getModel()).setPosition(position);
     }
 
     /**
@@ -271,7 +267,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
      *
      * @param atr <code>cz.green.ermodeller.Atribute</code> added atribute
      */
-    public void createUnique(AtributeConstruct atr) {
+    public void createUnique(AttributeConstruct atr) {
         int l = rect[0][0], t = rect[1][0];
         EntityConstruct ent = (EntityConstruct) atr.getOwner();
         int[][] r = ent.getRect();
@@ -290,7 +286,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
         try {
             model.setPrimary(primary);
         } catch (Throwable x) {
-            ShowException d = new ShowException(null, "Error", x, true);
+            new ShowException(null, "Error", x, true);
         }
 /*	for (int i = 0; i< ((Entity) getOwner()).PKmembers.size(); i++) {
 		System.out.println(((Entity) getOwner()).PKmembers.get(i));
@@ -332,7 +328,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
     /**
      * Returns the model atribute from the Aleš Kopecký work.
      */
-    public Object getModel() {
+    public Atribute getModel() {
         return model;
     }
 
@@ -384,18 +380,18 @@ public class AtributeConstruct extends ConceptualConstructObject {
                 //to add the atribute
                 UniqueKeyConstruct uk = (UniqueKeyConstruct) item;
                 if ((uk.connectionTo(this) == null) && (uk.getOwner() == getOwner())) {
-                    event.getComponent().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+                    event.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                     return;
                 }
             } else {
                 //to remove the atribute
                 if (connectionTo(item) != null) {
-                    event.getComponent().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+                    event.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                     return;
                 }
             }
         }
-        event.getComponent().setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        event.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
 
     /**
@@ -423,19 +419,19 @@ public class AtributeConstruct extends ConceptualConstructObject {
                         ((UniqueKey) (((UniqueKeyConstruct) item).getModel())).removeAtribute(model);
                         conn.disconnect();
                     } catch (Throwable x) {
-                        ShowException d = new ShowException(null, "Error", x, true);
+                        new ShowException(null, "Error", x, true);
                     }
                 }
             }
         }
-        event.getComponent().setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        event.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
 
     /**
      * Same as <code>handleMovingEvent</code> but remove functionality for BINARY and UML notation.
      */
     public void handleExMovingEvent(ExMovingEvent event) {
-        if (getType() == CHEN)
+        if (getNotationType() == CHEN)
             super.handleMovingEvent(event);
     }
 
@@ -452,11 +448,11 @@ public class AtributeConstruct extends ConceptualConstructObject {
             cc.removeAtribute(this);
             super.handleRemoveEvent(event);
         } catch (Throwable x) {
-            ShowException d = new ShowException(null, "Error", x, true);
+            new ShowException(null, "Error", x, true);
         }
 //	this.setPosition(cc.attribs.size());
 
-        if (getType() != CHEN)
+        if (getNotationType() != CHEN)
             if (cc instanceof EntityConstruct) {
                 EntityConstruct ent = (EntityConstruct) cc;
                 ent.recalculatePositionsOfAtributes();
@@ -489,7 +485,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
         java.awt.FontMetrics fm = g.getFontMetrics();
         final Stroke stroke = updateStrokeWithAliasing(g);
         // Enable antialiasing for shapes
-        if (getType() == CHEN) {
+        if (getNotationType() == CHEN) {
             switch (ACTUAL_LOD) {
                 case (LOD_LOW):
                     break;
@@ -548,7 +544,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
                     r = null;
             }
         }
-        if (getType() == BINARY) {
+        if (getNotationType() == BINARY) {
 
             //System.out.println("Draw binary");
             switch (ACTUAL_LOD) {
@@ -585,7 +581,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
                     r = null;
             }
         }
-        if (getType() == UML) {
+        if (getNotationType() == UML) {
             String nameUML = model.getName() + ": " + model.getDataType().toDescriptionString();
             switch (ACTUAL_LOD) {
                 case (LOD_LOW):
@@ -616,7 +612,6 @@ public class AtributeConstruct extends ConceptualConstructObject {
                         if (SHOW_PK_IN_UML == 1) g.drawString("pk", r.x, r.y + r.height - 2);
                     }
                     g.drawString(nameUML, r.x + (int) (1.5 * r.height), r.y + r.height - 2);
-                    r = null;
             }
         }
         updateBackupStroke(g, stroke);
@@ -652,7 +647,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
         String name = model.getName();
         java.awt.FontMetrics fm = g.getFontMetrics();
 
-        if (getType() == CHEN) {
+        if (getNotationType() == CHEN) {
             switch (ACTUAL_LOD) {
                 case (LOD_LOW):
                     break;
@@ -700,7 +695,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
                     r = null;
             }
         }
-        if (getType() == BINARY) {
+        if (getNotationType() == BINARY) {
             switch (ACTUAL_LOD) {
                 case (LOD_LOW):
                     break;
@@ -725,7 +720,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
                     r = null;
             }
         }
-        if (getType() == UML) {
+        if (getNotationType() == UML) {
             String nameUML = model.getName() + ": " + model.getDataType().toDescriptionString();
             switch (ACTUAL_LOD) {
                 case (LOD_LOW):
@@ -742,7 +737,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
                         g.drawString("pk", r.x, r.y + r.height - 2);
                     }
                     g.drawString(nameUML, r.x + (int) (1.5 * r.height), r.y + r.height - 2);
-                    r = null;
+                    //r = null;
             }
         }
     }
@@ -756,8 +751,8 @@ public class AtributeConstruct extends ConceptualConstructObject {
         if (e.getPropertyName().equals("dataType")) {
             if (getOwner() instanceof EntityConstruct) {
                 cz.green.event.ResizeRectangle rr = new cz.green.event.ResizeRectangle(
-                        0, 0, 0, 0, cz.green.event.ResizePoint.BOTTOM
-                        | cz.green.event.ResizePoint.RIGHT);
+                        0, 0, 0, 0, ResizePoint.BOTTOM
+                        | ResizePoint.RIGHT);
                 ((EntityConstruct) getOwner()).resizeEntity(new ResizeEvent(0, 0, 0, 0, rr, null));
                 (manager).repaintItem(this);
             }
@@ -766,14 +761,14 @@ public class AtributeConstruct extends ConceptualConstructObject {
             if (isPrimary()) {
                 if (!((EntityConstruct) getOwner()).PKmembers.contains(this))
                     ((EntityConstruct) getOwner()).PKmembers.addElement(this);
-                if (getType() == BINARY)
+                if (getNotationType() == BINARY)
                     moveToPosition(((EntityConstruct) getOwner()).PKmembers.size());
             } else {
                 ((EntityConstruct) getOwner()).PKmembers.removeElement(this);
-                if (getType() == BINARY)
+                if (getNotationType() == BINARY)
                     moveToPosition(((EntityConstruct) getOwner()).PKmembers.size() + 1);
             }
-            if (getType() != CHEN)
+            if (getNotationType() != CHEN)
                 ((EntityConstruct) getOwner()).recalculatePositionsOfAtributes();
 
         }
@@ -786,24 +781,25 @@ public class AtributeConstruct extends ConceptualConstructObject {
             java.awt.Rectangle b = getBounds();
             try {
                 if (dx != 0)
-                    resize(dx, 0, cz.green.event.ResizePoint.RIGHT, true);
+                    resize(dx, 0, ResizePoint.RIGHT, true);
                 if (dy != 0)
-                    resize(0, dy, cz.green.event.ResizePoint.BOTTOM, true);
+                    resize(0, dy, ResizePoint.BOTTOM, true);
             } catch (ItemNotInsideManagerException ex) {
+                // ex.printStackTrace(); //LV
             }
             b = b.union(getBounds());
             (manager).repaintRectangle(b.x, b.y, b.width, b.height);
-            if (getType() == UML || getType() == BINARY) {
+            if (getNotationType() == UML || getNotationType() == BINARY) {
                 if (getOwner() instanceof EntityConstruct) {
                     cz.green.event.ResizeRectangle rr = new cz.green.event.ResizeRectangle(
-                            0, 0, 0, 0, cz.green.event.ResizePoint.BOTTOM
-                            | cz.green.event.ResizePoint.RIGHT);
+                            0, 0, 0, 0, ResizePoint.BOTTOM
+                            | ResizePoint.RIGHT);
                     ((EntityConstruct) getOwner()).resizeEntity(new ResizeEvent(0, 0, 0, 0, rr, null));
                 }
             }
         } else {
             //jinak ho prekresli
-            java.awt.Rectangle b = getBounds();
+            //java.awt.Rectangle b = getBounds();
             (manager).repaintItem(this);
         }
     }
@@ -818,6 +814,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
         try {
             model.addPropertyChangeListener(this);
         } catch (NullPointerException e) {
+            e.printStackTrace();//pridano LV
         }
     }
 
@@ -859,6 +856,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
                 ((ConnectionManager) manager).addConnection(c);
                 (manager).repaintItem(c);
             } catch (ImpossibleNegativeValueException e) {
+                e.printStackTrace(); //LV
             }
         }
     }

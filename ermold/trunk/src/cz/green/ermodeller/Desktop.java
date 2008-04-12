@@ -21,6 +21,7 @@ import cz.omnicom.ermodeller.typeseditor.UserTypeStorage;
 import cz.omnicom.ermodeller.typeseditor.UserTypeStorageVector;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.Vector;
@@ -88,7 +89,7 @@ public class Desktop extends DesktopTool implements FontManager,
         Vector<Atribute> v2 = e2.getAtributes();
         int i, j;
         Atribute atrM1, atrM2;
-        AtributeConstruct atr2, atr1;
+        AttributeConstruct atr2, atr1;
         Entity entM;
         EntityConstruct ent2 = getEntity(e2.getID()), ent1 = getEntity(e1.getID());
 
@@ -164,14 +165,14 @@ public class Desktop extends DesktopTool implements FontManager,
     /**
      * Returns atribute with ID
      */
-    public AtributeConstruct getAtribute(int aid) {
-        return (AtributeConstruct) getConceptualObject(aid);
+    public AttributeConstruct getAtribute(int aid) {
+        return (AttributeConstruct) getConceptualObject(aid);
     }
 
-    private AtributeConstruct getAtribute(DGroupTool dg, int aid) {
+    private AttributeConstruct getAtribute(DGroupTool dg, int aid) {
         int cnt = dg.getItemCount(), id;
         Item item;
-        AtributeConstruct atr;
+        AttributeConstruct atr;
 
         for (int i = 0; i < cnt; i++) {
             item = dg.getItem(i);
@@ -181,8 +182,8 @@ public class Desktop extends DesktopTool implements FontManager,
             } else {
                 id = ((ConceptualObject) ((ConceptualConstructObject) item)
                         .getModel()).getID();
-                if (item instanceof AtributeConstruct && aid == id)
-                    return (AtributeConstruct) item;
+                if (item instanceof AttributeConstruct && aid == id)
+                    return (AttributeConstruct) item;
             }
         }
         return null;
@@ -660,7 +661,7 @@ public class Desktop extends DesktopTool implements FontManager,
      */
     public void handleDragOverEvent(DragOverEvent event) {
         event.getComponent().setCursor(
-                new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
 
     /**
@@ -668,7 +669,7 @@ public class Desktop extends DesktopTool implements FontManager,
      */
     public void handleMouseMoveEvent(cz.green.event.MouseMoveEvent event) {
         event.getComponent().setCursor(
-                new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
 
     /**

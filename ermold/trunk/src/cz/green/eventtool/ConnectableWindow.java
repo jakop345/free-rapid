@@ -7,6 +7,7 @@ import cz.green.event.interfaces.PaintableManager;
 import cz.green.eventtool.interfaces.Connectable;
 import cz.green.eventtool.interfaces.Connection;
 
+import java.awt.*;
 import java.util.Vector;
 
 /**
@@ -207,7 +208,7 @@ public class ConnectableWindow extends Window implements Connectable {
      * When cursor is moved over set the default cursor.
      */
     public void handleMouseMoveEvent(cz.green.event.MouseMoveEvent event) {
-        event.getComponent().setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        event.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
 
     /**

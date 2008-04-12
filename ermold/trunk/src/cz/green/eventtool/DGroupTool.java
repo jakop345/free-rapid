@@ -74,7 +74,7 @@ public class DGroupTool extends GroupTool implements ConnectionManager {
             super.add(item);
         } //this could not apper, else it is critical situation
         catch (ValueOutOfRangeException x) {
-            ShowException d = new ShowException(null, "Error", x, true);
+            new ShowException(null, "Error", x, true);
         }
     }
 

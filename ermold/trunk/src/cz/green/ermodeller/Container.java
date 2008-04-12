@@ -20,6 +20,7 @@ import cz.omnicom.ermodeller.errorlog.ShowErrorEvent;
 import cz.omnicom.ermodeller.errorlog.interfaces.ShowErrorListener;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 
 /**
@@ -137,7 +138,7 @@ public class Container extends ContainerToolComponent implements ModeSwitcher, F
         this.object = object;
         final NotationType type = ((ConceptualConstruct) object.getModel()).getSchema().getNotationType();
         if (type == Window.CHEN) {
-            setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
+            setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
             setWorkMode(ADDING_ATRIBUTE);
             return true;
         }
@@ -155,7 +156,7 @@ public class Container extends ContainerToolComponent implements ModeSwitcher, F
      */
     public boolean addingCardinality(CardinalityPair object) {
         this.object = object;
-        setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
+        setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
         setWorkMode(ADDING_CARDINALITY);
         return true;
     }
@@ -168,7 +169,7 @@ public class Container extends ContainerToolComponent implements ModeSwitcher, F
      */
     public boolean addingEntity(EntityConstruct ent) {
         object = ent;
-        setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
+        setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
         setWorkMode(ADDING_ENTITY);
         return true;
     }
@@ -177,7 +178,7 @@ public class Container extends ContainerToolComponent implements ModeSwitcher, F
      * Set regime for adding group.
      */
     public boolean addingGroup() {
-        setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
+        setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
         setWorkMode(ADDING_GROUP);
         return true;
     }
@@ -186,7 +187,7 @@ public class Container extends ContainerToolComponent implements ModeSwitcher, F
      * Set regime for adding relation.
      */
     public boolean addingRelation() {
-        setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
+        setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
         setWorkMode(ADDING_RELATION);
         return true;
     }
@@ -194,7 +195,7 @@ public class Container extends ContainerToolComponent implements ModeSwitcher, F
  * Set regime for adding relation from toolbar.
  */
     /*public boolean addingRelationToolbar() {
-        setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
+        setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
         setWorkMode(ADDING_RELATION_AND_CONNECTION_FROM_TOOLBAR);
         return true;
     }
@@ -204,7 +205,7 @@ public class Container extends ContainerToolComponent implements ModeSwitcher, F
  */
     public boolean addingRelationCon(EntityConstruct object) {
         this.object = object;
-        setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
+        setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
         setWorkMode(ADDING_RELATION_AND_CONNECTION);
         return true;
     }
@@ -214,7 +215,7 @@ public class Container extends ContainerToolComponent implements ModeSwitcher, F
      */
     public boolean addingConnectionToRel(EntityConstruct object) {
         this.object = object;
-        setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
+        setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
         setWorkMode(ADDING_CONNECTION);
         return true;
     }
@@ -224,7 +225,7 @@ public class Container extends ContainerToolComponent implements ModeSwitcher, F
      */
     public boolean addingIdentDependency(EntityConstruct object) {
         this.object = object;
-        setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
+        setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
         setWorkMode(ADDING_IDENT_DEPENDENCY);
         return true;
     }
@@ -234,7 +235,7 @@ public class Container extends ContainerToolComponent implements ModeSwitcher, F
      */
     public boolean addingAsISAChild(EntityConstruct object) {
         this.object = object;
-        setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
+        setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
         setWorkMode(ADDING_AS_ISA_CHILD);
         return true;
     }
@@ -244,7 +245,7 @@ public class Container extends ContainerToolComponent implements ModeSwitcher, F
      */
     public boolean addingConnectionToEnt(RelationConstruct object) {
         this.object = object;
-        setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
+        setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
         setWorkMode(ADDING_CONNECTION);
         return true;
     }
@@ -256,7 +257,7 @@ public class Container extends ContainerToolComponent implements ModeSwitcher, F
      */
     public boolean addingStrongAddiction(StrongAddictionPair object) {
         this.object = object;
-        setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
+        setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
         setWorkMode(ADDING_STRONGADDICTION);
         return true;
     }
@@ -268,7 +269,7 @@ public class Container extends ContainerToolComponent implements ModeSwitcher, F
      */
     public boolean addingUniqueKey(ConceptualConstructItem object) {
         this.object = object;
-        setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
+        setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
         setWorkMode(ADDING_UNIQUE_KEY);
         return true;
     }
@@ -279,7 +280,7 @@ public class Container extends ContainerToolComponent implements ModeSwitcher, F
      * @param object The owner of the new window.
      */
     public boolean addingWindow() {
-        setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
+        setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
         setWorkMode(ADDING_WINDOW);
         return true;
     }
@@ -302,7 +303,7 @@ public class Container extends ContainerToolComponent implements ModeSwitcher, F
      * Set regime for deleting elements.
      */
     public boolean deleting() {
-        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         setWorkMode(DELETING);
         return true;
     }
@@ -460,75 +461,75 @@ public class Container extends ContainerToolComponent implements ModeSwitcher, F
             switch (workMode) {
                 case COMPOSING_ENTITY:
                     setWorkMode(WORKING);
-                    setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                    setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                     desktop.fallAndHandleEvent(x, y, new DropAboveEvent(x, y, (Item) object, this, false));
 //				((ConceptualConstruct) object).createAtribute(x, y);
                     break;
                 case COMPOSING_RELATION:
                     setWorkMode(WORKING);
-                    setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                    setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 //				((ConceptualConstruct) object).createAtribute(x, y);
                     break;
                 case ADDING_ATRIBUTE:
                     setWorkMode(WORKING);
-                    setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                    setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                     ((ConceptualConstructItem) object).createAtribute(x, y);
                     break;
                 case ADDING_UNIQUE_KEY:
                     setWorkMode(WORKING);
-                    setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                    setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                     ((EntityConstruct) object).createUniqueKey(x, y);
                     break;
                 case ADDING_CARDINALITY:
                     setWorkMode(WORKING);
-                    setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                    setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                     ((CardinalityPair) object).create(getDesktop(), x, y);
                     break;
                 case ADDING_STRONGADDICTION:
                     setWorkMode(WORKING);
-                    setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                    setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                     ((StrongAddictionPair) object).create(getDesktop(), x, y);
                     break;
                 case REMOVING:
                     setWorkMode(WORKING);
-                    setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                    setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                     desktop.fallAndHandleEvent(x, y, new DropAboveEvent(x, y, (Item) object, this, false));
                     break;
                 case ADDING_RELATION:
                     setWorkMode(WORKING);
-                    setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                    setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                     ((ISchema) desktop).createRelation(x, y);
                     break;
 /*			case ADDING_RELATION_AND_CONNECTION_FROM_TOOLBAR :
 				setWorkMode(ADDING_RELATION_AND_CONNECTION);
-				setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
+				setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 				((Schema) desktop).createRelation(x, y);
 				desktop.fallAndHandleEvent(cooX, cooY, new SelectItemEvent(cooX, cooY, e.isControlDown(), this));
 				break;
 */
                 case ADDING_RELATION_AND_CONNECTION:
                     setWorkMode(WORKING);
-                    setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                    setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                     desktop.fallAndHandleEvent(x, y, new AddRelWithConnsEvent(x, y, (Item) object, this, false));
                     break;
                 case ADDING_CONNECTION:
                     setWorkMode(WORKING);
-                    setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                    setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                     desktop.fallAndHandleEvent(x, y, new AddConnectionEvent(x, y, (Item) object, this, false));
                     break;
                 case ADDING_IDENT_DEPENDENCY:
                     setWorkMode(WORKING);
-                    setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                    setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                     desktop.fallAndHandleEvent(x, y, new AddIdentificationDependencyEvent(x, y, (Item) object, this, false));
                     break;
                 case ADDING_AS_ISA_CHILD:
                     setWorkMode(WORKING);
-                    setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                    setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                     desktop.fallAndHandleEvent(x, y, new AddAsISAChildEvent(x, y, (Item) object, this, false));
                     break;
                 case ADDING_ENTITY:
                     setWorkMode(WORKING);
-                    setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                    setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                     ((ISchema) desktop).createEntity(x, y, (EntityConstruct) object);
                     break;
                 case MOVING:
@@ -635,7 +636,7 @@ public class Container extends ContainerToolComponent implements ModeSwitcher, F
      * Set normal working regime.
      */
     public boolean working() {
-        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         setWorkMode(WORKING);
         return true;
     }

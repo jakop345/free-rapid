@@ -118,7 +118,7 @@ public class StrongAddiction extends ConceptualConstructObject {
             sa.moveStrongAddiction(new ExMovingEvent(sa.getBounds().x, sa.getBounds().x, 0, 0, null, false));
             return sa;
         } catch (Throwable x) {
-            ShowException d = new ShowException(null, "Error", x, true);
+            new ShowException(null, "Error", x, true);
         }
         return null;
     }
@@ -176,12 +176,12 @@ public class StrongAddiction extends ConceptualConstructObject {
         if (item instanceof EntityConstruct) {
             if (event.getAdd()) {
                 if (this.connectionTo(item) == null) {
-                    event.getComponent().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+                    event.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                     return;
                 }
             }
         }
-        event.getComponent().setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        event.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
 
     /**
@@ -200,7 +200,7 @@ public class StrongAddiction extends ConceptualConstructObject {
                 }
             }
         }
-        event.getComponent().setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        event.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
 
     /**
@@ -217,7 +217,7 @@ public class StrongAddiction extends ConceptualConstructObject {
             Cchild.removeStrongAddictionParent(Cparent);
             super.handleRemoveEvent(event);
         } catch (Throwable x) {
-            ShowException d = new ShowException(null, "Error", x, true);
+            new ShowException(null, "Error", x, true);
         }
     }
 
@@ -509,7 +509,7 @@ public class StrongAddiction extends ConceptualConstructObject {
                 c.setTwo(uk);
             }
         } catch (Throwable x) {
-            ShowException d = new ShowException(null, "Error", x, true);
+            new ShowException(null, "Error", x, true);
         }
     }
 
@@ -534,7 +534,7 @@ public class StrongAddiction extends ConceptualConstructObject {
                 c.setTwo(ent);
             }
         } catch (Throwable x) {
-            ShowException d = new ShowException(null, "Error", x, true);
+            new ShowException(null, "Error", x, true);
         }
     }
 

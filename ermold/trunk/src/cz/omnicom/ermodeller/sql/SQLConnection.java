@@ -10,7 +10,7 @@ import java.sql.*;
  */
 public class SQLConnection implements Serializable {
     private java.lang.String driver;
-    private transient DatabaseMetaData dma;
+    // private transient DatabaseMetaData dma;
     private transient Connection con;
     private java.lang.String url;
     private transient cz.omnicom.ermodeller.sql.LogSQL log;
@@ -79,7 +79,7 @@ public class SQLConnection implements Serializable {
             Class.forName(driver);
             con = DriverManager.getConnection(url, user, passwd);
         } catch (Exception e) {
-            cz.green.swing.ShowException d = new ShowException(null, "Error in connection to database", e, true);
+            new ShowException(null, "Error in connection to database", e, true);
             con = null;
         }
     }
@@ -162,7 +162,7 @@ public class SQLConnection implements Serializable {
      * @param newUser java.lang.String
      */
     public void send(String s) {
-        String st, st1;
+        String st;
         int i = 0, j;
         boolean err = false;
 
@@ -196,7 +196,7 @@ public class SQLConnection implements Serializable {
                 log("Succesfuly");
             }
         } catch (Exception e) {
-            cz.green.swing.ShowException d = new ShowException(null, "SQL error", e, true);
+            new ShowException(null, "SQL error", e, true);
         }
         log("********************************************************");
         close();

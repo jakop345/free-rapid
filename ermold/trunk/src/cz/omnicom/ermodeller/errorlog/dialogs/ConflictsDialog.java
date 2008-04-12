@@ -1456,7 +1456,7 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
                 co.handleRemoveEvent(new cz.green.event.RemoveEvent(0, 0, desktop.getPaintPlace()));
             }
             if (conceptualObject instanceof Atribute) {
-                AtributeConstruct atr = desktop.getAtribute(i);
+                AttributeConstruct atr = desktop.getAtribute(i);
                 cc = atr.getOwner();
                 atr.removeAtribute(new cz.green.event.RemoveEvent(0, 0, desktop.getPaintPlace()));
                 cc.removeAtribute(atr);

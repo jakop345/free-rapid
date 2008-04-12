@@ -24,6 +24,7 @@ import cz.omnicom.ermodeller.conceptual.exception.WasNotFoundException;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Enumeration;
 import java.util.Vector;
 
 /**
@@ -61,12 +62,12 @@ public class EntityConstruct extends ConceptualConstructItem {
     /**
      * All ISA childs
      */
-    protected java.util.Vector ISAChilds = null;
+    protected Vector<EntityConstruct> ISAChilds = null;
 
     /**
      * Members of Primary key attributes
      */
-    protected java.util.Vector PKmembers = null;
+    protected Vector<AttributeConstruct> PKmembers = null;
 
     /** All attributes */
 //	protected java.util.Vector attribs = null;
@@ -122,14 +123,14 @@ public class EntityConstruct extends ConceptualConstructItem {
         //ent.setConstraints("éluùouËk˝ k˘Ú");
         EntManager = manager;
         java.awt.FontMetrics fm;
-        PKmembers = new java.util.Vector(3, 2);
+        PKmembers = new java.util.Vector<AttributeConstruct>(3, 2);
         try {
             fm = ((FontManager) manager).getReferentFontMetrics();
             int width = fm.stringWidth(name), height = fm.getAscent();
             rect[0][1] = rect[0][0] + 2 * width + height;
             rect[1][1] = rect[1][0] + 3 * height;
         } catch (ClassCastException e) {
-            fm = null;
+            e.printStackTrace(); // pridano LV
         }
     }
 
@@ -150,8 +151,8 @@ public class EntityConstruct extends ConceptualConstructItem {
             dx = (dx > 0) ? dx : 0;
             dy = (dy > 0) ? dy : 0;
             cz.green.event.ResizeRectangle rr = new cz.green.event.ResizeRectangle(
-                    0, 0, 0, 0, cz.green.event.ResizePoint.BOTTOM
-                    | cz.green.event.ResizePoint.RIGHT);
+                    0, 0, 0, 0, ResizePoint.BOTTOM
+                    | ResizePoint.RIGHT);
             cz.green.event.ResizeEvent ev = new cz.green.event.ResizeEvent(
                     event.getX(), event.getY(), dx, dy, rr, event
                     .getComponent());
@@ -160,10 +161,10 @@ public class EntityConstruct extends ConceptualConstructItem {
                     (s[0][1] + s[0][0] + r[0][0] - r[0][1]) / 2, s[1][0]
                     + height, event);
             if (ISAChilds == null)
-                ISAChilds = new java.util.Vector(3, 2);
-            ISAChilds.addElement(ent);
+                ISAChilds = new Vector<EntityConstruct>(3, 2);
+            ISAChilds.add(ent);
         } catch (Throwable x) {
-            ShowException d = new ShowException(null, "Error", x, true);
+            new ShowException(null, "Error", x, true);
         }
     }
 
@@ -228,8 +229,6 @@ public class EntityConstruct extends ConceptualConstructItem {
      */
     protected RelationConstruct compactableRelation(EntityConstruct ent) {
         CardinalityConstruct car;
-        Connection c;
-        Object o;
         for (int i = connections.size() - 1; i >= 0; i--) {
             if ((car = (CardinalityConstruct) ((Connection) connections.elementAt(i))
                     .isConnectedTo(CardinalityConstruct.class)) != null) {
@@ -272,7 +271,7 @@ public class EntityConstruct extends ConceptualConstructItem {
 						.getY(), event.getComponent()));
 			}
 		} catch (Exception e) {
-			ShowException d = new ShowException(null, "Error", e, true);
+			new ShowException(null, "Error", e, true);
 		}
 */
         this.handleRemoveEvent(new RemoveEvent(event.getX(), event.getY(),
@@ -299,7 +298,7 @@ public class EntityConstruct extends ConceptualConstructItem {
                 break;
             case BINARY:
                 for (int i = 0; i < getAtributes().size(); i++) {
-                    AtributeConstruct a = getAtributes().get(i);
+                    AttributeConstruct a = getAtributes().get(i);
                     int x = a.getBounds().width;
                     if (x > width) width = x;
                 }
@@ -307,7 +306,7 @@ public class EntityConstruct extends ConceptualConstructItem {
                 break;
             case UML:
                 for (int i = 0; i < getAtributes().size(); i++) {
-                    AtributeConstruct a = getAtributes().get(i);
+                    AttributeConstruct a = getAtributes().get(i);
                     int x = a.getBounds().width +
                             fm.stringWidth(": ") +
                             fm.stringWidth(((Atribute) a.getModel()).getDataType().toDescriptionString());
@@ -317,7 +316,7 @@ public class EntityConstruct extends ConceptualConstructItem {
         }
         if (type != NotationType.CHEN) {
             for (int i = 0; i < getAtributes().size(); i++) {
-                AtributeConstruct a = getAtributes().get(i);
+                AttributeConstruct a = getAtributes().get(i);
                 int x = a.getBounds().width;
                 if (x > width)
                     width = x;
@@ -328,10 +327,10 @@ public class EntityConstruct extends ConceptualConstructItem {
             }
         }
         if (ISAChilds != null) {
-            java.util.Enumeration e = ISAChilds.elements();
+            Enumeration<EntityConstruct> e = ISAChilds.elements();
             // counts maximal width
-            while (e.hasMoreElements()) {
-                r = ((EntityConstruct) e.nextElement()).getRect();
+            for (EntityConstruct entityConstruct : ISAChilds) {
+                r = entityConstruct.getRect();
                 int h = r[0][1] - r[0][0];
                 if (h > width)
                     width = h;
@@ -341,23 +340,23 @@ public class EntityConstruct extends ConceptualConstructItem {
         r = getRect();
         // test whether dx is possible, if not have to change
         int dx = width - r[0][1] + r[0][0];
-        int real = ((ev.getResizeRect().direction & cz.green.event.ResizePoint.LEFT) == cz.green.event.ResizePoint.LEFT) ? -ev
+        int real = ((ev.getResizeRect().direction & ResizePoint.LEFT) == ResizePoint.LEFT) ? -ev
                 .getDx()
                 : ev.getDx();
         if (real < dx) {
-            ev.setDx(((ev.getResizeRect().direction & cz.green.event.ResizePoint.LEFT) == cz.green.event.ResizePoint.LEFT) ? -dx
+            ev.setDx(((ev.getResizeRect().direction & ResizePoint.LEFT) == ResizePoint.LEFT) ? -dx
                     : dx);
         }
         // count max dy
         int dy = countResizeBottom(-1) - r[1][1] + r[1][0];
 //		int dy = - r[1][1] + r[1][0];
-        real = ((ev.getResizeRect().direction & cz.green.event.ResizePoint.TOP) == cz.green.event.ResizePoint.TOP) ? -ev
+        real = ((ev.getResizeRect().direction & ResizePoint.TOP) == ResizePoint.TOP) ? -ev
                 .getDy()
                 : ev.getDy();
         // if event dy is greater - change it
         if (real < dy) {
             ev
-                    .setDy(((ev.getResizeRect().direction & cz.green.event.ResizePoint.TOP) == cz.green.event.ResizePoint.TOP) ? -dy
+                    .setDy(((ev.getResizeRect().direction & ResizePoint.TOP) == ResizePoint.TOP) ? -dy
                             : dy);
         }
     }
@@ -406,7 +405,7 @@ public class EntityConstruct extends ConceptualConstructItem {
                 }
             } else {
                 // else count the top from the bottom of the previous
-                top = ((EntityConstruct) ISAChilds.elementAt(before)).getRect()[1][1]
+                top = (ISAChilds.elementAt(before)).getRect()[1][1]
                         + 2 * DIFFERENCE;
             }
         } catch (Throwable ex) {
@@ -439,11 +438,11 @@ public class EntityConstruct extends ConceptualConstructItem {
         cz.green.event.ResizingEvent newe = new cz.green.event.ResizingEvent(e
                 .getX(), e.getY(), 0, 0, newr, e.getComponent());
         newr.direction |= rr.direction
-                & (cz.green.event.ResizePoint.LEFT | cz.green.event.ResizePoint.RIGHT);
-        newr.direction |= cz.green.event.ResizePoint.BOTTOM;
+                & (ResizePoint.LEFT | ResizePoint.RIGHT);
+        newr.direction |= ResizePoint.BOTTOM;
         // count resize size
         if (e.getDy() != 0) {
-            int dy = ((rr.direction & cz.green.event.ResizePoint.TOP) == cz.green.event.ResizePoint.TOP) ? -e.getDy() : e.getDy();
+            int dy = ((rr.direction & ResizePoint.TOP) == ResizePoint.TOP) ? -e.getDy() : e.getDy();
             if (index != -1) {
                 dy = dy + countResizeBottom(index) - s[1][1] + r[1][1];
             }
@@ -452,10 +451,10 @@ public class EntityConstruct extends ConceptualConstructItem {
             }
         }
         if (e.getDx() != 0) {
-            int dx = ((rr.direction & cz.green.event.ResizePoint.LEFT) == cz.green.event.ResizePoint.LEFT) ? -e.getDx() : e.getDx();
+            int dx = ((rr.direction & ResizePoint.LEFT) == ResizePoint.LEFT) ? -e.getDx() : e.getDx();
             dx += r[0][1] - r[0][0] + 4 * DIFFERENCE - s[0][1] + s[0][0];
             if (dx > 0) {
-                newe.setDx(((rr.direction & cz.green.event.ResizePoint.LEFT) == cz.green.event.ResizePoint.LEFT) ? -dx : dx);
+                newe.setDx(((rr.direction & ResizePoint.LEFT) == ResizePoint.LEFT) ? -dx : dx);
             }
         }
         return newe;
@@ -512,7 +511,7 @@ public class EntityConstruct extends ConceptualConstructItem {
         }
         if (ISAChilds != null) {
             for (int i = ISAChilds.size() - 1; i > from; i--) {
-                r = ((EntityConstruct) ISAChilds.elementAt(i)).getRect();
+                r = (ISAChilds.elementAt(i)).getRect();
                 height += (r[1][1] - r[1][0]) + l;
             }
         }
@@ -578,7 +577,7 @@ public class EntityConstruct extends ConceptualConstructItem {
             manager.repaintItem(group);
             return ent;
         } catch (Throwable x) {
-            ShowException d = new ShowException(null, "Error", x, true);
+            new ShowException(null, "Error", x, true);
         }
         return null;
     }
@@ -661,8 +660,8 @@ public class EntityConstruct extends ConceptualConstructItem {
     */
     public void minimizeSize(cz.green.event.CoordinateEvent e) {
         cz.green.event.ResizeRectangle rr = new cz.green.event.ResizeRectangle(
-                0, 0, 0, 0, cz.green.event.ResizePoint.BOTTOM
-                | cz.green.event.ResizePoint.RIGHT);
+                0, 0, 0, 0, ResizePoint.BOTTOM
+                | ResizePoint.RIGHT);
 
         minimizeEntity(new ResizeEvent(getBounds().x, getBounds().y, 0, 0, rr, e.getComponent()));
     }
@@ -677,9 +676,8 @@ public class EntityConstruct extends ConceptualConstructItem {
     public UniqueKeyConstruct createUniqueKey(int left, int top) {
         try {
             // create model - unique key
-            Entity cc = (Entity) getModel();
-            UniqueKey cUq = cc
-                    .createUniqueKey();
+            Entity cc = getModel();
+            UniqueKey cUq = cc.createUniqueKey();
             // create unique key
             UniqueKeyConstruct uq = new UniqueKeyConstruct(cUq, this, manager, left, top);
             manager.add(uq);
@@ -690,7 +688,7 @@ public class EntityConstruct extends ConceptualConstructItem {
             (manager).repaintItem(conn);
             return uq;
         } catch (Throwable x) {
-            ShowException d = new ShowException(null, "Error", x, true);
+            new ShowException(null, "Error", x, true);
         }
         return null;
     }
@@ -734,7 +732,7 @@ public class EntityConstruct extends ConceptualConstructItem {
                     car.moveCardinality(new ExMovingEvent(p.x, p.y, 0, 0, null, false));
                 }
             } catch (Throwable x) {
-                ShowException d = new ShowException(null, "Error", x, true);
+                new ShowException(null, "Error", x, true);
             }
         } else {
             // decompose using strong addiction
@@ -789,8 +787,8 @@ public class EntityConstruct extends ConceptualConstructItem {
     /**
      * Returns all unique keys of this construct
      */
-    public java.util.Vector getUniqueKeys() {
-        java.util.Vector v = new java.util.Vector();
+    public Vector<UniqueKeyConstruct> getUniqueKeys() {
+        Vector<UniqueKeyConstruct> v = new java.util.Vector<UniqueKeyConstruct>();
         UniqueKeyConstruct uk;
         for (int i = connections.size() - 1; i >= 0; i--) {
             if ((uk = (UniqueKeyConstruct) ((Connection) connections.elementAt(i))
@@ -803,7 +801,7 @@ public class EntityConstruct extends ConceptualConstructItem {
     /**
      * Returns all Primary Key members of this entity
      */
-    public java.util.Vector getPKmembers() {
+    public Vector<AttributeConstruct> getPKmembers() {
         return PKmembers;
     }
 
@@ -820,14 +818,14 @@ public class EntityConstruct extends ConceptualConstructItem {
                 if ((item != this)
                         && ((ISAChilds == null) || (ISAChilds.indexOf(item) == -1))) {
                     event.getComponent().setCursor(
-                            new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+                            Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                     return;
                 }
             } else {
                 // if (areCompactable((Entity) item)) {
                 if (item != this) {
                     event.getComponent().setCursor(
-                            new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+                            Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                     return;
                 }
             }
@@ -835,7 +833,7 @@ public class EntityConstruct extends ConceptualConstructItem {
         if (item instanceof RelationConstruct) {
             if (event.getAdd()) {
                 event.getComponent().setCursor(
-                        new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+                        Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 return;
             }
         }
@@ -844,7 +842,7 @@ public class EntityConstruct extends ConceptualConstructItem {
             if (event.getAdd() && uk.getPrimary()
                     && (uk.connectionTo(this) == null)) {
                 event.getComponent().setCursor(
-                        new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+                        Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 return;
             }
         }
@@ -852,7 +850,7 @@ public class EntityConstruct extends ConceptualConstructItem {
             StrongAddiction sa = (StrongAddiction) item;
             if ((event.getAdd()) && (sa.getEntity() != this)) {
                 event.getComponent().setCursor(
-                        new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+                        Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 return;
             }
         }
@@ -930,11 +928,11 @@ public class EntityConstruct extends ConceptualConstructItem {
                     Connection c = ((Connection) e.nextElement());
                     if (c.getOne() instanceof CardinalityConstruct) {
                         car1 = ((CardinalityConstruct) c.getOne());
-                        name = ((Entity) car1.getEntity().getModel()).getName();
+                        name = (car1.getEntity().getModel()).getName();
                     }
                     if (c.getTwo() instanceof CardinalityConstruct) {
                         car1 = ((CardinalityConstruct) c.getTwo());
-                        name = ((Entity) car1.getEntity().getModel()).getName();
+                        name = (car1.getEntity().getModel()).getName();
                     }
                 }
             }
@@ -952,8 +950,9 @@ public class EntityConstruct extends ConceptualConstructItem {
     public void handleAddAsISAChildEvent(cz.green.event.AddAsISAChildEvent event) {
         Item item = event.getItem();
         if (item instanceof EntityConstruct) {
-            if ((item != this) && ((ISAChilds == null) || (ISAChilds.indexOf(item) == -1))) {
-                addISAChild((EntityConstruct) item, event);
+            final EntityConstruct ent = (EntityConstruct) item;
+            if ((item != this) && ((ISAChilds == null) || (ISAChilds.indexOf(ent) == -1))) {
+                addISAChild(ent, event);
             }
         }
     }
@@ -1003,7 +1002,7 @@ public class EntityConstruct extends ConceptualConstructItem {
                     event.setDropped(true);
                     return;
                 } catch (Throwable x) {
-                    ShowException d = new ShowException(null, "Error", x, true);
+                    new ShowException(null, "Error", x, true);
                 }
             }
         }
@@ -1100,7 +1099,7 @@ public class EntityConstruct extends ConceptualConstructItem {
                     + event.getDy(), new DragOverEvent(event, this));
         else
             event.getComponent().setCursor(
-                    new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                    Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
 
     /**
@@ -1141,7 +1140,7 @@ public class EntityConstruct extends ConceptualConstructItem {
             model.getSchema().disposeEntity(model);
             super.handleRemoveEvent(event);
         } catch (Throwable x) {
-            ShowException d = new ShowException(null, "Error", x, true);
+            new ShowException(null, "Error", x, true);
         }
     }
 
@@ -1278,7 +1277,7 @@ public class EntityConstruct extends ConceptualConstructItem {
             cz.green.event.MoveEvent mev;
             int max = ISAChilds.size() - 1;
             for (int i = 0; i <= max; i++) {
-                EntityConstruct ent = (EntityConstruct) ISAChilds.elementAt(i);
+                EntityConstruct ent = ISAChilds.elementAt(i);
                 mev = countMove(event, ent, i - 1);
                 ent.handleMoveEvent(mev);
             }
@@ -1297,7 +1296,7 @@ public class EntityConstruct extends ConceptualConstructItem {
             cz.green.event.MoveEvent mev;
             int max = ISAChilds.size() - 1;
             for (int i = 0; i <= max; i++) {
-                EntityConstruct ent = (EntityConstruct) ISAChilds.elementAt(i);
+                EntityConstruct ent = ISAChilds.elementAt(i);
                 mev = countMove(event, ent, i - 1);
                 mev.setDx(0);
                 ent.handleMoveEvent(mev);
@@ -1317,7 +1316,7 @@ public class EntityConstruct extends ConceptualConstructItem {
             cz.green.event.MovingEvent mev;
             int max = ISAChilds.size() - 1;
             for (int i = 0; i <= max; i++) {
-                EntityConstruct ent = (EntityConstruct) ISAChilds.elementAt(i);
+                EntityConstruct ent = ISAChilds.elementAt(i);
                 mev = countMove(event, ent, i - 1);
                 ent.handleMovingEvent(mev);
             }
@@ -1369,7 +1368,7 @@ public class EntityConstruct extends ConceptualConstructItem {
                     int height = r.y + 2 * fm.getAscent() + attribs.size() * 20 + 8;
                     if (ISAChilds != null) {
                         for (int i = ISAChilds.size() - 1; i > -1; i--) {
-                            int[][] rr = ((EntityConstruct) ISAChilds.elementAt(i)).getRect();
+                            int[][] rr = (ISAChilds.elementAt(i)).getRect();
                             height += (rr[1][1] - rr[1][0]) + 2 * DIFFERENCE;
                         }
                     }
@@ -1387,7 +1386,6 @@ public class EntityConstruct extends ConceptualConstructItem {
             g.drawRect(r.x + diff, r.y + diff, r.width - 2 * diff, r.height - 2 * diff);
         }
         g.drawString(name, r.x + (r.width - fm.stringWidth(name)) / 2, y);
-        r = null;
         updateBackupStroke(g, stroke);
     }
 
@@ -1427,7 +1425,7 @@ public class EntityConstruct extends ConceptualConstructItem {
                     int height = r.y + 2 * fm.getAscent() + attribs.size() * 20 + 8;
                     if (ISAChilds != null) {
                         for (int i = ISAChilds.size() - 1; i > -1; i--) {
-                            int[][] rr = ((EntityConstruct) ISAChilds.elementAt(i)).getRect();
+                            int[][] rr = (ISAChilds.elementAt(i)).getRect();
                             height += (rr[1][1] - rr[1][0]) + 2 * DIFFERENCE;
                         }
                     }
@@ -1459,8 +1457,8 @@ public class EntityConstruct extends ConceptualConstructItem {
         if (e.getPropertyName().equals("name") ||
                 e.getPropertyName().equals("constraints")) {
             cz.green.event.ResizeRectangle rr = new cz.green.event.ResizeRectangle(
-                    0, 0, 0, 0, cz.green.event.ResizePoint.BOTTOM
-                    | cz.green.event.ResizePoint.RIGHT);
+                    0, 0, 0, 0, ResizePoint.BOTTOM
+                    | ResizePoint.RIGHT);
             this.resizeEntity(new ResizeEvent(getBounds().x, getBounds().y, 0, 0, rr, null));
             (manager).repaintRectangle(r.x,
                     r.y, r.width, r.height);
@@ -1497,6 +1495,7 @@ public class EntityConstruct extends ConceptualConstructItem {
         try {
             model.addPropertyChangeListener(this);
         } catch (NullPointerException e) {
+            e.printStackTrace(); //LV
         }
     }
 
@@ -1507,7 +1506,7 @@ public class EntityConstruct extends ConceptualConstructItem {
         int PKlength = 0, ALength, dx, dy, position, highestPKposition = 0, lowestNonPKposition = getAtributes().size();
         int count = getAtributes().size();
         int PKmembersCount = getPKmembers().size();
-        AtributeConstruct a, pk;
+        AttributeConstruct a, pk;
         final NotationType type = model.getSchema().getNotationType();
         java.awt.FontMetrics fm = ((FontManager) manager).getReferentFontMetrics();
         if (type == BINARY) {
@@ -1519,7 +1518,7 @@ public class EntityConstruct extends ConceptualConstructItem {
                     position = a.getPosition();
                     if (position > highestPKposition) highestPKposition = position;
                     for (Object PKmember : PKmembers) {
-                        pk = (AtributeConstruct) PKmember;
+                        pk = (AttributeConstruct) PKmember;
                         if (pk.getPosition() < position)
                             ALength += pk.getBounds().width;
                     }
@@ -1545,8 +1544,8 @@ public class EntityConstruct extends ConceptualConstructItem {
             PKwidth = PKlength;
             /* adjust size of entity */
             cz.green.event.ResizeRectangle rr = new cz.green.event.ResizeRectangle(
-                    0, 0, 0, 0, cz.green.event.ResizePoint.BOTTOM
-                    | cz.green.event.ResizePoint.RIGHT);
+                    0, 0, 0, 0, ResizePoint.BOTTOM
+                    | ResizePoint.RIGHT);
 //				java.awt.Rectangle rOld = getBounds();
             this.resizeEntity(new ResizeEvent(getBounds().x, getBounds().y, 0, 0, rr, null));
             moveChilds(new ResizeEvent(getBounds().x, getBounds().y, 0, 0, rr, null));
@@ -1570,8 +1569,8 @@ public class EntityConstruct extends ConceptualConstructItem {
                 }
             }
             cz.green.event.ResizeRectangle rr = new cz.green.event.ResizeRectangle(
-                    0, 0, 0, 0, cz.green.event.ResizePoint.BOTTOM
-                    | cz.green.event.ResizePoint.RIGHT);
+                    0, 0, 0, 0, ResizePoint.BOTTOM
+                    | ResizePoint.RIGHT);
             this.resizeEntity(new ResizeEvent(getBounds().x, getBounds().y, 0, 0, rr, null));
             moveChilds(new ResizeEvent(getBounds().x, getBounds().y, 0, 0, rr, null));
         }
@@ -1581,8 +1580,8 @@ public class EntityConstruct extends ConceptualConstructItem {
 
     public void collectPKatributes() {
         int count = getAtributes().size();
-        Vector pks = new Vector();
-        AtributeConstruct a;
+        Vector<AttributeConstruct> pks = new Vector<AttributeConstruct>();
+        AttributeConstruct a;
         for (int i = count; i > 0; i--) {
             for (int j = 0; j < count; j++) {
                 a = (getAtributes().get(j));
@@ -1593,7 +1592,7 @@ public class EntityConstruct extends ConceptualConstructItem {
             }
         }
         for (Object pk : pks) {
-            ((AtributeConstruct) pk).moveTop();
+            ((AttributeConstruct) pk).moveTop();
         }
     }
 
@@ -1602,7 +1601,7 @@ public class EntityConstruct extends ConceptualConstructItem {
      * <code>moveAtribute</code>.
      *
      * @param cc The new owner of all atributes.
-     * @see #moveAtribute(AtributeConstruct)
+     * @see #moveAtribute(AttributeConstruct)
      */
     protected void reconnectAllAtributes(ConceptualConstructItem cc) {
         UniqueKeyConstruct uk;
@@ -1623,7 +1622,7 @@ public class EntityConstruct extends ConceptualConstructItem {
         EntityConstruct ent;
 
         if (ISAChilds != null) {
-            java.util.Vector v = new java.util.Vector(ISAChilds);
+            Vector<EntityConstruct> v = new java.util.Vector<EntityConstruct>(ISAChilds);
             for (Object aV : v) {
                 ent = (EntityConstruct) aV;
                 removeISAChild(ent, event);
@@ -1668,9 +1667,9 @@ public class EntityConstruct extends ConceptualConstructItem {
      */
     protected void removeChilds(cz.green.event.RemoveEvent event) {
         if ((ISAChilds != null) && (ISAChilds.size() > 0)) {
-            java.util.Enumeration e = ISAChilds.elements();
+            Enumeration<EntityConstruct> e = ISAChilds.elements();
             while (e.hasMoreElements()) {
-                EntityConstruct ent = (EntityConstruct) e.nextElement();
+                EntityConstruct ent = e.nextElement();
                 ent.removeCardinalities(event);
                 ent.removeAllStrongAddictionParents(event);
             }
@@ -1696,7 +1695,7 @@ public class EntityConstruct extends ConceptualConstructItem {
             moveChilds(event);
             m.repaintItem(this);
         } catch (Throwable x) {
-            ShowException d = new ShowException(null, "Error", x, true);
+            new ShowException(null, "Error", x, true);
         }
     }
 
@@ -1744,7 +1743,7 @@ public class EntityConstruct extends ConceptualConstructItem {
         if (ISAChilds != null) {
             int max = ISAChilds.size() - 1;
             for (int i = max; i >= 0; i--) {
-                EntityConstruct ent = (EntityConstruct) ISAChilds.elementAt(i);
+                EntityConstruct ent = ISAChilds.elementAt(i);
                 removeISAChild(ent, event);
                 cz.green.event.MoveEvent ev = new cz.green.event.MoveEvent(
                         event.getX(), event.getY(), 100, 0, event.getComponent());
@@ -1767,7 +1766,7 @@ public class EntityConstruct extends ConceptualConstructItem {
             man.add((Item) manager);
             ISAParent = null;
         } catch (Throwable x) {
-            ShowException d = new ShowException(null, "Error", x, true);
+            new ShowException(null, "Error", x, true);
         }
     }
 
@@ -1916,7 +1915,7 @@ public class EntityConstruct extends ConceptualConstructItem {
     public void moveAtributesBinarytoChen(int entWidth) {
         int count = getAtributes().size();
         for (int i = 0; i < count; i++) {
-            AtributeConstruct a = (getAtributes().get(i));
+            AttributeConstruct a = (getAtributes().get(i));
             try {
                 a.move(entWidth + 10, 0, true);
             } catch (ItemNotInsideManagerException e1) {
@@ -1943,11 +1942,11 @@ public class EntityConstruct extends ConceptualConstructItem {
         return DIFFERENCE;
     }
 
-    public java.util.List<AtributeConstruct> getAttribs() {
+    public java.util.List<AttributeConstruct> getAttribs() {
         return attribs;
     }
 
-    public void setAttribs(java.util.Vector attribs) {
+    public void setAttribs(Vector<AttributeConstruct> attribs) {
         assert attribs != null;
         this.attribs = attribs;
     }
@@ -1960,11 +1959,11 @@ public class EntityConstruct extends ConceptualConstructItem {
         this.decomposeAsRelation = decomposeAsRelation;
     }
 
-    public java.util.Vector getISAChilds() {
+    public Vector<EntityConstruct> getISAChilds() {
         return ISAChilds;
     }
 
-    public void setISAChilds(java.util.Vector childs) {
+    public void setISAChilds(Vector<EntityConstruct> childs) {
         ISAChilds = childs;
     }
 
