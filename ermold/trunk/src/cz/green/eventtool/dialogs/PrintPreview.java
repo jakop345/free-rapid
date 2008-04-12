@@ -1,4 +1,4 @@
-package cz.green.eventtool;
+package cz.green.eventtool.dialogs;
 
 import cz.green.event.interfaces.ContainerDesktop;
 import cz.green.eventtool.interfaces.Printable;

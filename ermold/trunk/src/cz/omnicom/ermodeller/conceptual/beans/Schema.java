@@ -21,13 +21,13 @@ public class Schema extends ConceptualObject {
      *
      * @see Entity
      */
-    protected Vector entities = new Vector();
+    protected Vector<Entity> entities = new Vector<Entity>();
     /**
      * All relations in the schema.
      *
      * @see Relation
      */
-    protected Vector relations = new Vector();
+    protected Vector<Relation> relations = new Vector<Relation>();
     /**
      * Counters for generating unique names of objects.
      */
@@ -218,9 +218,9 @@ public class Schema extends ConceptualObject {
      *
      * @return java.util.Vector
      */
-    public Vector getEntities() {
+    public Vector<Entity> getEntities() {
         if (entities == null)
-            entities = new Vector();
+            entities = new Vector<Entity>();
         return entities;
     }
 
@@ -258,9 +258,9 @@ public class Schema extends ConceptualObject {
      *
      * @return java.util.Vector
      */
-    public Vector getRelations() {
+    public Vector<Relation> getRelations() {
         if (relations == null)
-            relations = new Vector();
+            relations = new Vector<Relation>();
         return relations;
     }
 
@@ -295,10 +295,10 @@ public class Schema extends ConceptualObject {
      */
     private ErrorLogList checkCardinalityNameUnicity() throws CheckNameDuplicityValidationException {
         ErrorLogList errorLogList = new ErrorLogList();
-        Vector vectorToCheck = new Vector();
-        for (Enumeration relations = getRelations().elements(); relations.hasMoreElements();) {
-            for (Enumeration cardinalities = ((Relation) relations.nextElement()).getCardinalities().elements(); cardinalities.hasMoreElements();) {
-                vectorToCheck.addElement(new ConceptualObjectNameController((Cardinality) cardinalities.nextElement()));
+        Vector<ConceptualObjectNameController> vectorToCheck = new Vector<ConceptualObjectNameController>();
+        for (Enumeration<Relation> relations = getRelations().elements(); relations.hasMoreElements();) {
+            for (Enumeration<Cardinality> cardinalities = (relations.nextElement()).getCardinalities().elements(); cardinalities.hasMoreElements();) {
+                vectorToCheck.addElement(new ConceptualObjectNameController(cardinalities.nextElement()));
             }
         }
         try {
@@ -325,12 +325,12 @@ public class Schema extends ConceptualObject {
      */
     private ErrorLogList checkConceptualConstructNameUnicity() throws CheckNameDuplicityValidationException {
         ErrorLogList errorLogList = new ErrorLogList();
-        Vector vectorToCheck = new Vector();
-        for (Enumeration elements = getEntities().elements(); elements.hasMoreElements();) {
-            vectorToCheck.addElement(new ConceptualObjectNameController((Entity) elements.nextElement()));
+        Vector<ConceptualObjectNameController> vectorToCheck = new Vector<ConceptualObjectNameController>();
+        for (Enumeration<Entity> elements = getEntities().elements(); elements.hasMoreElements();) {
+            vectorToCheck.addElement(new ConceptualObjectNameController(elements.nextElement()));
         }
-        for (Enumeration elements = getRelations().elements(); elements.hasMoreElements();) {
-            vectorToCheck.addElement(new ConceptualObjectNameController((Relation) elements.nextElement()));
+        for (Enumeration<Relation> elements = getRelations().elements(); elements.hasMoreElements();) {
+            vectorToCheck.addElement(new ConceptualObjectNameController(elements.nextElement()));
         }
         try {
             errorLogList.concatErrorLogList(checkVectorForNameDuplicity(vectorToCheck, ConceptualConstructSameNameValidationError.class));
@@ -396,10 +396,10 @@ public class Schema extends ConceptualObject {
      */
     private ErrorLogList checkUniqueKeyNameUnicity() throws CheckNameDuplicityValidationException {
         ErrorLogList errorLogList = new ErrorLogList();
-        Vector vectorToCheck = new Vector();
-        for (Enumeration entities = getEntities().elements(); entities.hasMoreElements();) {
-            for (Enumeration uniqueKeys = ((Entity) entities.nextElement()).getUniqueKeys().elements(); uniqueKeys.hasMoreElements();) {
-                UniqueKey unq = (UniqueKey) uniqueKeys.nextElement();
+        Vector<ConceptualObjectNameController> vectorToCheck = new Vector<ConceptualObjectNameController>();
+        for (Enumeration<Entity> entities = getEntities().elements(); entities.hasMoreElements();) {
+            for (Enumeration<UniqueKey> uniqueKeys = (entities.nextElement()).getUniqueKeys().elements(); uniqueKeys.hasMoreElements();) {
+                UniqueKey unq = uniqueKeys.nextElement();
                 if (unq.getName() == null)
                     unq.setName("");
                 if (unq.getName().length() > 0)
@@ -434,12 +434,12 @@ public class Schema extends ConceptualObject {
     protected void setAllUnvalidated() {
         // all objects sets unvalidated
         //    - entities
-        for (Enumeration entities = getEntities().elements(); entities.hasMoreElements();) {
-            ((Entity) entities.nextElement()).setAllUnvalidated();
+        for (Enumeration<Entity> entities = getEntities().elements(); entities.hasMoreElements();) {
+            (entities.nextElement()).setAllUnvalidated();
         }
         //    - relations
-        for (Enumeration relations = getRelations().elements(); relations.hasMoreElements();) {
-            ((Relation) relations.nextElement()).setAllUnvalidated();
+        for (Enumeration<Relation> relations = getRelations().elements(); relations.hasMoreElements();) {
+            (relations.nextElement()).setAllUnvalidated();
         }
         super.setAllUnvalidated();
     }
@@ -473,13 +473,13 @@ public class Schema extends ConceptualObject {
         // check unicity of names
         errorLogList.concatErrorLogList(checkNameUnicity());
         // for all entities
-        for (Enumeration entities = getEntities().elements(); entities.hasMoreElements();) {
-            ErrorLogList entityErrors = ((Entity) entities.nextElement()).validate();
+        for (Enumeration<Entity> entities = getEntities().elements(); entities.hasMoreElements();) {
+            ErrorLogList entityErrors = (entities.nextElement()).validate();
             errorLogList.concatErrorLogList(entityErrors);
         }
         // for all relations
-        for (Enumeration relations = getRelations().elements(); relations.hasMoreElements();) {
-            ErrorLogList relationErrors = ((Relation) relations.nextElement()).validate();
+        for (Enumeration<Relation> relations = getRelations().elements(); relations.hasMoreElements();) {
+            ErrorLogList relationErrors = (relations.nextElement()).validate();
             errorLogList.concatErrorLogList(relationErrors);
         }
         return errorLogList;

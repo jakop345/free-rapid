@@ -69,7 +69,7 @@ public class EntityConstruct extends ConceptualConstructItem {
     protected java.util.Vector PKmembers = null;
 
     /** All attributes */
-//	protected java.util.Vector Attribs = null;
+//	protected java.util.Vector attribs = null;
 
     /**
      * Editor of Cosntraints
@@ -1366,7 +1366,7 @@ public class EntityConstruct extends ConceptualConstructItem {
                 g.drawLine(r.x, r.y + 2 * fm.getAscent(), r.x + r.width, r.y + 2
                         * fm.getAscent());
                 if (ConceptualConstructItem.ACTUAL_LOD == ConceptualConstructItem.LOD_FULL) {
-                    int height = r.y + 2 * fm.getAscent() + Attribs.size() * 20 + 8;
+                    int height = r.y + 2 * fm.getAscent() + attribs.size() * 20 + 8;
                     if (ISAChilds != null) {
                         for (int i = ISAChilds.size() - 1; i > -1; i--) {
                             int[][] rr = ((EntityConstruct) ISAChilds.elementAt(i)).getRect();
@@ -1424,7 +1424,7 @@ public class EntityConstruct extends ConceptualConstructItem {
                 g.drawLine(r.x, r.y + 2 * fm.getAscent(), r.x + r.width, r.y + 2
                         * fm.getAscent());
                 if (ConceptualConstructItem.ACTUAL_LOD == ConceptualConstructItem.LOD_FULL) {
-                    int height = r.y + 2 * fm.getAscent() + Attribs.size() * 20 + 8;
+                    int height = r.y + 2 * fm.getAscent() + attribs.size() * 20 + 8;
                     if (ISAChilds != null) {
                         for (int i = ISAChilds.size() - 1; i > -1; i--) {
                             int[][] rr = ((EntityConstruct) ISAChilds.elementAt(i)).getRect();
@@ -1943,12 +1943,13 @@ public class EntityConstruct extends ConceptualConstructItem {
         return DIFFERENCE;
     }
 
-    public java.util.Vector getAttribs() {
-        return Attribs;
+    public java.util.List<AtributeConstruct> getAttribs() {
+        return attribs;
     }
 
     public void setAttribs(java.util.Vector attribs) {
-        Attribs = attribs;
+        assert attribs != null;
+        this.attribs = attribs;
     }
 
     public boolean isDecomposeAsRelation() {

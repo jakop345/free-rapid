@@ -3,7 +3,6 @@ package cz.green.eventtool.dialogs;
 import cz.green.ermodeller.AppPrefs;
 import cz.green.ermodeller.Consts;
 import cz.green.event.interfaces.ContainerDesktop;
-import cz.green.eventtool.PrintPreview;
 import cz.green.eventtool.interfaces.Printable;
 import cz.green.swing.*;
 import cz.green.util.ActionAdapter;

@@ -156,7 +156,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
                 addMenuItem(menu, "Move to top", "img/mMoveTop.gif", this, "moveTop");
                 addMenuItem(menu, "Move up", "img/mMoveUp.gif", this, "moveUp");
             }
-//		if (((cz.omnicom.ermodeller.conceptual.beans.Atribute) getModel()).getPosition() < ((Entity) getOwner()).Attribs.size())
+//		if (((cz.omnicom.ermodeller.conceptual.beans.Atribute) getModel()).getPosition() < ((Entity) getOwner()).attribs.size())
             {
                 addMenuItem(menu, "Move down", "img/mMoveDown.gif", this, "moveDown");
                 addMenuItem(menu, "Move to end", "img/mMoveEnd.gif", this, "moveEnd");
@@ -219,8 +219,8 @@ public class AtributeConstruct extends ConceptualConstructObject {
         if (getType() == BINARY && (getOwner() instanceof EntityConstruct)) {
             if (getPosition() <= ((EntityConstruct) cc).PKmembers.size())
                 moveToPosition(((EntityConstruct) cc).PKmembers.size());
-            else moveToPosition(cc.Attribs.size());
-        } else moveToPosition(cc.Attribs.size());
+            else moveToPosition(cc.attribs.size());
+        } else moveToPosition(cc.attribs.size());
     }
 
     private NotationType getType() {
@@ -236,14 +236,14 @@ public class AtributeConstruct extends ConceptualConstructObject {
         int actualPosition = getPosition();
         if (newPosition == actualPosition) return;
         if (newPosition > actualPosition) {
-            for (int i = 0; i < cc.Attribs.size(); i++) {
-                AtributeConstruct a = (AtributeConstruct) cc.Attribs.get(i);
+            for (int i = 0; i < cc.attribs.size(); i++) {
+                AtributeConstruct a = (AtributeConstruct) cc.attribs.get(i);
                 if (a.getPosition() > actualPosition && a.getPosition() <= newPosition)
                     a.setPosition(a.getPosition() - 1);
             }
         } else
-            for (int i = 0; i < cc.Attribs.size(); i++) {
-                AtributeConstruct a = (AtributeConstruct) cc.Attribs.get(i);
+            for (int i = 0; i < cc.attribs.size(); i++) {
+                AtributeConstruct a = (AtributeConstruct) cc.attribs.get(i);
                 if (a.getPosition() >= newPosition && a.getPosition() < actualPosition)
                     a.setPosition(a.getPosition() + 1);
             }
@@ -447,14 +447,14 @@ public class AtributeConstruct extends ConceptualConstructObject {
             if (isPrimary())
                 setPrimary(false);
         moveEnd();
-        cc.Attribs.remove(this);
+        cc.attribs.remove(this);
         try {
             cc.removeAtribute(this);
             super.handleRemoveEvent(event);
         } catch (Throwable x) {
             ShowException d = new ShowException(null, "Error", x, true);
         }
-//	this.setPosition(cc.Attribs.size());
+//	this.setPosition(cc.attribs.size());
 
         if (getType() != CHEN)
             if (cc instanceof EntityConstruct) {
@@ -829,7 +829,7 @@ public class AtributeConstruct extends ConceptualConstructObject {
 		if(isPrimary())
 			setPrimary(false);
 	moveEnd();
-	cc.Attribs.remove(this);
+	cc.attribs.remove(this);
 */
         startConnFastRepaint();
         super.handleRemoveEvent(ev);

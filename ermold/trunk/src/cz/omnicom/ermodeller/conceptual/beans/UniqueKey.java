@@ -32,7 +32,7 @@ public class UniqueKey extends ConceptualObject {
      *
      * @see Atribute
      */
-    protected Vector atributes = new Vector();
+    protected Vector<Atribute> atributes = new Vector<Atribute>();
     /**
      * Owner of the unique key
      *
@@ -96,9 +96,9 @@ public class UniqueKey extends ConceptualObject {
      *
      * @return java.util.Vector
      */
-    public Vector getAtributes() {
+    public Vector<Atribute> getAtributes() {
         if (atributes == null)
-            atributes = new Vector();
+            atributes = new Vector<Atribute>();
         return atributes;
     }
 
@@ -187,9 +187,9 @@ public class UniqueKey extends ConceptualObject {
      * @see Entity#setPrimaryKey
      */
     protected synchronized void setAllAtributesArbitrary() {
-        for (Enumeration elements = getAtributes().elements(); elements.hasMoreElements();) {
+        for (Enumeration<Atribute> elements = getAtributes().elements(); elements.hasMoreElements();) {
             try {
-                ((Atribute) elements.nextElement()).setArbitrary(true);
+                (elements.nextElement()).setArbitrary(true);
             }
             catch (IsMemberOfPrimaryKeyException e) {
             } // cannot be thrown
@@ -236,8 +236,8 @@ public class UniqueKey extends ConceptualObject {
             }
         }
         if (!isPrimaryKey()) {
-            for (Enumeration atributes = getAtributes().elements(); atributes.hasMoreElements();) {
-                Atribute atribute = (Atribute) atributes.nextElement();
+            for (Enumeration<Atribute> atributes = getAtributes().elements(); atributes.hasMoreElements();) {
+                Atribute atribute = atributes.nextElement();
                 String dataType = atribute.getDataType().toString();
                 if ((DataType.isInNestedNames(dataType)) || (DataType.isInVarrayNames(dataType)) || (DataType.isInObjectNames(dataType))) {
                     ValidationError error = new CannotBeInUniqueKeyValidationError(atribute);
@@ -257,7 +257,7 @@ public class UniqueKey extends ConceptualObject {
     public void write(java.io.PrintWriter pw) {
         super.write(pw);
         pw.println("\t\t<ent>" + getEntity().getID() + "</ent>");
-        Vector v = getAtributes();
+        Vector<Atribute> v = getAtributes();
         for (Object aV : v) pw.println("\t\t<atr>" + ((Atribute) aV).getID() + "</atr>");
     }
 }

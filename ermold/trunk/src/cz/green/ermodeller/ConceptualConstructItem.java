@@ -15,6 +15,7 @@ import cz.omnicom.ermodeller.conceptual.exception.ParameterCannotBeNullException
 import cz.omnicom.ermodeller.conceptual.exception.WasNotFoundException;
 
 import javax.swing.*;
+import java.util.List;
 import java.util.Vector;
 
 
@@ -26,7 +27,7 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
     /**
      * All attributes
      */
-    protected java.util.Vector Attribs = new java.util.Vector(3, 2);
+    protected List<AtributeConstruct> attribs = new java.util.ArrayList<AtributeConstruct>(3);
 
 
     /**
@@ -80,13 +81,12 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
             //repaint atribute
             (manager).repaintItem(atr);
             //create connection
-            Connection conn = new ConnectionLine(manager, ((ConceptualConstruct) atr.getModel()).getSchema(), atr, this);
+            Connection conn = new ConnectionLine(manager, getSchema(), atr, this);
             ((ConnectionManager) manager).addConnection(conn);
             (manager).repaintItem(conn);
-            if (Attribs == null)
-                Attribs = new java.util.Vector(3, 2);
-            Attribs.addElement(atr);
-            cAtr.setPosition(Attribs.size());
+            assert attribs != null;
+            attribs.add(atr);
+            cAtr.setPosition(attribs.size());
             final NotationType type = atr.getNotationType();
             if (this instanceof EntityConstruct && type != CHEN) {
                 ((EntityConstruct) this).recalculatePositionsOfAtributes();
@@ -277,7 +277,7 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
         for (int i = connections.size() - 1; i >= 0; i--) {
             if ((atr = (AtributeConstruct) ((Connection) connections.elementAt(i)).isConnectedTo(AtributeConstruct.class)) != null)
                 cc.reconnectAtribute(atr);
-            //cc.Attribs.addElement(atr);
+            //cc.attribs.addElement(atr);
         }
     }
 
@@ -324,7 +324,7 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
                 if (((Atribute) atr.getModel()).isPrimary())
                     atr.setPrimary(false);
             atr.moveEnd();
-            ccFrom.Attribs.removeElement(atr);
+            ccFrom.attribs.remove(atr);
             ((ConceptualConstruct) getModel()).moveAtribute(cCcFrom, cAtr);
             //remove view-controller from the old manager
             atr.removeAtribute(new cz.green.event.RemoveEvent(0, 0, null));
@@ -338,8 +338,8 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
             Connection conn = new ConnectionLine(manager, atr.getSchema(), atr, this);
             ((ConnectionManager) manager).addConnection(conn);
             (manager).repaintItem(conn);
-            Attribs.addElement(atr);
-            atr.setPosition(Attribs.size());
+            attribs.add(atr);
+            atr.setPosition(attribs.size());
         } catch (Throwable x) {
             ShowException d = new ShowException(null, "Error", x, true);
         }
@@ -377,7 +377,7 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
      * @param i
      */
     public AtributeConstruct findAttributeWithPosition(int position) {
-        for (Object Attrib : Attribs) {
+        for (Object Attrib : attribs) {
             if (((AtributeConstruct) Attrib).getPosition() == position)
                 return (AtributeConstruct) Attrib;
         }

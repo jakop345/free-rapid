@@ -32,7 +32,7 @@ public class RelForeignKeyC2R extends ElementOfRelC2R implements SQLConstraintPr
     /**
      * Home atributes.
      */
-    private Vector atributesC2R = new Vector();
+    private Vector<AtributeC2R> atributesC2R = new Vector<AtributeC2R>();
     /**
      * Foreign unique key
      */
@@ -75,8 +75,7 @@ public class RelForeignKeyC2R extends ElementOfRelC2R implements SQLConstraintPr
      * @return ConstraintSQL
      */
     public ConstraintSQL createConstraintSQL() {
-        ForeignKeySQL foreignKey = new ForeignKeySQL(getAtributesC2R(), getForeignUniqueKeyC2R(), getNameC2R());
-        return foreignKey;
+        return new ForeignKeySQL(getAtributesC2R(), getForeignUniqueKeyC2R(), getNameC2R());
     }
 
     /**
@@ -89,9 +88,9 @@ public class RelForeignKeyC2R extends ElementOfRelC2R implements SQLConstraintPr
     /**
      * @return java.util.Vector
      */
-    public Vector getAtributesC2R() {
+    public Vector<AtributeC2R> getAtributesC2R() {
         if (atributesC2R == null)
-            atributesC2R = new Vector();
+            atributesC2R = new Vector<AtributeC2R>();
         return atributesC2R;
     }
 

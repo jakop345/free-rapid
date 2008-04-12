@@ -1,4 +1,4 @@
-package cz.green.eventtool;
+package cz.green.eventtool.dialogs;
 
 import javax.swing.*;
 import java.awt.*;

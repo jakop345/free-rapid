@@ -1,4 +1,4 @@
-package cz.green.eventtool;
+package cz.green.eventtool.dialogs;
 
 import cz.green.swing.ConstantConstraint;
 import cz.green.swing.CountLayout;
