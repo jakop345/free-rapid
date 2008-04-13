@@ -256,7 +256,7 @@ public class ConceptualConstructObject extends ConnectableWindow implements View
      */
     public void propEditing(boolean show) {
         if (getModel() != null)
-            PropertyListDialog.setBeanAndEdit(getModel(), ((ConceptualObject) getModel()).getName(), show);
+            PropertyListDialog.setBeanAndEdit(getModel(), ((ConceptualObject) getModel()).getName());
     }
 
     /**

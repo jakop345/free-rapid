@@ -1,5 +1,6 @@
 package cz.omnicom.ermodeller.conceptual.editors;
 
+import java.awt.*;
 import java.beans.PropertyEditorSupport;
 
 /**
@@ -53,6 +54,17 @@ public class MultiCardinalityEditor extends PropertyEditorSupport {
      */
     public String[] getTags() {
         return tags;
+    }
+
+
+    @Override
+    public boolean supportsCustomEditor() {
+        return true;
+    }
+
+    @Override
+    public Component getCustomEditor() {
+        return new MyComboBoxEditor(tags).getComponent();
     }
 
     /**

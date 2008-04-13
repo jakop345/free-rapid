@@ -25,7 +25,6 @@ public class DataTypeEditor extends JPanel implements java.awt.event.ActionListe
     private DataTypePanel dataTypePanel = null;
     protected transient PropertyChangeSupport propertyChange;
     private JPanel ivjDataTypePanel = null;
-    private Border ivjDataTypePanelGroupBox = null;
     private JRadioButton ivjDateRadioButton = null;
     private JRadioButton ivjFixedStringRadioButton = null;
     private JRadioButton ivjFloatRadioButton = null;
@@ -34,8 +33,6 @@ public class DataTypeEditor extends JPanel implements java.awt.event.ActionListe
     private JRadioButton ivjVariableStringRadioButton = null;
     //Steve
     private JRadioButton ivjUserTypeRadioButton = null;
-    // PS
-    private JButton closeButton;
 
     /**
      * Constructor

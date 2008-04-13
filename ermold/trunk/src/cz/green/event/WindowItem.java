@@ -263,7 +263,7 @@ public class WindowItem implements Item, java.io.Serializable {
         int[][] r = rect;
         float scale = (manager).getScale();
         return new Rectangle((int) (r[0][0] / scale), (int) (r[1][0] / scale),
-                (int) ((r[0][1] - r[0][0]) / scale), (int) ((r[1][1] - r[1][0]) / scale));
+                (int) ((r[0][1] - r[0][0]) / scale), (int) ((r[1][1] - r[1][0]) / scale) + 2);
     }
 
     /**
@@ -567,7 +567,7 @@ public class WindowItem implements Item, java.io.Serializable {
             }
         } catch (java.lang.reflect.InvocationTargetException e) {
             //handler throws some exception
-            System.out.println(e);
+            e.printStackTrace();
             return false;
         } catch (IllegalArgumentException e) {
             //wrong parameters

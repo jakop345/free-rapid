@@ -153,7 +153,6 @@ public class Atribute extends ConceptualObject {
      * @see #getArbitrary
      */
     public synchronized void setArbitrary(boolean arbitrary) throws IsMemberOfPrimaryKeyException {
-        boolean memberPK;
         boolean oldValue = fieldArbitrary;
         if (isPrimary() && !arbitrary) throw new IsMemberOfPrimaryKeyException(this);
         fieldArbitrary = arbitrary;

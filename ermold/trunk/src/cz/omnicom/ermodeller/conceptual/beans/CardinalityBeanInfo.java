@@ -1,9 +1,9 @@
 package cz.omnicom.ermodeller.conceptual.beans;
 
-import cz.omnicom.ermodeller.conceptual.editors.BooleanEditor;
+import com.l2fprod.common.beans.editor.BooleanPropertyEditor;
 import cz.omnicom.ermodeller.conceptual.editors.CardinalityCustomizer;
-import cz.omnicom.ermodeller.conceptual.editors.MultiCardinalityEditor;
 
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 
 /**
@@ -52,7 +52,7 @@ public class CardinalityBeanInfo extends java.beans.SimpleBeanInfo {
             }
             aDescriptor.setBound(true);
             /* aDescriptor.setConstrained(false); */
-            aDescriptor.setPropertyEditorClass(BooleanEditor.class);
+            //aDescriptor.setPropertyEditorClass(BooleanEditor.class);
             aDescriptor.setDisplayName("Mandatory");
             aDescriptor.setShortDescription("Connected entity should be always in relationship (parciality of connection).");
             /* aDescriptor.setExpert(false); */
@@ -242,13 +242,13 @@ public class CardinalityBeanInfo extends java.beans.SimpleBeanInfo {
      */
     public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
         try {
-            java.beans.PropertyDescriptor aDescriptorList[] = {
+            return new PropertyDescriptor[]{
                     arbitraryPropertyDescriptor()
                     , entityPropertyDescriptor()
                     , multiCardinalityPropertyDescriptor()
+                    , gluePropertyDescriptor()
                     , relationPropertyDescriptor()
             };
-            return aDescriptorList;
         } catch (Throwable exception) {
             handleException(exception);
         }
@@ -272,6 +272,7 @@ public class CardinalityBeanInfo extends java.beans.SimpleBeanInfo {
      *
      * @return java.beans.PropertyDescriptor
      */
+
     public java.beans.PropertyDescriptor multiCardinalityPropertyDescriptor() {
         java.beans.PropertyDescriptor aDescriptor = null;
         try {
@@ -309,9 +310,64 @@ public class CardinalityBeanInfo extends java.beans.SimpleBeanInfo {
             }
             aDescriptor.setBound(true);
             /* aDescriptor.setConstrained(false); */
-            aDescriptor.setPropertyEditorClass(MultiCardinalityEditor.class);
+            aDescriptor.setPropertyEditorClass(BooleanPropertyEditor.class);
             aDescriptor.setDisplayName("Arity");
             aDescriptor.setShortDescription("Cardinality of connection entity to relationship.");
+            /* aDescriptor.setExpert(false); */
+            /* aDescriptor.setHidden(false); */
+            /* aDescriptor.setValue("preferred", new Boolean(false)); */
+            /* aDescriptor.setValue("ivjDesignTimeProperty", new Boolean(true)); */
+        } catch (Throwable exception) {
+            handleException(exception);
+        }
+        return aDescriptor;
+    }
+
+    /**
+     * Gets the multiCardinality property descriptor.
+     *
+     * @return java.beans.PropertyDescriptor
+     */
+    public java.beans.PropertyDescriptor gluePropertyDescriptor() {
+        java.beans.PropertyDescriptor aDescriptor = null;
+        try {
+            try {
+                /* Using methods via getMethod is the faster way to create the multiCardinality property descriptor. */
+                java.lang.reflect.Method aGetMethod;
+                try {
+                    /* Attempt to find the method using getMethod with parameter types. */
+                    java.lang.Class aGetMethodParameterTypes[] = {};
+                    aGetMethod = getBeanClass().getMethod("getGlue", aGetMethodParameterTypes);
+                } catch (Throwable exception) {
+                    /* Since getMethod failed, call findMethod. */
+                    handleException(exception);
+                    aGetMethod = findMethod(getBeanClass(), "getGlue", 0);
+                }
+                java.lang.reflect.Method aSetMethod;
+                try {
+                    /* Attempt to find the method using getMethod with parameter types. */
+                    java.lang.Class aSetMethodParameterTypes[] = {
+                            boolean.class
+                    };
+                    aSetMethod = getBeanClass().getMethod("setGlue", aSetMethodParameterTypes);
+                } catch (Throwable exception) {
+                    /* Since getMethod failed, call findMethod. */
+                    handleException(exception);
+                    aSetMethod = findMethod(getBeanClass(), "setGlue", 1);
+                }
+                aDescriptor = new java.beans.PropertyDescriptor("glue"
+                        , aGetMethod, aSetMethod);
+            } catch (Throwable exception) {
+                /* Since we failed using methods, try creating a default property descriptor. */
+                handleException(exception);
+                aDescriptor = new java.beans.PropertyDescriptor("glue"
+                        , getBeanClass());
+            }
+            aDescriptor.setBound(true);
+            /* aDescriptor.setConstrained(false); */
+            //aDescriptor.setPropertyEditorClass(MultiCardinalityEditor.class);
+            aDescriptor.setDisplayName("Merge");
+            aDescriptor.setShortDescription("Merge entity with relation during generating relational schema and SQL.");
             /* aDescriptor.setExpert(false); */
             /* aDescriptor.setHidden(false); */
             /* aDescriptor.setValue("preferred", new Boolean(false)); */

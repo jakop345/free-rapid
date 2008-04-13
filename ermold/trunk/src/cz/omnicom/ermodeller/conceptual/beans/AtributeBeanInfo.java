@@ -1,7 +1,10 @@
 package cz.omnicom.ermodeller.conceptual.beans;
 
-import cz.omnicom.ermodeller.conceptual.editors.BooleanEditor;
+import cz.green.ermodeller.dialogs.DataTypePropertyEditor;
 
+import java.beans.EventSetDescriptor;
+import java.beans.MethodDescriptor;
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 
 /**
@@ -50,7 +53,7 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
             }
             aDescriptor.setBound(true);
             /* aDescriptor.setConstrained(false); */
-            aDescriptor.setPropertyEditorClass(BooleanEditor.class);
+            //aDescriptor.setPropertyEditorClass(BooleanEditor.class);
             aDescriptor.setDisplayName("Mandatory");
             aDescriptor.setShortDescription("Mandatory of atribute");
             /* aDescriptor.setExpert(false); */
@@ -105,7 +108,7 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
             }
             aDescriptor.setBound(true);
             /* aDescriptor.setConstrained(false); */
-            aDescriptor.setPropertyEditorClass(BooleanEditor.class);
+            //aDescriptor.setPropertyEditorClass(BooleanEditor.class);
             aDescriptor.setDisplayName("Unique");
             aDescriptor.setShortDescription("Set/reset unique");
             /* aDescriptor.setExpert(false); */
@@ -160,7 +163,7 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
             }
             aDescriptor.setBound(true);
             /* aDescriptor.setConstrained(false); */
-            aDescriptor.setPropertyEditorClass(BooleanEditor.class);
+            //aDescriptor.setPropertyEditorClass(BooleanEditor.class);
             aDescriptor.setDisplayName("Primary");
             aDescriptor.setShortDescription("Set/reset atribute as member of primary key");
             /* aDescriptor.setExpert(false); */
@@ -269,7 +272,7 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
             }
             aDescriptor.setBound(true);
             /* aDescriptor.setConstrained(false); */
-            aDescriptor.setPropertyEditorClass(cz.omnicom.ermodeller.datatype.DataTypeEditor.class);
+            aDescriptor.setPropertyEditorClass(DataTypePropertyEditor.class);
             aDescriptor.setDisplayName("Data type");
             aDescriptor.setShortDescription("Data type of atribute.");
             /* aDescriptor.setExpert(false); */
@@ -372,9 +375,7 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
      */
     public java.beans.EventSetDescriptor[] getEventSetDescriptors() {
         try {
-            java.beans.EventSetDescriptor aDescriptorList[] = {
-            };
-            return aDescriptorList;
+            return new EventSetDescriptor[]{};
         } catch (Throwable exception) {
             handleException(exception);
         }
@@ -388,9 +389,7 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
      */
     public java.beans.MethodDescriptor[] getMethodDescriptors() {
         try {
-            java.beans.MethodDescriptor aDescriptorList[] = {
-            };
-            return aDescriptorList;
+            return new MethodDescriptor[]{};
         } catch (Throwable exception) {
             handleException(exception);
         }
@@ -404,14 +403,13 @@ public class AtributeBeanInfo extends java.beans.SimpleBeanInfo {
      */
     public java.beans.PropertyDescriptor[] getPropertyDescriptors() {
         try {
-            java.beans.PropertyDescriptor aDescriptorList[] = {
+            return new PropertyDescriptor[]{
                     arbitraryPropertyDescriptor()
                     , uniquePropertyDescriptor()
                     , primaryPropertyDescriptor()
                     , constructPropertyDescriptor()
                     , dataTypePropertyDescriptor()
             };
-            return aDescriptorList;
         } catch (Throwable exception) {
             handleException(exception);
         }

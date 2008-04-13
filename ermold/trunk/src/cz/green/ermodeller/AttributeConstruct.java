@@ -479,6 +479,7 @@ public class AttributeConstruct extends ConceptualConstructObject {
      * Paints the atribute. Read <b>name</b> and the <b>arbitrary</b> properties from the model and paints the
      * atribute.
      */
+    @SuppressWarnings({"SuspiciousNameCombination"})
     public void paint(java.awt.Graphics g) {
         java.awt.Rectangle r = getBounds();
         String name = model.getName();
@@ -493,7 +494,7 @@ public class AttributeConstruct extends ConceptualConstructObject {
                     if (model.isPrimary()) {
                         if (selected) {
                             g.setColor(getSelectedBackgroundColor());
-                            g.fillRect(r.x, r.y, r.width, r.height);
+                            g.fillRect(r.x, r.y - 2, r.width + 2, r.height + 3);
                         }
                         g.setColor(getForegroundColor());
                         g.fillOval(r.x, r.y, r.height, r.height);
@@ -516,13 +517,15 @@ public class AttributeConstruct extends ConceptualConstructObject {
                 case (LOD_FULL):
                     if (selected) {
                         g.setColor(getSelectedBackgroundColor());
-                        g.fillRect(r.x, r.y, r.width, r.height);
+                        g.fillRect(r.x, r.y - 2, r.width + 2, r.height + 3);
                     }
                     //determime circle drawing
                     g.setColor(getForegroundColor());
                     if (model.getArbitrary()) {
                         g.fillOval(r.x, r.y, r.height, r.height);
                     } else {
+                        //g.setColor(Color.YELLOW);
+                        //g.fillOval(r.x, r.y, r.height, r.height);
                         g.drawOval(r.x, r.y, r.height, r.height);
                     }
 
@@ -537,10 +540,10 @@ public class AttributeConstruct extends ConceptualConstructObject {
                             }
                         }
                     }
-
+                    g.drawString(name, r.x + (int) (1.5 * r.height), r.y + r.height - 3);
                     if (model.isPrimary())
-                        g.drawLine(r.x + r.height, r.y + r.height, r.x + r.width, r.y + r.height);
-                    g.drawString(name, r.x + (int) (1.5 * r.height), r.y + r.height - 2);
+                        g.drawLine(r.x + r.height, r.y + r.height - 1, r.x + r.width, r.y + r.height - 1);
+
                     r = null;
             }
         }
@@ -770,7 +773,7 @@ public class AttributeConstruct extends ConceptualConstructObject {
             }
             if (getNotationType() != CHEN)
                 ((EntityConstruct) getOwner()).recalculatePositionsOfAtributes();
-
+            manager.repaintItem(this);
         }
         if (e.getPropertyName().equals("name")) {
             //the name changed --> counts new size and resize the atribute
@@ -800,7 +803,7 @@ public class AttributeConstruct extends ConceptualConstructObject {
         } else {
             //jinak ho prekresli
             //java.awt.Rectangle b = getBounds();
-            (manager).repaintItem(this);
+            manager.repaintItem(this);
         }
     }
 

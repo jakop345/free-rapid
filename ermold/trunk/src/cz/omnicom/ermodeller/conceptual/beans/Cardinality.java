@@ -36,6 +36,7 @@ public class Cardinality extends ConceptualObject {
     /**
      * Connected entity.
      */
+
     protected Entity entity = null;
     /**
      * Connected relation.

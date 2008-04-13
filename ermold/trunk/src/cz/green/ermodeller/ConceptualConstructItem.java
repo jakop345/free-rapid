@@ -80,11 +80,11 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
             AttributeConstruct atr = new AttributeConstruct(cAtr, this, manager, left, top);
             manager.add(atr);
             //repaint atribute
-            (manager).repaintItem(atr);
+            manager.repaintItem(atr);
             //create connection
             Connection conn = new ConnectionLine(manager, getSchema(), atr, this);
             ((ConnectionManager) manager).addConnection(conn);
-            (manager).repaintItem(conn);
+            manager.repaintItem(conn);
             assert attribs != null;
             attribs.add(atr);
             cAtr.setPosition(attribs.size());
@@ -319,10 +319,10 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
             }
             ConceptualConstructItem ccFrom = atr.getOwner();
             ConceptualConstruct cCcFrom = (ConceptualConstruct) (ccFrom.getModel());
-            Atribute cAtr = (Atribute) atr.getModel();
+            Atribute cAtr = atr.getModel();
             if (ccFrom instanceof EntityConstruct)
 //			if(((cz.omnicom.ermodeller.conceptual.beans.Entity)((Entity) ccFrom).getModel()).isPrimary())
-                if (((Atribute) atr.getModel()).isPrimary())
+                if ((atr.getModel()).isPrimary())
                     atr.setPrimary(false);
             atr.moveEnd();
             ccFrom.attribs.remove(atr);
@@ -334,11 +334,11 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
             atr.setOwner(this);
             //puts into new manager
             manager.add(atr);
-            (manager).repaintItem(atr);
+            manager.repaintItem(atr);
             //create new connection
             Connection conn = new ConnectionLine(manager, atr.getSchema(), atr, this);
             ((ConnectionManager) manager).addConnection(conn);
-            (manager).repaintItem(conn);
+            manager.repaintItem(conn);
             attribs.add(atr);
             atr.setPosition(attribs.size());
         } catch (Throwable x) {
@@ -358,7 +358,7 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
      */
     public void removeAtribute(AttributeConstruct atr) throws ParameterCannotBeNullException, WasNotFoundException {
         ConceptualConstruct cCc = (ConceptualConstruct) getModel();
-        cCc.disposeAtribute((Atribute) atr.getModel());
+        cCc.disposeAtribute(atr.getModel());
     }
 
     /**

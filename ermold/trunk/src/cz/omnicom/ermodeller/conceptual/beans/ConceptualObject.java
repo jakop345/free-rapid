@@ -297,11 +297,11 @@ public abstract class ConceptualObject implements Serializable, ShowErrorListene
      * @return list of errors
      * @see cz.omnicom.ermodeller.errorlog.ErrorLogList
      */
-    protected static final ErrorLogList checkVectorForNameDuplicity(Vector vectorToCheck, Class aValidationErrorClass) throws InstantiationException, IllegalAccessException {
+    protected static final ErrorLogList checkVectorForNameDuplicity(Vector<ConceptualObjectNameController> vectorToCheck, Class aValidationErrorClass) throws InstantiationException, IllegalAccessException {
         ErrorLogList errorLogList = new ErrorLogList();
         synchronized (vectorToCheck) {
             for (int i = 0; i < vectorToCheck.size(); i++) {
-                ConceptualObjectNameController firstController = (ConceptualObjectNameController) vectorToCheck.elementAt(i);
+                ConceptualObjectNameController firstController = vectorToCheck.elementAt(i);
                 if (!firstController.isAlreadyWrong()) {
                     ConceptualObject firstObject = firstController.getConceptualObject();
                     String firstName = firstObject.getName();
@@ -309,7 +309,7 @@ public abstract class ConceptualObject implements Serializable, ShowErrorListene
                     ConceptualObjectVectorValidationError error = (ConceptualObjectVectorValidationError) aValidationErrorClass.newInstance();
                     boolean errorAppeared = false;
                     for (int j = i + 1; j < vectorToCheck.size(); j++) {
-                        ConceptualObjectNameController secondController = (ConceptualObjectNameController) vectorToCheck.elementAt(j);
+                        ConceptualObjectNameController secondController = vectorToCheck.elementAt(j);
                         if (!secondController.isAlreadyWrong()) {
                             ConceptualObject secondObject = secondController.getConceptualObject();
                             String secondName = secondObject.getName();
@@ -462,9 +462,10 @@ public abstract class ConceptualObject implements Serializable, ShowErrorListene
     }
 
     public String toString() {
-        String s = getName() + "                        ";
-        if (getID() >= getSchema().getComposeID())
-            s = '*' + s;
+        String s = "ConceptualObject " + getName();
+//                + "                        ";
+//        if (getID() >= getSchema().getComposeID())
+//            s = '*' + s;
         return s;
     }
 
@@ -499,7 +500,7 @@ public abstract class ConceptualObject implements Serializable, ShowErrorListene
             }
             // checks the name for allowed characters
             char[] nameArr = name.toCharArray();
-            Vector notAllowed = new Vector();
+            Vector<Character> notAllowed = new Vector<Character>();
             for (char aNameArr : nameArr) {
                 found = false;
                 for (int j = 0; j < allowed.length && !found; j++) {

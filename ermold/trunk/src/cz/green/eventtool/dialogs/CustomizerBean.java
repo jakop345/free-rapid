@@ -79,4 +79,5 @@ public class CustomizerBean extends JDialog {
             return;
         customizer = null;
     }
+
 }

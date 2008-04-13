@@ -259,7 +259,6 @@ public class PropertyList extends JComponent implements Scrollable, PropertyChan
                 if (getter == null || setter == null) {
                     continue;
                 }
-                Component view = null;
                 Object value;
                 try {
                     Object args[] = {};

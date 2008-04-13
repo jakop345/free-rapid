@@ -22,6 +22,8 @@ import cz.omnicom.ermodeller.typeseditor.UserTypeStorageVector;
 
 import javax.swing.*;
 import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.Vector;
@@ -50,6 +52,13 @@ public class Desktop extends DesktopTool implements FontManager,
         super(place, left, top, width, height);
         model = new Schema();
         pcs = new java.beans.PropertyChangeSupport(this);
+        this.addPropertyChangeListener(new PropertyChangeListener() {
+
+            public void propertyChange(PropertyChangeEvent evt) {
+                System.out.println("evt = v Desktop = " + evt.getPropertyName());
+            }
+        });
+
     }
 
     /**
@@ -718,7 +727,7 @@ public class Desktop extends DesktopTool implements FontManager,
      * @see cz.green.event.interfaces.PaintableManager#selectItem(cz.green.event.interfaces.SelectableItem , boolean)
      * @see cz.green.event.interfaces.Manager#changeZOrder(cz.green.event.interfaces.Item , boolean)
      */
-    public void handleSelectItemEvent(cz.green.event.SelectItemEvent event) {
+    public void handleSelectItemEvent(SelectItemEvent event) {
         super.handleSelectItemEvent(event);
         if (!event.getAddItem()) {
             propEditing(false);
@@ -776,11 +785,7 @@ public class Desktop extends DesktopTool implements FontManager,
      * This method was created by Jiri Mares
      */
     public void propEditing(boolean show) {
-        PropertyListDialog
-                .setBeanAndEdit(
-                        getModel(),
-                        ((ConceptualObject) getModel())
-                                .getName(), show);
+        PropertyListDialog.setBeanAndEdit(getModel(), ((ConceptualObject) getModel()).getName());
     }
 
     /**
