@@ -2,27 +2,38 @@
 <project name="ERModeller" default="all" basedir=".">
     <property name="application" value="erm"/>
     <property name="version" value="${application}-5.0-a01"/>
-    <property name="jarfile" value="erm.jar"/>
+    <property name="mainjar.file" value="erm.jar"/>
+    <property name="mainjar-packed.file" value="${mainjar.file}.pack.gz"/>
 
     <!-- output data directories -->
-    <property name="build" value="${version}"/>
-    <property name="classes" value="_classes"/>
-    <property name="dist" value="dist"/>
+    <property name="build.dir" value="${version}"/>
+    <property name="classes.dir" value="_classes"/>
+    <property name="dist.dir" value="dist"/>
 
     <!-- input data directories -->
-    <property name="src" value="src"/>
-    <property name="etc" value="etc"/>
-    <property name="doc" value="doc"/>
-    <property name="lib" value="lib"/>
-    <property name="dev" value="dev"/>
-    <property name="lookandfeel" value="lookandfeel"/>
-    <property name="lib-src" value="lib-src"/>
+    <property name="src.dir" value="src"/>
+    <property name="etc.dir" value="etc"/>
+    <property name="doc.dir" value="doc"/>
+    <property name="lib.dir" value="lib"/>
+    <property name="dev.dir" value="dev"/>
+    <property name="lookandfeel.dir" value="lookandfeel"/>
+    <property name="lib-src.dir" value="lib-src"/>
+    <property name="ant-tasks.dir" value="${dev.dir}/ant-tasks/"/>
+    <property name="jnlp.url" value="http://localhost/jlp/erm"/>
+    <property name="jnlp.file" value="erm.jnlp"/>
+    <property name="jnlp.homepage" value="http://vity.cz/erm"/>
     <!--<property name="help" location="help"/>-->
     <property name="resources" value="cz/cvut/felk/erm/core/resources/"/>
     <property name="mainclass" value="cz.cvut.felk.erm.core.MainApp"/>
     <property name="splash" value="${resources}icons/splash.jpg"/>
 
-    <fileset id="jars" dir="${lib}" includes="**/*"/>
+
+    <!-- additional tasks for Ant -->
+    <taskdef classpath="${ant-tasks.dir}orangevolt-ant-tasks-1.3.8.jar"
+             resource="com/orangevolt/tools/ant/taskdefs.properties"/>
+    <!--<taskdef name="pack200" classname="com.sun.tools.apache.ant.pack200.Pack200Task" classpath="${ant-tasks.dir}Pack200Task.jar"/>-->
+
+    <fileset id="jars" dir="${lib.dir}" includes="**/*"/>
 
     <patternset id="compiler.resources">
         <include name="**/?*.properties"/>
@@ -43,50 +54,50 @@
     </path>
 
     <path id="dist-jars">
-        <fileset dir="${build}/${lib}" includes="**/*.jar"/>
-        <fileset dir="${build}/${lookandfeel}" includes="**/*.jar"/>
-        <fileset dir="${build}" includes="${jarfile}"/>
+        <fileset dir="${build.dir}/${lib.dir}" includes="**/*.jar"/>
+        <fileset dir="${build.dir}/${lookandfeel.dir}" includes="**/*.jar"/>
+        <fileset dir="${build.dir}" includes="${mainjar.file}"/>
     </path>
 
     <pathconvert property="lib.prefix" pathsep=" ">
-        <path location="${lib}"/>
+        <path location="${lib.dir}"/>
     </pathconvert>
 
     <pathconvert property="classpath" refid="jars" pathsep=" " dirsep="/">
-        <map from="${lib.prefix}" to="${lib}"/>
+        <map from="${lib.prefix}" to="${lib.dir}"/>
     </pathconvert>
 
     <target name="build" depends="compile" description="building ERModeller">
-        <jar jarfile="${build}/${jarfile}" compress="false">
+        <jar jarfile="${build.dir}/${mainjar.file}" compress="false">
             <manifest>
                 <attribute name="Build-Date" value="${TODAY}"/>
                 <attribute name="Class-Path" value="${classpath}"/>
                 <attribute name="Main-Class" value="${mainclass}"/>
                 <attribute name="SplashScreen-Image" value="${splash}"/>
             </manifest>
-            <fileset dir="${classes}" includes="**/*"/>
+            <fileset dir="${classes.dir}" includes="**/*"/>
         </jar>
-        <mkdir dir="${build}/${lib}"/>
-        <!--<mkdir dir="${build}/help"/>-->
-        <copy todir="${build}">
-            <fileset dir="${etc}" includes="**/*"/>
+        <mkdir dir="${build.dir}/${lib.dir}"/>
+        <!--<mkdir dir="${build.dir}/help"/>-->
+        <copy todir="${build.dir}">
+            <fileset dir="${etc.dir}" includes="**/*"/>
         </copy>
-        <!--<copy todir="${build}/help">-->
+        <!--<copy todir="${build.dir}/help">-->
         <!--<fileset dir="${help}" includes="**/*"></fileset>-->
         <!--</copy>-->
-        <copy todir="${build}/${lib}">
-            <fileset dir="${lib}" includes="**/*"/>
+        <copy todir="${build.dir}/${lib.dir}">
+            <fileset dir="${lib.dir}" includes="**/*"/>
         </copy>
     </target>
 
     <target name="compile" depends="clean, init" description="compiling source codes">
-        <mkdir dir="${classes}"/>
-        <javac srcdir="${src}" destdir="${classes}" classpathref="cp" optimize="on" target="1.6">
+        <mkdir dir="${classes.dir}"/>
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="cp" optimize="on" target="1.6">
         </javac>
         <!-- zkopirovani resourcu -->
 
-        <copy todir="${classes}">
-            <fileset dir="${src}">
+        <copy todir="${classes.dir}">
+            <fileset dir="${src.dir}">
                 <patternset refid="compiler.resources"/>
                 <type type="file"/>
             </fileset>
@@ -95,18 +106,18 @@
 
     <target name="init" description="initialization">
         <tstamp/>
-        <mkdir dir="${classes}"/>
-        <mkdir dir="${build}"/>
-        <mkdir dir="${dist}"/>
+        <mkdir dir="${classes.dir}"/>
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${dist.dir}"/>
     </target>
 
     <target name="clean" description="clean up">
-        <delete dir="${build}"/>
-        <delete dir="${classes}"/>
-        <delete dir="${dist}"/>
+        <delete dir="${build.dir}"/>
+        <delete dir="${classes.dir}"/>
+        <delete dir="${dist.dir}"/>
     </target>
 
-    <target name="sign" depends="build">
+    <target name="webstart" depends="build">
         <delete file="testkeystore"/>
         <genkey alias="cvut-fel" storepass="secret" keystore="testkeystore"
                 dname="CN=CVUT FEL, OU=Prague, O=www.feld.cvut.cz, C=CS"/>
@@ -117,38 +128,69 @@
             <path refid="dist-jars"/>
         </signjar>
         <delete file="testkeystore"/>
+        <!-- creating JNLP file -->
+        <jnlp toFile="${build.dir}/${jnlp.file}" href="${jnlp.file}" codebase="${jnlp.url}" jnlpversion="6.0">
+            <information offlineallowed="true">
+                <title>ER Modeller 5.0</title>
+                <vendor>CTU FEL</vendor>
+                <homepage href="http://www.foo.com/products/foo"/>
+                <!--                <icon kind="splash" href="images/splash.gif"/>-->
+                <icon href="erm.ico"/>
+                <description>ER Modeller</description>
+                <description kind="short">ER Modeller</description>
+                <description kind="tooltip">ER Modeller</description>
+            </information>
+
+            <security>
+                <all_permissions/>
+            </security>
+
+            <resources>
+                <j2se version="1.6+"/>
+                <!--<property name="jnlp.packEnabled" value="true"/>                -->
+                <fileset dir="${build.dir}">
+                    <include name="${lib.dir}/**/*.jar"/>
+                    <include name="${lookandfeel.dir}/**/*.jar"/>
+                    <include name="${mainjar.file}"/>
+                </fileset>
+            </resources>
+            <application_desc main_class="${mainclass}"/>
+        </jnlp>
+
+        <zip zipfile="${dist.dir}/${version}-ws.zip">
+            <fileset dir=".">
+                <include name="${build.dir}/${lib.dir}/"/>
+                <include name="${build.dir}/${lookandfeel.dir}/"/>
+                <include name="${build.dir}/${mainjar-packed.file}"/>
+                <include name="${build.dir}/${jnlp.file}"/>
+            </fileset>
+        </zip>
+
     </target>
-    <target name="all" depends="clean,init,compile, build, sign, dist" description="build all"/>
+    <target name="all" depends="clean,init,compile, build, webstart, dist" description="build all"/>
 
     <!-- run TimeJuggler -->
 
     <target name="run" depends="build">
-        <java fork="true" jar="${build}/${jarfile}"/>
+        <java fork="true" jar="${build.dir}/${mainjar.file}"/>
     </target>
 
-    <target name="dist" depends="sign" description="creating release">
-        <zip zipfile="${dist}/${version}.zip">
+    <target name="dist" depends="build" description="creating release">
+        <zip zipfile="${dist.dir}/${version}.zip">
             <fileset dir=".">
-                <include name="${build}/"/>
+                <include name="${build.dir}/"/>
+                <exclude name="${build.dir}/${mainjar-packed.file}"/>
             </fileset>
         </zip>
-        <zip destfile="${dist}/${version}-src.zip">
+        <zip destfile="${dist.dir}/${version}-src.zip">
             <fileset dir=".">
-                <include name="${lib}/"/>
-                <include name="${lib-src}/"/>
-                <include name="${etc}/"/>
-                <include name="${src}/"/>
-                <include name="${dev}/"/>
-                <include name="${doc}/"/>
+                <include name="${lib.dir}/"/>
+                <include name="${lib-src.dir}/"/>
+                <include name="${etc.dir}/"/>
+                <include name="${src.dir}/"/>
+                <include name="${dev.dir}/"/>
+                <include name="${doc.dir}/"/>
                 <include name="build.xml"/>
-            </fileset>
-        </zip>
-        <zip zipfile="${dist}/${version}-ws.zip">
-            <fileset dir=".">
-                <include name="${build}/${lib}/"/>
-                <include name="${build}/${lookandfeel}/"/>
-                <include name="${build}/${jarfile}"/>
-                <include name="${dev}/erm.jnlp"/>
             </fileset>
         </zip>
     </target>

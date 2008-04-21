@@ -1,0 +1,15 @@
+#More info about this file: http://joust.kano.net/weblog/archive/2004/10/16/pack200-on-apache-web-server/
+# Return the right mime type for JARs
+AddType application/x-java-archive .jar
+# Enable type maps
+AddHandler application/x-type-map .var
+Options +MultiViews
+# Tweak MultiViews - this line is for
+
+<Files *.pack.gz>
+  # Enable the Content-Encoding header for .jar.pack.gz files
+  AddEncoding pack200-gzip .jar
+  # Stop mod_gzip from messing with the Content-Encoding
+  # response for these files
+  RemoveEncoding .gz
+</Files>
