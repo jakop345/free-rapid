@@ -1,10 +1,13 @@
 package cz.cvut.felk.erm.gui.actions;
 
 import cz.cvut.felk.erm.core.MainApp;
+import cz.cvut.felk.erm.gui.dialogs.CloseDialog;
 import cz.cvut.felk.erm.gui.managers.AreaManager;
+import cz.cvut.felk.erm.gui.managers.FileInstance;
 import org.jdesktop.application.Action;
 import org.jdesktop.beans.AbstractBean;
 
+import java.util.Collection;
 import java.util.logging.Logger;
 
 /**
@@ -28,7 +31,6 @@ public class FileActions extends AbstractBean {
         areaManager.grabActiveFocus();
     }
 
-
     @Action()
     public void openScheme() {
 
@@ -51,11 +53,43 @@ public class FileActions extends AbstractBean {
     }
 
     @Action()
-    public void closeAllSchemes() {
+    public boolean closeAllSchemes() throws Exception {
+        final AreaManager areaManager = AreaManager.getInstance();
+        final Collection<FileInstance> modifiedList = areaManager.getModifiedInstances();
+        if (!modifiedList.isEmpty()) {
+            final CloseDialog<FileInstance> dialog;
 
+            dialog = new CloseDialog<FileInstance>(app.getMainFrame(), modifiedList);
+            app.prepareDialog(dialog, true);
+
+            if (dialog.getModalResult() != CloseDialog.RESULT_OK)
+                return false;
+            final Collection<FileInstance> selectedList = dialog.getReturnList();
+            if (selectedList != null) {
+                //closes all except the selected on the list
+                for (FileInstance o : areaManager.getOpenedInstances()) {
+                    if (!selectedList.contains(o)) { //is not modified list
+                        areaManager.closeInstanceHard(o);
+                    }
+                }
+                for (FileInstance aSelectedList : selectedList) {
+                    areaManager.setActivateFileInstance(aSelectedList);
+//                    if (!SaveFileAction.save(false))
+//                        return false;
+                    areaManager.closeActiveInstance();
+                }
+            } else
+                return false;//user set doClose
+        } else {
+            for (FileInstance o : areaManager.getOpenedInstances()) {
+                areaManager.closeInstanceHard(o);
+                //it.remove();
+            }
+        }
+        return true;
     }
 
-    @Action
+    @Action()
     public void pageSetup() {
 
     }

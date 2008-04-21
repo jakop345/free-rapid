@@ -129,7 +129,7 @@ public final class FileInstance implements IFileInstance<ContentArea>, IInformed
 
     public boolean closeSoft() throws Throwable {
         if (this.isModified())
-            switch (Swinger.getChoiceCancel("message.confirm.changed")) {
+            switch (Swinger.getChoiceCancel(Swinger.getResourceMap().getString("message.confirm.changed"))) {
                 case Swinger.RESULT_YES:
                     //SaveFileAction.getInstance().actionPerformed(null);
                     break;

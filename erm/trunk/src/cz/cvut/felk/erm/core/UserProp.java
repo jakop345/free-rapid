@@ -30,4 +30,5 @@ public class UserProp {
     public static final String WEBURL = "settings.weburl";
     public static final String ONE_INSTANCE_SERVER_PORT = "settings.oneInstanceServerPort";
     public static final String NEW_VERSION = "settings.checkForNewVersionAuto";
+    public static final String SORT_FILES_CLOSEDIALOG = "settings.sortFilesCloseDialog";
 }

@@ -33,7 +33,8 @@ public class ContentArea extends JPanel {
     }
 
     public boolean isModified() {
-        return modified;
+        //  return modified;
+        return true;
     }
 
     public void setModified(boolean modified) {

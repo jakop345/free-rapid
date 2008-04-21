@@ -3,7 +3,7 @@
     <property name="application" value="erm"/>
     <property name="version" value="${application}-5.0-a01"/>
     <property name="mainjar.file" value="erm.jar"/>
-    <property name="mainjar-packed.file" value="${mainjar.file}.pack.gz"/>
+    <!--<property name="mainjar-packed.file" value="${mainjar.file}.pack.gz"/>-->
 
     <!-- output data directories -->
     <property name="build.dir" value="${version}"/>
@@ -19,7 +19,7 @@
     <property name="lookandfeel.dir" value="lookandfeel"/>
     <property name="lib-src.dir" value="lib-src"/>
     <property name="ant-tasks.dir" value="${dev.dir}/ant-tasks/"/>
-    <property name="jnlp.url" value="http://localhost/jlp/erm"/>
+    <property name="jnlp.url" value="http://localhost/jnlp/erm"/>
     <property name="jnlp.file" value="erm.jnlp"/>
     <property name="jnlp.homepage" value="http://vity.cz/erm"/>
     <!--<property name="help" location="help"/>-->
@@ -80,7 +80,7 @@
         <mkdir dir="${build.dir}/${lib.dir}"/>
         <!--<mkdir dir="${build.dir}/help"/>-->
         <copy todir="${build.dir}">
-            <fileset dir="${etc.dir}" includes="**/*"/>
+            <fileset dir="${etc.dir}" includes="**/*" excludes="**/jnlp/**"/>
         </copy>
         <!--<copy todir="${build.dir}/help">-->
         <!--<fileset dir="${help}" includes="**/*"></fileset>-->
@@ -116,35 +116,38 @@
         <delete dir="${classes.dir}"/>
         <delete dir="${dist.dir}"/>
     </target>
+    <!-- Generates key for signing jars -->
+    <target name="genkey">
+        <delete file="${dev.dir}/keystore"/>
+        <genkey alias="cvut-fel" storepass="secret" keystore="${dev.dir}/keystore"
+                dname="CN=CVUT FEL, OU=Prague, O=www.feld.cvut.cz, C=CS"/>
+    </target>
 
     <target name="webstart" depends="build">
-        <delete file="testkeystore"/>
-        <genkey alias="cvut-fel" storepass="secret" keystore="testkeystore"
-                dname="CN=CVUT FEL, OU=Prague, O=www.feld.cvut.cz, C=CS"/>
-        <signjar
-                alias="cvut-fel" keystore="testkeystore"
-                storepass="secret"
-                >
+        <signjar alias="cvut-fel" keystore="${dev.dir}/keystore" storepass="secret">
             <path refid="dist-jars"/>
         </signjar>
-        <delete file="testkeystore"/>
         <!-- creating JNLP file -->
         <jnlp toFile="${build.dir}/${jnlp.file}" href="${jnlp.file}" codebase="${jnlp.url}" jnlpversion="6.0">
             <information offlineallowed="true">
                 <title>ER Modeller 5.0</title>
                 <vendor>CTU FEL</vendor>
-                <homepage href="http://www.foo.com/products/foo"/>
-                <!--                <icon kind="splash" href="images/splash.gif"/>-->
+                <homepage href="${jnlp.homepage}"/>
+                <icon kind="splash" href="splash.jpg"/>
+                <icon kind="shortcut" href="erm.ico" width="16" height="16"/>
+                <icon kind="shortcut" href="erm.ico" width="32" height="32"/>
                 <icon href="erm.ico"/>
                 <description>ER Modeller</description>
                 <description kind="short">ER Modeller</description>
                 <description kind="tooltip">ER Modeller</description>
+                <shortcut online="true">
+                    <desktop/>
+                    <menu submenu="CTU FEL"/>
+                </shortcut>
             </information>
-
             <security>
                 <all_permissions/>
             </security>
-
             <resources>
                 <j2se version="1.6+"/>
                 <!--<property name="jnlp.packEnabled" value="true"/>                -->
@@ -154,18 +157,21 @@
                     <include name="${mainjar.file}"/>
                 </fileset>
             </resources>
+
             <application_desc main_class="${mainclass}"/>
         </jnlp>
 
         <zip zipfile="${dist.dir}/${version}-ws.zip">
-            <fileset dir=".">
-                <include name="${build.dir}/${lib.dir}/"/>
-                <include name="${build.dir}/${lookandfeel.dir}/"/>
-                <include name="${build.dir}/${mainjar-packed.file}"/>
-                <include name="${build.dir}/${jnlp.file}"/>
+            <fileset dir="${build.dir}">
+                <include name="${lib.dir}/"/>
+                <include name="${lookandfeel.dir}/"/>
+                <include name="${mainjar.file}"/>
+                <include name="${jnlp.file}"/>
+            </fileset>
+            <fileset dir="${etc.dir}/jnlp">
+                <include name="**/*"/>
             </fileset>
         </zip>
-
     </target>
     <target name="all" depends="clean,init,compile, build, webstart, dist" description="build all"/>
 
@@ -179,7 +185,7 @@
         <zip zipfile="${dist.dir}/${version}.zip">
             <fileset dir=".">
                 <include name="${build.dir}/"/>
-                <exclude name="${build.dir}/${mainjar-packed.file}"/>
+                <!--<exclude name="${build.dir}/${mainjar-packed.file}"/>-->
             </fileset>
         </zip>
         <zip destfile="${dist.dir}/${version}-src.zip">

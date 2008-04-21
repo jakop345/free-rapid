@@ -44,6 +44,7 @@ public final class AreaManager implements InstanceListener, PropertyChangeListen
     public AreaManager(final ManagerDirector director) {
         super();
         //  this.director = director;
+        instance = this;
         recentFilesManager = new RecentFilesManager(director.getMenuManager());
         contentManager = director.getDockingManager().getToolManager().getContentManager();
         addFileChangeListener(recentFilesManager);
