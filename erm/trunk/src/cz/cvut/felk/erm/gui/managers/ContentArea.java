@@ -11,6 +11,7 @@ import java.awt.*;
 public class ContentArea extends JPanel {
     public static final String MODIFIED_PROPERTY = "modifiedProperty";
     private boolean modified = false;
+    private JGraph graphComponent;
 
     public ContentArea() {
         initComponents();
@@ -18,7 +19,13 @@ public class ContentArea extends JPanel {
 
     private void initComponents() {
         this.setLayout(new BorderLayout());
-        this.add(new JScrollPane(new JGraph()), BorderLayout.CENTER);
+        graphComponent = new JGraph();
+        this.add(new JScrollPane(graphComponent), BorderLayout.CENTER);
+    }
+
+
+    public JGraph getGraphComponent() {
+        return graphComponent;
     }
 
     public void freeUpResources() {

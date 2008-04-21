@@ -47,16 +47,16 @@ abstract class FileTransferHandler extends TransferHandler {
     public boolean canImport(JComponent com, DataFlavor[] dataFlavors) {
         for (DataFlavor flavor : dataFlavors) {
             if (flavor.isFlavorJavaFileListType()) {
-                logger.info("canImport: JavaFileList FLAVOR: " + flavor);
+                //logger.info("canImport: JavaFileList FLAVOR: " + flavor);
                 return true;
             }
             if (flavor.isMimeTypeEqual(URI_LIST_MIME_TYPE)) {
-                logger.info("canImport: String FLAVOR: " + flavor);
+                //logger.info("canImport: String FLAVOR: " + flavor);
                 return true;
             }
 
         }
-        logger.info("canImport: Rejected Flavors: " + Arrays.toString(dataFlavors));
+        //logger.info("canImport: Rejected Flavors: " + Arrays.toString(dataFlavors));
         return false;
     }
 

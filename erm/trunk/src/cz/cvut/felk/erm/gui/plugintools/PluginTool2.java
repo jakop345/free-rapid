@@ -11,7 +11,7 @@ import java.util.logging.Logger;
  * @author Vity
  */
 public final class PluginTool2 extends PluginTool {
-    private final static Logger logger = Logger.getLogger(PluginTool1.class.getName());
+    private final static Logger logger = Logger.getLogger(NavigatorTool.class.getName());
 
 
     public PluginTool2() {

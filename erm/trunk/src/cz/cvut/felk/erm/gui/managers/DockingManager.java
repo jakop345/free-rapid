@@ -8,10 +8,7 @@ import org.noos.xing.mydoggy.plaf.MyDoggyToolWindowManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.logging.Logger;
 
 /**
@@ -51,11 +48,12 @@ public class DockingManager {
         try {
             final LocalStorage localStorage = director.getContext().getLocalStorage();
             final File storageDir = localStorage.getDirectory();
+            storageDir.mkdirs();
             final File userFile = new File(storageDir, USER_LAYOUT_SESSION_FILENAME);
             if (!(userFile.exists()))
                 return;
 
-            final InputStream inputStream = localStorage.openInputFile(USER_LAYOUT_SESSION_FILENAME);
+            final InputStream inputStream = new FileInputStream(new File(storageDir, USER_LAYOUT_SESSION_FILENAME));
             final PersistenceDelegate persistenceDelegate = this.toolsManager.getPersistenceDelegate();
             persistenceDelegate.apply(inputStream);
         } catch (IOException e) {

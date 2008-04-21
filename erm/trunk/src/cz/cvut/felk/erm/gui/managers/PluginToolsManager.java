@@ -182,4 +182,7 @@ public class PluginToolsManager implements IAreaChangeListener {
     }
 
 
+    public void setPluginToolsVisible(boolean b) {
+        setToolsAvailable(b);
+    }
 }

@@ -4,6 +4,7 @@ import cz.cvut.felk.erm.utilities.LogUtils;
 import org.jdesktop.application.LocalStorage;
 
 import java.io.*;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -130,7 +131,11 @@ public final class AppPrefs {
 //
             if (!AppPrefs.getProperty(UserProp.PROXY_SAVEPASSWORD, false))
                 removeProperty(UserProp.PROXY_PASSWORD);
-            outputStream = MainApp.getAContext().getLocalStorage().openOutputFile(DEFAULT_PROPERTIES);
+            final LocalStorage localStorage = MainApp.getAContext().getLocalStorage();
+            final File outDir = localStorage.getDirectory();
+            outDir.mkdirs();
+            //outputStream = localStorage.openOutputFile(DEFAULT_PROPERTIES);
+            outputStream = new FileOutputStream(new File(outDir, DEFAULT_PROPERTIES));
             properties.exportNode(outputStream);
             outputStream.close();
         } catch (IOException e) {
@@ -161,7 +166,7 @@ public final class AppPrefs {
         }
         InputStream inputStream = null;
         try {
-            inputStream = localStorage.openInputFile(DEFAULT_PROPERTIES);
+            inputStream = new FileInputStream(new File(storageDir, DEFAULT_PROPERTIES));
             //props.loadFromXML(inputStream);
             Preferences.importPreferences(inputStream);
             inputStream.close();
@@ -188,7 +193,12 @@ public final class AppPrefs {
         if (appPath != null)
             return appPath;
         try {
-            appPath = new File(MainApp.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
+            final URI uri = MainApp.class.getProtectionDomain().getCodeSource().getLocation().toURI();
+            if (!uri.getScheme().equalsIgnoreCase("file")) {
+                logger.info("Running Webstart application");
+                return appPath = "";
+            }
+            appPath = new File(uri).getParent();
         } catch (URISyntaxException e) {
             LogUtils.processException(logger, e);
             return appPath = "";

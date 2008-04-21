@@ -9,7 +9,7 @@ import java.io.File;
  * @author Ladislav Vitasek
  */
 public interface IFileInstance<C extends JComponent> extends Comparable<IFileInstance> {
-    public C getRiderArea();
+    public C getContentArea();
 
     public TITextFileInfo getFileInfo();
 

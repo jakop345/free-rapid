@@ -94,7 +94,7 @@ public final class FileInstance implements IFileInstance<ContentArea>, IInformed
         this.setModified(false);
     }
 
-    public final ContentArea getRiderArea() {
+    public final ContentArea getContentArea() {
         return this.area;
     }
 

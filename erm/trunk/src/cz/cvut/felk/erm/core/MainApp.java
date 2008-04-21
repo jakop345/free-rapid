@@ -6,7 +6,7 @@ import cz.cvut.felk.erm.core.tasks.CheckForNewVersionTask;
 import cz.cvut.felk.erm.gui.StorageProperties;
 import cz.cvut.felk.erm.gui.managers.ManagerDirector;
 import cz.cvut.felk.erm.gui.managers.PluginToolsManager;
-import cz.cvut.felk.erm.gui.plugintools.PluginTool1;
+import cz.cvut.felk.erm.gui.plugintools.NavigatorTool;
 import cz.cvut.felk.erm.gui.plugintools.PluginTool2;
 import cz.cvut.felk.erm.swing.LookAndFeels;
 import cz.cvut.felk.erm.swing.TrayIconSupport;
@@ -125,7 +125,7 @@ public class MainApp extends SingleXFrameApplication {
         }
 
         final PluginToolsManager manager = director.getPluginToolsManager();
-        final PluginTool1 pluginTool1 = new PluginTool1();
+        final NavigatorTool pluginTool1 = new NavigatorTool();
         manager.addPluginTool(pluginTool1);
         final PluginTool2 pluginTool2 = new PluginTool2();
         manager.addPluginTool(pluginTool2);

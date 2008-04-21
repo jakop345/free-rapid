@@ -15,6 +15,7 @@
     <property name="doc" value="doc"/>
     <property name="lib" value="lib"/>
     <property name="dev" value="dev"/>
+    <property name="lookandfeel" value="lookandfeel"/>
     <property name="lib-src" value="lib-src"/>
     <!--<property name="help" location="help"/>-->
     <property name="resources" value="cz/cvut/felk/erm/core/resources/"/>
@@ -39,6 +40,12 @@
 
     <path id="cp">
         <fileset refid="jars"/>
+    </path>
+
+    <path id="dist-jars">
+        <fileset dir="${build}/${lib}" includes="**/*.jar"/>
+        <fileset dir="${build}/${lookandfeel}" includes="**/*.jar"/>
+        <fileset dir="${build}" includes="${jarfile}"/>
     </path>
 
     <pathconvert property="lib.prefix" pathsep=" ">
@@ -99,7 +106,19 @@
         <delete dir="${dist}"/>
     </target>
 
-    <target name="all" depends="clean,init,compile, build, dist" description="build all"/>
+    <target name="sign" depends="build">
+        <delete file="testkeystore"/>
+        <genkey alias="cvut-fel" storepass="secret" keystore="testkeystore"
+                dname="CN=CVUT FEL, OU=Prague, O=www.feld.cvut.cz, C=CS"/>
+        <signjar
+                alias="cvut-fel" keystore="testkeystore"
+                storepass="secret"
+                >
+            <path refid="dist-jars"/>
+        </signjar>
+        <delete file="testkeystore"/>
+    </target>
+    <target name="all" depends="clean,init,compile, build, sign, dist" description="build all"/>
 
     <!-- run TimeJuggler -->
 
@@ -107,7 +126,7 @@
         <java fork="true" jar="${build}/${jarfile}"/>
     </target>
 
-    <target name="dist" depends="build" description="creating release">
+    <target name="dist" depends="sign" description="creating release">
         <zip zipfile="${dist}/${version}.zip">
             <fileset dir=".">
                 <include name="${build}/"/>
@@ -122,6 +141,14 @@
                 <include name="${dev}/"/>
                 <include name="${doc}/"/>
                 <include name="build.xml"/>
+            </fileset>
+        </zip>
+        <zip zipfile="${dist}/${version}-ws.zip">
+            <fileset dir=".">
+                <include name="${build}/${lib}/"/>
+                <include name="${build}/${lookandfeel}/"/>
+                <include name="${build}/${jarfile}"/>
+                <include name="${dev}/erm.jnlp"/>
             </fileset>
         </zip>
     </target>

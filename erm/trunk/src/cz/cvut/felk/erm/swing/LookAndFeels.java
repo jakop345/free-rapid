@@ -51,10 +51,14 @@ public final class LookAndFeels {
     }
 
     private ClassLoader initClassLoader() {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        if (AppPrefs.getAppPath().isEmpty()) {//webstart
+            return classLoader;
+        }
         final String path = Utils.addFileSeparator(AppPrefs.getAppPath()) + Consts.LAFSDIR;
         logger.info("Loading plugin path " + path);
         final File file = new File(path);
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+
         try {
             if (file.exists()) {
                 final File[] jars = file.listFiles(new FilenameFilter() {
@@ -247,6 +251,7 @@ public final class LookAndFeels {
 
     /**
      * Method to attempt a dynamic update for all components of the given <code>Window</code>.
+     *
      * @param window The <code>Window</code> for which the look and feel update has to be performed against.
      */
     public static void updateWindowUI(final Window window) {

@@ -38,6 +38,7 @@ public final class AreaManager implements InstanceListener, PropertyChangeListen
     private static int anIDCounter = 0;
     private ContentManager contentManager;
     private FileInstance activeInstance = null;
+    private static AreaManager instance;
 
 
     public AreaManager(final ManagerDirector director) {
@@ -177,7 +178,7 @@ public final class AreaManager implements InstanceListener, PropertyChangeListen
         if (instance != null) {
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
-                    instance.getRiderArea().repaint();
+                    instance.getContentArea().repaint();
                 }
             });
         }
@@ -245,7 +246,7 @@ public final class AreaManager implements InstanceListener, PropertyChangeListen
     }
 
     public static void grabActiveFocus(final IFileInstance instance) {
-        Swinger.inputFocus(instance.getRiderArea());
+        Swinger.inputFocus(instance.getContentArea());
     }
 
 
@@ -419,5 +420,9 @@ public final class AreaManager implements InstanceListener, PropertyChangeListen
         final Object old = evt.getOldValue();
         final Object newValue = evt.getNewValue();
         logger.info("property = " + s + " old value = " + old + " new value=" + newValue);
+    }
+
+    public static AreaManager getInstance() {
+        return instance;
     }
 }

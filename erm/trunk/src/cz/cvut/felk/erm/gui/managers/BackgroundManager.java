@@ -35,7 +35,7 @@ public final class BackgroundManager implements IFileChangeListener, PropertyCha
 
     public void fileWasOpened(final FileChangeEvent event) {
         if (isGraphicMenu) {
-            final Container container = getContainerUI().getContainer();
+            final Container container = this.getContainerUI();
             container.setLayout(layout);
             container.remove(graphicMenu);
             container.repaint();
@@ -50,17 +50,18 @@ public final class BackgroundManager implements IFileChangeListener, PropertyCha
 
     public void setGraphicMenu() {
         if (!isGraphicMenu) {
-            final Container container = getContainerUI().getContainer();
+            final Container container = this.getContainerUI();
             layout = container.getLayout();
             container.setLayout(new BorderLayout());
             container.add(getGraphicMenu(), BorderLayout.CENTER);
             isGraphicMenu = true;
+            director.getPluginToolsManager().setPluginToolsVisible(false);
             logger.fine("Setting graphic menu");
         }
     }
 
-    private MyDesktopContentManagerUI getContainerUI() {
-        return (MyDesktopContentManagerUI) director.getDockingManager().getContentManagerUI();
+    private Container getContainerUI() {
+        return director.getDockingManager().getContentPane();
     }
 
     private Component getGraphicMenu() {
