@@ -53,7 +53,7 @@ public class Consts {
     /**
      * cesta k properties fajlu
      */
-    public static final String LAFSDIRFILE = LAFSDIR + "/lookandfeels.properties";
+    public static final String LAFSDIRFILE = "lookandfeels.properties";
     /**
      * port na kterem bezi aplikace, aby se zamezilo dvojimu spousteni - kvuli konexeni k databazi
      */

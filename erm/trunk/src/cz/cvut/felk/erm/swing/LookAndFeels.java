@@ -92,7 +92,7 @@ public final class LookAndFeels {
     public final Vector<LaF> getAvailableLookAndFeels() {
         if (availableLaFs == null) {
             availableLaFs = new Vector<LaF>(5);
-            final Properties properties = Utils.loadProperties(Utils.addFileSeparator(AppPrefs.getAppPath()) + Consts.LAFSDIRFILE, false);
+            final Properties properties = Utils.loadProperties(Consts.LAFSDIRFILE, true);
             final String namePostfix = ".name", themePostfix = ".theme", opaquePostfix = ".opaque", alonePostfix = ".alone";
             final String lafPrefix = "laf";
             int counter = -1;
