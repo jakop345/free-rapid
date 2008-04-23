@@ -239,7 +239,8 @@ public class UniqueKey extends ConceptualObject {
             for (Enumeration<Atribute> atributes = getAtributes().elements(); atributes.hasMoreElements();) {
                 Atribute atribute = atributes.nextElement();
                 String dataType = atribute.getDataType().toString();
-                if ((DataTypeManager.isInNestedNames(dataType)) || (DataTypeManager.isInVarrayNames(dataType)) || (DataTypeManager.isInObjectNames(dataType))) {
+                final DataTypeManager dataTypeManager = atribute.getSchema().getDataTypeManager();
+                if ((dataTypeManager.isInNestedNames(dataType)) || (dataTypeManager.isInVarrayNames(dataType)) || (dataTypeManager.isInObjectNames(dataType))) {
                     ValidationError error = new CannotBeInUniqueKeyValidationError(atribute);
                     error.connectErrorToObject(atribute);
                     errorLogList.addElement(error);

@@ -19,13 +19,13 @@ public class UniqueKeyC2R extends ElementOfRelationC2R implements SQLConstraintP
      *
      * @see cz.omnicom.ermodeller.conc2rela.AtributeC2R
      */
-    private final Vector atributesC2R = new Vector();
+    private final Vector<AtributeC2R> atributesC2R = new Vector<AtributeC2R>();
     /**
      * Corresponding conceptual unique key.
      *
      * @see cz.omnicom.ermodeller.conceptual.beans.UniqueKey
      */
-    private Vector conceptualUniqueKey = null;
+    private Vector<Atribute> conceptualUniqueKey = null;
 
     /**
      * UniqueKey constructor.
@@ -93,21 +93,20 @@ public class UniqueKeyC2R extends ElementOfRelationC2R implements SQLConstraintP
      * @return cz.omnicom.ermodeller.sql.ConstraintSQL
      */
     public ConstraintSQL createConstraintSQL() {
-        UniqueKeySQL constraint = new UniqueKeySQL(this);
-        return constraint;
+        return new UniqueKeySQL(this);
     }
 
     /**
      * @return java.util.Vector
      */
-    public Vector getAtributesC2R() {
+    public Vector<AtributeC2R> getAtributesC2R() {
         return atributesC2R;
     }
 
     /**
      * @return cz.omnicom.ermodeller.conceptual.UniqueKey
      */
-    protected Vector getConceptualUniqueKey() {
+    protected Vector<Atribute> getConceptualUniqueKey() {
         return conceptualUniqueKey;
     }
 
@@ -121,8 +120,8 @@ public class UniqueKeyC2R extends ElementOfRelationC2R implements SQLConstraintP
         String result = "(";
         if (getAtributesC2R().isEmpty())
             return "";
-        for (Enumeration atributesC2R = getAtributesC2R().elements(); atributesC2R.hasMoreElements();) {
-            AtributeC2R atributeC2R = (AtributeC2R) atributesC2R.nextElement();
+        for (Enumeration<AtributeC2R> atributesC2R = getAtributesC2R().elements(); atributesC2R.hasMoreElements();) {
+            AtributeC2R atributeC2R = atributesC2R.nextElement();
             result += atributeC2R.getNameC2R();
             if (atributesC2R.hasMoreElements())
                 result += ", ";

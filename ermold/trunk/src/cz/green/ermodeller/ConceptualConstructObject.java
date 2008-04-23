@@ -25,6 +25,19 @@ import java.awt.*;
 public class ConceptualConstructObject extends ConnectableWindow implements ViewController, java.beans.PropertyChangeListener {
 
     /**
+     * Graphic notation - Chan
+     */
+    public final static NotationType CHEN = NotationType.CHEN;
+    /**
+     * Graphic notation - Binary
+     */
+    public final static NotationType BINARY = NotationType.BINARY;
+    /**
+     * Graphic notation - UML
+     */
+    public final static NotationType UML = NotationType.UML;
+
+    /**
      * The same functionality as inhereted constructor.
      *
      * @see ConnectableWindow#ConnectableWindow(cz.green.event.interfaces.Manager ,int,int,int,int)
@@ -303,5 +316,9 @@ public class ConceptualConstructObject extends ConnectableWindow implements View
 
     public NotationType getNotationType() {
         return ((ConceptualObject) this.getModel()).getSchema().getNotationType();
+    }
+
+    public int getLevelOfDetails() {
+        return ((ConceptualObject) this.getModel()).getSchema().getLevelOfDetails();
     }
 }

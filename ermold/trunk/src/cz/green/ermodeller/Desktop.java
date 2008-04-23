@@ -15,6 +15,7 @@ import cz.green.eventtool.dialogs.PropertyListDialog;
 import cz.green.eventtool.interfaces.Connection;
 import cz.green.util.ActionAdapter;
 import cz.green.util.ParamActionAdapter;
+import cz.omnicom.ermodeller.conceptual.NotationType;
 import cz.omnicom.ermodeller.conceptual.beans.*;
 import cz.omnicom.ermodeller.errorlog.interfaces.ShowErrorListener;
 import cz.omnicom.ermodeller.typeseditor.UserTypeStorage;
@@ -446,14 +447,13 @@ public class Desktop extends DesktopTool implements FontManager,
             RelationConstruct rel = (RelationConstruct) aR;
 
             Enumeration e = rel.getConnections().elements();
-            Vector cards = new Vector();
+            java.util.List<CardinalityConstruct> cards = new Vector<CardinalityConstruct>();
             while (e.hasMoreElements()) {
                 Connection c = ((Connection) e.nextElement());
-                CardinalityConstruct car = null;
                 if (c.getOne() instanceof CardinalityConstruct)
-                    cards.add(c.getOne());
+                    cards.add((CardinalityConstruct) c.getOne());
                 if (c.getTwo() instanceof CardinalityConstruct)
-                    cards.add(c.getTwo());
+                    cards.add((CardinalityConstruct) c.getTwo());
             }
             if (cards.size() != 2) break;
             car1M = (Cardinality) ((CardinalityConstruct) cards.get(0)).getModel();
@@ -486,14 +486,13 @@ public class Desktop extends DesktopTool implements FontManager,
             RelationConstruct rel = (RelationConstruct) aR;
 
             Enumeration e = rel.getConnections().elements();
-            Vector cards = new Vector();
+            java.util.List<CardinalityConstruct> cards = new Vector<CardinalityConstruct>();
             while (e.hasMoreElements()) {
                 Connection c = ((Connection) e.nextElement());
-                CardinalityConstruct car = null;
                 if (c.getOne() instanceof CardinalityConstruct)
-                    cards.add(c.getOne());
+                    cards.add((CardinalityConstruct) c.getOne());
                 if (c.getTwo() instanceof CardinalityConstruct)
-                    cards.add(c.getTwo());
+                    cards.add((CardinalityConstruct) c.getTwo());
             }
             if (cards.size() != 2) break;
             car1M = (Cardinality) ((CardinalityConstruct) cards.get(0)).getModel();
@@ -527,14 +526,13 @@ public class Desktop extends DesktopTool implements FontManager,
             RelationConstruct rel = (RelationConstruct) allRelation;
 
             java.util.Enumeration e = rel.getConnections().elements();
-            Vector cards = new Vector();
+            java.util.List<CardinalityConstruct> cards = new Vector<CardinalityConstruct>();
             while (e.hasMoreElements()) {
                 Connection c = ((Connection) e.nextElement());
-                CardinalityConstruct car = null;
                 if (c.getOne() instanceof CardinalityConstruct)
-                    cards.add(c.getOne());
+                    cards.add((CardinalityConstruct) c.getOne());
                 if (c.getTwo() instanceof CardinalityConstruct)
-                    cards.add(c.getTwo());
+                    cards.add((CardinalityConstruct) c.getTwo());
             }
             if (cards.size() != 2) break;
             car1M = (Cardinality) ((CardinalityConstruct) cards.get(0)).getModel();
@@ -704,7 +702,7 @@ public class Desktop extends DesktopTool implements FontManager,
                     "addingEntity", null, EntityConstruct.class));
             menu.add(item);
 
-            if (model.getNotationType() == ConceptualConstructItem.CHEN) {
+            if (model.getNotationType() == NotationType.CHEN) {
                 item = new JMenuItem("Add relationship", new ImageIcon(ClassLoader
                         .getSystemResource("img/mRelation.gif")));
                 item.setHorizontalTextPosition(JMenuItem.RIGHT);

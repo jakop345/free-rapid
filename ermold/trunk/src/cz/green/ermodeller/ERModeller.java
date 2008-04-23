@@ -166,8 +166,7 @@ public class ERModeller extends JFrame implements
         getContentPane().add(PLD.getContentPane(), "East");
         //PropertyListDialog.createListDialog()
         final ImageIcon icon = new ImageIcon(ClassLoader.getSystemResource("img/icon.gif"));
-        if (icon != null)
-            this.setIconImage(icon.getImage());
+        this.setIconImage(icon.getImage());
         createMenuBar();
         this.setJMenuBar(menuBar);
 
@@ -219,8 +218,7 @@ public class ERModeller extends JFrame implements
         final String user = AppPrefs.getProperty(AppPrefs.DBCONNECT_USER, Consts.DEF_DBCONNECT_USER);
         //optDialog.loadCfg(driver, url, user);
 
-        ConceptualConstructItem.SHOW_PK_IN_UML = AppPrefs.getProperty(AppPrefs.GENERAL_PKSHOWUML, Consts.DEF_GENERAL_PKSHOWUML);
-        ConceptualConstructItem.SHOW_SHORTEN_CARD_IN_UML = AppPrefs.getProperty(AppPrefs.GENERAL_SHORTEN_CARDS_UML, Consts.DEF_GENERAL_SHORTEN_CARDS_UML);
+        Schema.SHOW_SHORTEN_CARD_IN_UML = AppPrefs.getProperty(AppPrefs.GENERAL_SHORTEN_CARDS_UML, Consts.DEF_GENERAL_SHORTEN_CARDS_UML);
 
         WindowItem.OBJECT_FOREGROUND_COLOR = AppPrefs.getProperty(AppPrefs.COLORS_OBJECT_FG, Consts.DEF_COLORS_OBJECT_FG);
         WindowItem.OBJECT_BACKGROUND_COLOR = AppPrefs.getProperty(AppPrefs.COLORS_OBJECT_BG, Consts.DEF_COLORS_OBJECT_BG);
@@ -240,8 +238,7 @@ public class ERModeller extends JFrame implements
         AppPrefs.storeProperty(AppPrefs.DBCONNECT_URL, url);
         AppPrefs.storeProperty(AppPrefs.DBCONNECT_USER, user);
 
-        AppPrefs.storeProperty(AppPrefs.GENERAL_PKSHOWUML, ConceptualConstructItem.SHOW_PK_IN_UML);
-        AppPrefs.storeProperty(AppPrefs.GENERAL_SHORTEN_CARDS_UML, ConceptualConstructItem.SHOW_SHORTEN_CARD_IN_UML);
+        AppPrefs.storeProperty(AppPrefs.GENERAL_SHORTEN_CARDS_UML, Schema.SHOW_SHORTEN_CARD_IN_UML);
         AppPrefs.storeProperty(AppPrefs.COLORS_OBJECT_FG, WindowItem.OBJECT_FOREGROUND_COLOR);
         AppPrefs.storeProperty(AppPrefs.COLORS_OBJECT_BG, WindowItem.OBJECT_BACKGROUND_COLOR);
         AppPrefs.storeProperty(AppPrefs.COLORS_SELOBJECT_BG, WindowItem.SELECTED_OBJECT_BACKGROUND_COLOR);
@@ -1110,7 +1107,7 @@ public class ERModeller extends JFrame implements
         cz.omnicom.ermodeller.datatype.DataType dt;
         ConceptualConstructItem cc;
         int schemaID;
-        Vector attrs = new Vector();
+        Vector<Atribute> attrs = new Vector<Atribute>();
         Vector<Integer> attrsPos = new Vector<Integer>();
 
         try {
@@ -1158,7 +1155,7 @@ public class ERModeller extends JFrame implements
                     ent = d.createEntity(l, t, w, h, null);
                     ent.setID(id
                             + new Integer(erdoc.getValue("id")));
-                    entM = (Entity) ent
+                    entM = ent
                             .getModel();
                     s = erdoc.getValue("name");
                     if (s == null)
@@ -1216,7 +1213,7 @@ public class ERModeller extends JFrame implements
                     atr = cc.createAtribute(l, t);
                     atr.setID(id
                             + new Integer(erdoc.getValue("id")));
-                    atrM = (Atribute) atr
+                    atrM = atr
                             .getModel();
                     attrs.addElement(atr.getModel());
                     s = erdoc.getValue("name");
@@ -1275,8 +1272,7 @@ public class ERModeller extends JFrame implements
                     l = ll + new Integer(erdoc.getValue("left"));
                     ent = d.getEntity(id
                             + new Integer(erdoc.getValue("ent")));
-                    ccM = (Entity) ent
-                            .getModel();
+                    ccM = ent.getModel();
                     uni = ent.createUniqueKey(l, t);
                     uni.setID(id
                             + new Integer(erdoc.getValue("id")));
@@ -1313,7 +1309,7 @@ public class ERModeller extends JFrame implements
             schemaM.setID(schemaID);
             // System.out.println(schemaM.getID());
             for (int j = 0; j < attrs.size(); j++)
-                ((Atribute) attrs.get(j)).setPosition(attrsPos.get(j));
+                (attrs.get(j)).setPosition(attrsPos.get(j));
             Vector v = d.getAllEntities();
             for (Object aV : v) ((EntityConstruct) aV).recalculatePositionsOfAtributes();
 
@@ -1327,7 +1323,7 @@ public class ERModeller extends JFrame implements
     /**
      * Loads desktop from document model
      */
-    public NotationType loadNotation(Desktop d, int id, Document doc) {
+    public NotationType loadNotation(Document doc) {
         NotationType notation = NotationType.CHEN;
         try {
             ERDocument erdoc = new ERDocument(doc);
@@ -1409,7 +1405,7 @@ public class ERModeller extends JFrame implements
                                 .getDesktop()).getModel()).createID();
                         id++;
                         if (what == WITH_XML) {
-                            NotationType withNotation = loadNotation(d, id, doc);
+                            NotationType withNotation = loadNotation(doc);
                             //		System.out.println("act notation " + ConceptualConstruct.ACTUAL_NOTATION + ", with not " + withNotation);
                             if (getNotationType() != withNotation) {
                                 System.out.println("different notations");
@@ -1572,7 +1568,7 @@ public class ERModeller extends JFrame implements
         if (evt.getPropertyName().equals("scale")) {
             setChanged(true);
             getScale().setSelectedItem(
-                    new Integer((int) (100 / (Float) evt.getNewValue())).toString());
+                    Integer.toString((int) (100 / (Float) evt.getNewValue())));
             setScaleAction();
         }
         if (evt.getPropertyName().equals("workMode")) {
@@ -1764,7 +1760,7 @@ public class ERModeller extends JFrame implements
      * Set display all deatails in the schema
      */
     public void setLODfull() {
-        ConceptualConstructItem.ACTUAL_LOD = ConceptualConstructItem.LOD_FULL;
+        getSchema().setLevelOfDetails(Schema.LOD_FULL);
         lodStatusLabel.setText("Full details");
         minimizeAll();
         repaint();
@@ -1774,7 +1770,7 @@ public class ERModeller extends JFrame implements
      * Set display medium details in thte schema - without atributes which are not members fo primary key
      */
     public void setLODmedium() {
-        ConceptualConstructItem.ACTUAL_LOD = ConceptualConstructItem.LOD_MEDIUM;
+        getSchema().setLevelOfDetails(Schema.LOD_MEDIUM);
         lodStatusLabel.setText("Medium details");
         if (getNotationType() == ConceptualConstructItem.UML) {
             Desktop d = getDesktop();
@@ -1792,7 +1788,7 @@ public class ERModeller extends JFrame implements
      * Set display low details in the schema - without all atributes
      */
     public void setLODlow() {
-        ConceptualConstructItem.ACTUAL_LOD = ConceptualConstructItem.LOD_LOW;
+        getSchema().setLevelOfDetails(Schema.LOD_LOW);
         lodStatusLabel.setText("Low details");
         minimizeAll();
         repaint();

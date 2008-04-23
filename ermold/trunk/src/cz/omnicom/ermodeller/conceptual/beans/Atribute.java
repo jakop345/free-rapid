@@ -250,17 +250,18 @@ public class Atribute extends ConceptualObject {
         ErrorLogList superErrorLogList = super.valid();
         errorLogList.concatErrorLogList(superErrorLogList);
         String dataType = getDataType().toString();
-        if ((getDataType() instanceof UserDefinedDataType) && (!DataTypeManager.getTypeNames().contains(getDataType().toString()))) {
+        final DataTypeManager dataTypeManager = this.getSchema().getDataTypeManager();
+        if ((getDataType() instanceof UserDefinedDataType) && (!dataTypeManager.getTypeNames().contains(getDataType().toString()))) {
             ValidationError error = new UndefinedDataTypeValidationError(this);
             error.connectErrorToObject(this);
             errorLogList.addElement(error);
         }
-        if (((DataTypeManager.isInNestedNames(dataType)) || (DataTypeManager.isInVarrayNames(dataType)) || (DataTypeManager.isInObjectNames(dataType))) && (isMemberOfPrimaryKey())) {
+        if (((dataTypeManager.isInNestedNames(dataType)) || (dataTypeManager.isInVarrayNames(dataType)) || (dataTypeManager.isInObjectNames(dataType))) && (isMemberOfPrimaryKey())) {
             ValidationError error = new CannotBeInPrimaryKeyValidationError(this);
             error.connectErrorToObject(this);
             errorLogList.addElement(error);
         }
-        if ((DataTypeManager.isInNestedNames(dataType)) && (getArbitrary())) {
+        if ((dataTypeManager.isInNestedNames(dataType)) && (getArbitrary())) {
             ValidationError error = new CannotBeNotNullValidationError(this);
             error.connectErrorToObject(this);
             errorLogList.addElement(error);

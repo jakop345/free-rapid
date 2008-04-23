@@ -5,17 +5,12 @@ import cz.green.ermodeller.interfaces.FontManager;
 import cz.green.ermodeller.interfaces.ISchema;
 import cz.green.ermodeller.interfaces.ModeSwitcher;
 import cz.green.ermodeller.interfaces.ModelFinder;
-import cz.green.event.AddAsISAChildEvent;
-import cz.green.event.AddConnectionEvent;
-import cz.green.event.AddIdentificationDependencyEvent;
-import cz.green.event.AddRelWithConnsEvent;
+import cz.green.event.*;
 import cz.green.event.interfaces.ContainerDesktop;
 import cz.green.event.interfaces.Item;
 import cz.green.eventtool.ContainerToolComponent;
-import cz.green.eventtool.Window;
 import cz.omnicom.ermodeller.conceptual.NotationType;
 import cz.omnicom.ermodeller.conceptual.beans.ConceptualConstruct;
-import cz.omnicom.ermodeller.conceptual.beans.Entity;
 import cz.omnicom.ermodeller.errorlog.ShowErrorEvent;
 import cz.omnicom.ermodeller.errorlog.interfaces.ShowErrorListener;
 
@@ -137,12 +132,12 @@ public class Container extends ContainerToolComponent implements ModeSwitcher, F
     public boolean addingAtribute(ConceptualConstructItem object) {
         this.object = object;
         final NotationType type = ((ConceptualConstruct) object.getModel()).getSchema().getNotationType();
-        if (type == Window.CHEN) {
+        if (type == NotationType.CHEN) {
             setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
             setWorkMode(ADDING_ATRIBUTE);
             return true;
         }
-        if (type == Window.BINARY || type == Window.UML) {
+        if (type == NotationType.BINARY || type == NotationType.UML) {
             (object).createAtribute(object.getBounds().x, object.getBounds().y);
             return true;
         }
@@ -379,7 +374,7 @@ public class Container extends ContainerToolComponent implements ModeSwitcher, F
      */
     public void editConstraints(EntityConstruct ent) {
         if (constDialog == null)
-            constDialog = new ConstraintsDialog(((Desktop) getDesktop()).ERMFrame, (Entity) ent.getModel());
+            constDialog = new ConstraintsDialog(((Desktop) getDesktop()).ERMFrame, ent.getModel());
         constDialog.setLocationRelativeTo(((Desktop) getDesktop()).ERMFrame);
         if (ent.getModel() != null) constDialog.setVisible(true);
     }
@@ -387,6 +382,7 @@ public class Container extends ContainerToolComponent implements ModeSwitcher, F
     /**
      * Override inherited method to send new events and support new work regime.
      */
+    @SuppressWarnings({"SuspiciousNameCombination"})
     public void mouseDragged(java.awt.event.MouseEvent e) {
         requestFocus();
         float scale = desktop.getScale();
@@ -626,7 +622,7 @@ public class Container extends ContainerToolComponent implements ModeSwitcher, F
     public void showError(ShowErrorEvent event) {
         try {
             getDesktop().selectItemEx(null, false);
-            ((ModelFinder) getDesktop()).isModelIn(event.getConceptualObjects(), new cz.green.event.SelectItemExEvent(0, 0, true, this));
+            ((ModelFinder) getDesktop()).isModelIn(event.getConceptualObjects(), new SelectItemExEvent(0, 0, true, this));
             getDesktop().fitSelected();
         } catch (ClassCastException x) {
         }

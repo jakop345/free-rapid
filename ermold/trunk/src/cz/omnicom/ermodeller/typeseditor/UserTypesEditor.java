@@ -136,13 +136,13 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
                 //System.out.println("Actual type is "+actualType.toString());
                 actualUserTypeStorage = new UserTypeStorage(aName, actualType, getUserTypesEditorPanel());
                 getTypesVector().addType(actualUserTypeStorage);
-                DataTypeManager.addToTypeNames(aName);
+                DataTypeManager.getInstance().addToTypeNames(aName);
                 if (actualUserTypeStorage.getDataType() instanceof NestedTableDataType)
-                    DataTypeManager.addToNestedNames(aName);
+                    DataTypeManager.getInstance().addToNestedNames(aName);
                 else if (actualUserTypeStorage.getDataType() instanceof VarrayDataType)
-                    DataTypeManager.addToVarrayNames(aName);
+                    DataTypeManager.getInstance().addToVarrayNames(aName);
                 else if (actualUserTypeStorage.getDataType() instanceof ObjectDataType)
-                    DataTypeManager.addToObjectNames(aName);
+                    DataTypeManager.getInstance().addToObjectNames(aName);
 
                 getButtOK().setEnabled(false);
                 getNameTextField().setText("");
@@ -173,10 +173,10 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
                 choice = JOptionPane.OK_OPTION;
             if (choice == JOptionPane.OK_OPTION) {
                 getTypesVector().removeTypeAt(getTypeComboBox().getSelectedIndex());
-                DataTypeManager.removeFromTypeNames(getTypeComboBox().getSelectedIndex());
-                DataTypeManager.removeFromNestedNames((String) getTypeComboBox().getSelectedItem());
-                DataTypeManager.removeFromVarrayNames((String) getTypeComboBox().getSelectedItem());
-                DataTypeManager.removeFromObjectNames((String) getTypeComboBox().getSelectedItem());
+                DataTypeManager.getInstance().removeFromTypeNames(getTypeComboBox().getSelectedIndex());
+                DataTypeManager.getInstance().removeFromNestedNames((String) getTypeComboBox().getSelectedItem());
+                DataTypeManager.getInstance().removeFromVarrayNames((String) getTypeComboBox().getSelectedItem());
+                DataTypeManager.getInstance().removeFromObjectNames((String) getTypeComboBox().getSelectedItem());
                 addAllTypesToCombo();
                 if (getTypeComboBox().getItemCount() == 0) {
                     getButtDelete().setEnabled(false);
@@ -188,21 +188,7 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
             changed = true;
         }
     };
-    /*
-     ActionListener buttEditListener = new ActionListener(){
-         public void actionPerformed(ActionEvent e){
-             //System.out.println("Edit pressed!!!");
-             actualUserTypeStorage = getTypesVector().getTypeAt(getTypeComboBox().getSelectedIndex());
-             setActualType(actualUserTypeStorage.getDataType());
-             getContentPane().remove(getUserTypesEditorPanel());
-             userTypesEditorPanel = actualUserTypeStorage.getPanel();
-             getContentPane().add(userTypesEditorPanel);
-             userTypesEditorPanel.setVisible(true);
-             userTypesEditorPanel.repaint();
-             //addAllTypesToCombo();
-         }
-     };
-     */
+
     final MouseListener textFieldMouseListener = new MouseListener() {
         public void mousePressed(MouseEvent e) {
             if (!getNewRadioButton().isSelected())
@@ -270,11 +256,11 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
     public void setTypesVector(UserTypeStorageVector v) {
         typesVector = v;
         UserTypesEditorPanel utep;
-        DataTypeManager.getTypeNames().removeAllElements();
+        DataTypeManager.getInstance().getTypeNames().removeAllElements();
         addAllTypesToCombo();
         for (Enumeration e = typesVector.elements(); e.hasMoreElements();) {
             UserTypeStorage u = (UserTypeStorage) e.nextElement();
-            DataTypeManager.addToTypeNames(u.getTypeName());
+            DataTypeManager.getInstance().addToTypeNames(u.getTypeName());
             /*let's make correct structure of dialogs and panels*/
             utep = new UserTypesEditorPanel(this, u.getDataType());
             java.awt.Dimension dimension = utep.getPreferredSize();
@@ -284,10 +270,10 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
     }
 
     public void reset() {
-        DataTypeManager.getTypeNames().removeAllElements();
-        DataTypeManager.removeAllFromNestedNames();
-        DataTypeManager.removeAllFromVarrayNames();
-        DataTypeManager.removeAllFromObjectNames();
+        DataTypeManager.getInstance().getTypeNames().removeAllElements();
+        DataTypeManager.getInstance().removeAllFromNestedNames();
+        DataTypeManager.getInstance().removeAllFromVarrayNames();
+        DataTypeManager.getInstance().removeAllFromObjectNames();
     }
 
     protected JCheckBox getCheckBox() {

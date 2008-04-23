@@ -14,8 +14,11 @@ import cz.green.eventtool.interfaces.ConnectionManager;
 import cz.green.swing.ShowException;
 import cz.omnicom.ermodeller.conceptual.NotationType;
 import cz.omnicom.ermodeller.conceptual.beans.Atribute;
+import cz.omnicom.ermodeller.conceptual.beans.Schema;
 import cz.omnicom.ermodeller.conceptual.beans.UniqueKey;
+import cz.omnicom.ermodeller.datatype.DataType;
 import cz.omnicom.ermodeller.datatype.DataTypeManager;
+import cz.omnicom.ermodeller.datatype.UserDefinedDataType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -487,10 +490,10 @@ public class AttributeConstruct extends ConceptualConstructObject {
         final Stroke stroke = updateStrokeWithAliasing(g);
         // Enable antialiasing for shapes
         if (getNotationType() == CHEN) {
-            switch (ACTUAL_LOD) {
-                case (LOD_LOW):
+            switch (getLevelOfDetails()) {
+                case (Schema.LOD_LOW):
                     break;
-                case (LOD_MEDIUM):
+                case (Schema.LOD_MEDIUM):
                     if (model.isPrimary()) {
                         if (selected) {
                             g.setColor(getSelectedBackgroundColor());
@@ -498,10 +501,11 @@ public class AttributeConstruct extends ConceptualConstructObject {
                         }
                         g.setColor(getForegroundColor());
                         g.fillOval(r.x, r.y, r.height, r.height);
-                        if (model.getDataType() instanceof cz.omnicom.ermodeller.datatype.UserDefinedDataType) {
-                            if (DataTypeManager.isInNestedNames(model.getDataType().toString()) ||
-                                    DataTypeManager.isInObjectNames(model.getDataType().toString()) ||
-                                    DataTypeManager.isInVarrayNames(model.getDataType().toString())) {
+                        if (model.getDataType() instanceof UserDefinedDataType) {
+                            final DataTypeManager dataTypeManager = this.getModel().getSchema().getDataTypeManager();
+                            if (dataTypeManager.isInNestedNames(model.getDataType().toString()) ||
+                                    dataTypeManager.isInObjectNames(model.getDataType().toString()) ||
+                                    dataTypeManager.isInVarrayNames(model.getDataType().toString())) {
                                 if (model.getArbitrary()) {
                                     g.fillOval(r.x + fm.getAscent() / 2, r.y, r.height, r.height);
                                 } else {
@@ -514,7 +518,7 @@ public class AttributeConstruct extends ConceptualConstructObject {
                         r = null;
                     }
                     break;
-                case (LOD_FULL):
+                case (Schema.LOD_FULL):
                     if (selected) {
                         g.setColor(getSelectedBackgroundColor());
                         g.fillRect(r.x, r.y - 2, r.width + 2, r.height + 3);
@@ -529,10 +533,11 @@ public class AttributeConstruct extends ConceptualConstructObject {
                         g.drawOval(r.x, r.y, r.height, r.height);
                     }
 
-                    if (model.getDataType() instanceof cz.omnicom.ermodeller.datatype.UserDefinedDataType) {
-                        if (DataTypeManager.isInNestedNames(model.getDataType().toString()) ||
-                                DataTypeManager.isInObjectNames(model.getDataType().toString()) ||
-                                DataTypeManager.isInVarrayNames(model.getDataType().toString())) {
+                    if (model.getDataType() instanceof UserDefinedDataType) {
+                        final DataTypeManager dataTypeManager = this.getModel().getSchema().getDataTypeManager();
+                        if (dataTypeManager.isInNestedNames(model.getDataType().toString()) ||
+                                dataTypeManager.isInObjectNames(model.getDataType().toString()) ||
+                                dataTypeManager.isInVarrayNames(model.getDataType().toString())) {
                             if (model.getArbitrary()) {
                                 g.fillOval(r.x + fm.getAscent() / 2, r.y, r.height, r.height);
                             } else {
@@ -550,10 +555,10 @@ public class AttributeConstruct extends ConceptualConstructObject {
         if (getNotationType() == BINARY) {
 
             //System.out.println("Draw binary");
-            switch (ACTUAL_LOD) {
-                case (LOD_LOW):
+            switch (getLevelOfDetails()) {
+                case (Schema.LOD_LOW):
                     break;
-                case (LOD_MEDIUM):
+                case (Schema.LOD_MEDIUM):
                     if (model.isPrimary()) {
                         if (selected) {
                             g.setColor(getSelectedBackgroundColor());
@@ -565,7 +570,7 @@ public class AttributeConstruct extends ConceptualConstructObject {
                     }
                     r = null;
                     break;
-                case (LOD_FULL):
+                case (Schema.LOD_FULL):
                     if (selected) {
                         g.setColor(getSelectedBackgroundColor());
                         g.fillRect(r.x, r.y, r.width, r.height);
@@ -586,20 +591,21 @@ public class AttributeConstruct extends ConceptualConstructObject {
         }
         if (getNotationType() == UML) {
             String nameUML = model.getName() + ": " + model.getDataType().toDescriptionString();
-            switch (ACTUAL_LOD) {
-                case (LOD_LOW):
+            switch (getLevelOfDetails()) {
+                case (Schema.LOD_LOW):
                     break;
-                case (LOD_MEDIUM):
+                case (Schema.LOD_MEDIUM):
                     if (model.isPrimary()) {
                         if (selected) {
                             g.setColor(getSelectedBackgroundColor());
                             g.fillRect(r.x, r.y, r.width, r.height);
                         }
-                        if (SHOW_PK_IN_UML == 1) g.drawString("pk", r.x, r.y + r.height - 2);
+                        if (getSchema().getShowPKInUML() == Schema.SHOW_PK_IN_UML_SHOW)
+                            g.drawString("pk", r.x, r.y + r.height - 2);
                         g.drawString(nameUML, r.x + (int) (1.5 * r.height), r.y + r.height - 2);
                     }
                     break;
-                case (LOD_FULL):
+                case (Schema.LOD_FULL):
                     if (selected) {
                         g.setColor(getSelectedBackgroundColor());
                         g.fillRect(r.x, r.y, r.width, r.height);
@@ -612,7 +618,8 @@ public class AttributeConstruct extends ConceptualConstructObject {
                     g.setColor(getForegroundColor());
                     //g.setColor(Color.blue);
                     if (model.isPrimary()) {
-                        if (SHOW_PK_IN_UML == 1) g.drawString("pk", r.x, r.y + r.height - 2);
+                        if (getSchema().getShowPKInUML() == Schema.SHOW_PK_IN_UML_SHOW)
+                            g.drawString("pk", r.x, r.y + r.height - 2);
                     }
                     g.drawString(nameUML, r.x + (int) (1.5 * r.height), r.y + r.height - 2);
             }
@@ -632,6 +639,7 @@ public class AttributeConstruct extends ConceptualConstructObject {
 /**
  * Prints the atribute on the printer graphics. Same as paint but don't sets the colors.
  */
+    @SuppressWarnings({"SuspiciousNameCombination"})
     public void print(java.awt.Graphics g) {
 /*	java.awt.Rectangle r = getBounds();
 	//draw circle
@@ -650,17 +658,19 @@ public class AttributeConstruct extends ConceptualConstructObject {
         String name = model.getName();
         java.awt.FontMetrics fm = g.getFontMetrics();
 
+        final DataType dataType = model.getDataType();
         if (getNotationType() == CHEN) {
-            switch (ACTUAL_LOD) {
-                case (LOD_LOW):
+            switch (getLevelOfDetails()) {
+                case (Schema.LOD_LOW):
                     break;
-                case (LOD_MEDIUM):
+                case (Schema.LOD_MEDIUM):
                     if (model.isPrimary()) {
                         g.fillOval(r.x, r.y, r.height, r.height);
-                        if (model.getDataType() instanceof cz.omnicom.ermodeller.datatype.UserDefinedDataType) {
-                            if (DataTypeManager.isInNestedNames(model.getDataType().toString()) ||
-                                    DataTypeManager.isInObjectNames(model.getDataType().toString()) ||
-                                    DataTypeManager.isInVarrayNames(model.getDataType().toString())) {
+                        if (dataType instanceof UserDefinedDataType) {
+                            final DataTypeManager dataTypeManager = this.getModel().getSchema().getDataTypeManager();
+                            if (dataTypeManager.isInNestedNames(dataType.toString()) ||
+                                    dataTypeManager.isInObjectNames(dataType.toString()) ||
+                                    dataTypeManager.isInVarrayNames(dataType.toString())) {
                                 if (model.getArbitrary()) {
                                     g.fillOval(r.x + fm.getAscent() / 2, r.y, r.height, r.height);
                                 } else {
@@ -673,17 +683,18 @@ public class AttributeConstruct extends ConceptualConstructObject {
                         r = null;
                     }
                     break;
-                case (LOD_FULL):
+                case (Schema.LOD_FULL):
                     if (model.getArbitrary()) {
                         g.fillOval(r.x, r.y, r.height, r.height);
                     } else {
                         g.drawOval(r.x, r.y, r.height, r.height);
                     }
 
-                    if (model.getDataType() instanceof cz.omnicom.ermodeller.datatype.UserDefinedDataType) {
-                        if (DataTypeManager.isInNestedNames(model.getDataType().toString()) ||
-                                DataTypeManager.isInObjectNames(model.getDataType().toString()) ||
-                                DataTypeManager.isInVarrayNames(model.getDataType().toString())) {
+                    if (dataType instanceof cz.omnicom.ermodeller.datatype.UserDefinedDataType) {
+                        final DataTypeManager dataTypeManager = this.getModel().getSchema().getDataTypeManager();
+                        if (dataTypeManager.isInNestedNames(dataType.toString()) ||
+                                dataTypeManager.isInObjectNames(dataType.toString()) ||
+                                dataTypeManager.isInVarrayNames(dataType.toString())) {
                             if (model.getArbitrary()) {
                                 g.fillOval(r.x + fm.getAscent() / 2, r.y, r.height, r.height);
                             } else {
@@ -699,17 +710,17 @@ public class AttributeConstruct extends ConceptualConstructObject {
             }
         }
         if (getNotationType() == BINARY) {
-            switch (ACTUAL_LOD) {
-                case (LOD_LOW):
+            switch (getLevelOfDetails()) {
+                case (Schema.LOD_LOW):
                     break;
-                case (LOD_MEDIUM):
+                case (Schema.LOD_MEDIUM):
                     if (model.isPrimary()) {
                         if (!PKfirst) g.drawString(" ,", r.x, r.y + r.height - 2);
                         g.drawString(name, r.x + (int) (1.5 * r.height), r.y + r.height - 2);
                     }
                     r = null;
                     break;
-                case (LOD_FULL):
+                case (Schema.LOD_FULL):
                     if (model.isPrimary()) {
                         if (!PKfirst) g.drawString(" ,", r.x, r.y + r.height - 2);
                     } else {
@@ -724,17 +735,17 @@ public class AttributeConstruct extends ConceptualConstructObject {
             }
         }
         if (getNotationType() == UML) {
-            String nameUML = model.getName() + ": " + model.getDataType().toDescriptionString();
-            switch (ACTUAL_LOD) {
-                case (LOD_LOW):
+            String nameUML = model.getName() + ": " + dataType.toDescriptionString();
+            switch (getLevelOfDetails()) {
+                case (Schema.LOD_LOW):
                     break;
-                case (LOD_MEDIUM):
+                case (Schema.LOD_MEDIUM):
                     if (model.isPrimary()) {
                         g.drawString("pk", r.x, r.y + r.height - 2);
                         g.drawString(nameUML, r.x + (int) (1.5 * r.height), r.y + r.height - 2);
                     }
                     break;
-                case (LOD_FULL):
+                case (Schema.LOD_FULL):
                     g.setColor(getForegroundColor());
                     if (model.isPrimary()) {
                         g.drawString("pk", r.x, r.y + r.height - 2);

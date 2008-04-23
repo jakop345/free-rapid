@@ -8,7 +8,7 @@ import java.util.Vector;
  *
  * @see java.util.Vector
  */
-public class ErrorLogList extends Vector {
+public class ErrorLogList extends Vector<ValidationError> {
     /**
      * Adds all errors from <code>aErrorLogList</code> to this list.
      *
@@ -20,7 +20,7 @@ public class ErrorLogList extends Vector {
             copyErrorLogList = (ErrorLogList) aErrorLogList.clone();
         }
         for (Enumeration newErrors = copyErrorLogList.elements(); newErrors.hasMoreElements();) {
-            this.addElement(newErrors.nextElement());
+            this.addElement((ValidationError) newErrors.nextElement());
         }
     }
 }

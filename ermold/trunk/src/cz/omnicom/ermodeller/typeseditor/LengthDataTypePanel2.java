@@ -18,7 +18,7 @@ public class LengthDataTypePanel2 extends LengthDataTypePanel {
 
             if (ae.getSource() == getUpButton())
                 connEtoM1(ae);
-            if (ae.getSource() == getdownButton())
+            if (ae.getSource() == getDownButton())
                 connEtoM2(ae);
 
             //System.out.println("actionPerformed(java.awt.event.ActionEvent e) 2 "+ae.paramString());
@@ -42,7 +42,7 @@ public class LengthDataTypePanel2 extends LengthDataTypePanel {
             setBackground(new java.awt.Color(204, 204, 204));
             setSize(114, 53);
             add(getLengthTextField(), getLengthTextField().getName());
-            add(getdownButton(), getdownButton().getName());
+            add(getDownButton(), getDownButton().getName());
             add(getUpButton(), getUpButton().getName());
             add(getLengthLabel(), getLengthLabel().getName());
             initConnections();
@@ -59,10 +59,10 @@ public class LengthDataTypePanel2 extends LengthDataTypePanel {
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
     protected void initConnections() {
         getLengthTextField().addKeyListener(this);
-        getdownButton().addMouseListener(this);
+        getDownButton().addMouseListener(this);
         getUpButton().addMouseListener(this);
         getUpButton().addActionListener(al);
-        getdownButton().addActionListener(al);
+        getDownButton().addActionListener(al);
     }
 
     /*

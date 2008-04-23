@@ -53,7 +53,7 @@ public class LengthDataTypePanel extends DataTypePanel implements FocusListener,
         // user code end
         if (e.getSource() == getUpButton())
             connEtoM1(e);
-        if (e.getSource() == getdownButton())
+        if (e.getSource() == getDownButton())
             connEtoM2(e);
         // user code begin {2}
         try {
@@ -217,7 +217,7 @@ public class LengthDataTypePanel extends DataTypePanel implements FocusListener,
      * @return javax.swing.JButton
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    protected javax.swing.JButton getdownButton() {
+    protected javax.swing.JButton getDownButton() {
         if (ivjdownButton == null) {
             try {
                 ivjdownButton = new javax.swing.JButton();
@@ -248,7 +248,7 @@ public class LengthDataTypePanel extends DataTypePanel implements FocusListener,
     protected LengthDataType getLengthDataType() {
         if (ivjLengthDataType == null) {
             try {
-                ivjLengthDataType = new cz.omnicom.ermodeller.datatype.LengthDataType();
+                ivjLengthDataType = new LengthDataType();
                 // user code begin {1}
                 // user code end
             } catch (java.lang.Throwable ivjExc) {
@@ -382,10 +382,10 @@ public class LengthDataTypePanel extends DataTypePanel implements FocusListener,
         // user code begin {1}
         getLengthTextField().addKeyListener(this);
         // user code end
-        getdownButton().addMouseListener(this);
+        getDownButton().addMouseListener(this);
         getUpButton().addMouseListener(this);
         getUpButton().addActionListener(this);
-        getdownButton().addActionListener(this);
+        getDownButton().addActionListener(this);
     }
 
     /**
@@ -401,7 +401,7 @@ public class LengthDataTypePanel extends DataTypePanel implements FocusListener,
             setBackground(new java.awt.Color(204, 204, 204));
             setSize(114, 53);
             add(getLengthTextField(), getLengthTextField().getName());
-            add(getdownButton(), getdownButton().getName());
+            add(getDownButton(), getDownButton().getName());
             add(getUpButton(), getUpButton().getName());
             add(getLengthLabel(), getLengthLabel().getName());
             initConnections();
@@ -508,7 +508,7 @@ public class LengthDataTypePanel extends DataTypePanel implements FocusListener,
     public void mousePressed(java.awt.event.MouseEvent e) {
         // user code begin {1}
         // user code end
-        if (e.getSource() == getdownButton())
+        if (e.getSource() == getDownButton())
             connEtoC3(e);
         if (e.getSource() == getUpButton())
             connEtoC5(e);
@@ -525,7 +525,7 @@ public class LengthDataTypePanel extends DataTypePanel implements FocusListener,
     public void mouseReleased(java.awt.event.MouseEvent e) {
         // user code begin {1}
         // user code end
-        if (e.getSource() == getdownButton())
+        if (e.getSource() == getDownButton())
             connEtoC4(e);
         if (e.getSource() == getUpButton())
             connEtoC6(e);

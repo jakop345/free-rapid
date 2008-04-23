@@ -462,11 +462,10 @@ public abstract class ConceptualObject implements Serializable, ShowErrorListene
     }
 
     public String toString() {
-        String s = "ConceptualObject " + getName();
-//                + "                        ";
+        //                + "                        ";
 //        if (getID() >= getSchema().getComposeID())
 //            s = '*' + s;
-        return s;
+        return "ConceptualObject " + getName();
     }
 
     /**

@@ -1,9 +1,9 @@
 package cz.green.ermodeller.dialogs;
 
 import cz.green.ermodeller.AppPrefs;
-import cz.green.ermodeller.ConceptualConstructItem;
 import cz.green.ermodeller.Consts;
 import cz.green.event.WindowItem;
+import cz.omnicom.ermodeller.conceptual.beans.Schema;
 import cz.omnicom.ermodeller.sql.SQLConnection;
 
 import javax.swing.*;
@@ -1406,8 +1406,8 @@ public class OptionsDialog extends javax.swing.JDialog {
         this.encod = AppPrefs.getProperty(AppPrefs.ENCODING, Consts.DEF_ENCODING);
         ivjNotationField.setSelectedIndex(defNot);
         ivjCodingField.setSelectedItem(encod);
-        ivjPkUMLField.setSelectedIndex(ConceptualConstructItem.SHOW_PK_IN_UML);
-        ivjCardUMLField.setSelectedIndex(ConceptualConstructItem.SHOW_SHORTEN_CARD_IN_UML);
+        ivjPkUMLField.setSelectedIndex(AppPrefs.getProperty(AppPrefs.GENERAL_PKSHOWUML, Consts.DEF_GENERAL_PKSHOWUML));
+        ivjCardUMLField.setSelectedIndex(Schema.SHOW_SHORTEN_CARD_IN_UML);
         foregroundColorButton.setBackground(WindowItem.OBJECT_FOREGROUND_COLOR);
         backgroundColorButton.setBackground(WindowItem.BACKGROUND_COLOR);
         objectBackgroundColorButton.setBackground(WindowItem.OBJECT_BACKGROUND_COLOR);
@@ -1488,8 +1488,8 @@ public class OptionsDialog extends javax.swing.JDialog {
 //        connection.setPasswd(new String(getPasswordField().getPassword()));
         AppPrefs.storeProperty(AppPrefs.ENCODING, (String) ivjCodingField.getSelectedItem());
         AppPrefs.storeProperty(AppPrefs.GENERAL_DEFNOTATION, ivjNotationField.getSelectedIndex());
-        ConceptualConstructItem.SHOW_PK_IN_UML = ivjPkUMLField.getSelectedIndex();
-        ConceptualConstructItem.SHOW_SHORTEN_CARD_IN_UML = ivjCardUMLField.getSelectedIndex();
+        AppPrefs.storeProperty(AppPrefs.GENERAL_PKSHOWUML, ivjPkUMLField.getSelectedIndex());
+        Schema.SHOW_SHORTEN_CARD_IN_UML = ivjCardUMLField.getSelectedIndex();
         WindowItem.OBJECT_FOREGROUND_COLOR = foregroundColorButton.getBackground();
         WindowItem.BACKGROUND_COLOR = backgroundColorButton.getBackground();
         WindowItem.OBJECT_BACKGROUND_COLOR = objectBackgroundColorButton.getBackground();

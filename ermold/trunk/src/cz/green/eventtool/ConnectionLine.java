@@ -288,10 +288,10 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
         }
         if (schema.getNotationType() == ConceptualConstructItem.CHEN) {
 
-            switch (ACTUAL_LOD) {
-                case (LOD_FULL):
+            switch (schema.getLevelOfDetails()) {
+                case (Schema.LOD_FULL):
                     g.drawLine(borderOne.x, borderOne.y, borderTwo.x, borderTwo.y);
-                case (LOD_MEDIUM):
+                case (Schema.LOD_MEDIUM):
                     /* There are no lines to atributes */
                     if (!(one.getClass().equals(
                             AttributeConstruct.class) || two.getClass()
@@ -306,7 +306,7 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
                             if (((AttributeConstruct) getTwo()).isPrimary())
                                 g.drawLine(borderOne.x, borderOne.y, borderTwo.x, borderTwo.y);
                     }
-                case (LOD_LOW):
+                case (Schema.LOD_LOW):
                     if (!(one.getClass().equals(
                             AttributeConstruct.class) || two.getClass()
                             .equals(AttributeConstruct.class)))
@@ -419,10 +419,10 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
             g.drawLine(borderOne.x, borderOne.y, borderTwo.x, borderTwo.y);
         }
         if (schema.getNotationType() == ConceptualConstructItem.CHEN) {
-            switch (ACTUAL_LOD) {
-                case (LOD_FULL):
+            switch (schema.getLevelOfDetails()) {
+                case (Schema.LOD_FULL):
                     g.drawLine(borderOne.x, borderOne.y, borderTwo.x, borderTwo.y);
-                case (LOD_MEDIUM):
+                case (Schema.LOD_MEDIUM):
                     /* There are no lines to atributes */
                     if (!(one.getClass().equals(
                             AttributeConstruct.class) || two.getClass()
@@ -437,7 +437,7 @@ public class ConnectionLine extends cz.green.eventtool.Window implements
                             if (((AttributeConstruct) getTwo()).isPrimary())
                                 g.drawLine(borderOne.x, borderOne.y, borderTwo.x, borderTwo.y);
                     }
-                case (LOD_LOW):
+                case (Schema.LOD_LOW):
                     if (!(one.getClass().equals(
                             AttributeConstruct.class) || two.getClass()
                             .equals(AttributeConstruct.class)))

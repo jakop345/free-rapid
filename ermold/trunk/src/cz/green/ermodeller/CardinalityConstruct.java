@@ -9,10 +9,7 @@ import cz.green.event.interfaces.Manager;
 import cz.green.eventtool.ConnectionLine;
 import cz.green.eventtool.interfaces.Connection;
 import cz.green.swing.ShowException;
-import cz.omnicom.ermodeller.conceptual.beans.Cardinality;
-import cz.omnicom.ermodeller.conceptual.beans.ConceptualObject;
-import cz.omnicom.ermodeller.conceptual.beans.Entity;
-import cz.omnicom.ermodeller.conceptual.beans.Relation;
+import cz.omnicom.ermodeller.conceptual.beans.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -424,8 +421,8 @@ public class CardinalityConstruct extends ConceptualConstructObject {
                 }
                 g.setColor(getForegroundColor());
                 ir = ((arbitrary) ? "1" : "0") + ".." + ((multiCard) ? "*" : "1");
-                if (SHOW_SHORTEN_CARD_IN_UML == 1 && !arbitrary && multiCard) ir = "*";
-                if (SHOW_SHORTEN_CARD_IN_UML == 1 && arbitrary && !multiCard) ir = "1";
+                if (Schema.SHOW_SHORTEN_CARD_IN_UML == 1 && !arbitrary && multiCard) ir = "*";
+                if (Schema.SHOW_SHORTEN_CARD_IN_UML == 1 && arbitrary && !multiCard) ir = "1";
                 g.drawString(ir, r.x + (r.width - fm.stringWidth(ir)) / 2, r.y + fm.getAscent());
                 g.drawString(name, r.x + (r.width - fm.stringWidth(name)) / 2, r.y + r.height - fm.getAscent() / 4);
                 break;
@@ -530,8 +527,8 @@ public class CardinalityConstruct extends ConceptualConstructObject {
             case UML:
                 g.setColor(getForegroundColor());
                 ir = ((arbitrary) ? "1" : "0") + ".." + ((multiCard) ? "*" : "1");
-                if (SHOW_SHORTEN_CARD_IN_UML == 1 && !arbitrary && multiCard) ir = "*";
-                if (SHOW_SHORTEN_CARD_IN_UML == 1 && arbitrary && !multiCard) ir = "1";
+                if (Schema.SHOW_SHORTEN_CARD_IN_UML == 1 && !arbitrary && multiCard) ir = "*";
+                if (Schema.SHOW_SHORTEN_CARD_IN_UML == 1 && arbitrary && !multiCard) ir = "1";
                 g.drawString(ir, r.x + (r.width - fm.stringWidth(ir)) / 2, r.y + fm.getAscent());
                 g.drawString(name, r.x + (r.width - fm.stringWidth(name)) / 2, r.y + r.height - fm.getAscent() / 4);
                 break;

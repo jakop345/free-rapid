@@ -26,18 +26,22 @@ public class UserDefinedDataTypePanel extends DataTypePanel implements ActionLis
         public void actionPerformed(ActionEvent e) {
             String oldItem = "";
 
-            if (DataTypeManager.getTypeNamesChanged())
-                DataTypeManager.setTypeNamesChanged(false);
+            if (getDataTypeManager().getTypeNamesChanged())
+                getDataTypeManager().setTypeNamesChanged(false);
             if (getJComboBox().getItemCount() > 0)
                 oldItem = (String) getJComboBox().getSelectedItem();
             getJComboBox().removeAllItems();
-            for (int i = 0; i < DataTypeManager.getTypeNames().size(); i++) {
-                getJComboBox().addItem(DataTypeManager.getTypeNames().get(i));
-                if ((DataTypeManager.getTypeNames().get(i)).compareTo(oldItem) == 0)
+            for (int i = 0; i < getDataTypeManager().getTypeNames().size(); i++) {
+                getJComboBox().addItem(getDataTypeManager().getTypeNames().get(i));
+                if ((getDataTypeManager().getTypeNames().get(i)).compareTo(oldItem) == 0)
                     getJComboBox().setSelectedIndex(i);
             }
         }
     };
+
+    private DataTypeManager getDataTypeManager() {
+        return null;
+    }
 
     /**
      * Constructor
@@ -106,7 +110,7 @@ public class UserDefinedDataTypePanel extends DataTypePanel implements ActionLis
         if (jComboBox == null) {
             try {
                 jComboBox = new JComboBox();
-                DataTypeManager.setTypeNamesChanged(true);
+                getDataTypeManager().setTypeNamesChanged(true);
                 jComboBox.setName("JComboBox");
                 jComboBox.setToolTipText("Select your own type");
                 jComboBox.setBounds(5, 25, 87, 25);
@@ -116,18 +120,18 @@ public class UserDefinedDataTypePanel extends DataTypePanel implements ActionLis
                 handleException(ivjExc);
             }
         }
-        if (DataTypeManager.getTypeNamesChanged()) {
-            DataTypeManager.setTypeNamesChanged(false);
+        if (getDataTypeManager().getTypeNamesChanged()) {
+            getDataTypeManager().setTypeNamesChanged(false);
             if (jComboBox.getItemCount() > 0) {
                 oldItem = (String) jComboBox.getSelectedItem();
                 //System.out.println("old item = "+ (String)jComboBox.getSelectedItem());
             }
             jComboBox.removeAllItems();
             //System.out.println("items removed...");
-            for (int i = 0; i < DataTypeManager.getTypeNames().size(); i++) {
-                jComboBox.addItem(DataTypeManager.getTypeNames().get(i));
+            for (int i = 0; i < getDataTypeManager().getTypeNames().size(); i++) {
+                jComboBox.addItem(getDataTypeManager().getTypeNames().get(i));
                 //System.out.println(DataType.getTypeNames().get(i)+" added to combobox");
-                if ((DataTypeManager.getTypeNames().get(i)).compareTo(oldItem) == 0)
+                if ((getDataTypeManager().getTypeNames().get(i)).compareTo(oldItem) == 0)
                     jComboBox.setSelectedIndex(i);
             }
         }

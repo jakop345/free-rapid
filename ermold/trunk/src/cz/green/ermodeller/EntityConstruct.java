@@ -16,7 +16,10 @@ import cz.green.eventtool.interfaces.Connection;
 import cz.green.eventtool.interfaces.ConnectionManager;
 import cz.green.swing.ShowException;
 import cz.omnicom.ermodeller.conceptual.NotationType;
-import cz.omnicom.ermodeller.conceptual.beans.*;
+import cz.omnicom.ermodeller.conceptual.beans.Cardinality;
+import cz.omnicom.ermodeller.conceptual.beans.Entity;
+import cz.omnicom.ermodeller.conceptual.beans.Schema;
+import cz.omnicom.ermodeller.conceptual.beans.UniqueKey;
 import cz.omnicom.ermodeller.conceptual.exception.CannotHavePrimaryKeyException;
 import cz.omnicom.ermodeller.conceptual.exception.CycleWouldAppearException;
 import cz.omnicom.ermodeller.conceptual.exception.IsISASonException;
@@ -289,7 +292,7 @@ public class EntityConstruct extends ConceptualConstructItem {
         int width = 60;
         java.awt.FontMetrics fm;
         fm = ((FontManager) manager).getReferentFontMetrics();
-        int nameWidth = fm.stringWidth(((Entity) getModel()).getName());
+        int nameWidth = fm.stringWidth((getModel()).getName());
         if (nameWidth > width)
             width = nameWidth;
         final NotationType type = model.getSchema().getNotationType();
@@ -309,7 +312,7 @@ public class EntityConstruct extends ConceptualConstructItem {
                     AttributeConstruct a = getAtributes().get(i);
                     int x = a.getBounds().width +
                             fm.stringWidth(": ") +
-                            fm.stringWidth(((Atribute) a.getModel()).getDataType().toDescriptionString());
+                            fm.stringWidth((a.getModel()).getDataType().toDescriptionString());
                     if (x > width) width = x;
                 }
                 break;
@@ -382,7 +385,8 @@ public class EntityConstruct extends ConceptualConstructItem {
 		top += 20 * ((ConceptualConstruct) from).getAtributes().size(); 
 		}
 */
-        final NotationType type = model.getSchema().getNotationType();
+        final Schema schema = model.getSchema();
+        final NotationType type = schema.getNotationType();
         try {
             if (before == -1) {
                 // if it is first -> count size from the top
@@ -390,13 +394,13 @@ public class EntityConstruct extends ConceptualConstructItem {
                 fm = ((FontManager) manager).getReferentFontMetrics();
                 top = s[1][0] + 3 * fm.getAscent();
                 if (type != NotationType.CHEN) {
-                    switch (ACTUAL_LOD) {
-                        case (LOD_FULL):
+                    switch (schema.getLevelOfDetails()) {
+                        case (Schema.LOD_FULL):
                             top += 20 * getAtributes().size();
                             if (type == BINARY && PKmembers != null && PKmembers.size() > 0)
                                 top -= 20 * (PKmembers.size() - 1);
                             break;
-                        case (LOD_MEDIUM):
+                        case (Schema.LOD_MEDIUM):
                             if (type == BINARY && PKmembers != null && PKmembers.size() > 0) top += 20;
                             if (type == UML && PKmembers != null && PKmembers.size() > 0)
                                 top += 20 * PKmembers.size();
@@ -477,14 +481,14 @@ public class EntityConstruct extends ConceptualConstructItem {
                 fm = ((FontManager) manager).getReferentFontMetrics();
                 height = 3 * fm.getAscent();
                 if (type == BINARY) {
-                    switch (ACTUAL_LOD) {
-                        case (LOD_LOW):
+                    switch (getLevelOfDetails()) {
+                        case (Schema.LOD_LOW):
                             break;
-                        case (LOD_MEDIUM):
+                        case (Schema.LOD_MEDIUM):
                             if (PKmembers.size() != 0)
                                 height += fm.getAscent();
                             break;
-                        case (LOD_FULL):
+                        case (Schema.LOD_FULL):
                             height += 20 * getAtributes().size();
                             if (PKmembers.size() != 0)
                                 height -= 20 * (PKmembers.size() - 1);
@@ -492,13 +496,13 @@ public class EntityConstruct extends ConceptualConstructItem {
                     }
                 }
                 if (type == UML) {
-                    switch (ACTUAL_LOD) {
-                        case (LOD_LOW):
+                    switch (getLevelOfDetails()) {
+                        case (Schema.LOD_LOW):
                             break;
-                        case (LOD_MEDIUM):
+                        case (Schema.LOD_MEDIUM):
                             height += 20 * PKmembers.size();
                             break;
-                        case (LOD_FULL):
+                        case (Schema.LOD_FULL):
                             height += 20 * getAtributes().size();
                             if (model.getConstraints().length() > 0)
                                 height += 3 * fm.getAscent();
@@ -1354,7 +1358,7 @@ public class EntityConstruct extends ConceptualConstructItem {
                 y = r.y + 5 + fm.getAscent();
                 g.drawLine(r.x, r.y + 2 * fm.getAscent(), r.x + r.width, r.y + 2
                         * fm.getAscent());
-                if (PKmembers.size() > 0 && ConceptualConstructItem.ACTUAL_LOD != ConceptualConstructItem.LOD_LOW) {
+                if (PKmembers.size() > 0 && getLevelOfDetails() != Schema.LOD_LOW) {
                     g.drawString("*", r.x + 3, r.y + 42);
                     g.drawString(" # (", r.x + 5, r.y + 40);
                     g.drawString(")", r.x + 5 + PKwidth, r.y + 40);
@@ -1364,7 +1368,7 @@ public class EntityConstruct extends ConceptualConstructItem {
                 y = r.y + 5 + fm.getAscent();
                 g.drawLine(r.x, r.y + 2 * fm.getAscent(), r.x + r.width, r.y + 2
                         * fm.getAscent());
-                if (ConceptualConstructItem.ACTUAL_LOD == ConceptualConstructItem.LOD_FULL) {
+                if (getLevelOfDetails() == Schema.LOD_FULL) {
                     int height = r.y + 2 * fm.getAscent() + attribs.size() * 20 + 8;
                     if (ISAChilds != null) {
                         for (int i = ISAChilds.size() - 1; i > -1; i--) {
@@ -1411,7 +1415,7 @@ public class EntityConstruct extends ConceptualConstructItem {
                 y = r.y + 5 + fm.getAscent();
                 g.drawLine(r.x, r.y + 2 * fm.getAscent(), r.x + r.width, r.y + 2
                         * fm.getAscent());
-                if (PKmembers.size() > 0 && ConceptualConstructItem.ACTUAL_LOD != ConceptualConstructItem.LOD_LOW) {
+                if (PKmembers.size() > 0 && getLevelOfDetails() != Schema.LOD_LOW) {
                     g.drawString("*", r.x + 3, r.y + 42);
                     g.drawString(" # (", r.x + 5, r.y + 40);
                     g.drawString(")", r.x + 5 + PKwidth, r.y + 40);
@@ -1421,7 +1425,7 @@ public class EntityConstruct extends ConceptualConstructItem {
                 y = r.y + 5 + fm.getAscent();
                 g.drawLine(r.x, r.y + 2 * fm.getAscent(), r.x + r.width, r.y + 2
                         * fm.getAscent());
-                if (ConceptualConstructItem.ACTUAL_LOD == ConceptualConstructItem.LOD_FULL) {
+                if (getLevelOfDetails() == Schema.LOD_FULL) {
                     int height = r.y + 2 * fm.getAscent() + attribs.size() * 20 + 8;
                     if (ISAChilds != null) {
                         for (int i = ISAChilds.size() - 1; i > -1; i--) {
@@ -1451,7 +1455,7 @@ public class EntityConstruct extends ConceptualConstructItem {
      * @see ConceptualConstructItem#propertyChange(java.beans.PropertyChangeEvent);
      */
     public void propertyChange(java.beans.PropertyChangeEvent e) {
-        ((ConceptualObject) getModel())
+        (getModel())
                 .setChanged(true);
         java.awt.Rectangle r = getBounds();
         if (e.getPropertyName().equals("name") ||
@@ -1893,7 +1897,7 @@ public class EntityConstruct extends ConceptualConstructItem {
         if (ISAParent != null) {
             throw new IsISASonException(model);
         }
-        model.setISAParent((Entity) ent
+        model.setISAParent(ent
                 .getModel());
         int[][] source = getRect();
         int dx = x - source[0][0], dy = y - source[1][0];

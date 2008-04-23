@@ -1,9 +1,12 @@
 package cz.omnicom.ermodeller.conceptual.beans;
 
+import cz.green.ermodeller.AppPrefs;
+import cz.green.ermodeller.Consts;
 import cz.omnicom.ermodeller.conceptual.NotationType;
 import cz.omnicom.ermodeller.conceptual.exception.ListException;
 import cz.omnicom.ermodeller.conceptual.exception.ParameterCannotBeNullException;
 import cz.omnicom.ermodeller.conceptual.exception.WasNotFoundException;
+import cz.omnicom.ermodeller.datatype.DataTypeManager;
 import cz.omnicom.ermodeller.errorlog.*;
 import cz.omnicom.ermodeller.errorlog.exception.CheckNameDuplicityValidationException;
 
@@ -22,6 +25,9 @@ public class Schema extends ConceptualObject {
      * @see Entity
      */
     protected Vector<Entity> entities = new Vector<Entity>();
+    protected DataTypeManager dataTypeManager = new DataTypeManager();
+
+
     /**
      * All relations in the schema.
      *
@@ -46,6 +52,36 @@ public class Schema extends ConceptualObject {
     private int fieldComposeID;
 
     private NotationType notationType = NotationType.CHEN;
+    /**
+     * Flag if the symbol "pk" is shown in front of Atribute in UML notation
+     * 0 = don't show
+     * 1 = show
+     */
+    public static int SHOW_PK_IN_UML_DONT_SHOW = 0;
+    public static int SHOW_PK_IN_UML_SHOW = 1;
+    /**
+     * Flag to show shorten 0..N and 1..1 cardinalities
+     * 0 = normal - 0..*; 1..1
+     * 1 = shorten - *  ;  1
+     */
+    public static int SHOW_SHORTEN_CARD_IN_UML = 1;
+    /**
+     * The level of details - show full details
+     */
+    public final static int LOD_FULL = 0;
+    /**
+     * The level of details - show entities with only primary keys
+     */
+    public final static int LOD_MEDIUM = 1;
+    /**
+     * The level of details - show entities without attributes
+     */
+    public final static int LOD_LOW = 2;
+    /**
+     * Actual level of details
+     */
+    private int levelOfDetails = LOD_FULL;
+
 
     /**
      * This method was created by Jiri Mares
@@ -60,6 +96,27 @@ public class Schema extends ConceptualObject {
 
     public void setNotationType(NotationType notationType) {
         this.notationType = notationType;
+    }
+
+    public DataTypeManager getDataTypeManager() {
+        return dataTypeManager;
+    }
+
+    public void setDataTypeManager(DataTypeManager dataTypeManager) {
+        this.dataTypeManager = dataTypeManager;
+    }
+
+
+    public int getShowPKInUML() {
+        return AppPrefs.getProperty(AppPrefs.GENERAL_PKSHOWUML, Consts.DEF_GENERAL_PKSHOWUML);
+    }
+
+    public int getLevelOfDetails() {
+        return levelOfDetails;
+    }
+
+    public void setLevelOfDetails(int levelOfDetails) {
+        this.levelOfDetails = levelOfDetails;
     }
 
     /**

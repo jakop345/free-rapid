@@ -46,6 +46,7 @@ public class ShowException extends JDialog {
      */
     public ShowException(java.awt.Frame owner, String title, Throwable th, boolean show) {
         this(owner, title, th);
+        th.printStackTrace();
         if (show)
             setVisible(true);
     }

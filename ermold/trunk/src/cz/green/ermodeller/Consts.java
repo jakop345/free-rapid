@@ -1,6 +1,7 @@
 package cz.green.ermodeller;
 
 import cz.green.event.WindowItem;
+import cz.omnicom.ermodeller.conceptual.beans.Schema;
 
 import java.awt.*;
 
@@ -41,11 +42,11 @@ public class Consts {
     /**
      * default value for pkshowuml
      */
-    public static final int DEF_GENERAL_PKSHOWUML = ConceptualConstructItem.SHOW_PK_IN_UML;
+    public static final int DEF_GENERAL_PKSHOWUML = Schema.SHOW_PK_IN_UML_SHOW;
     /**
      * default value for 'shorten cards uml'
      */
-    public static final int DEF_GENERAL_SHORTEN_CARDS_UML = ConceptualConstructItem.SHOW_SHORTEN_CARD_IN_UML;
+    public static final int DEF_GENERAL_SHORTEN_CARDS_UML = Schema.SHOW_SHORTEN_CARD_IN_UML;
     /**
      * default color value for foreground of the object
      */

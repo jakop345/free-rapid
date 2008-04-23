@@ -30,10 +30,10 @@ public class UserDefinedDataType extends DataType {
      */
     public UserDefinedDataType() {
         super();
-        if (DataTypeManager.getTypeNames().size() > 0)
-            typeName = DataTypeManager.getTypeNames().elementAt(0);
-        else
-            typeName = "";
+//        if (DataTypeManager.getTypeNames().size() > 0)
+//            typeName = DataTypeManager.getTypeNames().elementAt(0);
+//        else
+        typeName = "";
         //System.out.println("user data type constructor");
     }
 
