@@ -1,4 +1,4 @@
-package cz.omnicom.ermodeller.datatype;
+package cz.omnicom.ermodeller.datatype.editor;
 
 import javax.swing.*;
 //import java.beans.*;
@@ -6,7 +6,7 @@ import javax.swing.*;
 /**
  * Superclass of panels customizing the datatype. Is part of <code>DataTypeEditor</code>.
  *
- * @see cz.omnicom.ermodeller.datatype.DataTypeEditor
+ * @see DataTypeEditor
  */
 public abstract class DataTypePanel extends JPanel {
     /**

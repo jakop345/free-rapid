@@ -38,7 +38,8 @@ public abstract class EntC2R extends RelationC2R {
             addUniqueKeyC2R(uniqueKeyC2R);
         }
         catch (AlreadyContainsExceptionC2R e) {
-        } // cannot be thrown
+            // cannot be thrown
+        }
 
         boolean isUnique = false;
         Vector<Atribute> atributes = aConceptualEntity.getAtributes();
@@ -51,6 +52,7 @@ public abstract class EntC2R extends RelationC2R {
                 addUniqueKeyC2R(uniqueKeyC2R1);
             }
             catch (AlreadyContainsExceptionC2R e) {
+                // cannot be thrown
             }
         }
         /*for (Enumeration elements = aConceptualEntity.getUniqueKeys().elements(); elements.hasMoreElements();) {

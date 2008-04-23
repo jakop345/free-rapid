@@ -1,6 +1,9 @@
 //Steve
 package cz.omnicom.ermodeller.datatype;
 
+import cz.omnicom.ermodeller.datatype.editor.DataTypePanel;
+import cz.omnicom.ermodeller.datatype.editor.UserDefinedDataTypePanel;
+
 /**
  * User defined datatype.
  */
@@ -27,8 +30,8 @@ public class UserDefinedDataType extends DataType {
      */
     public UserDefinedDataType() {
         super();
-        if (DataType.getTypeNames().size() > 0)
-            typeName = DataType.getTypeNames().elementAt(0);
+        if (DataTypeManager.getTypeNames().size() > 0)
+            typeName = DataTypeManager.getTypeNames().elementAt(0);
         else
             typeName = "";
         //System.out.println("user data type constructor");

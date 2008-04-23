@@ -24,7 +24,6 @@ public class ParamActionAdapter extends ActionAdapter {
         Class[] paramTypes = {this.paramType = paramType};
         if (paramType == null) {
             paramTypes = null;
-            param = null;
         }
         while (true) {
             try {

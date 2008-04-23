@@ -1,6 +1,7 @@
 package cz.green.ermodeller;
 
 import cz.green.ermodeller.interfaces.ViewController;
+import cz.green.event.RemoveEvent;
 import cz.green.event.exceptions.ImpossibleNegativeValueException;
 import cz.green.event.interfaces.Manager;
 import cz.green.event.interfaces.PaintableManager;
@@ -50,6 +51,7 @@ public class ConceptualConstructObject extends ConnectableWindow implements View
             item.addActionListener(new ActionAdapter(destination, handlerName));
             menu.add(item);
         } catch (NoSuchMethodException e) {
+            //asdasdas
         }
     }
 
@@ -225,9 +227,8 @@ public class ConceptualConstructObject extends ConnectableWindow implements View
         JPopupMenu menu = event.getMenu();
         //construct the menu
         createMenu(menu, event);
-        JMenuItem item;
         //adds the delete item
-        addMenuItem(menu, "Delete", "img/mDelete.gif", this, "handleRemoveEvent", new cz.green.event.RemoveEvent(event.getX(), event.getY(), event.getComponent()), cz.green.event.RemoveEvent.class);
+        addMenuItem(menu, "Delete", "img/mDelete.gif", this, "handleRemoveEvent", new RemoveEvent(event.getX(), event.getY(), event.getComponent()), RemoveEvent.class);
         //show menu
         menu.show(event.getComponent(), event.getRealX(), event.getRealY());
     }

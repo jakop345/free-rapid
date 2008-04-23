@@ -1,7 +1,7 @@
 package cz.omnicom.ermodeller.typeseditor;
 
 import cz.omnicom.ermodeller.datatype.LengthDataType;
-import cz.omnicom.ermodeller.datatype.LengthDataTypePanel;
+import cz.omnicom.ermodeller.datatype.editor.LengthDataTypePanel;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

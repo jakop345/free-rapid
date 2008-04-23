@@ -1,4 +1,6 @@
-package cz.omnicom.ermodeller.datatype;
+package cz.omnicom.ermodeller.datatype.editor;
+
+import cz.omnicom.ermodeller.datatype.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -20,7 +22,7 @@ public class DataTypeEditor extends JPanel implements java.awt.event.ActionListe
     /**
      * Panel which customizes the <code>dataType</code>.
      *
-     * @see cz.omnicom.ermodeller.datatype.DataTypePanel
+     * @see cz.omnicom.ermodeller.datatype.editor.DataTypePanel
      */
     private DataTypePanel dataTypePanel = null;
     protected transient PropertyChangeSupport propertyChange;

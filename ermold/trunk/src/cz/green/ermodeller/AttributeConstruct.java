@@ -15,7 +15,7 @@ import cz.green.swing.ShowException;
 import cz.omnicom.ermodeller.conceptual.NotationType;
 import cz.omnicom.ermodeller.conceptual.beans.Atribute;
 import cz.omnicom.ermodeller.conceptual.beans.UniqueKey;
-import cz.omnicom.ermodeller.datatype.DataType;
+import cz.omnicom.ermodeller.datatype.DataTypeManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -499,9 +499,9 @@ public class AttributeConstruct extends ConceptualConstructObject {
                         g.setColor(getForegroundColor());
                         g.fillOval(r.x, r.y, r.height, r.height);
                         if (model.getDataType() instanceof cz.omnicom.ermodeller.datatype.UserDefinedDataType) {
-                            if (DataType.isInNestedNames(model.getDataType().toString()) ||
-                                    DataType.isInObjectNames(model.getDataType().toString()) ||
-                                    DataType.isInVarrayNames(model.getDataType().toString())) {
+                            if (DataTypeManager.isInNestedNames(model.getDataType().toString()) ||
+                                    DataTypeManager.isInObjectNames(model.getDataType().toString()) ||
+                                    DataTypeManager.isInVarrayNames(model.getDataType().toString())) {
                                 if (model.getArbitrary()) {
                                     g.fillOval(r.x + fm.getAscent() / 2, r.y, r.height, r.height);
                                 } else {
@@ -530,9 +530,9 @@ public class AttributeConstruct extends ConceptualConstructObject {
                     }
 
                     if (model.getDataType() instanceof cz.omnicom.ermodeller.datatype.UserDefinedDataType) {
-                        if (DataType.isInNestedNames(model.getDataType().toString()) ||
-                                DataType.isInObjectNames(model.getDataType().toString()) ||
-                                DataType.isInVarrayNames(model.getDataType().toString())) {
+                        if (DataTypeManager.isInNestedNames(model.getDataType().toString()) ||
+                                DataTypeManager.isInObjectNames(model.getDataType().toString()) ||
+                                DataTypeManager.isInVarrayNames(model.getDataType().toString())) {
                             if (model.getArbitrary()) {
                                 g.fillOval(r.x + fm.getAscent() / 2, r.y, r.height, r.height);
                             } else {
@@ -658,9 +658,9 @@ public class AttributeConstruct extends ConceptualConstructObject {
                     if (model.isPrimary()) {
                         g.fillOval(r.x, r.y, r.height, r.height);
                         if (model.getDataType() instanceof cz.omnicom.ermodeller.datatype.UserDefinedDataType) {
-                            if (DataType.isInNestedNames(model.getDataType().toString()) ||
-                                    DataType.isInObjectNames(model.getDataType().toString()) ||
-                                    DataType.isInVarrayNames(model.getDataType().toString())) {
+                            if (DataTypeManager.isInNestedNames(model.getDataType().toString()) ||
+                                    DataTypeManager.isInObjectNames(model.getDataType().toString()) ||
+                                    DataTypeManager.isInVarrayNames(model.getDataType().toString())) {
                                 if (model.getArbitrary()) {
                                     g.fillOval(r.x + fm.getAscent() / 2, r.y, r.height, r.height);
                                 } else {
@@ -681,9 +681,9 @@ public class AttributeConstruct extends ConceptualConstructObject {
                     }
 
                     if (model.getDataType() instanceof cz.omnicom.ermodeller.datatype.UserDefinedDataType) {
-                        if (DataType.isInNestedNames(model.getDataType().toString()) ||
-                                DataType.isInObjectNames(model.getDataType().toString()) ||
-                                DataType.isInVarrayNames(model.getDataType().toString())) {
+                        if (DataTypeManager.isInNestedNames(model.getDataType().toString()) ||
+                                DataTypeManager.isInObjectNames(model.getDataType().toString()) ||
+                                DataTypeManager.isInVarrayNames(model.getDataType().toString())) {
                             if (model.getArbitrary()) {
                                 g.fillOval(r.x + fm.getAscent() / 2, r.y, r.height, r.height);
                             } else {

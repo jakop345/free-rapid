@@ -1,5 +1,6 @@
 package cz.omnicom.ermodeller.datatype;
 
+import cz.omnicom.ermodeller.datatype.editor.DataTypePanel;
 import cz.omnicom.ermodeller.typeseditor.UserTypeStorage;
 import cz.omnicom.ermodeller.typeseditor.UserTypeStorageVector;
 

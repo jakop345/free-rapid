@@ -1,9 +1,6 @@
 package cz.omnicom.ermodeller.typeseditor;
 
-import cz.omnicom.ermodeller.datatype.DataType;
-import cz.omnicom.ermodeller.datatype.NestedTableDataType;
-import cz.omnicom.ermodeller.datatype.ObjectDataType;
-import cz.omnicom.ermodeller.datatype.VarrayDataType;
+import cz.omnicom.ermodeller.datatype.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -139,13 +136,13 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
                 //System.out.println("Actual type is "+actualType.toString());
                 actualUserTypeStorage = new UserTypeStorage(aName, actualType, getUserTypesEditorPanel());
                 getTypesVector().addType(actualUserTypeStorage);
-                DataType.addToTypeNames(aName);
+                DataTypeManager.addToTypeNames(aName);
                 if (actualUserTypeStorage.getDataType() instanceof NestedTableDataType)
-                    DataType.addToNestedNames(aName);
+                    DataTypeManager.addToNestedNames(aName);
                 else if (actualUserTypeStorage.getDataType() instanceof VarrayDataType)
-                    DataType.addToVarrayNames(aName);
+                    DataTypeManager.addToVarrayNames(aName);
                 else if (actualUserTypeStorage.getDataType() instanceof ObjectDataType)
-                    DataType.addToObjectNames(aName);
+                    DataTypeManager.addToObjectNames(aName);
 
                 getButtOK().setEnabled(false);
                 getNameTextField().setText("");
@@ -176,10 +173,10 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
                 choice = JOptionPane.OK_OPTION;
             if (choice == JOptionPane.OK_OPTION) {
                 getTypesVector().removeTypeAt(getTypeComboBox().getSelectedIndex());
-                DataType.removeFromTypeNames(getTypeComboBox().getSelectedIndex());
-                DataType.removeFromNestedNames((String) getTypeComboBox().getSelectedItem());
-                DataType.removeFromVarrayNames((String) getTypeComboBox().getSelectedItem());
-                DataType.removeFromObjectNames((String) getTypeComboBox().getSelectedItem());
+                DataTypeManager.removeFromTypeNames(getTypeComboBox().getSelectedIndex());
+                DataTypeManager.removeFromNestedNames((String) getTypeComboBox().getSelectedItem());
+                DataTypeManager.removeFromVarrayNames((String) getTypeComboBox().getSelectedItem());
+                DataTypeManager.removeFromObjectNames((String) getTypeComboBox().getSelectedItem());
                 addAllTypesToCombo();
                 if (getTypeComboBox().getItemCount() == 0) {
                     getButtDelete().setEnabled(false);
@@ -273,11 +270,11 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
     public void setTypesVector(UserTypeStorageVector v) {
         typesVector = v;
         UserTypesEditorPanel utep;
-        DataType.getTypeNames().removeAllElements();
+        DataTypeManager.getTypeNames().removeAllElements();
         addAllTypesToCombo();
         for (Enumeration e = typesVector.elements(); e.hasMoreElements();) {
             UserTypeStorage u = (UserTypeStorage) e.nextElement();
-            DataType.addToTypeNames(u.getTypeName());
+            DataTypeManager.addToTypeNames(u.getTypeName());
             /*let's make correct structure of dialogs and panels*/
             utep = new UserTypesEditorPanel(this, u.getDataType());
             java.awt.Dimension dimension = utep.getPreferredSize();
@@ -287,10 +284,10 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
     }
 
     public void reset() {
-        DataType.getTypeNames().removeAllElements();
-        DataType.removeAllFromNestedNames();
-        DataType.removeAllFromVarrayNames();
-        DataType.removeAllFromObjectNames();
+        DataTypeManager.getTypeNames().removeAllElements();
+        DataTypeManager.removeAllFromNestedNames();
+        DataTypeManager.removeAllFromVarrayNames();
+        DataTypeManager.removeAllFromObjectNames();
     }
 
     protected JCheckBox getCheckBox() {

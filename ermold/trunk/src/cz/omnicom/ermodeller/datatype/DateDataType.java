@@ -1,5 +1,7 @@
 package cz.omnicom.ermodeller.datatype;
 
+import cz.omnicom.ermodeller.datatype.editor.DataTypePanel;
+
 /**
  * Represents date datatype.
  */

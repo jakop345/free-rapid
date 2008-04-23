@@ -1,4 +1,6 @@
-package cz.omnicom.ermodeller.datatype;
+package cz.omnicom.ermodeller.datatype.editor;
+
+import cz.omnicom.ermodeller.datatype.LengthDataType;
 
 import javax.swing.*;
 import java.awt.*;

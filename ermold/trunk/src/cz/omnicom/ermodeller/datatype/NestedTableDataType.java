@@ -1,5 +1,7 @@
 package cz.omnicom.ermodeller.datatype;
 
+import cz.omnicom.ermodeller.datatype.editor.DataTypePanel;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 

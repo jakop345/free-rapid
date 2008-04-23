@@ -93,12 +93,13 @@ public class StrongAddiction extends ConceptualConstructObject {
      *
      * @param ent Strong addiction Parent.
      */
+    @SuppressWarnings({"SuspiciousNameCombination"})
     static public StrongAddiction createStrongAddiction(EntityConstruct parent, EntityConstruct child, Manager man, int left, int top) {
         try {
             if (parent.getModel().getSchema().getNotationType() == UML)
                 man = parent.getManager();
-            Entity cPar = (Entity) parent.getModel();
-            Entity cChild = (Entity) child.getModel();
+            Entity cPar = parent.getModel();
+            Entity cChild = child.getModel();
             cChild.addStrongAddictionParent(cPar);
             StrongAddiction sa = new StrongAddiction(parent, child, man, left, top);
             man.add(sa);
@@ -212,8 +213,8 @@ public class StrongAddiction extends ConceptualConstructObject {
      */
     public void handleRemoveEvent(cz.green.event.RemoveEvent event) {
         try {
-            Entity Cparent = (Entity) parent.getModel();
-            Entity Cchild = (Entity) child.getModel();
+            Entity Cparent = parent.getModel();
+            Entity Cchild = child.getModel();
             Cchild.removeStrongAddictionParent(Cparent);
             super.handleRemoveEvent(event);
         } catch (Throwable x) {
@@ -229,7 +230,7 @@ public class StrongAddiction extends ConceptualConstructObject {
         java.awt.Point cardinalityCenter = getCenter();
         java.awt.Rectangle er;
         er = (getType() == UML) ? getParent().getBounds() : getChild().getBounds();
-        java.awt.Rectangle r = getBounds();
+        Rectangle r = getBounds();
 
 /*	if (getType() != UML)*/
         {
@@ -287,7 +288,7 @@ public class StrongAddiction extends ConceptualConstructObject {
         java.awt.Point cardinalityCenter = getCenter();
         java.awt.Rectangle er;
         er = (getType() == UML) ? getParent().getBounds() : getChild().getBounds();
-        java.awt.Rectangle r = getBounds();
+        Rectangle r = getBounds();
 
 //	if (ConceptualConstruct.getType() != ConceptualConstruct.UML )
         {
@@ -342,7 +343,7 @@ public class StrongAddiction extends ConceptualConstructObject {
     public void paint(java.awt.Graphics g) {
         //paint item
         final Stroke stroke = updateStrokeWithAliasing(g);
-        java.awt.Rectangle r = getBounds();
+        Rectangle r = getBounds();
         if (selected) {
             g.setColor(getSelectedBackgroundColor());
             g.fillRect(r.x, r.y, r.width, r.height);
@@ -403,7 +404,7 @@ public class StrongAddiction extends ConceptualConstructObject {
     }
 
     private void paintLineToCardinality(java.awt.Graphics g, boolean UP) {
-        java.awt.Rectangle r = getBounds();
+        Rectangle r = getBounds();
         Point rcenter = parent.getRealCenter();
         Point ccenter = getRealCenter();
         int dx = rcenter.x - ccenter.x;
@@ -436,7 +437,7 @@ public class StrongAddiction extends ConceptualConstructObject {
      * @see Printable#print(java.awt.Graphics)
      */
     public void print(java.awt.Graphics g) {
-        java.awt.Rectangle r = getBounds();
+        Rectangle r = getBounds();
         switch (getType()) {
             case CHEN:
                 g.setColor(getForegroundColor());
@@ -485,7 +486,6 @@ public class StrongAddiction extends ConceptualConstructObject {
                 g.fillRect(r.x, r.y, r.width, r.height);
                 break;
         }
-        r = null;
     }
 
     /**
@@ -495,9 +495,9 @@ public class StrongAddiction extends ConceptualConstructObject {
      */
     public void reconnectStrongAddictionChild(UniqueKeyConstruct uk) {
         try {
-            Entity parent = (Entity) getEntity().getModel();
-            Entity oldChild = (Entity) getUniqueKey().getOwner().getModel();
-            Entity newChild = (Entity) uk.getOwner().getModel();
+            Entity parent = getEntity().getModel();
+            Entity oldChild = getUniqueKey().getOwner().getModel();
+            Entity newChild = uk.getOwner().getModel();
             oldChild.removeStrongAddictionParent(parent);
             newChild.addStrongAddictionParent(parent);
             Connection c = connectionTo(getUniqueKey());
@@ -520,9 +520,9 @@ public class StrongAddiction extends ConceptualConstructObject {
      */
     public void reconnectStrongAddictionParent(EntityConstruct ent) {
         try {
-            Entity oldParent = (Entity) getEntity().getModel();
-            Entity newParent = (Entity) ent.getModel();
-            Entity child = (Entity) getUniqueKey().getOwner().getModel();
+            Entity oldParent = getEntity().getModel();
+            Entity newParent = ent.getModel();
+            Entity child = getUniqueKey().getOwner().getModel();
             child.removeStrongAddictionParent(oldParent);
             child.addStrongAddictionParent(newParent);
             Connection c = connectionTo(getEntity());
@@ -557,8 +557,8 @@ public class StrongAddiction extends ConceptualConstructObject {
         pw.print("\t\t<height>");
         pw.print(rect[1][1] - rect[1][0]);
         pw.println("</height>");
-        Entity entPar = (Entity) parent.getModel();
-        Entity entChild = (Entity) child.getModel();
+        Entity entPar = parent.getModel();
+        Entity entChild = child.getModel();
         pw.println("\t\t<ent>" + entPar.getID() + "</ent>");
         pw.println("\t\t<child>" + entChild.getID() + "</child>");
         pw.println("\t</strong>");

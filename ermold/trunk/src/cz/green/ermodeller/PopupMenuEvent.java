@@ -1,5 +1,7 @@
 package cz.green.ermodeller;
 
+import cz.green.event.CoordinateEvent;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -8,7 +10,7 @@ import java.awt.*;
  * event occurs and the instance of the <code>PopupMenu</code> class to adds to it
  * some items and display.
  */
-public class PopupMenuEvent extends cz.green.event.CoordinateEvent {
+public class PopupMenuEvent extends CoordinateEvent {
     /**
      * The x coordinate the popup event. This is the real display coordinate not
      * after translation using the current scale

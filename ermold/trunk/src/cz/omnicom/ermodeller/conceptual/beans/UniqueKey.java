@@ -1,7 +1,7 @@
 package cz.omnicom.ermodeller.conceptual.beans;
 
 import cz.omnicom.ermodeller.conceptual.exception.*;
-import cz.omnicom.ermodeller.datatype.DataType;
+import cz.omnicom.ermodeller.datatype.DataTypeManager;
 import cz.omnicom.ermodeller.errorlog.CannotBeInUniqueKeyValidationError;
 import cz.omnicom.ermodeller.errorlog.ErrorLogList;
 import cz.omnicom.ermodeller.errorlog.UniqueKeyDoesntHaveAtributeValidationError;
@@ -239,7 +239,7 @@ public class UniqueKey extends ConceptualObject {
             for (Enumeration<Atribute> atributes = getAtributes().elements(); atributes.hasMoreElements();) {
                 Atribute atribute = atributes.nextElement();
                 String dataType = atribute.getDataType().toString();
-                if ((DataType.isInNestedNames(dataType)) || (DataType.isInVarrayNames(dataType)) || (DataType.isInObjectNames(dataType))) {
+                if ((DataTypeManager.isInNestedNames(dataType)) || (DataTypeManager.isInVarrayNames(dataType)) || (DataTypeManager.isInObjectNames(dataType))) {
                     ValidationError error = new CannotBeInUniqueKeyValidationError(atribute);
                     error.connectErrorToObject(atribute);
                     errorLogList.addElement(error);

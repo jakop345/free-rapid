@@ -581,7 +581,7 @@ public class Desktop extends DesktopTool implements FontManager,
                 if ((ent = getEntity((DGroupTool) item, id)) != null)
                     return ent;
             } else if (item instanceof EntityConstruct
-                    && id == (((Entity) ((EntityConstruct) item)
+                    && id == ((((EntityConstruct) item)
                     .getModel()).getID()))
                 return (EntityConstruct) item;
         }

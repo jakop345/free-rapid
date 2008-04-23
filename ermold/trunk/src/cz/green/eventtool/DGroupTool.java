@@ -54,7 +54,6 @@ public class DGroupTool extends GroupTool implements ConnectionManager {
     public void add(Item item) throws ItemNotInsideManagerException {
         try {
             int[][] h = itemsBounds(), r = new int[2][2];
-            boolean recount = false;
             //to all tree pointers sets null
             item.countLinks(null);
             //get the item size - i can do this, because tree pointers are null

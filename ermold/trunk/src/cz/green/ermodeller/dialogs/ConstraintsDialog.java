@@ -18,7 +18,7 @@ public class ConstraintsDialog extends JDialog implements java.awt.event.ActionL
     /**
      * Panel which customizes the <code>dataType</code>.
      *
-     * @see cz.omnicom.ermodeller.datatype.DataTypePanel
+     * @see cz.omnicom.ermodeller.datatype.editor.DataTypePanel
      */
     private JTextArea ivjTextArea = null;
     private Entity Cent = null;

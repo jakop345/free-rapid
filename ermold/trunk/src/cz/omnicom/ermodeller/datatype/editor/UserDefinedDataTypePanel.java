@@ -1,4 +1,7 @@
-package cz.omnicom.ermodeller.datatype;
+package cz.omnicom.ermodeller.datatype.editor;
+
+import cz.omnicom.ermodeller.datatype.DataTypeManager;
+import cz.omnicom.ermodeller.datatype.UserDefinedDataType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,14 +26,14 @@ public class UserDefinedDataTypePanel extends DataTypePanel implements ActionLis
         public void actionPerformed(ActionEvent e) {
             String oldItem = "";
 
-            if (DataType.getTypeNamesChanged())
-                DataType.setTypeNamesChanged(false);
+            if (DataTypeManager.getTypeNamesChanged())
+                DataTypeManager.setTypeNamesChanged(false);
             if (getJComboBox().getItemCount() > 0)
                 oldItem = (String) getJComboBox().getSelectedItem();
             getJComboBox().removeAllItems();
-            for (int i = 0; i < DataType.getTypeNames().size(); i++) {
-                getJComboBox().addItem(DataType.getTypeNames().get(i));
-                if ((DataType.getTypeNames().get(i)).compareTo(oldItem) == 0)
+            for (int i = 0; i < DataTypeManager.getTypeNames().size(); i++) {
+                getJComboBox().addItem(DataTypeManager.getTypeNames().get(i));
+                if ((DataTypeManager.getTypeNames().get(i)).compareTo(oldItem) == 0)
                     getJComboBox().setSelectedIndex(i);
             }
         }
@@ -103,7 +106,7 @@ public class UserDefinedDataTypePanel extends DataTypePanel implements ActionLis
         if (jComboBox == null) {
             try {
                 jComboBox = new JComboBox();
-                DataType.setTypeNamesChanged(true);
+                DataTypeManager.setTypeNamesChanged(true);
                 jComboBox.setName("JComboBox");
                 jComboBox.setToolTipText("Select your own type");
                 jComboBox.setBounds(5, 25, 87, 25);
@@ -113,18 +116,18 @@ public class UserDefinedDataTypePanel extends DataTypePanel implements ActionLis
                 handleException(ivjExc);
             }
         }
-        if (DataType.getTypeNamesChanged()) {
-            DataType.setTypeNamesChanged(false);
+        if (DataTypeManager.getTypeNamesChanged()) {
+            DataTypeManager.setTypeNamesChanged(false);
             if (jComboBox.getItemCount() > 0) {
                 oldItem = (String) jComboBox.getSelectedItem();
                 //System.out.println("old item = "+ (String)jComboBox.getSelectedItem());
             }
             jComboBox.removeAllItems();
             //System.out.println("items removed...");
-            for (int i = 0; i < DataType.getTypeNames().size(); i++) {
-                jComboBox.addItem(DataType.getTypeNames().get(i));
+            for (int i = 0; i < DataTypeManager.getTypeNames().size(); i++) {
+                jComboBox.addItem(DataTypeManager.getTypeNames().get(i));
                 //System.out.println(DataType.getTypeNames().get(i)+" added to combobox");
-                if ((DataType.getTypeNames().get(i)).compareTo(oldItem) == 0)
+                if ((DataTypeManager.getTypeNames().get(i)).compareTo(oldItem) == 0)
                     jComboBox.setSelectedIndex(i);
             }
         }
@@ -285,7 +288,7 @@ public class UserDefinedDataTypePanel extends DataTypePanel implements ActionLis
      *
      * @param aDataType cz.omnicom.ermodeller.datatype.CharDataType
      */
-    void setUserDefinedDataType(UserDefinedDataType aDataType) {
+    public void setUserDefinedDataType(UserDefinedDataType aDataType) {
         ivjUserDefinedDataType = aDataType;
         ivjUserDefinedDataType.addPropertyChangeListener(this);
     }

@@ -1,7 +1,7 @@
 package cz.omnicom.ermodeller.typeseditor;
 
-import cz.omnicom.ermodeller.datatype.DataTypePanel;
 import cz.omnicom.ermodeller.datatype.VarrayDataType;
+import cz.omnicom.ermodeller.datatype.editor.DataTypePanel;
 
 import javax.swing.*;
 import java.awt.*;

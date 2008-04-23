@@ -21,7 +21,7 @@ public class ChangeNotationDialog extends JDialog implements java.awt.event.Acti
     /**
      * Panel which customizes the <code>dataType</code>.
      *
-     * @see cz.omnicom.ermodeller.datatype.DataTypePanel
+     * @see cz.omnicom.ermodeller.datatype.editor.DataTypePanel
      */
     private JTextArea DescriptionTA = null;
     private final Entity Cent = null;

@@ -1,6 +1,7 @@
 package cz.omnicom.ermodeller.typeseditor;
 
 import cz.omnicom.ermodeller.datatype.*;
+import cz.omnicom.ermodeller.datatype.editor.DataTypePanel;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

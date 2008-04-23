@@ -1,7 +1,7 @@
 package cz.omnicom.ermodeller.typeseditor;
 
 import cz.omnicom.ermodeller.datatype.GeneralNumberDataType;
-import cz.omnicom.ermodeller.datatype.GeneralNumberDataTypePanel;
+import cz.omnicom.ermodeller.datatype.editor.GeneralNumberDataTypePanel;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

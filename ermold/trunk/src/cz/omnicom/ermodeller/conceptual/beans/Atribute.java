@@ -5,6 +5,7 @@ import cz.omnicom.ermodeller.conceptual.exception.ISAChildCannotHavePrimaryKeyEx
 import cz.omnicom.ermodeller.conceptual.exception.IsMemberOfPrimaryKeyException;
 import cz.omnicom.ermodeller.conceptual.exception.RelationCannotHavePrimaryKeyException;
 import cz.omnicom.ermodeller.datatype.DataType;
+import cz.omnicom.ermodeller.datatype.DataTypeManager;
 import cz.omnicom.ermodeller.datatype.IntegerDataType;
 import cz.omnicom.ermodeller.datatype.UserDefinedDataType;
 import cz.omnicom.ermodeller.errorlog.*;
@@ -249,17 +250,17 @@ public class Atribute extends ConceptualObject {
         ErrorLogList superErrorLogList = super.valid();
         errorLogList.concatErrorLogList(superErrorLogList);
         String dataType = getDataType().toString();
-        if ((getDataType() instanceof UserDefinedDataType) && (!DataType.getTypeNames().contains(getDataType().toString()))) {
+        if ((getDataType() instanceof UserDefinedDataType) && (!DataTypeManager.getTypeNames().contains(getDataType().toString()))) {
             ValidationError error = new UndefinedDataTypeValidationError(this);
             error.connectErrorToObject(this);
             errorLogList.addElement(error);
         }
-        if (((DataType.isInNestedNames(dataType)) || (DataType.isInVarrayNames(dataType)) || (DataType.isInObjectNames(dataType))) && (isMemberOfPrimaryKey())) {
+        if (((DataTypeManager.isInNestedNames(dataType)) || (DataTypeManager.isInVarrayNames(dataType)) || (DataTypeManager.isInObjectNames(dataType))) && (isMemberOfPrimaryKey())) {
             ValidationError error = new CannotBeInPrimaryKeyValidationError(this);
             error.connectErrorToObject(this);
             errorLogList.addElement(error);
         }
-        if ((DataType.isInNestedNames(dataType)) && (getArbitrary())) {
+        if ((DataTypeManager.isInNestedNames(dataType)) && (getArbitrary())) {
             ValidationError error = new CannotBeNotNullValidationError(this);
             error.connectErrorToObject(this);
             errorLogList.addElement(error);

@@ -1,11 +1,13 @@
 package cz.green.ermodeller;
 
+import cz.green.event.MovingEvent;
+
 /**
  * This class extends the <code>MoveEvent</code> from the package <code>cz.green.event</code>.
  * The reason for existence this class is in ER modeller. When many things are made
  * by dragging one item to other. This operation should be differentiate from normal items moving.
  */
-public class ExMoveEvent extends cz.green.event.MovingEvent {
+public class ExMoveEvent extends MovingEvent {
     /**
      * Holds information that this event represents just moving (<code>true</code>) or
      * dragging (<code>false</code>)

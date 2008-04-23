@@ -1,5 +1,8 @@
 package cz.omnicom.ermodeller.datatype;
 
+import cz.omnicom.ermodeller.datatype.editor.DataTypePanel;
+import cz.omnicom.ermodeller.datatype.editor.LengthDataTypePanel;
+
 import java.io.Serializable;
 
 /**
