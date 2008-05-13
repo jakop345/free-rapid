@@ -2,7 +2,7 @@ package cz.cvut.felk.erm.gui.managers;
 
 import cz.cvut.felk.erm.core.AppPrefs;
 import cz.cvut.felk.erm.core.Consts;
-import cz.cvut.felk.erm.core.UserProp;
+import cz.cvut.felk.erm.core.FWProp;
 import cz.cvut.felk.erm.gui.managers.interfaces.IAreaChangeListener;
 import cz.cvut.felk.erm.gui.managers.interfaces.IFileInstance;
 import cz.cvut.felk.erm.gui.managers.interfaces.InstanceListener;
@@ -40,9 +40,9 @@ public class TitleManager implements IAreaChangeListener, InstanceListener {
 
 
     public void updateTitle() {
-        if (!AppPrefs.getProperty(UserProp.FRAME_TITLE, true))
+        if (!AppPrefs.getProperty(FWProp.FRAME_TITLE, true))
             setEmptyInfo();
-        else 
+        else
             updateTitle(director.getAreaManager().getActiveInstance());
     }
 
@@ -61,10 +61,10 @@ public class TitleManager implements IAreaChangeListener, InstanceListener {
             return;
         }
 
-        if (AppPrefs.getProperty(UserProp.FRAME_TITLE, true)) {
+        if (AppPrefs.getProperty(FWProp.FRAME_TITLE, true)) {
             final String tabName;
             File file = instance.getFile();
-            switch (AppPrefs.getProperty(UserProp.FRAME_TITLE_TYPE, TITLE_FILENAME)) {
+            switch (AppPrefs.getProperty(FWProp.FRAME_TITLE_TYPE, TITLE_FILENAME)) {
                 case VARIABLE_NAME:
                     tabName = instance.getName();
                     break;

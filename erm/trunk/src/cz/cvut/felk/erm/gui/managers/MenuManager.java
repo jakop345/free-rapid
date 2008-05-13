@@ -33,13 +33,19 @@ public class MenuManager implements IFileChangeListener, IAreaChangeListener {
     private static final String SELECTED_TEXT_PROPERTY = "selectedText";
     private static final String MENU_SEPARATOR = "---";
     private JMenu recentsMenu;
+    private final FileActions fileActions;
 
+
+    public FileActions getFileActions() {
+        return fileActions;
+    }
 
     public MenuManager(final ApplicationContext context, ManagerDirector director) {
         super();
         this.context = context;
         this.director = director;
-        initActions(new FileActions());
+        fileActions = new FileActions();
+        initActions(fileActions);
         initActions(new EditActions());
         initActions(new ViewActions());
         initActions(new WindowActions());

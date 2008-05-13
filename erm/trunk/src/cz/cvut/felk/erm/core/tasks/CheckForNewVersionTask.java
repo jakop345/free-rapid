@@ -2,7 +2,7 @@ package cz.cvut.felk.erm.core.tasks;
 
 import cz.cvut.felk.erm.core.AppPrefs;
 import cz.cvut.felk.erm.core.Consts;
-import cz.cvut.felk.erm.core.UserProp;
+import cz.cvut.felk.erm.core.FWProp;
 import cz.cvut.felk.erm.core.application.ProxyHelper;
 import cz.cvut.felk.erm.swing.Swinger;
 import cz.cvut.felk.erm.utilities.Browser;
@@ -43,7 +43,7 @@ public class CheckForNewVersionTask extends CoreTask<ConnectResult, Void> {
         HttpURLConnection urlConn = null;
         message("message.connecting");
         try {
-            final String url = AppPrefs.getProperty(UserProp.CHECK_FOR_NEW_VERSION_URL, Consts.WEBURL_SUBMIT_ERROR);
+            final String url = AppPrefs.getProperty(FWProp.CHECK_FOR_NEW_VERSION_URL, Consts.WEBURL_SUBMIT_ERROR);
             urlConn = (HttpURLConnection) new URL(url).openConnection();
             urlConn.setDoOutput(true);
             urlConn.setDoInput(true);

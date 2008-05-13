@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <project name="ERModeller" default="all" basedir=".">
     <property name="application" value="erm"/>
-    <property name="version" value="${application}-5.0-a01"/>
+    <property name="version" value="5.0-a02"/>
+    <property name="version.name" value="${application}-${version}"/>
+
     <property name="mainjar.file" value="erm.jar"/>
     <!--<property name="mainjar-packed.file" value="${mainjar.file}.pack.gz"/>-->
 
     <!-- output data directories -->
-    <property name="build.dir" value="${version}"/>
+    <property name="build.dir" value="${version.name}"/>
     <property name="classes.dir" value="_classes"/>
     <property name="dist.dir" value="dist"/>
 
@@ -29,7 +31,7 @@
 
 
     <!-- additional tasks for Ant -->
-    <taskdef classpath="${ant-tasks.dir}orangevolt-ant-tasks-1.3.8.jar"
+    <taskdef classpath="${ant-tasks.dir}orangevolt-ant-tasks-1.4.0.jar"
              resource="com/orangevolt/tools/ant/taskdefs.properties"/>
     <!--<taskdef name="pack200" classname="com.sun.tools.apache.ant.pack200.Pack200Task" classpath="${ant-tasks.dir}Pack200Task.jar"/>-->
 
@@ -130,14 +132,14 @@
         <!-- creating JNLP file -->
         <jnlp toFile="${build.dir}/${jnlp.file}" href="${jnlp.file}" codebase="${jnlp.url}" jnlpversion="6.0">
             <information offlineallowed="true">
-                <title>ER Modeller 5.0</title>
+                <title>ER Modeller ${version}</title>
                 <vendor>CTU FEL</vendor>
                 <homepage href="${jnlp.homepage}"/>
                 <icon kind="splash" href="splash.jpg"/>
                 <icon kind="shortcut" href="erm.ico" width="16" height="16"/>
-                <icon kind="shortcut" href="erm.ico" width="32" height="32"/>
-                <icon href="erm.ico"/>
-                <description>ER Modeller</description>
+                <icon kind="shortcut" href="erm.gif" width="32" height="32"/>
+                <icon href="erm.gif"/>
+                <description>conceptual modelling tool</description>
                 <description kind="short">ER Modeller</description>
                 <description kind="tooltip">ER Modeller</description>
                 <shortcut online="true">
@@ -145,10 +147,11 @@
                     <menu submenu="CTU FEL"/>
                 </shortcut>
             </information>
+            <update check="background"/>
             <security>
                 <all_permissions/>
             </security>
-            <resources>
+            <resources version="${version}">
                 <j2se version="1.6+"/>
                 <!--<property name="jnlp.packEnabled" value="true"/>                -->
                 <fileset dir="${build.dir}">
@@ -161,7 +164,7 @@
             <application_desc main_class="${mainclass}"/>
         </jnlp>
 
-        <zip zipfile="${dist.dir}/${version}-ws.zip">
+        <zip zipfile="${dist.dir}/${version.name}-ws.zip">
             <fileset dir="${build.dir}">
                 <include name="${lib.dir}/"/>
                 <include name="${lookandfeel.dir}/"/>
@@ -182,13 +185,13 @@
     </target>
 
     <target name="dist" depends="build" description="creating release">
-        <zip zipfile="${dist.dir}/${version}.zip">
+        <zip zipfile="${dist.dir}/${version.name}.zip">
             <fileset dir=".">
                 <include name="${build.dir}/"/>
                 <!--<exclude name="${build.dir}/${mainjar-packed.file}"/>-->
             </fileset>
         </zip>
-        <zip destfile="${dist.dir}/${version}-src.zip">
+        <zip destfile="${dist.dir}/${version.name}-src.zip">
             <fileset dir=".">
                 <include name="${lib.dir}/"/>
                 <include name="${lib-src.dir}/"/>

@@ -1,6 +1,7 @@
 package cz.cvut.felk.erm.gui.dialogs.filechooser;
 
 import cz.cvut.felk.erm.core.AppPrefs;
+import cz.cvut.felk.erm.core.FWProp;
 import cz.cvut.felk.erm.core.UserProp;
 
 import javax.swing.*;
@@ -23,13 +24,13 @@ public class OpenSaveDialogFactory {
         filters.add(new EnhancedFileFilter(new String[]{"au"}, "soundDialog.filterAu"));
         filters.add(new EnhancedFileFilter(new String[]{"wav", "mid", "au"}, "soundDialog.allSupported"));
 
-        return getOpenFileDialog(filters, UserProp.LAST_USED_SOUND_FILTER, currentPath);
+        return getOpenFileDialog(filters, FWProp.LAST_USED_SOUND_FILTER, currentPath);
     }
 
     public static File[] getImportCalendarDialog() {
         final List<EnhancedFileFilter> filters = new ArrayList<EnhancedFileFilter>(1);
         filters.add(new EnhancedFileFilter(new String[]{"ics"}, "importICSDialog.filterIcs"));
-        return getOpenFileDialog(filters, UserProp.LAST_IMPORT_FILTER, AppPrefs.getProperty(UserProp.IMPORT_LAST_USED_FOLDER, ""));
+        return getOpenFileDialog(filters, UserProp.LAST_IMPORT_FILTER, AppPrefs.getProperty(FWProp.IMPORT_LAST_USED_FOLDER, ""));
     }
 
 

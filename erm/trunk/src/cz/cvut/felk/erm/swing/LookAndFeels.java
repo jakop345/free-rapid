@@ -2,8 +2,8 @@ package cz.cvut.felk.erm.swing;
 
 import cz.cvut.felk.erm.core.AppPrefs;
 import cz.cvut.felk.erm.core.Consts;
+import cz.cvut.felk.erm.core.FWProp;
 import cz.cvut.felk.erm.core.MainApp;
-import cz.cvut.felk.erm.core.UserProp;
 import cz.cvut.felk.erm.utilities.LogUtils;
 import cz.cvut.felk.erm.utilities.Utils;
 
@@ -41,9 +41,9 @@ public final class LookAndFeels {
 
     private LookAndFeels() {
         classLoader = initClassLoader();
-        final String selectedLookAndFeelClassName = AppPrefs.getProperty(UserProp.LOOK_AND_FEEL_SELECTED_KEY, KUNSTSTOFF);
-        final boolean opaque = AppPrefs.getProperty(UserProp.LOOK_AND_FEEL_OPAQUE_KEY, true);
-        String selectedTheme = AppPrefs.getProperty(UserProp.THEME_SELECTED_KEY, "");
+        final String selectedLookAndFeelClassName = AppPrefs.getProperty(FWProp.LOOK_AND_FEEL_SELECTED_KEY, KUNSTSTOFF);
+        final boolean opaque = AppPrefs.getProperty(FWProp.LOOK_AND_FEEL_OPAQUE_KEY, true);
+        String selectedTheme = AppPrefs.getProperty(FWProp.THEME_SELECTED_KEY, "");
 
         if (selectedTheme == null && selectedLookAndFeelClassName.equals(KUNSTSTOFF))
             selectedTheme = WordRiderMetalTheme.class.getName();
@@ -123,12 +123,12 @@ public final class LookAndFeels {
 
     public final void storeSelectedLaF(final LaF laf) {
 
-        AppPrefs.storeProperty(UserProp.LOOK_AND_FEEL_SELECTED_KEY, laf.getClassName());
-        AppPrefs.storeProperty(UserProp.LOOK_AND_FEEL_OPAQUE_KEY, laf.isToolbarOpaque());
+        AppPrefs.storeProperty(FWProp.LOOK_AND_FEEL_SELECTED_KEY, laf.getClassName());
+        AppPrefs.storeProperty(FWProp.LOOK_AND_FEEL_OPAQUE_KEY, laf.isToolbarOpaque());
         if (!laf.hasThemeClass()) {
-            AppPrefs.removeProperty(UserProp.THEME_SELECTED_KEY);
+            AppPrefs.removeProperty(FWProp.THEME_SELECTED_KEY);
         } else
-            AppPrefs.storeProperty(UserProp.THEME_SELECTED_KEY, laf.getThemeClass());
+            AppPrefs.storeProperty(FWProp.THEME_SELECTED_KEY, laf.getThemeClass());
         //  selectedLookAndFeel = laf;
         logger.config("LaF " + laf + " has been set. It will be effective on restart.");
     }

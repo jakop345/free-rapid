@@ -62,7 +62,7 @@ public class Consts {
     /**
      * URL adresa, kam se posilaji reporty o chybach
      */
-    public static final String WEBURL_SUBMIT_ERROR = "http://wordrider.net/error.php";
+    public static final String WEBURL_SUBMIT_ERROR = "http://wordrider.net/posterror.php";
 
     public static final int DEFAULT_RECENT_FILES_MAX_COUNT = 7;
 

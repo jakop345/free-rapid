@@ -15,8 +15,8 @@ import com.jgoodies.forms.layout.*;
 import com.l2fprod.common.swing.JButtonBar;
 import com.l2fprod.common.swing.plaf.blue.BlueishButtonBarUI;
 import cz.cvut.felk.erm.core.AppPrefs;
+import cz.cvut.felk.erm.core.FWProp;
 import cz.cvut.felk.erm.core.MainApp;
-import cz.cvut.felk.erm.core.UserProp;
 import cz.cvut.felk.erm.gui.MyPreferencesAdapter;
 import cz.cvut.felk.erm.gui.MyPresentationModel;
 import cz.cvut.felk.erm.swing.LaF;
@@ -85,7 +85,7 @@ public class UserPreferencesDialog extends AppDialog {
 
 
         setDefaultValues();
-        showCard(Card.valueOf(AppPrefs.getProperty(UserProp.USER_SETTINGS_SELECTED_CARD, Card.CARD1.toString())));
+        showCard(Card.valueOf(AppPrefs.getProperty(FWProp.USER_SETTINGS_SELECTED_CARD, Card.CARD1.toString())));
         pack();
         setResizable(true);
         locateOnOpticalScreenCenter(this);
@@ -128,7 +128,7 @@ public class UserPreferencesDialog extends AppDialog {
         assert card != null;
         final CardLayout cardLayout = (CardLayout) panelCard.getLayout();
         cardLayout.show(panelCard, card.toString());
-        AppPrefs.storeProperty(UserProp.USER_SETTINGS_SELECTED_CARD, card.toString());
+        AppPrefs.storeProperty(FWProp.USER_SETTINGS_SELECTED_CARD, card.toString());
         String actionName;
         switch (card) {
             case CARD1:
@@ -164,7 +164,7 @@ public class UserPreferencesDialog extends AppDialog {
 
     private void bindBasicComponents() {
 
-        bind(checkShowIconInSystemTray, UserProp.SHOW_TRAY, true);
+        bind(checkShowIconInSystemTray, FWProp.SHOW_TRAY, true);
 
         bindLaFCombobox();
     }
@@ -472,8 +472,8 @@ public class UserPreferencesDialog extends AppDialog {
         public void preferenceChange(PreferenceChangeEvent evt) {
             //pozor, interne se vola ve zvlastnim vlakne, nikoli na EDT threadu
             final MainApp app = MainApp.getInstance(MainApp.class);
-            final String key = evt.getKey();            
-            if (UserProp.SHOW_TRAY.equals(key)) {
+            final String key = evt.getKey();
+            if (FWProp.SHOW_TRAY.equals(key)) {
                 app.getTrayIconSupport().setVisibleByDefault();
             }
 //            else if (LAF_PROPERTY.equals(key)) {

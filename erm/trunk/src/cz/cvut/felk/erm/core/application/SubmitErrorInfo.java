@@ -2,16 +2,18 @@ package cz.cvut.felk.erm.core.application;
 
 import cz.cvut.felk.erm.core.AppPrefs;
 import cz.cvut.felk.erm.core.Consts;
-import cz.cvut.felk.erm.core.UserProp;
+import cz.cvut.felk.erm.core.FWProp;
 import cz.cvut.felk.erm.utilities.Utils;
 import org.jdesktop.beans.AbstractBean;
 import org.jdesktop.swingx.error.ErrorInfo;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Locale;
 
 /**
  * Info pro odeslani na server
+ *
  * @author Ladislav Vitasek
  */
 public class SubmitErrorInfo extends AbstractBean {
@@ -23,8 +25,8 @@ public class SubmitErrorInfo extends AbstractBean {
     public SubmitErrorInfo(ErrorInfo errorInfo) {
         super();
         this.errorInfo = errorInfo;
-        this.setName(AppPrefs.getProperty(UserProp.SUBMIT_ERROR_NAME));
-        this.setEmail(AppPrefs.getProperty(UserProp.SUBMIT_ERROR_EMAIL));
+        this.setName(AppPrefs.getProperty(FWProp.SUBMIT_ERROR_NAME));
+        this.setEmail(AppPrefs.getProperty(FWProp.SUBMIT_ERROR_EMAIL));
     }
 
     public String getName() {
@@ -75,13 +77,15 @@ public class SubmitErrorInfo extends AbstractBean {
 
 
     public String toURLPostData() {
-        AppPrefs.storeProperty(UserProp.SUBMIT_ERROR_EMAIL, getEmail());
-        AppPrefs.storeProperty(UserProp.SUBMIT_ERROR_NAME, getName());
+        AppPrefs.storeProperty(FWProp.SUBMIT_ERROR_EMAIL, getEmail());
+        AppPrefs.storeProperty(FWProp.SUBMIT_ERROR_NAME, getName());
 
         final StringBuilder builder = new StringBuilder();
         Utils.addParam(builder, "product", Consts.PRODUCT);
         Utils.addParam(builder, "version", Consts.VERSION);
         Utils.addParam(builder, "name", getName());
+        Utils.addParam(builder, "locale", Locale.getDefault().getLanguage());
+        Utils.addParam(builder, "os", System.getProperty("os.name", "Unknown"));
         Utils.addParam(builder, "comment", getComment());
         Utils.addParam(builder, "email", getEmail());
         Utils.addParam(builder, "userinfo", getUserInfo());

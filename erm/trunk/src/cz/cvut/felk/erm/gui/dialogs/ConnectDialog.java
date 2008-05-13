@@ -7,7 +7,7 @@ import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.*;
 import cz.cvut.felk.erm.core.AppPrefs;
-import cz.cvut.felk.erm.core.UserProp;
+import cz.cvut.felk.erm.core.FWProp;
 import cz.cvut.felk.erm.gui.MyPresentationModel;
 import cz.cvut.felk.erm.swing.ComponentFactory;
 import cz.cvut.felk.erm.swing.LimitedPlainDocument;
@@ -52,7 +52,7 @@ public class ConnectDialog extends AppDialog {
     public void okBtnAction() {
         this.setResult(RESULT_OK);
         model.triggerCommit();
-        AppPrefs.storeProperty(UserProp.PROXY_PASSWORD, Utils.generateXorString(String.valueOf(fieldPassword.getPassword())));
+        AppPrefs.storeProperty(FWProp.PROXY_PASSWORD, Utils.generateXorString(String.valueOf(fieldPassword.getPassword())));
         doClose();
     }
 
@@ -81,13 +81,13 @@ public class ConnectDialog extends AppDialog {
 
     private void buildModels() {
         model = new MyPresentationModel(null, new Trigger());
-        bind(fieldHostName, UserProp.PROXY_URL, "");
-        bind(fieldUserName, UserProp.PROXY_USERNAME, "");
-        bind(fieldPort, UserProp.PROXY_PORT, "");
-        bind(checkStorePassword, UserProp.PROXY_SAVEPASSWORD, false);
-        bind(checkAuthentification, UserProp.PROXY_LOGIN, false);
-        bind(checkUseProxy, UserProp.PROXY_USE, false);
-        fieldPassword.setText(Utils.generateXorString(AppPrefs.getProperty(UserProp.PROXY_PASSWORD, "")));
+        bind(fieldHostName, FWProp.PROXY_URL, "");
+        bind(fieldUserName, FWProp.PROXY_USERNAME, "");
+        bind(fieldPort, FWProp.PROXY_PORT, "");
+        bind(checkStorePassword, FWProp.PROXY_SAVEPASSWORD, false);
+        bind(checkAuthentification, FWProp.PROXY_LOGIN, false);
+        bind(checkUseProxy, FWProp.PROXY_USE, false);
+        fieldPassword.setText(Utils.generateXorString(AppPrefs.getProperty(FWProp.PROXY_PASSWORD, "")));
     }
 
     private void buildGUI() {
@@ -104,9 +104,9 @@ public class ConnectDialog extends AppDialog {
                 updateEnabledUseProxy(checkUseProxy.isSelected());
             }
         });
-        final boolean useProxy = AppPrefs.getProperty(UserProp.PROXY_USE, false);
+        final boolean useProxy = AppPrefs.getProperty(FWProp.PROXY_USE, false);
         updateEnabledUseProxy(useProxy);
-        updateEnabledUseLogin(AppPrefs.getProperty(UserProp.PROXY_LOGIN, false) && useProxy);
+        updateEnabledUseLogin(AppPrefs.getProperty(FWProp.PROXY_LOGIN, false) && useProxy);
     }
 
     private void updateEnabledUseProxy(final boolean enabled) {

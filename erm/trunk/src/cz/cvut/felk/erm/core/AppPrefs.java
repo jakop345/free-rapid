@@ -129,8 +129,8 @@ public final class AppPrefs {
 //                    parentFile.mkdirs();
 //            }
 //
-            if (!AppPrefs.getProperty(UserProp.PROXY_SAVEPASSWORD, false))
-                removeProperty(UserProp.PROXY_PASSWORD);
+            if (!AppPrefs.getProperty(FWProp.PROXY_SAVEPASSWORD, false))
+                removeProperty(FWProp.PROXY_PASSWORD);
             final LocalStorage localStorage = MainApp.getAContext().getLocalStorage();
             final File outDir = localStorage.getDirectory();
             outDir.mkdirs();

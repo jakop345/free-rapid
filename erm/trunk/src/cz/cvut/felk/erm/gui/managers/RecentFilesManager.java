@@ -2,7 +2,7 @@ package cz.cvut.felk.erm.gui.managers;
 
 import cz.cvut.felk.erm.core.AppPrefs;
 import cz.cvut.felk.erm.core.Consts;
-import cz.cvut.felk.erm.core.UserProp;
+import cz.cvut.felk.erm.core.FWProp;
 import cz.cvut.felk.erm.gui.managers.interfaces.IFileChangeListener;
 import cz.cvut.felk.erm.gui.managers.interfaces.IFileInstance;
 
@@ -24,13 +24,12 @@ public final class RecentFilesManager implements IFileChangeListener {
     }
 
     private static int getMaxRecentFilesSettings() {
-        return AppPrefs.getProperty(UserProp.MAX_RECENT_FILES, Consts.DEFAULT_RECENT_FILES_MAX_COUNT);
+        return AppPrefs.getProperty(FWProp.MAX_RECENT_FILES, Consts.DEFAULT_RECENT_FILES_MAX_COUNT);
     }
 
     private void loadRecentFiles() {
         String fileName, key;
-        for (int counter = 0; (fileName = AppPrefs.getProperty(key = RECENT_PREFERENCES + counter, null)) != null; ++counter)
-        {
+        for (int counter = 0; (fileName = AppPrefs.getProperty(key = RECENT_PREFERENCES + counter, null)) != null; ++counter) {
             if (fileName.length() > 0) {
                 recentFilesList.add(0, new File(fileName));
                 AppPrefs.removeProperty(key);
@@ -60,7 +59,7 @@ public final class RecentFilesManager implements IFileChangeListener {
     }
 
     public void fileWasClosed(final FileChangeEvent event) {
-        final IFileInstance fileInstance = event.getFileInstance();        
+        final IFileInstance fileInstance = event.getFileInstance();
         if (!fileInstance.hasAssignedFile())
             return;
         if (recentFilesList.indexOf(fileInstance.getFile()) < 0) {

@@ -2,7 +2,7 @@ package cz.cvut.felk.erm.utilities;
 
 import cz.cvut.felk.erm.core.AppPrefs;
 import cz.cvut.felk.erm.core.Consts;
-import cz.cvut.felk.erm.core.UserProp;
+import cz.cvut.felk.erm.core.FWProp;
 import cz.cvut.felk.erm.swing.Swinger;
 
 import java.awt.*;
@@ -45,7 +45,7 @@ public class Browser {
     }
 
     public static void showHomepage() {
-        openBrowser(AppPrefs.getProperty(UserProp.WEBURL, Consts.WEBURL));
+        openBrowser(AppPrefs.getProperty(FWProp.WEBURL, Consts.WEBURL));
     }
 
 }

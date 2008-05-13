@@ -1,8 +1,8 @@
 package cz.cvut.felk.erm.swing;
 
 import cz.cvut.felk.erm.core.AppPrefs;
+import cz.cvut.felk.erm.core.FWProp;
 import cz.cvut.felk.erm.core.MainApp;
-import cz.cvut.felk.erm.core.UserProp;
 import org.jdesktop.application.ApplicationContext;
 import org.jdesktop.application.ResourceMap;
 
@@ -35,7 +35,7 @@ public class TrayIconSupport implements PropertyChangeListener {
     }
 
     public synchronized void setVisibleByDefault() {
-        setVisible(AppPrefs.getProperty(UserProp.SHOW_TRAY, true));
+        setVisible(AppPrefs.getProperty(FWProp.SHOW_TRAY, true));
     }
 
     private synchronized void enable() {
@@ -52,7 +52,7 @@ public class TrayIconSupport implements PropertyChangeListener {
         windowAdapter = new WindowAdapter() {
             @Override
             public void windowIconified(WindowEvent e) {
-                if (AppPrefs.getProperty(UserProp.SHOW_TRAY, true) && AppPrefs.getProperty(UserProp.MINIMIZE_TO_TRAY, false))
+                if (AppPrefs.getProperty(FWProp.SHOW_TRAY, true) && AppPrefs.getProperty(FWProp.MINIMIZE_TO_TRAY, false))
                     frame.setVisible(false);
             }
         };
@@ -97,7 +97,7 @@ public class TrayIconSupport implements PropertyChangeListener {
         MenuItem defaultItem = new MenuItem(map.getString("trayQuit"));
         MenuItem restoreItem = new MenuItem(map.getString("trayRestore"));
         final CheckboxMenuItem hideWhenMinimizedItem = new CheckboxMenuItem(map.getString("trayHideWhenMinimized"));
-        hideWhenMinimizedItem.setState(AppPrefs.getProperty(UserProp.MINIMIZE_TO_TRAY, false));
+        hideWhenMinimizedItem.setState(AppPrefs.getProperty(FWProp.MINIMIZE_TO_TRAY, false));
 
         defaultItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -114,7 +114,7 @@ public class TrayIconSupport implements PropertyChangeListener {
         hideWhenMinimizedItem.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 final boolean b = hideWhenMinimizedItem.getState();
-                AppPrefs.storeProperty(UserProp.MINIMIZE_TO_TRAY, b);
+                AppPrefs.storeProperty(FWProp.MINIMIZE_TO_TRAY, b);
             }
         });
 

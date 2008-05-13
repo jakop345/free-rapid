@@ -1,7 +1,7 @@
 package cz.cvut.felk.erm.core.application;
 
 import cz.cvut.felk.erm.core.AppPrefs;
-import cz.cvut.felk.erm.core.UserProp;
+import cz.cvut.felk.erm.core.FWProp;
 import cz.cvut.felk.erm.utilities.Utils;
 
 import java.net.Authenticator;
@@ -18,11 +18,11 @@ public class ProxyHelper {
     }
 
     public static void initProxy() {
-        if (AppPrefs.getProperty(UserProp.PROXY_USE, false)) {
+        if (AppPrefs.getProperty(FWProp.PROXY_USE, false)) {
 
             final StringBuilder builder = new StringBuilder();
-            final String url = AppPrefs.getProperty(UserProp.PROXY_URL, "localhost");
-            final String port = AppPrefs.getProperty(UserProp.PROXY_PORT, "8080");
+            final String url = AppPrefs.getProperty(FWProp.PROXY_URL, "localhost");
+            final String port = AppPrefs.getProperty(FWProp.PROXY_PORT, "8080");
             builder.append("\nUrl-").append(url).append("\nPort-").append(port);
             System.setProperty("proxySet", "true");
             System.setProperty("https.proxyHost", url);
@@ -30,9 +30,9 @@ public class ProxyHelper {
             System.setProperty("https.proxyPort", port);
             System.setProperty("proxyHost", url);
             System.setProperty("proxyPort", port);
-            if (AppPrefs.getProperty(UserProp.PROXY_LOGIN, false)) {
-                final String userName = AppPrefs.getProperty(UserProp.PROXY_USERNAME, "");
-                final String password = Utils.generateXorString(AppPrefs.getProperty(UserProp.PROXY_PASSWORD, ""));
+            if (AppPrefs.getProperty(FWProp.PROXY_LOGIN, false)) {
+                final String userName = AppPrefs.getProperty(FWProp.PROXY_USERNAME, "");
+                final String password = Utils.generateXorString(AppPrefs.getProperty(FWProp.PROXY_PASSWORD, ""));
                 builder.append("\nProxy Login Name -").append(userName);
                 Authenticator.setDefault(new HttpAuthenticateProxy(userName, password));
             }

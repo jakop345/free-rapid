@@ -1,6 +1,8 @@
 package cz.cvut.felk.erm.core.tasks;
 
+import cz.cvut.felk.erm.core.AppPrefs;
 import cz.cvut.felk.erm.core.Consts;
+import cz.cvut.felk.erm.core.FWProp;
 import cz.cvut.felk.erm.core.application.ProxyHelper;
 import cz.cvut.felk.erm.core.application.SubmitErrorInfo;
 import cz.cvut.felk.erm.utilities.LogUtils;
@@ -33,7 +35,9 @@ public class SubmitErrorInfoTask extends CoreTask<Void, Void> {
         HttpURLConnection urlConn = null;
         message("message.connecting");
         try {
-            urlConn = (HttpURLConnection) new URL(Consts.WEBURL_SUBMIT_ERROR).openConnection();
+            final String url = AppPrefs.getProperty(FWProp.WEBURL_SUBMIT_ERROR, Consts.WEBURL_SUBMIT_ERROR);
+            urlConn = (HttpURLConnection) new URL(url).openConnection();
+            urlConn.setRequestMethod("POST");
             urlConn.setDoOutput(true);
             urlConn.setDoInput(true);
             urlConn.setUseCaches(false);
