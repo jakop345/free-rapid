@@ -7,6 +7,7 @@ import com.jgoodies.forms.builder.*;
 import com.jgoodies.forms.factories.*;
 import com.jgoodies.forms.layout.*;
 import com.l2fprod.common.swing.*;
+import org.jdesktop.swinghelper.buttonpanel.*;
 import org.jdesktop.swingx.*;
 /*
  * Created by JFormDesigner on Mon Aug 06 17:23:18 CEST 2007
@@ -47,7 +48,7 @@ public class UserPreferencesDialog extends JDialog {
 		JPanel panelWhenAlarmGoesOff = new JPanel();
 		JPanel panelAlarmDefaults = new JPanel();
 		JPanel panelViews = new JPanel();
-		buttonBar = new JPanel();
+		buttonBar = new JXButtonPanel();
 		btnOK = new JButton();
 		btnCancel = new JButton();
 		CellConstraints cc = new CellConstraints();
@@ -222,6 +223,7 @@ public class UserPreferencesDialog extends JDialog {
 			//======== buttonBar ========
 			{
 				buttonBar.setBorder(Borders.BUTTON_BAR_GAP_BORDER);
+				buttonBar.setCyclic(true);
 				buttonBar.setLayout(new FormLayout(
 					new ColumnSpec[] {
 						FormFactory.GLUE_COLSPEC,
@@ -254,7 +256,7 @@ public class UserPreferencesDialog extends JDialog {
 	private JPanel panelCard;
 	private JCheckBox checkShowIconInSystemTray;
 	private JComboBox comboLaF;
-	private JPanel buttonBar;
+	private JXButtonPanel buttonBar;
 	private JButton btnOK;
 	private JButton btnCancel;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables

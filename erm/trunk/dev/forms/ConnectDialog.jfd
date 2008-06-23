@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?> 
-<java version="1.6.0_02" class="java.beans.XMLDecoder"> 
+<java version="1.6.0_10-ea" class="java.beans.XMLDecoder"> 
  <object class="com.jformdesigner.model.FormModel"> 
   <void method="setProperty"> 
    <string>i18n.autoExternalize</string> 
@@ -385,7 +385,7 @@
         </void> 
         <void method="add"> 
          <object class="com.jformdesigner.model.FormContainer"> 
-          <string>javax.swing.JPanel</string> 
+          <string>org.jdesktop.swinghelper.buttonpanel.JXButtonPanel</string> 
           <object class="com.jformdesigner.model.FormLayoutManager"> 
            <class>com.jgoodies.forms.layout.FormLayout</class> 
            <void method="setProperty"> 

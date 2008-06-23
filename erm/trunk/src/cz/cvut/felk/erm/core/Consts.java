@@ -10,7 +10,7 @@ public class Consts {
     /**
      * Product name
      */
-    public static final String PRODUCT = "ER Modeller";
+    public static final String PRODUCT = "Test Project";
 
     /**
      * Version
