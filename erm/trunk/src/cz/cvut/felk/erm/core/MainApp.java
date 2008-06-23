@@ -16,6 +16,7 @@ import org.jdesktop.application.Application;
 import org.jdesktop.application.ApplicationContext;
 import org.jdesktop.application.ResourceConverter;
 import org.jdesktop.application.SessionStorage;
+import org.jdesktop.swinghelper.debug.CheckThreadViolationRepaintManager;
 import org.jdesktop.swingx.JXMultiSplitPane;
 import org.jdesktop.swingx.JXStatusBar;
 
@@ -99,6 +100,8 @@ public class MainApp extends SingleXFrameApplication {
 
     @Override
     protected void startup() {
+        if (debug)
+            RepaintManager.setCurrentManager(new CheckThreadViolationRepaintManager());
         director = new ManagerDirector(getContext());
         initMainFrame();
         this.addExitListener(new MainAppExitListener());
