@@ -1,0 +1,20 @@
+=====================================
+  Historie zmen pri vyvoji ERM 5.0
+=====================================
+Alpha 02 - 2008-04-07 (cca 450kB Java kodu, 17kB resources)
+---------------------------------------------------------------
+
+
+Alpha 01 - 2008-04-07 (cca 450kB Java kodu, 17kB resources)
+---------------------------------------------------------------
+- integrovan zakladni framework (Swing AppFramework)
+    - podpora akci, dlouhotrvajicich uloh, multijazycnost
+- podpora pro logovani
+- podpora pro look&feely
+- statusbar/toolbar
+- integrovan docking framework (MyDoggy komponenta)
+- otevirani/zavirani instanci oken
+- Window Menu (akce pro praci s okny)
+- podpora zobrazovani internich chyb a odesilani chyb na server (SwingX komponenty)
+- zakladni dialog s User Properties
+
