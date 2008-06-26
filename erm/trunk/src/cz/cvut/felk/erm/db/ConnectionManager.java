@@ -1,108 +1,56 @@
 package cz.cvut.felk.erm.db;
 
-import cz.cvut.felk.erm.core.Consts;
 import cz.cvut.felk.erm.core.MainApp;
-import cz.cvut.felk.erm.utilities.LogUtils;
-import org.jdesktop.application.Application;
-import org.jdesktop.application.ApplicationContext;
+import cz.cvut.felk.erm.gui.dialogs.ErrorDialog;
+import cz.cvut.felk.erm.swing.Swinger;
+import org.jdesktop.application.LocalStorage;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.EventObject;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 
 /**
+ * Tato trida poskytuje pristup k instanci tridy Connection pro pouziti databaze
+ *
  * @author Ladislav Vitasek
- *         Tato trida poskytuje pristup k instanci tridy Connection pro pouziti databaze
  */
 public class ConnectionManager {
     private final static Logger logger = Logger.getLogger(ConnectionManager.class.getName());
-    private static ConnectionManager instance;
-    private Connection connection;
+    private final static String DB_CONNECTIONS_FILE = "dbConnections.xml";
+    private List<DBConnection> dbConnections = null;
 
-    private String url;
-    //private String create_url;
-    private String db_user;
-    private String db_pass;
 
-    /**
-     * Singleton - privatni konstruktor
-     */
-    private ConnectionManager() {
-        /* deployment ready code */
-        ApplicationContext appContext = MainApp.getInstance().getContext();
-
-        this.db_user = Consts.DB_USERNAME;
-        this.db_pass = Consts.DB_PASSWORD;
-
-//		this.url = "jdbc:derby:G:/pokus/db";
-
-        /* deployment ready code */
-        //this.url = "" + appContext.getLocalStorage().getDirectory() + "/" + Consts.DB_LOCALDIR;
-
-        appContext.getApplication().addExitListener(new ConnectionManagerExitListener());
+    public ConnectionManager() {
     }
 
-    /**
-     * Ziskani instance ConnectionManagera - Synchronized zaruci thread safety
-     *
-     * @return vraci novou instanci Connection Managera
-     */
-    public static synchronized ConnectionManager getInstance() {
-        if (instance == null)
-            instance = new ConnectionManager();
-        return instance;
+    @SuppressWarnings({"unchecked"})
+    public List<DBConnection> loadConnections() throws IOException {
+        if (dbConnections != null)
+            return dbConnections;
+        final LocalStorage localStorage = MainApp.getAContext().getLocalStorage();
+        final File storageDir = localStorage.getDirectory();
+
+        final File connectionsFile = new File(storageDir, DB_CONNECTIONS_FILE);
+        if (!connectionsFile.exists()) {
+            final ArrayList<DBConnection> list = new ArrayList<DBConnection>(2);
+            list.add(DBConnection.createDefaultConnectionSettings());
+            return list;
+        }
+
+        final Object o = localStorage.load(DB_CONNECTIONS_FILE);
+        if (!(o instanceof List)) {
+            throw new IOException(Swinger.getResourceMap(ErrorDialog.class).getString("dbConnectionListLoadErrorIncompatible"));
+        }
+        return new ArrayList<DBConnection>(dbConnections = (List<DBConnection>) o);
     }
 
-    public Connection getConnection() throws SQLException {
-        if (connection == null) {
-            logger.info("Initializing connection to DB");
-            try {
-                connection = DriverManager.getConnection(url, db_user, db_pass);
-            }
-            catch (SQLException ex) {//tohle neni moc cisty, spis SQLException a ani mozna taky ne...
-                connection = DriverManager.getConnection(url, db_user, db_pass);
-            }
-            connection.setAutoCommit(false); // Vypnuti automatickeho commit pro kazdy dotaz
-        }
-        return connection;
-    }
+    public void storeConnections(List<DBConnection> list) throws IOException {
+        this.dbConnections = new ArrayList<DBConnection>(list);
+        final LocalStorage localStorage = MainApp.getAContext().getLocalStorage();
 
-    public void shutdown() throws SQLException {
-        if (connection != null) {
-            DriverManager.getConnection("jdbc:derby:;shutdown=true", db_user, db_pass);
-        }
-    }
-
-    /**
-     * Exit listener. Provede ukonceni spojeni s databazi
-     */
-    private static class ConnectionManagerExitListener implements Application.ExitListener {
-
-        public boolean canExit(EventObject event) {
-            return true;
-        }
-
-        public void willExit(EventObject event) {
-            boolean gotSQLExc = false;
-            logger.info("Shutting down database connection ...");
-            try {
-                ConnectionManager.getInstance().shutdown();
-            }
-            catch (SQLException ex) {
-                if (ex.getSQLState().equals("XJ015")) {
-                    gotSQLExc = true;    // uspesne ukonceni databaze - viz http://db.apache.org/derby/docs/dev/getstart/rwwdactivity3.html
-                } else {
-                    LogUtils.processException(logger, ex);
-                }
-            }
-            if (!gotSQLExc) {
-                logger.info("Database did not shut down normally");
-            } else {
-                logger.info("Database shut down normally");
-            }
-        }
+        localStorage.save(this.dbConnections, DB_CONNECTIONS_FILE);
     }
 }

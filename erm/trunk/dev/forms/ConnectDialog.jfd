@@ -358,6 +358,10 @@
               <string>labelWarning.text</string> 
              </object> 
             </void> 
+            <void method="setProperty"> 
+             <string>foreground</string> 
+             <object class="java.awt.Color" field="red"/> 
+            </void> 
             <void property="name"> 
              <string>labelWarning</string> 
             </void> 

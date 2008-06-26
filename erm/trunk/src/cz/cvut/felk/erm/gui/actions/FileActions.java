@@ -1,13 +1,22 @@
 package cz.cvut.felk.erm.gui.actions;
 
 import cz.cvut.felk.erm.core.MainApp;
+import cz.cvut.felk.erm.db.ConnectionManager;
+import cz.cvut.felk.erm.db.DBConnection;
 import cz.cvut.felk.erm.gui.dialogs.CloseDialog;
+import cz.cvut.felk.erm.gui.dialogs.ConnectionEditorDialog;
+import cz.cvut.felk.erm.gui.dialogs.SelectConnectionDialog;
 import cz.cvut.felk.erm.gui.managers.AreaManager;
 import cz.cvut.felk.erm.gui.managers.FileInstance;
+import cz.cvut.felk.erm.swing.Swinger;
 import org.jdesktop.application.Action;
 import org.jdesktop.beans.AbstractBean;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -32,13 +41,44 @@ public class FileActions extends AbstractBean {
     }
 
     @Action()
-    public void openScheme() {
+    public void openScheme() throws Exception {
+        final SelectConnectionDialog dialog = new SelectConnectionDialog(app.getMainFrame());
+        app.prepareDialog(dialog, true);
 
     }
 
     @Action()
-    public void saveScheme() {
-        throw new RuntimeException("Nejaka nenadala vyjimka v programu");
+    public void saveScheme() throws Exception {
+        updateConnectionsDialog(null);
+    }
+
+    public int updateConnectionsDialog(DBConnection connectionToEdit) throws Exception {
+        final ConnectionManager connectionManager = app.getManagerDirector().getConnectionManager();
+        final List<DBConnection> list = loadDBConnections(connectionManager);
+
+        final ConnectionEditorDialog dialog = new ConnectionEditorDialog(app.getMainFrame(), list, connectionToEdit);
+        app.prepareDialog(dialog, true);
+        if (dialog.getModalResult() == ConnectionEditorDialog.RESULT_OK) {
+            try {
+                connectionManager.storeConnections(dialog.getConnList());
+            } catch (IOException e) {
+                logger.log(Level.SEVERE, "Cannot store DB Connection settings list", e);
+                Swinger.showErrorDialog("dbConnectionListStoreError", e, false);
+            }
+        }
+        return dialog.getModalResult();
+    }
+
+    public List<DBConnection> loadDBConnections(final ConnectionManager connectionManager) {
+        List<DBConnection> list;
+        try {
+            list = connectionManager.loadConnections();
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Cannot load DB Connection settings list", e);
+            Swinger.showErrorDialog("dbConnectionListLoadError", e, false);
+            list = new ArrayList<DBConnection>(3);
+        }
+        return list;
     }
 
     @Action()

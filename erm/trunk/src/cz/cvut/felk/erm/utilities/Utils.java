@@ -30,6 +30,8 @@ public final class Utils {
      * @return zakodovany/dekodovany retezec
      */
     public static String generateXorString(final String text) {
+        if (text == null)
+            return null;
         final char[] textArray = text.toCharArray();
         final int length = textArray.length;
         if (length > 0) {
@@ -155,4 +157,7 @@ public final class Utils {
         return params.length() > 0 ? params + "&" + paramWithValue : paramWithValue;
     }
 
+    public static boolean hasValue(final String string) {
+        return string != null && !string.isEmpty();
+    }
 }

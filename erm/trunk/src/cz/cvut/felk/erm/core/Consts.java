@@ -22,15 +22,6 @@ public class Consts {
      */
     public static final String APPVERSION = PRODUCT + " " + VERSION;
 
-    /**
-     * uzivatelske jmeno pro pristup do databaze
-     */
-    public static final String DB_USERNAME = "erm";
-
-    /**
-     * uzivatelske heslo pro pristup do databaze
-     */
-    public static final String DB_PASSWORD = DB_USERNAME;
 
     /**
      * cesta k souboru pro nastaveni logovani - debug
@@ -69,6 +60,29 @@ public class Consts {
     public static final String WEBURL_CHECKNEWVERSION = "http://wordrider.net/checkerm.php";
 
     public static final String WEBURL = "https://service.felk.cvut.cz/prj/PROJECT88/";
+
+    // hodnoty pro defaultni hodnoty pripojeni
+
+    public static final String DB_DRIVER = "oracle.jdbc.OracleDriver";
+
+    public static final String DB_NAME = "CTU FEL";
+
+    public static final String DB_DESCRIPTION = "CTU FEL Oracle - server CS";
+
+    public static final String DB_URL = "jdbc:oracle:thin:@cs.felk.cvut.cz:1526:ORACLE";
+
+    public static final String DB_LIBRARY_FILE = "jdbc/ojdbc6.jar";
+
+    /**
+     * uzivatelske jmeno pro pristup do databaze
+     */
+    public static final String DB_USERNAME = "your_user_id";
+
+    /**
+     * uzivatelske heslo pro pristup do databaze
+     */
+    public static final String DB_PASSWORD = "";
+
 
     /**
      * Od teto tridy se nebudou delat zadne instance

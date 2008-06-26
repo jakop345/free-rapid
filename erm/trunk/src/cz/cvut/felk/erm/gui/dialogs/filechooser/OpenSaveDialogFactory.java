@@ -14,6 +14,7 @@ import java.util.List;
  * @author Ladislav Vitasek
  */
 public class OpenSaveDialogFactory {
+
     private OpenSaveDialogFactory() {
     }
 
@@ -33,11 +34,19 @@ public class OpenSaveDialogFactory {
         return getOpenFileDialog(filters, UserProp.LAST_IMPORT_FILTER, AppPrefs.getProperty(FWProp.IMPORT_LAST_USED_FOLDER, ""));
     }
 
+    public static File[] getChooseJARorZIPFileDialog() {
+        final List<EnhancedFileFilter> filters = new ArrayList<EnhancedFileFilter>(3);
+        filters.add(new EnhancedFileFilter(new String[]{"zip"}, "connectionEditorDialog.filterZIP"));
+        filters.add(new EnhancedFileFilter(new String[]{"jar"}, "connectionEditorDialog.filterJAR"));
+        filters.add(new EnhancedFileFilter(new String[]{"jar", "zip"}, "connectionEditorDialog.filterJavaLibraries"));
+        return getOpenFileDialog(filters, UserProp.OPEN_JAR_LAST_USED_FILTER, UserProp.OPEN_JAR_LAST_USED_FOLDER);
+    }
+
 
     @SuppressWarnings({"SuspiciousMethodCalls"})
-    private static File[] getOpenFileDialog(final List<EnhancedFileFilter> fileFilters, final String lastUsedFilterKey, final String folderPath) {
+    private static File[] getOpenFileDialog(final List<EnhancedFileFilter> fileFilters, final String lastUsedFilterKey, final String folderPathKey) {
 
-        final JFileChooser fileDialog = new JAppFileChooser(new File(folderPath));
+        final JFileChooser fileDialog = new JAppFileChooser(new File(AppPrefs.getProperty(folderPathKey, "")));
         updateFileFilters(fileDialog, fileFilters, lastUsedFilterKey);
         fileDialog.setAcceptAllFileFilterUsed(false);
         fileDialog.setMultiSelectionEnabled(false);
@@ -46,6 +55,7 @@ public class OpenSaveDialogFactory {
             return new File[0];
         else {
             AppPrefs.storeProperty(lastUsedFilterKey, fileFilters.indexOf(fileDialog.getFileFilter()));
+            AppPrefs.storeProperty(folderPathKey, fileDialog.getSelectedFile().getPath());
             return new File[]{fileDialog.getSelectedFile()};
         }
     }

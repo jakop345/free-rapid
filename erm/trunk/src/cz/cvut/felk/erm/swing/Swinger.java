@@ -149,12 +149,20 @@ public class Swinger {
         showErrorDialog(Swinger.getResourceMap(clazz), messageResource, e, showErrorReporter);
     }
 
+    public static void showErrorDialog(Class clazz, final String messageResource, final Throwable e) {
+        showErrorDialog(Swinger.getResourceMap(clazz), messageResource, e, false);
+    }
+
     public static void showErrorDialog(final String messageResource, final Throwable e, final boolean showErrorReporter) {
         showErrorDialog(ErrorDialog.class, messageResource, e, showErrorReporter);
     }
 
     public static void showErrorDialog(final String messageResource, final Throwable e) {
         showErrorDialog(ErrorDialog.class, messageResource, e, false);
+    }
+
+    public static void showErrorDialog(ResourceMap map, final String messageResource, final Throwable e) {
+        showErrorDialog(map, messageResource, e, false);
     }
 
     private static void showErrorDialog(ResourceMap map, final String messageResource, final Throwable e, boolean showErrorReporter) {

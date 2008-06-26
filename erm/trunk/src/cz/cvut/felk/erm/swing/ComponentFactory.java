@@ -78,6 +78,12 @@ public class ComponentFactory {
         return field;
     }
 
+    public static JPasswordField getPasswordField() {
+        final JPasswordField field = new JPasswordField();
+        field.addFocusListener(ComponentFactory.getInstance().getFocusListener());
+        return field;
+    }
+
 
     public static EditorPaneLinkDetector getEmailsEditorPane() {
         return new EditorPaneLinkDetector();

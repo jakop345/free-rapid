@@ -121,6 +121,7 @@ public class ConnectDialog extends JDialog {
 
 				//---- labelWarning ----
 				labelWarning.setText(bundle.getString("labelWarning.text"));
+				labelWarning.setForeground(Color.red);
 				contentPanel.add(labelWarning, cc.xywh(1, 9, 7, 1));
 			}
 			dialogPane.add(contentPanel, BorderLayout.CENTER);

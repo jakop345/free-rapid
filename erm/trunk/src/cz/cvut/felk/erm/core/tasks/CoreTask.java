@@ -1,13 +1,18 @@
 package cz.cvut.felk.erm.core.tasks;
 
 import org.jdesktop.application.Application;
+import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.Task;
 
 /**
  * @author Ladislav Vitasek
  */
-abstract class CoreTask<T, V> extends Task<T, V> {
+public abstract class CoreTask<T, V> extends Task<T, V> {
     static InputBlocker inputBlocker = null;
+
+    public CoreTask(Application application, ResourceMap resourceMap, String resourcePrefix) {
+        super(application, resourceMap, resourcePrefix);
+    }
 
     public CoreTask(Application application) {
         super(application);

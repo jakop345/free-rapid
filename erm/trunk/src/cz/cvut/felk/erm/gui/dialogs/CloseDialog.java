@@ -12,6 +12,7 @@ import cz.cvut.felk.erm.gui.managers.FileInstance;
 import cz.cvut.felk.erm.swing.Swinger;
 import cz.cvut.felk.erm.swing.renderers.CheckRenderer;
 import org.jdesktop.application.Action;
+import org.jdesktop.swinghelper.buttonpanel.JXButtonPanel;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -198,7 +199,8 @@ public class CloseDialog<C extends FileInstance> extends AppDialog {
         JScrollPane scrollPane1 = new JScrollPane();
         list = new JList();
         checkSort = new JCheckBox();
-        JPanel buttonBar = new JPanel();
+        JXButtonPanel buttonBar = new JXButtonPanel();
+        buttonBar.setCyclic(true);
         btnSelectAll = new JButton();
         btnSelectNone = new JButton();
         btnOk = new JButton();

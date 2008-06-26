@@ -16,6 +16,7 @@ import cz.cvut.felk.erm.swing.components.CompTitledPane;
 import cz.cvut.felk.erm.utilities.LogUtils;
 import cz.cvut.felk.erm.utilities.Utils;
 import org.jdesktop.application.Action;
+import org.jdesktop.swinghelper.buttonpanel.JXButtonPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -162,7 +163,9 @@ public class ConnectDialog extends AppDialog {
         fieldPassword = new JPasswordField();
         checkStorePassword = new JCheckBox();
         labelWarning = new JLabel();
-        JPanel buttonBar = new JPanel();
+        JXButtonPanel buttonBar = new JXButtonPanel();
+        buttonBar.setCyclic(true);
+
         btnOk = new JButton();
         btnCancel = new JButton();
         CellConstraints cc = new CellConstraints();

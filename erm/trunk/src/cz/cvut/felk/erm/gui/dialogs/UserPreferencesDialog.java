@@ -24,6 +24,7 @@ import cz.cvut.felk.erm.swing.LookAndFeels;
 import cz.cvut.felk.erm.swing.Swinger;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
+import org.jdesktop.swinghelper.buttonpanel.JXButtonPanel;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -303,7 +304,9 @@ public class UserPreferencesDialog extends AppDialog {
 
         JPanel panelMultiWeekView = new JPanel();
 
-        buttonBar = new JPanel();
+        JXButtonPanel buttonBar = new JXButtonPanel();
+        buttonBar.setCyclic(true);
+
         btnOK = new JButton();
         btnCancel = new JButton();
         CellConstraints cc = new CellConstraints();
@@ -459,7 +462,6 @@ public class UserPreferencesDialog extends AppDialog {
     private JComboBox comboLaF;
 
 
-    private JPanel buttonBar;
     private JButton btnOK;
     private JButton btnCancel;
 

@@ -6,8 +6,8 @@ import cz.cvut.felk.erm.swing.Swinger;
 import cz.cvut.felk.erm.swing.ToolbarSeparator;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.ApplicationContext;
-import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.TaskMonitor;
+import org.jdesktop.swingx.JXBusyLabel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,7 +37,7 @@ public class ToolbarManager implements IFileChangeListener, IAreaChangeListener 
      * samotny toolbar
      */
     private JToolBar toolbar = new JToolBar("mainToolbar");
-    private JLabel labelWorkingProgress;
+    private JXBusyLabel labelWorkingProgress;
 
     /**
      * Konstruktor - naplni toolbar buttony
@@ -86,7 +86,7 @@ public class ToolbarManager implements IFileChangeListener, IAreaChangeListener 
 
 
         toolbar.add(Box.createGlue());
-        this.labelWorkingProgress = new JLabel();
+        this.labelWorkingProgress = new JXBusyLabel();
         this.labelWorkingProgress.setName("labelWorkingProgress");
         labelWorkingProgress.setBorder(BorderFactory.createEmptyBorder(2, 10, 2, 10));
         setWorkingProgress(false);
@@ -132,10 +132,7 @@ public class ToolbarManager implements IFileChangeListener, IAreaChangeListener 
 
 
     private void setWorkingProgress(final boolean enabled) {
-        final ResourceMap map = Application.getInstance().getContext().getResourceMap();
-        final String icon = (enabled) ? "iconWorking" : "iconNotWorking";
-        labelWorkingProgress.setIcon(map.getIcon(icon));
-        labelWorkingProgress.setEnabled(false);
+        labelWorkingProgress.setBusy(enabled);
     }
 
     private void setToolBarVisible(boolean visible) {

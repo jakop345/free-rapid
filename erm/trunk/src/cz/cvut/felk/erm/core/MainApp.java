@@ -105,7 +105,7 @@ public class MainApp extends SingleXFrameApplication {
         director = new ManagerDirector(getContext());
         initMainFrame();
         this.addExitListener(new MainAppExitListener());
-
+        //this.getContext().getLocalStorage().load()
         show(getMainFrame());
         getTrayIconSupport().setVisibleByDefault();
         setGlobalEDTExceptionHandler();

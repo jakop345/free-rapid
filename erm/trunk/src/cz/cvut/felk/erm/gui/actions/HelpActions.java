@@ -6,12 +6,18 @@ import cz.cvut.felk.erm.gui.dialogs.AboutDialog;
 import cz.cvut.felk.erm.utilities.Browser;
 import org.jdesktop.application.Action;
 
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+
 /**
  * @author Ladislav Vitasek
  */
 
 public class HelpActions {
+    public static final String CONTEXT_DIALOG_HELPPROPERTY = "contextDialogHelp";
+
     private MainApp app;
+    public static final String CONTEXT_DIALOG_HELP_ACTION = "contextDialogHelpAction";
 
 
     public HelpActions() {
@@ -31,6 +37,12 @@ public class HelpActions {
     @Action
     public void visitHomepage() {
         Browser.showHomepage();
+    }
+
+    @Action
+    public void contextDialogHelpAction(ActionEvent event) {
+        final String context = ((JComponent) event.getSource()).getClientProperty(CONTEXT_DIALOG_HELPPROPERTY).toString();
+        Browser.openBrowser(context);
     }
 
     @Action

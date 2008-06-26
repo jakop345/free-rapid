@@ -35,8 +35,8 @@ final class EnhancedFileFilter extends FileFilter implements IFileType {
 
         final String extension = Utils.getExtension(f);
         if (extension != null)
-            for (int i = 0; i < extensions.length; ++i) {
-                if (extension.equals(this.extensions[i])) {
+            for (Object ext : extensions) {
+                if (extension.equals(ext)) {
                     return true;
                 }
             }

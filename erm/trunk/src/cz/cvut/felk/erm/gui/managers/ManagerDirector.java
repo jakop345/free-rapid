@@ -1,6 +1,7 @@
 package cz.cvut.felk.erm.gui.managers;
 
 import cz.cvut.felk.erm.core.MainApp;
+import cz.cvut.felk.erm.db.ConnectionManager;
 import cz.cvut.felk.erm.gui.actions.FileTransferHandlerImpl;
 import cz.cvut.felk.erm.gui.managers.interfaces.IFileChangeListener;
 import cz.cvut.felk.erm.swing.TextComponentContextMenuListener;
@@ -26,6 +27,7 @@ public class ManagerDirector implements IFileChangeListener {
     private DockingManager dockingManager;
     private Container rootContainer;
     private JFrame mainFrame;
+    private ConnectionManager connectionManager;
 
 
     public ManagerDirector(ApplicationContext context) {
@@ -87,6 +89,12 @@ public class ManagerDirector implements IFileChangeListener {
             toolbarManager = new ToolbarManager(context);
         return toolbarManager;
 
+    }
+
+    public ConnectionManager getConnectionManager() {
+        if (connectionManager == null)
+            connectionManager = new ConnectionManager();
+        return connectionManager;
     }
 
 
