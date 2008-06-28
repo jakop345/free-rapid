@@ -27,9 +27,10 @@ public class Swinger {
     private static final String MESSAGE_ERROR_TITLE_CODE = "errorMessage";
     private static final String MESSAGE_CONFIRM_TITLE_CODE = "confirmMessage";
     private static final String MESSAGE_INFORMATION_TITLE_CODE = "informationMessage";
-    private static final String MESSAGE_WARNING_TITLE_CODE = "warningMessage";
+    //private static final String MESSAGE_WARNING_TITLE_CODE = "warningMessage";
     private static final String MESSAGE_BTN_YES_CODE = "message.button.yes";
     private static final String MESSAGE_BTN_NO_CODE = "message.button.no";
+    private static final String MESSAGE_BTN_OK_CODE = "message.button.ok";
     public static final String MESSAGE_BTN_CANCEL_CODE = "message.button.cancel";
 
     public static final int RESULT_NO = 1;
@@ -57,7 +58,7 @@ public class Swinger {
         return JOptionPane.showOptionDialog(Frame.getFrames()[0], message, map.getString(MESSAGE_CONFIRM_TITLE_CODE),
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
-                null, new String[]{map.getString(MESSAGE_BTN_YES_CODE), map.getString(MESSAGE_BTN_NO_CODE),
+                null, new Object[]{map.getString(MESSAGE_BTN_YES_CODE), map.getString(MESSAGE_BTN_NO_CODE),
                 map.getString(MESSAGE_BTN_CANCEL_CODE)},
                 null);
     }
@@ -113,6 +114,21 @@ public class Swinger {
     }
 
     public static void showErrorMessage(ResourceMap map, final String message, final Object... args) {
+        JOptionPane.showMessageDialog(Frame.getFrames()[0], map.getString(message, args), getResourceMap().getString("errorMessage", args), JOptionPane.ERROR_MESSAGE);
+    }
+
+    public static int showOptionDialog(ResourceMap map, final int messageType, final String messageCode, final String[] buttons, final Object... args) {
+        final ResourceMap mainMap = getResourceMap();
+        final Object[] objects = new Object[buttons.length];
+        for (int i = 0; i < buttons.length; i++) {
+            final String s = map.getString(buttons[i]);
+            assert s != null;
+            objects[i] = s;
+        }
+        return JOptionPane.showOptionDialog(Frame.getFrames()[0], map.getString(messageCode, args), mainMap.getString("errorMessage", args), JOptionPane.NO_OPTION, messageType, null, objects, objects[0]);
+    }
+
+    public static void showMessage(ResourceMap map, final String message, final Object... args) {
         JOptionPane.showMessageDialog(Frame.getFrames()[0], map.getString(message, args), getResourceMap().getString("errorMessage", args), JOptionPane.ERROR_MESSAGE);
     }
 

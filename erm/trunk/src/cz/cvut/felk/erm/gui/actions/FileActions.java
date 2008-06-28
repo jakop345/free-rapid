@@ -3,12 +3,14 @@ package cz.cvut.felk.erm.gui.actions;
 import cz.cvut.felk.erm.core.MainApp;
 import cz.cvut.felk.erm.db.ConnectionManager;
 import cz.cvut.felk.erm.db.DBConnection;
+import cz.cvut.felk.erm.db.tasks.RunSQLScriptTask;
 import cz.cvut.felk.erm.gui.dialogs.CloseDialog;
 import cz.cvut.felk.erm.gui.dialogs.ConnectionEditorDialog;
 import cz.cvut.felk.erm.gui.dialogs.SelectConnectionDialog;
 import cz.cvut.felk.erm.gui.managers.AreaManager;
 import cz.cvut.felk.erm.gui.managers.FileInstance;
 import cz.cvut.felk.erm.swing.Swinger;
+import cz.cvut.felk.erm.utilities.Utils;
 import org.jdesktop.application.Action;
 import org.jdesktop.beans.AbstractBean;
 
@@ -44,7 +46,11 @@ public class FileActions extends AbstractBean {
     public void openScheme() throws Exception {
         final SelectConnectionDialog dialog = new SelectConnectionDialog(app.getMainFrame());
         app.prepareDialog(dialog, true);
-
+        if (dialog.getModalResult() == SelectConnectionDialog.RESULT_OK) {
+            DBConnection conn = dialog.getSelectedConnection();
+            final String sql = Utils.loadFile("c:\\skola\\skola2\\!semestry\\8.semestr\\sql\\create_obj.sql");
+            app.getContext().getTaskService().execute(new RunSQLScriptTask(conn, sql));
+        }
     }
 
     @Action()

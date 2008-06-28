@@ -16,8 +16,8 @@ import cz.cvut.felk.erm.core.AppPrefs;
 import cz.cvut.felk.erm.core.UserProp;
 import cz.cvut.felk.erm.core.tasks.CoreTask;
 import cz.cvut.felk.erm.db.DBConnection;
-import cz.cvut.felk.erm.db.DBTestConnectionTask;
 import cz.cvut.felk.erm.db.DatabaseDriverManager;
+import cz.cvut.felk.erm.db.tasks.DBTestConnectionTask;
 import cz.cvut.felk.erm.gui.actions.HelpActions;
 import cz.cvut.felk.erm.gui.dialogs.filechooser.OpenSaveDialogFactory;
 import cz.cvut.felk.erm.swing.ComponentFactory;
@@ -161,7 +161,7 @@ public class ConnectionEditorDialog extends AppDialog {
         final DBConnection connection = (DBConnection) listConnections.getSelectedValue();
         if (!validateForm())
             return null;
-        return new DBTestConnectionTask(connection, getResourceMap(), true);
+        return new DBTestConnectionTask(connection, true);
     }
 
     @org.jdesktop.application.Action(block = Task.BlockingScope.WINDOW)
@@ -169,7 +169,7 @@ public class ConnectionEditorDialog extends AppDialog {
         final DBConnection connection = (DBConnection) listConnections.getSelectedValue();
         if (!validateForm())
             return null;
-        return new DBTestConnectionTask(connection, getResourceMap(), false);
+        return new DBTestConnectionTask(connection, false);
     }
 
     @org.jdesktop.application.Action(block = Task.BlockingScope.WINDOW)

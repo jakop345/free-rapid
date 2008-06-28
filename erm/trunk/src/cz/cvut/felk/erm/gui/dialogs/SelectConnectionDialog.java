@@ -35,7 +35,7 @@ public class SelectConnectionDialog extends AppDialog {
     private final static Logger logger = Logger.getLogger(SelectConnectionDialog.class.getName());
     private PresentationModel<DBConnection> model;
     private ArrayListModel<DBConnection> connListModel;
-
+    private DBConnection selectedConnection = null;
 
     public SelectConnectionDialog(Frame owner) throws Exception {
         super(owner, true);
@@ -53,6 +53,7 @@ public class SelectConnectionDialog extends AppDialog {
 
     @org.jdesktop.application.Action
     public void okBtnAction() {
+        setSelectedConnection((DBConnection) comboConnections.getSelectedItem());
         setResult(RESULT_OK);
         doClose();
     }
@@ -287,4 +288,11 @@ public class SelectConnectionDialog extends AppDialog {
     private JButton btnOK;
     private JButton btnCancel;
 
+    public void setSelectedConnection(DBConnection selectedConnection) {
+        this.selectedConnection = selectedConnection;
+    }
+
+    public DBConnection getSelectedConnection() {
+        return selectedConnection;
+    }
 }

@@ -25,23 +25,15 @@ public class ConnectionUtil {
         }
     }
 
-    public static void closeStatement(Statement statement) {
+    public static void closeStatement(Statement statement) throws SQLException {
         if (statement != null) {
-            try {
-                statement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            statement.close();
         }
     }
 
-    public static void closeConnection(Connection connection) {
+    public static void closeConnection(Connection connection) throws SQLException {
         if (connection != null) {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            connection.close();
         }
     }
 
@@ -77,5 +69,13 @@ public class ConnectionUtil {
             else
                 throw new SQLException(e);
         }
+    }
+
+    public static void rollback(Connection connection) throws SQLException {
+        connection.rollback();
+    }
+
+    public static void commit(Connection connection) throws SQLException {
+        connection.commit();
     }
 }

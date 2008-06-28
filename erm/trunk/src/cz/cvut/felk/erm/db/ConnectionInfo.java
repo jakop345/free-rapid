@@ -4,8 +4,6 @@ package cz.cvut.felk.erm.db;
  * @author Ladislav Vitasek
  */
 
-import cz.cvut.felk.erm.gui.dialogs.ConnectionEditorDialog;
-import cz.cvut.felk.erm.swing.Swinger;
 import org.jdesktop.application.ResourceMap;
 
 import java.sql.DatabaseMetaData;
@@ -17,12 +15,11 @@ public class ConnectionInfo {
     private String st;
     private DatabaseMetaData metaData;
 
-    public ConnectionInfo(DatabaseMetaData metaData) throws SQLException {
+    public ConnectionInfo(ResourceMap map, DatabaseMetaData metaData) throws SQLException {
         this.metaData = metaData;
         String databaseProductVersion = this.metaData.getDatabaseProductVersion();
         int index = databaseProductVersion.indexOf('\n');
         databaseProductVersion = index > -1 ? databaseProductVersion.substring(0, index) : databaseProductVersion;
-        final ResourceMap map = Swinger.getResourceMap(ConnectionEditorDialog.class);
         st = map.getString("connectionInfo", metaData.getDatabaseProductName(), databaseProductVersion, metaData.getDriverName(), this.metaData.getDriverVersion(), metaData.getURL(), metaData.getUserName());
     }
 

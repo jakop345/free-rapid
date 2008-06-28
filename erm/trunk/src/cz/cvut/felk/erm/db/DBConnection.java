@@ -10,7 +10,6 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.io.Serializable;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,7 +17,7 @@ import java.util.logging.Logger;
 /**
  * @author Ladislav Vitasek
  */
-public class DBConnection extends Model implements Cloneable, Serializable {
+public class DBConnection extends Model implements Cloneable {
     private final static Logger logger = Logger.getLogger(DBConnection.class.getName());
 
     private static final long serialVersionUID = 1L;
@@ -47,7 +46,7 @@ public class DBConnection extends Model implements Cloneable, Serializable {
     private String user = "";
 
     private boolean tested = false;
-    private boolean valid = false;
+    //private boolean valid = false;
 
 
     private transient String password = null;

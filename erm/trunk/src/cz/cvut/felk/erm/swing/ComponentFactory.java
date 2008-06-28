@@ -4,13 +4,12 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import cz.cvut.felk.erm.swing.components.ColorComboBox;
 import cz.cvut.felk.erm.swing.components.EditorPaneLinkDetector;
 import cz.cvut.felk.erm.swing.models.NaiiveComboModel;
+import cz.cvut.felk.erm.swing.models.SQLSyntaxDocument;
 import cz.cvut.felk.erm.swing.renderers.ComboBoxRenderer;
 import org.jdesktop.swingx.JXDatePicker;
 
 import javax.swing.*;
-import javax.swing.text.DateFormatter;
-import javax.swing.text.DefaultFormatterFactory;
-import javax.swing.text.JTextComponent;
+import javax.swing.text.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.text.DateFormat;
@@ -68,6 +67,20 @@ public class ComponentFactory {
 
     public static JTextArea getTextArea() {
         final JTextArea textArea = new JTextArea();
+        textArea.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+        return textArea;
+    }
+
+    public static JEditorPane getSQLArea() {
+        final JEditorPane textArea = new JEditorPane();
+        final EditorKit editorKit = new StyledEditorKit() {
+            public Document createDefaultDocument() {
+                return new SQLSyntaxDocument();
+            }
+        };
+
+        textArea.setEditorKitForContentType("text/sql", editorKit);
+        textArea.setContentType("text/sql");
         textArea.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
         return textArea;
     }

@@ -19,4 +19,8 @@ public class UserProp {
     public static final String DB_DEFAULT_NAME = "settings.dbDefaultName";
     public static final String CONN_EDITOR_LAST_SEL_CONNECTION = "settings.connEditorLastSelConnection";
     public static final String CONN_CHOOSE_LAST_SEL_CONNECTION = "settins.chooseLastSelConnection";
+    public static final String SQL_IGNORE_ORA00942 = "settings.ignoreSQLExceptionORA00942";//table or view does not exists
+    public static final String LAST_SAVELOG_FILENAME = "settings.lastSaveLogFileName";
+    public static final String LAST_SAVELOG_FILTER = "settings.lastSaveLogFilter";
+    public static final String LAST_USED_FOLDER_SAVELOG = "settings.lastUsedFolderSaveLog";
 }

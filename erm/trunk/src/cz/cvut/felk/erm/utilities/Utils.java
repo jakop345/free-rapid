@@ -160,4 +160,31 @@ public final class Utils {
     public static boolean hasValue(final String string) {
         return string != null && !string.isEmpty();
     }
+
+
+    public static String getExceptionMessage(Throwable cause) {
+        String message = cause.getLocalizedMessage();
+        if (message == null) {
+            if (cause.getMessage() != null) {
+                message = cause.getMessage();
+            } else message = cause.toString();
+        }
+        return message;
+    }
+
+    public static String loadFile(final String fileName) {
+        final StringBuffer buffer = new StringBuffer(2000);
+        try {
+            final BufferedReader stream = new BufferedReader(new InputStreamReader(new FileInputStream(new File(fileName))));
+            final char[] lines = new char[2000];
+            int read;
+            while ((read = stream.read(lines)) != -1)
+                buffer.append(lines, 0, read);
+            stream.close();
+        } catch (Exception e) {
+            LogUtils.processException(logger, e);
+        }
+        return buffer.toString();
+    }
+
 }

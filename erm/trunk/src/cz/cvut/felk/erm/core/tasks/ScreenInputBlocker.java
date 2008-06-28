@@ -1,6 +1,7 @@
 package cz.cvut.felk.erm.core.tasks;
 
 import org.jdesktop.application.Application;
+import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
 import org.jdesktop.application.Task;
 import org.jdesktop.swingx.JXFrame;
@@ -18,7 +19,7 @@ import java.util.logging.Logger;
 /**
  * @author Ladislav Vitasek
  */
-class ScreenInputBlocker extends Task.InputBlocker implements PropertyChangeListener {
+public class ScreenInputBlocker extends Task.InputBlocker implements PropertyChangeListener {
     private final static Logger logger = Logger.getLogger(ScreenInputBlocker.class.getName());
 
     private JDialog modalDialog = null;
@@ -54,10 +55,11 @@ class ScreenInputBlocker extends Task.InputBlocker implements PropertyChangeList
     private JDialog createBlockingDialog() {
         optionPane = new JOptionPane();
         optionPane.setMessageType(JOptionPane.PLAIN_MESSAGE);
+
         final Task task = getTask();
         if (task.getUserCanCancel()) {
             JButton cancelButton = new JButton();
-            cancelButton.setName("BlockingDialog.cancelButton");
+            cancelButton.setName("cancelButton");
             ActionListener doCancelTask = new ActionListener() {
                 public void actionPerformed(ActionEvent ignore) {
                     task.cancel(true);
@@ -75,6 +77,7 @@ class ScreenInputBlocker extends Task.InputBlocker implements PropertyChangeList
         String taskTitle = task.getTitle();
         String dialogTitle = (taskTitle == null) ? "BlockingDialog" : taskTitle;
         JDialog dialog = optionPane.createDialog(dialogOwner, dialogTitle);
+        dialog.setName("BlockingDialog");
         dialog.setModal(true);
         dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
         if (task.getUserCanCancel()) {
@@ -85,12 +88,11 @@ class ScreenInputBlocker extends Task.InputBlocker implements PropertyChangeList
                 }
             });
         }
-        dialog.setName("BlockingDialog");
         optionPane.setName("BlockingDialog.optionPane");
-//        final ResourceMap resourceMap = ((CoreTask) task).getResourceMap();
-//        if (resourceMap != null) {
-//            resourceMap.injectComponents(dialog);
-//        }
+        final ResourceMap resourceMap = ((CoreTask) task).getTaskResourceMap();
+        if (resourceMap != null) {
+            resourceMap.injectComponents(dialog);
+        }
         dialog.pack();
         return dialog;
     }

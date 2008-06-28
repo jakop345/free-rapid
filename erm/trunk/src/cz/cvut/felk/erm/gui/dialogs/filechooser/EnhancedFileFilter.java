@@ -13,6 +13,14 @@ final class EnhancedFileFilter extends FileFilter implements IFileType {
     private final Object[] extensions;
     private final String description;
 
+    public static EnhancedFileFilter createAllFilesFilter() {
+        return createFilter(new String[0], "allFiles");
+    }
+
+    public static EnhancedFileFilter createFilter(final String[] extensions, final String labelDescription) {
+        return new EnhancedFileFilter(extensions, labelDescription);
+    }
+
     public EnhancedFileFilter(final String[] extensions, final String labelDescription) {
         this.extensions = extensions;
         final StringBuilder buffer = new StringBuilder();
@@ -22,6 +30,8 @@ final class EnhancedFileFilter extends FileFilter implements IFileType {
             if (i + 1 != length)
                 buffer.append(',');
         }
+        if (extensions.length == 0)
+            buffer.append("*.*");
         this.description = Swinger.getResourceMap(JAppFileChooser.class).getString(labelDescription, buffer.toString());
     }
 
@@ -32,7 +42,8 @@ final class EnhancedFileFilter extends FileFilter implements IFileType {
     public final boolean accept(final File f) {
         if (f.isDirectory())
             return true;
-
+        if (extensions.length == 0)//all files
+            return true;
         final String extension = Utils.getExtension(f);
         if (extension != null)
             for (Object ext : extensions) {

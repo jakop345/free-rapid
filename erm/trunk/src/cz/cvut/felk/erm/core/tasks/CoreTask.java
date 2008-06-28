@@ -19,13 +19,17 @@ public abstract class CoreTask<T, V> extends Task<T, V> {
         //     setDefaultInputBlocker();
     }
 
-//    public ResourceMap getTaskResourceMap() {
-//        return super.getResourceMap();
-//    }
+    public ResourceMap getTaskResourceMap() {
+        return super.getResourceMap();
+    }
 
 //    private void setDefaultInputBlocker() {
 //        if (inputBlocker == null)
 //            inputBlocker = new ScreenInputBlocker(this, BlockingScope.APPLICATION, null);
 //        this.setInputBlocker(inputBlocker);
 //    }
+
+    public void postMessage(String s, Object args) {
+        message(s, args);
+    }
 }
