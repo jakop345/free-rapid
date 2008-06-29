@@ -1,5 +1,6 @@
 package cz.omnicom.ermodeller.errorlog.dialogs;
 
+import cz.green.ermodeller.WorkingDesktop;
 import cz.omnicom.ermodeller.conceptual.beans.ConceptualObject;
 import cz.omnicom.ermodeller.conceptual.beans.Schema;
 import cz.omnicom.ermodeller.errorlog.ErrorLogList;
@@ -18,7 +19,7 @@ import java.util.Enumeration;
  */
 public class ErrorLogDialog extends JDialog implements java.awt.event.ActionListener, java.beans.PropertyChangeListener {
     private JButton ivjCloseButton = null;
-    private cz.green.ermodeller.Desktop desktop;
+    private WorkingDesktop desktop;
     private JPanel ivjDownPanel = null;
     private ErrorLogList ivjErrorLogList = null;
     private JTree ivjErrorTree = null;
@@ -439,7 +440,7 @@ public class ErrorLogDialog extends JDialog implements java.awt.event.ActionList
         }
     }
 
-    public void setDesktop(cz.green.ermodeller.Desktop d) {
+    public void setDesktop(WorkingDesktop d) {
         desktop = d;
     }
 

@@ -1,5 +1,6 @@
 package cz.green.eventtool;
 
+import cz.green.event.AddItemEvent;
 import cz.green.event.ContainerComponent;
 import cz.green.event.DesktopGroupWindow;
 import cz.green.event.interfaces.ContainerDesktop;
@@ -90,9 +91,9 @@ public class ContainerToolComponent extends ContainerComponent {
                 }
                 try {
                     if (workMode == ADDING_GROUP)
-                        desktop.fallAndHandleEvent(cooX, cooY, new cz.green.event.AddItemEvent(cooX, cooY, new GroupTool(desktop, cooX, cooY, x - cooX, y - cooY), this));
+                        desktop.fallAndHandleEvent(cooX, cooY, new AddItemEvent(cooX, cooY, new GroupTool(desktop, cooX, cooY, x - cooX, y - cooY), this));
                     else
-                        desktop.fallAndHandleEvent(cooX, cooY, new cz.green.event.AddItemEvent(cooX, cooY, new Window(desktop, cooX, cooY, x - cooX, y - cooY), this));
+                        desktop.fallAndHandleEvent(cooX, cooY, new AddItemEvent(cooX, cooY, new Window(desktop, cooX, cooY, x - cooX, y - cooY), this));
                 } catch (Exception ex) {
                     return;
                 }

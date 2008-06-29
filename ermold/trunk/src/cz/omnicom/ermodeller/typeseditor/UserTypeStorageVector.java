@@ -15,11 +15,11 @@ public class UserTypeStorageVector {
     public static final int DIRECT = 1;
     public static final int INDIRECT = 0;
 
-    protected Vector userTypeStorageVector = null;
+    protected Vector<UserTypeStorage> userTypeStorageVector = null;
     protected transient PropertyChangeSupport propertyChange = null;
 
     public UserTypeStorageVector() {
-        userTypeStorageVector = new Vector(0);
+        userTypeStorageVector = new Vector<UserTypeStorage>(0);
     }
 
     public PropertyChangeSupport getPropertyChange() {
@@ -66,18 +66,18 @@ public class UserTypeStorageVector {
     public UserTypeStorage getTypeAt(int index) {
         //System.out.println("Size: "+userTypeStorageVector.size());
         //System.out.println("Index requested: "+index);
-        return (UserTypeStorage) (userTypeStorageVector.get(index));
+        return (userTypeStorageVector.get(index));
     }
 
-    /**
-     * adds UserTypeStorage object to userTypeStorageVector at the specified position
-     */
-    public void addTypeAt(UserTypeStorage s, int index) {
-        userTypeStorageVector.add(index, s);
-        getPropertyChange().firePropertyChange(ADD_TO_PROPERTYCHANGE, null, s);
-    }
+//    /**
+//     * adds UserTypeStorage object to userTypeStorageVector at the specified position
+//     */
+//    public void addTypeAt(UserTypeStorage s, int index) {
+//        userTypeStorageVector.add(index, s);
+//        getPropertyChange().firePropertyChange(ADD_TO_PROPERTYCHANGE, null, s);
+//    }
 
-    public Enumeration elements() {
+    public Enumeration<UserTypeStorage> elements() {
         return userTypeStorageVector.elements();
     }
 
@@ -87,15 +87,15 @@ public class UserTypeStorageVector {
      * It divides elements into two groups - first group is for direct creating
      * and the second is for creating using incomplete type declaration
      */
-    public Enumeration elementsForCreating(int which) {
-        Vector vector = new Vector(0);
-        Vector vectorIncomplete = new Vector(0);
-        Vector names = new Vector(0);
+    public Enumeration<UserTypeStorage> elementsForCreating(int which) {
+        Vector<UserTypeStorage> vector = new Vector<UserTypeStorage>(0);
+        Vector<UserTypeStorage> vectorIncomplete = new Vector<UserTypeStorage>(0);
+        Vector<String> names = new Vector<String>(0);
         boolean changed = true;
 
         //System.out.println("entering elementsForDirectCreating");
-        for (Enumeration e = elements(); e.hasMoreElements();) {
-            UserTypeStorage uts = (UserTypeStorage) e.nextElement();
+        for (Enumeration<UserTypeStorage> e = elements(); e.hasMoreElements();) {
+            UserTypeStorage uts = e.nextElement();
             DataType dt = uts.getDataType();
             //System.out.println("getting next element");
             if (!((dt instanceof VarrayDataType) || (dt instanceof NestedTableDataType) || (dt instanceof ObjectDataType))) {
@@ -128,10 +128,10 @@ public class UserTypeStorageVector {
         }
         while (changed) {
             changed = false;
-            for (Enumeration e = elements(); e.hasMoreElements();) {
+            for (Enumeration<UserTypeStorage> e = elements(); e.hasMoreElements();) {
                 UserTypeStorage uts;
                 do {
-                    uts = (UserTypeStorage) e.nextElement();
+                    uts = e.nextElement();
                 } while (e.hasMoreElements() && names.contains(uts.getTypeName()));
                 if (!names.contains(uts.getTypeName())) {
                     DataType dt = uts.getDataType();
@@ -164,8 +164,8 @@ public class UserTypeStorageVector {
                 }
             }
         }
-        for (Enumeration e = elements(); e.hasMoreElements();) {
-            UserTypeStorage uts = (UserTypeStorage) e.nextElement();
+        for (Enumeration<UserTypeStorage> e = elements(); e.hasMoreElements();) {
+            UserTypeStorage uts = e.nextElement();
             if (!vector.contains(uts))
                 vectorIncomplete.addElement(uts);
         }
@@ -181,7 +181,7 @@ public class UserTypeStorageVector {
 
     public boolean nameAlreadyExists(String name) {
         for (int i = 0; i < getSize(); i++)
-            if (((UserTypeStorage) userTypeStorageVector.get(i)).getTypeName().equals(name))
+            if ((userTypeStorageVector.get(i)).getTypeName().equals(name))
                 return true;
         return false;
     }

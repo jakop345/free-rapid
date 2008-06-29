@@ -22,7 +22,7 @@ import java.awt.event.KeyEvent;
  * This class has the same functionality as its predecessor. Adds many new work regimes, help functionality and font
  * management.
  */
-public class Container extends ContainerToolComponent implements ModeSwitcher, FontManager, ShowErrorListener {
+public class DesktopContainer extends ContainerToolComponent implements ModeSwitcher, FontManager, ShowErrorListener {
     /**
      * The adding entity state.
      */
@@ -109,7 +109,7 @@ public class Container extends ContainerToolComponent implements ModeSwitcher, F
      * @param helpURL Specify the page which is open as help.
      * @see cz.green.eventtool.ContainerToolComponent#Container(int,int,int,int)
      */
-    public Container(int width, int height) {
+    public DesktopContainer(int width, int height) {
         super(width, height);
         setFont(new java.awt.Font("sansserif", java.awt.Font.PLAIN, 12));
         menu = new JPopupMenu("MainMenu");
@@ -120,7 +120,7 @@ public class Container extends ContainerToolComponent implements ModeSwitcher, F
     /**
      * Adds new desktop
      */
-    public void addDesktop(Desktop d) {
+    public void addDesktop(WorkingDesktop d) {
         desktop = d;
     }
 
@@ -311,8 +311,8 @@ public class Container extends ContainerToolComponent implements ModeSwitcher, F
     public ContainerDesktop getDesktop() {
         if (desktop == null) {
             java.awt.Rectangle r = getBounds();
-            desktop = new Desktop(this, r.x, r.y, r.width, r.height);
-            ((Desktop) desktop).addShowErrorListener(this);
+            desktop = new WorkingDesktop(this, r.x, r.y, r.width, r.height);
+            ((WorkingDesktop) desktop).addShowErrorListener(this);
         }
         return desktop;
     }
@@ -363,7 +363,7 @@ public class Container extends ContainerToolComponent implements ModeSwitcher, F
     public void loadFromFile(String fileName) throws java.io.IOException, ClassNotFoundException {
         super.loadFromFile(fileName);
         try {
-            ((Desktop) getDesktop()).addShowErrorListener(this);
+            ((WorkingDesktop) getDesktop()).addShowErrorListener(this);
 //		propEditing(true);
         } catch (ClassCastException x) {
         }
@@ -374,8 +374,8 @@ public class Container extends ContainerToolComponent implements ModeSwitcher, F
      */
     public void editConstraints(EntityConstruct ent) {
         if (constDialog == null)
-            constDialog = new ConstraintsDialog(((Desktop) getDesktop()).ERMFrame, ent.getModel());
-        constDialog.setLocationRelativeTo(((Desktop) getDesktop()).ERMFrame);
+            constDialog = new ConstraintsDialog(((WorkingDesktop) getDesktop()).ERMFrame, ent.getModel());
+        constDialog.setLocationRelativeTo(((WorkingDesktop) getDesktop()).ERMFrame);
         if (ent.getModel() != null) constDialog.setVisible(true);
     }
 
@@ -571,7 +571,7 @@ public class Container extends ContainerToolComponent implements ModeSwitcher, F
      */
     public void propEditing(boolean show) {
         try {
-            ((Desktop) getDesktop()).propEditing(show);
+            ((WorkingDesktop) getDesktop()).propEditing(show);
         } catch (ClassCastException x) {
         }
     }

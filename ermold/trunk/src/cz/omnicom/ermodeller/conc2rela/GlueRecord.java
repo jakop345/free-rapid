@@ -21,11 +21,11 @@ public class GlueRecord implements CheckRowProducer {
     /**
      * Glued relations records.
      */
-    private final Vector gluedRelationsC2R = new Vector();
+    private final Vector<GluedRelationRecord> gluedRelationsC2R = new Vector<GluedRelationRecord>();
     /**
      * Not glued relations records.
      */
-    private final Vector notGluedRelationsC2R = new Vector();
+    private final Vector<GluedRelationRecord> notGluedRelationsC2R = new Vector<GluedRelationRecord>();
 
     /**
      * Constructor.
@@ -114,21 +114,21 @@ public class GlueRecord implements CheckRowProducer {
         IsNotNullAtributeGroupVector vecSkeletNotNull = createNotNullVecAtributes(getSkeletAtributesC2R());
         if (vecSkeletNotNull != null)
             allNotNull.addGroupAtributes(vecSkeletNotNull);
-        for (Enumeration elements = getNotGluedRelationsC2R().elements(); elements.hasMoreElements();) {
-            IsNotNullAtributeGroupVector vecNotGluedNotNull = createNotNullVecAtributes(((GluedRelationRecord) elements.nextElement()).getGluedAtributesC2R());
+        for (Enumeration<GluedRelationRecord> elements = getNotGluedRelationsC2R().elements(); elements.hasMoreElements();) {
+            IsNotNullAtributeGroupVector vecNotGluedNotNull = createNotNullVecAtributes((elements.nextElement()).getGluedAtributesC2R());
             if (vecNotGluedNotNull != null)
                 allNotNull.addGroupAtributes(vecNotGluedNotNull);
         }
-        for (Enumeration elements = getGluedRelationsC2R().elements(); elements.hasMoreElements();) {
-            IsNotNullAtributeGroupVector vecGluedNotNull = createNotNullVecAtributes(((GluedRelationRecord) elements.nextElement()).getGluedAtributesC2R());
+        for (Enumeration<GluedRelationRecord> elements = getGluedRelationsC2R().elements(); elements.hasMoreElements();) {
+            IsNotNullAtributeGroupVector vecGluedNotNull = createNotNullVecAtributes((elements.nextElement()).getGluedAtributesC2R());
             if (vecGluedNotNull != null)
                 allNotNull.addGroupAtributes(vecGluedNotNull);
         }
         orCheck.addORPartOfCheck(allNotNull);
 
         // create checks - for every (0,1) glued relation
-        for (Enumeration gluedRelations = getGluedRelationsC2R().elements(); gluedRelations.hasMoreElements();) {
-            GluedRelationRecord gluedRelationRecord = (GluedRelationRecord) gluedRelations.nextElement();
+        for (Enumeration<GluedRelationRecord> gluedRelations = getGluedRelationsC2R().elements(); gluedRelations.hasMoreElements();) {
+            GluedRelationRecord gluedRelationRecord = gluedRelations.nextElement();
             RelationC2R gluedRelationC2R = gluedRelationRecord.getRelationC2R();
             boolean generate = !gluedRelationRecord.getArbitraryCardinality();
             if (gluedRelationC2R instanceof RelC2R)
@@ -150,8 +150,8 @@ public class GlueRecord implements CheckRowProducer {
                 if (vecSkeletNull != null)
                     checkPart.addGroupAtributes(vecSkeletNull);
                 // glued atributes check
-                for (Enumeration elements = getGluedRelationsC2R().elements(); elements.hasMoreElements();) {
-                    GluedRelationRecord relationRecord = (GluedRelationRecord) elements.nextElement();
+                for (Enumeration<GluedRelationRecord> elements = getGluedRelationsC2R().elements(); elements.hasMoreElements();) {
+                    GluedRelationRecord relationRecord = elements.nextElement();
                     RelationC2R relationC2R = relationRecord.getRelationC2R();
                     if (relationRecord != gluedRelationRecord) {
                         IsNullAtributeGroupVector vecNull = createNullVecAtributes(relationRecord.getGluedAtributesC2R());
@@ -160,8 +160,8 @@ public class GlueRecord implements CheckRowProducer {
                     }
                 }
                 // not glued atributes check
-                for (Enumeration elements = getNotGluedRelationsC2R().elements(); elements.hasMoreElements();) {
-                    GluedRelationRecord relationRecord = (GluedRelationRecord) elements.nextElement();
+                for (Enumeration<GluedRelationRecord> elements = getNotGluedRelationsC2R().elements(); elements.hasMoreElements();) {
+                    GluedRelationRecord relationRecord = elements.nextElement();
                     RelationC2R relationC2R = relationRecord.getRelationC2R();
                     if (relationRecord != gluedRelationRecord) {
                         IsNullAtributeGroupVector vecNull = createNullVecAtributes(relationRecord.getGluedAtributesC2R());
@@ -179,14 +179,14 @@ public class GlueRecord implements CheckRowProducer {
     /**
      * @return java.util.Vector
      */
-    private Vector getGluedRelationsC2R() {
+    private Vector<GluedRelationRecord> getGluedRelationsC2R() {
         return gluedRelationsC2R;
     }
 
     /**
      * @return java.util.Vector
      */
-    private Vector getNotGluedRelationsC2R() {
+    private Vector<GluedRelationRecord> getNotGluedRelationsC2R() {
         return notGluedRelationsC2R;
     }
 

@@ -22,7 +22,7 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
     private JButton ivjCloseButton = null;
     private String prefix = null;
     private ConceptualObject conceptualObject;
-    private cz.green.ermodeller.Desktop desktop;
+    private WorkingDesktop desktop;
     private int id = 0;
     private CardLayout cardL;
     private JPanel ivjDownPanel = null;
@@ -1495,7 +1495,7 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
         }
     }
 
-    public void setDesktop(cz.green.ermodeller.Desktop d) {
+    public void setDesktop(WorkingDesktop d) {
         desktop = d;
     }
 

@@ -17,12 +17,10 @@ import cz.omnicom.ermodeller.conc2obj.ObjDialog;
 import cz.omnicom.ermodeller.conceptual.NotationType;
 import cz.omnicom.ermodeller.conceptual.beans.*;
 import cz.omnicom.ermodeller.datatype.*;
-import cz.omnicom.ermodeller.errorlog.ConceptualObjectVectorValidationError;
 import cz.omnicom.ermodeller.errorlog.ErrorLogList;
-import cz.omnicom.ermodeller.errorlog.ValidationError;
 import cz.omnicom.ermodeller.errorlog.dialogs.ConflictsDialog;
 import cz.omnicom.ermodeller.errorlog.dialogs.ErrorLogDialog;
-import cz.omnicom.ermodeller.sql.SQLDialog;
+import cz.omnicom.ermodeller.sql.gui.SQLDialog;
 import cz.omnicom.ermodeller.typeseditor.UserTypeStorage;
 import cz.omnicom.ermodeller.typeseditor.UserTypeStorageVector;
 import cz.omnicom.ermodeller.typeseditor.UserTypesEditor;
@@ -57,10 +55,10 @@ public class ERModeller extends JFrame implements
     /**
      * The container where the desktop paints
      *
-     * @see Container
-     * @see Desktop
+     * @see DesktopContainer
+     * @see WorkingDesktop
      */
-    private Container place = null;
+    private DesktopContainer place = null;
 
     /**
      * Input field for the user scale
@@ -159,7 +157,7 @@ public class ERModeller extends JFrame implements
         getContentPane().add(getToolBar(), "North");
 
         getContentPane().add(getStatusPanel(), "South");
-        PropertyListDialog PLD = PropertyListDialog.createListDialog(this, false, ((Desktop) getPlace().getDesktop()).getModel(), "Properties");
+        PropertyListDialog PLD = PropertyListDialog.createListDialog(this, false, ((WorkingDesktop) getPlace().getDesktop()).getModel(), "Properties");
         PLD.setPreferredSize(new Dimension(20, 20));
         PLD.setMaximumSize(new Dimension(20, 20));
         setChanged(false);
@@ -195,7 +193,7 @@ public class ERModeller extends JFrame implements
         typeEditor = new UserTypesEditor(this);
         typeEditor.setLocationRelativeTo(this);
 
-        ((Desktop) getPlace().getDesktop()).ERMFrame = this;
+        ((WorkingDesktop) getPlace().getDesktop()).ERMFrame = this;
 
         loadDefaultConfiguration();
         final int activeNotation = AppPrefs.getProperty(AppPrefs.GENERAL_DEFNOTATION, Consts.DEF_GENERAL_DEFNOTATION);
@@ -291,7 +289,7 @@ public class ERModeller extends JFrame implements
      * Shows all conflicts in the schema
      */
     public void conflicts() {
-        Desktop d = getDesktop();
+        WorkingDesktop d = getDesktop();
         Schema schema = getSchema();
         if (schema.getComposeID() > schema.getID()) {//?????????
             conflictsDialog.setID(0);
@@ -303,12 +301,12 @@ public class ERModeller extends JFrame implements
     }
 
     private Schema getSchema() {
-        Desktop d = getDesktop();
+        WorkingDesktop d = getDesktop();
         return (Schema) d.getModel();
     }
 
-    private Desktop getDesktop() {
-        return (Desktop) getPlace().getDesktop();
+    private WorkingDesktop getDesktop() {
+        return (WorkingDesktop) getPlace().getDesktop();
     }
 
     /**
@@ -361,12 +359,12 @@ public class ERModeller extends JFrame implements
      */
     public void generate() {
         try {
-            if (getPlace().getDesktop() instanceof Desktop) {
+            if (getPlace().getDesktop() instanceof WorkingDesktop) {
                 cz.omnicom.ermodeller.conc2rela.SchemaC2R schemaC2R;
                 Schema model = getSchema();
                 ErrorLogList list = model.checkConsistency();
                 conflictsDialog.setErrorLogList(list);
-                conflictsDialog.setDesktop((Desktop) getPlace().getDesktop());
+                conflictsDialog.setDesktop((WorkingDesktop) getPlace().getDesktop());
                 if (conflictsDialog.isVisible() || !list.isEmpty()) {
                     conflictsDialog.setVisible(true);
                 }
@@ -379,8 +377,8 @@ public class ERModeller extends JFrame implements
 //						osetreni kardinalit
                         if (getNotationType() != ConceptualConstructItem.CHEN) {
                             if (getNotationType() == ConceptualConstructItem.BINARY)
-                                ((Desktop) getPlace().getDesktop()).switchAllRConnectionsCard(place);
-                            else ((Desktop) getPlace().getDesktop()).switchAllRConnectionsBoth(place);
+                                ((WorkingDesktop) getPlace().getDesktop()).switchAllRConnectionsCard(place);
+                            else ((WorkingDesktop) getPlace().getDesktop()).switchAllRConnectionsBoth(place);
                         }
                         //konec osetreni kardinalit
                         schemaC2R = new cz.omnicom.ermodeller.conc2rela.SchemaC2R(
@@ -392,8 +390,8 @@ public class ERModeller extends JFrame implements
 //						osetreni kardinalit
                         if (getNotationType() != ConceptualConstructItem.CHEN) {
                             if (getNotationType() == ConceptualConstructItem.BINARY)
-                                ((Desktop) getPlace().getDesktop()).switchAllRConnectionsCard(place);
-                            else ((Desktop) getPlace().getDesktop()).switchAllRConnectionsBoth(place);
+                                ((WorkingDesktop) getPlace().getDesktop()).switchAllRConnectionsCard(place);
+                            else ((WorkingDesktop) getPlace().getDesktop()).switchAllRConnectionsBoth(place);
                         }
                         //konec osetreni kardinalit
                         sqlDialog.setSQLConnection(optDialog
@@ -417,12 +415,12 @@ public class ERModeller extends JFrame implements
     public void generateObj() {
         try {
 
-            if (getPlace().getDesktop() instanceof Desktop) {
+            if (getPlace().getDesktop() instanceof WorkingDesktop) {
                 cz.omnicom.ermodeller.conc2rela.SchemaC2R schemaC2R;
                 Schema model = getSchema();
                 ErrorLogList list = model.checkConsistency();
                 conflictsDialog.setErrorLogList(list);
-                conflictsDialog.setDesktop((Desktop) getPlace().getDesktop());
+                conflictsDialog.setDesktop((WorkingDesktop) getPlace().getDesktop());
                 if (conflictsDialog.isVisible() || !list.isEmpty()) {
                     conflictsDialog.setVisible(true);
                 }
@@ -436,8 +434,8 @@ public class ERModeller extends JFrame implements
                         final NotationType type = getNotationType();
                         if (type != ConceptualConstructItem.CHEN) {
                             if (type == ConceptualConstructItem.BINARY)
-                                ((Desktop) getPlace().getDesktop()).switchAllRConnectionsCard(place);
-                            else ((Desktop) getPlace().getDesktop()).switchAllRConnectionsBoth(place);
+                                ((WorkingDesktop) getPlace().getDesktop()).switchAllRConnectionsCard(place);
+                            else ((WorkingDesktop) getPlace().getDesktop()).switchAllRConnectionsBoth(place);
                         }
                         //konec osetreni kardinalit
                         schemaC2R = new cz.omnicom.ermodeller.conc2rela.SchemaC2R(
@@ -448,8 +446,8 @@ public class ERModeller extends JFrame implements
                         //osetreni kardinalit
                         if (type != ConceptualConstructItem.CHEN) {
                             if (type == ConceptualConstructItem.BINARY)
-                                ((Desktop) getPlace().getDesktop()).switchAllRConnectionsCard(place);
-                            else ((Desktop) getPlace().getDesktop()).switchAllRConnectionsBoth(place);
+                                ((WorkingDesktop) getPlace().getDesktop()).switchAllRConnectionsCard(place);
+                            else ((WorkingDesktop) getPlace().getDesktop()).switchAllRConnectionsBoth(place);
                         }
                         //konec osetreni kardinalit
                         objDialog.setSchemaObj(schemaC2R.createSchemaObj());
@@ -487,15 +485,15 @@ public class ERModeller extends JFrame implements
     /**
      * Returns the container where all the schema is placed.
      *
-     * @see Container
+     * @see DesktopContainer
      */
-    public Container getPlace() {
+    public DesktopContainer getPlace() {
         if (place == null) {
-            place = new Container(2500, 2500);
+            place = new DesktopContainer(2500, 2500);
             place.setName("Place");
-            place.setBackground(java.awt.Color.black);
+            place.setBackground(Color.black);
             try {
-                ((Desktop) place.getDesktop()).addPropertyChangeListener(this);
+                ((WorkingDesktop) place.getDesktop()).addPropertyChangeListener(this);
             } catch (ClassCastException x) {
             }
         }
@@ -548,15 +546,12 @@ public class ERModeller extends JFrame implements
         // menu.getAccessibleContext().setAccessibleDescription(
         // "The only menu in this program that has menu items");
         menuBar.add(menu);
-        menu
-                .add(getMenuItem("New..", "img/new.gif", KeyEvent.VK_N, this,
-                        "create"));
-        menu
-                .add(getMenuItem("Open..", "img/load.gif", KeyEvent.VK_O, this,
-                        "load"));
-        menu
-                .add(getMenuItem("Save..", "img/save.gif", KeyEvent.VK_S, this,
-                        "save"));
+        menu.add(getMenuItem("New..", "img/new.gif", KeyEvent.VK_N, this,
+                "create"));
+        menu.add(getMenuItem("Open..", "img/load.gif", KeyEvent.VK_O, this,
+                "load"));
+        menu.add(getMenuItem("Save..", "img/save.gif", KeyEvent.VK_S, this,
+                "save"));
         menu.addSeparator();
         menu.add(getMenuItem("Print..", "img/print.gif", KeyEvent.VK_P, this,
                 "print"));
@@ -839,14 +834,14 @@ public class ERModeller extends JFrame implements
      */
     public void check() {
         try {
-            if (getPlace().getDesktop() instanceof Desktop) {
+            if (getPlace().getDesktop() instanceof WorkingDesktop) {
                 Schema model = getSchema();
                 errDialog.setErrorLogList(model.checkConsistency());
             }
         } catch (Throwable x) {
             new ShowException(null, "Error", x, true);
         }
-        errDialog.setDesktop((Desktop) getPlace().getDesktop());
+        errDialog.setDesktop((WorkingDesktop) getPlace().getDesktop());
         errDialog.setVisible(true);
     }
 
@@ -908,7 +903,7 @@ public class ERModeller extends JFrame implements
      * Returns <code>true</code> if schema is changed
      */
     public boolean isChanged() {
-        Desktop d = (Desktop) (getPlace().getDesktop());
+        WorkingDesktop d = (WorkingDesktop) (getPlace().getDesktop());
         return ((Schema) d.getModel())
                 .isChanged() || changed || typeEditor.isChanged();
     }
@@ -972,7 +967,7 @@ public class ERModeller extends JFrame implements
                                */
                         loadFromFile(fileName, NEW_XML);
                     try {
-                        ((Desktop) getPlace().getDesktop())
+                        ((WorkingDesktop) getPlace().getDesktop())
                                 .addPropertyChangeListener(this);
                     } catch (ClassCastException x) {
                     }
@@ -995,7 +990,6 @@ public class ERModeller extends JFrame implements
      */
     public void loadUserTypes(Document doc) {
         DataType dt;
-        String s1;
         String typeName;
         String dataType;
         String itemName;
@@ -1018,10 +1012,8 @@ public class ERModeller extends JFrame implements
                         itemType = erdoc.getValue("datatype", 2);
                         ((ObjectDataType) dt).addItem(new UserTypeStorage(
                                 itemName, extractDataType(itemType), null));
-                        // System.out.println("itemname "+ itemName + " itemtype
-                        // " + itemType);
                     }
-                    ((ObjectDataType) dt).setTypesVector(typesVector);
+                    ((ObjectDataType) dt).setUserDefinedTypesVector(typesVector);
                 }
                 typesVector.addType(new UserTypeStorage(typeName, dt, null));
             } while (erdoc.next(0));
@@ -1077,18 +1069,18 @@ public class ERModeller extends JFrame implements
     /**
      * Loads desktop from document model
      */
-    public String loadDesktop(Desktop d, int id, Document doc) {
+    public String loadDesktop(WorkingDesktop d, int id, Document doc) {
         int i, t, l, tt, ll, w, h, notation;
         String prefix;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder parser;
-        try {
-            parser = factory.newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
-            System.err.println("Fatal Error, No XML was found");
-            e.printStackTrace();
-            System.exit(-1);
-        }
+//        DocumentBuilder parser;
+//        try {
+//            parser = factory.newDocumentBuilder();
+//        } catch (ParserConfigurationException e) {
+//            System.err.println("Fatal Error, No XML was found");
+//            e.printStackTrace();
+//            System.exit(-1);
+//        }
 
         String s;
         EntityConstruct ent;
@@ -1224,7 +1216,6 @@ public class ERModeller extends JFrame implements
                     if (s == null)
                         s = "";
                     atrM.setComment(s);
-                    dt = new cz.omnicom.ermodeller.datatype.IntegerDataType();
                     s = erdoc.getValue("datatype");
                     dt = extractDataType(s);
                     atrM.setDataType(dt);
@@ -1272,7 +1263,6 @@ public class ERModeller extends JFrame implements
                     l = ll + new Integer(erdoc.getValue("left"));
                     ent = d.getEntity(id
                             + new Integer(erdoc.getValue("ent")));
-                    ccM = ent.getModel();
                     uni = ent.createUniqueKey(l, t);
                     uni.setID(id
                             + new Integer(erdoc.getValue("id")));
@@ -1357,23 +1347,9 @@ public class ERModeller extends JFrame implements
         }
 
         String s;
-        EntityConstruct ent;
-        RelationConstruct rel;
-        AttributeConstruct atr;
-        CardinalityConstruct car;
-        UniqueKeyConstruct uni;
-        ConceptualObject coM;
-        Atribute atrM;
-        ConceptualConstruct ccM;
-        Entity entM;
         Schema schemaM;
-        Cardinality carM;
-        UniqueKey uniM;
-        cz.omnicom.ermodeller.datatype.DataType dt;
-        ConceptualConstructItem cc;
-        Desktop d;
+        WorkingDesktop d;
 
-        //parser.setAllowJavaEncodingName(true);
 
         switch (what) {
             case NEW_CTS:
@@ -1399,9 +1375,9 @@ public class ERModeller extends JFrame implements
                     try {
                         loadUserTypes(doc);
                         java.awt.Rectangle rb = place.getBounds();
-                        d = new Desktop(place, rb.x, rb.y, rb.width, rb.height);
+                        d = new WorkingDesktop(place, rb.x, rb.y, rb.width, rb.height);
                         d.addShowErrorListener(place);
-                        id = ((Schema) ((Desktop) place
+                        id = ((Schema) ((WorkingDesktop) place
                                 .getDesktop()).getModel()).createID();
                         id++;
                         if (what == WITH_XML) {
@@ -1421,8 +1397,6 @@ public class ERModeller extends JFrame implements
                         }
                         String prefix = loadDesktop(d, id, doc);
                         if (what == NEW_XML) {
-                            schemaM = (Schema) d
-                                    .getModel();
                             place.addDesktop(d);
                             getPlace().getDesktop();
                             repaint();
@@ -1441,13 +1415,10 @@ public class ERModeller extends JFrame implements
                                             javax.swing.JOptionPane.ERROR_MESSAGE);
                             break;
                         }
-                        d = (Desktop) place.getDesktop();
+                        d = (WorkingDesktop) place.getDesktop();
                         loadDesktop(d, id, doc);
                         repaint();
-                        ConceptualObjectVectorValidationError errV;
-                        ValidationError err;
-                        schemaM = (Schema) d
-                                .getModel();
+                        schemaM = (Schema) d.getModel();
                         schemaM.setComposeID(id);
                         conflictsDialog.setPrefix(prefix);
                         conflictsDialog.setID(id);
@@ -1488,8 +1459,6 @@ public class ERModeller extends JFrame implements
         if (helpURL != null)
             Consts.DEF_HELPPATH = helpURL;
         try {
-            if (winLF)
-                UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
             ERModeller app = new ERModeller();
             app.setVisible(true);
         } catch (Throwable x) {
@@ -1519,7 +1488,7 @@ public class ERModeller extends JFrame implements
      * Minimize all objects in the schema (count visible atributes in Entities and return minimal size)
      */
     public void minimizeAll() {
-        Desktop d = getDesktop();
+        WorkingDesktop d = getDesktop();
         Vector v = d.getAllEntities();
         for (Object aV : v) {
             EntityConstruct ent = (EntityConstruct) aV;
@@ -1533,9 +1502,7 @@ public class ERModeller extends JFrame implements
         for (Object rel1 : rels) {
             RelationConstruct rel = (RelationConstruct) rel1;
             /*Minimize size of relation */
-            ResizeRectangle rr = new ResizeRectangle(
-                    0, 0, 0, 0, ResizePoint.BOTTOM
-                    | ResizePoint.RIGHT);
+            ResizeRectangle rr = new ResizeRectangle(0, 0, 0, 0, ResizePoint.BOTTOM | ResizePoint.RIGHT);
             rel.minimizeRelation(new ResizeEvent(rel.getBounds().x, rel.getBounds().y, 0, 0, rr, this));
         }
     }
@@ -1574,69 +1541,69 @@ public class ERModeller extends JFrame implements
         if (evt.getPropertyName().equals("workMode")) {
             String mode = "img/working.gif";
             switch ((Integer) evt.getNewValue()) {
-                case Container.WORKING:
+                case DesktopContainer.WORKING:
                     mode = "img/working.gif";
                     break;
-                case Container.DELETING:
+                case DesktopContainer.DELETING:
                     mode = "img/deleting.gif";
                     break;
-                case Container.MOVING:
+                case DesktopContainer.MOVING:
                     setChanged(true);
                     mode = "img/moving.gif";
                     break;
-                case Container.RESIZING:
+                case DesktopContainer.RESIZING:
                     setChanged(true);
                     mode = "img/resizing.gif";
                     break;
-                case Container.ADDING_WINDOW:
+                case DesktopContainer.ADDING_WINDOW:
                     setChanged(true);
                     mode = "img/aWindow.gif";
                     break;
-                case Container.ADDING_GROUP:
+                case DesktopContainer.ADDING_GROUP:
                     setChanged(true);
                     mode = "img/aGroup.gif";
                     break;
-                case Container.ADDING_ENTITY:
+                case DesktopContainer.ADDING_ENTITY:
                     setChanged(true);
                     mode = "img/aEntity.gif";
                     break;
-                case Container.ADDING_RELATION:
+                case DesktopContainer.ADDING_RELATION:
                     setChanged(true);
                     mode = "img/aRelation.gif";
                     break;
-                case Container.ADDING_RELATION_AND_CONNECTION:
+                case DesktopContainer.ADDING_RELATION_AND_CONNECTION:
                     setChanged(true);
                     mode = "img/aRelationConn.gif";
                     break;
-                case Container.ADDING_CONNECTION:
+                case DesktopContainer.ADDING_CONNECTION:
                     setChanged(true);
                     mode = "img/aCardinality.gif";
                     break;
-                case Container.ADDING_AS_ISA_CHILD:
+                case DesktopContainer.ADDING_AS_ISA_CHILD:
                     setChanged(true);
                     mode = "img/aSetISAchild.gif";
                     break;
-                case Container.ADDING_ATRIBUTE:
+                case DesktopContainer.ADDING_ATRIBUTE:
                     setChanged(true);
                     mode = "img/aAtribute.gif";
                     break;
-                case Container.ADDING_UNIQUE_KEY:
+                case DesktopContainer.ADDING_UNIQUE_KEY:
                     setChanged(true);
                     mode = "img/aUKey.gif";
                     break;
-                case Container.ADDING_CARDINALITY:
+                case DesktopContainer.ADDING_CARDINALITY:
                     setChanged(true);
                     mode = "img/aCardinality.gif";
                     break;
-                case Container.ADDING_STRONGADDICTION:
+                case DesktopContainer.ADDING_STRONGADDICTION:
                     setChanged(true);
                     mode = "img/aSAddiction.gif";
                     break;
-                case Container.REMOVING:
+                case DesktopContainer.REMOVING:
                     mode = "img/removing.gif";
                     break;
-                case Container.COMPOSING_ENTITY:
-                case Container.COMPOSING_RELATION:
+                case DesktopContainer.COMPOSING_ENTITY:
+                case DesktopContainer.COMPOSING_RELATION:
                     mode = "img/removing.gif";
                     break;
             }
@@ -1710,7 +1677,7 @@ public class ERModeller extends JFrame implements
                 }
             } else {
                 chooser.setCurrentDirectory(new File(AppPrefs.getProperty(AppPrefs.LOAD_STORE_DIR, Consts.DEF_LOAD_STORE_DIR)));
-                String name = ((Schema) (((Desktop) getPlace()
+                String name = ((Schema) (((WorkingDesktop) getPlace()
                         .getDesktop()).getModel())).getName()
                         + ".xml";
                 chooser.setSelectedFile(new java.io.File(name));
@@ -1733,7 +1700,7 @@ public class ERModeller extends JFrame implements
                                */
                         PrintWriter pw = new PrintWriter(new BufferedWriter(
                                 new FileWriter(fileName)));
-                        ((Desktop) getPlace().getDesktop()).write(AppPrefs.getProperty(AppPrefs.ENCODING, Consts.DEF_ENCODING),
+                        ((WorkingDesktop) getPlace().getDesktop()).write(AppPrefs.getProperty(AppPrefs.ENCODING, Consts.DEF_ENCODING),
                                 typeEditor.getTypesVector(), pw);
                         pw.flush();
                         pw.close();
@@ -1773,7 +1740,7 @@ public class ERModeller extends JFrame implements
         getSchema().setLevelOfDetails(Schema.LOD_MEDIUM);
         lodStatusLabel.setText("Medium details");
         if (getNotationType() == ConceptualConstructItem.UML) {
-            Desktop d = getDesktop();
+            WorkingDesktop d = getDesktop();
             Vector ents = d.getAllEntities();
             for (Object ent1 : ents) {
                 EntityConstruct ent = (EntityConstruct) ent1;
@@ -1809,7 +1776,7 @@ public class ERModeller extends JFrame implements
      * Swith notation to Chen
      */
     public void setChen() {
-        Desktop desktop = getDesktop();
+        WorkingDesktop desktop = getDesktop();
 
         if (getNotationType() != ConceptualConstructItem.CHEN) {
             desktop.decomposeTernaryRels(place);
@@ -1864,7 +1831,7 @@ public class ERModeller extends JFrame implements
      * Swith notation to binary
      */
     public void setBinary() {
-        Desktop d = getDesktop();
+        WorkingDesktop d = getDesktop();
         setChanged(true);
 
         if (getNotationType() == ConceptualConstructItem.CHEN) {
@@ -1940,7 +1907,7 @@ public class ERModeller extends JFrame implements
      * Swith notation to UML
      */
     public void setUML() {
-        Desktop d = getDesktop();
+        WorkingDesktop d = getDesktop();
         setChanged(true);
 
         if (getNotationType() == ConceptualConstructItem.CHEN) {
@@ -1994,7 +1961,7 @@ public class ERModeller extends JFrame implements
      * Sets the schema is changed
      */
     public void setChanged(boolean newChanged) {
-        Desktop d = (Desktop) (getPlace().getDesktop());
+        WorkingDesktop d = (WorkingDesktop) (getPlace().getDesktop());
         ((Schema) d.getModel())
                 .setChanged(newChanged);
         changed = newChanged;

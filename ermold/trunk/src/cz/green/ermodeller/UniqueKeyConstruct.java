@@ -91,7 +91,7 @@ public class UniqueKeyConstruct extends ConceptualConstructObject {
     public void addingAtribute(EntityConstruct ent) {
         try {
             // ((ContainerToolComponent)manager).addingAtribute(ent);
-            Desktop d = (Desktop) ((DGroupTool) manager).getManager();
+            WorkingDesktop d = (WorkingDesktop) ((DGroupTool) manager).getManager();
         } catch (Throwable x) {
             new ShowException(null, "Error", x, true);
         }
@@ -290,7 +290,7 @@ public class UniqueKeyConstruct extends ConceptualConstructObject {
             if (event.getAdd()) {
                 // adding strong addiction parent
                 if (getPrimary() && (connectionTo(ent) == null)) {
-                    ((Container) event.getComponent())
+                    ((DesktopContainer) event.getComponent())
                             .addingStrongAddiction(new StrongAddictionPair(ent,
                                     this));
                     event.setDropped(true);

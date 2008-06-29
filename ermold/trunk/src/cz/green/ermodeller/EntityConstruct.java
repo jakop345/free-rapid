@@ -627,10 +627,10 @@ public class EntityConstruct extends ConceptualConstructItem {
         }
         addMenuItem(menu, "Add identification dependent Entity ...",
                 "img/mDSAEntity.gif", this, "decomposeUsingStrongAddiction", event
-                .getComponent(), Container.class);
+                .getComponent(), DesktopContainer.class);
         addMenuItem(menu, "Add Relationship to new Entity ...", "img/mDREntity.gif",
                 this, "decomposeUsingRelation", event.getComponent(),
-                Container.class);
+                DesktopContainer.class);
         addMenuItem(menu, "Compose entity with ...", "img/mCompEntity.gif", event
                 .getComponent(), "removing", this, Item.class);
         // addMenuItem(menu, "Compose with entity", "mCompEntity.gif",
@@ -754,7 +754,7 @@ public class EntityConstruct extends ConceptualConstructItem {
      *
      * @param con Where this all lies.
      */
-    public void decomposeUsingRelation(Container con) {
+    public void decomposeUsingRelation(DesktopContainer con) {
         decomposeAsRelation = true;
         con.addingEntity(this);
     }
@@ -765,7 +765,7 @@ public class EntityConstruct extends ConceptualConstructItem {
      *
      * @param con Where this all lies.
      */
-    public void decomposeUsingStrongAddiction(Container con) {
+    public void decomposeUsingStrongAddiction(DesktopContainer con) {
         decomposeAsRelation = false;
         con.addingEntity(this);
     }
@@ -995,7 +995,7 @@ public class EntityConstruct extends ConceptualConstructItem {
                 RelationConstruct rel = (RelationConstruct) item;
                 try {
                     if (type == CHEN)
-                        ((Container) event.getComponent()).addingCardinality(new CardinalityPair(this, rel));
+                        ((DesktopContainer) event.getComponent()).addingCardinality(new CardinalityPair(this, rel));
                     else {
                         java.awt.Point p = ((RelationConstruct) item).getAbsoluteCenter(this);
                         CardinalityConstruct car = ((RelationConstruct) item).createCardinality(this, ((RelationConstruct) item).getManager(), p.x, p.y);
@@ -1016,7 +1016,7 @@ public class EntityConstruct extends ConceptualConstructItem {
                 UniqueKeyConstruct uk = (UniqueKeyConstruct) item;
                 // add as strong addiction parent
                 if (uk.getPrimary() && (uk.connectionTo(this) == null)) {
-                    ((Container) event.getComponent())
+                    ((DesktopContainer) event.getComponent())
                             .addingStrongAddiction(new StrongAddictionPair(
                                     this, uk));
                     event.setDropped(true);
@@ -1693,7 +1693,7 @@ public class EntityConstruct extends ConceptualConstructItem {
         if (index == -1)
             return;
         try {
-            ent.resetISAParent(((Container) event.getComponent()).getDesktop());
+            ent.resetISAParent(((DesktopContainer) event.getComponent()).getDesktop());
             ISAChilds.removeElementAt(index);
             PaintableManager m = (manager);
             moveChilds(event);

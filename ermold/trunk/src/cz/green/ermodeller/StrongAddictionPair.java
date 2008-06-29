@@ -7,7 +7,7 @@ import cz.green.swing.ShowException;
  * This class exists to hold entity, which would like to participate on the relation (also held).
  * Used by creating <code>Cardinality</code> by container.
  *
- * @see Container#addingCardinality(cz.green.ermodeller.CardinalityPair)
+ * @see DesktopContainer#addingCardinality(cz.green.ermodeller.CardinalityPair)
  */
 public class StrongAddictionPair {
     private EntityConstruct entity = null;

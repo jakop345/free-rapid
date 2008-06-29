@@ -17,7 +17,7 @@ public class ORCheckObj implements SubObjProducer, SubTreeProducerObj {
      *
      * @see cz.omnicom.ermodeller.sql.PartOfCheck
      */
-    private final Vector orParts = new Vector();
+    private final Vector<PartOfCheckObj> orParts = new Vector<PartOfCheckObj>();
 
     /**
      * Adds new part of check.
@@ -41,8 +41,8 @@ public class ORCheckObj implements SubObjProducer, SubTreeProducerObj {
      */
     public String createSubSQL(int countTabs) {
         String result = "";
-        for (Enumeration elements = getORParts().elements(); elements.hasMoreElements();) {
-            result += ((PartOfCheckObj) elements.nextElement()).createSubSQL(countTabs);
+        for (Enumeration<PartOfCheckObj> elements = getORParts().elements(); elements.hasMoreElements();) {
+            result += (elements.nextElement()).createSubSQL(countTabs);
             if (elements.hasMoreElements())
                 result += "\n" + TabCreatorObj.getTabs(countTabs) + "OR\n";
         }
@@ -56,8 +56,8 @@ public class ORCheckObj implements SubObjProducer, SubTreeProducerObj {
      */
     public IconNode createSubTree() {
         IconNode top = new IconNode(this, true, getIcon());
-        for (Enumeration elements = getORParts().elements(); elements.hasMoreElements();) {
-            top.add(((PartOfCheckObj) elements.nextElement()).createSubTree());
+        for (Enumeration<PartOfCheckObj> elements = getORParts().elements(); elements.hasMoreElements();) {
+            top.add((elements.nextElement()).createSubTree());
         }
         return top;
     }
@@ -76,7 +76,7 @@ public class ORCheckObj implements SubObjProducer, SubTreeProducerObj {
      *
      * @return java.util.Vector
      */
-    public Vector getORParts() {
+    public Vector<PartOfCheckObj> getORParts() {
         return orParts;
     }
 

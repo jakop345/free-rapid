@@ -16,7 +16,7 @@ public class ObjectDataType extends DataType {
     /**
      * all user defined types
      */
-    protected UserTypeStorageVector typesVector = null;
+    protected UserTypeStorageVector userDefinedTypesVector = null;
 
     /**
      * tells whether this object is being tested for containing nested table
@@ -40,7 +40,7 @@ public class ObjectDataType extends DataType {
     public ObjectDataType(UserTypeStorageVector v) {
         super();
         itemVector = new UserTypeStorageVector();
-        typesVector = v;
+        userDefinedTypesVector = v;
     }
 
     public UserTypeStorage getItemAt(int index) {
@@ -62,8 +62,8 @@ public class ObjectDataType extends DataType {
         return itemVector;
     }
 
-    public void setTypesVector(UserTypeStorageVector v) {
-        typesVector = v;
+    public void setUserDefinedTypesVector(UserTypeStorageVector v) {
+        userDefinedTypesVector = v;
     }
 
     public DataTypePanel getPanel() {
@@ -79,7 +79,7 @@ public class ObjectDataType extends DataType {
         DataType dt = null;
 
         //System.out.println("name je "+name);
-        for (Enumeration e = typesVector.elements(); e.hasMoreElements();) {
+        for (Enumeration e = userDefinedTypesVector.elements(); e.hasMoreElements();) {
             s = (UserTypeStorage) e.nextElement();
             //System.out.println("type name je "+s.getTypeName());
             if (s.getTypeName().equals(name))
@@ -134,8 +134,8 @@ public class ObjectDataType extends DataType {
     /**
      * returns names of all neted table data type items in this object
      */
-    public Vector getNestedNames() {
-        Vector result = new Vector(0);
+    public Vector<String> getNestedNames() {
+        Vector<String> result = new Vector<String>(0);
         String dataType;
         if (!namesChecked) {
             namesChecked = true;
@@ -145,8 +145,8 @@ public class ObjectDataType extends DataType {
                 if (getDataType(dataType) instanceof NestedTableDataType)
                     result.addElement(u.getTypeName());
                 if (getDataType(dataType) instanceof ObjectDataType) {
-                    Vector temp = ((ObjectDataType) getDataType(dataType)).getNestedNames();
-                    for (Enumeration enu = temp.elements(); enu.hasMoreElements();)
+                    Vector<String> temp = ((ObjectDataType) getDataType(dataType)).getNestedNames();
+                    for (Enumeration<String> enu = temp.elements(); enu.hasMoreElements();)
                         result.addElement(enu.nextElement());
                 }
             }

@@ -32,7 +32,7 @@ import java.util.Vector;
 /**
  * Adds new needful functionality for realiying the ER modeller.
  */
-public class Desktop extends DesktopTool implements FontManager,
+public class WorkingDesktop extends DesktopTool implements FontManager,
         ISchema, ViewController, ModelFinder {
     /**
      * The model - object from Aleš Kopecký work
@@ -48,8 +48,8 @@ public class Desktop extends DesktopTool implements FontManager,
      * @see cz.green.eventtool.DesktopTool#DesktopGroupWindow(cz.green.event.ContainerComponent , int,
      *      int, int, int)
      */
-    public Desktop(ContainerComponent place, int left, int top,
-                   int width, int height) {
+    public WorkingDesktop(ContainerComponent place, int left, int top,
+                          int width, int height) {
         super(place, left, top, width, height);
         model = new Schema();
         pcs = new java.beans.PropertyChangeSupport(this);
@@ -100,7 +100,6 @@ public class Desktop extends DesktopTool implements FontManager,
         int i, j;
         Atribute atrM1, atrM2;
         AttributeConstruct atr2, atr1;
-        Entity entM;
         EntityConstruct ent2 = getEntity(e2.getID()), ent1 = getEntity(e1.getID());
 
         for (i = 0; i < v2.size(); i++) {
@@ -418,7 +417,7 @@ public class Desktop extends DesktopTool implements FontManager,
     /**
      * Decompose all relationships which have atribute
      */
-    public void decomposeRelsWithAtributes(Container place) {
+    public void decomposeRelsWithAtributes(DesktopContainer place) {
         Vector<Serializable> RA = getRelationsWithAttribute(false);
         for (Object aRA : RA) {
             RelationConstruct rel = (RelationConstruct) aRA;
@@ -429,7 +428,7 @@ public class Desktop extends DesktopTool implements FontManager,
     /**
      * Decompose all ternary relationships
      */
-    public void decomposeTernaryRels(Container place) {
+    public void decomposeTernaryRels(DesktopContainer place) {
         Vector<Serializable> TR = getTernaryRelations(false);
         for (Object aTR : TR) {
             RelationConstruct rel = (RelationConstruct) aTR;
@@ -440,7 +439,7 @@ public class Desktop extends DesktopTool implements FontManager,
     /**
      * Switch all connetions to the other side of relationship
      */
-    public void switchAllRConnectionsCard(Container place) {
+    public void switchAllRConnectionsCard(DesktopContainer place) {
         Vector<Item> R = getAllRelations();
         Cardinality car1M, car2M;
         for (Object aR : R) {
@@ -479,7 +478,7 @@ public class Desktop extends DesktopTool implements FontManager,
     /**
      * Switch all connetions to the other side of relationship
      */
-    public void switchAllRConnectionsBoth(Container place) {
+    public void switchAllRConnectionsBoth(DesktopContainer place) {
         Vector<Item> R = getAllRelations();
         Cardinality car1M, car2M;
         for (Object aR : R) {
@@ -519,7 +518,7 @@ public class Desktop extends DesktopTool implements FontManager,
     /**
      * Switch all connetions to the other side of relationship
      */
-    public void switchAllRConnectionsArb(Container place) {
+    public void switchAllRConnectionsArb(DesktopContainer place) {
         Vector<Item> allRelations = getAllRelations();
         Cardinality car1M, car2M;
         for (Object allRelation : allRelations) {

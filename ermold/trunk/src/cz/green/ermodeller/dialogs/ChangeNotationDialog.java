@@ -1,6 +1,7 @@
 package cz.green.ermodeller.dialogs;
 
 import cz.green.ermodeller.ERModeller;
+import cz.green.ermodeller.WorkingDesktop;
 import cz.omnicom.ermodeller.conceptual.NotationType;
 import cz.omnicom.ermodeller.conceptual.beans.Entity;
 
@@ -173,7 +174,7 @@ public class ChangeNotationDialog extends JDialog implements java.awt.event.Acti
 
         DecomposeLabel2.setText("Ternary Rels :");
         DecomposeLabel2.setBounds(new Rectangle(5, 158, 157, 20));
-        Vector RT = ((cz.green.ermodeller.Desktop) Erm.getPlace().getDesktop()).getTernaryRelations(true);
+        Vector RT = ((WorkingDesktop) Erm.getPlace().getDesktop()).getTernaryRelations(true);
         TernaryRList.setListData(RT);
         TernaryRList.setBounds(new Rectangle(5, 179, 120, 80));
         JScrollPane TernaryRListScroller = new JScrollPane(TernaryRList);
@@ -181,7 +182,7 @@ public class ChangeNotationDialog extends JDialog implements java.awt.event.Acti
 
         DecomposeLabel.setText("Rels with attributes:");
         DecomposeLabel.setBounds(new Rectangle(135, 158, 157, 20));
-        Vector AR = ((cz.green.ermodeller.Desktop) Erm.getPlace().getDesktop()).getRelationsWithAttribute(true);
+        Vector AR = ((WorkingDesktop) Erm.getPlace().getDesktop()).getRelationsWithAttribute(true);
         AtrRList.setListData(AR);
         AtrRList.setBounds(new Rectangle(135, 175, 120, 80));
         JScrollPane AtrRListScroller = new JScrollPane(AtrRList);
@@ -189,7 +190,7 @@ public class ChangeNotationDialog extends JDialog implements java.awt.event.Acti
 
         DeleteLabel.setBounds(new Rectangle(265, 158, 120, 20));
         DeleteLabel.setText("Rels without 2 conns:");
-        Vector DR = ((cz.green.ermodeller.Desktop) Erm.getPlace().getDesktop()).getRelationsWithoutConnection(true);
+        Vector DR = ((WorkingDesktop) Erm.getPlace().getDesktop()).getRelationsWithoutConnection(true);
         DelRList.setListData(DR);
         DelRList.setBounds(new Rectangle(265, 189, 120, 80));
         JScrollPane DelRListScroller = new JScrollPane(DelRList);

@@ -288,7 +288,7 @@ public class RelationConstruct extends ConceptualConstructItem {
     public void decompose(CoordinateEvent event) {
 //	if (!decomposable()) return;
 
-        Manager man = ((Container) event.getComponent()).getDesktop();
+        Manager man = ((DesktopContainer) event.getComponent()).getDesktop();
         try {
             EntityConstruct ent = transformToEntity(man);
             boolean create = false;
@@ -498,7 +498,7 @@ public class RelationConstruct extends ConceptualConstructItem {
                 EntityConstruct ent = (EntityConstruct) item;
                 try {
                     if (getNotationType() == CHEN)
-                        ((Container) event.getComponent()).addingCardinality(new CardinalityPair(ent, this));
+                        ((DesktopContainer) event.getComponent()).addingCardinality(new CardinalityPair(ent, this));
                     else {
                         CardinalityConstruct car = createCardinality((EntityConstruct) item, ((EntityConstruct) item).getManager(), getBounds().x, getBounds().y);
                         car.model.setName(this.model.getName());

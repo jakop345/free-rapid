@@ -34,13 +34,13 @@ public abstract class RelationC2R extends ObjectC2R implements SQLCreateCommandP
      *
      * @see cz.omnicom.ermodeller.conc2rela.AtributeC2R
      */
-    private Vector atributesC2R = new Vector();
+    private Vector<AtributeC2R> atributesC2R = new Vector<AtributeC2R>();
     /**
      * Unique keys
      *
      * @see cz.omnicom.ermodeller.conc2rela.UniqueKeyC2R
      */
-    private Vector uniqueKeysC2R = new Vector();
+    private Vector<UniqueKeyC2R> uniqueKeysC2R = new Vector<UniqueKeyC2R>();
     /**
      * Primary key - optional
      *
@@ -58,7 +58,7 @@ public abstract class RelationC2R extends ObjectC2R implements SQLCreateCommandP
      *
      * @see cz.omnicom.ermodeller.conc2rela.ForeignKeyC2R
      */
-    private Vector entForeignKeysC2R = new Vector();
+    private Vector<EntForeignKeyC2R> entForeignKeysC2R = new Vector<EntForeignKeyC2R>();
     /**
      * Numberer of foreign keys names.
      */
@@ -79,9 +79,9 @@ public abstract class RelationC2R extends ObjectC2R implements SQLCreateCommandP
         super(new NameC2R(aConceptualConstruct.getName()), aSchemaC2R);
         conceptualConstruct = aConceptualConstruct;
 
-        for (Enumeration elements = aConceptualConstruct.getAtributes().elements(); elements.hasMoreElements();) {
+        for (Enumeration<Atribute> elements = aConceptualConstruct.getAtributes().elements(); elements.hasMoreElements();) {
             try {
-                addAtributeC2R(new AtributeC2R(aSchemaC2R, this, (Atribute) elements.nextElement()));
+                addAtributeC2R(new AtributeC2R(aSchemaC2R, this, elements.nextElement()));
             }
             catch (AlreadyContainsExceptionC2R e) {
             } // cannot be thrown
@@ -138,8 +138,8 @@ public abstract class RelationC2R extends ObjectC2R implements SQLCreateCommandP
     public AlterAddCommandSQL createAlterAddCommandSQL() {
         AlterAddCommandSQL alterAddCommand = new AlterAddCommandSQL(this);
         // entity foreign keys (of primary keys)
-        for (Enumeration elements = getEntForeignKeysC2R().elements(); elements.hasMoreElements();) {
-            EntForeignKeyC2R entForeignKeyC2R = (EntForeignKeyC2R) elements.nextElement();
+        for (Enumeration<EntForeignKeyC2R> elements = getEntForeignKeysC2R().elements(); elements.hasMoreElements();) {
+            EntForeignKeyC2R entForeignKeyC2R = elements.nextElement();
             alterAddCommand.addConstraint(entForeignKeyC2R.createConstraintSQL());
         }
         return alterAddCommand;
@@ -183,19 +183,19 @@ public abstract class RelationC2R extends ObjectC2R implements SQLCreateCommandP
     public CreateCommandSQL createCreateCommandSQL(UserTypeStorageVector typesVector) {
         CreateCommandSQL createCommand = new CreateCommandSQL(this);
         // atributes
-        for (Enumeration atributes = getAtributesC2R().elements(); atributes.hasMoreElements();) {
-            AtributeC2R atribute = (AtributeC2R) atributes.nextElement();
+        for (Enumeration<AtributeC2R> atributes = getAtributesC2R().elements(); atributes.hasMoreElements();) {
+            AtributeC2R atribute = atributes.nextElement();
             createCommand.addColumn(atribute.createColumnSQL());
             if (atribute.getDataType() instanceof UserDefinedDataType) {
-                for (Enumeration e = typesVector.elements(); e.hasMoreElements();) {
-                    UserTypeStorage u = (UserTypeStorage) e.nextElement();
+                for (Enumeration<UserTypeStorage> e = typesVector.elements(); e.hasMoreElements();) {
+                    UserTypeStorage u = e.nextElement();
                     if (u.getTypeName().equals(atribute.getDataType().toString())) {
                         if (u.getDataType() instanceof NestedTableDataType)
                             createCommand.addNestedTableStorageClause(atribute.createNestedTableStorageClause(getNameC2R().getName()));
                         else if (u.getDataType() instanceof ObjectDataType) {
-                            Vector names = ((ObjectDataType) u.getDataType()).getNestedNames();
-                            for (Enumeration enu = names.elements(); enu.hasMoreElements();) {
-                                String name = (String) enu.nextElement();
+                            Vector<String> names = ((ObjectDataType) u.getDataType()).getNestedNames();
+                            for (Enumeration<String> enu = names.elements(); enu.hasMoreElements();) {
+                                String name = enu.nextElement();
                                 createCommand.addNestedTableStorageClause(new NestedTableStorageSQL(name, getNameC2R().getName() + "_" + atribute.getNameC2R()));
                             }
                         }
@@ -208,8 +208,8 @@ public abstract class RelationC2R extends ObjectC2R implements SQLCreateCommandP
                */
         }
         // unique keys
-        for (Enumeration uniqueKeys = getUniqueKeysC2R().elements(); uniqueKeys.hasMoreElements();) {
-            UniqueKeyC2R uniqueKey = (UniqueKeyC2R) uniqueKeys.nextElement();
+        for (Enumeration<UniqueKeyC2R> uniqueKeys = getUniqueKeysC2R().elements(); uniqueKeys.hasMoreElements();) {
+            UniqueKeyC2R uniqueKey = uniqueKeys.nextElement();
             if (!isPrimaryKeyC2R(uniqueKey) && uniqueKey.getAtributesC2R().size() > 0) {
                 createCommand.addConstraint(uniqueKey.createConstraintSQL());
             }
@@ -243,8 +243,8 @@ public abstract class RelationC2R extends ObjectC2R implements SQLCreateCommandP
 
     public CreateCommandObj createCreateCommandObj(UserTypeStorageVector typesVector) {
         CreateCommandObj createCommand = new CreateCommandObj(this);
-        for (Enumeration atributes = getAtributesC2R().elements(); atributes.hasMoreElements();) {
-            AtributeC2R atribute = (AtributeC2R) atributes.nextElement();
+        for (Enumeration<AtributeC2R> atributes = getAtributesC2R().elements(); atributes.hasMoreElements();) {
+            AtributeC2R atribute = atributes.nextElement();
             boolean isInUnique = false;
 
             boolean isForeign = false;
@@ -295,8 +295,8 @@ public abstract class RelationC2R extends ObjectC2R implements SQLCreateCommandP
 
     public CreateCommandTypeObj createCommandTypeObj(UserTypeStorageVector typesVector) {
         CreateCommandTypeObj createCommand = new CreateCommandTypeObj(this);
-        for (Enumeration atributes = getAtributesC2R().elements(); atributes.hasMoreElements();) {
-            AtributeC2R atribute = (AtributeC2R) atributes.nextElement();
+        for (Enumeration<AtributeC2R> atributes = getAtributesC2R().elements(); atributes.hasMoreElements();) {
+            AtributeC2R atribute = atributes.nextElement();
             //reference test
             boolean isForeign = false;
             boolean isRel = false;
@@ -322,15 +322,15 @@ public abstract class RelationC2R extends ObjectC2R implements SQLCreateCommandP
             } else createCommand.addColumn(atribute.createColumnObj());
             //end of change
             if (atribute.getDataType() instanceof UserDefinedDataType) {
-                for (Enumeration e = typesVector.elements(); e.hasMoreElements();) {
-                    UserTypeStorage u = (UserTypeStorage) e.nextElement();
+                for (Enumeration<UserTypeStorage> e = typesVector.elements(); e.hasMoreElements();) {
+                    UserTypeStorage u = e.nextElement();
                     if (u.getTypeName().equals(atribute.getDataType().toString())) {
                         if (u.getDataType() instanceof NestedTableDataType)
                             createCommand.addNestedTableStorageClauseObj(atribute.createNestedTableStorageClauseObj(getNameC2R().getName()));
                         else if (u.getDataType() instanceof ObjectDataType) {
-                            Vector names = ((ObjectDataType) u.getDataType()).getNestedNames();
-                            for (Enumeration enu = names.elements(); enu.hasMoreElements();) {
-                                String name = (String) enu.nextElement();
+                            Vector<String> names = ((ObjectDataType) u.getDataType()).getNestedNames();
+                            for (Enumeration<String> enu = names.elements(); enu.hasMoreElements();) {
+                                String name = enu.nextElement();
                                 createCommand.addNestedTableStorageClauseObj(new NestedTableStorageObj(name, getNameC2R().getName() + "_" + atribute.getNameC2R()));
                             }
                         }
@@ -353,8 +353,8 @@ public abstract class RelationC2R extends ObjectC2R implements SQLCreateCommandP
      * @return cz.omnicom.ermodeller.conc2rela.AtributeC2R
      */
     public AtributeC2R findAtributeC2RByConceptualAtribute(Atribute aConceptualAtribute) {
-        for (Enumeration elements = getAtributesC2R().elements(); elements.hasMoreElements();) {
-            AtributeC2R atributeC2R = (AtributeC2R) elements.nextElement();
+        for (Enumeration<AtributeC2R> elements = getAtributesC2R().elements(); elements.hasMoreElements();) {
+            AtributeC2R atributeC2R = elements.nextElement();
             if (atributeC2R.getConceptualAtribute() == aConceptualAtribute)
                 return atributeC2R;
         }
@@ -368,8 +368,8 @@ public abstract class RelationC2R extends ObjectC2R implements SQLCreateCommandP
      * @return cz.omnicom.ermodeller.conc2rela.UniqueKeyC2R
      */
     public UniqueKeyC2R findUniqueKeyC2RByConceptualUniqueKey(Vector aConceptualUniqueKey) {
-        for (Enumeration elements = getUniqueKeysC2R().elements(); elements.hasMoreElements();) {
-            UniqueKeyC2R uniqueKeyC2R = (UniqueKeyC2R) elements.nextElement();
+        for (Enumeration<UniqueKeyC2R> elements = getUniqueKeysC2R().elements(); elements.hasMoreElements();) {
+            UniqueKeyC2R uniqueKeyC2R = elements.nextElement();
             if (uniqueKeyC2R.getConceptualUniqueKey() == aConceptualUniqueKey)
                 return uniqueKeyC2R;
         }
@@ -379,9 +379,9 @@ public abstract class RelationC2R extends ObjectC2R implements SQLCreateCommandP
     /**
      * @return java.util.Vector
      */
-    public Vector getAtributesC2R() {
+    public Vector<AtributeC2R> getAtributesC2R() {
         if (atributesC2R == null)
-            atributesC2R = new Vector();
+            atributesC2R = new Vector<AtributeC2R>();
         return atributesC2R;
     }
 
@@ -413,9 +413,9 @@ public abstract class RelationC2R extends ObjectC2R implements SQLCreateCommandP
     /**
      * @return java.util.Vector
      */
-    public Vector getEntForeignKeysC2R() {
+    public Vector<EntForeignKeyC2R> getEntForeignKeysC2R() {
         if (entForeignKeysC2R == null)
-            entForeignKeysC2R = new Vector();
+            entForeignKeysC2R = new Vector<EntForeignKeyC2R>();
         return entForeignKeysC2R;
     }
 
@@ -429,9 +429,9 @@ public abstract class RelationC2R extends ObjectC2R implements SQLCreateCommandP
     /**
      * @return java.util.Vector
      */
-    public Vector getUniqueKeysC2R() {
+    public Vector<UniqueKeyC2R> getUniqueKeysC2R() {
         if (uniqueKeysC2R == null)
-            uniqueKeysC2R = new Vector();
+            uniqueKeysC2R = new Vector<UniqueKeyC2R>();
         return uniqueKeysC2R;
     }
 

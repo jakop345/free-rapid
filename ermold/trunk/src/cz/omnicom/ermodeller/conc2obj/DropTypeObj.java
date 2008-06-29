@@ -58,6 +58,6 @@ public class DropTypeObj extends CommandObj {
      * @return java.lang.String
      */
     public String toString() {
-        return "Drop type " + name + " FORCE";
+        return "DROP TYPE " + name + " FORCE";
     }
 }
