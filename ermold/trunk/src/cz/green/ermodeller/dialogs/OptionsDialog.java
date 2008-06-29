@@ -4,7 +4,7 @@ import cz.green.ermodeller.AppPrefs;
 import cz.green.ermodeller.Consts;
 import cz.green.event.WindowItem;
 import cz.omnicom.ermodeller.conceptual.beans.Schema;
-import cz.omnicom.ermodeller.sql.SQLConnection;
+import cz.omnicom.ermodeller.sql.gui.SQLConnection;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,7 +23,7 @@ public class OptionsDialog extends javax.swing.JDialog {
     private javax.swing.JComboBox ivjCardUMLField = null;
     private javax.swing.JTextField ivjUserField = null;
 
-    private cz.omnicom.ermodeller.sql.SQLConnection connection = null;
+    private SQLConnection connection = null;
     final IvjEventHandler ivjEventHandler = new IvjEventHandler();
     private java.lang.String Sql;
 

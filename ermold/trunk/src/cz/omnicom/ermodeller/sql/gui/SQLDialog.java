@@ -1,11 +1,15 @@
-package cz.omnicom.ermodeller.sql;
+package cz.omnicom.ermodeller.sql.gui;
 
 import cz.green.ermodeller.AppPrefs;
 import cz.green.swing.ExtensionFileFilter;
 import cz.omnicom.ermodeller.icontree.IconNodeRenderer;
+import cz.omnicom.ermodeller.sql.SchemaSQL;
 import cz.omnicom.ermodeller.sql.interfaces.SubSQLProducer;
 
 import javax.swing.*;
+import javax.swing.text.Document;
+import javax.swing.text.EditorKit;
+import javax.swing.text.StyledEditorKit;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.io.File;
@@ -25,7 +29,7 @@ public class SQLDialog extends JDialog implements java.awt.event.ActionListener,
     private JPanel ivjDownPanel = null;
     private SchemaSQL ivjSchemaSQL = null;
     private JTree ivjSQLTree = null;
-    private JTextArea ivjJTextArea1 = null;
+    private JEditorPane sqlAreaView = null;
     private JPanel ivjJPanel1 = null;
     private JButton ivjSaveButton = null;
     private JFileChooser ivjJFileChooser2 = null;
@@ -503,13 +507,21 @@ public class SQLDialog extends JDialog implements java.awt.event.ActionListener,
      * @return javax.swing.JTextArea
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    private javax.swing.JTextArea getJTextArea1() {
-        if (ivjJTextArea1 == null) {
+    private JEditorPane getJTextArea1() {
+        if (sqlAreaView == null) {
+            sqlAreaView = new JEditorPane();
+            EditorKit editorKit = new StyledEditorKit() {
+                public Document createDefaultDocument() {
+                    return new SQLSyntaxDocument();
+                }
+            };
+            sqlAreaView.setEditorKitForContentType("text/java", editorKit);
+            sqlAreaView.setContentType("text/java");
+
             try {
-                ivjJTextArea1 = new javax.swing.JTextArea();
-                ivjJTextArea1.setName("JTextArea1");
-                ivjJTextArea1.setBounds(0, 0, 164, 109);
-                ivjJTextArea1.setEditable(false);
+                sqlAreaView.setName("JTextArea1");
+                sqlAreaView.setBounds(0, 0, 164, 109);
+                sqlAreaView.setEditable(false);
                 // user code begin {1}
                 // user code end
             } catch (java.lang.Throwable ivjExc) {
@@ -518,7 +530,7 @@ public class SQLDialog extends JDialog implements java.awt.event.ActionListener,
                 handleException(ivjExc);
             }
         }
-        return ivjJTextArea1;
+        return sqlAreaView;
     }
 
     /**
@@ -710,7 +722,7 @@ public class SQLDialog extends JDialog implements java.awt.event.ActionListener,
 
         /* Uncomment the following lines to print uncaught exceptions to stdout */
         // System.out.println("--------- UNCAUGHT EXCEPTION ---------");
-        // exception.printStackTrace(System.out);
+        exception.printStackTrace(System.out);
     }
 
     /**
@@ -859,7 +871,8 @@ public class SQLDialog extends JDialog implements java.awt.event.ActionListener,
         if (object instanceof SchemaSQL) {
             schemaSQL = (SchemaSQL) object;
             sql = schemaSQL.createSQL();
-            connection.send(sql);
+            if (connection != null)
+                connection.send(sql);
         }
     }
 

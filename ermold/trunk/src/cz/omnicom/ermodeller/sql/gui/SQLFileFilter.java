@@ -1,18 +1,18 @@
-package cz.omnicom.ermodeller.sql;
+package cz.omnicom.ermodeller.sql.gui;
 
 import javax.swing.filechooser.FileFilter;
 import java.io.File;
 
 /**
- * File filter for text files *.txt.
+ * File filter for text files *.sql.
  *
  * @see javax.swing.filechooser.FileFilter;
  */
-public class TXTFileFilter extends FileFilter {
-    final static String TXT = "txt";
+public class SQLFileFilter extends FileFilter {
+    final static String SQL = "sql";
 
     /**
-     * Accept all directories and all *.txt files.
+     * Accept all directories and all *.sql files.
      *
      * @param java.io.File file to be accepted or refused
      * @return boolean
@@ -25,7 +25,7 @@ public class TXTFileFilter extends FileFilter {
         int i = s.lastIndexOf('.');
         if (i > 0 && i < s.length() - 1) {
             String extension = s.substring(i + 1).toLowerCase();
-            if (TXT.equals(extension))
+            if (SQL.equals(extension))
                 return true;
         }
         return false;
@@ -37,6 +37,6 @@ public class TXTFileFilter extends FileFilter {
      * @return java.lang.String
      */
     public String getDescription() {
-        return "Text files";
+        return "SQL batch files";
     }
 }

@@ -1,4 +1,4 @@
-package cz.omnicom.ermodeller.sql;
+package cz.omnicom.ermodeller.sql.gui;
 
 /**
  * Insert the type's description here.

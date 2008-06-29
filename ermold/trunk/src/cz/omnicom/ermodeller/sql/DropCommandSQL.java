@@ -59,6 +59,6 @@ public class DropCommandSQL extends CommandSQL {
      * @return java.lang.String
      */
     public String toString() {
-        return "Drop table " + relation.getNameC2R() + " cascade constraints";
+        return "DROP TABLE " + relation.getNameC2R() + " CASCADE CONSTRAINTS";
     }
 }

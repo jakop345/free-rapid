@@ -50,7 +50,6 @@ public class Intro extends CommandSQL {
      * @return java.lang.String
      */
     public String toString() {
-        String s = "Set Echo on\nPurge Recyclebin;\n/* používate-li verzi nižší než Oracle 10g,\n zakomentujte pøíkaz PURGE */\n";
-        return s;
+        return "Set Echo on\nPurge Recyclebin;\n/* používate-li verzi nižší než Oracle 10g,\n zakomentujte pøíkaz PURGE */\n";
     }
 }

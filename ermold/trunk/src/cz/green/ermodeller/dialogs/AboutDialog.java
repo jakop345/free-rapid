@@ -10,7 +10,7 @@ import java.awt.*;
  */
 public class AboutDialog extends javax.swing.JDialog {
     private javax.swing.JPanel ivjJDialogContentPane = null;
-//    private cz.omnicom.ermodeller.sql.SQLConnection connection = null;
+//    private cz.omnicom.ermodeller.sql.gui.SQLConnection connection = null;
 
     final JLabel AppNameLabel = new JLabel();
     final JLabel VersionLabel = new JLabel();

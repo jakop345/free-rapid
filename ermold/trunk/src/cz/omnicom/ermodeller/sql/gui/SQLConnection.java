@@ -1,4 +1,4 @@
-package cz.omnicom.ermodeller.sql;
+package cz.omnicom.ermodeller.sql.gui;
 
 import cz.green.swing.ShowException;
 
@@ -13,7 +13,7 @@ public class SQLConnection implements Serializable {
     // private transient DatabaseMetaData dma;
     private transient Connection con;
     private java.lang.String url;
-    private transient cz.omnicom.ermodeller.sql.LogSQL log;
+    private transient LogSQL log;
     private java.lang.String user;
     private String passwd;
 

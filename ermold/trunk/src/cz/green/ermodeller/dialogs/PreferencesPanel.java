@@ -1,6 +1,6 @@
 package cz.green.ermodeller.dialogs;
 
-import cz.omnicom.ermodeller.sql.SQLConnection;
+import cz.omnicom.ermodeller.sql.gui.SQLConnection;
 
 /**
  * Dialog for program's preferences
@@ -11,7 +11,7 @@ public class PreferencesPanel extends javax.swing.JPanel {
     private javax.swing.JPasswordField ivjPasswordField = null;
     private javax.swing.JTextField ivjURLField = null;
     private javax.swing.JTextField ivjUserField = null;
-    private cz.omnicom.ermodeller.sql.SQLConnection connection = null;
+    private SQLConnection connection = null;
     final IvjEventHandler ivjEventHandler = new IvjEventHandler();
     private java.lang.String Sql;
     private javax.swing.JButton cancelButton = null;

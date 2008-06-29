@@ -59,6 +59,6 @@ public class DropCommandObj extends CommandObj {
      * @return java.lang.String
      */
     public String toString() {
-        return "Drop table " + relation.getNameC2R() + "_obj cascade constraints";
+        return "DROP TABLE " + relation.getNameC2R() + "_obj CASCADE CONSTRAINTS";
     }
 }

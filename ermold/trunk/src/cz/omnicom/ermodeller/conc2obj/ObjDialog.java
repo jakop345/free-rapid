@@ -4,6 +4,7 @@ import cz.green.ermodeller.AppPrefs;
 import cz.green.swing.ExtensionFileFilter;
 import cz.omnicom.ermodeller.conc2obj.interfaces.SubObjProducer;
 import cz.omnicom.ermodeller.icontree.IconNodeRenderer;
+import cz.omnicom.ermodeller.sql.gui.SQLConnection;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -33,7 +34,7 @@ public class ObjDialog extends JDialog implements java.awt.event.ActionListener,
     private JPanel ivjJDialogContentPane1 = null;
     private DefaultMutableTreeNode ivjRoot = null;
     private String fileName = null;
-    private cz.omnicom.ermodeller.sql.SQLConnection connection = null;
+    private cz.omnicom.ermodeller.sql.gui.SQLConnection connection = null;
     private JButton ivjSendButton = null;
     private JButton ivjViewButton = null;
     private JPanel ivjSVPanel = null;
@@ -903,7 +904,7 @@ public class ObjDialog extends JDialog implements java.awt.event.ActionListener,
      *
      * @param newValue java.lang.String
      */
-    public void setObjConnection(cz.omnicom.ermodeller.sql.SQLConnection con) {
+    public void setObjConnection(SQLConnection con) {
         connection = con;
     }
 
