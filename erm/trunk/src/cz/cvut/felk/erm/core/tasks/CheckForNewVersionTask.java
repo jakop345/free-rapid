@@ -95,6 +95,9 @@ public class CheckForNewVersionTask extends CoreTask<ConnectResult, Void> {
 
     @Override
     protected void failed(Throwable cause) {
+        if (handleRuntimeException(cause))
+            return;
+
         if (!showInfoMessages)
             return;
         if (cause instanceof UnknownHostException) {

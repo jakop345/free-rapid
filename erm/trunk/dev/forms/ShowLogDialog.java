@@ -1,6 +1,8 @@
 import java.awt.*;
 import java.util.*;
 import javax.swing.*;
+import javax.swing.border.*;
+import javax.swing.tree.*;
 import com.jgoodies.forms.builder.*;
 import com.jgoodies.forms.factories.*;
 import com.jgoodies.forms.layout.*;
@@ -24,12 +26,20 @@ public class ShowLogDialog extends JDialog {
 		ResourceBundle bundle = ResourceBundle.getBundle("ShowLogDialog");
 		JPanel dialogPane = new JPanel();
 		JPanel contentPanel = new JPanel();
+		JSplitPane splitPane = new JSplitPane();
+		JScrollPane scrollPane2 = new JScrollPane();
+		errorTree = new JTree();
 		JScrollPane scrollPane = new JScrollPane();
 		textArea = ComponentFactory.getSQLArea();
 		JXButtonPanel buttonBar = new JXButtonPanel();
 		btnCopyToClipboard = new JButton();
 		btnSaveLog = new JButton();
 		btnOK = new JButton();
+		JPanel toolbarPanel = new JPanel();
+		btnPrevError = new JButton();
+		btnNextError = new JButton();
+		separator1 = new JSeparator();
+		btnOraErrorCode = new JButton();
 		CellConstraints cc = new CellConstraints();
 
 		//======== this ========
@@ -43,18 +53,70 @@ public class ShowLogDialog extends JDialog {
 
 			//======== contentPanel ========
 			{
+				contentPanel.setPreferredSize(new Dimension(530, 426));
 				contentPanel.setLayout(new BorderLayout());
 
-				//======== scrollPane ========
+				//======== splitPane ========
 				{
-					scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+					splitPane.setOneTouchExpandable(true);
+					splitPane.setResizeWeight(0.5);
 
-					//---- textArea ----
-					textArea.setPreferredSize(new Dimension(450, 400));
-					textArea.setEditable(false);
-					scrollPane.setViewportView(textArea);
+					//======== scrollPane2 ========
+					{
+						scrollPane2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+						//---- errorTree ----
+						errorTree.setModel(new DefaultTreeModel(
+							new DefaultMutableTreeNode("(root)") {
+								{
+									add(new DefaultMutableTreeNode("sdfsdf"));
+									add(new DefaultMutableTreeNode("sdfs"));
+									add(new DefaultMutableTreeNode("sdf"));
+									add(new DefaultMutableTreeNode("sdf"));
+									add(new DefaultMutableTreeNode("sd"));
+									add(new DefaultMutableTreeNode("sdfs"));
+									add(new DefaultMutableTreeNode("dfs"));
+									add(new DefaultMutableTreeNode("df"));
+									add(new DefaultMutableTreeNode("sdf"));
+									add(new DefaultMutableTreeNode("sd"));
+									add(new DefaultMutableTreeNode("fs"));
+									add(new DefaultMutableTreeNode("dfs"));
+									add(new DefaultMutableTreeNode("df"));
+									add(new DefaultMutableTreeNode("sdf"));
+									add(new DefaultMutableTreeNode("sdf"));
+									add(new DefaultMutableTreeNode("s"));
+									add(new DefaultMutableTreeNode("dfs"));
+									add(new DefaultMutableTreeNode("df"));
+									add(new DefaultMutableTreeNode("sdf"));
+									add(new DefaultMutableTreeNode("s"));
+									add(new DefaultMutableTreeNode("df"));
+									add(new DefaultMutableTreeNode("sdf"));
+									add(new DefaultMutableTreeNode("sd"));
+									add(new DefaultMutableTreeNode("fs"));
+									add(new DefaultMutableTreeNode("df"));
+									add(new DefaultMutableTreeNode("sd"));
+									add(new DefaultMutableTreeNode("fs"));
+									add(new DefaultMutableTreeNode("df"));
+									add(new DefaultMutableTreeNode("sdf"));
+									add(new DefaultMutableTreeNode("s"));
+									add(new DefaultMutableTreeNode("df"));
+								}
+							}));
+						scrollPane2.setViewportView(errorTree);
+					}
+					splitPane.setLeftComponent(scrollPane2);
+
+					//======== scrollPane ========
+					{
+						scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+						//---- textArea ----
+						textArea.setEditable(false);
+						scrollPane.setViewportView(textArea);
+					}
+					splitPane.setRightComponent(scrollPane);
 				}
-				contentPanel.add(scrollPane, BorderLayout.CENTER);
+				contentPanel.add(splitPane, BorderLayout.CENTER);
 			}
 			dialogPane.add(contentPanel, BorderLayout.CENTER);
 
@@ -87,6 +149,41 @@ public class ShowLogDialog extends JDialog {
 				buttonBarBuilder.add(btnOK,              cc.xy(6, 1));
 			}
 			dialogPane.add(buttonBar, BorderLayout.SOUTH);
+
+			//======== toolbarPanel ========
+			{
+				toolbarPanel.setBorder(new EmptyBorder(0, 5, 3, 5));
+
+				//---- btnPrevError ----
+				btnPrevError.setPreferredSize(new Dimension(26, 23));
+				btnPrevError.setName(bundle.getString("btnPrevError.name"));
+
+				//---- btnNextError ----
+				btnNextError.setPreferredSize(new Dimension(26, 23));
+				btnNextError.setName(bundle.getString("btnNextError.name"));
+
+				//---- btnOraErrorCode ----
+				btnOraErrorCode.setPreferredSize(new Dimension(26, 23));
+				btnOraErrorCode.setName(bundle.getString("btnOraErrorCode.name"));
+
+				PanelBuilder toolbarPanelBuilder = new PanelBuilder(new FormLayout(
+					new ColumnSpec[] {
+						FormFactory.DEFAULT_COLSPEC,
+						FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+						FormFactory.DEFAULT_COLSPEC,
+						FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+						FormFactory.DEFAULT_COLSPEC,
+						FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+						FormFactory.DEFAULT_COLSPEC
+					},
+					RowSpec.decodeSpecs("default")), toolbarPanel);
+
+				toolbarPanelBuilder.add(btnPrevError,    cc.xy(1, 1));
+				toolbarPanelBuilder.add(btnNextError,    cc.xy(3, 1));
+				toolbarPanelBuilder.add(separator1,      cc.xy(5, 1));
+				toolbarPanelBuilder.add(btnOraErrorCode, cc.xy(7, 1));
+			}
+			dialogPane.add(toolbarPanel, BorderLayout.NORTH);
 		}
 		contentPane.add(dialogPane, BorderLayout.CENTER);
 		pack();
@@ -96,9 +193,14 @@ public class ShowLogDialog extends JDialog {
 
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
 	// Generated using JFormDesigner Open Source Project license - unknown
+	private JTree errorTree;
 	private JEditorPane textArea;
 	private JButton btnCopyToClipboard;
 	private JButton btnSaveLog;
 	private JButton btnOK;
+	private JButton btnPrevError;
+	private JButton btnNextError;
+	private JSeparator separator1;
+	private JButton btnOraErrorCode;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables
 }

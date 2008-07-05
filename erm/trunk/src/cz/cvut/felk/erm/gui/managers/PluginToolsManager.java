@@ -61,9 +61,11 @@ public class PluginToolsManager implements IAreaChangeListener {
     private void setToolsAvailable(final boolean available) {
         final ToolWindow[] toolWindows = toolWindowManager.getToolWindows();
         for (ToolWindow toolWindow : toolWindows) {
+            logger.info("Setting tool " + toolWindow.getId() + " available to " + available);
             toolWindow.setAvailable(available);
             toolWindow.setVisible(available);
         }
+
     }
 
     public void areaDeactivated(AreaChangeEvent event) {
@@ -182,7 +184,11 @@ public class PluginToolsManager implements IAreaChangeListener {
     }
 
 
-    public void setPluginToolsVisible(boolean b) {
-        setToolsAvailable(b);
+    public void setPluginToolsVisible(final boolean b) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                setToolsAvailable(b);
+            }
+        });
     }
 }

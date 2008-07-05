@@ -5,6 +5,7 @@ import cz.cvut.felk.erm.swing.components.ColorComboBox;
 import cz.cvut.felk.erm.swing.components.EditorPaneLinkDetector;
 import cz.cvut.felk.erm.swing.models.NaiiveComboModel;
 import cz.cvut.felk.erm.swing.models.SQLSyntaxDocument;
+import cz.cvut.felk.erm.swing.painters.RiderCaret;
 import cz.cvut.felk.erm.swing.renderers.ComboBoxRenderer;
 import org.jdesktop.swingx.JXDatePicker;
 
@@ -78,7 +79,7 @@ public class ComponentFactory {
                 return new SQLSyntaxDocument();
             }
         };
-
+        textArea.setCaret(new RiderCaret());
         textArea.setEditorKitForContentType("text/sql", editorKit);
         textArea.setContentType("text/sql");
         textArea.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));

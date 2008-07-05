@@ -112,9 +112,9 @@ public class SubmitErrorDialog extends AppDialog {
         buildGUI();
 
         final ActionMap actionMap = getActionMap();
-        btnOk.setAction(actionMap.get("okBtnAction"));
-        btnCancel.setAction(actionMap.get("cancelBtnAction"));
-        btnConnection.setAction(actionMap.get("btnConnectionAction"));
+        setAction(btnOk, "okBtnAction");
+        setAction(btnCancel, "cancelBtnAction");
+        setAction(btnConnection, "btnConnectionAction");
         pack();
         setResizable(true);
         locateOnOpticalScreenCenter(this);
@@ -127,9 +127,9 @@ public class SubmitErrorDialog extends AppDialog {
         Bindings.bind(commentTextArea, model.getBufferedModel("comment"));
     }
 
-    private ActionMap getActionMap() {
-        return Swinger.getActionMap(this.getClass(), this);
-    }
+//    private ActionMap getActionMap() {
+//        return Swinger.getActionMap(this.getClass(), this);
+//    }
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents

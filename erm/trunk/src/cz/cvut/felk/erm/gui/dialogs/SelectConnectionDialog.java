@@ -17,7 +17,6 @@ import cz.cvut.felk.erm.core.AppPrefs;
 import cz.cvut.felk.erm.core.UserProp;
 import cz.cvut.felk.erm.db.DBConnection;
 import cz.cvut.felk.erm.gui.actions.FileActions;
-import cz.cvut.felk.erm.gui.actions.HelpActions;
 import cz.cvut.felk.erm.gui.managers.ManagerDirector;
 import cz.cvut.felk.erm.swing.ComponentFactory;
 import cz.cvut.felk.erm.swing.Swinger;
@@ -74,6 +73,7 @@ public class SelectConnectionDialog extends AppDialog {
         doClose();
     }
 
+
     @org.jdesktop.application.Action
     public void btnEditConnectionAction() throws Exception {
         final ManagerDirector managerDirector = getApp().getManagerDirector();
@@ -91,14 +91,14 @@ public class SelectConnectionDialog extends AppDialog {
 
     @Override
     public void doClose() {
-        final DBConnection bean = model.getBean();
-        if (bean != null)
-            AppPrefs.storeProperty(UserProp.CONN_CHOOSE_LAST_SEL_CONNECTION, bean.getId());
-        super.doClose();
-        model.setBean(null);
         if (model != null) {
+            final DBConnection bean = model.getBean();
+            if (bean != null)
+                AppPrefs.storeProperty(UserProp.CONN_CHOOSE_LAST_SEL_CONNECTION, bean.getId());
+            model.setBean(null);
             model.release();
         }
+        super.doClose();
     }
 
     @Override
@@ -111,6 +111,7 @@ public class SelectConnectionDialog extends AppDialog {
         return btnOK;
     }
 
+
     private void build() throws CloneNotSupportedException {
         inject();
         buildGUI();
@@ -119,7 +120,7 @@ public class SelectConnectionDialog extends AppDialog {
         btnOK.setAction(map.get("okBtnAction"));
         btnCancel.setAction(map.get("btnCancelAction"));
         btnEditConnection.setAction(map.get("btnEditConnectionAction"));
-        btnHelp.setAction(map.get(HelpActions.CONTEXT_DIALOG_HELP_ACTION));
+        setContextHelp(btnHelp, "http://seznam.cz");
 
         buildModels();
 
@@ -158,8 +159,6 @@ public class SelectConnectionDialog extends AppDialog {
         final ConnectionEditorDialog.DBConnectionCellRenderer renderer = new ConnectionEditorDialog.DBConnectionCellRenderer(Swinger.getResourceMap(ConnectionEditorDialog.class));
         comboConnections.setRenderer(renderer);
 
-
-        btnHelp.putClientProperty(HelpActions.CONTEXT_DIALOG_HELPPROPERTY, "http://www.seznam.cz");
     }
 
 
@@ -167,10 +166,6 @@ public class SelectConnectionDialog extends AppDialog {
         model = new PresentationModel<DBConnection>((ValueModel) null);
 
         bindBasicComponents();
-    }
-
-    private ActionMap getActionMap() {
-        return Swinger.getActionMap(this.getClass(), this);
     }
 
 

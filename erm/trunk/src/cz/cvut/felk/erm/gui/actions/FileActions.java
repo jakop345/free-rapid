@@ -48,7 +48,7 @@ public class FileActions extends AbstractBean {
         app.prepareDialog(dialog, true);
         if (dialog.getModalResult() == SelectConnectionDialog.RESULT_OK) {
             DBConnection conn = dialog.getSelectedConnection();
-            final String sql = Utils.loadFile("c:\\skola\\skola2\\!semestry\\8.semestr\\sql\\create_obj.sql");
+            final String sql = Utils.loadFile("c:\\temp\\create_obj.sql");
             app.getContext().getTaskService().execute(new RunSQLScriptTask(conn, sql));
         }
     }
@@ -89,7 +89,7 @@ public class FileActions extends AbstractBean {
 
     @Action()
     public void saveAsScheme() {
-
+        throw new IllegalStateException("Tohle je takova testovaci nahodna vyjimka v programu");
     }
 
     @Action()

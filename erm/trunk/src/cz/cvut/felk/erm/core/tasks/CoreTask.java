@@ -1,5 +1,6 @@
 package cz.cvut.felk.erm.core.tasks;
 
+import cz.cvut.felk.erm.core.application.GlobalEDTExceptionHandler;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.Task;
@@ -23,7 +24,7 @@ public abstract class CoreTask<T, V> extends Task<T, V> {
         return super.getResourceMap();
     }
 
-//    private void setDefaultInputBlocker() {
+    //    private void setDefaultInputBlocker() {
 //        if (inputBlocker == null)
 //            inputBlocker = new ScreenInputBlocker(this, BlockingScope.APPLICATION, null);
 //        this.setInputBlocker(inputBlocker);
@@ -31,5 +32,20 @@ public abstract class CoreTask<T, V> extends Task<T, V> {
 
     public void postMessage(String s, Object args) {
         message(s, args);
+    }
+
+    @Override
+    protected void failed(Throwable cause) {
+        super.failed(cause);
+        handleRuntimeException(cause);
+    }
+
+    protected boolean handleRuntimeException(Throwable cause) {
+        if (cause instanceof RuntimeException) {
+            GlobalEDTExceptionHandler exceptionHandler = new GlobalEDTExceptionHandler();
+            exceptionHandler.uncaughtException(Thread.currentThread(), cause);
+            return true;
+        }
+        return false;
     }
 }

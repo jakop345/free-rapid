@@ -113,13 +113,11 @@ public class CloseDialog<C extends FileInstance> extends AppDialog {
         buildGUI();
         buildModels();
 
-        final ActionMap actionMap = getActionMap();
-
-        btnOk.setAction(actionMap.get("okBtnAction"));
-        btnCancel.setAction(actionMap.get("cancelBtnAction"));
-        btnSelectAll.setAction(actionMap.get("btnSelectAllAction"));
-        btnSelectNone.setAction(actionMap.get("btnSelectNoneAction"));
-        checkSort.setAction(actionMap.get("checkSortAction"));
+        setAction(btnOk, "okBtnAction");
+        setAction(btnCancel, "cancelBtnAction");
+        setAction(btnSelectAll, "btnSelectAllAction");
+        setAction(btnSelectNone, "btnSelectNoneAction");
+        setAction(checkSort, "checkSortAction");
         setDefaultValues();
 
         pack();
@@ -183,9 +181,9 @@ public class CloseDialog<C extends FileInstance> extends AppDialog {
         reSort(checkSort.isSelected());
     }
 
-    private ActionMap getActionMap() {
-        return Swinger.getActionMap(this.getClass(), this);
-    }
+//    private ActionMap getActionMap() {
+//        return Swinger.getActionMap(this.getClass(), this);
+//    }
 
 
     private void bind(final JCheckBox checkBox, final String key, final Object defaultValue) {

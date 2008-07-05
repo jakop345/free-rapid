@@ -21,7 +21,6 @@ import cz.cvut.felk.erm.gui.MyPreferencesAdapter;
 import cz.cvut.felk.erm.gui.MyPresentationModel;
 import cz.cvut.felk.erm.swing.LaF;
 import cz.cvut.felk.erm.swing.LookAndFeels;
-import cz.cvut.felk.erm.swing.Swinger;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.swinghelper.buttonpanel.JXButtonPanel;
@@ -80,9 +79,8 @@ public class UserPreferencesDialog extends AppDialog {
         buildGUI();
         buildModels();
 
-        final ActionMap actionMap = getActionMap();
-        btnOK.setAction(actionMap.get("okBtnAction"));
-        btnCancel.setAction(actionMap.get("cancelBtnAction"));
+        setAction(btnOK, "okBtnAction");
+        setAction(btnCancel, "cancelBtnAction");
 
 
         setDefaultValues();
@@ -278,9 +276,9 @@ public class UserPreferencesDialog extends AppDialog {
         }
     }
 
-    private ActionMap getActionMap() {
-        return Swinger.getActionMap(this.getClass(), this);
-    }
+//    private ActionMap getActionMap() {
+//        return Swinger.getActionMap(this.getClass(), this);
+//    }
 
 
     private void initComponents() {

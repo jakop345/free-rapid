@@ -2,6 +2,7 @@ import java.awt.*;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.border.*;
+import com.jgoodies.forms.builder.*;
 import com.jgoodies.forms.factories.*;
 import com.jgoodies.forms.layout.*;
 import org.jdesktop.swinghelper.buttonpanel.*;
@@ -78,15 +79,25 @@ public class ConnectionEditor extends JDialog {
 
 			//======== contentPanel ========
 			{
-				contentPanel.setLayout(new FormLayout(
-					"default:grow",
-					"default, fill:default:grow"));
 
 				//======== toolbar ========
 				{
 					toolbar.setBorder(new EmptyBorder(5, 5, 0, 5));
 					toolbar.setOpaque(false);
-					toolbar.setLayout(new FormLayout(
+
+					//---- btnConnectionAdd ----
+					btnConnectionAdd.setPreferredSize(new Dimension(26, 23));
+					btnConnectionAdd.setName(bundle.getString("btnConnectionAdd.name"));
+
+					//---- btnConnectionRemove ----
+					btnConnectionRemove.setPreferredSize(new Dimension(26, 23));
+					btnConnectionRemove.setName(bundle.getString("btnConnectionRemove.name"));
+
+					//---- btnConnectionCopy ----
+					btnConnectionCopy.setPreferredSize(new Dimension(26, 23));
+					btnConnectionCopy.setName(bundle.getString("btnConnectionCopy.name"));
+
+					PanelBuilder toolbarBuilder = new PanelBuilder(new FormLayout(
 						new ColumnSpec[] {
 							FormFactory.PREF_COLSPEC,
 							FormFactory.PREF_COLSPEC,
@@ -95,23 +106,14 @@ public class ConnectionEditor extends JDialog {
 							FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
 							new ColumnSpec(ColumnSpec.FILL, Sizes.DEFAULT, FormSpec.DEFAULT_GROW)
 						},
-						RowSpec.decodeSpecs("pref:grow")));
+						RowSpec.decodeSpecs("pref:grow")), toolbar);
 					((FormLayout)toolbar.getLayout()).setColumnGroups(new int[][] {{1, 2, 4}});
 
-					//---- btnConnectionAdd ----
-					btnConnectionAdd.setPreferredSize(new Dimension(26, 23));
-					toolbar.add(btnConnectionAdd, cc.xy(1, 1));
-
-					//---- btnConnectionRemove ----
-					btnConnectionRemove.setPreferredSize(new Dimension(26, 23));
-					toolbar.add(btnConnectionRemove, cc.xy(2, 1));
-					toolbar.add(separator1, cc.xy(3, 1));
-
-					//---- btnConnectionCopy ----
-					btnConnectionCopy.setPreferredSize(new Dimension(26, 23));
-					toolbar.add(btnConnectionCopy, cc.xy(4, 1));
+					toolbarBuilder.add(btnConnectionAdd,    cc.xy(1, 1));
+					toolbarBuilder.add(btnConnectionRemove, cc.xy(2, 1));
+					toolbarBuilder.add(separator1,          cc.xy(3, 1));
+					toolbarBuilder.add(btnConnectionCopy,   cc.xy(4, 1));
 				}
-				contentPanel.add(toolbar, cc.xy(1, 1));
 
 				//======== splitPane ========
 				{
@@ -124,11 +126,6 @@ public class ConnectionEditor extends JDialog {
 					{
 						splitLeftPanel.setMinimumSize(new Dimension(102, 24));
 						splitLeftPanel.setPreferredSize(new Dimension(102, 116));
-						splitLeftPanel.setLayout(new FormLayout(
-							new ColumnSpec[] {
-								new ColumnSpec(ColumnSpec.FILL, Sizes.bounded(Sizes.PREFERRED, Sizes.dluX(100), Sizes.dluX(130)), FormSpec.DEFAULT_GROW)
-							},
-							RowSpec.decodeSpecs("fill:default:grow")));
 
 						//======== scrollPane1 ========
 						{
@@ -138,7 +135,14 @@ public class ConnectionEditor extends JDialog {
 							listConnections.setBorder(new EmptyBorder(2, 2, 2, 2));
 							scrollPane1.setViewportView(listConnections);
 						}
-						splitLeftPanel.add(scrollPane1, cc.xy(1, 1));
+
+						PanelBuilder splitLeftPanelBuilder = new PanelBuilder(new FormLayout(
+							new ColumnSpec[] {
+								new ColumnSpec(ColumnSpec.FILL, Sizes.bounded(Sizes.PREFERRED, Sizes.dluX(100), Sizes.dluX(130)), FormSpec.DEFAULT_GROW)
+							},
+							RowSpec.decodeSpecs("fill:default:grow")), splitLeftPanel);
+
+						splitLeftPanelBuilder.add(scrollPane1, cc.xy(1, 1));
 					}
 					splitPane.setLeftComponent(splitLeftPanel);
 
@@ -149,7 +153,70 @@ public class ConnectionEditor extends JDialog {
 							new TitledBorder(null, "Connection parameters", TitledBorder.LEFT, TitledBorder.DEFAULT_POSITION)));
 						panelParameters.setPreferredSize(new Dimension(400, 260));
 						panelParameters.setVisible(false);
-						panelParameters.setLayout(new FormLayout(
+
+						//---- labelName ----
+						labelName.setText(bundle.getString("labelName.text"));
+						labelName.setLabelFor(nameField);
+
+						//---- nameField ----
+						nameField.setPreferredSize(new Dimension(150, 20));
+
+						//---- labelDescription ----
+						labelDescription.setText(bundle.getString("labelDescription.text"));
+						labelDescription.setLabelFor(descriptionField);
+
+						//---- labelLibrary ----
+						labelLibrary.setText(bundle.getString("labelLibrary.text"));
+						labelLibrary.setLabelFor(libraryField);
+
+						//---- btnSelectLibrary ----
+						btnSelectLibrary.setText(bundle.getString("btnSelectLibrary.text"));
+						btnSelectLibrary.setPreferredSize(new Dimension(26, 23));
+
+						//---- labelDriver ----
+						labelDriver.setText(bundle.getString("labelDriver.text"));
+						labelDriver.setLabelFor(driverCombo);
+
+						//---- labelURL ----
+						labelURL.setText(bundle.getString("labelURL.text"));
+						labelURL.setLabelFor(urlField);
+
+						//---- labelUser ----
+						labelUser.setText(bundle.getString("labelUser.text"));
+						labelUser.setLabelFor(userField);
+
+						//---- labelPassword ----
+						labelPassword.setText(bundle.getString("labelPassword.text"));
+						labelPassword.setLabelFor(passwordField);
+
+						//---- labelWarning ----
+						labelWarning.setText(bundle.getString("labelWarning.text"));
+						labelWarning.setForeground(Color.red);
+
+						//======== btnPanel2 ========
+						{
+
+							//---- btnTest ----
+							btnTest.setText(bundle.getString("btnTest.text"));
+
+							//---- btnInfo ----
+							btnInfo.setText(bundle.getString("btnInfo.text"));
+
+							PanelBuilder btnPanel2Builder = new PanelBuilder(new FormLayout(
+								new ColumnSpec[] {
+									new ColumnSpec(ColumnSpec.FILL, Sizes.DEFAULT, FormSpec.DEFAULT_GROW),
+									FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+									FormFactory.DEFAULT_COLSPEC,
+									FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+									FormFactory.DEFAULT_COLSPEC
+								},
+								RowSpec.decodeSpecs("default")), btnPanel2);
+
+							btnPanel2Builder.add(btnTest, cc.xy(3, 1));
+							btnPanel2Builder.add(btnInfo, cc.xy(5, 1));
+						}
+
+						PanelBuilder panelParametersBuilder = new PanelBuilder(new FormLayout(
 							new ColumnSpec[] {
 								FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
 								FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
@@ -183,89 +250,36 @@ public class ConnectionEditor extends JDialog {
 								FormFactory.DEFAULT_ROWSPEC,
 								FormFactory.LINE_GAP_ROWSPEC,
 								FormFactory.LINE_GAP_ROWSPEC
-							}));
+							}), panelParameters);
 						((FormLayout)panelParameters.getLayout()).setRowGroups(new int[][] {{1, 11, 13}, {3, 7, 9}});
 
-						//---- labelName ----
-						labelName.setText(bundle.getString("labelName.text"));
-						labelName.setLabelFor(nameField);
-						panelParameters.add(labelName, cc.xy(3, 1));
-
-						//---- nameField ----
-						nameField.setPreferredSize(new Dimension(150, 20));
-						panelParameters.add(nameField, cc.xy(5, 1));
-
-						//---- labelDescription ----
-						labelDescription.setText(bundle.getString("labelDescription.text"));
-						labelDescription.setLabelFor(descriptionField);
-						panelParameters.add(labelDescription, cc.xy(3, 3));
-						panelParameters.add(descriptionField, cc.xywh(5, 3, 5, 1));
-
-						//---- labelLibrary ----
-						labelLibrary.setText(bundle.getString("labelLibrary.text"));
-						labelLibrary.setLabelFor(libraryField);
-						panelParameters.add(labelLibrary, cc.xy(3, 5));
-						panelParameters.add(libraryField, cc.xywh(5, 5, 3, 1));
-
-						//---- btnSelectLibrary ----
-						btnSelectLibrary.setText(bundle.getString("btnSelectLibrary.text"));
-						btnSelectLibrary.setPreferredSize(new Dimension(26, 23));
-						panelParameters.add(btnSelectLibrary, cc.xy(9, 5));
-
-						//---- labelDriver ----
-						labelDriver.setText(bundle.getString("labelDriver.text"));
-						labelDriver.setLabelFor(driverCombo);
-						panelParameters.add(labelDriver, cc.xy(3, 7));
-						panelParameters.add(driverCombo, cc.xywh(5, 7, 5, 1));
-
-						//---- labelURL ----
-						labelURL.setText(bundle.getString("labelURL.text"));
-						labelURL.setLabelFor(urlField);
-						panelParameters.add(labelURL, cc.xy(3, 9));
-						panelParameters.add(urlField, cc.xywh(5, 9, 5, 1));
-
-						//---- labelUser ----
-						labelUser.setText(bundle.getString("labelUser.text"));
-						labelUser.setLabelFor(userField);
-						panelParameters.add(labelUser, cc.xy(3, 11));
-						panelParameters.add(userField, cc.xy(5, 11));
-
-						//---- labelPassword ----
-						labelPassword.setText(bundle.getString("labelPassword.text"));
-						labelPassword.setLabelFor(passwordField);
-						panelParameters.add(labelPassword, cc.xy(3, 13));
-						panelParameters.add(passwordField, cc.xy(5, 13));
-
-						//---- labelWarning ----
-						labelWarning.setText(bundle.getString("labelWarning.text"));
-						labelWarning.setForeground(Color.red);
-						panelParameters.add(labelWarning, cc.xywh(5, 15, 3, 1));
-
-						//======== btnPanel2 ========
-						{
-							btnPanel2.setLayout(new FormLayout(
-								new ColumnSpec[] {
-									new ColumnSpec(ColumnSpec.FILL, Sizes.DEFAULT, FormSpec.DEFAULT_GROW),
-									FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
-									FormFactory.DEFAULT_COLSPEC,
-									FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
-									FormFactory.DEFAULT_COLSPEC
-								},
-								RowSpec.decodeSpecs("default")));
-
-							//---- btnTest ----
-							btnTest.setText(bundle.getString("btnTest.text"));
-							btnPanel2.add(btnTest, cc.xy(3, 1));
-
-							//---- btnInfo ----
-							btnInfo.setText(bundle.getString("btnInfo.text"));
-							btnPanel2.add(btnInfo, cc.xy(5, 1));
-						}
-						panelParameters.add(btnPanel2, cc.xywh(3, 17, 7, 1));
+						panelParametersBuilder.add(labelName,        cc.xy  (3,  1));
+						panelParametersBuilder.add(nameField,        cc.xy  (5,  1));
+						panelParametersBuilder.add(labelDescription, cc.xy  (3,  3));
+						panelParametersBuilder.add(descriptionField, cc.xywh(5,  3, 5, 1));
+						panelParametersBuilder.add(labelLibrary,     cc.xy  (3,  5));
+						panelParametersBuilder.add(libraryField,     cc.xywh(5,  5, 3, 1));
+						panelParametersBuilder.add(btnSelectLibrary, cc.xy  (9,  5));
+						panelParametersBuilder.add(labelDriver,      cc.xy  (3,  7));
+						panelParametersBuilder.add(driverCombo,      cc.xywh(5,  7, 5, 1));
+						panelParametersBuilder.add(labelURL,         cc.xy  (3,  9));
+						panelParametersBuilder.add(urlField,         cc.xywh(5,  9, 5, 1));
+						panelParametersBuilder.add(labelUser,        cc.xy  (3, 11));
+						panelParametersBuilder.add(userField,        cc.xy  (5, 11));
+						panelParametersBuilder.add(labelPassword,    cc.xy  (3, 13));
+						panelParametersBuilder.add(passwordField,    cc.xy  (5, 13));
+						panelParametersBuilder.add(labelWarning,     cc.xywh(5, 15, 3, 1));
+						panelParametersBuilder.add(btnPanel2,        cc.xywh(3, 17, 7, 1));
 					}
 					splitPane.setRightComponent(panelParameters);
 				}
-				contentPanel.add(splitPane, cc.xy(1, 2));
+
+				PanelBuilder contentPanelBuilder = new PanelBuilder(new FormLayout(
+					"default:grow",
+					"default, fill:default:grow"), contentPanel);
+
+				contentPanelBuilder.add(toolbar,   cc.xy(1, 1));
+				contentPanelBuilder.add(splitPane, cc.xy(1, 2));
 			}
 			dialogPane.add(contentPanel, BorderLayout.CENTER);
 
@@ -273,7 +287,17 @@ public class ConnectionEditor extends JDialog {
 			{
 				buttonBar.setBorder(Borders.BUTTON_BAR_GAP_BORDER);
 				buttonBar.setCyclic(true);
-				buttonBar.setLayout(new FormLayout(
+
+				//---- btnHelp ----
+				btnHelp.setText(bundle.getString("btnHelp.text"));
+
+				//---- btnOK ----
+				btnOK.setText(bundle.getString("btnOK.text"));
+
+				//---- btnCancel ----
+				btnCancel.setText(bundle.getString("btnCancel.text"));
+
+				PanelBuilder buttonBarBuilder = new PanelBuilder(new FormLayout(
 					new ColumnSpec[] {
 						FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
 						FormFactory.BUTTON_COLSPEC,
@@ -282,20 +306,12 @@ public class ConnectionEditor extends JDialog {
 						FormFactory.RELATED_GAP_COLSPEC,
 						FormFactory.BUTTON_COLSPEC
 					},
-					RowSpec.decodeSpecs("pref")));
+					RowSpec.decodeSpecs("pref")), buttonBar);
 				((FormLayout)buttonBar.getLayout()).setColumnGroups(new int[][] {{2, 4, 6}});
 
-				//---- btnHelp ----
-				btnHelp.setText(bundle.getString("btnHelp.text"));
-				buttonBar.add(btnHelp, cc.xy(2, 1));
-
-				//---- btnOK ----
-				btnOK.setText(bundle.getString("btnOK.text"));
-				buttonBar.add(btnOK, cc.xy(4, 1));
-
-				//---- btnCancel ----
-				btnCancel.setText(bundle.getString("btnCancel.text"));
-				buttonBar.add(btnCancel, cc.xy(6, 1));
+				buttonBarBuilder.add(btnHelp,   cc.xy(2, 1));
+				buttonBarBuilder.add(btnOK,     cc.xy(4, 1));
+				buttonBarBuilder.add(btnCancel, cc.xy(6, 1));
 			}
 			dialogPane.add(buttonBar, BorderLayout.SOUTH);
 		}

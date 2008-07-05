@@ -18,7 +18,6 @@ import cz.cvut.felk.erm.core.tasks.CoreTask;
 import cz.cvut.felk.erm.db.DBConnection;
 import cz.cvut.felk.erm.db.DatabaseDriverManager;
 import cz.cvut.felk.erm.db.tasks.DBTestConnectionTask;
-import cz.cvut.felk.erm.gui.actions.HelpActions;
 import cz.cvut.felk.erm.gui.dialogs.filechooser.OpenSaveDialogFactory;
 import cz.cvut.felk.erm.swing.ComponentFactory;
 import cz.cvut.felk.erm.swing.Swinger;
@@ -234,16 +233,15 @@ public class ConnectionEditorDialog extends AppDialog {
         inject();
         buildGUI();
 
-        final ActionMap map = getActionMap();
-        btnOK.setAction(map.get("okBtnAction"));
-        btnCancel.setAction(map.get("btnCancelAction"));
-        btnConnectionAdd.setAction(map.get("btnConnectionAddAction"));
-        btnConnectionRemove.setAction(map.get("btnConnectionRemoveAction"));
-        btnConnectionCopy.setAction(map.get("btnConnectionCopyAction"));
-        btnTest.setAction(map.get("btnTestAction"));
-        btnSelectLibrary.setAction(map.get("btnSelectLibraryAction"));
-        btnInfo.setAction(map.get("btnInfoAction"));
-        btnHelp.setAction(map.get("contextDialogHelpAction"));
+        setAction(btnOK, ("okBtnAction"));
+        setAction(btnCancel, ("btnCancelAction"));
+        setAction(btnConnectionAdd, ("btnConnectionAddAction"));
+        setAction(btnConnectionRemove, ("btnConnectionRemoveAction"));
+        setAction(btnConnectionCopy, ("btnConnectionCopyAction"));
+        setAction(btnTest, ("btnTestAction"));
+        setAction(btnSelectLibrary, ("btnSelectLibraryAction"));
+        setAction(btnInfo, ("btnInfoAction"));
+        setAction(btnHelp, ("contextDialogHelpAction"));
 
         buildModels();
 
@@ -307,7 +305,7 @@ public class ConnectionEditorDialog extends AppDialog {
                     activateEditing();
             }
         });
-        btnHelp.putClientProperty(HelpActions.CONTEXT_DIALOG_HELPPROPERTY, "http://www.seznam.cz");
+        setContextHelp(btnHelp, "http://www.seznam.cz");
     }
 
     private void activateEditing() {
@@ -412,9 +410,9 @@ public class ConnectionEditorDialog extends AppDialog {
 //        connector.updateProperty2();
     }
 
-    private ActionMap getActionMap() {
-        return Swinger.getActionMap(this.getClass(), this);
-    }
+//    private ActionMap getActionMap() {
+//        return Swinger.getActionMap(this.getClass(), this);
+//    }
 
 
     private void bindBasicComponents() {

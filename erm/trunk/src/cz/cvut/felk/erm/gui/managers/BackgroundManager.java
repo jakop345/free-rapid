@@ -56,6 +56,7 @@ public final class BackgroundManager implements IFileChangeListener, PropertyCha
             container.add(getGraphicMenu(), BorderLayout.CENTER);
             isGraphicMenu = true;
             director.getPluginToolsManager().setPluginToolsVisible(false);
+            container.doLayout();
             logger.fine("Setting graphic menu");
         }
     }

@@ -11,11 +11,13 @@ import org.jdesktop.application.ResourceMap;
 
 import java.io.IOException;
 import java.io.LineNumberReader;
-import java.io.PrintWriter;
 import java.io.Reader;
+import java.io.StringWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -28,12 +30,13 @@ public class ScriptRunner {
 
     private Connection connection;
 
-    private PrintWriter logWriter = new PrintWriter(System.out);
-    private PrintWriter errorLogWriter = new PrintWriter(System.err);
+    private StringWriter logWriter = new StringWriter();
+    private List<SQLScriptError> errorList = new LinkedList<SQLScriptError>();
 
     private String delimiter = DEFAULT_DELIMITER;
     private boolean fullLineDelimiter = false;
     private final CoreTask task;
+
 
     /**
      * Default constructor
@@ -56,17 +59,8 @@ public class ScriptRunner {
      *
      * @param logWriter - the new value of the logWriter property
      */
-    public void setLogWriter(PrintWriter logWriter) {
+    public void setLogWriter(StringWriter logWriter) {
         this.logWriter = logWriter;
-    }
-
-    /**
-     * Setter for errorLogWriter property
-     *
-     * @param errorLogWriter - the new value of the errorLogWriter property
-     */
-    public void setErrorLogWriter(PrintWriter errorLogWriter) {
-        this.errorLogWriter = errorLogWriter;
     }
 
     /**
@@ -113,10 +107,12 @@ public class ScriptRunner {
                     //Do nothing
                 } else if (!fullLineDelimiter && trimmedLine.endsWith(getDelimiter())
                         || fullLineDelimiter && trimmedLine.equals(getDelimiter())) {
+
                     command.append(line.substring(0, line.lastIndexOf(getDelimiter())));
                     command.append(" ");
-
+                    int commandIndex = getWriteIndex();
                     final String sql = command.toString();
+
                     println(sql);
                     logger.info("SQL:" + sql);
 
@@ -128,13 +124,20 @@ public class ScriptRunner {
                     } catch (SQLException e) {
                         final String msg = e.getMessage();
 
-                        wasError = true;
-                        println(map.getString("runSQL.errSeparator1"));
-                        printError(map.getString("runSQL.error", msg));
+                        final String sep1 = map.getString("runSQL.errSeparator1");
+                        println(sep1);
+                        print(map.getString("runSQL.error", msg.replaceAll("\\n", "\n" + sep1)));
+                        if (!msg.endsWith("\n"))
+                            println("");
                         logger.info("Error executing: " + msg);
                         println(map.getString("runSQL.errSeparator2"));
-                        if (AppPrefs.getProperty(UserProp.SQL_IGNORE_ORA00942, true) && msg.indexOf("ORA-00942") != -1) {
-                            wasError = false;
+                        int writeIndex = getWriteIndex();
+                        println("");
+                        if (AppPrefs.getProperty(UserProp.SQL_IGNORE_ORA00942, true) && e.getErrorCode() == 942 && !wasError) {
+
+                        } else {
+                            wasError = true;
+                            errorList.add(new SQLScriptError(commandIndex, writeIndex, e.getErrorCode(), msg));
                         }
                     }
 
@@ -152,7 +155,7 @@ public class ScriptRunner {
             }
             conn.commit();
         } catch (SQLException e) {
-            printlnError(map.getString("runSQL.error", e.getMessage()));
+            println(map.getString("runSQL.error", e.getMessage()));
             throw e;
         } finally {
             conn.rollback();
@@ -163,26 +166,28 @@ public class ScriptRunner {
         return wasError;
     }
 
+    public List<SQLScriptError> getErrorList() {
+        return errorList;
+    }
+
+    private void print(String s) {
+        if (logWriter != null) {
+            logWriter.write(s);
+        }
+    }
+
     private String getDelimiter() {
         return delimiter;
     }
 
 
-    private void println(Object o) {
+    private int getWriteIndex() {
+        return logWriter.getBuffer().length();
+    }
+
+    private void println(String s) {
         if (logWriter != null) {
-            logWriter.println(o);
-        }
-    }
-
-    private void printlnError(Object o) {
-        if (errorLogWriter != null) {
-            errorLogWriter.println(o);
-        }
-    }
-
-    private void printError(Object o) {
-        if (errorLogWriter != null) {
-            errorLogWriter.print(o);
+            logWriter.write(s + "\n");
         }
     }
 
@@ -190,10 +195,55 @@ public class ScriptRunner {
         if (logWriter != null) {
             logWriter.flush();
         }
-        if (errorLogWriter != null) {
-            errorLogWriter.flush();
-        }
     }
 
+    public static class SQLScriptError {
+        private int startPosition;
+        private final int endPosition;
+        private int errorCode;
+        private String errorText;
+
+
+        public SQLScriptError(int startPosition, int endPosition, int errorCode, String errorText) {
+            this.startPosition = startPosition;
+            this.endPosition = endPosition;
+            this.errorCode = errorCode;
+            this.errorText = errorText;
+        }
+
+
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            SQLScriptError that = (SQLScriptError) o;
+
+            return startPosition == that.startPosition;
+        }
+
+        public int hashCode() {
+            return startPosition;
+        }
+
+        public int getStartPosition() {
+            return startPosition;
+        }
+
+        public int getEndPosition() {
+            return endPosition;
+        }
+
+        public int getErrorCode() {
+            return errorCode;
+        }
+
+        public String getErrorText() {
+            return errorText;
+        }
+
+//        public boolean isOracle() {
+//            return errorText != null && errorText.indexOf("ORA-") != -1;
+//        }
+    }
 
 }

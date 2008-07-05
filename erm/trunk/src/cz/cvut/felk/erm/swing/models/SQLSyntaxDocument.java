@@ -47,7 +47,7 @@ public class SQLSyntaxDocument extends DefaultStyledDocument {
 
         oraErrorStyle = new SimpleAttributeSet();
         StyleConstants.setForeground(oraErrorStyle, Color.RED);
-        StyleConstants.setBold(oraErrorStyle, true);
+        StyleConstants.setItalic(oraErrorStyle, true);
 
         numberStyle = new SimpleAttributeSet();
         StyleConstants.setForeground(numberStyle, Color.BLUE);
@@ -348,6 +348,14 @@ public class SQLSyntaxDocument extends DefaultStyledDocument {
             endOffset = index - 1;
         }
 
+        if (index == -1)
+            index = content.indexOf("%%", startOffset);
+
+        if ((index > -1) && (index < endOffset)) {
+            doc.setCharacterAttributes(index, endOffset - index + 1, oraErrorStyle, false);
+            endOffset = index - 1;
+        }
+
         //  check for tokens
 
         checkForTokens(content, startOffset, endOffset);
@@ -476,9 +484,6 @@ public class SQLSyntaxDocument extends DefaultStyledDocument {
         if (isDataType(token)) {
             style = dataTypeStyle;
         }
-        if (isOraError(token)) {
-            style = oraErrorStyle;
-        }
         if (style != null)
             doc.setCharacterAttributes(startOffset, endOfToken - startOffset, style, false);
         return endOfToken + 1;
@@ -570,16 +575,17 @@ public class SQLSyntaxDocument extends DefaultStyledDocument {
         return types.contains(token);
     }
 
-    /*
-      *  Override for other languages
-      */
-    protected boolean isOraError(String token) {
-        return token.matches("(ora|ORA)-[0-9]{1,5}");
-    }
+//    /*
+//      *  Override for other languages
+//      */
+//    protected boolean isOraError(String token) {
+//        return token.matches("(ora|ORA)-[0-9]{1,5}");
+//    }
 
     /*
       *  Override for other languages
       */
+
     protected String getStartDelimiter() {
         return "/*";
     }
@@ -663,4 +669,6 @@ public class SQLSyntaxDocument extends DefaultStyledDocument {
         frame.setSize(800, 300);
         frame.setVisible(true);
     }
+
+
 }

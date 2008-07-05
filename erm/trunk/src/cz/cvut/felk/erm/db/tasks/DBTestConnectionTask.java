@@ -63,6 +63,9 @@ public class DBTestConnectionTask extends RemoteDBTask<ConnectionInfo, Void> {
 
     @Override
     protected void failed(Throwable cause) {
+        if (handleRuntimeException(cause))
+            return;
+
         connectionSettings.setTested(false);
         LogUtils.processException(logger, cause);
         Swinger.showErrorMessage(this.getResourceMap(), "errormessage_dbError", Utils.getExceptionMessage(cause));

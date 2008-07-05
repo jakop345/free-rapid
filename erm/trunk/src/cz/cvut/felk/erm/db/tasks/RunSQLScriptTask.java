@@ -13,7 +13,7 @@ import org.jdesktop.application.Application;
 import org.jdesktop.application.ResourceMap;
 
 import javax.swing.*;
-import java.io.PrintWriter;
+import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
@@ -25,13 +25,12 @@ import java.util.logging.Logger;
 /**
  * @author Ladislav Vitasek
  */
-public class RunSQLScriptTask extends RemoteDBTask<Boolean, Void> {
+public class RunSQLScriptTask extends RemoteDBTask<ScriptRunner, Void> {
     private final static Logger logger = Logger.getLogger(RunSQLScriptTask.class.getName());
     private final DBConnection connectionSettings;
     private String sqlScript;
     private Connection connection;
     private StringWriter output = new StringWriter();
-    private PrintWriter log = new PrintWriter(output);
 
 
     public RunSQLScriptTask(DBConnection connection, String sqlScript) {
@@ -44,7 +43,7 @@ public class RunSQLScriptTask extends RemoteDBTask<Boolean, Void> {
     }
 
     @Override
-    public Boolean doInBackground() throws Exception {
+    public ScriptRunner doInBackground() throws Exception {
         message("db_connectingTask");
         logger.info("db_connectingTask");
         ConnectionStatus status = new ConnectionStatus();
@@ -61,13 +60,12 @@ public class RunSQLScriptTask extends RemoteDBTask<Boolean, Void> {
         }
         stringReader = new StringReader(sqlScript);
         final ScriptRunner scriptRunner = new ScriptRunner(connection, this);
-        scriptRunner.setLogWriter(log);
-        scriptRunner.setErrorLogWriter(log);
+        scriptRunner.setLogWriter(output);
         boolean wasError = scriptRunner.runScript(stringReader);
         if (wasError)
             logger.info(reencodeLogFile());
         stringReader.close();
-        return wasError;
+        return scriptRunner;
     }
 
     private String reencodeLogFile() {
@@ -76,14 +74,18 @@ public class RunSQLScriptTask extends RemoteDBTask<Boolean, Void> {
 
     @Override
     protected void finished() {
-        log.close();
+        try {
+            output.close();
+        } catch (IOException e) {
+            LogUtils.processException(logger, e);
+        }
     }
 
     @Override
-    protected void succeeded(Boolean wasErrorInItem) {
+    protected void succeeded(ScriptRunner scriptRunner) {
         connectionSettings.setTested(true);
         final ResourceMap map = getResourceMap();
-        if (!wasErrorInItem)
+        if (scriptRunner.getErrorList().isEmpty())
             Swinger.showInformationDialog(map.getString("db_SQLScriptExecutedSuccesfully"));
         else {
             final int result = Swinger.showOptionDialog(map, JOptionPane.ERROR_MESSAGE, "db_SQLScriptFailed", new String[]{"closeButton", "db_SQLViewLogButton"});
@@ -98,6 +100,7 @@ public class RunSQLScriptTask extends RemoteDBTask<Boolean, Void> {
                     return;
                 }
                 dialog.setLog(reencodeLogFile());
+                dialog.setErrorList(scriptRunner.getErrorList());
                 app.prepareDialog(dialog, true);
             }
         }
@@ -118,6 +121,9 @@ public class RunSQLScriptTask extends RemoteDBTask<Boolean, Void> {
 
     @Override
     protected void failed(Throwable cause) {
+        if (handleRuntimeException(cause))
+            return;
+
         connectionSettings.setTested(false);
         LogUtils.processException(logger, cause);
         String message = Utils.getExceptionMessage(cause);

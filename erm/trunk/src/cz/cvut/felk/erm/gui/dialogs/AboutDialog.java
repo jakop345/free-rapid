@@ -45,7 +45,7 @@ public class AboutDialog extends AppDialog {
         buildGUI();
 
         final ActionMap actionMap = getActionMap();
-        btnOK.setAction(actionMap.get("okBtnAction"));
+        setAction(btnOK, ("okBtnAction"));
 
         pack();
         setResizable(false);
@@ -90,9 +90,9 @@ public class AboutDialog extends AppDialog {
         doClose();
     }
 
-    private ActionMap getActionMap() {
-        return Swinger.getActionMap(this.getClass(), this);
-    }
+//    private ActionMap getActionMap() {
+//        return Swinger.getActionMap(this.getClass(), this);
+//    }
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents

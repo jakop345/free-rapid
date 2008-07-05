@@ -68,17 +68,16 @@ public class ConnectDialog extends AppDialog {
         inject();
         buildGUI();
         buildModels();
-        final ActionMap actionMap = getActionMap();
-        btnOk.setAction(actionMap.get("okBtnAction"));
-        btnCancel.setAction(actionMap.get("cancelBtnAction"));
+        setAction(btnOk, "okBtnAction");
+        setAction(btnCancel, "cancelBtnAction");
         pack();
         setResizable(true);
         locateOnOpticalScreenCenter(this);
     }
 
-    private ActionMap getActionMap() {
-        return Swinger.getActionMap(this.getClass(), this);
-    }
+//    private ActionMap getActionMap() {
+//        return Swinger.getActionMap(this.getClass(), this);
+//    }
 
     private void buildModels() {
         model = new MyPresentationModel(null, new Trigger());

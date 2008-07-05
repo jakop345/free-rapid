@@ -6,7 +6,6 @@ import cz.cvut.felk.erm.gui.dialogs.AboutDialog;
 import cz.cvut.felk.erm.utilities.Browser;
 import org.jdesktop.application.Action;
 
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 /**
@@ -41,7 +40,8 @@ public class HelpActions {
 
     @Action
     public void contextDialogHelpAction(ActionEvent event) {
-        final String context = ((JComponent) event.getSource()).getClientProperty(CONTEXT_DIALOG_HELPPROPERTY).toString();
+        //final String context = ((JComponent) event.getSource()).getClientProperty(CONTEXT_DIALOG_HELPPROPERTY).toString();
+        final String context = event.getActionCommand();
         Browser.openBrowser(context);
     }
 

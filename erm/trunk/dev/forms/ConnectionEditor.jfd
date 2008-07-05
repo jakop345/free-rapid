@@ -121,6 +121,13 @@
                 <int>23</int> 
                </object> 
               </void> 
+              <void method="setProperty"> 
+               <string>name</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>btnConnectionAdd.name</string> 
+               </object> 
+              </void> 
               <void property="name"> 
                <string>btnConnectionAdd</string> 
               </void> 
@@ -145,6 +152,13 @@
                <object class="java.awt.Dimension"> 
                 <int>26</int> 
                 <int>23</int> 
+               </object> 
+              </void> 
+              <void method="setProperty"> 
+               <string>name</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>btnConnectionRemove.name</string> 
                </object> 
               </void> 
               <void property="name"> 
@@ -190,6 +204,13 @@
                <object class="java.awt.Dimension"> 
                 <int>26</int> 
                 <int>23</int> 
+               </object> 
+              </void> 
+              <void method="setProperty"> 
+               <string>name</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>btnConnectionCopy.name</string> 
                </object> 
               </void> 
               <void property="name"> 

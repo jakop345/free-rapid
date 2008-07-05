@@ -100,6 +100,11 @@ public class Swinger {
         return rm.getResourceMap(className);
     }
 
+    public static ResourceMap getResourceMap(final Class className, final Class stopClass) {
+        final ResourceManager rm = MainApp.getAContext().getResourceManager();
+        return rm.getResourceMap(className, stopClass);
+    }
+
     public static Action getAction(Object actionName) {
         final Action action = MainApp.getAContext().getActionMap().get(actionName);
         if (action == null) {
@@ -111,6 +116,10 @@ public class Swinger {
 
     public static ActionMap getActionMap(Class aClass, Object actionsObject) {
         return MainApp.getAContext().getActionMap(aClass, actionsObject);
+    }
+
+    public static ActionMap getActionMap(Object actionsObject) {
+        return MainApp.getAContext().getActionMap(actionsObject);
     }
 
     public static void showErrorMessage(ResourceMap map, final String message, final Object... args) {

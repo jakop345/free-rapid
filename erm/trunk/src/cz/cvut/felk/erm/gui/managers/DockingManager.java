@@ -59,6 +59,7 @@ public class DockingManager {
         } catch (IOException e) {
             LogUtils.processException(logger, e);
         }
+        logger.info("Renew docking Manager layout");
     }
 
     public ContentManagerUI getContentManagerUI() {

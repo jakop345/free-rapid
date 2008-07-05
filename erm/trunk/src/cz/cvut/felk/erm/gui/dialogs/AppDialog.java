@@ -1,6 +1,7 @@
 package cz.cvut.felk.erm.gui.dialogs;
 
 import cz.cvut.felk.erm.core.MainApp;
+import cz.cvut.felk.erm.gui.actions.HelpActions;
 import cz.cvut.felk.erm.swing.Swinger;
 import cz.cvut.felk.erm.swing.models.NaiiveComboModel;
 import cz.cvut.felk.erm.utilities.LogUtils;
@@ -21,9 +22,12 @@ import java.util.logging.Logger;
  */
 abstract class AppDialog extends JDialog {
     private final static Logger logger = Logger.getLogger(AppDialog.class.getName());
+
     public final static int RESULT_OK = 0;
     final static int RESULT_CANCEL = 1;
     int result = RESULT_CANCEL;
+    private ActionMap actionMap = null;
+
 //    private final boolean closeOnCancel = true;
 
     public AppDialog(Dialog owner, boolean modal) throws HeadlessException {
@@ -50,7 +54,6 @@ abstract class AppDialog extends JDialog {
         return null;
     }
 
-
     public MainApp getApp() {
         return MainApp.getInstance(MainApp.class);
     }
@@ -68,7 +71,7 @@ abstract class AppDialog extends JDialog {
 ////        action.setProxy(delegate);
 //
 //        okayButton.setAction(action);
-//        cancelButton.setAction(actionMap.get("cancel"));
+
     }
 
 
@@ -120,6 +123,7 @@ abstract class AppDialog extends JDialog {
         rootPane.registerKeyboardAction(okButtonListener, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
         stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.CTRL_MASK);//textarea
         rootPane.registerKeyboardAction(okButtonListener, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
+
         return rootPane;
     }
 
@@ -147,11 +151,12 @@ abstract class AppDialog extends JDialog {
     }
 
     protected ResourceMap getResourceMap() {
-        return Swinger.getResourceMap(this.getClass());
+        return Swinger.getResourceMap(this.getClass(), AppDialog.class);
     }
 
     /**
      * Locates the given component on the screen's center.
+     *
      * @param component the component to be centered
      */
     static void locateOnOpticalScreenCenter(Component component) {
@@ -197,4 +202,32 @@ abstract class AppDialog extends JDialog {
         return text.trim().length() > 0;
     }
 
+    protected Action setAction(AbstractButton button, String actionCode) {
+        final Action action = getActionMap().get(actionCode);
+        button.setAction(action);
+        return action;
+    }
+
+    protected ActionMap getActionMap() {
+        if (this.actionMap == null)
+            return actionMap = Swinger.getActionMap(this.getClass(), this);
+        else
+            return actionMap;
+    }
+
+    protected void setContextHelp(AbstractButton btnHelp, String contextHelp) {
+        final Action helpAction = getActionMap().get(HelpActions.CONTEXT_DIALOG_HELP_ACTION);
+        btnHelp.setAction(helpAction);
+        btnHelp.setActionCommand(contextHelp);
+        btnHelp.putClientProperty(HelpActions.CONTEXT_DIALOG_HELPPROPERTY, contextHelp);
+        rootPane.registerKeyboardAction(helpAction, contextHelp, (KeyStroke) helpAction.getValue(Action.ACCELERATOR_KEY), JComponent.WHEN_IN_FOCUSED_WINDOW);
+    }
+
+    protected void registerKeyboardAction(Action action) {
+        registerKeyboardAction(action, (KeyStroke) action.getValue(Action.ACCELERATOR_KEY));
+    }
+
+    protected void registerKeyboardAction(Action action, KeyStroke keystroke) {
+        rootPane.registerKeyboardAction(action, keystroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
+    }
 }
