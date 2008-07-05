@@ -73,7 +73,18 @@
             </void> 
             <void method="setProperty"> 
              <string>resizeWeight</string> 
-             <double>0.5</double> 
+             <double>0.01</double> 
+            </void> 
+            <void method="setProperty"> 
+             <string>preferredSize</string> 
+             <object class="java.awt.Dimension"> 
+              <int>650</int> 
+              <int>400</int> 
+             </object> 
+            </void> 
+            <void method="setProperty"> 
+             <string>name</string> 
+             <string>splitPane</string> 
             </void> 
             <void method="auxiliary"> 
              <void method="setProperty"> 
@@ -106,233 +117,6 @@
               <void method="add"> 
                <object class="com.jformdesigner.model.FormComponent"> 
                 <string>javax.swing.JTree</string> 
-                <void method="setProperty"> 
-                 <string>model</string> 
-                 <object class="javax.swing.tree.DefaultTreeModel"> 
-                  <object class="javax.swing.tree.DefaultMutableTreeNode"> 
-                   <void property="userObject"> 
-                    <string>(root)</string> 
-                   </void> 
-                   <void method="add"> 
-                    <object class="javax.swing.tree.DefaultMutableTreeNode"> 
-                     <void property="userObject"> 
-                      <string>sdfsdf</string> 
-                     </void> 
-                    </object> 
-                   </void> 
-                   <void method="add"> 
-                    <object class="javax.swing.tree.DefaultMutableTreeNode"> 
-                     <void property="userObject"> 
-                      <string>sdfs</string> 
-                     </void> 
-                    </object> 
-                   </void> 
-                   <void method="add"> 
-                    <object class="javax.swing.tree.DefaultMutableTreeNode"> 
-                     <void property="userObject"> 
-                      <string>sdf</string> 
-                     </void> 
-                    </object> 
-                   </void> 
-                   <void method="add"> 
-                    <object class="javax.swing.tree.DefaultMutableTreeNode"> 
-                     <void property="userObject"> 
-                      <string>sdf</string> 
-                     </void> 
-                    </object> 
-                   </void> 
-                   <void method="add"> 
-                    <object class="javax.swing.tree.DefaultMutableTreeNode"> 
-                     <void property="userObject"> 
-                      <string>sd</string> 
-                     </void> 
-                    </object> 
-                   </void> 
-                   <void method="add"> 
-                    <object class="javax.swing.tree.DefaultMutableTreeNode"> 
-                     <void property="userObject"> 
-                      <string>sdfs</string> 
-                     </void> 
-                    </object> 
-                   </void> 
-                   <void method="add"> 
-                    <object class="javax.swing.tree.DefaultMutableTreeNode"> 
-                     <void property="userObject"> 
-                      <string>dfs</string> 
-                     </void> 
-                    </object> 
-                   </void> 
-                   <void method="add"> 
-                    <object class="javax.swing.tree.DefaultMutableTreeNode"> 
-                     <void property="userObject"> 
-                      <string>df</string> 
-                     </void> 
-                    </object> 
-                   </void> 
-                   <void method="add"> 
-                    <object class="javax.swing.tree.DefaultMutableTreeNode"> 
-                     <void property="userObject"> 
-                      <string>sdf</string> 
-                     </void> 
-                    </object> 
-                   </void> 
-                   <void method="add"> 
-                    <object class="javax.swing.tree.DefaultMutableTreeNode"> 
-                     <void property="userObject"> 
-                      <string>sd</string> 
-                     </void> 
-                    </object> 
-                   </void> 
-                   <void method="add"> 
-                    <object class="javax.swing.tree.DefaultMutableTreeNode"> 
-                     <void property="userObject"> 
-                      <string>fs</string> 
-                     </void> 
-                    </object> 
-                   </void> 
-                   <void method="add"> 
-                    <object class="javax.swing.tree.DefaultMutableTreeNode"> 
-                     <void property="userObject"> 
-                      <string>dfs</string> 
-                     </void> 
-                    </object> 
-                   </void> 
-                   <void method="add"> 
-                    <object class="javax.swing.tree.DefaultMutableTreeNode"> 
-                     <void property="userObject"> 
-                      <string>df</string> 
-                     </void> 
-                    </object> 
-                   </void> 
-                   <void method="add"> 
-                    <object class="javax.swing.tree.DefaultMutableTreeNode"> 
-                     <void property="userObject"> 
-                      <string>sdf</string> 
-                     </void> 
-                    </object> 
-                   </void> 
-                   <void method="add"> 
-                    <object class="javax.swing.tree.DefaultMutableTreeNode"> 
-                     <void property="userObject"> 
-                      <string>sdf</string> 
-                     </void> 
-                    </object> 
-                   </void> 
-                   <void method="add"> 
-                    <object class="javax.swing.tree.DefaultMutableTreeNode"> 
-                     <void property="userObject"> 
-                      <string>s</string> 
-                     </void> 
-                    </object> 
-                   </void> 
-                   <void method="add"> 
-                    <object class="javax.swing.tree.DefaultMutableTreeNode"> 
-                     <void property="userObject"> 
-                      <string>dfs</string> 
-                     </void> 
-                    </object> 
-                   </void> 
-                   <void method="add"> 
-                    <object class="javax.swing.tree.DefaultMutableTreeNode"> 
-                     <void property="userObject"> 
-                      <string>df</string> 
-                     </void> 
-                    </object> 
-                   </void> 
-                   <void method="add"> 
-                    <object class="javax.swing.tree.DefaultMutableTreeNode"> 
-                     <void property="userObject"> 
-                      <string>sdf</string> 
-                     </void> 
-                    </object> 
-                   </void> 
-                   <void method="add"> 
-                    <object class="javax.swing.tree.DefaultMutableTreeNode"> 
-                     <void property="userObject"> 
-                      <string>s</string> 
-                     </void> 
-                    </object> 
-                   </void> 
-                   <void method="add"> 
-                    <object class="javax.swing.tree.DefaultMutableTreeNode"> 
-                     <void property="userObject"> 
-                      <string>df</string> 
-                     </void> 
-                    </object> 
-                   </void> 
-                   <void method="add"> 
-                    <object class="javax.swing.tree.DefaultMutableTreeNode"> 
-                     <void property="userObject"> 
-                      <string>sdf</string> 
-                     </void> 
-                    </object> 
-                   </void> 
-                   <void method="add"> 
-                    <object class="javax.swing.tree.DefaultMutableTreeNode"> 
-                     <void property="userObject"> 
-                      <string>sd</string> 
-                     </void> 
-                    </object> 
-                   </void> 
-                   <void method="add"> 
-                    <object class="javax.swing.tree.DefaultMutableTreeNode"> 
-                     <void property="userObject"> 
-                      <string>fs</string> 
-                     </void> 
-                    </object> 
-                   </void> 
-                   <void method="add"> 
-                    <object class="javax.swing.tree.DefaultMutableTreeNode"> 
-                     <void property="userObject"> 
-                      <string>df</string> 
-                     </void> 
-                    </object> 
-                   </void> 
-                   <void method="add"> 
-                    <object class="javax.swing.tree.DefaultMutableTreeNode"> 
-                     <void property="userObject"> 
-                      <string>sd</string> 
-                     </void> 
-                    </object> 
-                   </void> 
-                   <void method="add"> 
-                    <object class="javax.swing.tree.DefaultMutableTreeNode"> 
-                     <void property="userObject"> 
-                      <string>fs</string> 
-                     </void> 
-                    </object> 
-                   </void> 
-                   <void method="add"> 
-                    <object class="javax.swing.tree.DefaultMutableTreeNode"> 
-                     <void property="userObject"> 
-                      <string>df</string> 
-                     </void> 
-                    </object> 
-                   </void> 
-                   <void method="add"> 
-                    <object class="javax.swing.tree.DefaultMutableTreeNode"> 
-                     <void property="userObject"> 
-                      <string>sdf</string> 
-                     </void> 
-                    </object> 
-                   </void> 
-                   <void method="add"> 
-                    <object class="javax.swing.tree.DefaultMutableTreeNode"> 
-                     <void property="userObject"> 
-                      <string>s</string> 
-                     </void> 
-                    </object> 
-                   </void> 
-                   <void method="add"> 
-                    <object class="javax.swing.tree.DefaultMutableTreeNode"> 
-                     <void property="userObject"> 
-                      <string>df</string> 
-                     </void> 
-                    </object> 
-                   </void> 
-                  </object> 
-                 </object> 
-                </void> 
                 <void property="name"> 
                  <string>errorTree</string> 
                 </void> 
@@ -424,7 +208,7 @@
            <class>com.jgoodies.forms.layout.FormLayout</class> 
            <void method="setProperty"> 
             <string>$columnSpecs</string> 
-            <string>button, relgap, button, labelcompgap, pref:grow, button</string> 
+            <string>button, unrelgap, button, relgap, button, labelcompgap, pref:grow, button</string> 
            </void> 
            <void method="setProperty"> 
             <string>$rowSpecs</string> 
@@ -451,6 +235,32 @@
              <string>text</string> 
              <object class="com.jformdesigner.model.FormMessage"> 
               <null/> 
+              <string>btnHelp.text</string> 
+             </object> 
+            </void> 
+            <void property="name"> 
+             <string>btnHelp</string> 
+            </void> 
+           </object> 
+           <object class="com.jformdesigner.model.FormLayoutConstraints"> 
+            <class>com.jgoodies.forms.layout.CellConstraints</class> 
+            <void method="setProperty"> 
+             <string>gridX</string> 
+             <int>1</int> 
+            </void> 
+            <void method="setProperty"> 
+             <string>gridY</string> 
+             <int>1</int> 
+            </void> 
+           </object> 
+          </void> 
+          <void method="add"> 
+           <object class="com.jformdesigner.model.FormComponent"> 
+            <string>javax.swing.JButton</string> 
+            <void method="setProperty"> 
+             <string>text</string> 
+             <object class="com.jformdesigner.model.FormMessage"> 
+              <null/> 
               <string>btnCopyToClipboard.text</string> 
              </object> 
             </void> 
@@ -462,7 +272,7 @@
             <class>com.jgoodies.forms.layout.CellConstraints</class> 
             <void method="setProperty"> 
              <string>gridX</string> 
-             <int>1</int> 
+             <int>3</int> 
             </void> 
            </object> 
           </void> 
@@ -484,7 +294,7 @@
             <class>com.jgoodies.forms.layout.CellConstraints</class> 
             <void method="setProperty"> 
              <string>gridX</string> 
-             <int>3</int> 
+             <int>5</int> 
             </void> 
            </object> 
           </void> 
@@ -506,7 +316,7 @@
             <class>com.jgoodies.forms.layout.CellConstraints</class> 
             <void method="setProperty"> 
              <string>gridX</string> 
-             <int>6</int> 
+             <int>8</int> 
             </void> 
             <void method="setProperty"> 
              <string>gridY</string> 
@@ -530,7 +340,7 @@
            <class>com.jgoodies.forms.layout.FormLayout</class> 
            <void method="setProperty"> 
             <string>$columnSpecs</string> 
-            <string>default, labelcompgap, default, labelcompgap, default, labelcompgap, default</string> 
+            <string>default, labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, default, labelcompgap, default</string> 
            </void> 
            <void method="setProperty"> 
             <string>$rowSpecs</string> 
@@ -538,7 +348,7 @@
            </void> 
            <void method="setProperty"> 
             <string>$columnGroupIds</string> 
-            <string>1, 0, 0, 0, 0, 0, 0</string> 
+            <string>1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0</string> 
            </void> 
           </object> 
           <void method="setProperty"> 
@@ -573,13 +383,16 @@
             </void> 
             <void method="setProperty"> 
              <string>name</string> 
-             <object class="com.jformdesigner.model.FormMessage"> 
-              <null/> 
-              <string>btnPrevError.name</string> 
-             </object> 
+             <string>btnPrevError</string> 
             </void> 
             <void property="name"> 
              <string>btnPrevError</string> 
+            </void> 
+            <void method="auxiliary"> 
+             <void method="setProperty"> 
+              <string>JavaCodeGenerator.customCreateCode</string> 
+              <string>ComponentFactory.getToolbarButton();</string> 
+             </void> 
             </void> 
            </object> 
            <object class="com.jformdesigner.model.FormLayoutConstraints"> 
@@ -595,13 +408,16 @@
             </void> 
             <void method="setProperty"> 
              <string>name</string> 
-             <object class="com.jformdesigner.model.FormMessage"> 
-              <null/> 
-              <string>btnNextError.name</string> 
-             </object> 
+             <string>btnNextError</string> 
             </void> 
             <void property="name"> 
              <string>btnNextError</string> 
+            </void> 
+            <void method="auxiliary"> 
+             <void method="setProperty"> 
+              <string>JavaCodeGenerator.customCreateCode</string> 
+              <string>ComponentFactory.getToolbarButton();</string> 
+             </void> 
             </void> 
            </object> 
            <object class="com.jformdesigner.model.FormLayoutConstraints"> 
@@ -640,13 +456,16 @@
             </void> 
             <void method="setProperty"> 
              <string>name</string> 
-             <object class="com.jformdesigner.model.FormMessage"> 
-              <null/> 
-              <string>btnOraErrorCode.name</string> 
-             </object> 
+             <string>btnOraErrorCode</string> 
             </void> 
             <void property="name"> 
              <string>btnOraErrorCode</string> 
+            </void> 
+            <void method="auxiliary"> 
+             <void method="setProperty"> 
+              <string>JavaCodeGenerator.customCreateCode</string> 
+              <string>ComponentFactory.getToolbarButton();</string> 
+             </void> 
             </void> 
            </object> 
            <object class="com.jformdesigner.model.FormLayoutConstraints"> 
@@ -654,6 +473,82 @@
             <void method="setProperty"> 
              <string>gridX</string> 
              <int>7</int> 
+            </void> 
+           </object> 
+          </void> 
+          <void method="add"> 
+           <object class="com.jformdesigner.model.FormComponent"> 
+            <string>javax.swing.JSeparator</string> 
+            <void property="name"> 
+             <string>separator2</string> 
+            </void> 
+           </object> 
+           <object class="com.jformdesigner.model.FormLayoutConstraints"> 
+            <class>com.jgoodies.forms.layout.CellConstraints</class> 
+            <void method="setProperty"> 
+             <string>gridX</string> 
+             <int>9</int> 
+            </void> 
+           </object> 
+          </void> 
+          <void method="add"> 
+           <object class="com.jformdesigner.model.FormComponent"> 
+            <string>javax.swing.JToggleButton</string> 
+            <void method="setProperty"> 
+             <string>preferredSize</string> 
+             <object idref="Dimension0"/> 
+            </void> 
+            <void method="setProperty"> 
+             <string>name</string> 
+             <string>btnOraErrorCode</string> 
+            </void> 
+            <void property="name"> 
+             <string>btnSearch</string> 
+            </void> 
+            <void method="auxiliary"> 
+             <void method="setProperty"> 
+              <string>JavaCodeGenerator.customCreateCode</string> 
+              <string>ComponentFactory.getToolbarToggleButton();</string> 
+             </void> 
+            </void> 
+           </object> 
+           <object class="com.jformdesigner.model.FormLayoutConstraints"> 
+            <class>com.jgoodies.forms.layout.CellConstraints</class> 
+            <void method="setProperty"> 
+             <string>gridX</string> 
+             <int>11</int> 
+            </void> 
+           </object> 
+          </void> 
+          <void method="add"> 
+           <object class="com.jformdesigner.model.FormContainer"> 
+            <string>javax.swing.JPanel</string> 
+            <object class="com.jformdesigner.model.FormLayoutManager"> 
+             <class>com.jformdesigner.runtime.NullLayout</class> 
+             <void method="setProperty"> 
+              <string>autoSize</string> 
+              <boolean>false</boolean> 
+             </void> 
+            </object> 
+            <void method="auxiliary"> 
+             <void method="setProperty"> 
+              <string>JavaCodeGenerator.customCreateCode</string> 
+              <string>ComponentFactory.getToolbarFindBar(textArea);</string> 
+             </void> 
+            </void> 
+            <void property="name"> 
+             <string>findBar</string> 
+            </void> 
+           </object> 
+           <object class="com.jformdesigner.model.FormLayoutConstraints"> 
+            <class>com.jgoodies.forms.layout.CellConstraints</class> 
+            <void method="setProperty"> 
+             <string>gridX</string> 
+             <int>13</int> 
+            </void> 
+            <void method="setProperty"> 
+             <string>gridY</string> 
+             <int>1</int> 
             </void> 
            </object> 
           </void> 

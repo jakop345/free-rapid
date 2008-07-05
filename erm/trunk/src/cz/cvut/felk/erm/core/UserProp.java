@@ -23,4 +23,6 @@ public class UserProp {
     public static final String LAST_SAVELOG_FILENAME = "settings.lastSaveLogFileName";
     public static final String LAST_SAVELOG_FILTER = "settings.lastSaveLogFilter";
     public static final String LAST_USED_FOLDER_SAVELOG = "settings.lastUsedFolderSaveLog";
+    public static final String SHOWLOGDIALOG_SEARCHVISIBLE = "settings.showLogDialogSearchVisible";
+    public static final String FINDBAR_MATCHCASE = "settings.findBarMatchCase";
 }

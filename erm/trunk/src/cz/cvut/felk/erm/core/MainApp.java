@@ -136,7 +136,7 @@ public class MainApp extends SingleXFrameApplication {
 
         if (!openingFile)
             this.director.getBackgroundManager().setGraphicMenu();
-        if (AppPrefs.getProperty(FWProp.NEW_VERSION, true))
+        if (AppPrefs.getProperty(FWProp.NEW_VERSION, true) && !debug)
             startCheckNewVersion();
 
     }

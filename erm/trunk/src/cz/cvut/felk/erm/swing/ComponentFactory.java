@@ -3,6 +3,7 @@ package cz.cvut.felk.erm.swing;
 import com.jgoodies.forms.layout.ColumnSpec;
 import cz.cvut.felk.erm.swing.components.ColorComboBox;
 import cz.cvut.felk.erm.swing.components.EditorPaneLinkDetector;
+import cz.cvut.felk.erm.swing.components.FindBar;
 import cz.cvut.felk.erm.swing.models.NaiiveComboModel;
 import cz.cvut.felk.erm.swing.models.SQLSyntaxDocument;
 import cz.cvut.felk.erm.swing.painters.RiderCaret;
@@ -11,6 +12,7 @@ import org.jdesktop.swingx.JXDatePicker;
 
 import javax.swing.*;
 import javax.swing.text.*;
+import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.text.DateFormat;
@@ -72,6 +74,10 @@ public class ComponentFactory {
         return textArea;
     }
 
+    public static FindBar getToolbarFindBar(JTextComponent component) {
+        return new FindBar(component);
+    }
+
     public static JEditorPane getSQLArea() {
         final JEditorPane textArea = new JEditorPane();
         final EditorKit editorKit = new StyledEditorKit() {
@@ -90,6 +96,22 @@ public class ComponentFactory {
         final JTextField field = new JTextField();
         field.addFocusListener(ComponentFactory.getInstance().getFocusListener());
         return field;
+    }
+
+    public static JButton getToolbarButton() {
+        final JButton btn = new JButton();
+        btn.setFocusable(false);
+        btn.setPreferredSize(new Dimension(26, 23));
+        btn.setMinimumSize(btn.getPreferredSize());
+        return btn;
+    }
+
+    public static JToggleButton getToolbarToggleButton() {
+        final JToggleButton btn = new JToggleButton();
+        btn.setFocusable(false);
+        btn.setPreferredSize(new Dimension(26, 23));
+        btn.setMinimumSize(btn.getPreferredSize());
+        return btn;
     }
 
     public static JPasswordField getPasswordField() {

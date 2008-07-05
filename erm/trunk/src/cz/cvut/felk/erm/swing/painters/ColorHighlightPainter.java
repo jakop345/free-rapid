@@ -6,7 +6,7 @@ import java.awt.*;
 /**
  * @author Ladislav Vitasek
  */
-class ColorHighlightPainter extends DefaultHighlighter.DefaultHighlightPainter {
+public class ColorHighlightPainter extends DefaultHighlighter.DefaultHighlightPainter {
     private final Color color;
 
     public ColorHighlightPainter(final Color color) {

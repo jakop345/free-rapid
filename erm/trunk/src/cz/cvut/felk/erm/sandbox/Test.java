@@ -1,26 +1,27 @@
 package cz.cvut.felk.erm.sandbox;
 
-import org.jdesktop.swingx.JXLoginDialog;
-import org.jdesktop.swingx.JXLoginPane;
+import cz.cvut.felk.erm.swing.components.FindBar;
+import org.jdesktop.swingx.JXEditorPane;
 
 import javax.swing.*;
+import java.awt.*;
 
-/**
- * @author Ladislav Vitasek
- */
+
 public class Test {
-    public static void main(String[] args) {
 
-        final JFrame jFrame = new JFrame();
-        final JXLoginDialog dialog = new JXLoginDialog(jFrame);
-        final JXLoginPane jxLoginPane = new JXLoginPane(null);
-        dialog.setPanel(jxLoginPane);
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                dialog.setVisible(true);
-            }
-        });
-        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        jFrame.setVisible(true);
+    public static void main(String[] args) {
+        final JFrame frame = new JFrame("Test window");
+        final Container container = frame.getContentPane();
+        container.setLayout(new BorderLayout());
+        final JXEditorPane pane = new JXEditorPane();
+        final FindBar comp = new FindBar(pane);
+
+        container.add(comp, BorderLayout.NORTH);
+        container.add(new JScrollPane(pane), BorderLayout.CENTER);
+
+        frame.setSize(400, 250);
+        frame.setLocationRelativeTo(null);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
     }
 }

@@ -1,16 +1,23 @@
 package cz.cvut.felk.erm.gui.dialogs;
 
+import com.jgoodies.binding.beans.PropertyConnector;
+import com.jgoodies.binding.value.Trigger;
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.*;
+import cz.cvut.felk.erm.core.AppPrefs;
+import cz.cvut.felk.erm.core.UserProp;
 import cz.cvut.felk.erm.core.tasks.CoreTask;
 import cz.cvut.felk.erm.db.ScriptRunner;
+import cz.cvut.felk.erm.gui.MyPresentationModel;
 import cz.cvut.felk.erm.gui.dialogs.filechooser.OpenSaveDialogFactory;
 import cz.cvut.felk.erm.swing.ComponentFactory;
 import cz.cvut.felk.erm.swing.Swinger;
+import cz.cvut.felk.erm.swing.components.FindBar;
 import cz.cvut.felk.erm.utilities.LogUtils;
 import cz.cvut.felk.erm.utilities.Utils;
+import org.jdesktop.application.ApplicationAction;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.Task;
 import org.jdesktop.swinghelper.buttonpanel.JXButtonPanel;
@@ -22,6 +29,7 @@ import javax.swing.event.CaretListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.JTextComponent;
 import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
@@ -36,6 +44,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 
 /**
  * @author Ladislav Vitasek
@@ -51,6 +60,8 @@ public class ShowLogDialog extends AppDialog implements ClipboardOwner, TreeSele
     private static final String NEXT_ERROR_ENABLED_PROPERTY = "nextErrorEnabled";
     private int prevIndex;
     private int nextIndex;
+    private MyPresentationModel<Preferences> model;
+
 
     public ShowLogDialog(Frame owner) throws Exception {
         super(owner, true);
@@ -78,6 +89,20 @@ public class ShowLogDialog extends AppDialog implements ClipboardOwner, TreeSele
         StringSelection stringSelection = new StringSelection(textArea.getText());
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.setContents(stringSelection, this);
+    }
+
+    @org.jdesktop.application.Action
+    public void btnSearchAction() {
+
+        findBar.setVisible(!findBar.isVisible());
+        final boolean isVisible = findBar.isVisible();
+        if (isVisible) {
+            final JTextComponent field = findBar.getSearchField();
+            field.setText(textArea.getSelectedText());
+            Swinger.inputFocus(field);
+        }
+        ((ApplicationAction) btnSearch.getAction()).setSelected(isVisible);
+        AppPrefs.storeProperty(UserProp.SHOWLOGDIALOG_SEARCHVISIBLE, isVisible);
     }
 
     @org.jdesktop.application.Action(block = Task.BlockingScope.NONE)
@@ -153,7 +178,15 @@ public class ShowLogDialog extends AppDialog implements ClipboardOwner, TreeSele
 
     @Override
     public void doClose() {
-        //errorTree.setModel(null);
+        if (model != null) {
+            model.triggerCommit();
+
+            model.setBean(null);
+            model.release();
+        }
+        if (findBar != null) {
+            findBar.deinstall();
+        }
         super.doClose();
     }
 
@@ -179,9 +212,15 @@ public class ShowLogDialog extends AppDialog implements ClipboardOwner, TreeSele
         setAction(btnOK, "okBtnAction");
         setAction(btnCopyToClipboard, "btnCopyToClipboardAction");
         setAction(btnSaveLog, "btnSaveLogAction");
+        setAction(btnSearch, "btnSearchAction");
 
         final Action btnPrevErrorAction = setAction(btnPrevError, "btnPrevErrorAction");
         final Action btnNextErrorAction = setAction(btnNextError, "btnNextErrorAction");
+
+
+        setContextHelp(btnHelp, "http://www.google.com");
+
+        registerKeyboardAction(btnSearch.getAction());
 
         registerKeyboardAction(btnPrevErrorAction);
         registerKeyboardAction(btnPrevErrorAction, KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.ALT_DOWN_MASK));
@@ -198,7 +237,11 @@ public class ShowLogDialog extends AppDialog implements ClipboardOwner, TreeSele
     }
 
     private void setDefaultValues() {
+        findBar.setVisible(false);
 
+        if (AppPrefs.getProperty(UserProp.SHOWLOGDIALOG_SEARCHVISIBLE, false)) {
+            btnSearchAction();
+        }
     }
 
     private void buildGUI() {
@@ -236,6 +279,18 @@ public class ShowLogDialog extends AppDialog implements ClipboardOwner, TreeSele
         textArea.getCaret().setVisible(true);
         Swinger.inputFocus(textArea);
         Swinger.inputFocus(errorTree);
+
+        final JTextComponent searchField = findBar.getSearchField();
+        searchField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    btnSearchAction();
+                    searchField.setText("");
+                    Swinger.inputFocus(textArea);
+                }
+            }
+        });
     }
 
     private void caretPositionChanged(final int position) {
@@ -267,6 +322,14 @@ public class ShowLogDialog extends AppDialog implements ClipboardOwner, TreeSele
 
     private void buildModels() throws CloneNotSupportedException {
         bindBasicComponents();
+        model = new MyPresentationModel<Preferences>(null, new Trigger());
+
+//        btnSearch.getAction().putValue("selected", AppPrefs.getProperty(UserProp.SHOWLOGDIALOG_SEARCHVISIBLE, false));
+
+//        PropertyConnector connector = PropertyConnector.connect(btnSearch.getAction(), "selected", findBar, "visible");
+//        connector.updateProperty2();
+        PropertyConnector.connectAndUpdate(model.getBufferedPreferences(UserProp.FINDBAR_MATCHCASE, false), findBar.getMatchCaseAction(), "selected");
+
     }
 
     private void bindBasicComponents() {
@@ -276,10 +339,11 @@ public class ShowLogDialog extends AppDialog implements ClipboardOwner, TreeSele
     public void setErrorList(List<ScriptRunner.SQLScriptError> errorList) {
         this.errorList = errorList;
         final DefaultTreeModel treeModel = (DefaultTreeModel) errorTree.getModel();
-        final DefaultMutableTreeNode root = new DefaultMutableTreeNode(errorList.size() + " errors in total");
+        final ResourceMap map = getResourceMap();
+        final DefaultMutableTreeNode root = new DefaultMutableTreeNode(map.getString("errorTree_root", errorList.size()));
         int counter = 0;
         for (ScriptRunner.SQLScriptError error : errorList) {
-            final MutableTreeNode node = new DefaultMutableTreeNode(new TreeItem("#" + (++counter), error));
+            final MutableTreeNode node = new DefaultMutableTreeNode(new TreeItem(map.getString("errorTree_item", (++counter)), error));
             root.add(node);
         }
 
@@ -416,34 +480,34 @@ public class ShowLogDialog extends AppDialog implements ClipboardOwner, TreeSele
             return retValue;
         }
     }
-
+//        splitPane.setPreferredSize(new Dimension(650, 400));
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner Open Source Project license - unknown
-        ////ResourceBundle bundle = ResourceBundle.getBundle("ShowLogDialog");
+        //ResourceBundle bundle = ResourceBundle.getBundle("ShowLogDialog");
         JPanel dialogPane = new JPanel();
-        dialogPane.setName("dialogPane");
         JPanel contentPanel = new JPanel();
-        contentPanel.setName("contentPanel");
         JSplitPane splitPane = new JSplitPane();
-        splitPane.setName("splitPane");
         splitPane.setPreferredSize(new Dimension(650, 400));
         JScrollPane scrollPane2 = new JScrollPane();
-        scrollPane2.setName("scrollPane2");
         errorTree = new JTree();
-        errorTree.setName("errorTree");
+        splitPane.setName("splitPane");
         JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setName("scrollPane");
         textArea = ComponentFactory.getSQLArea();
-        textArea.setName("errorTree");
         JXButtonPanel buttonBar = new JXButtonPanel();
+        btnHelp = new JButton();
         btnCopyToClipboard = new JButton();
         btnSaveLog = new JButton();
         btnOK = new JButton();
         JPanel toolbarPanel = new JPanel();
-        btnPrevError = new JButton();
-        btnNextError = new JButton();
+        btnPrevError = ComponentFactory.getToolbarButton();
+        btnNextError = ComponentFactory.getToolbarButton();
+//		separator1 = new JSeparator();
+        btnOraErrorCode = ComponentFactory.getToolbarButton();
+//		separator2 = new JSeparator();
+        btnSearch = ComponentFactory.getToolbarToggleButton();
+        findBar = ComponentFactory.getToolbarFindBar(textArea);
         CellConstraints cc = new CellConstraints();
 
         //======== this ========
@@ -457,6 +521,7 @@ public class ShowLogDialog extends AppDialog implements ClipboardOwner, TreeSele
 
             //======== contentPanel ========
             {
+                contentPanel.setPreferredSize(new Dimension(530, 426));
                 contentPanel.setLayout(new BorderLayout());
 
                 //======== splitPane ========
@@ -466,11 +531,8 @@ public class ShowLogDialog extends AppDialog implements ClipboardOwner, TreeSele
 
                     //======== scrollPane2 ========
                     {
-
-                        //---- errorTree ----
-                        //errorTree.setPreferredSize(new Dimension(140, 64));
+                        scrollPane2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
                         scrollPane2.setViewportView(errorTree);
-                        //scrollPane2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
                     }
                     splitPane.setLeftComponent(scrollPane2);
 
@@ -492,6 +554,9 @@ public class ShowLogDialog extends AppDialog implements ClipboardOwner, TreeSele
             {
                 buttonBar.setBorder(Borders.BUTTON_BAR_GAP_BORDER);
 
+                //---- btnHelp ----
+                btnHelp.setName("btnHelp");
+
                 //---- btnCopyToClipboard ----
                 btnCopyToClipboard.setName("btnCopyToClipboard");
 
@@ -504,6 +569,8 @@ public class ShowLogDialog extends AppDialog implements ClipboardOwner, TreeSele
                 PanelBuilder buttonBarBuilder = new PanelBuilder(new FormLayout(
                         new ColumnSpec[]{
                                 ComponentFactory.BUTTON_COLSPEC,
+                                FormFactory.UNRELATED_GAP_COLSPEC,
+                                ComponentFactory.BUTTON_COLSPEC,
                                 FormFactory.RELATED_GAP_COLSPEC,
                                 ComponentFactory.BUTTON_COLSPEC,
                                 FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
@@ -512,9 +579,10 @@ public class ShowLogDialog extends AppDialog implements ClipboardOwner, TreeSele
                         },
                         RowSpec.decodeSpecs("pref")), buttonBar);
 
-                buttonBarBuilder.add(btnCopyToClipboard, cc.xy(1, 1));
-                buttonBarBuilder.add(btnSaveLog, cc.xy(3, 1));
-                buttonBarBuilder.add(btnOK, cc.xy(6, 1));
+                buttonBarBuilder.add(btnHelp, cc.xy(1, 1));
+                buttonBarBuilder.add(btnCopyToClipboard, cc.xy(3, 1));
+                buttonBarBuilder.add(btnSaveLog, cc.xy(5, 1));
+                buttonBarBuilder.add(btnOK, cc.xy(8, 1));
             }
             dialogPane.add(buttonBar, BorderLayout.SOUTH);
 
@@ -524,20 +592,46 @@ public class ShowLogDialog extends AppDialog implements ClipboardOwner, TreeSele
 
                 //---- btnPrevError ----
                 btnPrevError.setPreferredSize(new Dimension(26, 23));
+                btnPrevError.setName("btnPrevError");
 
                 //---- btnNextError ----
                 btnNextError.setPreferredSize(new Dimension(26, 23));
+                btnNextError.setName("btnNextError");
+
+                //---- btnOraErrorCode ----
+                btnOraErrorCode.setPreferredSize(new Dimension(26, 23));
+                btnOraErrorCode.setName("btnOraErrorCode");
+
+                //---- btnSearch ----
+                btnSearch.setPreferredSize(new Dimension(26, 23));
+                btnSearch.setName("btnSearch");
 
                 PanelBuilder toolbarPanelBuilder = new PanelBuilder(new FormLayout(
                         new ColumnSpec[]{
                                 FormFactory.DEFAULT_COLSPEC,
                                 FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+                                FormFactory.DEFAULT_COLSPEC,
+                                FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+                                FormFactory.DEFAULT_COLSPEC,
+                                FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+                                FormFactory.DEFAULT_COLSPEC,
+                                FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+                                FormFactory.DEFAULT_COLSPEC,
+                                FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+                                FormFactory.DEFAULT_COLSPEC,
+                                FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
                                 FormFactory.DEFAULT_COLSPEC
                         },
                         RowSpec.decodeSpecs("default")), toolbarPanel);
+                ((FormLayout) toolbarPanel.getLayout()).setColumnGroups(new int[][]{{1, 3, 7, 11}});
 
                 toolbarPanelBuilder.add(btnPrevError, cc.xy(1, 1));
                 toolbarPanelBuilder.add(btnNextError, cc.xy(3, 1));
+                toolbarPanelBuilder.add(Box.createHorizontalStrut(3), cc.xy(5, 1));
+                toolbarPanelBuilder.add(btnOraErrorCode, cc.xy(7, 1));
+                toolbarPanelBuilder.add(Box.createHorizontalStrut(3), cc.xy(9, 1));
+                toolbarPanelBuilder.add(btnSearch, cc.xy(11, 1));
+                toolbarPanelBuilder.add(findBar, cc.xy(13, 1));
             }
             dialogPane.add(toolbarPanel, BorderLayout.NORTH);
         }
@@ -554,6 +648,10 @@ public class ShowLogDialog extends AppDialog implements ClipboardOwner, TreeSele
     private JButton btnOK;
     private JButton btnPrevError;
     private JButton btnNextError;
+    private JButton btnHelp;
+    private JToggleButton btnSearch;
+    private JButton btnOraErrorCode;
+    private FindBar findBar;
 
     public void lostOwnership(Clipboard clipboard, Transferable contents) {
 
