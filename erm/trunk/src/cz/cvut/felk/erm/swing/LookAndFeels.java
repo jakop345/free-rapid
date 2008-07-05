@@ -15,8 +15,8 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.Properties;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,7 +32,7 @@ public final class LookAndFeels {
 
     private ClassLoader classLoader = null;
 
-    private Vector<LaF> availableLaFs = null;
+    private java.util.List<LaF> availableLaFs = null;
 
 
     public static LookAndFeels getInstance() {
@@ -89,17 +89,17 @@ public final class LookAndFeels {
     //    }
     // --Commented out by Inspection STOP (26.2.05 17:31)
 
-    public final Vector<LaF> getAvailableLookAndFeels() {
+    public final java.util.List<LaF> getAvailableLookAndFeels() {
         if (availableLaFs == null) {
-            availableLaFs = new Vector<LaF>(5);
+            availableLaFs = new ArrayList<LaF>();
             final Properties properties = Utils.loadProperties(Consts.LAFSDIRFILE, true);
             final String namePostfix = ".name", themePostfix = ".theme", opaquePostfix = ".opaque", alonePostfix = ".alone";
-            final String lafPrefix = "laf";
-            int counter = -1;
-            String className, lafID, theme, nameLaF, themeCode, themeName;
+            final String[] lafs = properties.getProperty("lafs", "").split("\\|");
+            String className, theme, nameLaF, themeCode, themeName;
             boolean opaque;
-            while ((className = properties.getProperty(lafID = (lafPrefix + ++counter))) != null) {
-                if (isPresent(className) != null) {
+            for (String lafID : lafs) {
+                className = properties.getProperty(lafID + ".class");
+                if (className != null && isPresent(className) != null) {
                     opaque = properties.getProperty(lafID + opaquePostfix, "true").equals("true");
                     int themeCounter = -1;
                     nameLaF = properties.getProperty(lafID + namePostfix, className);
