@@ -11,7 +11,7 @@ import java.util.Vector;
  *
  * @see cz.felk.cvut.erm.conceptual.beans.Entity
  */
-public abstract class EntC2R extends RelationC2R {
+abstract class EntC2R extends RelationC2R {
     /**
      * Used when creating primary keys.
      * See cz.omnicom.ermodeller.conc2rela.SchemaC2R#createPrimaryKeysC2R

@@ -3,7 +3,7 @@ package cz.felk.cvut.erm.conc2rela;
 /**
  * Superclass of all objects owned by <code>RelC2R</code>.
  */
-public abstract class ElementOfRelC2R extends ObjectC2R {
+abstract class ElementOfRelC2R extends ObjectC2R {
     /**
      * Owner.
      */

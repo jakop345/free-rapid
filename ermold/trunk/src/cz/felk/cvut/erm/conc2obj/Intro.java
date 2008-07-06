@@ -7,7 +7,7 @@ import javax.swing.*;
 /**
  * Commands representing drop table command.
  */
-public class Intro extends CommandObj {
+class Intro extends CommandObj {
 
 /**
  * Constructor.

@@ -7,7 +7,7 @@ import cz.felk.cvut.erm.conc2obj.interfaces.SubTreeProducerObj;
 /**
  * Superclass of SQL commands.
  */
-public abstract class CommandObj implements SubObjProducer, SubTreeProducerObj {
+abstract class CommandObj implements SubObjProducer, SubTreeProducerObj {
     /**
      * @return javax.swing.Icon
      */

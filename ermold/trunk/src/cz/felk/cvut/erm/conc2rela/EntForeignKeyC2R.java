@@ -13,7 +13,7 @@ import java.util.Vector;
  *
  * @see cz.felk.cvut.erm.conc2rela.SchemaC2R#createPrimaryKeysC2R
  */
-public class EntForeignKeyC2R extends ElementOfRelationC2R implements SQLConstraintProducer {
+class EntForeignKeyC2R extends ElementOfRelationC2R implements SQLConstraintProducer {
     /**
      * Home atributes.
      */

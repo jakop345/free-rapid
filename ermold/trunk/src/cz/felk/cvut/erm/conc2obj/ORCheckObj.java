@@ -11,7 +11,7 @@ import java.util.Vector;
 /**
  * Type of check which compose parts by OR.
  */
-public class ORCheckObj implements SubObjProducer, SubTreeProducerObj {
+class ORCheckObj implements SubObjProducer, SubTreeProducerObj {
     /**
      * Parts of check.
      *

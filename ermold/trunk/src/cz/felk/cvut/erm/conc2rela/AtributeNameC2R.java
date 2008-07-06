@@ -10,7 +10,7 @@ import java.util.Vector;
  * subnumbers - parallel cardinalities,
  * name.
  */
-public class AtributeNameC2R extends NameC2R {
+class AtributeNameC2R extends NameC2R {
     private Vector prefixes = new Vector();
     private Vector subNumbers = new Vector();
 

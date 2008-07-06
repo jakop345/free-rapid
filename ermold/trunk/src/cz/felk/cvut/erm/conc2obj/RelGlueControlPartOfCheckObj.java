@@ -6,7 +6,7 @@ import cz.felk.cvut.erm.conc2rela.RelC2R;
  * Part of check which enforces constraints for corresponding
  * conceptual relation in glued relation.
  */
-public class RelGlueControlPartOfCheckObj extends GlueControlPartOfCheckObj {
+class RelGlueControlPartOfCheckObj extends GlueControlPartOfCheckObj {
     /**
      * Corresponding relational relation.
      */

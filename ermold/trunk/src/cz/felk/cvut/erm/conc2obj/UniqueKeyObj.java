@@ -8,7 +8,7 @@ import javax.swing.*;
 /**
  * SQL unique key.
  */
-public class UniqueKeyObj extends ConstraintObj {
+class UniqueKeyObj extends ConstraintObj {
     /**
      * Relational unique key
      *

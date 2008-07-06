@@ -9,7 +9,7 @@ import java.util.Vector;
 /**
  * Superclass of commands which include rows (columns, checks, constraints).
  */
-public abstract class CommandWithRowsObj extends CommandObj {
+abstract class CommandWithRowsObj extends CommandObj {
     /**
      * All rows
      *

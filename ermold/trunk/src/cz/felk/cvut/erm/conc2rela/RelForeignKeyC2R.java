@@ -12,7 +12,7 @@ import java.util.Vector;
 /**
  * Foreign key created from cardinalities.
  */
-public class RelForeignKeyC2R extends ElementOfRelC2R implements SQLConstraintProducer {
+class RelForeignKeyC2R extends ElementOfRelC2R implements SQLConstraintProducer {
     /**
      * Corresponding cardinality.
      */

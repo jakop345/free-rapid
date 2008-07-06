@@ -5,7 +5,7 @@ import java.util.Vector;
 /**
  * Record about gluing/not gluing the relation.
  */
-public class GluedRelationRecord {
+class GluedRelationRecord {
     /**
      * Glued/non glued relation.
      */

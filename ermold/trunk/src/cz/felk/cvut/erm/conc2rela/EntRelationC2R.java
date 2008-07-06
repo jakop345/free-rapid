@@ -6,7 +6,7 @@ import cz.felk.cvut.erm.conceptual.beans.Entity;
 /**
  * Relation created from conceptual entity.
  */
-public class EntRelationC2R extends EntC2R {
+class EntRelationC2R extends EntC2R {
     /**
      * EntRelation constructor.
      *

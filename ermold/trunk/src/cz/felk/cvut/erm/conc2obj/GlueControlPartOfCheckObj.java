@@ -9,7 +9,7 @@ import java.util.Vector;
 /**
  * Part of check - AND condition of groups.
  */
-public class GlueControlPartOfCheckObj extends PartOfCheckObj {
+class GlueControlPartOfCheckObj extends PartOfCheckObj {
     /**
      * Groups of controlled atributes.
      *

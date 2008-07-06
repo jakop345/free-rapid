@@ -12,7 +12,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
  *
  * @see cz.felk.cvut.erm.conceptual.beans.ConceptualObject
  */
-public abstract class ConceptualObjectValidationError extends ValidationError {
+abstract class ConceptualObjectValidationError extends ValidationError {
     /**
      * Held object in a holder
      */

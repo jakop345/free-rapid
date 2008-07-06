@@ -24,7 +24,7 @@ public class ObjDialog extends JDialog implements java.awt.event.ActionListener,
     private JScrollPane ivjJScrollPane2 = null;
     private JButton ivjCloseButton = null;
     private JPanel ivjDownPanel = null;
-    private SchemaObj ivjSchemaObj = null;
+    private SchemaObjSQL ivjSchemaObjSQL = null;
     private JTree ivjSQLTree = null;
     private JTextArea ivjJTextArea1 = null;
     private JPanel ivjJPanel1 = null;
@@ -53,9 +53,9 @@ public class ObjDialog extends JDialog implements java.awt.event.ActionListener,
      *
      * @param owner java.awt.Frame
      */
-    public ObjDialog(Frame owner, SchemaObj aSchemaObj) {
+    public ObjDialog(Frame owner, SchemaObjSQL aSchemaObjSQL) {
         super(owner);
-        setSchemaObj(aSchemaObj);
+        setSchemaObj(aSchemaObjSQL);
         initialize();
     }
 
@@ -597,10 +597,10 @@ public class ObjDialog extends JDialog implements java.awt.event.ActionListener,
      * @return cz.omnicom.ermodeller.sql.SchemaSQL
      */
 /* WARNING: THIS METHOD WILL BE REGENERATED. */
-    public SchemaObj getSchemaObj() {
-        if (ivjSchemaObj == null) {
+    public SchemaObjSQL getSchemaObj() {
+        if (ivjSchemaObjSQL == null) {
             try {
-                ivjSchemaObj = new cz.felk.cvut.erm.conc2obj.SchemaObj();
+                ivjSchemaObjSQL = new SchemaObjSQL();
                 // user code begin {1}
                 // user code end
             } catch (java.lang.Throwable ivjExc) {
@@ -609,7 +609,7 @@ public class ObjDialog extends JDialog implements java.awt.event.ActionListener,
                 handleException(ivjExc);
             }
         }
-        return ivjSchemaObj;
+        return ivjSchemaObjSQL;
     }
 
     /**
@@ -783,11 +783,11 @@ public class ObjDialog extends JDialog implements java.awt.event.ActionListener,
         PrintWriter dataOutStream;
 
         Object object = getRoot().getUserObject();
-        SchemaObj schemaSQL;
+        SchemaObjSQL schemaSQLSQL;
         String sql;
-        if (object instanceof SchemaObj) {
-            schemaSQL = (SchemaObj) object;
-            sql = schemaSQL.createSQL();
+        if (object instanceof SchemaObjSQL) {
+            schemaSQLSQL = (SchemaObjSQL) object;
+            sql = schemaSQLSQL.createSQL();
             if (sql.length() <= 0) {
                 String[] options = {"Yes", "No"};
                 int option;
@@ -854,11 +854,11 @@ public class ObjDialog extends JDialog implements java.awt.event.ActionListener,
      */
     public void sendButton_ActionPerformed(java.awt.event.ActionEvent actionEvent) {
         Object object = getRoot().getUserObject();
-        SchemaObj schemaSQL;
+        SchemaObjSQL schemaSQLSQL;
         String sql;
-        if (object instanceof SchemaObj) {
-            schemaSQL = (SchemaObj) object;
-            sql = schemaSQL.createSQL();
+        if (object instanceof SchemaObjSQL) {
+            schemaSQLSQL = (SchemaObjSQL) object;
+            sql = schemaSQLSQL.createSQL();
             connection.send(sql);
         }
     }
@@ -892,9 +892,9 @@ public class ObjDialog extends JDialog implements java.awt.event.ActionListener,
      * @param aErrorLogList cz.omnicom.ermodeller.errorlog.ErrorLogList
      * @see #createTree
      */
-    public synchronized void setSchemaObj(SchemaObj aSchemaObj) {
+    public synchronized void setSchemaObj(SchemaObjSQL aSchemaObjSQL) {
         // Sets errorloglist
-        ivjSchemaObj = (aSchemaObj == null) ? new SchemaObj() : aSchemaObj;
+        ivjSchemaObjSQL = (aSchemaObjSQL == null) ? new SchemaObjSQL() : aSchemaObjSQL;
         // Creates and inserts new error tree
         createTree();
     }

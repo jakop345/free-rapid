@@ -8,7 +8,7 @@ import javax.swing.*;
 /**
  * Column in the table - atribute.
  */
-public class ObjectTypeColumnObj extends RowObj {
+class ObjectTypeColumnObj extends RowObj {
 
     private UserTypeStorage typeStorage = null;
 

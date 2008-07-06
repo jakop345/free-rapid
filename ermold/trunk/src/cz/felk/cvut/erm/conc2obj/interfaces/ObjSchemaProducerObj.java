@@ -1,6 +1,6 @@
 package cz.felk.cvut.erm.conc2obj.interfaces;
 
-import cz.felk.cvut.erm.conc2obj.SchemaObj;
+import cz.felk.cvut.erm.conc2obj.SchemaObjSQL;
 
 /**
  * Object, which creates SQL schema (sql commands)
@@ -14,5 +14,5 @@ public interface ObjSchemaProducerObj {
      *
      * @return cz.omnicom.ermodeller.sql.SchemaSQL
      */
-    public SchemaObj createSchemaObj();
+    public SchemaObjSQL createSchemaObj();
 }

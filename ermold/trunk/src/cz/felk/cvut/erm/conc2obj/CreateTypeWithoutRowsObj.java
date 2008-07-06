@@ -7,11 +7,11 @@ public class CreateTypeWithoutRowsObj extends CreateTypeObj {
     /**
      * Corresponding data type.
      */
-    DataType dataType = null;
+    private DataType dataType = null;
     /**
      * name of the type
      */
-    String name = null;
+    private String name = null;
 
     /**
      * Constructor.

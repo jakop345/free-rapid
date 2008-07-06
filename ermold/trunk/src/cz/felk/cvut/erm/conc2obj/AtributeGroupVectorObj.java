@@ -13,7 +13,7 @@ import java.util.Vector;
  * Superclass for groups of atributes with the same controlled property.
  * For examaple that each of them must be NULL.
  */
-public abstract class AtributeGroupVectorObj implements SubObjProducer, SubTreeProducerObj {
+abstract class AtributeGroupVectorObj implements SubObjProducer, SubTreeProducerObj {
 
     /**
      * Holder af atribute.

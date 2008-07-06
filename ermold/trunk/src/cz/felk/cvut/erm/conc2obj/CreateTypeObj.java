@@ -8,7 +8,7 @@ import javax.swing.*;
 /**
  * Commands representing drop table command.
  */
-public abstract class CreateTypeObj extends CommandObj {
+abstract class CreateTypeObj extends CommandObj {
     /**
      * Corresponding data type.
      */

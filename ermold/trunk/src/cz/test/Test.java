@@ -1,6 +1,6 @@
 package cz.test;
 
-import cz.green.ermodeller.DesktopContainer;
+import cz.felk.cvut.erm.ermodeller.DesktopContainer;
 
 import javax.swing.*;
 import java.awt.*;

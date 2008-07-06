@@ -9,7 +9,7 @@ import cz.felk.cvut.erm.conc2obj.interfaces.SubTreeProducerObj;
  *
  * @see cz.felk.cvut.erm.sql.CommandSQL
  */
-public abstract class RowObj implements SubObjProducer, SubTreeProducerObj {
+abstract class RowObj implements SubObjProducer, SubTreeProducerObj {
     /**
      * @return javax.swing.Icon
      */

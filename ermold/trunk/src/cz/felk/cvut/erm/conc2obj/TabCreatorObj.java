@@ -5,7 +5,7 @@ package cz.felk.cvut.erm.conc2obj;
  *
  * @see cz.felk.cvut.erm.sql.interfaces.SubSQLProducer#createSubSQL
  */
-public class TabCreatorObj {
+class TabCreatorObj {
     /**
      * @param countTabs int
      * @return java.lang.String

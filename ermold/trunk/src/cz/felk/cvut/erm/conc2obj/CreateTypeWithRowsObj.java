@@ -11,13 +11,13 @@ public class CreateTypeWithRowsObj extends CreateTypeObj {
     /**
      * Corresponding data type.
      */
-    ObjectDataType objectDataType = null;
+    private ObjectDataType objectDataType = null;
     /**
      * name of the type
      */
-    String name = null;
+    private String name = null;
 
-    Vector rows = null;
+    private Vector rows = null;
 
     /**
      * Constructor.

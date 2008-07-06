@@ -409,38 +409,38 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
      *
      * @return cz.omnicom.ermodeller.conc2rela.SchemaObj
      */
-    public SchemaObj createSchemaObj() {
-        SchemaObj schemaObj = new SchemaObj(this);
+    public SchemaObjSQL createSchemaObj() {
+        SchemaObjSQL schemaObjSQL = new SchemaObjSQL(this);
 
         if (generateDrop)
             for (Enumeration<UserTypeStorage> types = typesVector.elements(); types.hasMoreElements();) {
                 UserTypeStorage uts = types.nextElement();
-                schemaObj.addDropTypeObj(new DropTypeObj(uts.getTypeName()));
+                schemaObjSQL.addDropTypeObj(new DropTypeObj(uts.getTypeName()));
             }
         for (Enumeration<UserTypeStorage> types = typesVector.elementsForCreating(UserTypeStorageVector.DIRECT); types.hasMoreElements();) {
             UserTypeStorage uts = types.nextElement();
             if (uts.getDataType() instanceof cz.felk.cvut.erm.datatype.ObjectDataType)
-                schemaObj.addCreateTypeObj(new CreateTypeWithRowsObj((cz.felk.cvut.erm.datatype.ObjectDataType) uts.getDataType(), uts.getTypeName()));
+                schemaObjSQL.addCreateTypeObj(new CreateTypeWithRowsObj((cz.felk.cvut.erm.datatype.ObjectDataType) uts.getDataType(), uts.getTypeName()));
             else
-                schemaObj.addCreateTypeObj(new CreateTypeWithoutRowsObj(uts.getDataType(), uts.getTypeName()));
+                schemaObjSQL.addCreateTypeObj(new CreateTypeWithoutRowsObj(uts.getDataType(), uts.getTypeName()));
         }
         for (Enumeration<UserTypeStorage> types = typesVector.elementsForCreating(UserTypeStorageVector.INDIRECT); types.hasMoreElements();) {
             UserTypeStorage uts = types.nextElement();
-            schemaObj.addCreateIncompleteTypeObj(new CreateIncompleteTypeObj(uts.getTypeName()));
+            schemaObjSQL.addCreateIncompleteTypeObj(new CreateIncompleteTypeObj(uts.getTypeName()));
             if (uts.getDataType() instanceof cz.felk.cvut.erm.datatype.ObjectDataType)
-                schemaObj.addCreateTypeObj(new CreateTypeWithRowsObj((cz.felk.cvut.erm.datatype.ObjectDataType) uts.getDataType(), uts.getTypeName()));
+                schemaObjSQL.addCreateTypeObj(new CreateTypeWithRowsObj((cz.felk.cvut.erm.datatype.ObjectDataType) uts.getDataType(), uts.getTypeName()));
             else
-                schemaObj.addCreateTypeObj(new CreateTypeWithoutRowsObj(uts.getDataType(), uts.getTypeName()));
+                schemaObjSQL.addCreateTypeObj(new CreateTypeWithoutRowsObj(uts.getDataType(), uts.getTypeName()));
         }
         for (Enumeration<RelationC2R> relations = getRelationsC2R().elements(); relations.hasMoreElements();) {
 
             RelationC2R relation = relations.nextElement();
             if (generateDrop) {
-                schemaObj.addDropCommandObj(relation.createDropCommandObj());
-                schemaObj.addDropTypeObj(new DropTypeObj(relation.getNameC2R() + "_t"));
+                schemaObjSQL.addDropCommandObj(relation.createDropCommandObj());
+                schemaObjSQL.addDropTypeObj(new DropTypeObj(relation.getNameC2R() + "_t"));
             }
-            schemaObj.addCommandTypeObj(relation.createCommandTypeObj(typesVector));
-            schemaObj.addCreateCommandObj(relation.createCreateCommandObj(typesVector));
+            schemaObjSQL.addCommandTypeObj(relation.createCommandTypeObj(typesVector));
+            schemaObjSQL.addCreateCommandObj(relation.createCreateCommandObj(typesVector));
 
             for (Enumeration<AtributeC2R> atributes = relation.getAtributesC2R().elements(); atributes.hasMoreElements();) {
                 boolean isForeign = false;
@@ -465,16 +465,16 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
                 if (isForeign && !isRel) {
                     AlterReferenceType c = new AlterReferenceType(atribute);
                     AlterAddCommandObj a = new AlterAddCommandObj(relation, atribute);
-                    schemaObj.addAlterAddCommandObj(a);
-                    schemaObj.addReferenceType(c);
+                    schemaObjSQL.addAlterAddCommandObj(a);
+                    schemaObjSQL.addReferenceType(c);
                 } else if (isForeign) {
                     AlterAddCommandObj a = new AlterAddCommandObj(relation, atribute);
-                    schemaObj.addAlterAddCommandObj(a);
+                    schemaObjSQL.addAlterAddCommandObj(a);
                 }
             }
 
         }
-        return schemaObj;
+        return schemaObjSQL;
     }
 
     /**

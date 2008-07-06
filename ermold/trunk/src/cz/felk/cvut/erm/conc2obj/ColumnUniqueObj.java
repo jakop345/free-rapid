@@ -9,7 +9,7 @@ import java.util.Vector;
 /**
  * Column in the table - atribute.
  */
-public class ColumnUniqueObj extends RowObj {
+class ColumnUniqueObj extends RowObj {
     /**
      * Atribute describing the column
      *

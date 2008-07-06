@@ -12,7 +12,7 @@ import java.util.Vector;
 /**
  * SQL schema with SQL commands.
  */
-public class SchemaObj implements SubObjProducer, SubTreeProducerObj {
+public class SchemaObjSQL implements SubObjProducer, SubTreeProducerObj {
     /**
      * Corresponding relational schema.
      *
@@ -22,40 +22,40 @@ public class SchemaObj implements SubObjProducer, SubTreeProducerObj {
     /**
      * Commands for creating tables.
      */
-    private Vector createCommands = new Vector();
+    private Vector<CreateCommandObj> createCommands = new Vector<CreateCommandObj>();
     /**
      * Commands for altering tables.
      */
-    private Vector alterAddCommands = new Vector();
+    private Vector<AlterAddCommandObj> alterAddCommands = new Vector<AlterAddCommandObj>();
     /**
      * Commands for dropping tables.
      */
-    private Vector dropCommands = new Vector();
+    private Vector<DropCommandObj> dropCommands = new Vector<DropCommandObj>();
     /**
      * Commands for creating types
      */
-    private Vector createTypes = new Vector();
+    private Vector<CreateTypeObj> createTypes = new Vector<CreateTypeObj>();
     /**
      * Commands for creating incomplete types
      */
-    private Vector createIncompleteTypes = new Vector();
+    private Vector<CreateIncompleteTypeObj> createIncompleteTypes = new Vector<CreateIncompleteTypeObj>();
     /**
      * Commands for dropping types
      */
-    private Vector dropTypes = new Vector();
+    private Vector<DropTypeObj> dropTypes = new Vector<DropTypeObj>();
     /**
      * Commands for object types
      */
-    private Vector createCommandTypesObj = new Vector();
+    private Vector<CreateCommandTypeObj> createCommandTypesObj = new Vector<CreateCommandTypeObj>();
 
-    private Vector alterReferenceTypes = new Vector();
+    private Vector<AlterReferenceType> alterReferenceTypes = new Vector<AlterReferenceType>();
 
     private Intro intro = null;
 
     /**
      * Constructor.
      */
-    public SchemaObj() {
+    public SchemaObjSQL() {
     }
 
     /**
@@ -63,7 +63,7 @@ public class SchemaObj implements SubObjProducer, SubTreeProducerObj {
      *
      * @param aSchemaC2R Corresponding relational schema to SQL schema
      */
-    public SchemaObj(SchemaC2R aSchemaC2R) {
+    public SchemaObjSQL(SchemaC2R aSchemaC2R) {
         schemaC2R = aSchemaC2R;
     }
 
@@ -190,36 +190,36 @@ public class SchemaObj implements SubObjProducer, SubTreeProducerObj {
         String result = "";
 
         result += intro.toString() + "\n";
-        for (Enumeration elements = getDropCommands().elements(); elements.hasMoreElements();) {
-            DropCommandObj commandSQL = (DropCommandObj) elements.nextElement();
+        for (Enumeration<DropCommandObj> elements = getDropCommands().elements(); elements.hasMoreElements();) {
+            DropCommandObj commandSQL = elements.nextElement();
             result += commandSQL.createSubSQL(countTabs) + ";\n" + ((elements.hasMoreElements()) ? "" : "\n");
         }
-        for (Enumeration elements = getDropTypes().elements(); elements.hasMoreElements();) {
-            DropTypeObj commandSQL = (DropTypeObj) elements.nextElement();
+        for (Enumeration<DropTypeObj> elements = getDropTypes().elements(); elements.hasMoreElements();) {
+            DropTypeObj commandSQL = elements.nextElement();
             result += commandSQL.createSubSQL(countTabs) + ";\n" + ((elements.hasMoreElements()) ? "" : "\n");
         }
-        for (Enumeration elements = getCreateIncompleteTypes().elements(); elements.hasMoreElements();) {
-            CreateIncompleteTypeObj commandSQL = (CreateIncompleteTypeObj) elements.nextElement();
+        for (Enumeration<CreateIncompleteTypeObj> elements = getCreateIncompleteTypes().elements(); elements.hasMoreElements();) {
+            CreateIncompleteTypeObj commandSQL = elements.nextElement();
             result += commandSQL.createSubSQL(countTabs) + ";\n/\n" + ((elements.hasMoreElements()) ? "" : "\n");
         }
-        for (Enumeration elements = getCreateTypes().elements(); elements.hasMoreElements();) {
-            CreateTypeObj commandSQL = (CreateTypeObj) elements.nextElement();
+        for (Enumeration<CreateTypeObj> elements = getCreateTypes().elements(); elements.hasMoreElements();) {
+            CreateTypeObj commandSQL = elements.nextElement();
             result += commandSQL.createSubSQL(countTabs) + ";\n/\n" + ((elements.hasMoreElements()) ? "" : "\n");
         }
-        for (Enumeration elements = getCommandTypesObj().elements(); elements.hasMoreElements();) {
-            CreateCommandTypeObj commandSQL = (CreateCommandTypeObj) elements.nextElement();
+        for (Enumeration<CreateCommandTypeObj> elements = getCommandTypesObj().elements(); elements.hasMoreElements();) {
+            CreateCommandTypeObj commandSQL = elements.nextElement();
             result += commandSQL.createSubSQL(countTabs) + ";\n/\n" + ((elements.hasMoreElements()) ? "" : "\n");
         }
-        for (Enumeration elements = getReferenceTypesObj().elements(); elements.hasMoreElements();) {
-            AlterReferenceType commandSQL = (AlterReferenceType) elements.nextElement();
+        for (Enumeration<AlterReferenceType> elements = getReferenceTypesObj().elements(); elements.hasMoreElements();) {
+            AlterReferenceType commandSQL = elements.nextElement();
             result += commandSQL.createSubSQL(countTabs) + ";\n" + ((elements.hasMoreElements()) ? "" : "\n");
         }
-        for (Enumeration elements = getCreateCommands().elements(); elements.hasMoreElements();) {
-            CreateCommandObj commandSQL = (CreateCommandObj) elements.nextElement();
+        for (Enumeration<CreateCommandObj> elements = getCreateCommands().elements(); elements.hasMoreElements();) {
+            CreateCommandObj commandSQL = elements.nextElement();
             result += commandSQL.createSubSQL(countTabs) + ";\n" + ((elements.hasMoreElements()) ? "" : "\n");
         }
-        for (Enumeration elements = getAlterAddCommands().elements(); elements.hasMoreElements();) {
-            AlterAddCommandObj commandSQL = (AlterAddCommandObj) elements.nextElement();
+        for (Enumeration<AlterAddCommandObj> elements = getAlterAddCommands().elements(); elements.hasMoreElements();) {
+            AlterAddCommandObj commandSQL = elements.nextElement();
             result += commandSQL.createSubSQL(countTabs) + ";\n";
         }
         return result;
@@ -234,36 +234,36 @@ public class SchemaObj implements SubObjProducer, SubTreeProducerObj {
         IconNode top = new IconNode(this, true, getIcon());
         intro = new Intro();
         top.add(intro.createSubTree());
-        for (Enumeration elements = getDropCommands().elements(); elements.hasMoreElements();) {
-            DropCommandObj commandObj = (DropCommandObj) elements.nextElement();
+        for (Enumeration<DropCommandObj> elements = getDropCommands().elements(); elements.hasMoreElements();) {
+            DropCommandObj commandObj = elements.nextElement();
             top.add(commandObj.createSubTree());
         }
-        for (Enumeration elements = getDropTypes().elements(); elements.hasMoreElements();) {
-            DropTypeObj commandObj = (DropTypeObj) elements.nextElement();
+        for (Enumeration<DropTypeObj> elements = getDropTypes().elements(); elements.hasMoreElements();) {
+            DropTypeObj commandObj = elements.nextElement();
             top.add(commandObj.createSubTree());
         }
-        for (Enumeration elements = getCreateIncompleteTypes().elements(); elements.hasMoreElements();) {
-            CreateIncompleteTypeObj commandSQL = (CreateIncompleteTypeObj) elements.nextElement();
+        for (Enumeration<CreateIncompleteTypeObj> elements = getCreateIncompleteTypes().elements(); elements.hasMoreElements();) {
+            CreateIncompleteTypeObj commandSQL = elements.nextElement();
             top.add(commandSQL.createSubTree());
         }
-        for (Enumeration elements = getCreateTypes().elements(); elements.hasMoreElements();) {
-            CreateTypeObj commandSQL = (CreateTypeObj) elements.nextElement();
+        for (Enumeration<CreateTypeObj> elements = getCreateTypes().elements(); elements.hasMoreElements();) {
+            CreateTypeObj commandSQL = elements.nextElement();
             top.add(commandSQL.createSubTree());
         }
-        for (Enumeration elements = getCommandTypesObj().elements(); elements.hasMoreElements();) {
-            CreateCommandTypeObj commandSQL = (CreateCommandTypeObj) elements.nextElement();
+        for (Enumeration<CreateCommandTypeObj> elements = getCommandTypesObj().elements(); elements.hasMoreElements();) {
+            CreateCommandTypeObj commandSQL = elements.nextElement();
             top.add(commandSQL.createSubTree());
         }
-        for (Enumeration elements = getReferenceTypesObj().elements(); elements.hasMoreElements();) {
-            AlterReferenceType commandSQL = (AlterReferenceType) elements.nextElement();
+        for (Enumeration<AlterReferenceType> elements = getReferenceTypesObj().elements(); elements.hasMoreElements();) {
+            AlterReferenceType commandSQL = elements.nextElement();
             top.add(commandSQL.createSubTree());
         }
-        for (Enumeration elements = getCreateCommands().elements(); elements.hasMoreElements();) {
-            CreateCommandObj commandSQL = (CreateCommandObj) elements.nextElement();
+        for (Enumeration<CreateCommandObj> elements = getCreateCommands().elements(); elements.hasMoreElements();) {
+            CreateCommandObj commandSQL = elements.nextElement();
             top.add(commandSQL.createSubTree());
         }
-        for (Enumeration elements = getAlterAddCommands().elements(); elements.hasMoreElements();) {
-            AlterAddCommandObj commandSQL = (AlterAddCommandObj) elements.nextElement();
+        for (Enumeration<AlterAddCommandObj> elements = getAlterAddCommands().elements(); elements.hasMoreElements();) {
+            AlterAddCommandObj commandSQL = elements.nextElement();
             top.add(commandSQL.createSubTree());
         }
         return top;
@@ -284,9 +284,9 @@ public class SchemaObj implements SubObjProducer, SubTreeProducerObj {
      *
      * @return java.util.Vector
      */
-    protected Vector getAlterAddCommands() {
+    protected Vector<AlterAddCommandObj> getAlterAddCommands() {
         if (alterAddCommands == null)
-            alterAddCommands = new Vector();
+            alterAddCommands = new Vector<AlterAddCommandObj>();
         return alterAddCommands;
     }
 
@@ -295,9 +295,9 @@ public class SchemaObj implements SubObjProducer, SubTreeProducerObj {
      *
      * @return java.util.Vector
      */
-    protected Vector getCreateCommands() {
+    protected Vector<CreateCommandObj> getCreateCommands() {
         if (createCommands == null)
-            createCommands = new Vector();
+            createCommands = new Vector<CreateCommandObj>();
         return createCommands;
     }
 
@@ -306,9 +306,9 @@ public class SchemaObj implements SubObjProducer, SubTreeProducerObj {
      *
      * @return java.util.Vector
      */
-    protected Vector getDropCommands() {
+    protected Vector<DropCommandObj> getDropCommands() {
         if (dropCommands == null)
-            dropCommands = new Vector();
+            dropCommands = new Vector<DropCommandObj>();
         return dropCommands;
     }
 
@@ -317,9 +317,9 @@ public class SchemaObj implements SubObjProducer, SubTreeProducerObj {
      *
      * @return java.util.Vector
      */
-    protected Vector getCreateTypes() {
+    protected Vector<CreateTypeObj> getCreateTypes() {
         if (createTypes == null)
-            createTypes = new Vector();
+            createTypes = new Vector<CreateTypeObj>();
         return createTypes;
     }
 
@@ -328,9 +328,9 @@ public class SchemaObj implements SubObjProducer, SubTreeProducerObj {
      *
      * @return java.util.Vector
      */
-    protected Vector getCreateIncompleteTypes() {
+    protected Vector<CreateIncompleteTypeObj> getCreateIncompleteTypes() {
         if (createIncompleteTypes == null)
-            createIncompleteTypes = new Vector();
+            createIncompleteTypes = new Vector<CreateIncompleteTypeObj>();
         return createIncompleteTypes;
     }
 
@@ -339,9 +339,9 @@ public class SchemaObj implements SubObjProducer, SubTreeProducerObj {
      *
      * @return java.util.Vector
      */
-    protected Vector getDropTypes() {
+    protected Vector<DropTypeObj> getDropTypes() {
         if (dropTypes == null)
-            dropTypes = new Vector();
+            dropTypes = new Vector<DropTypeObj>();
         return dropTypes;
     }
 
@@ -350,9 +350,9 @@ public class SchemaObj implements SubObjProducer, SubTreeProducerObj {
      *
      * @return java.util.Vector
      */
-    protected Vector getCommandTypesObj() {
+    protected Vector<CreateCommandTypeObj> getCommandTypesObj() {
         if (createCommandTypesObj == null)
-            createCommandTypesObj = new Vector();
+            createCommandTypesObj = new Vector<CreateCommandTypeObj>();
         return createCommandTypesObj;
     }
 
@@ -361,9 +361,9 @@ public class SchemaObj implements SubObjProducer, SubTreeProducerObj {
      *
      * @return java.util.Vector
      */
-    protected Vector getReferenceTypesObj() {
+    protected Vector<AlterReferenceType> getReferenceTypesObj() {
         if (alterReferenceTypes == null)
-            alterReferenceTypes = new Vector();
+            alterReferenceTypes = new Vector<AlterReferenceType>();
         return alterReferenceTypes;
     }
 

@@ -9,7 +9,7 @@ import java.util.Vector;
 /**
  * Records gluing. Collects atributes into groups how they was created.
  */
-public class GlueRecord implements CheckRowProducer {
+class GlueRecord implements CheckRowProducer {
     /**
      * Owner of record
      */
