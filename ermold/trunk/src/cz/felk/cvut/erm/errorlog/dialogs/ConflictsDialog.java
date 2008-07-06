@@ -1,7 +1,10 @@
 package cz.felk.cvut.erm.errorlog.dialogs;
 
 import cz.felk.cvut.erm.conceptual.beans.*;
-import cz.felk.cvut.erm.ermodeller.*;
+import cz.felk.cvut.erm.ermodeller.AttributeConstruct;
+import cz.felk.cvut.erm.ermodeller.ConceptualConstructItem;
+import cz.felk.cvut.erm.ermodeller.ConceptualConstructObject;
+import cz.felk.cvut.erm.ermodeller.WorkingDesktop;
 import cz.felk.cvut.erm.errorlog.ConceptualObjectVectorValidationError;
 import cz.felk.cvut.erm.errorlog.ErrorLogList;
 import cz.felk.cvut.erm.errorlog.ValidationError;
@@ -88,21 +91,18 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
      * Comment
      */
     public void acceptButtonAction() {
-        int i = conceptualObject.getID();
-        EntityConstruct ent;
-        RelationConstruct rel;
-
+        //EntityConstruct ent;
         if (conceptualObject instanceof ConceptualConstruct)
             if (getComposeModel().getSelectedItem().equals("none")) {
                 conceptualObject.setName(getRenameField().getText());
             } else {
                 Object o = getComposeModel().getSelectedItem();
                 if (conceptualObject instanceof Entity) {
-                    ent = desktop.getEntity(((ConceptualConstruct) o).getID());
+                    //   ent = desktop.getEntity(((ConceptualConstruct) o).getID());
                     //ent.composeEntity(desktop.getEntity(i),new cz.felk.cvut.erm.ermodeller.DragOverEvent(0,0,(cz.felk.cvut.erm.event.interfaces.Item)desktop.getEntity(i),desktop.getPaintPlace()));
                     desktop.composeEntity((Entity) conceptualObject, (Entity) o);
                 } else {
-                    rel = desktop.getRelation(((ConceptualConstruct) o).getID());
+                    //rel = desktop.getRelation(((ConceptualConstruct) o).getID());
                     desktop.composeRelation((Relation) conceptualObject, (Relation) o);
                 }
             }
@@ -206,7 +206,6 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
      */
     private void createTree(DefaultMutableTreeNode top) {
         ValidationError err;
-        ErrorLogList errList = getErrorLogList();
 
         for (Enumeration errors = getErrorLogList().elements(); errors.hasMoreElements();) {
             err = (ValidationError) errors.nextElement();
@@ -1439,8 +1438,6 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
         i = conceptualObject.getID();
         ConceptualConstructItem cc;
         ConceptualConstructObject co;
-        ConceptualConstruct ccM;
-        EntityConstruct ent;
 
         try {
             if (conceptualObject instanceof Entity) {
@@ -1506,11 +1503,10 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
      */
     public synchronized void setErrorLogList(ErrorLogList aErrorLogList) {
         ValidationError err;
-        ConceptualObjectVectorValidationError errV;
-        java.util.Vector objList;
+
+        //java.util.Vector objList;
         int cnt = aErrorLogList.size(), i, j;
-        boolean compErr;
-        ConceptualObject co;
+        //ConceptualObject co;
 
         // Empties the old error tree
         getRoot().removeAllChildren();
@@ -1518,14 +1514,14 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
         ivjErrorLogList = new ErrorLogList();
 
         for (i = 0; i < cnt; i++) {
-            err = (ValidationError) (aErrorLogList.get(i));
-            objList = err.getObjects();
-            compErr = false;
-            for (j = 0; j < objList.size(); j++) {
-                co = (ConceptualObject) objList.get(j);
-                if (co.getID() >= id)
-                    compErr = true;
-            }
+            err = (aErrorLogList.get(i));
+//            objList = err.getObjects();
+            //compErr = false;
+//            for (j = 0; j < objList.size(); j++) {
+//                co = (ConceptualObject) objList.get(j);
+//                if (co.getID() >= id)
+            //compErr = true;
+//            }
 //			if (compErr) {
             ivjErrorLogList.add(err);
 //			}

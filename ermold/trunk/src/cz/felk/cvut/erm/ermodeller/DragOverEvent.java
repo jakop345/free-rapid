@@ -9,7 +9,7 @@ import cz.felk.cvut.erm.event.interfaces.Item;
  * Is send by handlers of the <code>ExMovingEvent</code> or by the <code>Container</code>
  * when its in the <code>removing</code> regime.
  */
-public class DragOverEvent extends cz.felk.cvut.erm.event.CoordinateEvent {
+class DragOverEvent extends cz.felk.cvut.erm.event.CoordinateEvent {
     /**
      * The item dragging over receiver of the event
      */

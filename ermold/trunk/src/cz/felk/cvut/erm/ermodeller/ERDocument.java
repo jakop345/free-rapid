@@ -8,7 +8,7 @@ import org.w3c.dom.NodeList;
  * Class for working with ER schemas in XML files
  */
 
-public class ERDocument {
+class ERDocument {
     private final org.w3c.dom.Document doc;
     //private NodeList nl;
     private final NodeList[] nodeList;

@@ -8,7 +8,7 @@ import cz.felk.cvut.erm.event.interfaces.Item;
  * <p/>
  * To the invoker carry information about the dropping has been made or not.
  */
-public class DropAboveEvent extends DragOverEvent {
+class DropAboveEvent extends DragOverEvent {
     /**
      * When receiver do some opertion with drpped item then sets this
      * atribute to <code>true</code>

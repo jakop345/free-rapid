@@ -20,7 +20,7 @@ import java.awt.*;
 /**
  * This type was created in VisualAge.
  */
-public class StrongAddiction extends ConceptualConstructObject {
+class StrongAddiction extends ConceptualConstructObject {
     public static final int SIZE = 6;
     EntityConstruct parent;
     EntityConstruct child;

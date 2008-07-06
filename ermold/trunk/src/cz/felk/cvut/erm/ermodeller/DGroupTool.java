@@ -22,7 +22,7 @@ import java.util.Vector;
  * <code>ConnectionManager</code> iterface to be able to hold the connections. Therefore has also atribute
  * <code>connections</code>, where holds local connections.
  */
-public class DGroupTool extends cz.felk.cvut.erm.eventtool.DGroupTool implements FontManager, ModelFinder {
+class DGroupTool extends cz.felk.cvut.erm.eventtool.DGroupTool implements FontManager, ModelFinder {
     /**
      * Simply calls the inherited constructor.
      *

@@ -9,7 +9,7 @@ import cz.felk.cvut.erm.swing.ShowException;
  *
  * @see DesktopContainer#addingCardinality(cz.felk.cvut.erm.ermodeller.CardinalityPair)
  */
-public class StrongAddictionPair {
+class StrongAddictionPair {
     private EntityConstruct entity = null;
     private UniqueKeyConstruct uniqueKey = null;
 
