@@ -2,6 +2,7 @@ package cz.cvut.felk.erm.gui.dialogs;
 
 import cz.cvut.felk.erm.core.MainApp;
 import cz.cvut.felk.erm.gui.actions.HelpActions;
+import cz.cvut.felk.erm.swing.SwingUtils;
 import cz.cvut.felk.erm.swing.Swinger;
 import cz.cvut.felk.erm.swing.models.NaiiveComboModel;
 import cz.cvut.felk.erm.utilities.LogUtils;
@@ -205,6 +206,14 @@ abstract class AppDialog extends JDialog {
     protected Action setAction(AbstractButton button, String actionCode) {
         final Action action = getActionMap().get(actionCode);
         button.setAction(action);
+        final Object keystroke = action.getValue(Action.ACCELERATOR_KEY);
+        if (keystroke != null) {
+            registerKeyboardAction(action);
+            final Object desc = action.getValue(Action.SHORT_DESCRIPTION);
+            if (desc != null) {
+                action.putValue(Action.SHORT_DESCRIPTION, desc.toString() + " (" + SwingUtils.keyStroke2String((KeyStroke) keystroke) + ")");
+            }
+        }
         return action;
     }
 

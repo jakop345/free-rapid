@@ -48,6 +48,13 @@ public class FileActions extends AbstractBean {
         app.prepareDialog(dialog, true);
         if (dialog.getModalResult() == SelectConnectionDialog.RESULT_OK) {
             DBConnection conn = dialog.getSelectedConnection();
+            if (!Utils.hasValue(conn.getPassword()) && Utils.hasValue(conn.getUser())) {
+                final String pass = Swinger.showPasswordDialog();
+                if (pass != null) {
+                    conn = conn.doCopy();
+                    conn.setPassword(pass);
+                } else return;
+            }
             final String sql = Utils.loadFile("c:\\temp\\create_obj.sql");
             app.getContext().getTaskService().execute(new RunSQLScriptTask(conn, sql));
         }

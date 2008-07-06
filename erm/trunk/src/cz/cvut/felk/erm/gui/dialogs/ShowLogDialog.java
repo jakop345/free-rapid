@@ -15,6 +15,7 @@ import cz.cvut.felk.erm.gui.dialogs.filechooser.OpenSaveDialogFactory;
 import cz.cvut.felk.erm.swing.ComponentFactory;
 import cz.cvut.felk.erm.swing.Swinger;
 import cz.cvut.felk.erm.swing.components.FindBar;
+import cz.cvut.felk.erm.utilities.Browser;
 import cz.cvut.felk.erm.utilities.LogUtils;
 import cz.cvut.felk.erm.utilities.Utils;
 import org.jdesktop.application.ApplicationAction;
@@ -55,12 +56,16 @@ public class ShowLogDialog extends AppDialog implements ClipboardOwner, TreeSele
     private int index = 0;
     private boolean prevErrorEnabled;
     private boolean nextErrorEnabled;
+    private boolean gotoSQLErrorEnabled;
 
     private static final String PREV_ERROR_ENABLED_PROPERTY = "prevErrorEnabled";
     private static final String NEXT_ERROR_ENABLED_PROPERTY = "nextErrorEnabled";
+    private static final String GOTO_SQL_ERROR_PROPERTY = "gotoSQLErrorEnabled";
+
     private int prevIndex;
     private int nextIndex;
     private MyPresentationModel<Preferences> model;
+    private boolean isOracle = false;
 
 
     public ShowLogDialog(Frame owner) throws Exception {
@@ -90,6 +95,15 @@ public class ShowLogDialog extends AppDialog implements ClipboardOwner, TreeSele
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.setContents(stringSelection, this);
     }
+
+    @org.jdesktop.application.Action(enabledProperty = GOTO_SQL_ERROR_PROPERTY)
+    public void btnOraErrorCodeAction() {
+        if (!isOracle)
+            return;
+        final ScriptRunner.SQLScriptError error = errorList.get(index);
+        Browser.openBrowser(getResourceMap().getString("btnOraErrorCode_url", error.getErrorCode()));
+    }
+
 
     @org.jdesktop.application.Action
     public void btnSearchAction() {
@@ -156,6 +170,17 @@ public class ShowLogDialog extends AppDialog implements ClipboardOwner, TreeSele
         setSelectedIndex(nextIndex);
     }
 
+
+    public boolean isGotoSQLErrorEnabled() {
+        return gotoSQLErrorEnabled && isOracle;
+    }
+
+    public void setGotoSQLErrorEnabled(boolean gotoSQLErrorEnabled) {
+        final boolean oldValue = this.gotoSQLErrorEnabled;
+        this.gotoSQLErrorEnabled = gotoSQLErrorEnabled;
+        firePropertyChange(ShowLogDialog.GOTO_SQL_ERROR_PROPERTY, oldValue, gotoSQLErrorEnabled);
+    }
+
     public boolean isPrevErrorEnabled() {
         return prevErrorEnabled;
     }
@@ -213,6 +238,7 @@ public class ShowLogDialog extends AppDialog implements ClipboardOwner, TreeSele
         setAction(btnCopyToClipboard, "btnCopyToClipboardAction");
         setAction(btnSaveLog, "btnSaveLogAction");
         setAction(btnSearch, "btnSearchAction");
+        setAction(btnOraErrorCode, "btnOraErrorCodeAction");
 
         final Action btnPrevErrorAction = setAction(btnPrevError, "btnPrevErrorAction");
         final Action btnNextErrorAction = setAction(btnNextError, "btnNextErrorAction");
@@ -220,11 +246,7 @@ public class ShowLogDialog extends AppDialog implements ClipboardOwner, TreeSele
 
         setContextHelp(btnHelp, "http://www.google.com");
 
-        registerKeyboardAction(btnSearch.getAction());
-
-        registerKeyboardAction(btnPrevErrorAction);
         registerKeyboardAction(btnPrevErrorAction, KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.ALT_DOWN_MASK));
-        registerKeyboardAction(btnNextErrorAction);
         registerKeyboardAction(btnNextErrorAction, KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.ALT_DOWN_MASK));
 
         buildModels();
@@ -297,6 +319,7 @@ public class ShowLogDialog extends AppDialog implements ClipboardOwner, TreeSele
         if (errorList == null)
             return;
         nextIndex = prevIndex = -1;
+        setGotoSQLErrorEnabled(false);
         int index = -1;
         for (ScriptRunner.SQLScriptError error : errorList) {
             final int start = error.getStartPosition();
@@ -317,6 +340,7 @@ public class ShowLogDialog extends AppDialog implements ClipboardOwner, TreeSele
         }
         this.setNextErrorEnabled(nextIndex != -1 && nextIndex < errorList.size());
         this.setPrevErrorEnabled(prevIndex >= 0);
+        setGotoSQLErrorEnabled(index >= 0 && index < errorList.size());
     }
 
 
@@ -348,6 +372,8 @@ public class ShowLogDialog extends AppDialog implements ClipboardOwner, TreeSele
         }
 
         treeModel.setRoot(root);
+        isOracle = errorList.get(0).getErrorText().indexOf("ORA-") != -1;
+
         errorTree.setSelectionPath(new TreePath(root.getFirstChild()));
     }
 

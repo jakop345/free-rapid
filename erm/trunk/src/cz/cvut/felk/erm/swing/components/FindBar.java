@@ -84,7 +84,7 @@ public class FindBar extends JXFindBar {
         h.removeAllHighlights();
 
         final String raw = searchField.getText();
-        final boolean caseSensitive = getPatternModel().isCaseSensitive();
+        //final boolean caseSensitive = getPatternModel().isCaseSensitive();
         //System.out.println("caseSensitive = " + caseSensitive);
         final int foundIndex = getPatternModel().getFoundIndex();
         if (!raw.isEmpty()) {

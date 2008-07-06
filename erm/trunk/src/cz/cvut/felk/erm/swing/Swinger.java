@@ -43,6 +43,25 @@ public class Swinger {
         JOptionPane.showMessageDialog(Frame.getFrames()[0], message, getResourceMap().getString(MESSAGE_INFORMATION_TITLE_CODE), JOptionPane.INFORMATION_MESSAGE);
     }
 
+    public static String showPasswordDialog() {
+        final JPasswordField pwd = new JPasswordField(12);
+        final ResourceMap map = getResourceMap();
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                Swinger.inputFocus(pwd);
+                //pwd.requestFocusInWindow();
+            }
+        });
+        final int action = JOptionPane.showOptionDialog(Frame.getFrames()[0], pwd, map.getString("message.enterPassword"),
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                map.getIcon("message.enterPassword.icon"), new Object[]{map.getString(MESSAGE_BTN_OK_CODE), map.getString(MESSAGE_BTN_CANCEL_CODE)},
+                map.getString(MESSAGE_BTN_OK_CODE));
+        if (action >= 0) {
+            return new String(pwd.getPassword());
+        } else return null;
+    }
+
     public static int getChoiceCancel(final String message) {
         final ResourceMap map = getResourceMap();
         return JOptionPane.showOptionDialog(Frame.getFrames()[0], message, map.getString(MESSAGE_CONFIRM_TITLE_CODE),
