@@ -112,7 +112,7 @@ public class UniqueKeyConstruct extends ConceptualConstructObject {
         StrongAddiction sa;
         int count = 0;
         for (int i = connections.size() - 1; i >= 0; i--) {
-            if ((sa = (StrongAddiction) ((Connection) connections.elementAt(i))
+            if ((sa = (StrongAddiction) (connections.get(i))
                     .isConnectedTo(StrongAddiction.class)) != null) {
                 if (sa.getEntity() != ent) {
                     return true;
@@ -160,9 +160,9 @@ public class UniqueKeyConstruct extends ConceptualConstructObject {
         Vector<Connectable> v = new java.util.Vector<Connectable>();
 
         for (int i = connections.size() - 1; i >= 0; i--) {
-            if (((Connection) connections.elementAt(i))
+            if ((connections.get(i))
                     .isConnectedTo(AttributeConstruct.class) != null) {
-                v.add(((ConnectionLine) connections.elementAt(i)).getTwo());
+                v.add((connections.get(i)).getTwo());
             }
         }
         return v;
@@ -335,7 +335,7 @@ public class UniqueKeyConstruct extends ConceptualConstructObject {
      */
     protected boolean hasAtribute() {
         for (int i = connections.size() - 1; i >= 0; i--) {
-            if (((Connection) connections.elementAt(i))
+            if ((connections.get(i))
                     .isConnectedTo(AttributeConstruct.class) != null) {
                 return true;
             }
@@ -411,7 +411,7 @@ public class UniqueKeyConstruct extends ConceptualConstructObject {
     protected void removeAllStrongAddiction(cz.felk.cvut.erm.event.RemoveEvent event) {
         StrongAddiction sa;
         for (int i = connections.size() - 1; i >= 0; i--) {
-            if ((sa = (StrongAddiction) (((Connection) connections.elementAt(i)))
+            if ((sa = (StrongAddiction) ((connections.get(i)))
                     .isConnectedTo(StrongAddiction.class)) != null)
                 sa.handleRemoveEvent(event);
         }
@@ -470,8 +470,8 @@ public class UniqueKeyConstruct extends ConceptualConstructObject {
         StrongAddiction sa = null;
         Connection c;
         for (int i = connections.size() - 1; i >= 0; i--) {
-            if ((sa = (StrongAddiction) ((c = ((Connection) connections
-                    .elementAt(i))).isConnectedTo(StrongAddiction.class))) != null) {
+            if ((sa = (StrongAddiction) ((c = (connections
+                    .get(i))).isConnectedTo(StrongAddiction.class))) != null) {
                 if (c.getOne() instanceof StrongAddiction) {
                     c.setTwo(uk);
                 }

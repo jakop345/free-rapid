@@ -24,6 +24,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.Serializable;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -343,9 +344,8 @@ public class WorkingDesktop extends DesktopTool implements FontManager,
         for (Object rel1 : rels) {
             RelationConstruct rel = (RelationConstruct) rel1;
             connCounter = 0;
-            Enumeration e = rel.getConnections().elements();
-            while (e.hasMoreElements()) {
-                Connection c = ((Connection) e.nextElement());
+            final java.util.List<Connection> connectionList = rel.getConnections();
+            for (Connection c : connectionList) {
                 CardinalityConstruct car = null;
                 if (c.getOne() instanceof CardinalityConstruct)
                     car = (CardinalityConstruct) c.getOne();
@@ -377,9 +377,8 @@ public class WorkingDesktop extends DesktopTool implements FontManager,
         for (Object rel1 : rels) {
             RelationConstruct rel = (RelationConstruct) rel1;
             connCounter = 0;
-            Enumeration e = rel.getConnections().elements();
-            while (e.hasMoreElements()) {
-                Connection c = ((Connection) e.nextElement());
+            final List<Connection> connectionList = rel.getConnections();
+            for (Connection c : connectionList) {
                 CardinalityConstruct car = null;
                 if (c.getOne() instanceof CardinalityConstruct)
                     car = (CardinalityConstruct) c.getOne();
@@ -442,10 +441,9 @@ public class WorkingDesktop extends DesktopTool implements FontManager,
         for (Object aR : R) {
             RelationConstruct rel = (RelationConstruct) aR;
 
-            Enumeration e = rel.getConnections().elements();
             java.util.List<CardinalityConstruct> cards = new Vector<CardinalityConstruct>();
-            while (e.hasMoreElements()) {
-                Connection c = ((Connection) e.nextElement());
+            final List<Connection> connectionList = rel.getConnections();
+            for (Connection c : connectionList) {
                 if (c.getOne() instanceof CardinalityConstruct)
                     cards.add((CardinalityConstruct) c.getOne());
                 if (c.getTwo() instanceof CardinalityConstruct)
@@ -481,10 +479,9 @@ public class WorkingDesktop extends DesktopTool implements FontManager,
         for (Object aR : R) {
             RelationConstruct rel = (RelationConstruct) aR;
 
-            Enumeration e = rel.getConnections().elements();
             java.util.List<CardinalityConstruct> cards = new Vector<CardinalityConstruct>();
-            while (e.hasMoreElements()) {
-                Connection c = ((Connection) e.nextElement());
+            final List<Connection> connectionList = rel.getConnections();
+            for (Connection c : connectionList) {
                 if (c.getOne() instanceof CardinalityConstruct)
                     cards.add((CardinalityConstruct) c.getOne());
                 if (c.getTwo() instanceof CardinalityConstruct)
@@ -521,10 +518,9 @@ public class WorkingDesktop extends DesktopTool implements FontManager,
         for (Object allRelation : allRelations) {
             RelationConstruct rel = (RelationConstruct) allRelation;
 
-            java.util.Enumeration e = rel.getConnections().elements();
+            final List<Connection> connectionList = rel.getConnections();
             java.util.List<CardinalityConstruct> cards = new Vector<CardinalityConstruct>();
-            while (e.hasMoreElements()) {
-                Connection c = ((Connection) e.nextElement());
+            for (Connection c : connectionList) {
                 if (c.getOne() instanceof CardinalityConstruct)
                     cards.add((CardinalityConstruct) c.getOne());
                 if (c.getTwo() instanceof CardinalityConstruct)

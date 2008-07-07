@@ -99,9 +99,7 @@ public class CardinalityConstruct extends ConceptualConstructObject {
      * Get the entity that participation this object represents.
      */
     public EntityConstruct getEntity() {
-        java.util.Enumeration e = connections.elements();
-        while (e.hasMoreElements()) {
-            Connection c = ((Connection) e.nextElement());
+        for (Connection c : connections) {
             if (c.getOne() instanceof EntityConstruct)
                 return (EntityConstruct) (c.getOne());
             if (c.getTwo() instanceof EntityConstruct)
@@ -121,9 +119,7 @@ public class CardinalityConstruct extends ConceptualConstructObject {
      * Get the relation that this object belongs to.
      */
     public RelationConstruct getRelation() {
-        java.util.Enumeration e = connections.elements();
-        while (e.hasMoreElements()) {
-            Connection c = ((Connection) e.nextElement());
+        for (Connection c : connections) {
             if (c.getOne() instanceof RelationConstruct)
                 return (RelationConstruct) (c.getOne());
             if (c.getTwo() instanceof RelationConstruct)
@@ -136,11 +132,9 @@ public class CardinalityConstruct extends ConceptualConstructObject {
      * Get the connection line ro relation that this object belongs to.
      */
     public ConnectionLine getRelationConnectionLine() {
-        java.util.Enumeration e = connections.elements();
-        while (e.hasMoreElements()) {
-            Connection c = ((Connection) e.nextElement());
+        for (Connection c : connections) {
             if (c.getOne() instanceof RelationConstruct || c.getTwo() instanceof RelationConstruct)
-                return ((ConnectionLine) c);
+                return (ConnectionLine) c; //TODO podezrele pretypovani
         }
         return null;
     }

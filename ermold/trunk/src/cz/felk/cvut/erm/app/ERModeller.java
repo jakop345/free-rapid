@@ -33,7 +33,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
-import java.util.Enumeration;
 import java.util.Vector;
 
 /**
@@ -1614,11 +1613,9 @@ public class ERModeller extends JFrame implements
      * @param nextNotation
      */
     private void resizeStrongAddictions(EntityConstruct ent, NotationType nextNotation) {
-        java.util.Enumeration e = ent.getConnections().elements();
         java.awt.FontMetrics fm = ((FontManager) ent.getManager()).getReferentFontMetrics();
         StrongAddiction sa = null;
-        while (e.hasMoreElements()) {
-            Connection c = ((Connection) e.nextElement());
+        for (Connection c : ent.getConnections()) {
             if (c.getOne() instanceof StrongAddiction) sa = ((StrongAddiction) c.getOne());
             if (c.getTwo() instanceof StrongAddiction) sa = ((StrongAddiction) c.getTwo());
             if (sa != null) {
@@ -1879,10 +1876,8 @@ public class ERModeller extends JFrame implements
                 e.printStackTrace();
             }
             /* Move cardinalities to its Entities*/
-            Enumeration e = rel.getConnections().elements();
             CardinalityConstruct car;
-            while (e.hasMoreElements()) {
-                Connection c = ((Connection) e.nextElement());
+            for (Connection c : rel.getConnections()) {
                 if (c.getOne() instanceof CardinalityConstruct) {
                     car = ((CardinalityConstruct) c.getOne());
                     car.moveCardinality(new ExMovingEvent(car.getBounds().x, car.getBounds().y, 0, 0, null, false));
@@ -1934,10 +1929,8 @@ public class ERModeller extends JFrame implements
                 e.printStackTrace();
             }
             /* Attach all cardinalities to its Entities*/
-            Enumeration e = rel.getConnections().elements();
             CardinalityConstruct car;
-            while (e.hasMoreElements()) {
-                Connection c = ((Connection) e.nextElement());
+            for (Connection c : rel.getConnections()) {
                 if (c.getOne() instanceof CardinalityConstruct) {
                     car = ((CardinalityConstruct) c.getOne());
                     car.moveCardinality(new ExMovingEvent(car.getBounds().x, car.getBounds().y, 0, 0, null, false));
@@ -2010,11 +2003,9 @@ public class ERModeller extends JFrame implements
      * @param ent
      */
     private void setNewStrongAddictionsManager(EntityConstruct ent) {
-        java.util.Enumeration e = ent.getConnections().elements();
-        java.awt.FontMetrics fm = ((FontManager) ent.getManager()).getReferentFontMetrics();
+        //java.awt.FontMetrics fm = ((FontManager) ent.getManager()).getReferentFontMetrics();
         StrongAddiction sa = null;
-        while (e.hasMoreElements()) {
-            Connection c = ((Connection) e.nextElement());
+        for (Connection c : ent.getConnections()) {
             if (c.getOne() instanceof StrongAddiction) sa = ((StrongAddiction) c.getOne());
             if (c.getTwo() instanceof StrongAddiction) sa = ((StrongAddiction) c.getTwo());
             if (sa != null) {

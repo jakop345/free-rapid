@@ -49,9 +49,7 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
      * @return The instance of the class <code>Cardinality</code> or <code>null</code>.
      */
     protected CardinalityConstruct cardinalityWith(ConceptualConstructItem cc) {
-        java.util.Enumeration e = connections.elements();
-        while (e.hasMoreElements()) {
-            Connection c = ((Connection) e.nextElement());
+        for (Connection c : connections) {
             CardinalityConstruct car = null;
             if (c.getOne() instanceof CardinalityConstruct)
                 car = (CardinalityConstruct) c.getOne();
@@ -120,7 +118,7 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
         Vector<AttributeConstruct> v = new java.util.Vector<AttributeConstruct>();
         AttributeConstruct atr;
         for (int i = connections.size() - 1; i >= 0; i--) {
-            if ((atr = (AttributeConstruct) ((Connection) connections.elementAt(i)).isConnectedTo(AttributeConstruct.class)) != null)
+            if ((atr = (AttributeConstruct) (connections.get(i)).isConnectedTo(AttributeConstruct.class)) != null)
                 v.add(atr);
         }
         return v;
@@ -277,7 +275,7 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
     protected void reconnectAllAtributes(ConceptualConstructItem cc) {
         AttributeConstruct atr;
         for (int i = connections.size() - 1; i >= 0; i--) {
-            if ((atr = (AttributeConstruct) ((Connection) connections.elementAt(i)).isConnectedTo(AttributeConstruct.class)) != null)
+            if ((atr = (AttributeConstruct) ((Connection) connections.get(i)).isConnectedTo(AttributeConstruct.class)) != null)
                 cc.reconnectAtribute(atr);
             //cc.attribs.addElement(atr);
         }
@@ -292,7 +290,7 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
     protected void reconnectAllCardinalities(ConceptualConstructItem cc) {
         Connection c;
         for (int i = connections.size() - 1; i >= 0; i--) {
-            c = (Connection) connections.elementAt(i);
+            c = connections.get(i);
             if (c.getOne() instanceof CardinalityConstruct)
                 ((CardinalityConstruct) c.getOne()).reconnect(cc);
             if (c.getTwo() instanceof CardinalityConstruct)
@@ -370,7 +368,7 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
     protected void removeCardinalities(cz.felk.cvut.erm.event.RemoveEvent event) {
         CardinalityConstruct car;
         for (int i = connections.size() - 1; i >= 0; i--) {
-            if ((car = (CardinalityConstruct) (((Connection) connections.elementAt(i))).isConnectedTo(CardinalityConstruct.class)) != null)
+            if ((car = (CardinalityConstruct) (connections.get(i)).isConnectedTo(CardinalityConstruct.class)) != null)
                 car.handleRemoveEvent(event);
         }
     }

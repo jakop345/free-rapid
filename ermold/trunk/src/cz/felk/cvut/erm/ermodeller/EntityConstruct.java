@@ -186,7 +186,7 @@ public class EntityConstruct extends ConceptualConstructItem {
                 return true;
         UniqueKeyConstruct uk;
         for (int i = connections.size() - 1; i >= 0; i--) {
-            if ((uk = (UniqueKeyConstruct) ((Connection) connections.elementAt(i))
+            if ((uk = (UniqueKeyConstruct) ((Connection) connections.get(i))
                     .isConnectedTo(UniqueKeyConstruct.class)) != null) {
                 if ((uk.getOwner() == ent) && (!uk.areOthersConnections(this)))
                     return true;
@@ -233,7 +233,7 @@ public class EntityConstruct extends ConceptualConstructItem {
     protected RelationConstruct compactableRelation(EntityConstruct ent) {
         CardinalityConstruct car;
         for (int i = connections.size() - 1; i >= 0; i--) {
-            if ((car = (CardinalityConstruct) ((Connection) connections.elementAt(i))
+            if ((car = (CardinalityConstruct) ((Connection) connections.get(i))
                     .isConnectedTo(CardinalityConstruct.class)) != null) {
                 if (car.isCompactable()
                         && car.getRelation().compactConnection(ent, this))
@@ -243,7 +243,7 @@ public class EntityConstruct extends ConceptualConstructItem {
         return null;
     }
 
-    public Vector getConnections() {
+    public java.util.List<Connection> getConnections() {
         return connections;
     }
 
@@ -409,7 +409,7 @@ public class EntityConstruct extends ConceptualConstructItem {
                 }
             } else {
                 // else count the top from the bottom of the previous
-                top = (ISAChilds.elementAt(before)).getRect()[1][1]
+                top = (ISAChilds.get(before)).getRect()[1][1]
                         + 2 * DIFFERENCE;
             }
         } catch (Throwable ex) {
@@ -515,7 +515,7 @@ public class EntityConstruct extends ConceptualConstructItem {
         }
         if (ISAChilds != null) {
             for (int i = ISAChilds.size() - 1; i > from; i--) {
-                r = (ISAChilds.elementAt(i)).getRect();
+                r = (ISAChilds.get(i)).getRect();
                 height += (r[1][1] - r[1][0]) + l;
             }
         }
@@ -795,7 +795,7 @@ public class EntityConstruct extends ConceptualConstructItem {
         Vector<UniqueKeyConstruct> v = new java.util.Vector<UniqueKeyConstruct>();
         UniqueKeyConstruct uk;
         for (int i = connections.size() - 1; i >= 0; i--) {
-            if ((uk = (UniqueKeyConstruct) ((Connection) connections.elementAt(i))
+            if ((uk = (UniqueKeyConstruct) ((Connection) connections.get(i))
                     .isConnectedTo(UniqueKeyConstruct.class)) != null)
                 v.add(uk);
         }
@@ -926,10 +926,8 @@ public class EntityConstruct extends ConceptualConstructItem {
             RelationConstruct rel = (RelationConstruct) item;
             String name = "";
             if (type != ConceptualConstructItem.CHEN) {
-                java.util.Enumeration e = rel.getConnections().elements();
                 CardinalityConstruct car1;
-                while (e.hasMoreElements()) {
-                    Connection c = ((Connection) e.nextElement());
+                for (Connection c : rel.getConnections()) {
                     if (c.getOne() instanceof CardinalityConstruct) {
                         car1 = ((CardinalityConstruct) c.getOne());
                         name = (car1.getEntity().getModel()).getName();
@@ -975,7 +973,7 @@ public class EntityConstruct extends ConceptualConstructItem {
             if (event.getAdd()) {
                 // add as ISA child
                 if ((item != this)
-                        && ((ISAChilds == null) || (ISAChilds.indexOf(item) == -1))) {
+                        && ((ISAChilds == null) || (ISAChilds.indexOf(item) == -1))) {//TODO podezrele volani
                     addISAChild((EntityConstruct) item, event);
                     event.setDropped(true);
                 }
@@ -1069,9 +1067,7 @@ public class EntityConstruct extends ConceptualConstructItem {
             event.setDy(dy);
         }
         //repaint strong addiction line
-        java.util.Enumeration e = connections.elements();
-        while (e.hasMoreElements()) {
-            Connection c = ((Connection) e.nextElement());
+        for (Connection c : connections) {
             StrongAddiction sa = null;
             if (c.getOne() instanceof StrongAddiction)
                 sa = (StrongAddiction) (c.getOne());
@@ -1166,10 +1162,9 @@ public class EntityConstruct extends ConceptualConstructItem {
 
     public void moveCardinalities() {
         /* Move cardinalities to its Entities*/
-        java.util.Enumeration e = getConnections().elements();
         CardinalityConstruct car;
-        while (e.hasMoreElements()) {
-            Connection c = ((Connection) e.nextElement());
+
+        for (Connection c : getConnections()) {
             if (c.getOne() instanceof CardinalityConstruct) {
                 car = ((CardinalityConstruct) c.getOne());
                 car.moveCardinality(new ExMovingEvent(car.getBounds().x, car.getBounds().y, 0, 0, null, false));
@@ -1183,10 +1178,8 @@ public class EntityConstruct extends ConceptualConstructItem {
 
     public void moveStrongAddictions() {
         /* Move cardinalities to its Entities*/
-        java.util.Enumeration e = getConnections().elements();
         StrongAddiction sa;
-        while (e.hasMoreElements()) {
-            Connection c = ((Connection) e.nextElement());
+        for (Connection c : getConnections()) {
             if (c.getOne() instanceof StrongAddiction) {
                 sa = ((StrongAddiction) c.getOne());
                 sa.moveStrongAddiction(new ExMovingEvent(sa.getBounds().x, sa.getBounds().y, 0, 0, null, false));
@@ -1261,7 +1254,7 @@ public class EntityConstruct extends ConceptualConstructItem {
     protected void changeAllStrongAddictions(EntityConstruct ent) {
         StrongAddiction sa;
         for (int i = connections.size() - 1; i >= 0; i--) {
-            if ((sa = (StrongAddiction) ((Connection) connections.elementAt(i))
+            if ((sa = (StrongAddiction) connections.get(i)
                     .isConnectedTo(StrongAddiction.class)) != null) {
                 if (sa.getEntity() != ent)
                     sa.reconnectStrongAddictionParent(ent);
@@ -1281,7 +1274,7 @@ public class EntityConstruct extends ConceptualConstructItem {
             cz.felk.cvut.erm.event.MoveEvent mev;
             int max = ISAChilds.size() - 1;
             for (int i = 0; i <= max; i++) {
-                EntityConstruct ent = ISAChilds.elementAt(i);
+                EntityConstruct ent = ISAChilds.get(i);
                 mev = countMove(event, ent, i - 1);
                 ent.handleMoveEvent(mev);
             }
@@ -1300,7 +1293,7 @@ public class EntityConstruct extends ConceptualConstructItem {
             cz.felk.cvut.erm.event.MoveEvent mev;
             int max = ISAChilds.size() - 1;
             for (int i = 0; i <= max; i++) {
-                EntityConstruct ent = ISAChilds.elementAt(i);
+                EntityConstruct ent = ISAChilds.get(i);
                 mev = countMove(event, ent, i - 1);
                 mev.setDx(0);
                 ent.handleMoveEvent(mev);
@@ -1320,7 +1313,7 @@ public class EntityConstruct extends ConceptualConstructItem {
             cz.felk.cvut.erm.event.MovingEvent mev;
             int max = ISAChilds.size() - 1;
             for (int i = 0; i <= max; i++) {
-                EntityConstruct ent = ISAChilds.elementAt(i);
+                EntityConstruct ent = ISAChilds.get(i);
                 mev = countMove(event, ent, i - 1);
                 ent.handleMovingEvent(mev);
             }
@@ -1372,7 +1365,7 @@ public class EntityConstruct extends ConceptualConstructItem {
                     int height = r.y + 2 * fm.getAscent() + attribs.size() * 20 + 8;
                     if (ISAChilds != null) {
                         for (int i = ISAChilds.size() - 1; i > -1; i--) {
-                            int[][] rr = (ISAChilds.elementAt(i)).getRect();
+                            int[][] rr = (ISAChilds.get(i)).getRect();
                             height += (rr[1][1] - rr[1][0]) + 2 * DIFFERENCE;
                         }
                     }
@@ -1429,7 +1422,7 @@ public class EntityConstruct extends ConceptualConstructItem {
                     int height = r.y + 2 * fm.getAscent() + attribs.size() * 20 + 8;
                     if (ISAChilds != null) {
                         for (int i = ISAChilds.size() - 1; i > -1; i--) {
-                            int[][] rr = (ISAChilds.elementAt(i)).getRect();
+                            int[][] rr = (ISAChilds.get(i)).getRect();
                             height += (rr[1][1] - rr[1][0]) + 2 * DIFFERENCE;
                         }
                     }
@@ -1611,7 +1604,7 @@ public class EntityConstruct extends ConceptualConstructItem {
         UniqueKeyConstruct uk;
         RemoveEvent ev = new RemoveEvent(0, 0, null);
         for (int i = connections.size() - 1; i >= 0; i--) {
-            if ((uk = (UniqueKeyConstruct) ((Connection) connections.elementAt(i))
+            if ((uk = (UniqueKeyConstruct) (connections.get(i))
                     .isConnectedTo(UniqueKeyConstruct.class)) != null) {
                 uk.handleRemoveEvent(ev);
             }
@@ -1646,7 +1639,7 @@ public class EntityConstruct extends ConceptualConstructItem {
             cz.felk.cvut.erm.event.RemoveEvent event) {
         StrongAddiction sa;
         for (int i = connections.size() - 1; i >= 0; i--)
-            if ((sa = (StrongAddiction) (((Connection) connections.elementAt(i))
+            if ((sa = (StrongAddiction) ((connections.get(i))
                     .isConnectedTo(StrongAddiction.class))) != null)
                 sa.handleRemoveEvent(event);
     }
@@ -1747,7 +1740,7 @@ public class EntityConstruct extends ConceptualConstructItem {
         if (ISAChilds != null) {
             int max = ISAChilds.size() - 1;
             for (int i = max; i >= 0; i--) {
-                EntityConstruct ent = ISAChilds.elementAt(i);
+                EntityConstruct ent = ISAChilds.get(i);
                 removeISAChild(ent, event);
                 cz.felk.cvut.erm.event.MoveEvent ev = new cz.felk.cvut.erm.event.MoveEvent(
                         event.getX(), event.getY(), 100, 0, event.getComponent());

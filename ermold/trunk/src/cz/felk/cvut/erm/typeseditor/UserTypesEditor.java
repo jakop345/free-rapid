@@ -28,7 +28,6 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
     protected JCheckBox checkBox = null;
 
     private boolean creating = true;
-    private boolean objectDuplicity = false;
     private boolean showDialog = true;
     private boolean changed = false;
 
@@ -261,7 +260,7 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
         for (Enumeration e = typesVector.elements(); e.hasMoreElements();) {
             UserTypeStorage u = (UserTypeStorage) e.nextElement();
             DataTypeManager.getInstance().addToTypeNames(u.getTypeName());
-            
+
             utep = new UserTypesEditorPanel(this, u.getDataType());
             java.awt.Dimension dimension = utep.getPreferredSize();
             utep.setBounds(270, 10, dimension.width, dimension.height);
@@ -455,6 +454,7 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
     }
 
     public void propertyChange(PropertyChangeEvent e) {
+        boolean objectDuplicity;
         if (e.getPropertyName().equals(ObjectDataTypePanel2.DUPLICITY_CONFLICT)) {
             objectDuplicity = true;
             return;

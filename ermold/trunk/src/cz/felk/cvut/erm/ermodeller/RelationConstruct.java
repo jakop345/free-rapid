@@ -51,19 +51,16 @@ public class RelationConstruct extends ConceptualConstructItem {
         rel.addPropertyChangeListener(this);
         String name = (model = rel).getName();
         java.awt.FontMetrics fm;
-        try {
-            fm = ((FontManager) manager).getReferentFontMetrics();
-            int width = fm.stringWidth(name), height = fm.getAscent();
-            if (getNotationType() == CHEN) {
+
+        fm = ((FontManager) manager).getReferentFontMetrics();
+        int width = fm.stringWidth(name), height = fm.getAscent();
+        if (getNotationType() == CHEN) {
 //			rect[0][1] = rect[0][0] + 2 * width + height;
-                rect[0][1] = rect[0][0] + 9 * height;
-                rect[1][1] = rect[1][0] + 3 * height;
-            } else {
-                rect[0][1] = rect[0][0] + 7;
-                rect[1][1] = rect[1][0] + 7;
-            }
-        } catch (ClassCastException e) {
-            fm = null;
+            rect[0][1] = rect[0][0] + 9 * height;
+            rect[1][1] = rect[1][0] + 3 * height;
+        } else {
+            rect[0][1] = rect[0][0] + 7;
+            rect[1][1] = rect[1][0] + 7;
         }
     }
 
@@ -78,12 +75,10 @@ public class RelationConstruct extends ConceptualConstructItem {
      * @see CardinalityConstruct#isCompactable()
      */
     public boolean compactConnection(EntityConstruct e1, EntityConstruct e2) {
-        Object o;
-        Connection c;
         CardinalityConstruct car;
         //go through all connections
         for (int i = connections.size() - 1; i >= 0; i--) {
-            if ((car = (CardinalityConstruct) ((Connection) connections.elementAt(i)).isConnectedTo(CardinalityConstruct.class)) != null) {
+            if ((car = (CardinalityConstruct) (connections.get(i)).isConnectedTo(CardinalityConstruct.class)) != null) {
                 //it's connection to the cardinality
                 if (car.isCompactable()) {
                     EntityConstruct e = car.getEntity();
@@ -124,21 +119,20 @@ public class RelationConstruct extends ConceptualConstructItem {
      */
     public CardinalityConstruct createCardinality(EntityConstruct ent, Manager manager, int left, int top) {
         CardinalityConstruct car;
+
         try {
-            //creates new model - cardinality
+//creates new model - cardinality
             Relation cRel = model;
             Entity cEnt = (ent.getModel());
             Cardinality cCar = cRel.createCardinality(cEnt);
             //creates new view controller - cardinality
-/*		Changed manager from desktop to ENTITY!	
+/*		Changed manager from desktop to ENTITY!
   		Cardinality car = new Cardinality(cCar, manager, left, top);
 		manager.add(car);
 */
             if (getNotationType() != CHEN) {
-                java.util.Enumeration e = connections.elements();
                 int counter = 0;
-                while (e.hasMoreElements()) {
-                    Connection c = ((Connection) e.nextElement());
+                for (Connection c : connections) {
                     CardinalityConstruct exCar = null;
                     if (c.getOne() instanceof CardinalityConstruct)
                         exCar = (CardinalityConstruct) (c.getOne());
@@ -160,11 +154,9 @@ public class RelationConstruct extends ConceptualConstructItem {
             ((ConnectionManager) manager).addConnection(conn);
             (manager).repaintItem(conn);
             return car;
-        } catch (Throwable x) {
-            new ShowException(null, "Error", x, true);
-            car = null;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        return car;
     }
 
     /*public Cardinality createCardinality(Entity ent, cz.felk.cvut.erm.event.interfaces.Manager manager, int left, int top, boolean toTheMiddle) throws ItemNotInsideManagerException {
@@ -218,6 +210,7 @@ public class RelationConstruct extends ConceptualConstructItem {
     static public RelationConstruct createRelation(Schema schema, Manager manager, int left, int right) {
         try {
             //creates the new DGroup instance
+            //noinspection SuspiciousNameCombination
             DGroupTool group = new DGroupTool(manager, left, right, 0, 0);
             Relation cRel = schema.createRelation();
             //creates new relation
@@ -244,6 +237,7 @@ public class RelationConstruct extends ConceptualConstructItem {
      */
     static public RelationConstruct createRelation(Schema schema, Manager manager, int left, int top, int width, int height) {
         RelationConstruct rel;
+        //noinspection SuspiciousNameCombination
         rel = createRelation(schema, manager, left, top);
         java.awt.Rectangle r = rel.getBounds();
         try {
@@ -262,13 +256,13 @@ public class RelationConstruct extends ConceptualConstructItem {
      */
     protected boolean decomposable() {
         Vector<EntityConstruct> v = new java.util.Vector<EntityConstruct>(connections.size());
-        Object o;
+
         CardinalityConstruct car;
-        Connection c;
+
         boolean recursive = false;
         //go through all connections
         for (int i = connections.size() - 1; i >= 0; i--) {
-            if ((car = (CardinalityConstruct) ((Connection) (connections.elementAt(i))).isConnectedTo(CardinalityConstruct.class)) != null) {
+            if ((car = (CardinalityConstruct) ((Connection) (connections.get(i))).isConnectedTo(CardinalityConstruct.class)) != null) {
                 if (!car.isMultiCardinality())
                     return true;
                 //is there already connection to the entity
@@ -295,7 +289,7 @@ public class RelationConstruct extends ConceptualConstructItem {
             CardinalityConstruct car, primary = null, first = null;
             //find entity with single cardinality or take the first
             for (int i = connections.size() - 1; i >= 0; i--) {
-                if ((car = (CardinalityConstruct) ((Connection) (connections.elementAt(i))).isConnectedTo(CardinalityConstruct.class)) != null) {
+                if ((car = (CardinalityConstruct) ((Connection) (connections.get(i))).isConnectedTo(CardinalityConstruct.class)) != null) {
                     if (primary == null)
                         primary = car;
                     if ((!car.isMultiCardinality()) && !create) {
@@ -306,11 +300,11 @@ public class RelationConstruct extends ConceptualConstructItem {
             }
             //if there is some cardinality object, create primary key and add strong addiction
             if (primary != null) {
-                java.awt.Point p = ent.getCenter(primary.getEntity());
+                ent.getCenter(primary.getEntity());//TODO mozna zbytecne
                 primary.transformToStrongAddiction(ent, man);
             }
             for (int i = connections.size() - 1; i >= 0; i--) {
-                if ((car = (CardinalityConstruct) ((Connection) (connections.elementAt(i))).isConnectedTo(CardinalityConstruct.class)) != null) {
+                if ((car = (CardinalityConstruct) ((Connection) (connections.get(i))).isConnectedTo(CardinalityConstruct.class)) != null) {
                     if (car != primary) {
                         if (create) {
                             //others cardinalities decompose as new relations
@@ -325,7 +319,7 @@ public class RelationConstruct extends ConceptualConstructItem {
             if (!decomposable()) {
                 StrongAddiction sa;
                 for (int i = connections.size() - 1; i >= 0; i--) {
-                    if ((sa = (StrongAddiction) ((Connection) (connections.elementAt(i))).isConnectedTo(StrongAddiction.class)) != null) {
+                    if ((sa = (StrongAddiction) ((connections.get(i))).isConnectedTo(StrongAddiction.class)) != null) {
                         sa.move(i * 10, i * 10, false);
                     }
                 }
@@ -459,10 +453,8 @@ public class RelationConstruct extends ConceptualConstructItem {
         if (item instanceof EntityConstruct) {
             String name = "";
             if (getNotationType() != ConceptualConstructItem.CHEN) {
-                java.util.Enumeration e = getConnections().elements();
                 CardinalityConstruct car1;
-                while (e.hasMoreElements()) {
-                    Connection c = ((Connection) e.nextElement());
+                for (Connection c : connections) {
                     if (c.getOne() instanceof CardinalityConstruct) {
                         car1 = ((CardinalityConstruct) c.getOne());
                         name = (car1.getEntity().getModel()).getName();
@@ -517,9 +509,7 @@ public class RelationConstruct extends ConceptualConstructItem {
 
     public void handleExMoveEvent(ExMoveEvent event) {
         super.handleExMoveEvent(event);
-        java.util.Enumeration e = connections.elements();
-        while (e.hasMoreElements()) {
-            Connection c = ((Connection) e.nextElement());
+        for (Connection c : connections) {
             CardinalityConstruct car = null;
             if (c.getOne() instanceof CardinalityConstruct)
                 car = (CardinalityConstruct) (c.getOne());
@@ -530,7 +520,6 @@ public class RelationConstruct extends ConceptualConstructItem {
                 car.getManager().repaintRectangle(r.x, r.y, r.width, r.height);
             }
         }
-
     }
 
     /**
@@ -703,17 +692,13 @@ public class RelationConstruct extends ConceptualConstructItem {
      * @see ConceptualConstructItem#propertyCHENge(java.beans.PropertyCHENgeEvent);
      */
     public void propertyChange(java.beans.PropertyChangeEvent e) {
-        ((ConceptualObject) getModel())
-                .setChanged(true);
+        ((ConceptualObject) getModel()).setChanged(true);
         java.awt.Rectangle r = getBounds();
         if (e.getPropertyName().equals("name")) {
             if (getNotationType() == CHEN) {
-                ResizeRectangle rr = new ResizeRectangle(
-                        0, 0, 0, 0, ResizePoint.BOTTOM
-                        | ResizePoint.RIGHT);
+                ResizeRectangle rr = new ResizeRectangle(0, 0, 0, 0, ResizePoint.BOTTOM | ResizePoint.RIGHT);
                 this.resizeRelation(new ResizeEvent(0, 0, 0, 0, rr, null));
-                (manager).repaintRectangle(r.x,
-                        r.y, r.width, r.height);
+                manager.repaintRectangle(r.x, r.y, r.width, r.height);
             }
         }
     }
@@ -795,7 +780,7 @@ public class RelationConstruct extends ConceptualConstructItem {
     /**
      * @return Returns the connections.
      */
-    public Vector getConnections() {
+    public java.util.List<Connection> getConnections() {
         return connections;
     }
 

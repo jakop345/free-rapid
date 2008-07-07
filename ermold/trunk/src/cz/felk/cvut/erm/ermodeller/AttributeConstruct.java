@@ -82,7 +82,7 @@ public class AttributeConstruct extends ConceptualConstructObject {
         Object removeElement = null;
         if (connections.size() == 1) {
             //there is only connection to relation or entity
-            removeElement = connections.elementAt(0);
+            removeElement = connections.get(0);
             Connection c = (Connection) removeElement;
             if ((c.getOne() != cc) && (c.getTwo() != cc))
                 removeElement = null;
@@ -470,7 +470,7 @@ public class AttributeConstruct extends ConceptualConstructObject {
      */
     protected boolean isInUniqueKey() {
         for (int i = connections.size() - 1; i >= 0; i--) {
-            if (((Connection) connections.elementAt(i)).isConnectedTo(UniqueKeyConstruct.class) != null)
+            if (((Connection) connections.get(i)).isConnectedTo(UniqueKeyConstruct.class) != null)
                 return true;
         }
         return false;
@@ -854,7 +854,7 @@ public class AttributeConstruct extends ConceptualConstructObject {
         boolean add = false;
         if (connections.size() == 1) {
             //there is only connection to relation, entity or unique key
-            Connection c = (Connection) (connections.elementAt(0));
+            Connection c = connections.get(0);
             if ((c.getOne() != cc) && (c.getTwo() != cc)) {
                 //the last connection is not to the owner -- adds such connection
                 add = true;

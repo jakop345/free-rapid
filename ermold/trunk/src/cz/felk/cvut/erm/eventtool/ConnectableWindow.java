@@ -8,7 +8,7 @@ import cz.felk.cvut.erm.eventtool.interfaces.Connectable;
 import cz.felk.cvut.erm.eventtool.interfaces.Connection;
 
 import java.awt.*;
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  * Creates all needed functionality for connectable windows. Invokes repainting function to all connections,
@@ -22,7 +22,7 @@ public class ConnectableWindow extends Window implements Connectable {
     /**
      * This vector holds all connections connected to this window
      */
-    protected Vector connections = null;
+    protected java.util.List<Connection> connections = null;
     /**
      * Determine whether the connections are already painted using paintFast method
      */
@@ -36,7 +36,7 @@ public class ConnectableWindow extends Window implements Connectable {
      */
     public ConnectableWindow(Manager manager, int left, int top, int width, int height) throws NullPointerException, ImpossibleNegativeValueException {
         super(manager, left, top, width, height);
-        connections = new Vector(5, 3);
+        connections = new ArrayList<Connection>(5);
     }
 
     /**
@@ -46,7 +46,7 @@ public class ConnectableWindow extends Window implements Connectable {
      * @see Connectable#addConnection(cz.felk.cvut.erm.ermodeller.Connection)
      */
     public void addConnection(Connection conn) {
-        connections.addElement(conn);
+        connections.add(conn);
     }
 
     /**
@@ -57,9 +57,7 @@ public class ConnectableWindow extends Window implements Connectable {
      *         <code>null</code>.
      */
     public Connection connectionTo(Object object) {
-        java.util.Enumeration e = connections.elements();
-        while (e.hasMoreElements()) {
-            Connection c = ((Connection) e.nextElement());
+        for (Connection c : connections) {
             if ((c.getOne() == object) || (c.getTwo() == object))
                 return c;
         }
@@ -72,8 +70,8 @@ public class ConnectableWindow extends Window implements Connectable {
      * @see Connection#disconnect()
      */
     public void disconnectAll() {
-        while (connections.size() != 0) {
-            ((Connection) connections.elementAt(0)).disconnect();
+        while (!connections.isEmpty()) {
+            connections.get(0).disconnect();
         }
     }
 
@@ -87,18 +85,14 @@ public class ConnectableWindow extends Window implements Connectable {
      */
     protected void finishConnFastRepaint(boolean recount) {
         PaintableManager m = manager;
-        java.util.Enumeration e;
-        e = connections.elements();
         if (recount) {
-            while (e.hasMoreElements()) {
-                Connection c = ((Connection) e.nextElement());
+            for (Connection c : connections) {
                 connPaintedFast = false;
                 c.repaintStoredBounds();
                 m.repaintItem(c);
             }
         } else {
-            while (e.hasMoreElements()) {
-                Connection c = ((Connection) e.nextElement());
+            for (Connection c : connections) {
                 m.repaintItemFast(c);
             }
         }
@@ -256,7 +250,7 @@ public class ConnectableWindow extends Window implements Connectable {
      * @see Connectable#removeConnection(Connection)
      */
     public void removeConnection(Connection conn) {
-        connections.removeElement(conn);
+        connections.remove(conn);
     }
 
     /**
@@ -282,17 +276,14 @@ public class ConnectableWindow extends Window implements Connectable {
      */
     protected void startConnFastRepaint() {
         PaintableManager m = manager;
-        java.util.Enumeration e;
-        e = connections.elements();
         if (connPaintedFast) {
-            if (connPaintedFast)
-                while (e.hasMoreElements()) {
-                    m.repaintItemFast((Connection) e.nextElement());
-                }
+            for (Connection c : connections) {
+                m.repaintItemFast(c);
+            }
         } else {
-            while (e.hasMoreElements()) {
-                ((Connection) e.nextElement()).saveBounds();
-                connPaintedFast = true;
+            for (Connection c : connections) {
+                c.saveBounds();
+                connPaintedFast = true; //TODO nastavovani v cyklu
             }
         }
     }

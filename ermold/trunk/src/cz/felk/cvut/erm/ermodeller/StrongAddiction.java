@@ -128,9 +128,7 @@ public class StrongAddiction extends ConceptualConstructObject {
      * Get the entity that participation this object represents.
      */
     public EntityConstruct getEntity() {
-        java.util.Enumeration e = connections.elements();
-        while (e.hasMoreElements()) {
-            Connection c = ((Connection) e.nextElement());
+        for (Connection c : connections) {
             if (c.getOne() instanceof EntityConstruct)
                 return (EntityConstruct) (c.getOne());
             if (c.getTwo() instanceof EntityConstruct)
@@ -155,9 +153,7 @@ public class StrongAddiction extends ConceptualConstructObject {
      * Get the entity that participation this object represents.
      */
     public UniqueKeyConstruct getUniqueKey() {
-        java.util.Enumeration e = connections.elements();
-        while (e.hasMoreElements()) {
-            Connection c = ((Connection) e.nextElement());
+        for (Connection c : connections) {
             if (c.getOne() instanceof UniqueKeyConstruct)
                 return (UniqueKeyConstruct) (c.getOne());
             if (c.getTwo() instanceof UniqueKeyConstruct)
