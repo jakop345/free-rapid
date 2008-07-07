@@ -261,7 +261,7 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
         for (Enumeration e = typesVector.elements(); e.hasMoreElements();) {
             UserTypeStorage u = (UserTypeStorage) e.nextElement();
             DataTypeManager.getInstance().addToTypeNames(u.getTypeName());
-            /*let's make correct structure of dialogs and panels*/
+            
             utep = new UserTypesEditorPanel(this, u.getDataType());
             java.awt.Dimension dimension = utep.getPreferredSize();
             utep.setBounds(270, 10, dimension.width, dimension.height);
