@@ -2,6 +2,9 @@ package cz.felk.cvut.erm.ermodeller;
 
 import cz.felk.cvut.erm.conceptual.beans.Atribute;
 import cz.felk.cvut.erm.conceptual.beans.UniqueKey;
+import cz.felk.cvut.erm.event.DragOverEvent;
+import cz.felk.cvut.erm.event.DropAboveEvent;
+import cz.felk.cvut.erm.event.PopUpMenuEvent;
 import cz.felk.cvut.erm.event.exceptions.ImpossibleNegativeValueException;
 import cz.felk.cvut.erm.event.interfaces.Item;
 import cz.felk.cvut.erm.event.interfaces.Manager;
@@ -130,7 +133,7 @@ public class UniqueKeyConstruct extends ConceptualConstructObject {
      *              for determing targets of the methods call.
      * @return The filled menu.
      */
-    protected JPopupMenu createMenu(JPopupMenu menu, PopupMenuEvent event) {
+    protected JPopupMenu createMenu(JPopupMenu menu, PopUpMenuEvent event) {
         super.createMenu(menu, event);
         if (hasAtribute()) {
             addMenuItem(menu, "Remove atribute", "img/mDisconnect.gif", event

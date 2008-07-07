@@ -8,9 +8,7 @@ import cz.felk.cvut.erm.datatype.DataType;
 import cz.felk.cvut.erm.datatype.DataTypeManager;
 import cz.felk.cvut.erm.datatype.UserDefinedDataType;
 import cz.felk.cvut.erm.ermodeller.interfaces.FontManager;
-import cz.felk.cvut.erm.event.MoveEvent;
-import cz.felk.cvut.erm.event.ResizeEvent;
-import cz.felk.cvut.erm.event.ResizePoint;
+import cz.felk.cvut.erm.event.*;
 import cz.felk.cvut.erm.event.exceptions.ImpossibleNegativeValueException;
 import cz.felk.cvut.erm.event.exceptions.ItemNotInsideManagerException;
 import cz.felk.cvut.erm.event.interfaces.Item;
@@ -122,7 +120,7 @@ public class AttributeConstruct extends ConceptualConstructObject {
      *              call.
      * @return The filled menu.
      */
-    protected JPopupMenu createMenu(JPopupMenu menu, PopupMenuEvent event) {
+    protected JPopupMenu createMenu(JPopupMenu menu, PopUpMenuEvent event) {
         super.createMenu(menu, event);
         final NotationType type = getNotationType();
         if (getOwner() instanceof EntityConstruct) {

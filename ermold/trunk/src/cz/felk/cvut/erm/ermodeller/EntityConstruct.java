@@ -10,7 +10,7 @@ import cz.felk.cvut.erm.conceptual.exception.CannotHavePrimaryKeyException;
 import cz.felk.cvut.erm.conceptual.exception.CycleWouldAppearException;
 import cz.felk.cvut.erm.conceptual.exception.IsISASonException;
 import cz.felk.cvut.erm.conceptual.exception.WasNotFoundException;
-import cz.felk.cvut.erm.ermodeller.dialogs.ConstraintsDialog;
+import cz.felk.cvut.erm.dialogs.ConstraintsDialog;
 import cz.felk.cvut.erm.ermodeller.interfaces.FontManager;
 import cz.felk.cvut.erm.ermodeller.interfaces.ISchema;
 import cz.felk.cvut.erm.event.*;
@@ -594,7 +594,7 @@ public class EntityConstruct extends ConceptualConstructItem {
      *              call.
      * @return The filled menu.
      */
-    protected JPopupMenu createMenu(JPopupMenu menu, PopupMenuEvent event) {
+    protected JPopupMenu createMenu(JPopupMenu menu, PopUpMenuEvent event) {
         super.createMenu(menu, event);
         final NotationType type = model.getSchema().getNotationType();
 /*		addMenuItem(menu, "Add unique key", "mUKey.gif", event.getComponent(),
@@ -1791,7 +1791,7 @@ public class EntityConstruct extends ConceptualConstructItem {
      * @see #resizeParent(cz.felk.cvut.erm.event.ResizeEvent, EntityConstruct)
      * @see #moveChilds(cz.felk.cvut.erm.event.CoordinateEvent)
      */
-    protected void resizeEntity(cz.felk.cvut.erm.event.ResizeEvent event) {
+    public void resizeEntity(cz.felk.cvut.erm.event.ResizeEvent event) {
         countMinSize(event);
         if (ISAParent != null) {
             ISAParent.resizeParent(event, this);
@@ -1812,7 +1812,7 @@ public class EntityConstruct extends ConceptualConstructItem {
      * @see #minimizeChilds(cz.felk.cvut.erm.event.ResizeEvent, EntityConstruct)
      * @see #moveChilds(cz.felk.cvut.erm.event.CoordinateEvent)
      */
-    protected void minimizeEntity(cz.felk.cvut.erm.event.ResizeEvent event) {
+    public void minimizeEntity(cz.felk.cvut.erm.event.ResizeEvent event) {
         if (ISAChilds != null && ISAChilds.size() > 0) {
             for (Object ISAChild : ISAChilds) {
                 EntityConstruct ent = (EntityConstruct) ISAChild;

@@ -1,4 +1,4 @@
-package cz.felk.cvut.erm.errorlog.dialogs;
+package cz.felk.cvut.erm.dialogs;
 
 import cz.felk.cvut.erm.conceptual.beans.ConceptualObject;
 import cz.felk.cvut.erm.conceptual.beans.Schema;

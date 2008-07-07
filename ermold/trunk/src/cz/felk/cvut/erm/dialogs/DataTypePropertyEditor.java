@@ -1,4 +1,4 @@
-package cz.felk.cvut.erm.ermodeller.dialogs;
+package cz.felk.cvut.erm.dialogs;
 
 import com.l2fprod.common.beans.editor.AbstractPropertyEditor;
 import com.l2fprod.common.swing.PercentLayout;

@@ -1,8 +1,8 @@
-package cz.felk.cvut.erm.ermodeller.dialogs;
+package cz.felk.cvut.erm.dialogs;
 
+import cz.felk.cvut.erm.app.ERModeller;
 import cz.felk.cvut.erm.conceptual.NotationType;
 import cz.felk.cvut.erm.conceptual.beans.Entity;
-import cz.felk.cvut.erm.ermodeller.ERModeller;
 import cz.felk.cvut.erm.ermodeller.WorkingDesktop;
 
 import javax.swing.*;

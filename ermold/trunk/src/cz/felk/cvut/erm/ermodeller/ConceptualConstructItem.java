@@ -5,6 +5,7 @@ import cz.felk.cvut.erm.conceptual.beans.Atribute;
 import cz.felk.cvut.erm.conceptual.beans.ConceptualConstruct;
 import cz.felk.cvut.erm.conceptual.exception.ParameterCannotBeNullException;
 import cz.felk.cvut.erm.conceptual.exception.WasNotFoundException;
+import cz.felk.cvut.erm.event.*;
 import cz.felk.cvut.erm.event.exceptions.ImpossibleNegativeValueException;
 import cz.felk.cvut.erm.event.interfaces.Invokable;
 import cz.felk.cvut.erm.event.interfaces.Item;
@@ -107,7 +108,7 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
      *              methods call.
      * @return The filled menu.
      */
-    protected JPopupMenu createMenu(JPopupMenu menu, PopupMenuEvent event) {
+    protected JPopupMenu createMenu(JPopupMenu menu, PopUpMenuEvent event) {
         super.createMenu(menu, event);
         return menu;
     }
@@ -199,7 +200,7 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
     /**
      * The same handling as by ConnectableWindow but the moving is passed to the manager
      *
-     * @see DGroupTool#handleExMoveEvent(cz.felk.cvut.erm.ermodeller.ExMoveEvent)
+     * @see DGroupTool#handleExMoveEvent(cz.felk.cvut.erm.event.ExMoveEvent)
      */
     public void handleExMoveEvent(ExMoveEvent event) {
         DropAboveEvent ev = null;
@@ -227,7 +228,7 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
     /**
      * The same handling as by ConnectableWindow but the moving is passed to the manager
      *
-     * @see DGroupTool#handleExMovingEvent(cz.felk.cvut.erm.ermodeller.ExMovingEvent)
+     * @see DGroupTool#handleExMovingEvent(cz.felk.cvut.erm.event.ExMovingEvent)
      */
     public void handleExMovingEvent(ExMovingEvent event) {
         paintedFast = true;

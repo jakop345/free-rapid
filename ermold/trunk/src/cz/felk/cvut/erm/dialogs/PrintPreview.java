@@ -1,4 +1,4 @@
-package cz.felk.cvut.erm.eventtool.dialogs;
+package cz.felk.cvut.erm.dialogs;
 
 import cz.felk.cvut.erm.event.interfaces.ContainerDesktop;
 import cz.felk.cvut.erm.eventtool.interfaces.Printable;

@@ -1,8 +1,10 @@
 package cz.felk.cvut.erm.ermodeller;
 
+import cz.felk.cvut.erm.app.AppPrefs;
+import cz.felk.cvut.erm.app.Consts;
 import cz.felk.cvut.erm.conceptual.NotationType;
 import cz.felk.cvut.erm.conceptual.beans.ConceptualConstruct;
-import cz.felk.cvut.erm.ermodeller.dialogs.ConstraintsDialog;
+import cz.felk.cvut.erm.dialogs.ConstraintsDialog;
 import cz.felk.cvut.erm.ermodeller.interfaces.FontManager;
 import cz.felk.cvut.erm.ermodeller.interfaces.ISchema;
 import cz.felk.cvut.erm.ermodeller.interfaces.ModeSwitcher;
@@ -560,10 +562,10 @@ public class DesktopContainer extends ContainerToolComponent implements ModeSwit
      * @param y     Event y coordinate (nature schema coordinates)
      * @param realX Real container x coordinate
      * @param realY Real container y coordinate
-     * @see PopupMenuEvent
+     * @see PopUpMenuEvent
      */
     protected void popupAction(int x, int y, int realX, int realY) {
-        desktop.fallAndHandleEvent(x, y, new PopupMenuEvent(x, y, realX, realY, this, menu));
+        desktop.fallAndHandleEvent(x, y, new PopUpMenuEvent(x, y, realX, realY, this, menu));
     }
 
     /**

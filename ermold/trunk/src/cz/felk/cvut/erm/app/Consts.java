@@ -1,4 +1,4 @@
-package cz.felk.cvut.erm.ermodeller;
+package cz.felk.cvut.erm.app;
 
 import cz.felk.cvut.erm.conceptual.beans.Schema;
 import cz.felk.cvut.erm.event.WindowItem;

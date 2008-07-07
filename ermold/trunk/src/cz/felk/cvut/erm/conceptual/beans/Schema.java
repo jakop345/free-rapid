@@ -1,12 +1,12 @@
 package cz.felk.cvut.erm.conceptual.beans;
 
+import cz.felk.cvut.erm.app.AppPrefs;
+import cz.felk.cvut.erm.app.Consts;
 import cz.felk.cvut.erm.conceptual.NotationType;
 import cz.felk.cvut.erm.conceptual.exception.ListException;
 import cz.felk.cvut.erm.conceptual.exception.ParameterCannotBeNullException;
 import cz.felk.cvut.erm.conceptual.exception.WasNotFoundException;
 import cz.felk.cvut.erm.datatype.DataTypeManager;
-import cz.felk.cvut.erm.ermodeller.AppPrefs;
-import cz.felk.cvut.erm.ermodeller.Consts;
 import cz.felk.cvut.erm.errorlog.*;
 import cz.felk.cvut.erm.errorlog.exception.CheckNameDuplicityValidationException;
 
@@ -295,7 +295,7 @@ public class Schema extends ConceptualObject {
      * This returns icon for invalid state.
      *
      * @return Icon represented invalid state of the atribute.
-     * @see cz.felk.cvut.erm.errorlog.dialogs.ErrorLogDialog
+     * @see cz.felk.cvut.erm.dialogs.ErrorLogDialog
      */
     public Icon getInvalidIcon() {
         return new ImageIcon(ClassLoader.getSystemResource("img/schemainvalid.gif"));
@@ -335,7 +335,7 @@ public class Schema extends ConceptualObject {
      * This returns icon for valid state.
      *
      * @return Icon represented valid state of the atribute.
-     * @see cz.felk.cvut.erm.errorlog.dialogs.ErrorLogDialog
+     * @see cz.felk.cvut.erm.dialogs.ErrorLogDialog
      */
     public Icon getValidIcon() {
         return new ImageIcon(ClassLoader.getSystemResource("img/schemavalid.gif"));

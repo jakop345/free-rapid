@@ -117,7 +117,7 @@ public class UniqueKey extends ConceptualObject {
      * This returns icon for invalid state.
      *
      * @return Icon represented invalid state of the atribute.
-     * @see cz.felk.cvut.erm.errorlog.dialogs.ErrorLogDialog
+     * @see cz.felk.cvut.erm.dialogs.ErrorLogDialog
      */
     public Icon getInvalidIcon() {
         return new ImageIcon(ClassLoader.getSystemResource("img/unqinvalid.gif"));
@@ -128,7 +128,7 @@ public class UniqueKey extends ConceptualObject {
      * This returns icon for valid state.
      *
      * @return Icon represented valid state of the atribute.
-     * @see cz.felk.cvut.erm.errorlog.dialogs.ErrorLogDialog
+     * @see cz.felk.cvut.erm.dialogs.ErrorLogDialog
      */
     public Icon getValidIcon() {
         return new ImageIcon(ClassLoader.getSystemResource("img/unqvalid.gif"));

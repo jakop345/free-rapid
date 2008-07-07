@@ -1,7 +1,7 @@
 package cz.felk.cvut.erm.conc2obj;
 
+import cz.felk.cvut.erm.app.AppPrefs;
 import cz.felk.cvut.erm.conc2obj.interfaces.SubObjProducer;
-import cz.felk.cvut.erm.ermodeller.AppPrefs;
 import cz.felk.cvut.erm.icontree.IconNodeRenderer;
 import cz.felk.cvut.erm.sql.gui.SQLConnection;
 import cz.felk.cvut.erm.swing.ExtensionFileFilter;

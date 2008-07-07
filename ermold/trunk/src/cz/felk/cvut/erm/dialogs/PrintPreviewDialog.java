@@ -1,7 +1,7 @@
-package cz.felk.cvut.erm.eventtool.dialogs;
+package cz.felk.cvut.erm.dialogs;
 
-import cz.felk.cvut.erm.ermodeller.AppPrefs;
-import cz.felk.cvut.erm.ermodeller.Consts;
+import cz.felk.cvut.erm.app.AppPrefs;
+import cz.felk.cvut.erm.app.Consts;
 import cz.felk.cvut.erm.event.interfaces.ContainerDesktop;
 import cz.felk.cvut.erm.eventtool.interfaces.Printable;
 import cz.felk.cvut.erm.swing.*;

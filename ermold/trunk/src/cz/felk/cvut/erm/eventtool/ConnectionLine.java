@@ -1,5 +1,6 @@
 package cz.felk.cvut.erm.eventtool;
 
+import cz.felk.cvut.erm.app.Consts;
 import cz.felk.cvut.erm.conceptual.beans.Schema;
 import cz.felk.cvut.erm.ermodeller.*;
 import cz.felk.cvut.erm.event.ResizePoint;

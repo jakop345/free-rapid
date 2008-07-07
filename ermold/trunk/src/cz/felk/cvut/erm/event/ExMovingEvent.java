@@ -1,11 +1,11 @@
-package cz.felk.cvut.erm.ermodeller;
+package cz.felk.cvut.erm.event;
 
 /**
  * This class extends the <code>MovingEvent</code> from the package <code>cz.green.event</code>.
  * The reason for existence this class is in ER modeller. When many things are made
  * by dragging one item to other. This operation should be differentiate from normal items moving.
  */
-class ExMovingEvent extends ExMoveEvent {
+public class ExMovingEvent extends ExMoveEvent {
     /**
      * Only invokes the inherited constructor
      *

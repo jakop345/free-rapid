@@ -1,4 +1,4 @@
-package cz.felk.cvut.erm.ermodeller;
+package cz.felk.cvut.erm.app;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;

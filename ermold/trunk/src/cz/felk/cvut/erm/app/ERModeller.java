@@ -1,20 +1,15 @@
-package cz.felk.cvut.erm.ermodeller;
+package cz.felk.cvut.erm.app;
 
 import cz.felk.cvut.erm.conc2obj.ObjDialog;
 import cz.felk.cvut.erm.conceptual.NotationType;
 import cz.felk.cvut.erm.conceptual.beans.*;
 import cz.felk.cvut.erm.datatype.*;
-import cz.felk.cvut.erm.ermodeller.dialogs.AboutDialog;
-import cz.felk.cvut.erm.ermodeller.dialogs.ChangeNotationDialog;
-import cz.felk.cvut.erm.ermodeller.dialogs.OptionsDialog;
+import cz.felk.cvut.erm.dialogs.*;
+import cz.felk.cvut.erm.ermodeller.*;
 import cz.felk.cvut.erm.ermodeller.interfaces.FontManager;
 import cz.felk.cvut.erm.errorlog.ErrorLogList;
-import cz.felk.cvut.erm.errorlog.dialogs.ConflictsDialog;
-import cz.felk.cvut.erm.errorlog.dialogs.ErrorLogDialog;
 import cz.felk.cvut.erm.event.*;
 import cz.felk.cvut.erm.event.exceptions.ItemNotInsideManagerException;
-import cz.felk.cvut.erm.eventtool.dialogs.PrintPreviewDialog;
-import cz.felk.cvut.erm.eventtool.dialogs.PropertyListDialog;
 import cz.felk.cvut.erm.eventtool.interfaces.Connection;
 import cz.felk.cvut.erm.sql.gui.SQLDialog;
 import cz.felk.cvut.erm.swing.ExtensionFileFilter;
@@ -55,8 +50,8 @@ public class ERModeller extends JFrame implements
     /**
      * The container where the desktop paints
      *
-     * @see DesktopContainer
-     * @see WorkingDesktop
+     * @see cz.felk.cvut.erm.ermodeller.DesktopContainer
+     * @see cz.felk.cvut.erm.ermodeller.WorkingDesktop
      */
     private DesktopContainer place = null;
 
@@ -1791,7 +1786,7 @@ public class ERModeller extends JFrame implements
 
             for (Object allEntity : allEntities) {
                 EntityConstruct ent = (EntityConstruct) allEntity;
-                if (ent.isStrongAddictionChild)
+                if (ent.isStrongAddictionChild())
                     setNewStrongAddictionsManager(ent);
             }
 
@@ -1806,7 +1801,7 @@ public class ERModeller extends JFrame implements
                 RelationConstruct rel = (RelationConstruct) rel1;
 //				int height=rel.getBounds().height, width=rel.getBounds().width;
                 FontMetrics fm = ((FontManager) rel.getManager()).getReferentFontMetrics();
-                int width = fm.stringWidth(rel.model.getName()), height = fm.getAscent();
+                int width = fm.stringWidth(((Relation) rel.getModel()).getName()), height = fm.getAscent();
                 try {
                     rel.resize(2 * width + height - 7, 3 * height - 7, (ResizePoint.RIGHT | ResizePoint.BOTTOM), true);
                     rel.handleMoveEvent(new MoveEvent(rel.getBounds().x, rel.getBounds().y, -rel.getBounds().width / 2 + 4, -rel.getBounds().height / 2 + 4, null));
@@ -1854,14 +1849,14 @@ public class ERModeller extends JFrame implements
         for (Object allEntity : allEntities) {
             EntityConstruct ent = (EntityConstruct) allEntity;
             ent.recalculatePositionsOfAtributes();
-            if (ent.isStrongAddictionChild)
+            if (ent.isStrongAddictionChild())
                 setNewStrongAddictionsManager(ent);
             /*Resize entity if is too small to show inside all atributes */
             ResizeRectangle rr = new ResizeRectangle(
                     0, 0, 0, 0, ResizePoint.BOTTOM
                     | ResizePoint.RIGHT);
             ent.resizeEntity(new ResizeEvent(ent.getBounds().x, ent.getBounds().y, 1, 1, rr, this));
-            if (ent.isStrongAddictionChild)
+            if (ent.isStrongAddictionChild())
                 resizeStrongAddictions(ent, ConceptualConstructItem.BINARY);
         }
 
@@ -1925,7 +1920,7 @@ public class ERModeller extends JFrame implements
             EntityConstruct ent = (EntityConstruct) allEntity;
             ent.recalculatePositionsOfAtributes();
             resizeStrongAddictions(ent, ConceptualConstructItem.UML);
-            if (ent.isStrongAddictionChild)
+            if (ent.isStrongAddictionChild())
                 setNewStrongAddictionsManager(ent);
         }
 

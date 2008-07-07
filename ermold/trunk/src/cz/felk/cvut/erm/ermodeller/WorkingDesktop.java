@@ -2,19 +2,16 @@ package cz.felk.cvut.erm.ermodeller;
 
 import cz.felk.cvut.erm.conceptual.NotationType;
 import cz.felk.cvut.erm.conceptual.beans.*;
+import cz.felk.cvut.erm.dialogs.PropertyListDialog;
 import cz.felk.cvut.erm.ermodeller.interfaces.FontManager;
 import cz.felk.cvut.erm.ermodeller.interfaces.ISchema;
 import cz.felk.cvut.erm.ermodeller.interfaces.ModelFinder;
 import cz.felk.cvut.erm.ermodeller.interfaces.ViewController;
 import cz.felk.cvut.erm.errorlog.interfaces.ShowErrorListener;
-import cz.felk.cvut.erm.event.ContainerComponent;
-import cz.felk.cvut.erm.event.RemoveEvent;
-import cz.felk.cvut.erm.event.SelectItemEvent;
-import cz.felk.cvut.erm.event.SelectItemExEvent;
+import cz.felk.cvut.erm.event.*;
 import cz.felk.cvut.erm.event.interfaces.Item;
 import cz.felk.cvut.erm.event.interfaces.PaintableItem;
 import cz.felk.cvut.erm.eventtool.DesktopTool;
-import cz.felk.cvut.erm.eventtool.dialogs.PropertyListDialog;
 import cz.felk.cvut.erm.eventtool.interfaces.Connection;
 import cz.felk.cvut.erm.typeseditor.UserTypeStorage;
 import cz.felk.cvut.erm.typeseditor.UserTypeStorageVector;
@@ -87,7 +84,7 @@ public class WorkingDesktop extends DesktopTool implements FontManager,
                               Entity eM2) {
         EntityConstruct e1 = getEntity(eM1.getID()), e2 = getEntity(eM2.getID());
 
-        e2.composeEntity(e1, new cz.felk.cvut.erm.ermodeller.DragOverEvent(0, 0,
+        e2.composeEntity(e1, new DragOverEvent(0, 0,
                 e1, getPaintPlace()));
     }
 
@@ -127,7 +124,7 @@ public class WorkingDesktop extends DesktopTool implements FontManager,
                                 Relation rM2) {
         RelationConstruct r1 = getRelation(rM1.getID()), r2 = getRelation(rM2.getID());
 
-        r2.composeRelation(r1, new cz.felk.cvut.erm.ermodeller.DragOverEvent(0, 0,
+        r2.composeRelation(r1, new DragOverEvent(0, 0,
                 r1, getPaintPlace()));
     }
 
@@ -682,7 +679,7 @@ public class WorkingDesktop extends DesktopTool implements FontManager,
      * Shows the context menu for the desktop. Removes all items from the menu,
      * add new a display.
      */
-    public void handlePopupMenuEvent(PopupMenuEvent event) {
+    public void handlePopUpMenuEvent(PopUpMenuEvent event) {
         try {
             JPopupMenu menu = event.getMenu();
             menu.removeAll();

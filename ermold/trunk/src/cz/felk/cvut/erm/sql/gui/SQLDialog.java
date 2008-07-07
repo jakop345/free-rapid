@@ -1,6 +1,6 @@
 package cz.felk.cvut.erm.sql.gui;
 
-import cz.felk.cvut.erm.ermodeller.AppPrefs;
+import cz.felk.cvut.erm.app.AppPrefs;
 import cz.felk.cvut.erm.icontree.IconNodeRenderer;
 import cz.felk.cvut.erm.sql.SchemaSQL;
 import cz.felk.cvut.erm.sql.interfaces.SubSQLProducer;

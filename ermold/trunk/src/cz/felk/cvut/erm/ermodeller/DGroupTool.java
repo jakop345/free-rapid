@@ -3,6 +3,8 @@ package cz.felk.cvut.erm.ermodeller;
 import cz.felk.cvut.erm.ermodeller.interfaces.FontManager;
 import cz.felk.cvut.erm.ermodeller.interfaces.ModelFinder;
 import cz.felk.cvut.erm.ermodeller.interfaces.ViewController;
+import cz.felk.cvut.erm.event.ExMoveEvent;
+import cz.felk.cvut.erm.event.ExMovingEvent;
 import cz.felk.cvut.erm.event.SelectItemExEvent;
 import cz.felk.cvut.erm.event.exceptions.ImpossibleNegativeValueException;
 import cz.felk.cvut.erm.event.interfaces.Item;

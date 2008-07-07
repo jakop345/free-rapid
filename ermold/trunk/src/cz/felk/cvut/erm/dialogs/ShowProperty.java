@@ -1,4 +1,4 @@
-package cz.felk.cvut.erm.eventtool.dialogs;
+package cz.felk.cvut.erm.dialogs;
 
 import javax.swing.*;
 import java.awt.*;

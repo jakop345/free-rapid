@@ -1,4 +1,4 @@
-package cz.felk.cvut.erm.ermodeller.dialogs;
+package cz.felk.cvut.erm.dialogs;
 
 import cz.felk.cvut.erm.conceptual.beans.Entity;
 

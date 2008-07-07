@@ -1,15 +1,16 @@
 package cz.felk.cvut.erm.ermodeller;
 
+import cz.felk.cvut.erm.app.Consts;
 import cz.felk.cvut.erm.conceptual.NotationType;
 import cz.felk.cvut.erm.conceptual.beans.ConceptualObject;
 import cz.felk.cvut.erm.conceptual.beans.Schema;
+import cz.felk.cvut.erm.dialogs.PropertyListDialog;
 import cz.felk.cvut.erm.ermodeller.interfaces.ViewController;
-import cz.felk.cvut.erm.event.RemoveEvent;
+import cz.felk.cvut.erm.event.*;
 import cz.felk.cvut.erm.event.exceptions.ImpossibleNegativeValueException;
 import cz.felk.cvut.erm.event.interfaces.Manager;
 import cz.felk.cvut.erm.event.interfaces.PaintableManager;
 import cz.felk.cvut.erm.eventtool.ConnectableWindow;
-import cz.felk.cvut.erm.eventtool.dialogs.PropertyListDialog;
 import cz.felk.cvut.erm.util.ActionAdapter;
 import cz.felk.cvut.erm.util.ParamActionAdapter;
 
@@ -130,7 +131,7 @@ public class ConceptualConstructObject extends ConnectableWindow implements View
      *              call.
      * @return The filled menu.
      */
-    protected JPopupMenu createMenu(JPopupMenu menu, PopupMenuEvent event) {
+    protected JPopupMenu createMenu(JPopupMenu menu, PopUpMenuEvent event) {
         menu.removeAll();
         //addMenuItem(menu, "Properties", "mProperty.gif", this, "propEditing", new Boolean(true), boolean.class);
         return menu;
@@ -234,9 +235,9 @@ public class ConceptualConstructObject extends ConnectableWindow implements View
      * Handle popup menu event to create menu by method <code>createMenu</code>, adds at the end of the menu item to delete
      * element and shows the menu.
      *
-     * @see #createMenu(java.awt.PopupMenu, cz.felk.cvut.erm.ermodeller.PopupMenuEvent)
+     * @see #createMenu(java.awt.PopupMenu, PopUpMenuEvent)
      */
-    public void handlePopupMenuEvent(PopupMenuEvent event) {
+    public void handlePopUpMenuEvent(PopUpMenuEvent event) {
         JPopupMenu menu = event.getMenu();
         //construct the menu
         createMenu(menu, event);

@@ -181,7 +181,7 @@ public class RelationConstruct extends ConceptualConstructItem {
  *              methods call.
  * @return The filled menu.
  */
-    protected JPopupMenu createMenu(JPopupMenu menu, PopupMenuEvent event) {
+    protected JPopupMenu createMenu(JPopupMenu menu, PopUpMenuEvent event) {
         super.createMenu(menu, event);
         if (getNotationType() == CHEN)
             addMenuItem(menu, "Add atribute", "img/mAtribute.gif", event.getComponent(), "addingAtribute", this, ConceptualConstructItem.class);
@@ -744,7 +744,7 @@ public class RelationConstruct extends ConceptualConstructItem {
      *
      * @see #countMinSize(ResizeEvent)
      */
-    protected void minimizeRelation(ResizeEvent event) {
+    public void minimizeRelation(ResizeEvent event) {
         event.setDx(-1000);
         event.setDy(-1000);
         countMinSize(event);

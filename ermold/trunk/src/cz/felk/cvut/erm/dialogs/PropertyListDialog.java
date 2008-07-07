@@ -1,4 +1,4 @@
-package cz.felk.cvut.erm.eventtool.dialogs;
+package cz.felk.cvut.erm.dialogs;
 
 import com.l2fprod.common.propertysheet.Property;
 import com.l2fprod.common.propertysheet.PropertySheet;

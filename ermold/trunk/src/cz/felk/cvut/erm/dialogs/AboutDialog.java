@@ -1,6 +1,6 @@
-package cz.felk.cvut.erm.ermodeller.dialogs;
+package cz.felk.cvut.erm.dialogs;
 
-import cz.felk.cvut.erm.ermodeller.Consts;
+import cz.felk.cvut.erm.app.Consts;
 
 import javax.swing.*;
 import java.awt.*;

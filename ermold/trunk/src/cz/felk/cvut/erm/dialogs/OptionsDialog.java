@@ -1,8 +1,9 @@
-package cz.felk.cvut.erm.ermodeller.dialogs;
+package cz.felk.cvut.erm.dialogs;
 
+import cz.felk.cvut.erm.app.AppPrefs;
+import cz.felk.cvut.erm.app.Consts;
+import cz.felk.cvut.erm.app.ERModeller;
 import cz.felk.cvut.erm.conceptual.beans.Schema;
-import cz.felk.cvut.erm.ermodeller.AppPrefs;
-import cz.felk.cvut.erm.ermodeller.Consts;
 import cz.felk.cvut.erm.event.WindowItem;
 import cz.felk.cvut.erm.sql.gui.SQLConnection;
 
@@ -95,14 +96,14 @@ public class OptionsDialog extends javax.swing.JDialog {
     final JTabbedPane jTabbedPane1 = new JTabbedPane();
     JTabbedPane jTabbedPane2 = new JTabbedPane();
     GridBagLayout gridBagLayout1 = new GridBagLayout();
-    cz.felk.cvut.erm.ermodeller.ERModeller erm = null;
+    ERModeller erm = null;
 
     /**
      * OptionsDialog constructor comment.
      *
      * @param owner java.awt.Frame
      */
-    public OptionsDialog(java.awt.Frame owner, cz.felk.cvut.erm.ermodeller.ERModeller erm) {
+    public OptionsDialog(java.awt.Frame owner, ERModeller erm) {
         super(owner);
         initialize();
         this.erm = erm;

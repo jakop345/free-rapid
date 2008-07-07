@@ -2,7 +2,7 @@ package cz.felk.cvut.erm.ermodeller;
 
 import cz.felk.cvut.erm.conceptual.beans.*;
 import cz.felk.cvut.erm.ermodeller.interfaces.FontManager;
-import cz.felk.cvut.erm.event.ResizePoint;
+import cz.felk.cvut.erm.event.*;
 import cz.felk.cvut.erm.event.exceptions.ImpossibleNegativeValueException;
 import cz.felk.cvut.erm.event.exceptions.ItemNotInsideManagerException;
 import cz.felk.cvut.erm.event.interfaces.Item;
@@ -80,7 +80,7 @@ public class CardinalityConstruct extends ConceptualConstructObject {
      *              call.
      * @return The filled menu.
      */
-    protected JPopupMenu createMenu(JPopupMenu menu, PopupMenuEvent event) {
+    protected JPopupMenu createMenu(JPopupMenu menu, PopUpMenuEvent event) {
         super.createMenu(menu, event);
         if (model.getArbitrary()) {
             addMenuItem(menu, "Optional", "img/mNotMandatory.gif", getModel(), "setArbitrary", Boolean.FALSE, boolean.class);

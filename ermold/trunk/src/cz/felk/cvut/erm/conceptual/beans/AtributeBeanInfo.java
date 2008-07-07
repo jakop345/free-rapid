@@ -1,6 +1,6 @@
 package cz.felk.cvut.erm.conceptual.beans;
 
-import cz.felk.cvut.erm.ermodeller.dialogs.DataTypePropertyEditor;
+import cz.felk.cvut.erm.dialogs.DataTypePropertyEditor;
 
 import java.beans.EventSetDescriptor;
 import java.beans.MethodDescriptor;

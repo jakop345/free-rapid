@@ -1,4 +1,4 @@
-package cz.felk.cvut.erm.errorlog.dialogs;
+package cz.felk.cvut.erm.dialogs;
 
 import cz.felk.cvut.erm.conceptual.beans.*;
 import cz.felk.cvut.erm.ermodeller.AttributeConstruct;
@@ -99,7 +99,7 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
                 Object o = getComposeModel().getSelectedItem();
                 if (conceptualObject instanceof Entity) {
                     //   ent = desktop.getEntity(((ConceptualConstruct) o).getID());
-                    //ent.composeEntity(desktop.getEntity(i),new cz.felk.cvut.erm.ermodeller.DragOverEvent(0,0,(cz.felk.cvut.erm.event.interfaces.Item)desktop.getEntity(i),desktop.getPaintPlace()));
+                    //ent.composeEntity(desktop.getEntity(i),new cz.felk.cvut.erm.event.DragOverEvent(0,0,(cz.felk.cvut.erm.event.interfaces.Item)desktop.getEntity(i),desktop.getPaintPlace()));
                     desktop.composeEntity((Entity) conceptualObject, (Entity) o);
                 } else {
                     //rel = desktop.getRelation(((ConceptualConstruct) o).getID());

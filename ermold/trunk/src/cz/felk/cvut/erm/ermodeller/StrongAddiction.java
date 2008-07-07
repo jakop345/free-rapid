@@ -3,7 +3,7 @@ package cz.felk.cvut.erm.ermodeller;
 import cz.felk.cvut.erm.conceptual.NotationType;
 import cz.felk.cvut.erm.conceptual.beans.Entity;
 import cz.felk.cvut.erm.ermodeller.interfaces.FontManager;
-import cz.felk.cvut.erm.event.ResizePoint;
+import cz.felk.cvut.erm.event.*;
 import cz.felk.cvut.erm.event.exceptions.ImpossibleNegativeValueException;
 import cz.felk.cvut.erm.event.exceptions.ItemNotInsideManagerException;
 import cz.felk.cvut.erm.event.interfaces.Item;
@@ -20,7 +20,7 @@ import java.awt.*;
 /**
  * This type was created in VisualAge.
  */
-class StrongAddiction extends ConceptualConstructObject {
+public class StrongAddiction extends ConceptualConstructObject {
     public static final int SIZE = 6;
     EntityConstruct parent;
     EntityConstruct child;
@@ -83,7 +83,7 @@ class StrongAddiction extends ConceptualConstructObject {
      *              methods call.
      * @return The filled menu.
      */
-    protected JPopupMenu createMenu(JPopupMenu menu, PopupMenuEvent event) {
+    protected JPopupMenu createMenu(JPopupMenu menu, PopUpMenuEvent event) {
         menu.removeAll();
         return menu;
     }
