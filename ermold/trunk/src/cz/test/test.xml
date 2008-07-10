@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="Windows-1250"?>
+ <!DOCTYPE schema [
+         <!ELEMENT schema (scale|left|top|width|height|id|name|notation|comment|usertype|relation|entity|cardinality|atribute)*>
+         <!ELEMENT scale (#PCDATA)>
+         <!ELEMENT left (#PCDATA)>
+         <!ELEMENT top (#PCDATA)>
+         <!ELEMENT width (#PCDATA)>
+         <!ELEMENT height (#PCDATA)>
+         <!ELEMENT id (#PCDATA)>
+         <!ELEMENT name (#PCDATA)>
+         <!ELEMENT notation (#PCDATA)>
+         <!ELEMENT comment (#PCDATA)>
+         <!ELEMENT usertype (typename|datatypedef)*>
+         <!ELEMENT typename (#PCDATA)>
+         <!ELEMENT datatypedef (datatype|item)*>
+         <!ELEMENT datatype (#PCDATA)>
+         <!ELEMENT item (itemname|datatype)*>
+         <!ELEMENT itemname (#PCDATA)>
+         <!ELEMENT relation (left|top|width|height|id|name|comment)*>
+         <!ELEMENT entity (left|top|width|height|id|name|comment|constraints|parent)*>
+         <!ELEMENT constraints (#PCDATA)>
+         <!ELEMENT cardinality (left|top|width|height|id|name|comment|ent|rel|arbitrary|multi|glue)*>
+         <!ELEMENT ent (#PCDATA)>
+         <!ELEMENT rel (#PCDATA)>
+         <!ELEMENT arbitrary (#PCDATA)>
+         <!ELEMENT multi (#PCDATA)>
+         <!ELEMENT glue (#PCDATA)>
+         <!ELEMENT atribute (left|top|width|height|id|name|comment|datatype|arbitrary|primary|uniq|position|ent|rel)*>
+         <!ELEMENT primary (#PCDATA)>
+         <!ELEMENT uniq (#PCDATA)>
+         <!ELEMENT position (#PCDATA)>
+         <!ELEMENT parent (#PCDATA)>
+         ]>
+ <schema>
+     <scale>1.0</scale>
+     <left>0</left>
+     <top>0</top>
+     <width>2500</width>
+     <height>2500</height>
+     <id>25</id>
+     <name>Schema</name>
+     <notation>0</notation>
+     <comment/>
+     <usertype>
+         <typename>asdasd</typename>
+         <datatypedef>
+             <datatype>Varray (255) of VarChar2(261)</datatype>
+         </datatypedef>
+     </usertype>
+     <usertype>
+         <typename>objektova</typename>
+         <datatypedef>
+             <datatype>Object</datatype>
+             <item>
+                 <itemname>Item1</itemname>
+                 <datatype>Number(38, 0)</datatype>
+             </item>
+             <item>
+                 <itemname>Item2</itemname>
+                 <datatype>asdasd</datatype>
+             </item>
+         </datatypedef>
+     </usertype>
+     <relation>
+         <left>386</left>
+         <top>391</top>
+         <width>117</width>
+         <height>39</height>
+         <id>16</id>
+         <name>Rel4</name>
+         <comment/>
+     </relation>
+     <relation>
+         <left>161</left>
+         <top>287</top>
+         <width>117</width>
+         <height>39</height>
+         <id>13</id>
+         <name>Rel3</name>
+         <comment/>
+     </relation>
+     <entity>
+         <left>284</left>
+         <top>451</top>
+         <width>85</width>
+         <height>39</height>
+         <id>12</id>
+         <name>Entity4</name>
+         <comment/>
+         <constraints/>
+     </entity>
+     <cardinality>
+         <left>357</left>
+         <top>414</top>
+         <width>49</width>
+         <height>29</height>
+         <id>17</id>
+         <name>Entity4</name>
+         <comment/>
+         <ent>12</ent>
+         <rel>16</rel>
+         <arbitrary>false</arbitrary>
+         <multi>true</multi>
+         <glue>false</glue>
+     </cardinality>
+     <cardinality>
+         <left>294</left>
+         <top>407</top>
+         <width>49</width>
+         <height>29</height>
+         <id>14</id>
+         <name>Entity4</name>
+         <comment/>
+         <ent>12</ent>
+         <rel>13</rel>
+         <arbitrary>false</arbitrary>
+         <multi>true</multi>
+         <glue>false</glue>
+     </cardinality>
+     <entity>
+         <left>85</left>
+         <top>430</top>
+         <width>101</width>
+         <height>86</height>
+         <id>21</id>
+         <name>ISAMaster</name>
+         <comment/>
+         <constraints/>
+     </entity>
+     <atribute>
+         <left>151</left>
+         <top>389</top>
+         <width>67</width>
+         <height>13</height>
+         <id>22</id>
+         <name>Atribute1</name>
+         <comment>sdfsdfsdf</comment>
+         <datatype>Integer</datatype>
+         <arbitrary>true</arbitrary>
+         <primary>false</primary>
+         <uniq>false</uniq>
+         <position>1</position>
+         <ent>21</ent>
+     </atribute>
+     <entity>
+         <left>93</left>
+         <top>469</top>
+         <width>85</width>
+         <height>39</height>
+         <id>23</id>
+         <name>ISAChild</name>
+         <comment/>
+         <constraints/>
+         <parent>21</parent>
+     </entity>
+     <relation>
+         <left>377</left>
+         <top>158</top>
+         <width>117</width>
+         <height>39</height>
+         <id>2</id>
+         <name>Rel1</name>
+         <comment/>
+     </relation>
+     <atribute>
+         <left>513</left>
+         <top>123</top>
+         <width>67</width>
+         <height>13</height>
+         <id>5</id>
+         <name>Atribute1</name>
+         <comment/>
+         <datatype>Integer</datatype>
+         <arbitrary>true</arbitrary>
+         <primary>false</primary>
+         <uniq>false</uniq>
+         <position>1</position>
+         <rel>2</rel>
+     </atribute>
+     <entity>
+         <left>130</left>
+         <top>123</top>
+         <width>85</width>
+         <height>39</height>
+         <id>0</id>
+         <name>Entity1</name>
+         <comment/>
+         <constraints/>
+     </entity>
+     <cardinality>
+         <left>238</left>
+         <top>171</top>
+         <width>49</width>
+         <height>29</height>
+         <id>4</id>
+         <name>Entity1</name>
+         <comment/>
+         <ent>0</ent>
+         <rel>2</rel>
+         <arbitrary>false</arbitrary>
+         <multi>true</multi>
+         <glue>false</glue>
+     </cardinality>
+     <cardinality>
+         <left>155</left>
+         <top>176</top>
+         <width>49</width>
+         <height>29</height>
+         <id>15</id>
+         <name>Entity1</name>
+         <comment/>
+         <ent>0</ent>
+         <rel>13</rel>
+         <arbitrary>false</arbitrary>
+         <multi>true</multi>
+         <glue>false</glue>
+     </cardinality>
+     <atribute>
+         <left>255</left>
+         <top>84</top>
+         <width>67</width>
+         <height>13</height>
+         <id>8</id>
+         <name>Atribute1</name>
+         <comment/>
+         <datatype>Integer</datatype>
+         <arbitrary>false</arbitrary>
+         <primary>false</primary>
+         <uniq>false</uniq>
+         <position>1</position>
+         <ent>0</ent>
+     </atribute>
+     <entity>
+         <left>491</left>
+         <top>294</top>
+         <width>85</width>
+         <height>39</height>
+         <id>1</id>
+         <name>Entity2</name>
+         <comment/>
+         <constraints/>
+     </entity>
+     <cardinality>
+         <left>418</left>
+         <top>256</top>
+         <width>49</width>
+         <height>29</height>
+         <id>3</id>
+         <name>Entity2</name>
+         <comment/>
+         <ent>1</ent>
+         <rel>2</rel>
+         <arbitrary>false</arbitrary>
+         <multi>true</multi>
+         <glue>false</glue>
+     </cardinality>
+     <atribute>
+         <left>602</left>
+         <top>249</top>
+         <width>67</width>
+         <height>13</height>
+         <id>6</id>
+         <name>Atribute1</name>
+         <comment/>
+         <datatype>Integer</datatype>
+         <arbitrary>true</arbitrary>
+         <primary>true</primary>
+         <uniq>true</uniq>
+         <position>1</position>
+         <ent>1</ent>
+     </atribute>
+     <cardinality>
+         <left>453</left>
+         <top>340</top>
+         <width>49</width>
+         <height>29</height>
+         <id>18</id>
+         <name>Entity2</name>
+         <comment/>
+         <ent>1</ent>
+         <rel>16</rel>
+         <arbitrary>false</arbitrary>
+         <multi>true</multi>
+         <glue>false</glue>
+     </cardinality>
+     <atribute>
+         <left>618</left>
+         <top>285</top>
+         <width>59</width>
+         <height>13</height>
+         <id>7</id>
+         <name>Unique</name>
+         <comment/>
+         <datatype>Integer</datatype>
+         <arbitrary>false</arbitrary>
+         <primary>false</primary>
+         <uniq>true</uniq>
+         <position>2</position>
+         <ent>1</ent>
+     </atribute>
+     <atribute>
+         <left>618</left>
+         <top>318</top>
+         <width>67</width>
+         <height>13</height>
+         <id>24</id>
+         <name>Atribute3</name>
+         <comment/>
+         <datatype>Integer</datatype>
+         <arbitrary>true</arbitrary>
+         <primary>false</primary>
+         <uniq>false</uniq>
+         <position>3</position>
+         <ent>1</ent>
+     </atribute>
+ </schema>

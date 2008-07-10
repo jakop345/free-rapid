@@ -466,10 +466,10 @@ public class UniqueKeyConstruct extends ConceptualConstructObject {
     public void resetPrimary(UniqueKeyConstruct uk) {
         if (!primary || (uk == null))
             return;
-        StrongAddiction sa = null;
+        //StrongAddiction sa = null;
         Connection c;
         for (int i = connections.size() - 1; i >= 0; i--) {
-            if ((sa = (StrongAddiction) ((c = (connections
+            if ((((c = (connections
                     .get(i))).isConnectedTo(StrongAddiction.class))) != null) {
                 if (c.getOne() instanceof StrongAddiction) {
                     c.setTwo(uk);
