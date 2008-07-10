@@ -4,12 +4,13 @@ import cz.felk.cvut.erm.conc2obj.*;
 import cz.felk.cvut.erm.conc2obj.interfaces.ObjSchemaProducerObj;
 import cz.felk.cvut.erm.conc2rela.exception.*;
 import cz.felk.cvut.erm.conceptual.beans.*;
-import cz.felk.cvut.erm.datatype.NestedTableDataType;
+import cz.felk.cvut.erm.datatype.ObjectDataType;
 import cz.felk.cvut.erm.sql.*;
 import cz.felk.cvut.erm.typeseditor.UserTypeStorage;
 import cz.felk.cvut.erm.typeseditor.UserTypeStorageVector;
 
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -21,13 +22,13 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
      *
      * @see cz.felk.cvut.erm.conc2rela.RelationC2R
      */
-    private Vector<RelationC2R> relationsC2R = new Vector<RelationC2R>();
+    private List<RelationC2R> relationsC2R = new Vector<RelationC2R>();
     /**
      * User types in the schema.
      *
      * @see cz.felk.cvut.erm.typeseditor.UserTypeStorageVector
      */
-    private UserTypeStorageVector typesVector = null;
+    private UserTypeStorageVector userTypesVector = null;
     /**
      * Conceptual schema
      *
@@ -58,7 +59,7 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
      *
      * @see #feedUpOnePrimaryKeyC2R
      */
-    private class PKNumberer {
+    private static class PKNumberer {
         private int number = 0;
         private PrimaryKeyC2R primaryKeyC2R = null;
 
@@ -84,7 +85,7 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
      *
      * @see #feedUpOnePrimaryKeyC2R
      */
-    private class VecNumberer extends Vector {
+    private class VecNumberer extends Vector<PKNumberer> {
         public boolean contains(PrimaryKeyC2R aPrimaryKeyC2R) {
             for (Enumeration elements = this.elements(); elements.hasMoreElements();) {
                 PKNumberer numberer = (PKNumberer) elements.nextElement();
@@ -127,7 +128,7 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
     public SchemaC2R(Schema aConceptualSchema, UserTypeStorageVector types, boolean aGenerateDrops, boolean aShortenPrefixes, boolean aUserGlue) throws AlreadyContainsExceptionC2R, WasNotFoundByConceptualExceptionC2R {
         super(new NameC2R(aConceptualSchema.getName()), null);
         schema = aConceptualSchema;
-        typesVector = types;
+        userTypesVector = types;
         generateDrop = aGenerateDrops;
         shortenPrefixes = aShortenPrefixes;
         userGlue = aUserGlue;
@@ -135,22 +136,22 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
         // can throw AlreadyContains, WasNotFoundByConceptual
     }
 
-    /**
-     * returns names of all nested tables
-     */
-    private String getNestedTableNames() {
-        String names = ",";
-        for (Enumeration<UserTypeStorage> e = typesVector.elements(); e.hasMoreElements();) {
-            UserTypeStorage u = e.nextElement();
-            if (u.getDataType() instanceof NestedTableDataType)
-                names += u.getTypeName() + ",";
-            /*
-           if(u.getDataType() instanceof ObjectDataType)
-               names += u.getTypeName()+",";
-           */
-        }
-        return names;
-    }
+//    /**
+//     * returns names of all nested tables
+//     */
+//    private String getNestedTableNames() {
+//        String names = ",";
+//        for (Enumeration<UserTypeStorage> e = typesVector.elements(); e.hasMoreElements();) {
+//            UserTypeStorage u = e.nextElement();
+//            if (u.getDataType() instanceof NestedTableDataType)
+//                names += u.getTypeName() + ",";
+//            /*
+//           if(u.getDataType() instanceof ObjectDataType)
+//               names += u.getTypeName()+",";
+//           */
+//        }
+//        return names;
+//    }
 
     /**
      * Adds relation.
@@ -163,7 +164,7 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
         if (getRelationsC2R().contains(aRelationC2R))
             throw new AlreadyContainsExceptionC2R(this, aRelationC2R, ListExceptionC2R.RELATIONS_LIST);
 
-        getRelationsC2R().addElement(aRelationC2R);
+        getRelationsC2R().add(aRelationC2R);
     }
 
     /**
@@ -213,14 +214,13 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
      */
     protected void createForeignKeysC2R() throws WasNotFoundByConceptualExceptionC2R {
         // every "relation" relation
-        for (Enumeration<RelationC2R> elements = getRelationsC2R().elements(); elements.hasMoreElements();) {
-            RelationC2R relationC2R = elements.nextElement();
+        final List<RelationC2R> c2R = getRelationsC2R();
+        for (RelationC2R relationC2R : c2R) {
             if (relationC2R instanceof RelC2R) {
                 RelC2R relC2R = (RelC2R) relationC2R;
                 Relation conceptualRelationBean = (Relation) relC2R.getConceptualConstruct();
                 // every cardinality
-                for (Enumeration<Cardinality> cardinalities = conceptualRelationBean.getCardinalities().elements(); cardinalities.hasMoreElements();) {
-                    Cardinality conceptualCardinality = cardinalities.nextElement();
+                for (Cardinality conceptualCardinality : conceptualRelationBean.getCardinalities()) {
                     Entity entity = conceptualCardinality.getEntity();
                     EntC2R entC2R = (EntC2R) findRelationC2RByConceptualConstruct(entity);
                     if (entC2R == null)
@@ -248,15 +248,14 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
     protected Vector<Vector<EntC2R>> createLevelMultiTreeOfEntC2R() {
         Vector<Vector<EntC2R>> sonGraph = new Vector<Vector<EntC2R>>(); // vector of vectors
         // reset level counters
-        for (Enumeration<RelationC2R> elements = getRelationsC2R().elements(); elements.hasMoreElements();) {
-            RelationC2R relationC2R = elements.nextElement();
+        final List<RelationC2R> c2R = getRelationsC2R();
+        for (RelationC2R relationC2R : c2R) {
             if (relationC2R instanceof EntC2R) {
                 ((EntC2R) relationC2R).resetLevel();
             }
         }
         // create multi-tree
-        for (Enumeration<RelationC2R> elements = getRelationsC2R().elements(); elements.hasMoreElements();) {
-            RelationC2R relationC2R = elements.nextElement();
+        for (RelationC2R relationC2R : c2R) {
             if (relationC2R instanceof EntC2R) {
                 EntC2R entC2R = (EntC2R) relationC2R;
                 Entity entity = (Entity) entC2R.getConceptualConstruct();
@@ -371,30 +370,30 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
         SchemaSQL schemaSQL = new SchemaSQL(this);
 
         if (generateDrop)
-            for (Enumeration<UserTypeStorage> types = typesVector.elements(); types.hasMoreElements();) {
+            for (Enumeration<UserTypeStorage> types = userTypesVector.elements(); types.hasMoreElements();) {
                 UserTypeStorage uts = types.nextElement();
                 schemaSQL.addDropType(new DropTypeSQL(uts.getTypeName()));
             }
-        for (Enumeration<UserTypeStorage> types = typesVector.elementsForCreating(UserTypeStorageVector.DIRECT); types.hasMoreElements();) {
+        for (Enumeration<UserTypeStorage> types = userTypesVector.elementsForCreating(UserTypeStorageVector.DIRECT); types.hasMoreElements();) {
             UserTypeStorage uts = types.nextElement();
-            if (uts.getDataType() instanceof cz.felk.cvut.erm.datatype.ObjectDataType)
-                schemaSQL.addCreateType(new CreateTypeWithRowsSQL((cz.felk.cvut.erm.datatype.ObjectDataType) uts.getDataType(), uts.getTypeName()));
+            if (uts.getDataType() instanceof ObjectDataType)
+                schemaSQL.addCreateType(new CreateTypeWithRowsSQL((ObjectDataType) uts.getDataType(), uts.getTypeName()));
             else
                 schemaSQL.addCreateType(new CreateTypeWithoutRowsSQL(uts.getDataType(), uts.getTypeName()));
         }
-        for (Enumeration<UserTypeStorage> types = typesVector.elementsForCreating(UserTypeStorageVector.INDIRECT); types.hasMoreElements();) {
+        for (Enumeration<UserTypeStorage> types = userTypesVector.elementsForCreating(UserTypeStorageVector.INDIRECT); types.hasMoreElements();) {
             UserTypeStorage uts = types.nextElement();
             schemaSQL.addCreateIncompleteType(new CreateIncompleteTypeSQL(uts.getTypeName()));
-            if (uts.getDataType() instanceof cz.felk.cvut.erm.datatype.ObjectDataType)
-                schemaSQL.addCreateType(new CreateTypeWithRowsSQL((cz.felk.cvut.erm.datatype.ObjectDataType) uts.getDataType(), uts.getTypeName()));
+            if (uts.getDataType() instanceof ObjectDataType)
+                schemaSQL.addCreateType(new CreateTypeWithRowsSQL((ObjectDataType) uts.getDataType(), uts.getTypeName()));
             else
                 schemaSQL.addCreateType(new CreateTypeWithoutRowsSQL(uts.getDataType(), uts.getTypeName()));
         }
-        for (Enumeration<RelationC2R> relations = getRelationsC2R().elements(); relations.hasMoreElements();) {
-            RelationC2R relation = relations.nextElement();
+        final List<RelationC2R> c2R = getRelationsC2R();
+        for (RelationC2R relation : c2R) {
             if (generateDrop)
                 schemaSQL.addDropCommand(relation.createDropCommandSQL());
-            schemaSQL.addCreateCommand(relation.createCreateCommandSQL(typesVector));
+            schemaSQL.addCreateCommand(relation.createCreateCommandSQL(userTypesVector));
             schemaSQL.addAlterAddCommand(relation.createAlterAddCommandSQL());
         }
         return schemaSQL;
@@ -413,39 +412,36 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
         SchemaObjSQL schemaObjSQL = new SchemaObjSQL(this);
 
         if (generateDrop)
-            for (Enumeration<UserTypeStorage> types = typesVector.elements(); types.hasMoreElements();) {
+            for (Enumeration<UserTypeStorage> types = userTypesVector.elements(); types.hasMoreElements();) {
                 UserTypeStorage uts = types.nextElement();
                 schemaObjSQL.addDropTypeObj(new DropTypeObj(uts.getTypeName()));
             }
-        for (Enumeration<UserTypeStorage> types = typesVector.elementsForCreating(UserTypeStorageVector.DIRECT); types.hasMoreElements();) {
+        for (Enumeration<UserTypeStorage> types = userTypesVector.elementsForCreating(UserTypeStorageVector.DIRECT); types.hasMoreElements();) {
             UserTypeStorage uts = types.nextElement();
-            if (uts.getDataType() instanceof cz.felk.cvut.erm.datatype.ObjectDataType)
-                schemaObjSQL.addCreateTypeObj(new CreateTypeWithRowsObj((cz.felk.cvut.erm.datatype.ObjectDataType) uts.getDataType(), uts.getTypeName()));
+            if (uts.getDataType() instanceof ObjectDataType)
+                schemaObjSQL.addCreateTypeObj(new CreateTypeWithRowsObj((ObjectDataType) uts.getDataType(), uts.getTypeName()));
             else
                 schemaObjSQL.addCreateTypeObj(new CreateTypeWithoutRowsObj(uts.getDataType(), uts.getTypeName()));
         }
-        for (Enumeration<UserTypeStorage> types = typesVector.elementsForCreating(UserTypeStorageVector.INDIRECT); types.hasMoreElements();) {
+        for (Enumeration<UserTypeStorage> types = userTypesVector.elementsForCreating(UserTypeStorageVector.INDIRECT); types.hasMoreElements();) {
             UserTypeStorage uts = types.nextElement();
             schemaObjSQL.addCreateIncompleteTypeObj(new CreateIncompleteTypeObj(uts.getTypeName()));
-            if (uts.getDataType() instanceof cz.felk.cvut.erm.datatype.ObjectDataType)
-                schemaObjSQL.addCreateTypeObj(new CreateTypeWithRowsObj((cz.felk.cvut.erm.datatype.ObjectDataType) uts.getDataType(), uts.getTypeName()));
+            if (uts.getDataType() instanceof ObjectDataType)
+                schemaObjSQL.addCreateTypeObj(new CreateTypeWithRowsObj((ObjectDataType) uts.getDataType(), uts.getTypeName()));
             else
                 schemaObjSQL.addCreateTypeObj(new CreateTypeWithoutRowsObj(uts.getDataType(), uts.getTypeName()));
         }
-        for (Enumeration<RelationC2R> relations = getRelationsC2R().elements(); relations.hasMoreElements();) {
-
-            RelationC2R relation = relations.nextElement();
+        final List<RelationC2R> c2R = this.getRelationsC2R();
+        for (RelationC2R relation : c2R) {
             if (generateDrop) {
                 schemaObjSQL.addDropCommandObj(relation.createDropCommandObj());
                 schemaObjSQL.addDropTypeObj(new DropTypeObj(relation.getNameC2R() + "_t"));
             }
-            schemaObjSQL.addCommandTypeObj(relation.createCommandTypeObj(typesVector));
-            schemaObjSQL.addCreateCommandObj(relation.createCreateCommandObj(typesVector));
-
-            for (Enumeration<AtributeC2R> atributes = relation.getAtributesC2R().elements(); atributes.hasMoreElements();) {
+            schemaObjSQL.addCommandTypeObj(relation.createCommandTypeObj(userTypesVector));
+            schemaObjSQL.addCreateCommandObj(relation.createCreateCommandObj(userTypesVector));
+            for (AtributeC2R atribute : relation.getAtributesC2R()) {
                 boolean isForeign = false;
                 boolean isRel = false;
-                AtributeC2R atribute = atributes.nextElement();
                 if (relation instanceof RelRelationC2R) {
                     isRel = !((RelRelationC2R) relation).getGlued();
                     for (Object rel : ((RelRelationC2R) relation).getRelForeignKeysC2R()) {
@@ -484,17 +480,18 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
      */
     protected int discoverMinCardPrefix() {
         int result = 0;
-        Vector<String> names = new Vector<String>();
-        for (Enumeration<Relation> relations = schema.getRelations().elements(); relations.hasMoreElements();) {
-            Vector<Cardinality> rCards = (relations.nextElement()).getCardinalities();
-            for (Enumeration<Cardinality> cards = rCards.elements(); cards.hasMoreElements();) {
-                names.addElement((cards.nextElement()).getName());
+        final List<String> names = new Vector<String>();
+        final List<Relation> relations = schema.getRelations();
+        for (Relation relation : relations) {
+            List<Cardinality> rCards = relation.getCardinalities();
+            for (Cardinality card : rCards) {
+                names.add(card.getName());
             }
         }
         for (int i = 0; i < names.size(); i++) {
-            String refName = names.elementAt(i);
+            String refName = names.get(i);
             for (int j = i + 1; j < names.size(); j++) {
-                String compName = names.elementAt(j);
+                String compName = names.get(j);
                 int compLen = (refName.length() < compName.length()) ? refName.length() : compName.length();
                 int min;
                 boolean equal = true;
@@ -519,17 +516,20 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
      */
     protected int discoverMinConstructPrefix() {
         int result = 0;
-        Vector<String> names = new Vector<String>();
-        for (Enumeration<Relation> relations = schema.getRelations().elements(); relations.hasMoreElements();) {
-            names.addElement((relations.nextElement()).getName());
+        List<String> names = new Vector<String>();
+        for (Relation relation : schema.getRelations()) {
+            names.add(relation.getName());
         }
-        for (Enumeration<Entity> entities = schema.getEntities().elements(); entities.hasMoreElements();) {
-            names.addElement((entities.nextElement()).getName());
+        for (Entity entity : schema.getEntities()) {
+            names.add(entity.getName());
         }
+//        for (Enumeration<Entity> entities = schema.getEntities().elements(); entities.hasMoreElements();) {
+//            names.add((entities.nextElement()).getName());
+//        }
         for (int i = 0; i < names.size(); i++) {
-            String refName = names.elementAt(i);
+            String refName = names.get(i);
             for (int j = i + 1; j < names.size(); j++) {
-                String compName = names.elementAt(j);
+                String compName = names.get(j);
                 int compLen = (refName.length() < compName.length()) ? refName.length() : compName.length();
                 int min;
                 boolean equal = true;
@@ -561,10 +561,11 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
             rolePrefixLength = discoverMinCardPrefix();
             constructPrefixLength = discoverMinConstructPrefix();
             // creates skeletons of all "entity" relations
-            for (Enumeration<Entity> elements = aConceptualSchema.getEntities().elements(); elements.hasMoreElements();) {
+            final List<Entity> entityVector = aConceptualSchema.getEntities();
+            for (Entity entity : entityVector) {
                 try {
                     // can throw WasNotFoundByConceptual
-                    addRelationC2R(new EntRelationC2R(this, elements.nextElement()));
+                    addRelationC2R(new EntRelationC2R(this, entity));
                 }
                 catch (AlreadyContainsExceptionC2R e) {
                     // cannot be thrown
@@ -574,11 +575,13 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
             createPrimaryKeysC2R(); // can throw WasNotFoundByConceptual
 
             // creates skeletons of all "relation" relations
-            for (Enumeration<Relation> elements = aConceptualSchema.getRelations().elements(); elements.hasMoreElements();) {
+            final List<Relation> relationVector = aConceptualSchema.getRelations();
+            for (Relation relation : relationVector) {
                 try {
-                    addRelationC2R(new RelRelationC2R(this, elements.nextElement()));
+                    addRelationC2R(new RelRelationC2R(this, relation));
                 }
                 catch (AlreadyContainsExceptionC2R e) {
+                    e.printStackTrace();
                     // cannot be thrown
                 }
             }
@@ -606,16 +609,14 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
         VecNumberer numberers = new VecNumberer();
         PrimaryKeyC2R primaryKeyC2R = aEntC2R.getPrimaryKeyC2R();
         // discovering parallel strong addictions
-        for (Enumeration elements = primaryKeyC2R.getParentsPK().elements(); elements.hasMoreElements();) {
-            PrimaryKeyC2R parentPrimaryKeyC2R = (PrimaryKeyC2R) elements.nextElement();
+        for (PrimaryKeyC2R parentPrimaryKeyC2R : primaryKeyC2R.getParentsPK()) {
             if (primaryKeyC2R.existParallelParentPrimaryKeyC2R(parentPrimaryKeyC2R)) {
                 if (!numberers.contains(parentPrimaryKeyC2R))
                     numberers.addPK(parentPrimaryKeyC2R);
             }
         }
         // creating foreign atributes
-        for (Enumeration elements = primaryKeyC2R.getParentsPK().elements(); elements.hasMoreElements();) {
-            PrimaryKeyC2R parentPrimaryKeyC2R = (PrimaryKeyC2R) elements.nextElement();
+        for (PrimaryKeyC2R parentPrimaryKeyC2R : primaryKeyC2R.getParentsPK()) {
             String prefix;
             int number = -1;
             if (primaryKeyC2R.existParallelParentPrimaryKeyC2R(parentPrimaryKeyC2R)) {
@@ -623,8 +624,7 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
                 number = numberers.getNumber(parentPrimaryKeyC2R);
             }
             EntForeignKeyC2R entForeignKeyC2R = new EntForeignKeyC2R(aEntC2R.getSchemaC2R(), aEntC2R, parentPrimaryKeyC2R);
-            for (Enumeration atributes = parentPrimaryKeyC2R.getAtributesC2R().elements(); atributes.hasMoreElements();) {
-                AtributeC2R parentAtributeC2R = (AtributeC2R) atributes.nextElement();
+            for (AtributeC2R parentAtributeC2R : parentPrimaryKeyC2R.getAtributesC2R()) {
                 if (shortenPrefixes) {
                     prefix = parentAtributeC2R.getRelationC2R().getNameC2R().getName();
                     prefix = prefix.substring(0, (prefix.length() < this.constructPrefixLength) ? prefix.length() : this.constructPrefixLength);
@@ -658,8 +658,8 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
      * @return cz.omnicom.ermodeller.conc2rela.RelationC2R
      */
     protected RelationC2R findRelationC2RByConceptualConstruct(ConceptualConstruct aConceptualConstruct) {
-        for (Enumeration<RelationC2R> elements = getRelationsC2R().elements(); elements.hasMoreElements();) {
-            RelationC2R relationC2R = elements.nextElement();
+        final List<RelationC2R> c2R = getRelationsC2R();
+        for (RelationC2R relationC2R : c2R) {
             if (relationC2R.getConceptualConstruct() == aConceptualConstruct)
                 return relationC2R;
         }
@@ -669,7 +669,7 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
     /**
      * @return java.util.Vector
      */
-    public Vector<RelationC2R> getRelationsC2R() {
+    public List<RelationC2R> getRelationsC2R() {
         if (relationsC2R == null)
             relationsC2R = new Vector<RelationC2R>();
         return relationsC2R;
@@ -691,13 +691,13 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
      * @see #recoverC2R
      */
     protected void glueRelationsC2R() throws AlreadyContainsExceptionC2R {
-        Vector relations = (Vector) getRelationsC2R().clone();
+        final Vector relations = (Vector) ((Vector) getRelationsC2R()).clone();
         for (Enumeration elements = relations.elements(); elements.hasMoreElements();) {
             RelationC2R relationC2R = (RelationC2R) elements.nextElement();
             if (relationC2R instanceof RelC2R) {
                 RelC2R relC2R = (RelC2R) relationC2R;
                 // glues all desired relations to this one
-                Vector gluedRelationsC2R = relC2R.glueC2R(); // can throw AlreadyContains, WasNotFoundByConceptual
+                Vector<RelationC2R> gluedRelationsC2R = relC2R.glueC2R(); // can throw AlreadyContains, WasNotFoundByConceptual
                 // removes glued relations
                 recoverC2R(gluedRelationsC2R);
             }
@@ -708,16 +708,15 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
      * Generates names for foreign keys.
      */
     protected void nameForeignKeys() {
-        for (Enumeration<RelationC2R> relations = getRelationsC2R().elements(); relations.hasMoreElements();) {
-            RelationC2R relation = relations.nextElement();
-            for (Enumeration<EntForeignKeyC2R> entFKs = relation.getEntForeignKeysC2R().elements(); entFKs.hasMoreElements();) {
-                EntForeignKeyC2R entFK = entFKs.nextElement();
+        for (RelationC2R relation : getRelationsC2R()) {
+            final List<EntForeignKeyC2R> entFKs = relation.getEntForeignKeysC2R();
+            for (EntForeignKeyC2R entFK : entFKs) {
                 entFK.setNameC2R(new NameC2R("FK_" + relation.getNameC2R() + "_" + relation.getCountFK()));
             }
             if (relation instanceof RelC2R) {
                 RelC2R rel = (RelC2R) relation;
-                for (Enumeration relFKs = rel.getRelForeignKeysC2R().elements(); relFKs.hasMoreElements();) {
-                    RelForeignKeyC2R relFK = (RelForeignKeyC2R) relFKs.nextElement();
+                final List<RelForeignKeyC2R> relForeignKeyC2Rs = rel.getRelForeignKeysC2R();
+                for (RelForeignKeyC2R relFK : relForeignKeyC2Rs) {
                     relFK.setNameC2R(new NameC2R("FK_" + relation.getNameC2R() + "_" + relation.getCountFK()));
                 }
             }
@@ -728,8 +727,8 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
      * Generates names for primary keys.
      */
     protected void namePrimaryKeys() {
-        for (Enumeration<RelationC2R> relations = getRelationsC2R().elements(); relations.hasMoreElements();) {
-            RelationC2R relation = relations.nextElement();
+        final List<RelationC2R> c2R = getRelationsC2R();
+        for (RelationC2R relation : c2R) {
             PrimaryKeyC2R pk = relation.getPrimaryKeyC2R();
             if (pk != null && pk.getNameC2R() == null)
                 pk.setNameC2R(new NameC2R("PK_" + relation.getNameC2R()));
@@ -740,10 +739,10 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
      * Generates names for unique keys.
      */
     protected void nameUniqueKeys() {
-        for (Enumeration<RelationC2R> relations = getRelationsC2R().elements(); relations.hasMoreElements();) {
-            RelationC2R relation = relations.nextElement();
-            for (Enumeration<UniqueKeyC2R> relUNQs = relation.getUniqueKeysC2R().elements(); relUNQs.hasMoreElements();) {
-                UniqueKeyC2R unq = relUNQs.nextElement();
+        final List<RelationC2R> c2R = getRelationsC2R();
+        for (RelationC2R relation : c2R) {
+            final List<UniqueKeyC2R> uniqueKeyC2Rs = relation.getUniqueKeysC2R();
+            for (UniqueKeyC2R unq : uniqueKeyC2Rs) {
                 if (!unq.isPrimaryKeyC2R() && unq.getNameC2R() == null && unq.getAtributesC2R().size() > 0)
                     unq.setNameC2R(new NameC2R("UNQ_" + relation.getNameC2R() + "_" + relation.getCountUNQ()));
 
@@ -756,9 +755,8 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
      *
      * @param gluedRelationsC2R java.util.Vector
      */
-    protected void recoverC2R(Vector gluedRelationsC2R) {
-        for (Enumeration elements = gluedRelationsC2R.elements(); elements.hasMoreElements();) {
-            RelationC2R relationC2R = (RelationC2R) elements.nextElement();
+    protected void recoverC2R(Vector<RelationC2R> gluedRelationsC2R) {
+        for (RelationC2R relationC2R : gluedRelationsC2R) {
             try {
                 removeRelationC2R(relationC2R);
             }
@@ -778,7 +776,7 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
      * @see #addToLevelEntC2R
      */
     private void removeFromLevelEntC2R(EntC2R aEntC2R, Vector<Vector<EntC2R>> aSonGraph, int aLevel) {
-        (aSonGraph.elementAt(aLevel)).removeElement(aEntC2R);
+        (aSonGraph.get(aLevel)).remove(aEntC2R);
         aEntC2R.setLevel(aLevel);
     }
 
@@ -788,7 +786,7 @@ public class SchemaC2R extends ObjectC2R implements ObjSchemaProducerObj {
      * @param relationC2R cz.omnicom.ermodeller.conc2rela.RelationC2R
      */
     protected void removeRelationC2R(RelationC2R relationC2R) throws WasNotFoundExceptionC2R {
-        if (!getRelationsC2R().removeElement(relationC2R))
+        if (!getRelationsC2R().remove(relationC2R))
             throw new WasNotFoundExceptionC2R(this, relationC2R, ListExceptionC2R.RELATIONS_LIST);
     }
 }

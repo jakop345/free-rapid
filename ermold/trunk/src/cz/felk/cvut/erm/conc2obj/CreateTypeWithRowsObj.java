@@ -17,7 +17,7 @@ public class CreateTypeWithRowsObj extends CreateTypeObj {
      */
     private String name = null;
 
-    private Vector rows = null;
+    private Vector<RowObj> rows = null;
 
     /**
      * Constructor.
@@ -31,8 +31,8 @@ public class CreateTypeWithRowsObj extends CreateTypeObj {
     }
 
     private void fillRows() {
-        for (Enumeration elements = objectDataType.getItemVector().elements(); elements.hasMoreElements();) {
-            UserTypeStorage column = (UserTypeStorage) elements.nextElement();
+        for (Enumeration<UserTypeStorage> elements = objectDataType.getItemVector().elements(); elements.hasMoreElements();) {
+            UserTypeStorage column = elements.nextElement();
             addColumn(new ObjectTypeColumnObj(column));
         }
     }
@@ -46,8 +46,8 @@ public class CreateTypeWithRowsObj extends CreateTypeObj {
      */
     public String createSubSQL(int countTabs) {
         String result = TabCreatorObj.getTabs(countTabs) + toString() + " (\n";
-        for (Enumeration elements = getRows().elements(); elements.hasMoreElements();) {
-            RowObj commandSQL = (RowObj) elements.nextElement();
+        for (Enumeration<RowObj> elements = getRows().elements(); elements.hasMoreElements();) {
+            RowObj commandSQL = elements.nextElement();
             result += commandSQL.createSubSQL(countTabs + 1) + (elements.hasMoreElements() ? "," : "") + "\n";
         }
         return result + TabCreatorObj.getTabs(countTabs) + ")";
@@ -60,8 +60,8 @@ public class CreateTypeWithRowsObj extends CreateTypeObj {
      */
     public IconNode createSubTree() {
         IconNode top = new IconNode(this, true, getIcon());
-        for (Enumeration elements = getRows().elements(); elements.hasMoreElements();) {
-            RowObj commandSQL = (RowObj) elements.nextElement();
+        for (Enumeration<RowObj> elements = getRows().elements(); elements.hasMoreElements();) {
+            RowObj commandSQL = elements.nextElement();
             top.add(commandSQL.createSubTree());
         }
         return top;
@@ -72,9 +72,9 @@ public class CreateTypeWithRowsObj extends CreateTypeObj {
      *
      * @return java.util.Vector
      */
-    protected Vector getRows() {
+    protected Vector<RowObj> getRows() {
         if (rows == null)
-            rows = new Vector();
+            rows = new Vector<RowObj>();
         return rows;
     }
 

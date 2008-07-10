@@ -126,7 +126,7 @@ public class Atribute extends ConceptualObject {
      * @return Returns the fieldUnique.
      */
     public boolean isUnique() {
-        return fieldUnique;
+        return this.fieldUnique;
     }
 
     /**
@@ -219,7 +219,8 @@ public class Atribute extends ConceptualObject {
             fieldUnique = true;
             ((Entity) getConstruct()).addMemberOfPrimaryKey(this);
         } else {
-            fieldUnique = false;
+            if (oldValue) //byl true, kliknul na false, prenastavime unique na false, je treba pohlidat aby neprehodil
+                fieldUnique = false;
             if (getConstruct() instanceof Entity)
                 ((Entity) getConstruct()).removeMemberOfPrimaryKey(this);
         }

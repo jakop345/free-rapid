@@ -33,73 +33,73 @@ class GlueRecord implements CheckRowProducer {
      * @param aRelRelationC2R owner - skelet
      */
     public GlueRecord(RelC2R aRelC2R) {
-        this.skeletAtributesC2R = (Vector) aRelC2R.getAtributesC2R().clone();
+        this.skeletAtributesC2R = (Vector) ((Vector) aRelC2R.getAtributesC2R()).clone();
         this.relation = aRelC2R;
     }
 
     /**
      * Adds record to glued records.
-     *
-     * @param aGluedRelationRecord cz.omnicom.ermodeller.conc2rela.GluedRelationRecord
-     */
-    protected void addGluedRelationC2R(GluedRelationRecord aGluedRelationRecord) {
-        getGluedRelationsC2R().addElement(aGluedRelationRecord);
-    }
+          *
+          * @param aGluedRelationRecord cz.omnicom.ermodeller.conc2rela.GluedRelationRecord
+          */
+         protected void addGluedRelationC2R(GluedRelationRecord aGluedRelationRecord) {
+             getGluedRelationsC2R().addElement(aGluedRelationRecord);
+         }
 
     /**
      * Adds record to not glued records.
-     *
-     * @param aGluedRelationRecord cz.omnicom.ermodeller.conc2rela.GluedRelationRecord
-     */
-    protected void addNotGluedRelationC2R(GluedRelationRecord aNotGluedRelationRecord) {
-        getNotGluedRelationsC2R().addElement(aNotGluedRelationRecord);
-    }
+          *
+          * @param aGluedRelationRecord cz.omnicom.ermodeller.conc2rela.GluedRelationRecord
+          */
+         protected void addNotGluedRelationC2R(GluedRelationRecord aNotGluedRelationRecord) {
+             getNotGluedRelationsC2R().addElement(aNotGluedRelationRecord);
+         }
 
     /**
      * Returns SQL check row.
-     *
-     * @return CheckRow
-     */
-    public CheckRow createCheckRow() {
-        return new GlueCheckRow(createORCheck());
-    }
+          *
+          * @return CheckRow
+          */
+         public CheckRow createCheckRow() {
+             return new GlueCheckRow(createORCheck());
+         }
 
     /**
      * Creates vector of atributes with property set that these atributes are checked to be NOT NULL.
-     *
-     * @param aAtributesC2R atributes
-     * @return IsNotNullAtributeGroupVector
-     */
-    public static IsNotNullAtributeGroupVector createNotNullVecAtributes(Vector aAtributesC2R) {
-        if (aAtributesC2R.isEmpty())
-            return null;
-        IsNotNullAtributeGroupVector result = new IsNotNullAtributeGroupVector();
-        for (Enumeration elements = aAtributesC2R.elements(); elements.hasMoreElements();) {
-            AtributeC2R atributeC2R = (AtributeC2R) elements.nextElement();
-            if (atributeC2R.getArbitraryBeforeGluing())
-                result.addAtributeC2R(atributeC2R);
-        }
-        if (result.isEmpty())
-            return null;
-        return result;
-    }
+          *
+          * @param aAtributesC2R atributes
+          * @return IsNotNullAtributeGroupVector
+          */
+         public static IsNotNullAtributeGroupVector createNotNullVecAtributes(Vector aAtributesC2R) {
+             if (aAtributesC2R.isEmpty())
+                 return null;
+             IsNotNullAtributeGroupVector result = new IsNotNullAtributeGroupVector();
+             for (Enumeration elements = aAtributesC2R.elements(); elements.hasMoreElements();) {
+                 AtributeC2R atributeC2R = (AtributeC2R) elements.nextElement();
+                 if (atributeC2R.getArbitraryBeforeGluing())
+                     result.addAtributeC2R(atributeC2R);
+             }
+             if (result.isEmpty())
+                 return null;
+             return result;
+         }
 
     /**
      * Creates vector of atributes with property set that these atributes are checked to be NULL.
-     *
-     * @param aAtributesC2R atributes
-     * @return IsNotNullAtributeGroupVector
-     */
-    public static IsNullAtributeGroupVector createNullVecAtributes(Vector aAtributesC2R) {
-        if (aAtributesC2R.isEmpty())
-            return null;
-        IsNullAtributeGroupVector result = new IsNullAtributeGroupVector();
-        for (Enumeration elements = aAtributesC2R.elements(); elements.hasMoreElements();) {
-            AtributeC2R atributeC2R = (AtributeC2R) elements.nextElement();
-            result.addAtributeC2R(atributeC2R);
-        }
-        return result;
-    }
+          *
+          * @param aAtributesC2R atributes
+          * @return IsNotNullAtributeGroupVector
+          */
+         public static IsNullAtributeGroupVector createNullVecAtributes(Vector aAtributesC2R) {
+             if (aAtributesC2R.isEmpty())
+                 return null;
+             IsNullAtributeGroupVector result = new IsNullAtributeGroupVector();
+             for (Enumeration elements = aAtributesC2R.elements(); elements.hasMoreElements();) {
+                 AtributeC2R atributeC2R = (AtributeC2R) elements.nextElement();
+                 result.addAtributeC2R(atributeC2R);
+             }
+             return result;
+         }
 
     /**
      * Creates ORCheck which enforces conceptual conditions after gluing.
@@ -162,7 +162,7 @@ class GlueRecord implements CheckRowProducer {
                 // not glued atributes check
                 for (Enumeration<GluedRelationRecord> elements = getNotGluedRelationsC2R().elements(); elements.hasMoreElements();) {
                     GluedRelationRecord relationRecord = elements.nextElement();
-                    RelationC2R relationC2R = relationRecord.getRelationC2R();
+                    //    RelationC2R relationC2R = relationRecord.getRelationC2R();
                     if (relationRecord != gluedRelationRecord) {
                         IsNullAtributeGroupVector vecNull = createNullVecAtributes(relationRecord.getGluedAtributesC2R());
                         if (vecNull != null)

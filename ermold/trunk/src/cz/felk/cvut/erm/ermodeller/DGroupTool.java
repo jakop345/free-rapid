@@ -10,7 +10,7 @@ import cz.felk.cvut.erm.event.exceptions.ImpossibleNegativeValueException;
 import cz.felk.cvut.erm.event.interfaces.Item;
 import cz.felk.cvut.erm.event.interfaces.Manager;
 
-import java.util.Vector;
+import java.util.List;
 
 /**
  * This group has special functionality useful by relations and entities. It can't receive any events,
@@ -72,7 +72,7 @@ class DGroupTool extends cz.felk.cvut.erm.eventtool.DGroupTool implements FontMa
      * @param elems Vector
      * @param event cz.green.event.SelectItemExEvent
      */
-    public void isModelIn(Vector elems, SelectItemExEvent event) {
+    public void isModelIn(List elems, SelectItemExEvent event) {
         int size = wins.size();
         ViewController vc;
         Object o;
@@ -83,7 +83,7 @@ class DGroupTool extends cz.felk.cvut.erm.eventtool.DGroupTool implements FontMa
             if ((o = wins.elementAt(i)) instanceof ViewController) {
                 vc = (ViewController) o;
                 if ((index = elems.indexOf(vc.getModel())) != -1) {
-                    elems.removeElementAt(index);
+                    elems.remove(index);
                     ((Item) o).invokeEventHandler(event);
                 }
             }

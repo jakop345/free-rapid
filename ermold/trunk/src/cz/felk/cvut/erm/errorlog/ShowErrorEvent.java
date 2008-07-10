@@ -2,13 +2,14 @@ package cz.felk.cvut.erm.errorlog;
 
 import cz.felk.cvut.erm.conceptual.beans.ConceptualObject;
 
+import java.util.List;
 import java.util.Vector;
 
 /**
  * Event carries info only about the source object.
  */
 public class ShowErrorEvent extends java.util.EventObject {
-    private final Vector conceptualObjects = new Vector();
+    private final List<ConceptualObject> conceptualObjects = new Vector<ConceptualObject>();
 
     /**
      * ShowErrorStateEvent constructor comment.
@@ -23,13 +24,13 @@ public class ShowErrorEvent extends java.util.EventObject {
      * @param anObject ConceptualObject
      */
     public void addConceptualObject(ConceptualObject anObject) {
-        getConceptualObjects().addElement(anObject);
+        getConceptualObjects().add(anObject);
     }
 
     /**
      * @return java.util.Vector
      */
-    public Vector getConceptualObjects() {
+    public List<ConceptualObject> getConceptualObjects() {
         return conceptualObjects;
     }
 }

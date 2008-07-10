@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -163,14 +164,14 @@ public abstract class ConceptualObject implements Serializable, ShowErrorListene
      * @param vector java.util.Vector
      * @see #empty
      */
-    protected static final void emptyConceptualVector(Vector vector) {
+    protected static void emptyConceptualVector(List<? extends ConceptualObject> vector) {
         synchronized (vector) {
-            for (Enumeration elements = vector.elements(); elements.hasMoreElements();) {
-                // Each object must be emptied.
-                ((ConceptualObject) elements.nextElement()).empty();
+            for (ConceptualObject o : vector) {
+                o.empty();
             }
-            vector.removeAllElements();
-            vector.trimToSize();
+            vector.clear();
+//            vector.removeAllElements();
+//            vector.trimToSize();
         }
     }
 
@@ -297,11 +298,11 @@ public abstract class ConceptualObject implements Serializable, ShowErrorListene
      * @return list of errors
      * @see cz.felk.cvut.erm.errorlog.ErrorLogList
      */
-    protected static final ErrorLogList checkVectorForNameDuplicity(Vector<ConceptualObjectNameController> vectorToCheck, Class aValidationErrorClass) throws InstantiationException, IllegalAccessException {
+    protected static ErrorLogList checkVectorForNameDuplicity(List<ConceptualObjectNameController> vectorToCheck, Class aValidationErrorClass) throws InstantiationException, IllegalAccessException {
         ErrorLogList errorLogList = new ErrorLogList();
         synchronized (vectorToCheck) {
             for (int i = 0; i < vectorToCheck.size(); i++) {
-                ConceptualObjectNameController firstController = vectorToCheck.elementAt(i);
+                ConceptualObjectNameController firstController = vectorToCheck.get(i);
                 if (!firstController.isAlreadyWrong()) {
                     ConceptualObject firstObject = firstController.getConceptualObject();
                     String firstName = firstObject.getName();
@@ -309,7 +310,7 @@ public abstract class ConceptualObject implements Serializable, ShowErrorListene
                     ConceptualObjectVectorValidationError error = (ConceptualObjectVectorValidationError) aValidationErrorClass.newInstance();
                     boolean errorAppeared = false;
                     for (int j = i + 1; j < vectorToCheck.size(); j++) {
-                        ConceptualObjectNameController secondController = vectorToCheck.elementAt(j);
+                        ConceptualObjectNameController secondController = vectorToCheck.get(j);
                         if (!secondController.isAlreadyWrong()) {
                             ConceptualObject secondObject = secondController.getConceptualObject();
                             String secondName = secondObject.getName();

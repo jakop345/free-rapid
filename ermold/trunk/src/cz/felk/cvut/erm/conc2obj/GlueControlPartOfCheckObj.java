@@ -15,13 +15,13 @@ class GlueControlPartOfCheckObj extends PartOfCheckObj {
      *
      * @see cz.felk.cvut.erm.sql.AtributeGroupVector
      */
-    private final Vector groups = new Vector();
+    private final Vector<AtributeGroupVectorObj> groups = new Vector<AtributeGroupVectorObj>();
     /**
      * Nested OR checks
      *
      * @see cz.felk.cvut.erm.sql.ORCheck
      */
-    private final Vector subORChecks = new Vector();
+    private final Vector<ORCheckObj> subORChecks = new Vector<ORCheckObj>();
 
     /**
      * Adds group of atributes.
@@ -59,16 +59,16 @@ class GlueControlPartOfCheckObj extends PartOfCheckObj {
     public String createSubSQL(int countTabs) {
         int count = getGroups().size() + getSubORChecks().size();
         String result = (count < 2) ? "" : TabCreatorObj.getTabs(countTabs) + "(\n";
-        for (Enumeration elements = getGroups().elements(); elements.hasMoreElements();) {
-            AtributeGroupVectorObj group = (AtributeGroupVectorObj) elements.nextElement();
+        for (Enumeration<AtributeGroupVectorObj> elements = getGroups().elements(); elements.hasMoreElements();) {
+            AtributeGroupVectorObj group = elements.nextElement();
             result += group.createSubSQL(countTabs + 1);
             if (elements.hasMoreElements())
                 result += "\n" + TabCreatorObj.getTabs(countTabs + 1) + "AND\n";
         }
         if (!getGroups().isEmpty() && !getSubORChecks().isEmpty())
             result += "\n" + TabCreatorObj.getTabs(countTabs + 1) + "AND\n";
-        for (Enumeration elements = getSubORChecks().elements(); elements.hasMoreElements();) {
-            ORCheckObj subCheck = (ORCheckObj) elements.nextElement();
+        for (Enumeration<ORCheckObj> elements = getSubORChecks().elements(); elements.hasMoreElements();) {
+            ORCheckObj subCheck = elements.nextElement();
             result += TabCreatorObj.getTabs(countTabs + 1) + "(\n";
             result += subCheck.createSubSQL(countTabs + 2);
             result += "\n" + TabCreatorObj.getTabs(countTabs + 1) + ")";
@@ -85,12 +85,12 @@ class GlueControlPartOfCheckObj extends PartOfCheckObj {
      */
     public IconNode createSubTree() {
         IconNode top = new IconNode(this, true, getIcon());
-        for (Enumeration elements = getGroups().elements(); elements.hasMoreElements();) {
-            AtributeGroupVectorObj group = (AtributeGroupVectorObj) elements.nextElement();
+        for (Enumeration<AtributeGroupVectorObj> elements = getGroups().elements(); elements.hasMoreElements();) {
+            AtributeGroupVectorObj group = elements.nextElement();
             top.add(group.createSubTree());
         }
-        for (Enumeration elements = getSubORChecks().elements(); elements.hasMoreElements();) {
-            ORCheckObj subCheck = (ORCheckObj) elements.nextElement();
+        for (Enumeration<ORCheckObj> elements = getSubORChecks().elements(); elements.hasMoreElements();) {
+            ORCheckObj subCheck = elements.nextElement();
             top.add(subCheck.createSubTree());
         }
         return top;
@@ -101,7 +101,7 @@ class GlueControlPartOfCheckObj extends PartOfCheckObj {
      *
      * @return java.util.Vector
      */
-    public Vector getGroups() {
+    public Vector<AtributeGroupVectorObj> getGroups() {
         return groups;
     }
 
@@ -119,7 +119,7 @@ class GlueControlPartOfCheckObj extends PartOfCheckObj {
      *
      * @return java.util.Vector
      */
-    public Vector getSubORChecks() {
+    public Vector<ORCheckObj> getSubORChecks() {
         return subORChecks;
     }
 

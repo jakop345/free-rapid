@@ -4,6 +4,7 @@ import cz.felk.cvut.erm.datatype.*;
 import cz.felk.cvut.erm.sql.TabCreator;
 
 import java.beans.PropertyChangeSupport;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -76,6 +77,10 @@ public class UserTypeStorageVector {
 //        userTypeStorageVector.add(index, s);
 //        getPropertyChange().firePropertyChange(ADD_TO_PROPERTYCHANGE, null, s);
 //    }
+
+    public Vector<UserTypeStorage> getUserTypeStorageVector() {
+        return (Vector<UserTypeStorage>) Collections.unmodifiableCollection(userTypeStorageVector);
+    }
 
     public Enumeration<UserTypeStorage> elements() {
         return userTypeStorageVector.elements();

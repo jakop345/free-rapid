@@ -22,6 +22,7 @@ import cz.felk.cvut.erm.typeseditor.UserTypeStorage;
 import cz.felk.cvut.erm.typeseditor.UserTypeStorageVector;
 
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -84,6 +85,7 @@ public abstract class RelationC2R extends ObjectC2R implements SQLCreateCommandP
                 addAtributeC2R(new AtributeC2R(aSchemaC2R, this, elements.nextElement()));
             }
             catch (AlreadyContainsExceptionC2R e) {
+                e.printStackTrace();
             } // cannot be thrown
         }
     }
@@ -99,7 +101,7 @@ public abstract class RelationC2R extends ObjectC2R implements SQLCreateCommandP
         if (getAtributesC2R().contains(anAtributeC2R))
             throw new AlreadyContainsExceptionC2R(this, anAtributeC2R, ListExceptionC2R.ATRIBUTES_LIST);
 
-        getAtributesC2R().addElement(anAtributeC2R);
+        getAtributesC2R().add(anAtributeC2R);
     }
 
     /**
@@ -113,7 +115,7 @@ public abstract class RelationC2R extends ObjectC2R implements SQLCreateCommandP
         if (getEntForeignKeysC2R().contains(aEntForeignKeyC2R))
             throw new AlreadyContainsExceptionC2R(this, aEntForeignKeyC2R, ListExceptionC2R.ENT_FKS_LIST);
 
-        getEntForeignKeysC2R().addElement(aEntForeignKeyC2R);
+        getEntForeignKeysC2R().add(aEntForeignKeyC2R);
     }
 
     /**
@@ -127,7 +129,7 @@ public abstract class RelationC2R extends ObjectC2R implements SQLCreateCommandP
         if (getUniqueKeysC2R().contains(aUniqueKeyC2R))
             throw new AlreadyContainsExceptionC2R(this, aUniqueKeyC2R, ListExceptionC2R.UNIQUEKEYS_LIST);
 
-        getUniqueKeysC2R().addElement(aUniqueKeyC2R);
+        getUniqueKeysC2R().add(aUniqueKeyC2R);
     }
 
     /**
@@ -138,8 +140,7 @@ public abstract class RelationC2R extends ObjectC2R implements SQLCreateCommandP
     public AlterAddCommandSQL createAlterAddCommandSQL() {
         AlterAddCommandSQL alterAddCommand = new AlterAddCommandSQL(this);
         // entity foreign keys (of primary keys)
-        for (Enumeration<EntForeignKeyC2R> elements = getEntForeignKeysC2R().elements(); elements.hasMoreElements();) {
-            EntForeignKeyC2R entForeignKeyC2R = elements.nextElement();
+        for (EntForeignKeyC2R entForeignKeyC2R : getEntForeignKeysC2R()) {
             alterAddCommand.addConstraint(entForeignKeyC2R.createConstraintSQL());
         }
         return alterAddCommand;
@@ -183,8 +184,8 @@ public abstract class RelationC2R extends ObjectC2R implements SQLCreateCommandP
     public CreateCommandSQL createCreateCommandSQL(UserTypeStorageVector typesVector) {
         CreateCommandSQL createCommand = new CreateCommandSQL(this);
         // atributes
-        for (Enumeration<AtributeC2R> atributes = getAtributesC2R().elements(); atributes.hasMoreElements();) {
-            AtributeC2R atribute = atributes.nextElement();
+        final List<AtributeC2R> c2R = getAtributesC2R();
+        for (AtributeC2R atribute : c2R) {
             createCommand.addColumn(atribute.createColumnSQL());
             if (atribute.getDataType() instanceof UserDefinedDataType) {
                 for (Enumeration<UserTypeStorage> e = typesVector.elements(); e.hasMoreElements();) {
@@ -208,8 +209,8 @@ public abstract class RelationC2R extends ObjectC2R implements SQLCreateCommandP
                */
         }
         // unique keys
-        for (Enumeration<UniqueKeyC2R> uniqueKeys = getUniqueKeysC2R().elements(); uniqueKeys.hasMoreElements();) {
-            UniqueKeyC2R uniqueKey = uniqueKeys.nextElement();
+        final List<UniqueKeyC2R> uniqueKeyC2Rs = getUniqueKeysC2R();
+        for (UniqueKeyC2R uniqueKey : uniqueKeyC2Rs) {
             if (!isPrimaryKeyC2R(uniqueKey) && uniqueKey.getAtributesC2R().size() > 0) {
                 createCommand.addConstraint(uniqueKey.createConstraintSQL());
             }
@@ -243,8 +244,7 @@ public abstract class RelationC2R extends ObjectC2R implements SQLCreateCommandP
 
     public CreateCommandObj createCreateCommandObj(UserTypeStorageVector typesVector) {
         CreateCommandObj createCommand = new CreateCommandObj(this);
-        for (Enumeration<AtributeC2R> atributes = getAtributesC2R().elements(); atributes.hasMoreElements();) {
-            AtributeC2R atribute = atributes.nextElement();
+        for (AtributeC2R atribute : getAtributesC2R()) {
             boolean isInUnique = false;
 
             boolean isForeign = false;
@@ -295,8 +295,7 @@ public abstract class RelationC2R extends ObjectC2R implements SQLCreateCommandP
 
     public CreateCommandTypeObj createCommandTypeObj(UserTypeStorageVector typesVector) {
         CreateCommandTypeObj createCommand = new CreateCommandTypeObj(this);
-        for (Enumeration<AtributeC2R> atributes = getAtributesC2R().elements(); atributes.hasMoreElements();) {
-            AtributeC2R atribute = atributes.nextElement();
+        for (AtributeC2R atribute : getAtributesC2R()) {
             //reference test
             boolean isForeign = false;
             boolean isRel = false;
@@ -353,8 +352,7 @@ public abstract class RelationC2R extends ObjectC2R implements SQLCreateCommandP
      * @return cz.omnicom.ermodeller.conc2rela.AtributeC2R
      */
     public AtributeC2R findAtributeC2RByConceptualAtribute(Atribute aConceptualAtribute) {
-        for (Enumeration<AtributeC2R> elements = getAtributesC2R().elements(); elements.hasMoreElements();) {
-            AtributeC2R atributeC2R = elements.nextElement();
+        for (AtributeC2R atributeC2R : getAtributesC2R()) {
             if (atributeC2R.getConceptualAtribute() == aConceptualAtribute)
                 return atributeC2R;
         }
@@ -363,13 +361,10 @@ public abstract class RelationC2R extends ObjectC2R implements SQLCreateCommandP
 
     /**
      * Find relational unique key by corresponding conceptual unique key.
-     *
-     * @param aConceptualUniqueKey cz.omnicom.ermodeller.conceptual.UniqueKey
-     * @return cz.omnicom.ermodeller.conc2rela.UniqueKeyC2R
      */
     public UniqueKeyC2R findUniqueKeyC2RByConceptualUniqueKey(Vector aConceptualUniqueKey) {
-        for (Enumeration<UniqueKeyC2R> elements = getUniqueKeysC2R().elements(); elements.hasMoreElements();) {
-            UniqueKeyC2R uniqueKeyC2R = elements.nextElement();
+        final List<UniqueKeyC2R> uniqueKeyC2Rs = getUniqueKeysC2R();
+        for (UniqueKeyC2R uniqueKeyC2R : uniqueKeyC2Rs) {
             if (uniqueKeyC2R.getConceptualUniqueKey() == aConceptualUniqueKey)
                 return uniqueKeyC2R;
         }
@@ -379,7 +374,7 @@ public abstract class RelationC2R extends ObjectC2R implements SQLCreateCommandP
     /**
      * @return java.util.Vector
      */
-    public Vector<AtributeC2R> getAtributesC2R() {
+    public List<AtributeC2R> getAtributesC2R() {
         if (atributesC2R == null)
             atributesC2R = new Vector<AtributeC2R>();
         return atributesC2R;
@@ -413,7 +408,7 @@ public abstract class RelationC2R extends ObjectC2R implements SQLCreateCommandP
     /**
      * @return java.util.Vector
      */
-    public Vector<EntForeignKeyC2R> getEntForeignKeysC2R() {
+    public List<EntForeignKeyC2R> getEntForeignKeysC2R() {
         if (entForeignKeysC2R == null)
             entForeignKeysC2R = new Vector<EntForeignKeyC2R>();
         return entForeignKeysC2R;
@@ -429,7 +424,7 @@ public abstract class RelationC2R extends ObjectC2R implements SQLCreateCommandP
     /**
      * @return java.util.Vector
      */
-    public Vector<UniqueKeyC2R> getUniqueKeysC2R() {
+    public List<UniqueKeyC2R> getUniqueKeysC2R() {
         if (uniqueKeysC2R == null)
             uniqueKeysC2R = new Vector<UniqueKeyC2R>();
         return uniqueKeysC2R;

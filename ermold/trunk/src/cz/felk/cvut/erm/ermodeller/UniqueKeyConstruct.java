@@ -27,12 +27,12 @@ public class UniqueKeyConstruct extends ConceptualConstructObject {
     /**
      * The owner of the unique key
      */
-    EntityConstruct ent = null;
+    private EntityConstruct ent = null;
 
     /**
      * The model object from the Aleš Kopecký work
      */
-    UniqueKey model = null;
+    private UniqueKey model = null;
 
     /**
      * Determines whether the unique key is primary
@@ -74,8 +74,7 @@ public class UniqueKeyConstruct extends ConceptualConstructObject {
      */
     public void addAtribute(AttributeConstruct atr) {
         try {
-            model.addAtribute((Atribute) (atr
-                    .getModel()));
+            model.addAtribute(atr.getModel());
             Connection conn = new ConnectionLine(manager, getSchema(), this, atr);
             ((ConnectionManager) manager).addConnection(conn);
             (manager).repaintItem(conn);

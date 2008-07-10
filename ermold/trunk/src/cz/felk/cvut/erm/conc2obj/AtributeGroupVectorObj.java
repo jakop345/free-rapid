@@ -69,7 +69,7 @@ abstract class AtributeGroupVectorObj implements SubObjProducer, SubTreeProducer
     /**
      * Atributes in group - holders of columns.
      */
-    private Vector atributes = new Vector();
+    private Vector<AtributeC2RHolder> atributes = new Vector<AtributeC2RHolder>();
 
     /**
      * Adds antribute.
@@ -90,8 +90,8 @@ abstract class AtributeGroupVectorObj implements SubObjProducer, SubTreeProducer
      */
     public String createSubSQL(int countTabs) {
         String result = (getAtributes().size() < 2) ? "" : TabCreatorObj.getTabs(countTabs) + "(\n";
-        for (Enumeration elements = getAtributes().elements(); elements.hasMoreElements();) {
-            AtributeC2RHolder atributeHolder = (AtributeC2RHolder) elements.nextElement();
+        for (Enumeration<AtributeC2RHolder> elements = getAtributes().elements(); elements.hasMoreElements();) {
+            AtributeC2RHolder atributeHolder = elements.nextElement();
             result += atributeHolder.createSubSQL((getAtributes().size() < 2) ? countTabs : countTabs + 1);
             if (elements.hasMoreElements())
                 result += " AND\n";
@@ -107,8 +107,8 @@ abstract class AtributeGroupVectorObj implements SubObjProducer, SubTreeProducer
      */
     public IconNode createSubTree() {
         IconNode top = new IconNode(this, true, getIcon());
-        for (Enumeration elements = getAtributes().elements(); elements.hasMoreElements();) {
-            AtributeC2RHolder atributeHolder = (AtributeC2RHolder) elements.nextElement();
+        for (Enumeration<AtributeC2RHolder> elements = getAtributes().elements(); elements.hasMoreElements();) {
+            AtributeC2RHolder atributeHolder = elements.nextElement();
             top.add(atributeHolder.createSubTree());
         }
         return top;
@@ -119,9 +119,9 @@ abstract class AtributeGroupVectorObj implements SubObjProducer, SubTreeProducer
      *
      * @return java.util.Vector
      */
-    public Vector getAtributes() {
+    public Vector<AtributeC2RHolder> getAtributes() {
         if (atributes == null)
-            atributes = new Vector();
+            atributes = new Vector<AtributeC2RHolder>();
         return atributes;
     }
 

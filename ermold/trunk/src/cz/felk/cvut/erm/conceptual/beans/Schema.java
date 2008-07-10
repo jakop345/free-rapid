@@ -12,6 +12,7 @@ import cz.felk.cvut.erm.errorlog.exception.CheckNameDuplicityValidationException
 
 import javax.swing.*;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -24,7 +25,7 @@ public class Schema extends ConceptualObject {
      *
      * @see Entity
      */
-    protected Vector<Entity> entities = new Vector<Entity>();
+    protected List<Entity> entities = new Vector<Entity>();
     protected DataTypeManager dataTypeManager = new DataTypeManager();
 
 
@@ -33,7 +34,7 @@ public class Schema extends ConceptualObject {
      *
      * @see Relation
      */
-    protected Vector<Relation> relations = new Vector<Relation>();
+    protected List<Relation> relations = new Vector<Relation>();
     /**
      * Counters for generating unique names of objects.
      */
@@ -81,6 +82,8 @@ public class Schema extends ConceptualObject {
      * Actual level of details
      */
     private int levelOfDetails = LOD_FULL;
+
+    private static final String ENTITY_DEFAULT_NAME = "Entity";
 
 
     /**
@@ -140,9 +143,9 @@ public class Schema extends ConceptualObject {
     public synchronized Entity createEntity() {
         Entity entity = new Entity();
         entity.setSchema(this);
-        entity.setName("Entity" + getEntityIDCounter());
-        Vector oldValue = (Vector) getEntities().clone();
-        getEntities().addElement(entity);
+        entity.setName(ENTITY_DEFAULT_NAME + getEntityIDCounter());
+        Vector oldValue = (Vector) ((Vector) getEntities()).clone();
+        getEntities().add(entity);
         firePropertyChange(ENTITIES_PROPERTY_CHANGE, oldValue, getEntities());
         return entity;
     }
@@ -163,8 +166,8 @@ public class Schema extends ConceptualObject {
         Relation relationBean = new Relation();
         relationBean.setSchema(this);
         relationBean.setName("Rel" + getRelationIDCounter());
-        Vector oldValue = (Vector) getRelations().clone();
-        getRelations().addElement(relationBean);
+        Vector oldValue = (Vector) ((Vector) getRelations()).clone();
+        getRelations().add(relationBean);
         firePropertyChange(RELATIONS_PROPERTY_CHANGE, oldValue, getRelations());
         return relationBean;
     }
@@ -173,7 +176,7 @@ public class Schema extends ConceptualObject {
      * Disposes all entities in the schema.
      */
     private synchronized void disposeAllEntities() {
-        Vector oldValue = (Vector) getEntities().clone();
+        Vector oldValue = (Vector) ((Vector) getEntities()).clone();
         emptyConceptualVector(getEntities());
         firePropertyChange(ENTITIES_PROPERTY_CHANGE, oldValue, getEntities());
     }
@@ -182,7 +185,7 @@ public class Schema extends ConceptualObject {
      * Disposes all relations in the schema.
      */
     private synchronized void disposeAllRelations() {
-        Vector oldValue = (Vector) getRelations().clone();
+        Vector oldValue = (Vector) ((Vector) getRelations()).clone();
         emptyConceptualVector(getRelations());
         firePropertyChange(RELATIONS_PROPERTY_CHANGE, oldValue, getRelations());
     }
@@ -200,8 +203,8 @@ public class Schema extends ConceptualObject {
         if (anEntity == null)
             throw new ParameterCannotBeNullException();
 
-        Vector oldValue = (Vector) getEntities().clone();
-        if (!(getEntities().removeElement(anEntity))) { // was it removed?
+        Vector oldValue = (Vector) ((Vector) getEntities()).clone();
+        if (!(getEntities().remove(anEntity))) { // was it removed?
             // No, it wasn't found
             throw new WasNotFoundException(this, anEntity, ListException.ENTITIES_LIST);
         } else {
@@ -224,8 +227,8 @@ public class Schema extends ConceptualObject {
         if (aRelationBean == null)
             throw new ParameterCannotBeNullException();
 
-        Vector oldValue = (Vector) getRelations().clone();
-        if (!(getRelations().removeElement(aRelationBean))) { // was it removed?
+        Vector oldValue = (Vector) ((Vector) getRelations()).clone();
+        if (!(getRelations().remove(aRelationBean))) { // was it removed?
             // No, it wasn't found
             throw new WasNotFoundException(this, aRelationBean, ListException.RELATIONS_LIST);
         } else {
@@ -275,7 +278,7 @@ public class Schema extends ConceptualObject {
      *
      * @return java.util.Vector
      */
-    public Vector<Entity> getEntities() {
+    public List<Entity> getEntities() {
         if (entities == null)
             entities = new Vector<Entity>();
         return entities;
@@ -315,7 +318,7 @@ public class Schema extends ConceptualObject {
      *
      * @return java.util.Vector
      */
-    public Vector<Relation> getRelations() {
+    public List<Relation> getRelations() {
         if (relations == null)
             relations = new Vector<Relation>();
         return relations;
@@ -352,10 +355,10 @@ public class Schema extends ConceptualObject {
      */
     private ErrorLogList checkCardinalityNameUnicity() throws CheckNameDuplicityValidationException {
         ErrorLogList errorLogList = new ErrorLogList();
-        Vector<ConceptualObjectNameController> vectorToCheck = new Vector<ConceptualObjectNameController>();
-        for (Enumeration<Relation> relations = getRelations().elements(); relations.hasMoreElements();) {
-            for (Enumeration<Cardinality> cardinalities = (relations.nextElement()).getCardinalities().elements(); cardinalities.hasMoreElements();) {
-                vectorToCheck.addElement(new ConceptualObjectNameController(cardinalities.nextElement()));
+        List<ConceptualObjectNameController> vectorToCheck = new Vector<ConceptualObjectNameController>();
+        for (Relation relation : getRelations()) {
+            for (Cardinality cardinality : relation.getCardinalities()) {
+                vectorToCheck.add(new ConceptualObjectNameController(cardinality));
             }
         }
         try {
@@ -382,12 +385,12 @@ public class Schema extends ConceptualObject {
      */
     private ErrorLogList checkConceptualConstructNameUnicity() throws CheckNameDuplicityValidationException {
         ErrorLogList errorLogList = new ErrorLogList();
-        Vector<ConceptualObjectNameController> vectorToCheck = new Vector<ConceptualObjectNameController>();
-        for (Enumeration<Entity> elements = getEntities().elements(); elements.hasMoreElements();) {
-            vectorToCheck.addElement(new ConceptualObjectNameController(elements.nextElement()));
+        List<ConceptualObjectNameController> vectorToCheck = new Vector<ConceptualObjectNameController>();
+        for (Entity entity : getEntities()) {
+            vectorToCheck.add(new ConceptualObjectNameController(entity));
         }
-        for (Enumeration<Relation> elements = getRelations().elements(); elements.hasMoreElements();) {
-            vectorToCheck.addElement(new ConceptualObjectNameController(elements.nextElement()));
+        for (Relation relation : getRelations()) {
+            vectorToCheck.add(new ConceptualObjectNameController(relation));
         }
         try {
             errorLogList.concatErrorLogList(checkVectorForNameDuplicity(vectorToCheck, ConceptualConstructSameNameValidationError.class));
@@ -453,14 +456,13 @@ public class Schema extends ConceptualObject {
      */
     private ErrorLogList checkUniqueKeyNameUnicity() throws CheckNameDuplicityValidationException {
         ErrorLogList errorLogList = new ErrorLogList();
-        Vector<ConceptualObjectNameController> vectorToCheck = new Vector<ConceptualObjectNameController>();
-        for (Enumeration<Entity> entities = getEntities().elements(); entities.hasMoreElements();) {
-            for (Enumeration<UniqueKey> uniqueKeys = (entities.nextElement()).getUniqueKeys().elements(); uniqueKeys.hasMoreElements();) {
-                UniqueKey unq = uniqueKeys.nextElement();
+        List<ConceptualObjectNameController> vectorToCheck = new Vector<ConceptualObjectNameController>();
+        for (Entity entity : getEntities()) {
+            for (UniqueKey unq : entity.getUniqueKeys()) {
                 if (unq.getName() == null)
                     unq.setName("");
                 if (unq.getName().length() > 0)
-                    vectorToCheck.addElement(new ConceptualObjectNameController(unq));
+                    vectorToCheck.add(new ConceptualObjectNameController(unq));
             }
         }
         try {
@@ -491,12 +493,12 @@ public class Schema extends ConceptualObject {
     protected void setAllUnvalidated() {
         // all objects sets unvalidated
         //    - entities
-        for (Enumeration<Entity> entities = getEntities().elements(); entities.hasMoreElements();) {
-            (entities.nextElement()).setAllUnvalidated();
+        for (Entity entity : getEntities()) {
+            entity.setAllUnvalidated();
         }
         //    - relations
-        for (Enumeration<Relation> relations = getRelations().elements(); relations.hasMoreElements();) {
-            (relations.nextElement()).setAllUnvalidated();
+        for (Relation relation : getRelations()) {
+            relation.setAllUnvalidated();
         }
         super.setAllUnvalidated();
     }
@@ -530,13 +532,14 @@ public class Schema extends ConceptualObject {
         // check unicity of names
         errorLogList.concatErrorLogList(checkNameUnicity());
         // for all entities
-        for (Enumeration<Entity> entities = getEntities().elements(); entities.hasMoreElements();) {
-            ErrorLogList entityErrors = (entities.nextElement()).validate();
+        for (Entity entity : getEntities()) {
+            ErrorLogList entityErrors = entity.validate();
             errorLogList.concatErrorLogList(entityErrors);
         }
+
         // for all relations
-        for (Enumeration<Relation> relations = getRelations().elements(); relations.hasMoreElements();) {
-            ErrorLogList relationErrors = (relations.nextElement()).validate();
+        for (Relation relation : getRelations()) {
+            ErrorLogList relationErrors = relation.validate();
             errorLogList.concatErrorLogList(relationErrors);
         }
         return errorLogList;

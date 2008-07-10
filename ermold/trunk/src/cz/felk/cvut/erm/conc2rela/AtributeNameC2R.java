@@ -11,8 +11,8 @@ import java.util.Vector;
  * name.
  */
 class AtributeNameC2R extends NameC2R {
-    private Vector prefixes = new Vector();
-    private Vector subNumbers = new Vector();
+    private Vector<String> prefixes = new Vector<String>();
+    private Vector<Integer> subNumbers = new Vector<Integer>();
 
     /**
      * AtributeNameC2R constructor.
@@ -21,8 +21,8 @@ class AtributeNameC2R extends NameC2R {
      */
     public AtributeNameC2R(AtributeNameC2R anAtributeNameC2R) {
         super(anAtributeNameC2R);
-        this.prefixes = (Vector) anAtributeNameC2R.getPrefixes().clone();
-        this.subNumbers = (Vector) anAtributeNameC2R.getSubNumbers().clone();
+        this.prefixes = (Vector<String>) anAtributeNameC2R.getPrefixes().clone();
+        this.subNumbers = (Vector<Integer>) anAtributeNameC2R.getSubNumbers().clone();
     }
 
     /**
@@ -42,8 +42,8 @@ class AtributeNameC2R extends NameC2R {
      * @param aNameC2R cz.omnicom.ermodeller.conc2rela.NameC2R
      */
     protected void addAllPrefixes(AtributeNameC2R anAtributeNameC2R) {
-        for (Enumeration elements = anAtributeNameC2R.getPrefixes().elements(); elements.hasMoreElements();) {
-            this.addPrefix((String) elements.nextElement());
+        for (Enumeration<String> elements = anAtributeNameC2R.getPrefixes().elements(); elements.hasMoreElements();) {
+            this.addPrefix(elements.nextElement());
         }
     }
 
@@ -53,8 +53,8 @@ class AtributeNameC2R extends NameC2R {
      * @param aNameC2R cz.omnicom.ermodeller.conc2rela.NameC2R
      */
     protected void addAllSubNumbers(AtributeNameC2R anAtributeNameC2R) {
-        for (Enumeration elements = anAtributeNameC2R.getSubNumbers().elements(); elements.hasMoreElements();) {
-            this.addSubNumber((Integer) elements.nextElement());
+        for (Enumeration<Integer> elements = anAtributeNameC2R.getSubNumbers().elements(); elements.hasMoreElements();) {
+            this.addSubNumber(elements.nextElement());
         }
     }
 
@@ -80,14 +80,14 @@ class AtributeNameC2R extends NameC2R {
     /**
      * @return Vector
      */
-    public Vector getPrefixes() {
+    public Vector<String> getPrefixes() {
         return prefixes;
     }
 
     /**
      * @return java.util.Vector
      */
-    public Vector getSubNumbers() {
+    public Vector<Integer> getSubNumbers() {
         return subNumbers;
     }
 
@@ -99,12 +99,12 @@ class AtributeNameC2R extends NameC2R {
     public String toString() {
         String subNumbers = "";
         String strPrefixes = "";
-        for (Enumeration elements = getSubNumbers().elements(); elements.hasMoreElements();) {
+        for (Enumeration<Integer> elements = getSubNumbers().elements(); elements.hasMoreElements();) {
             subNumbers += elements.nextElement().toString();
 /*		if (elements.hasMoreElements())
 			subNumbers += "_";*/
         }
-        for (Enumeration elements = getPrefixes().elements(); elements.hasMoreElements();) {
+        for (Enumeration<String> elements = getPrefixes().elements(); elements.hasMoreElements();) {
             strPrefixes += elements.nextElement().toString();
             if (elements.hasMoreElements())
                 strPrefixes += "_";

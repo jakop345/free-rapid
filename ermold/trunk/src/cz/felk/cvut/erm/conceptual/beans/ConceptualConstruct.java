@@ -9,6 +9,7 @@ import cz.felk.cvut.erm.errorlog.ErrorLogList;
 import cz.felk.cvut.erm.errorlog.exception.CheckNameDuplicityValidationException;
 
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -82,8 +83,8 @@ public abstract class ConceptualConstruct extends ConceptualObject {
         if (containsCardinality(aCardinality))
             throw new AlreadyContainsException(this, aCardinality, AlreadyContainsException.CARDINALITIES_LIST);
 
-        Vector oldValue = (Vector) getCardinalities().clone();
-        getCardinalities().addElement(aCardinality);
+        Vector oldValue = (Vector) ((Vector) getCardinalities()).clone();
+        getCardinalities().add(aCardinality);
         firePropertyChange(CARDINALITIES_PROPERTY_CHANGE, oldValue, getCardinalities());
     }
 
@@ -122,9 +123,11 @@ public abstract class ConceptualConstruct extends ConceptualObject {
             addAtribute(atribute);
         }
         catch (ParameterCannotBeNullException e) {
-        } // Cannot be thrown.
+            e.printStackTrace(); // Cannot be thrown.
+        }
         catch (AlreadyContainsException e) {
-        } // Cannot be thrown.
+            e.printStackTrace(); // Cannot be thrown.
+        }
         return atribute;
     }
 
@@ -153,11 +156,12 @@ public abstract class ConceptualConstruct extends ConceptualObject {
     private synchronized void disposeAllCardinalities() {
         // Cardinality disconnects (removes from list) itself,
         //    construct doesn't disposes cardinalities itself.
-        for (Enumeration<Cardinality> elements = getCardinalities().elements(); elements.hasMoreElements();) {
+        final List<Cardinality> cards = getCardinalities();
+        for (Cardinality card : cards) {
             // Each cardinality must be emptied - disconnected.
-            (elements.nextElement()).empty();
+            card.empty();
         }
-        getCardinalities().trimToSize();
+//        cards.trimToSize();
     }
 
     /**
@@ -180,6 +184,7 @@ public abstract class ConceptualConstruct extends ConceptualObject {
             // Throws WasNotFoundException if the atribute wasn't found and then wasn't removed.
         }
         catch (ParameterCannotBeNullException e) {
+            e.printStackTrace();
         } // Cannot be thrown.
         anAtribute.empty();
     }
@@ -222,7 +227,7 @@ public abstract class ConceptualConstruct extends ConceptualObject {
      *
      * @return java.util.Vector
      */
-    public Vector<Cardinality> getCardinalities() {
+    public List<Cardinality> getCardinalities() {
         if (cardinalities == null)
             cardinalities = new Vector<Cardinality>();
         return cardinalities;
@@ -284,11 +289,13 @@ public abstract class ConceptualConstruct extends ConceptualObject {
             // Can throw WasNotFoundException exception.
         }
         catch (ParameterCannotBeNullException e) {
+            e.printStackTrace();
         } // Cannot be thrown.
         try {
             this.addAtribute(anAtribute);
         }
         catch (ParameterCannotBeNullException e) {
+            e.printStackTrace();
         } // Cannot be thrown.
         catch (AlreadyContainsException e) {
             // Restore previous state.
@@ -296,8 +303,10 @@ public abstract class ConceptualConstruct extends ConceptualObject {
                 from.addAtribute(anAtribute);
             }
             catch (ParameterCannotBeNullException ex) {
+                e.printStackTrace();
             } // Cannot be thrown.
             catch (AlreadyContainsException ex) {
+                e.printStackTrace();
             } // Cannot be thrown.
             throw e;
         }
@@ -349,8 +358,8 @@ public abstract class ConceptualConstruct extends ConceptualObject {
         if (aCardinality == null)
             throw new ParameterCannotBeNullException();
 
-        Vector oldValue = (Vector) getCardinalities().clone();
-        if (!(getCardinalities().removeElement(aCardinality))) { // was it removed?
+        Vector oldValue = (Vector) ((Vector) getCardinalities()).clone();
+        if (!(getCardinalities().remove(aCardinality))) { // was it removed?
             // No, it wasn't found.
             throw new WasNotFoundException(this, aCardinality, ListException.CARDINALITIES_LIST);
         } else {

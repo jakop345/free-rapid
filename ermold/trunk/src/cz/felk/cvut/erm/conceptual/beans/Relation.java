@@ -141,8 +141,8 @@ public class Relation extends ConceptualConstruct {
     private synchronized boolean isConnectedToEntity(Entity anEntity) {
         if (anEntity == null)
             return false;
-        for (Enumeration elements = getCardinalities().elements(); elements.hasMoreElements();) {
-            if (((Cardinality) elements.nextElement()).getEntity() == anEntity)
+        for (Cardinality cardinality : getCardinalities()) {
+            if (cardinality.getEntity() == anEntity)
                 return true;
         }
         return false;
@@ -157,8 +157,8 @@ public class Relation extends ConceptualConstruct {
     protected void setAllUnvalidated() {
         // all objects set unvalidated
         //    - cardinalities
-        for (Enumeration cardinalities = getCardinalities().elements(); cardinalities.hasMoreElements();) {
-            ((Cardinality) cardinalities.nextElement()).setAllUnvalidated();
+        for (Cardinality cardinality : getCardinalities()) {
+            cardinality.setAllUnvalidated();
         }
         //    - atributes are set here:
         super.setAllUnvalidated();
@@ -189,8 +189,8 @@ public class Relation extends ConceptualConstruct {
             error.connectErrorToObject(this);
             errorLogList.addElement(error);
         }
-        for (Enumeration cardinalities = getCardinalities().elements(); cardinalities.hasMoreElements();) {
-            ErrorLogList cardErrorLogList = ((Cardinality) cardinalities.nextElement()).validate();
+        for (Cardinality cardinality : getCardinalities()) {
+            ErrorLogList cardErrorLogList = cardinality.validate();
             errorLogList.concatErrorLogList(cardErrorLogList);
         }
         for (Enumeration atributes = getAtributes().elements(); atributes.hasMoreElements();) {

@@ -3,8 +3,6 @@ package cz.felk.cvut.erm.typeseditor;
 import cz.felk.cvut.erm.datatype.DataType;
 import cz.felk.cvut.erm.datatype.ObjectDataType;
 
-import java.util.Enumeration;
-
 public class UserTypeStorage {
 
     protected String typeName = null;
@@ -52,8 +50,7 @@ public class UserTypeStorage {
         pw.println("</datatype>");
         if (getDataType() instanceof ObjectDataType) {
             UserTypeStorageVector itemVector = ((ObjectDataType) getDataType()).getItemVector();
-            for (Enumeration elements = itemVector.elements(); elements.hasMoreElements();) {
-                UserTypeStorage u = (UserTypeStorage) elements.nextElement();
+            for (UserTypeStorage u : itemVector.getUserTypeStorageVector()) {
                 pw.println("\t\t\t<item>");
                 pw.print("\t\t\t\t<itemname>");
                 pw.print(u.getTypeName());

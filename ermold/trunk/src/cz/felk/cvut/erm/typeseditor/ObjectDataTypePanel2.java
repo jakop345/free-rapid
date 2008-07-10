@@ -27,7 +27,7 @@ public class ObjectDataTypePanel2 extends DataTypePanel implements ActionListene
     protected JLabel itemLabel = null;
     protected JScrollPane scrollPane = null;
 
-    private Vector objectTypeEditorVector = null;
+    private Vector<ObjectTypeEditor> objectTypeEditorVector = null;
     private UserTypeStorageVector userTypeStorageVector = null;
 
     private DataType dataType = null;
@@ -66,7 +66,7 @@ public class ObjectDataTypePanel2 extends DataTypePanel implements ActionListene
     protected ObjectTypeEditor getObjectTypeEditor(int index) {
         //System.out.println("getObjectTypeEditor "+index);
         if (objectTypeEditorVector == null)
-            objectTypeEditorVector = new Vector();
+            objectTypeEditorVector = new Vector<ObjectTypeEditor>();
         //System.out.println("objectTypeEditorVector.size()= "+objectTypeEditorVector.size());
         if (objectTypeEditorVector.size() == index) {
             ObjectTypeEditor ote = new ObjectTypeEditor(userTypeStorageVector, getObjectDataType());
@@ -77,7 +77,7 @@ public class ObjectDataTypePanel2 extends DataTypePanel implements ActionListene
             Dimension dimension = ote.getPreferredSize();
             ote.setBounds(0, 0, dimension.width, dimension.height);
         }
-        return (ObjectTypeEditor) objectTypeEditorVector.get(index);
+        return objectTypeEditorVector.get(index);
     }
 
     /**
@@ -189,7 +189,7 @@ public class ObjectDataTypePanel2 extends DataTypePanel implements ActionListene
             java.awt.Frame frame;
             try {
                 Class aFrameClass = Class.forName("com.ibm.uvm.abt.edit.TestFrame");
-                frame = (java.awt.Frame) aFrameClass.newInstance();
+                frame = (Frame) aFrameClass.newInstance();
             } catch (java.lang.Throwable ivjExc) {
                 frame = new java.awt.Frame();
             }
@@ -381,8 +381,8 @@ public class ObjectDataTypePanel2 extends DataTypePanel implements ActionListene
     public void setObjectDataType(ObjectDataType aDataType) {
         ivjObjectDataType = aDataType;
         ivjObjectDataType.addPropertyChangeListener(this);
-        for (Enumeration e = ivjObjectDataType.getItemVector().elements(); e.hasMoreElements();) {
-            UserTypeStorage u = (UserTypeStorage) e.nextElement();
+        for (Enumeration<UserTypeStorage> e = ivjObjectDataType.getItemVector().elements(); e.hasMoreElements();) {
+            UserTypeStorage u = e.nextElement();
             selectedItemPos = listModel.size();
             getObjectTypeEditor(listModel.size() - 1).setContents(u);
             type = u.getDataType().toString();

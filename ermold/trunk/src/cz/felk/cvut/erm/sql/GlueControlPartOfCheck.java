@@ -15,13 +15,13 @@ public class GlueControlPartOfCheck extends PartOfCheck {
      *
      * @see cz.felk.cvut.erm.sql.AtributeGroupVector
      */
-    private final Vector groups = new Vector();
+    private final Vector<AtributeGroupVector> groups = new Vector<AtributeGroupVector>();
     /**
      * Nested OR checks
      *
      * @see cz.felk.cvut.erm.sql.ORCheck
      */
-    private final Vector subORChecks = new Vector();
+    private final Vector<ORCheck> subORChecks = new Vector<ORCheck>();
 
     /**
      * Adds group of atributes.
@@ -59,16 +59,16 @@ public class GlueControlPartOfCheck extends PartOfCheck {
     public String createSubSQL(int countTabs) {
         int count = getGroups().size() + getSubORChecks().size();
         String result = (count < 2) ? "" : TabCreator.getTabs(countTabs) + "(\n";
-        for (Enumeration elements = getGroups().elements(); elements.hasMoreElements();) {
-            AtributeGroupVector group = (AtributeGroupVector) elements.nextElement();
+        for (Enumeration<AtributeGroupVector> elements = getGroups().elements(); elements.hasMoreElements();) {
+            AtributeGroupVector group = elements.nextElement();
             result += group.createSubSQL(countTabs + 1);
             if (elements.hasMoreElements())
                 result += "\n" + TabCreator.getTabs(countTabs + 1) + "AND\n";
         }
         if (!getGroups().isEmpty() && !getSubORChecks().isEmpty())
             result += "\n" + TabCreator.getTabs(countTabs + 1) + "AND\n";
-        for (Enumeration elements = getSubORChecks().elements(); elements.hasMoreElements();) {
-            ORCheck subCheck = (ORCheck) elements.nextElement();
+        for (Enumeration<ORCheck> elements = getSubORChecks().elements(); elements.hasMoreElements();) {
+            ORCheck subCheck = elements.nextElement();
             result += TabCreator.getTabs(countTabs + 1) + "(\n";
             result += subCheck.createSubSQL(countTabs + 2);
             result += "\n" + TabCreator.getTabs(countTabs + 1) + ")";
@@ -85,12 +85,12 @@ public class GlueControlPartOfCheck extends PartOfCheck {
      */
     public IconNode createSubTree() {
         IconNode top = new IconNode(this, true, getIcon());
-        for (Enumeration elements = getGroups().elements(); elements.hasMoreElements();) {
-            AtributeGroupVector group = (AtributeGroupVector) elements.nextElement();
+        for (Enumeration<AtributeGroupVector> elements = getGroups().elements(); elements.hasMoreElements();) {
+            AtributeGroupVector group = elements.nextElement();
             top.add(group.createSubTree());
         }
-        for (Enumeration elements = getSubORChecks().elements(); elements.hasMoreElements();) {
-            ORCheck subCheck = (ORCheck) elements.nextElement();
+        for (Enumeration<ORCheck> elements = getSubORChecks().elements(); elements.hasMoreElements();) {
+            ORCheck subCheck = elements.nextElement();
             top.add(subCheck.createSubTree());
         }
         return top;
@@ -101,7 +101,7 @@ public class GlueControlPartOfCheck extends PartOfCheck {
      *
      * @return java.util.Vector
      */
-    public Vector getGroups() {
+    public Vector<AtributeGroupVector> getGroups() {
         return groups;
     }
 
@@ -119,7 +119,7 @@ public class GlueControlPartOfCheck extends PartOfCheck {
      *
      * @return java.util.Vector
      */
-    public Vector getSubORChecks() {
+    public Vector<ORCheck> getSubORChecks() {
         return subORChecks;
     }
 

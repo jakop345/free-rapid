@@ -1,4 +1,4 @@
-package cz.felk.cvut.erm.conc2rela;
+package cz.felk.cvut.erm.dialogs;
 
 import javax.swing.*;
 import java.awt.*;

@@ -22,8 +22,8 @@ import java.awt.*;
  */
 public class StrongAddiction extends ConceptualConstructObject {
     public static final int SIZE = 6;
-    EntityConstruct parent;
-    EntityConstruct child;
+    private EntityConstruct parent;
+    private EntityConstruct child;
 
     /**
      * StrongAddiction constructor comment.

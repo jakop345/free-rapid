@@ -259,6 +259,7 @@ public class UniqueKey extends ConceptualObject {
         super.write(pw);
         pw.println("\t\t<ent>" + getEntity().getID() + "</ent>");
         Vector<Atribute> v = getAtributes();
-        for (Object aV : v) pw.println("\t\t<atr>" + ((Atribute) aV).getID() + "</atr>");
+        for (Atribute aV : v)
+            pw.println("\t\t<atr>" + aV.getID() + "</atr>");
     }
 }

@@ -219,7 +219,8 @@ public class PropertyListDialog extends JDialog implements PropertyChangeListene
      * no longer as alone window
      */
     static public void setBeanAndEdit(Object bean, String name) {
-//	if (dialog != null) {
+        if (dialog == null)
+            return;
         if (dialog.activeBean != null)
             ((ConceptualObject) dialog.activeBean).removePropertyChangeListener(dialog);
         dialog.activeBean = bean;
@@ -290,7 +291,7 @@ public class PropertyListDialog extends JDialog implements PropertyChangeListene
             try {
                 properties[i].readFromObject(bean);
             } catch (Exception e) {
-                //as
+                e.printStackTrace();
             }
         }
     }

@@ -13,7 +13,7 @@ class GluedRelationRecord {
     /**
      * Atributes added as foreign atributes to skelet relation.
      */
-    private final Vector gluedAtributesC2R = new Vector();
+    private final Vector<AtributeC2R> gluedAtributesC2R = new Vector<AtributeC2R>();
     /**
      * Was relation glued.
      */
@@ -62,7 +62,7 @@ class GluedRelationRecord {
     /**
      * @return java.util.Vector
      */
-    public Vector getGluedAtributesC2R() {
+    public Vector<AtributeC2R> getGluedAtributesC2R() {
         return gluedAtributesC2R;
     }
 

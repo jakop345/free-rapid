@@ -17,7 +17,7 @@ class EntForeignKeyC2R extends ElementOfRelationC2R implements SQLConstraintProd
     /**
      * Home atributes.
      */
-    private Vector atributesC2R = new Vector();
+    private Vector<AtributeC2R> atributesC2R = new Vector<AtributeC2R>();
     /**
      * Foreign primary key
      */
@@ -55,16 +55,15 @@ class EntForeignKeyC2R extends ElementOfRelationC2R implements SQLConstraintProd
      * @return ConstraintSQL
      */
     public ConstraintSQL createConstraintSQL() {
-        ForeignKeySQL foreignKey = new ForeignKeySQL(getAtributesC2R(), getForeignPrimaryKeyC2R().getUniqueKeyGroupC2R(), getNameC2R());
-        return foreignKey;
+        return new ForeignKeySQL(getAtributesC2R(), getForeignPrimaryKeyC2R().getUniqueKeyGroupC2R(), getNameC2R());
     }
 
     /**
      * @return java.util.Vector
      */
-    public Vector getAtributesC2R() {
+    public Vector<AtributeC2R> getAtributesC2R() {
         if (atributesC2R == null)
-            atributesC2R = new Vector();
+            atributesC2R = new Vector<AtributeC2R>();
         return atributesC2R;
     }
 

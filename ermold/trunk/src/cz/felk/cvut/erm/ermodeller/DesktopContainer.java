@@ -376,8 +376,8 @@ public class DesktopContainer extends ContainerToolComponent implements ModeSwit
      */
     public void editConstraints(EntityConstruct ent) {
         if (constDialog == null)
-            constDialog = new ConstraintsDialog(((WorkingDesktop) getDesktop()).ERMFrame, ent.getModel());
-        constDialog.setLocationRelativeTo(((WorkingDesktop) getDesktop()).ERMFrame);
+            constDialog = new ConstraintsDialog(null, ent.getModel());
+        constDialog.setLocationRelativeTo(null);
         if (ent.getModel() != null) constDialog.setVisible(true);
     }
 

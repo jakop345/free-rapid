@@ -36,7 +36,7 @@ public class WorkingDesktop extends DesktopTool implements FontManager,
      * The model - object from Aleš Kopecký work
      */
     protected Schema model = null;
-    public JFrame ERMFrame;
+    //public JFrame ERMFrame;
 
     private transient java.beans.PropertyChangeSupport pcs = null;
 
@@ -730,7 +730,7 @@ public class WorkingDesktop extends DesktopTool implements FontManager,
      * @param elems Vector
      * @param event cz.green.event.SelectItemExEvent
      */
-    public void isModelIn(Vector elems, SelectItemExEvent event) {
+    public void isModelIn(List elems, SelectItemExEvent event) {
         int size = wins.size();
         ViewController vc;
         Object o;
@@ -741,7 +741,7 @@ public class WorkingDesktop extends DesktopTool implements FontManager,
             if ((o = wins.elementAt(i)) instanceof ViewController) {
                 vc = (ViewController) o;
                 if ((index = elems.indexOf(vc.getModel())) != -1) {
-                    elems.removeElementAt(index);
+                    elems.remove(index);
                     ((Item) o).invokeEventHandler(event);
                 }
             }
@@ -844,8 +844,7 @@ public class WorkingDesktop extends DesktopTool implements FontManager,
         pw.println("<?xml version=\"1.0\" encoding=\"" + encoding + "\"?>"); // encoding=\"UTF-16\"
         pw.println("<!-- ER Modeller version 4.0 schema -->");
         pw.println("<!DOCTYPE schema [");
-        pw
-                .println("<!ELEMENT schema (scale,left,top,width,height,id,name,notation,comment,usertype*,(entity*,atribute*,relation*,unique*,cardinality*,strong*)*)>");
+        pw.println("<!ELEMENT schema (scale,left,top,width,height,id,name,notation,comment,usertype*,(entity*,atribute*,relation*,unique*,cardinality*,strong*)*)>");
         pw.println("<!ELEMENT scale (#PCDATA)>");
         pw.println("<!ELEMENT left (#PCDATA)>");
         pw.println("<!ELEMENT top (#PCDATA)>");
@@ -856,14 +855,10 @@ public class WorkingDesktop extends DesktopTool implements FontManager,
         pw.println("<!ELEMENT comment (#PCDATA)>");
         pw.println("<!ELEMENT usertype (typename, datatypedef)>");
         pw.println("<!ELEMENT entity (left,top,width,height,id,name,comment)>");
-        pw
-                .println("<!ELEMENT atribute (left,top,width,height,id,name,comment,datatype,arbitrary,(ent|rel))>");
-        pw
-                .println("<!ELEMENT relation (left,top,width,height,id,name,comment)>");
-        pw
-                .println("<!ELEMENT unique (left,top,width,height,id,name,comment,ent,atr*,primary)>");
-        pw
-                .println("<!ELEMENT cardinality (left,top,width,height,id,name,comment,ent,rel,arbitrary,multi,glue)>");
+        pw.println("<!ELEMENT atribute (left,top,width,height,id,name,comment,datatype,arbitrary,(ent|rel))>");
+        pw.println("<!ELEMENT relation (left,top,width,height,id,name,comment)>");
+        pw.println("<!ELEMENT unique (left,top,width,height,id,name,comment,ent,atr*,primary)>");
+        pw.println("<!ELEMENT cardinality (left,top,width,height,id,name,comment,ent,rel,arbitrary,multi,glue)>");
         pw.println("<!ELEMENT strong (left,top,width,height,ent,uni)>");
         pw.println("<!ELEMENT datatype (#PCDATA)>");
         pw.println("<!ELEMENT typename (#PCDATA)>");
@@ -903,8 +898,11 @@ public class WorkingDesktop extends DesktopTool implements FontManager,
             Item item = getItem(i);
             if (item instanceof DGroupTool)
                 writeItem((DGroupTool) item, pw);
-            else
-                ((ConceptualConstructObject) getItem(i)).write(pw);
+            else {
+                final ConceptualConstructObject constructObject = (ConceptualConstructObject) getItem(i);
+                assert !(constructObject instanceof UniqueKeyConstruct);
+                constructObject.write(pw);
+            }
         }
         pw.println("</schema>");
     }

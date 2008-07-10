@@ -1,6 +1,7 @@
 package cz.felk.cvut.erm.app;
 
 import cz.felk.cvut.erm.conc2obj.ObjDialog;
+import cz.felk.cvut.erm.conc2rela.SchemaC2R;
 import cz.felk.cvut.erm.conceptual.NotationType;
 import cz.felk.cvut.erm.conceptual.beans.*;
 import cz.felk.cvut.erm.datatype.*;
@@ -125,12 +126,12 @@ public class ERModeller extends JFrame implements
     /**
      * Adding file as a new xml..
      */
-    public final static int NEW_XML = 1;
+    public final static int LOAD_FROM_XML = 1;
 
     /**
      * Adding xml file into actual desktop.
      */
-    public final static int WITH_XML = 2;
+    public final static int MERGE_WITH_XML = 2;
 
     /**
      * Title of the main window
@@ -187,7 +188,7 @@ public class ERModeller extends JFrame implements
         typeEditor = new UserTypesEditor(this);
         typeEditor.setLocationRelativeTo(this);
 
-        ((WorkingDesktop) getPlace().getDesktop()).ERMFrame = this;
+        //((WorkingDesktop) getPlace().getDesktop()).ERMFrame = this;
 
         loadDefaultConfiguration();
         final int activeNotation = AppPrefs.getProperty(AppPrefs.GENERAL_DEFNOTATION, Consts.DEF_GENERAL_DEFNOTATION);
@@ -271,7 +272,7 @@ public class ERModeller extends JFrame implements
                     }
                     String ext = ((ExtensionFileFilter) chooser.getFileFilter())
                             .getExtension();
-                    loadFromFile(fileName, WITH_XML);
+                    loadFromFile(fileName, MERGE_WITH_XML);
                 }
             }
         } catch (Throwable x) {
@@ -363,7 +364,7 @@ public class ERModeller extends JFrame implements
                     conflictsDialog.setVisible(true);
                 }
                 if (list.isEmpty()) {
-                    cz.felk.cvut.erm.conc2rela.GenerateDialog genDialog = new cz.felk.cvut.erm.conc2rela.GenerateDialog(
+                    GenerateDialog genDialog = new GenerateDialog(
                             this);
                     genDialog.setLocationRelativeTo(null);
                     genDialog.setVisible(true);
@@ -375,7 +376,7 @@ public class ERModeller extends JFrame implements
                             else ((WorkingDesktop) getPlace().getDesktop()).switchAllRConnectionsBoth(place);
                         }
                         //konec osetreni kardinalit
-                        schemaC2R = new cz.felk.cvut.erm.conc2rela.SchemaC2R(
+                        schemaC2R = new SchemaC2R(
                                 model, typeEditor.getTypesVector(), genDialog
                                 .getGenDrop(), genDialog
                                 .getShortenPrefixes(), !genDialog
@@ -419,7 +420,7 @@ public class ERModeller extends JFrame implements
                     conflictsDialog.setVisible(true);
                 }
                 if (list.isEmpty()) {
-                    cz.felk.cvut.erm.conc2rela.GenerateDialog genDialog = new cz.felk.cvut.erm.conc2rela.GenerateDialog(
+                    GenerateDialog genDialog = new GenerateDialog(
                             this);
                     genDialog.setLocationRelativeTo(null);
                     genDialog.setVisible(true);
@@ -432,7 +433,7 @@ public class ERModeller extends JFrame implements
                             else ((WorkingDesktop) getPlace().getDesktop()).switchAllRConnectionsBoth(place);
                         }
                         //konec osetreni kardinalit
-                        schemaC2R = new cz.felk.cvut.erm.conc2rela.SchemaC2R(
+                        schemaC2R = new SchemaC2R(
                                 model, typeEditor.getTypesVector(), genDialog
                                 .getGenDrop(), genDialog
                                 .getShortenPrefixes(), !genDialog
@@ -959,7 +960,7 @@ public class ERModeller extends JFrame implements
                         /*
                                * loadFromFile(fileName,NEW_CTS); else
                                */
-                        loadFromFile(fileName, NEW_XML);
+                        loadFromFile(fileName, LOAD_FROM_XML);
                     try {
                         ((WorkingDesktop) getPlace().getDesktop())
                                 .addPropertyChangeListener(this);
@@ -1000,7 +1001,7 @@ public class ERModeller extends JFrame implements
                      * System.out.println("je to typ "+dataType);
                      */
                 dt = extractDataType(dataType);
-                if (dataType.equals("Object")) {
+                if ("Object".equals(dataType)) {
                     while (erdoc.next(2)) {
                         itemName = erdoc.getValue("itemname", 2);
                         itemType = erdoc.getValue("datatype", 2);
@@ -1047,13 +1048,13 @@ public class ERModeller extends JFrame implements
             name = name.substring(name.indexOf(")") + 4, name.length());
             name = name.trim();
             ((VarrayDataType) dt).setType(extractDataType(name));
-        } else if (name.equals("Float")) {
+        } else if ("Float".equals(name)) {
             dt = new FloatDataType();
-        } else if (name.equals("Date")) {
+        } else if ("Date".equals(name)) {
             dt = new DateDataType();
-        } else if (name.equals("Integer")) {
+        } else if ("Integer".equals(name)) {
             dt = new IntegerDataType();
-        } else if (name.equals("Object")) {
+        } else if ("Object".equals(name)) {
             dt = new ObjectDataType();
         } else
             dt = new UserDefinedDataType(name);
@@ -1066,16 +1067,6 @@ public class ERModeller extends JFrame implements
     public String loadDesktop(WorkingDesktop d, int id, Document doc) {
         int i, t, l, tt, ll, w, h, notation;
         String prefix;
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-//        DocumentBuilder parser;
-//        try {
-//            parser = factory.newDocumentBuilder();
-//        } catch (ParserConfigurationException e) {
-//            System.err.println("Fatal Error, No XML was found");
-//            e.printStackTrace();
-//            System.exit(-1);
-//        }
-
         String s;
         EntityConstruct ent;
         EntityConstruct child;
@@ -1083,10 +1074,10 @@ public class ERModeller extends JFrame implements
         AttributeConstruct atr;
         CardinalityConstruct car;
         UniqueKeyConstruct uni;
-        ConceptualObject coM;
+        ConceptualObject relationModel;
         Atribute atrM;
         ConceptualConstruct ccM;
-        Entity entM;
+        Entity entityModel;
         Schema schemaM;
         Cardinality carM;
         UniqueKey uniM;
@@ -1095,7 +1086,7 @@ public class ERModeller extends JFrame implements
         int schemaID;
         Vector<Atribute> attrs = new Vector<Atribute>();
         Vector<Integer> attrsPos = new Vector<Integer>();
-
+        //TODO co je tt a ll
         try {
             ERDocument erdoc = new ERDocument(doc);
             if (!erdoc.setElements("schema"))
@@ -1139,28 +1130,26 @@ public class ERModeller extends JFrame implements
                     w = new Integer(erdoc.getValue("width"));
                     h = new Integer(erdoc.getValue("height"));
                     ent = d.createEntity(l, t, w, h, null);
-                    ent.setID(id
-                            + new Integer(erdoc.getValue("id")));
-                    entM = ent
-                            .getModel();
+                    ent.setID(id + new Integer(erdoc.getValue("id")));
+                    entityModel = ent.getModel();
                     s = erdoc.getValue("name");
                     if (s == null)
                         s = "";
-                    entM.setName(s);
+                    entityModel.setName(s);
                     s = erdoc.getValue("comment");
                     if (s == null)
                         s = "";
-                    entM.setComment(s);
+                    entityModel.setComment(s);
                     s = erdoc.getValue("constraints");
                     if (s == null)
                         s = "";
-                    entM.setConstraints(s);
+                    entityModel.setConstraints(s);
                     if ((s = erdoc.getValue("parent")) != null) {
                         i = id + new Integer(s);
                         d.getEntity(i).addISAChild(
                                 ent,
-                                new cz.felk.cvut.erm.event.ResizeEvent(0, 0, 0, 0,
-                                        new cz.felk.cvut.erm.event.ResizeRectangle(0,
+                                new ResizeEvent(0, 0, 0, 0,
+                                        new ResizeRectangle(0,
                                                 0, 0, 0, 0), this));
                     }
                 } while (erdoc.next());
@@ -1174,16 +1163,15 @@ public class ERModeller extends JFrame implements
                     rel = d.createRelation(l, t, w, h);
                     rel.setID(id
                             + new Integer(erdoc.getValue("id")));
-                    coM = (Relation) rel
-                            .getModel();
+                    relationModel = (Relation) rel.getModel();
                     s = erdoc.getValue("name");
                     if (s == null)
                         s = "";
-                    coM.setName(s);
+                    relationModel.setName(s);
                     s = erdoc.getValue("comment");
                     if (s == null)
                         s = "";
-                    coM.setComment(s);
+                    relationModel.setComment(s);
                 } while (erdoc.next());
 
             if (erdoc.setElements("atribute"))
@@ -1226,15 +1214,11 @@ public class ERModeller extends JFrame implements
                 do {
                     t = tt + new Integer(erdoc.getValue("top"));
                     l = ll + new Integer(erdoc.getValue("left"));
-                    ent = d.getEntity(id
-                            + new Integer(erdoc.getValue("ent")));
-                    rel = d.getRelation(id
-                            + new Integer(erdoc.getValue("rel")));
+                    ent = d.getEntity(id + new Integer(erdoc.getValue("ent")));
+                    rel = d.getRelation(id + new Integer(erdoc.getValue("rel")));
                     car = rel.createCardinality(ent, d, l, t);
-                    car.setID(id
-                            + new Integer(erdoc.getValue("id")));
-                    carM = (Cardinality) car
-                            .getModel();
+                    car.setID(id + new Integer(erdoc.getValue("id")));
+                    carM = (Cardinality) car.getModel();
                     s = erdoc.getValue("name");
                     if (s == null)
                         s = "";
@@ -1255,13 +1239,10 @@ public class ERModeller extends JFrame implements
                 do {
                     t = tt + new Integer(erdoc.getValue("top"));
                     l = ll + new Integer(erdoc.getValue("left"));
-                    ent = d.getEntity(id
-                            + new Integer(erdoc.getValue("ent")));
+                    ent = d.getEntity(id + new Integer(erdoc.getValue("ent")));
                     uni = ent.createUniqueKey(l, t);
-                    uni.setID(id
-                            + new Integer(erdoc.getValue("id")));
-                    uniM = (UniqueKey) uni
-                            .getModel();
+                    uni.setID(id + new Integer(erdoc.getValue("id")));
+                    uniM = (UniqueKey) uni.getModel();
                     s = erdoc.getValue("name");
                     if (s == null)
                         s = "";
@@ -1341,15 +1322,15 @@ public class ERModeller extends JFrame implements
         }
 
         String s;
-        Schema schemaM;
+        Schema schemaModel;
         WorkingDesktop d;
 
 
         switch (what) {
-            case NEW_CTS:
+            case NEW_CTS://uz nepouzivano
                 getPlace().loadFromFile(fileName);
                 break;
-            case NEW_XML:
+            case LOAD_FROM_XML:
                 getPlace().setScale(1);
                 getPlace().clearDesktop();
                 if ((i = fileName.lastIndexOf("\\")) >= 0)
@@ -1357,7 +1338,8 @@ public class ERModeller extends JFrame implements
                 else
                     s = fileName;
                 setTitle(TITLE + " - " + s);
-            case WITH_XML:
+            case MERGE_WITH_XML: //spolecne i pro LOAD_FROM_XML
+
                 Document doc = null;
                 try {
                     doc = parser.parse(new File(fileName));
@@ -1371,10 +1353,9 @@ public class ERModeller extends JFrame implements
                         java.awt.Rectangle rb = place.getBounds();
                         d = new WorkingDesktop(place, rb.x, rb.y, rb.width, rb.height);
                         d.addShowErrorListener(place);
-                        id = ((Schema) ((WorkingDesktop) place
-                                .getDesktop()).getModel()).createID();
+                        id = ((Schema) ((WorkingDesktop) place.getDesktop()).getModel()).createID();
                         id++;
-                        if (what == WITH_XML) {
+                        if (what == MERGE_WITH_XML) {
                             NotationType withNotation = loadNotation(doc);
                             //		System.out.println("act notation " + ConceptualConstruct.ACTUAL_NOTATION + ", with not " + withNotation);
                             if (getNotationType() != withNotation) {
@@ -1390,15 +1371,14 @@ public class ERModeller extends JFrame implements
                             }
                         }
                         String prefix = loadDesktop(d, id, doc);
-                        if (what == NEW_XML) {
+                        if (what == LOAD_FROM_XML) {
                             place.addDesktop(d);
                             getPlace().getDesktop();
                             repaint();
                             break;
                         }
-                        schemaM = (Schema) d
-                                .getModel();
-                        ErrorLogList errList = schemaM.checkConsistency();
+                        schemaModel = (Schema) d.getModel();
+                        ErrorLogList errList = schemaModel.checkConsistency();
                         if (errList.size() > 0) {
                             repaint();
                             javax.swing.JOptionPane
@@ -1412,12 +1392,12 @@ public class ERModeller extends JFrame implements
                         d = (WorkingDesktop) place.getDesktop();
                         loadDesktop(d, id, doc);
                         repaint();
-                        schemaM = (Schema) d.getModel();
-                        schemaM.setComposeID(id);
+                        schemaModel = (Schema) d.getModel();
+                        schemaModel.setComposeID(id);
                         conflictsDialog.setPrefix(prefix);
                         conflictsDialog.setID(id);
                         conflictsDialog.setDesktop(d);
-                        conflictsDialog.setErrorLogList(schemaM.checkConsistency());
+                        conflictsDialog.setErrorLogList(schemaModel.checkConsistency());
                         conflictsDialog.setVisible(true);
                     } catch (Exception e) {
                         ShowException se = new ShowException(null, "Error", e, true);
@@ -1619,7 +1599,7 @@ public class ERModeller extends JFrame implements
             if (c.getOne() instanceof StrongAddiction) sa = ((StrongAddiction) c.getOne());
             if (c.getTwo() instanceof StrongAddiction) sa = ((StrongAddiction) c.getTwo());
             if (sa != null) {
-                cz.felk.cvut.erm.event.ResizeRectangle rr = new cz.felk.cvut.erm.event.ResizeRectangle(
+                cz.felk.cvut.erm.event.ResizeRectangle rr = new ResizeRectangle(
                         0, 0, 0, 0, ResizePoint.BOTTOM
                         | ResizePoint.RIGHT);
                 java.awt.Rectangle saR = sa.getBounds();

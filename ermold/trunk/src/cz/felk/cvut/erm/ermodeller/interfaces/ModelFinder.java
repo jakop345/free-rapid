@@ -2,7 +2,7 @@ package cz.felk.cvut.erm.ermodeller.interfaces;
 
 import cz.felk.cvut.erm.event.SelectItemExEvent;
 
-import java.util.Vector;
+import java.util.List;
 
 /**
  * This type was created by Jiri Mares
@@ -14,5 +14,5 @@ public interface ModelFinder {
      * @param elems java.util.Vector
      * @param event cz.green.event.SelectItemExEvent
      */
-    void isModelIn(Vector elems, SelectItemExEvent event);
+    void isModelIn(List elems, SelectItemExEvent event);
 }

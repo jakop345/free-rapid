@@ -5,7 +5,6 @@ import cz.felk.cvut.erm.conceptual.exception.ParameterCannotBeNullException;
 import cz.felk.cvut.erm.conceptual.exception.WasNotFoundException;
 
 import javax.swing.*;
-import java.util.Enumeration;
 
 /**
  * <code>Cardinality</code> represents a line between an entity and a relation.
@@ -76,8 +75,7 @@ public class Cardinality extends ConceptualObject {
         Relation relationBean = getRelation();
         if (relationBean == null)
             return false;
-        for (Enumeration elements = relationBean.getCardinalities().elements(); elements.hasMoreElements();) {
-            Cardinality cardinality = (Cardinality) elements.nextElement();
+        for (Cardinality cardinality : relationBean.getCardinalities()) {
             if (cardinality != this) {
                 Entity entity = cardinality.getEntity();
                 if (entity == anEntity)
@@ -101,8 +99,7 @@ public class Cardinality extends ConceptualObject {
         Entity entity = getEntity();
         if (entity == null)
             return false;
-        for (Enumeration elements = entity.getCardinalities().elements(); elements.hasMoreElements();) {
-            Cardinality cardinality = (Cardinality) elements.nextElement();
+        for (Cardinality cardinality : entity.getCardinalities()) {
             if (cardinality != this) {
                 Relation relationBean = cardinality.getRelation();
                 if (relationBean == aRelationBean)

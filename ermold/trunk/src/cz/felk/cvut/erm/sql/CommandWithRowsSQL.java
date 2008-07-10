@@ -15,7 +15,7 @@ public abstract class CommandWithRowsSQL extends CommandSQL {
      *
      * @see cz.felk.cvut.erm.sql.RowSQL
      */
-    Vector rows = new Vector();
+    Vector<RowSQL> rows = new Vector<RowSQL>();
     /**
      * Corresponding relation.
      *
@@ -95,8 +95,8 @@ public abstract class CommandWithRowsSQL extends CommandSQL {
     public String createSubSQL(int countTabs) {
         String tail = "";
         String result = TabCreator.getTabs(countTabs) + toString() + " (\n";
-        for (Enumeration elements = getRows().elements(); elements.hasMoreElements();) {
-            RowSQL commandSQL = (RowSQL) elements.nextElement();
+        for (Enumeration<RowSQL> elements = getRows().elements(); elements.hasMoreElements();) {
+            RowSQL commandSQL = elements.nextElement();
             if (commandSQL instanceof NestedTableStorageSQL)
                 tail += ((tail.equals("")) ? "\n" : ",\n") + commandSQL.createSubSQL(countTabs);
             else
@@ -113,13 +113,13 @@ public abstract class CommandWithRowsSQL extends CommandSQL {
      */
     public IconNode createSubTree() {
         IconNode top = new IconNode(this, true, getIcon());
-        for (Enumeration elements = getRows().elements(); elements.hasMoreElements();) {
-            RowSQL commandSQL = (RowSQL) elements.nextElement();
+        for (Enumeration<RowSQL> elements = getRows().elements(); elements.hasMoreElements();) {
+            RowSQL commandSQL = elements.nextElement();
             if (!(commandSQL instanceof NestedTableStorageSQL))
                 top.add(commandSQL.createSubTree());
         }
-        for (Enumeration elements = getRows().elements(); elements.hasMoreElements();) {
-            RowSQL commandSQL = (RowSQL) elements.nextElement();
+        for (Enumeration<RowSQL> elements = getRows().elements(); elements.hasMoreElements();) {
+            RowSQL commandSQL = elements.nextElement();
             if (commandSQL instanceof NestedTableStorageSQL)
                 top.add(commandSQL.createSubTree());
         }
@@ -131,9 +131,9 @@ public abstract class CommandWithRowsSQL extends CommandSQL {
      *
      * @return java.util.Vector
      */
-    protected Vector getRows() {
+    protected Vector<RowSQL> getRows() {
         if (rows == null)
-            rows = new Vector();
+            rows = new Vector<RowSQL>();
         return rows;
     }
 

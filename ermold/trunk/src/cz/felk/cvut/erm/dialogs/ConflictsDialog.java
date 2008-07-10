@@ -1554,7 +1554,7 @@ public class ConflictsDialog extends JDialog implements java.awt.event.ActionLis
         int cnt = tp.getPathCount(), i;
         Schema schema;
         ConceptualObject co;
-        Vector v;
+        java.util.List v;
 
         ivjComposeModel.removeAllElements();
         ivjComposeModel.addElement("none");

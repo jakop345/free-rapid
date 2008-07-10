@@ -169,10 +169,11 @@ public class WindowItem implements Item, java.io.Serializable {
                     tree[i][0] = item.itemIn(i, rect[i], IntervalMethods.LEFT, where);
                 if (tree[i][1] == to)
                     tree[i][1] = item.itemIn(i, rect[i], IntervalMethods.RIGHT, where);
-            }
-        } //if occurs exception, this code is wrong
-        catch (ValueOutOfRangeException e) {
+            } //if occurs exception, this code is wrong
+        } catch (ValueOutOfRangeException e) {
+            e.printStackTrace();
         } catch (BadDimensionException e) {
+            e.printStackTrace();
         }
     }
 
@@ -209,6 +210,7 @@ public class WindowItem implements Item, java.io.Serializable {
             return item;
         } //if occurs exception, this code is wrong
         catch (ValueOutOfRangeException e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -541,11 +543,12 @@ public class WindowItem implements Item, java.io.Serializable {
         java.lang.reflect.Method handler;
         Class[] parameterTypes = new Class[1];
         Object[] parameters = new Object[1];
-        String methodName = event.getClass().getName(); //name of the event handler
+        //String methodName = event.getClass().getName(); //name of the event handler
         //we want olny class name, withou package
-        String remainder = methodName.substring(methodName.lastIndexOf('.') + 1);
+        //     String remainder = methodName.substring(methodName.lastIndexOf('.') + 1);
+        //String remainder =
         //prefix "handle" + event class name
-        methodName = "handle" + remainder;
+        final String methodName = "handle" + event.getClass().getSimpleName();
         //prepare parameters types and values
         parameterTypes[0] = event.getClass();
         parameters[0] = event;

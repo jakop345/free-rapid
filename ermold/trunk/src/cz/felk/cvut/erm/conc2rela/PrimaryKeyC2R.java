@@ -20,7 +20,7 @@ public class PrimaryKeyC2R extends ElementOfRelationC2R implements SQLConstraint
     /**
      * Foreign primary keys - is used when creating (feeding) final primary keys.
      */
-    private Vector parentPrimaryKeys = new Vector();
+    private Vector<PrimaryKeyC2R> parentPrimaryKeys = new Vector<PrimaryKeyC2R>();
 
     /**
      * PrimaryKeyC2R constructor.
@@ -62,8 +62,8 @@ public class PrimaryKeyC2R extends ElementOfRelationC2R implements SQLConstraint
      */
     public boolean existParallelParentPrimaryKeyC2R(PrimaryKeyC2R aPrimaryKeyC2R) {
         int counter = 0;
-        for (Enumeration elements = getParentsPK().elements(); elements.hasMoreElements();) {
-            PrimaryKeyC2R primaryKeyC2R = (PrimaryKeyC2R) elements.nextElement();
+        for (Enumeration<PrimaryKeyC2R> elements = getParentsPK().elements(); elements.hasMoreElements();) {
+            PrimaryKeyC2R primaryKeyC2R = elements.nextElement();
             if (primaryKeyC2R == aPrimaryKeyC2R)
                 counter++;
         }
@@ -73,16 +73,16 @@ public class PrimaryKeyC2R extends ElementOfRelationC2R implements SQLConstraint
     /**
      * @return java.util.Vector
      */
-    public Vector getAtributesC2R() {
+    public Vector<AtributeC2R> getAtributesC2R() {
         return getUniqueKeyGroupC2R().getAtributesC2R();
     }
 
     /**
      * @return java.util.Vector
      */
-    public Vector getParentsPK() {
+    public Vector<PrimaryKeyC2R> getParentsPK() {
         if (parentPrimaryKeys == null)
-            parentPrimaryKeys = new Vector();
+            parentPrimaryKeys = new Vector<PrimaryKeyC2R>();
         return parentPrimaryKeys;
     }
 

@@ -11,13 +11,13 @@ public class CreateTypeWithRowsSQL extends CreateTypeSQL {
     /**
      * Corresponding data type.
      */
-    ObjectDataType objectDataType = null;
+    private ObjectDataType objectDataType = null;
     /**
      * name of the type
      */
-    String name = null;
+    private String name = null;
 
-    Vector rows = null;
+    private Vector<RowSQL> rows = null;
 
     /**
      * Constructor.
@@ -31,8 +31,7 @@ public class CreateTypeWithRowsSQL extends CreateTypeSQL {
     }
 
     private void fillRows() {
-        for (Enumeration elements = objectDataType.getItemVector().elements(); elements.hasMoreElements();) {
-            UserTypeStorage column = (UserTypeStorage) elements.nextElement();
+        for (UserTypeStorage column : objectDataType.getItemVector().getUserTypeStorageVector()) {
             addColumn(new ObjectTypeColumnSQL(column));
         }
     }
@@ -46,8 +45,8 @@ public class CreateTypeWithRowsSQL extends CreateTypeSQL {
      */
     public String createSubSQL(int countTabs) {
         String result = TabCreator.getTabs(countTabs) + toString() + " (\n";
-        for (Enumeration elements = getRows().elements(); elements.hasMoreElements();) {
-            RowSQL commandSQL = (RowSQL) elements.nextElement();
+        for (Enumeration<RowSQL> elements = getRows().elements(); elements.hasMoreElements();) {
+            RowSQL commandSQL = elements.nextElement();
             result += commandSQL.createSubSQL(countTabs + 1) + (elements.hasMoreElements() ? "," : "") + "\n";
         }
         return result + TabCreator.getTabs(countTabs) + ")";
@@ -60,8 +59,8 @@ public class CreateTypeWithRowsSQL extends CreateTypeSQL {
      */
     public IconNode createSubTree() {
         IconNode top = new IconNode(this, true, getIcon());
-        for (Enumeration elements = getRows().elements(); elements.hasMoreElements();) {
-            RowSQL commandSQL = (RowSQL) elements.nextElement();
+        for (Enumeration<RowSQL> elements = getRows().elements(); elements.hasMoreElements();) {
+            RowSQL commandSQL = elements.nextElement();
             top.add(commandSQL.createSubTree());
         }
         return top;
@@ -72,9 +71,9 @@ public class CreateTypeWithRowsSQL extends CreateTypeSQL {
      *
      * @return java.util.Vector
      */
-    protected Vector getRows() {
+    protected Vector<RowSQL> getRows() {
         if (rows == null)
-            rows = new Vector();
+            rows = new Vector<RowSQL>();
         return rows;
     }
 
@@ -110,6 +109,6 @@ public class CreateTypeWithRowsSQL extends CreateTypeSQL {
      * @return java.lang.String
      */
     public String toString() {
-        return "Create type " + name + " as " + objectDataType.toString();
+        return "CREATE TYPE " + name + " AS " + objectDataType.toString();
     }
 }

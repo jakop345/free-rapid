@@ -8,6 +8,7 @@ import cz.felk.cvut.erm.sql.AlterAddCommandSQL;
 import cz.felk.cvut.erm.sql.CreateCommandSQL;
 
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -19,7 +20,7 @@ public abstract class RelC2R extends RelationC2R {
     /**
      * Foreign keys created from conceptual cardinalities.
      */
-    private Vector relForeignKeysC2R = new Vector();
+    private List<RelForeignKeyC2R> relForeignKeysC2R = new Vector<RelForeignKeyC2R>();
     /**
      * Created during gluing - something like history of gluing. Helps generate checks and potentially views etc.
      */
@@ -57,7 +58,7 @@ public abstract class RelC2R extends RelationC2R {
         if (getRelForeignKeysC2R().contains(aRelForeignKeyC2R))
             throw new AlreadyContainsExceptionC2R(this, aRelForeignKeyC2R, ListExceptionC2R.REL_FKS_LIST);
 
-        getRelForeignKeysC2R().addElement(aRelForeignKeyC2R);
+        getRelForeignKeysC2R().add(aRelForeignKeyC2R);
     }
 
     /**
@@ -68,8 +69,7 @@ public abstract class RelC2R extends RelationC2R {
     public AlterAddCommandSQL createAlterAddCommandSQL() {
         AlterAddCommandSQL alterAddCommand = super.createAlterAddCommandSQL();
         // relation foreign keys
-        for (Enumeration elements = getRelForeignKeysC2R().elements(); elements.hasMoreElements();) {
-            RelForeignKeyC2R relForeignKeyC2R = (RelForeignKeyC2R) elements.nextElement();
+        for (RelForeignKeyC2R relForeignKeyC2R : getRelForeignKeysC2R()) {
             alterAddCommand.addConstraint(relForeignKeyC2R.createConstraintSQL());
         }
         return alterAddCommand;
@@ -112,9 +112,9 @@ public abstract class RelC2R extends RelationC2R {
     /**
      * @return java.util.Vector
      */
-    public Vector getRelForeignKeysC2R() {
+    public List<RelForeignKeyC2R> getRelForeignKeysC2R() {
         if (relForeignKeysC2R == null)
-            relForeignKeysC2R = new Vector();
+            relForeignKeysC2R = new Vector<RelForeignKeyC2R>();
         return relForeignKeysC2R;
     }
 
@@ -129,10 +129,10 @@ public abstract class RelC2R extends RelationC2R {
      *
      * @see cz.felk.cvut.erm.conc2rela.RelForeignKeyC2R
      */
-    protected Vector glueC2R() throws AlreadyContainsExceptionC2R {
+    protected Vector<RelationC2R> glueC2R() throws AlreadyContainsExceptionC2R {
 
-        Vector gluedRelationsC2R = new Vector();
-        Vector relFKsToRemove = new Vector();
+        Vector<RelationC2R> gluedRelationsC2R = new Vector<RelationC2R>();
+        Vector<RelForeignKeyC2R> relFKsToRemove = new Vector<RelForeignKeyC2R>();
         boolean gluedNonArbitraryCard = false;
         glueRecord = new GlueRecord(this);
         // is used, when all foreign keys are (x,N)
@@ -145,19 +145,14 @@ public abstract class RelC2R extends RelationC2R {
         //boolean was0=false;
         int count1 = 0;
         int relCount = 0;
-        RelForeignKeyC2R useGlue = null;
-        for (Enumeration elements = relForeignKeysC2R.elements(); elements.hasMoreElements();) {
-            RelForeignKeyC2R relForeignKeyC2R = (RelForeignKeyC2R) elements.nextElement();
-            //if (!was0 && !relForeignKeyC2R.getArbitrary() && !relForeignKeyC2R.getMultiCardinality()) {
-            //	useGlue=relForeignKeyC2R;
-            //	was0=true;
-            //}
+        //RelForeignKeyC2R useGlue = null;
+        for (RelForeignKeyC2R relForeignKeyC2R : relForeignKeysC2R) {
             if (!relForeignKeyC2R.getMultiCardinality()) count1++;
             relCount++;
         }
 
         // provide gluing/non-gluing
-        Vector relForeignKeysC2R = (Vector) getRelForeignKeysC2R().clone();
+        Vector relForeignKeysC2R = (Vector) ((Vector) getRelForeignKeysC2R()).clone();
         for (Enumeration elements = relForeignKeysC2R.elements(); elements.hasMoreElements();) {
             RelForeignKeyC2R relForeignKeyC2R = (RelForeignKeyC2R) elements.nextElement();
             UniqueKeyC2R foreignUniqueKeyC2R = relForeignKeyC2R.getForeignUniqueKeyC2R();
@@ -185,8 +180,8 @@ public abstract class RelC2R extends RelationC2R {
                 UniqueKeyC2R uniqueKeyC2R = new UniqueKeyC2R(this.getSchemaC2R(), this, null, null, false);
                 // can throw WasNotFoundByConceptual, AlreadyContains
 
-                for (Enumeration atributes = foreignUniqueKeyC2R.getAtributesC2R().elements(); atributes.hasMoreElements();) {
-                    AtributeC2R foreignAtributeC2R = (AtributeC2R) atributes.nextElement();
+                for (Enumeration<AtributeC2R> atributes = foreignUniqueKeyC2R.getAtributesC2R().elements(); atributes.hasMoreElements();) {
+                    AtributeC2R foreignAtributeC2R = atributes.nextElement();
 
                     String prefix;
                     if (getSchemaC2R().shortenPrefixes) {
@@ -205,6 +200,7 @@ public abstract class RelC2R extends RelationC2R {
                         wholeUniqueKeyC2R.addAtributeC2R(atributeC2R);
                     }
                     catch (AlreadyContainsExceptionC2R e) {
+                        e.printStackTrace();
                     } // cannot be thrown
                 }
                 if (!relForeignKeyC2R.getMultiCardinality()) {
@@ -213,6 +209,7 @@ public abstract class RelC2R extends RelationC2R {
                         addUniqueKeyC2R(uniqueKeyC2R);
                     }
                     catch (AlreadyContainsExceptionC2R e) {
+                        e.printStackTrace();
                     } // cannot be thrown
                 }
                 glueRecord.addNotGluedRelationC2R(gluedRelationRecord);
@@ -239,8 +236,8 @@ public abstract class RelC2R extends RelationC2R {
             }
 
             if (glue) {
-                for (Enumeration atrs = foreignUniqueKeyC2R.getAtributesC2R().elements(); atrs.hasMoreElements();) {
-                    wholeUniqueKeyC2R.addAtributeC2R((AtributeC2R) atrs.nextElement());
+                for (Enumeration<AtributeC2R> atrs = foreignUniqueKeyC2R.getAtributesC2R().elements(); atrs.hasMoreElements();) {
+                    wholeUniqueKeyC2R.addAtributeC2R(atrs.nextElement());
                 }
                 setGlued(true);
 
@@ -250,15 +247,14 @@ public abstract class RelC2R extends RelationC2R {
                 // - move all atributes - reset owner
 
                 if (!relForeignKeyC2R.getArbitrary() && gluings < 2) {
-                    for (Enumeration atributes = this.getAtributesC2R().elements(); atributes.hasMoreElements();) {
-                        AtributeC2R atributeC2R = (AtributeC2R) atributes.nextElement();
+                    List<AtributeC2R> atributesC2R = this.getAtributesC2R();
+                    for (AtributeC2R atributeC2R : atributesC2R) {
                         atributeC2R.setArbitrary(false);
                     }
                 }
 
-                for (Enumeration atributes = relationC2R.getAtributesC2R().elements(); atributes.hasMoreElements();) {
-                    AtributeC2R atributeC2R = (AtributeC2R) atributes.nextElement();
-
+                final List<AtributeC2R> atributes = relationC2R.getAtributesC2R();
+                for (AtributeC2R atributeC2R : atributes) {
                     if (!relForeignKeyC2R.getArbitrary() && gluings > 1) atributeC2R.setArbitrary(false);
 
                     this.addAtributeC2R(atributeC2R); // can throw AlreadyContains
@@ -290,15 +286,14 @@ public abstract class RelC2R extends RelationC2R {
                 }
                 // - move all unique keys - reset owner
 
-                for (Enumeration uniqueKeys = relationC2R.getUniqueKeysC2R().elements(); uniqueKeys.hasMoreElements();) {
-                    UniqueKeyC2R uniqueKeyC2R = (UniqueKeyC2R) uniqueKeys.nextElement();
+                final List<UniqueKeyC2R> uniqueKeyC2Rs = relationC2R.getUniqueKeysC2R();
+                for (UniqueKeyC2R uniqueKeyC2R : uniqueKeyC2Rs) {
                     this.addUniqueKeyC2R(uniqueKeyC2R); // can throw AlreadyContains
                     uniqueKeyC2R.setRelationC2R(this);
                 }
 
                 // - move entity foreign keys
-                for (Enumeration entFKs = relationC2R.getEntForeignKeysC2R().elements(); entFKs.hasMoreElements();) {
-                    EntForeignKeyC2R entForeignKeyC2R = (EntForeignKeyC2R) entFKs.nextElement();
+                for (EntForeignKeyC2R entForeignKeyC2R : relationC2R.getEntForeignKeysC2R()) {
                     this.addEntForeignKeyC2R(entForeignKeyC2R); // can throw AlreadyContains
                     entForeignKeyC2R.setRelationC2R(this);
                 }
@@ -312,8 +307,8 @@ public abstract class RelC2R extends RelationC2R {
                 }
                 if (relationC2R instanceof RelC2R) {
                     RelC2R relC2R = (RelC2R) relationC2R;
-                    for (Enumeration relFKs = relC2R.getRelForeignKeysC2R().elements(); relFKs.hasMoreElements();) {
-                        RelForeignKeyC2R relFKeyC2R = (RelForeignKeyC2R) relFKs.nextElement();
+                    final List<RelForeignKeyC2R> c2R = relC2R.getRelForeignKeysC2R();
+                    for (RelForeignKeyC2R relFKeyC2R : c2R) {
                         this.addRelForeignKeyC2R(relFKeyC2R); // can throw AlreadyContains
                         relFKeyC2R.setRelC2R(this);
                     }
@@ -327,18 +322,18 @@ public abstract class RelC2R extends RelationC2R {
             }
         }
         // remove foreign keys which was glued
-        for (Enumeration elements = relFKsToRemove.elements(); elements.hasMoreElements();) {
-            RelForeignKeyC2R relForeignKeyC2R = (RelForeignKeyC2R) elements.nextElement();
+        for (Enumeration<RelForeignKeyC2R> elements = relFKsToRemove.elements(); elements.hasMoreElements();) {
+            RelForeignKeyC2R relForeignKeyC2R = elements.nextElement();
             try {
                 removeRelForeignKeyC2R(relForeignKeyC2R);
             }
             catch (WasNotFoundExceptionC2R e) {
+                e.printStackTrace();
             } // never mind
         }
         if (gluedNonArbitraryCard) {
             // modify arbitrarity of atributes - will be checked by checks
-            for (Enumeration elements = this.getAtributesC2R().elements(); elements.hasMoreElements();) {
-                AtributeC2R atributeC2R = (AtributeC2R) elements.nextElement();
+            for (AtributeC2R atributeC2R : this.getAtributesC2R()) {
                 atributeC2R.setArbitrary(false);
             }
         }
@@ -355,8 +350,8 @@ public abstract class RelC2R extends RelationC2R {
      */
     protected int howManyGluings() {
         int result = 0;
-        for (Enumeration elements = getRelForeignKeysC2R().elements(); elements.hasMoreElements();) {
-            RelForeignKeyC2R relForeignKeyC2R = (RelForeignKeyC2R) elements.nextElement();
+        final List<RelForeignKeyC2R> c2R = getRelForeignKeysC2R();
+        for (RelForeignKeyC2R relForeignKeyC2R : c2R) {
             if (relForeignKeyC2R.getGlue())
                 result++;
         }
@@ -367,7 +362,7 @@ public abstract class RelC2R extends RelationC2R {
      * Remove relational foreign key - after gluing through this one.
      */
     protected void removeRelForeignKeyC2R(RelForeignKeyC2R aRelForeignKeyC2R) throws WasNotFoundExceptionC2R {
-        if (!getRelForeignKeysC2R().removeElement(aRelForeignKeyC2R))
+        if (!getRelForeignKeysC2R().remove(aRelForeignKeyC2R))
             throw new WasNotFoundExceptionC2R(this, aRelForeignKeyC2R, ListExceptionC2R.REL_FKS_LIST);
     }
 
