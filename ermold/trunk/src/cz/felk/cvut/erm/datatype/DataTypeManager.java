@@ -111,4 +111,11 @@ public class DataTypeManager {
     public boolean getTypeNamesChanged() {
         return typeNamesChanged;
     }
+
+    public void reset() {
+        getTypeNames().removeAllElements();
+        removeAllFromNestedNames();
+        removeAllFromVarrayNames();
+        removeAllFromObjectNames();
+    }
 }

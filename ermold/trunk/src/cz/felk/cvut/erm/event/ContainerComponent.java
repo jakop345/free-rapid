@@ -336,7 +336,7 @@ public class ContainerComponent extends JComponent implements MouseListener, Mou
       * @see java.awt.event.KeyListener#keyTyped(java.awt.event.KeyEvent)
       */
     public void keyTyped(KeyEvent e) {
-        // TODO Auto-generated method stub
+
     }
 
     /* (non-Javadoc)
@@ -352,6 +352,6 @@ public class ContainerComponent extends JComponent implements MouseListener, Mou
       * @see java.awt.event.KeyListener#keyReleased(java.awt.event.KeyEvent)
       */
     public void keyReleased(KeyEvent e) {
-        // TODO Auto-generated method stub
+
     }
 }

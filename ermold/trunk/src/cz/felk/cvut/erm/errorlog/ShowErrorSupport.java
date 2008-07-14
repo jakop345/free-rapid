@@ -2,17 +2,16 @@ package cz.felk.cvut.erm.errorlog;
 
 import cz.felk.cvut.erm.errorlog.interfaces.ShowErrorListener;
 
-import java.io.Serializable;
 import java.util.Vector;
 
 /**
  * Support class for firing ShowError events.
  */
-public class ShowErrorSupport implements Serializable {
+public class ShowErrorSupport {
     /**
      * Listeners.
      */
-    private Vector listeners;
+    private Vector<ShowErrorListener> listeners;
     /**
      * Source object.
      */
@@ -30,7 +29,7 @@ public class ShowErrorSupport implements Serializable {
      */
     public synchronized void addShowErrorListener(ShowErrorListener listener) {
         if (listeners == null)
-            listeners = new Vector();
+            listeners = new Vector<ShowErrorListener>();
         listeners.addElement(listener);
     }
 
@@ -38,14 +37,14 @@ public class ShowErrorSupport implements Serializable {
      * Fires ShowError event to all listeners.
      */
     public void fireShowError(ShowErrorEvent anEvent) {
-        Vector targets;
+        Vector<ShowErrorListener> targets;
         synchronized (this) {
             if (listeners == null)
                 return;
-            targets = (Vector) listeners.clone();
+            targets = (Vector<ShowErrorListener>) listeners.clone();
         }
         for (int i = 0; i < targets.size(); i++) {
-            ShowErrorListener target = (ShowErrorListener) targets.elementAt(i);
+            ShowErrorListener target = targets.elementAt(i);
             target.showError(anEvent);
         }
     }

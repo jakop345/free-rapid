@@ -3,29 +3,25 @@ package cz.felk.cvut.erm.app;
 import cz.felk.cvut.erm.conc2obj.ObjDialog;
 import cz.felk.cvut.erm.conc2rela.SchemaC2R;
 import cz.felk.cvut.erm.conceptual.NotationType;
-import cz.felk.cvut.erm.conceptual.beans.*;
-import cz.felk.cvut.erm.datatype.*;
+import cz.felk.cvut.erm.conceptual.beans.Relation;
+import cz.felk.cvut.erm.conceptual.beans.Schema;
 import cz.felk.cvut.erm.dialogs.*;
 import cz.felk.cvut.erm.ermodeller.*;
 import cz.felk.cvut.erm.ermodeller.interfaces.FontManager;
 import cz.felk.cvut.erm.errorlog.ErrorLogList;
 import cz.felk.cvut.erm.event.*;
 import cz.felk.cvut.erm.event.exceptions.ItemNotInsideManagerException;
+import cz.felk.cvut.erm.event.interfaces.Item;
 import cz.felk.cvut.erm.eventtool.interfaces.Connection;
+import cz.felk.cvut.erm.fileimport.ermver4.XMLBind;
 import cz.felk.cvut.erm.sql.gui.SQLDialog;
 import cz.felk.cvut.erm.swing.ExtensionFileFilter;
 import cz.felk.cvut.erm.swing.ShowException;
-import cz.felk.cvut.erm.typeseditor.UserTypeStorage;
-import cz.felk.cvut.erm.typeseditor.UserTypeStorageVector;
 import cz.felk.cvut.erm.typeseditor.UserTypesEditor;
 import cz.felk.cvut.erm.util.ActionAdapter;
 import cz.felk.cvut.erm.util.ParamActionAdapter;
-import org.w3c.dom.Document;
 
 import javax.swing.*;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
@@ -34,6 +30,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.util.Collection;
 import java.util.Vector;
 
 /**
@@ -272,7 +269,8 @@ public class ERModeller extends JFrame implements
                     }
                     String ext = ((ExtensionFileFilter) chooser.getFileFilter())
                             .getExtension();
-                    loadFromFile(fileName, MERGE_WITH_XML);
+                    mergeFromFile(fileName);
+//                    loadFromFile(fileName, MERGE_WITH_XML);
                 }
             }
         } catch (Throwable x) {
@@ -956,11 +954,13 @@ public class ERModeller extends JFrame implements
                     objDialog.setFileName(fileName);
                     String ext = ((ExtensionFileFilter) chooser.getFileFilter())
                             .getExtension();
-                    if (ext.equals("xml"))// cts
+                    if ("xml".equals(ext))// cts
+
                         /*
-                               * loadFromFile(fileName,NEW_CTS); else
-                               */
-                        loadFromFile(fileName, LOAD_FROM_XML);
+                        * loadFromFile(fileName,NEW_CTS); else
+                        */
+                        loadFromFile(fileName);
+                    // loadFromFile(fileName, LOAD_FROM_XML);
                     try {
                         ((WorkingDesktop) getPlace().getDesktop())
                                 .addPropertyChangeListener(this);
@@ -980,430 +980,612 @@ public class ERModeller extends JFrame implements
         return false;
     }
 
+    private void loadFromFile(final String fileName) {
+        final File file = new File(fileName);
+        final WorkingDesktop d = new WorkingDesktop(place, place.getBounds());
+        d.addShowErrorListener(place);
+        int id = place.getWorkingDesktop().getSchemaModel().createID();
+        id++;
+        final XMLBind xmlBind = new XMLBind();
+        try {
+            xmlBind.loadDesktop(d, id, xmlBind.loadSchema(file));
+            typeEditor.setTypesVector(xmlBind.getTypesVector());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+
+        final String s;
+        int i;
+        if ((i = fileName.lastIndexOf("\\")) >= 0)
+            s = fileName.substring(i + 1);
+        else
+            s = fileName;
+        setTitle(TITLE + " - " + s);
+        getPlace().setScale(1);
+        place.setDesktop(d);
+    }
+
+    private void mergeFromFile(final String fileName) {
+        final File file = new File(fileName);
+        final WorkingDesktop currentWorkingDesktop = place.getWorkingDesktop();
+        final int id = currentWorkingDesktop.getSchemaModel().createID() + 1;
+        final Rectangle rect = place.getBounds();
+        final WorkingDesktop d = new WorkingDesktop(new DesktopContainer(rect.width, rect.height), rect);
+        //d.addShowErrorListener(place);
+        final XMLBind xmlBind = new XMLBind();
+        try {
+            xmlBind.loadDesktop(d, id, xmlBind.loadSchema(file), currentWorkingDesktop.getHighestRect());
+            if (getNotationType() != d.getSchemaModel().getNotationType()) {
+                repaint();
+                javax.swing.JOptionPane
+                        .showMessageDialog(
+                                null,
+                                "Refused, the schema to be merged is in different graphic notation",
+                                "Compose",
+                                javax.swing.JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            typeEditor.setTypesVector(xmlBind.getTypesVector());
+
+            ErrorLogList errList = d.getSchemaModel().checkConsistency();
+            if (!errList.isEmpty()) {
+                repaint();
+                javax.swing.JOptionPane
+                        .showMessageDialog(
+                                null,
+                                "Refused, the schema to be merged is not consistent",
+                                "Compose",
+                                javax.swing.JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            final Collection<Item> itemCollection = d.getItems();
+            final WorkingDesktop desktop = (WorkingDesktop) place.getDesktop();
+            for (Item item : itemCollection) {
+                desktop.addItem(item);
+            }
+
+            //  d.removeShowErrorListener(place);
+            repaint();
+            desktop.getSchemaModel().setComposeID(d.getSchemaModel().getComposeID());
+            conflictsDialog.setPrefix(xmlBind.getPrefix());
+            conflictsDialog.setID(id);
+            conflictsDialog.setDesktop(desktop);
+            conflictsDialog.setErrorLogList(desktop.getSchemaModel().checkConsistency());
+            conflictsDialog.setVisible(true);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+//        place.setDesktop(d);
+    }
+
     /**
      * loads user data types
      */
-    public void loadUserTypes(Document doc) {
-        DataType dt;
-        String typeName;
-        String dataType;
-        String itemName;
-        String itemType;
-        UserTypeStorageVector typesVector = new UserTypeStorageVector();
-        ERDocument erdoc = new ERDocument(doc);
-        if (erdoc.setElements("usertype")) {
-            do {
-                typeName = erdoc.getValue("typename", 0);
-                erdoc.next(1);
-                dataType = erdoc.getValue("datatype", 1);
-                /*
-                     * System.out.println("Nalezen uzivatelsky typ "+typeName);
-                     * System.out.println("je to typ "+dataType);
-                     */
-                dt = extractDataType(dataType);
-                if ("Object".equals(dataType)) {
-                    while (erdoc.next(2)) {
-                        itemName = erdoc.getValue("itemname", 2);
-                        itemType = erdoc.getValue("datatype", 2);
-                        ((ObjectDataType) dt).addItem(new UserTypeStorage(
-                                itemName, extractDataType(itemType), null));
-                    }
-                    ((ObjectDataType) dt).setUserDefinedTypesVector(typesVector);
-                }
-                typesVector.addType(new UserTypeStorage(typeName, dt, null));
-            } while (erdoc.next(0));
-            typeEditor.setTypesVector(typesVector);
-        }
-    }
+//    public void loadUserTypes(Document doc) {
+//        DataType dt;
+//        String typeName;
+//        String dataType;
+//        String itemName;
+//        String itemType;
+//        UserTypeStorageVector typesVector = new UserTypeStorageVector();
+//        ERDocument erdoc = new ERDocument(doc);
+//        if (erdoc.setElements("usertype")) {
+//            do {
+//                typeName = erdoc.getValue("typename", 0);
+//                erdoc.next(1);
+//                dataType = erdoc.getValue("datatype", 1);
+//                /*
+//                     * System.out.println("Nalezen uzivatelsky typ "+typeName);
+//                     * System.out.println("je to typ "+dataType);
+//                     */
+//                dt = extractDataType(dataType);
+//                if ("Object".equals(dataType)) {
+//                    while (erdoc.next(2)) {
+//                        itemName = erdoc.getValue("itemname", 2);
+//                        itemType = erdoc.getValue("datatype", 2);
+//                        ((ObjectDataType) dt).addItem(new UserTypeStorage(
+//                                itemName, extractDataType(itemType), null));
+//                    }
+//                    ((ObjectDataType) dt).setUserDefinedTypesVector(typesVector);
+//                }
+//                typesVector.addType(new UserTypeStorage(typeName, dt, null));
+//            } while (erdoc.next(0));
+//            typeEditor.setTypesVector(typesVector);
+//        }
+//    }
 
-    private DataType extractDataType(String name) {
-        DataType dt;
-        String s1;
-
-        if (name.startsWith("VarChar2")) {
-            name = name.substring(9, name.length() - 1);
-            name = name.trim();
-            dt = new Varchar2DataType();
-            ((LengthDataType) dt).setLength(Integer.parseInt(name));
-        } else if (name.startsWith("Char")) {
-            name = name.substring(5, name.length() - 1);
-            name = name.trim();
-            dt = new FixedCharDataType();
-            ((LengthDataType) dt).setLength(Integer.parseInt(name));
-        } else if (name.startsWith("Number")) {
-            dt = new GeneralNumberDataType();
-            s1 = name.substring(7, name.indexOf(","));
-            ((GeneralNumberDataType) dt).setPrecision(Integer.parseInt(s1));
-            name = name.substring(name.indexOf(",") + 1, name.length() - 1);
-            name = name.trim();
-            ((GeneralNumberDataType) dt).setScale(Integer.parseInt(name));
-        } else if (name.startsWith("Table of")) {
-            name = name.substring(9, name.length());
-            name = name.trim();
-            dt = new NestedTableDataType(extractDataType(name));
-        } else if (name.startsWith("Varray")) {
-            dt = new VarrayDataType();
-            s1 = name.substring(8, name.indexOf(")"));
-            ((VarrayDataType) dt).setLength(Integer.parseInt(s1));
-            name = name.substring(name.indexOf(")") + 4, name.length());
-            name = name.trim();
-            ((VarrayDataType) dt).setType(extractDataType(name));
-        } else if ("Float".equals(name)) {
-            dt = new FloatDataType();
-        } else if ("Date".equals(name)) {
-            dt = new DateDataType();
-        } else if ("Integer".equals(name)) {
-            dt = new IntegerDataType();
-        } else if ("Object".equals(name)) {
-            dt = new ObjectDataType();
-        } else
-            dt = new UserDefinedDataType(name);
-        return dt;
-    }
-
-    /**
-     * Loads desktop from document model
-     */
-    public String loadDesktop(WorkingDesktop d, int id, Document doc) {
-        int i, t, l, tt, ll, w, h, notation;
-        String prefix;
-        String s;
-        EntityConstruct ent;
-        EntityConstruct child;
-        RelationConstruct rel;
-        AttributeConstruct atr;
-        CardinalityConstruct car;
-        UniqueKeyConstruct uni;
-        ConceptualObject relationModel;
-        Atribute atrM;
-        ConceptualConstruct ccM;
-        Entity entityModel;
-        Schema schemaM;
-        Cardinality carM;
-        UniqueKey uniM;
-        cz.felk.cvut.erm.datatype.DataType dt;
-        ConceptualConstructItem cc;
-        int schemaID;
-        Vector<Atribute> attrs = new Vector<Atribute>();
-        Vector<Integer> attrsPos = new Vector<Integer>();
-        //TODO co je tt a ll
-        try {
-            ERDocument erdoc = new ERDocument(doc);
-            if (!erdoc.setElements("schema"))
-                return "";
-            schemaM = (Schema) d.getModel();
-            if (schemaM.getID() > 0) {
-                int[] r = d.getHighestRect();
-                ll = r[0] + 10;
-                tt = r[1] + 10;
-                if (ll > tt)
-                    ll = 0;
-                else
-                    tt = 0;
-            } else {
-                ll = 0;
-                tt = 0;
-            }
-            s = erdoc.getValue("name");
-            if (s == null)
-                s = "composed";
-            prefix = s + "_";
-            schemaID = id + new Integer(erdoc.getValue("id"));
-            if (erdoc.getValue("notation") != null) {
-                notation = (Integer.parseInt(erdoc.getValue("notation")));
-                switch (notation) {
-                    case 0:
-                        setChen();
-                        break;
-                    case 1:
-                        setBinary();
-                        break;
-                    case 2:
-                        setUML();
-                        break;
-                }
-            }
-            if (erdoc.setElements("entity"))
-                do {
-                    t = tt + new Integer(erdoc.getValue("top"));
-                    l = ll + new Integer(erdoc.getValue("left"));
-                    w = new Integer(erdoc.getValue("width"));
-                    h = new Integer(erdoc.getValue("height"));
-                    ent = d.createEntity(l, t, w, h, null);
-                    ent.setID(id + new Integer(erdoc.getValue("id")));
-                    entityModel = ent.getModel();
-                    s = erdoc.getValue("name");
-                    if (s == null)
-                        s = "";
-                    entityModel.setName(s);
-                    s = erdoc.getValue("comment");
-                    if (s == null)
-                        s = "";
-                    entityModel.setComment(s);
-                    s = erdoc.getValue("constraints");
-                    if (s == null)
-                        s = "";
-                    entityModel.setConstraints(s);
-                    if ((s = erdoc.getValue("parent")) != null) {
-                        i = id + new Integer(s);
-                        d.getEntity(i).addISAChild(
-                                ent,
-                                new ResizeEvent(0, 0, 0, 0,
-                                        new ResizeRectangle(0,
-                                                0, 0, 0, 0), this));
-                    }
-                } while (erdoc.next());
-
-            if (erdoc.setElements("relation"))
-                do {
-                    t = tt + new Integer(erdoc.getValue("top"));
-                    l = ll + new Integer(erdoc.getValue("left"));
-                    w = new Integer(erdoc.getValue("width"));
-                    h = new Integer(erdoc.getValue("height"));
-                    rel = d.createRelation(l, t, w, h);
-                    rel.setID(id
-                            + new Integer(erdoc.getValue("id")));
-                    relationModel = (Relation) rel.getModel();
-                    s = erdoc.getValue("name");
-                    if (s == null)
-                        s = "";
-                    relationModel.setName(s);
-                    s = erdoc.getValue("comment");
-                    if (s == null)
-                        s = "";
-                    relationModel.setComment(s);
-                } while (erdoc.next());
-
-            if (erdoc.setElements("atribute"))
-                do {
-                    t = tt + new Integer(erdoc.getValue("top"));
-                    l = ll + new Integer(erdoc.getValue("left"));
-                    s = erdoc.getValue("ent");
-                    if (s == null) {
-                        s = erdoc.getValue("rel");
-                        cc = d.getRelation(id + new Integer(s));
-                    } else
-                        cc = d.getEntity(id + new Integer(s));
-                    atr = cc.createAtribute(l, t);
-                    atr.setID(id
-                            + new Integer(erdoc.getValue("id")));
-                    atrM = atr
-                            .getModel();
-                    attrs.addElement(atr.getModel());
-                    s = erdoc.getValue("name");
-                    if (s == null)
-                        s = "";
-                    atrM.setName(s);
-                    s = erdoc.getValue("comment");
-                    if (s == null)
-                        s = "";
-                    atrM.setComment(s);
-                    s = erdoc.getValue("datatype");
-                    dt = extractDataType(s);
-                    atrM.setDataType(dt);
-                    atrM.setArbitrary(
-                            Boolean.valueOf(erdoc.getValue("arbitrary")));
-                    atrM.setPrimary(
-                            Boolean.valueOf(erdoc.getValue("primary")));
-                    atrM.setUnique(
-                            Boolean.valueOf(erdoc.getValue("uniq")));
-                    attrsPos.addElement(new Integer(erdoc.getValue("position")));
-                } while (erdoc.next());
-
-            if (erdoc.setElements("cardinality"))
-                do {
-                    t = tt + new Integer(erdoc.getValue("top"));
-                    l = ll + new Integer(erdoc.getValue("left"));
-                    ent = d.getEntity(id + new Integer(erdoc.getValue("ent")));
-                    rel = d.getRelation(id + new Integer(erdoc.getValue("rel")));
-                    car = rel.createCardinality(ent, d, l, t);
-                    car.setID(id + new Integer(erdoc.getValue("id")));
-                    carM = (Cardinality) car.getModel();
-                    s = erdoc.getValue("name");
-                    if (s == null)
-                        s = "";
-                    carM.setName(s);
-                    s = erdoc.getValue("comment");
-                    if (s == null)
-                        s = "";
-                    carM.setComment(s);
-                    s = erdoc.getValue("arbitrary");
-                    carM.setArbitrary(Boolean.valueOf(s));
-                    s = erdoc.getValue("multi");
-                    carM.setMultiCardinality(Boolean.valueOf(s));
-                    s = erdoc.getValue("glue");
-                    carM.setGlue(Boolean.valueOf(s));
-                } while (erdoc.next());
-
-            if (erdoc.setElements("unique"))
-                do {
-                    t = tt + new Integer(erdoc.getValue("top"));
-                    l = ll + new Integer(erdoc.getValue("left"));
-                    ent = d.getEntity(id + new Integer(erdoc.getValue("ent")));
-                    uni = ent.createUniqueKey(l, t);
-                    uni.setID(id + new Integer(erdoc.getValue("id")));
-                    uniM = (UniqueKey) uni.getModel();
-                    s = erdoc.getValue("name");
-                    if (s == null)
-                        s = "";
-                    uniM.setName(s);
-                    s = erdoc.getValue("comment");
-                    if (s == null)
-                        s = "";
-                    uniM.setComment(s);
-                    erdoc.setNode("atr");
-                    while ((s = erdoc.getNextValue()) != null) {
-                        atr = d.getAtribute(id + new Integer(s));
-                        uni.addAtribute(atr);
-                    }
-                    if (Boolean.valueOf(erdoc.getValue("primary")))
-                        uni.setPrimary();
-                } while (erdoc.next());
-
-            if (erdoc.setElements("strong"))
-                do {
-                    t = tt + new Integer(erdoc.getValue("top"));
-                    l = ll + new Integer(erdoc.getValue("left"));
-                    i = id + new Integer(erdoc.getValue("ent"));
-                    int j = id
-                            + new Integer(erdoc.getValue("child"));
-                    ent = d.getEntity(i);
-                    child = (EntityConstruct) d.getConceptualObject(j);
-                    StrongAddiction.createStrongAddiction(ent, child, child.getManager(), l, t);
-                } while (erdoc.next());
-            schemaM.setID(schemaID);
-            // System.out.println(schemaM.getID());
-            for (int j = 0; j < attrs.size(); j++)
-                (attrs.get(j)).setPosition(attrsPos.get(j));
-            Vector v = d.getAllEntities();
-            for (Object aV : v) ((EntityConstruct) aV).recalculatePositionsOfAtributes();
-
-        } catch (Exception e) {
-            ShowException se = new ShowException(null, "Error", e, true);
-            return "";
-        }
-        return prefix;
-    }
+//    private DataType extractDataType(String name) {
+//        DataType dt;
+//        String s1;
+//
+//        if (name.startsWith("VarChar2")) {
+//            name = name.substring(9, name.length() - 1);
+//            name = name.trim();
+//            dt = new Varchar2DataType();
+//            ((LengthDataType) dt).setLength(Integer.parseInt(name));
+//        } else if (name.startsWith("Char")) {
+//            name = name.substring(5, name.length() - 1);
+//            name = name.trim();
+//            dt = new FixedCharDataType();
+//            ((LengthDataType) dt).setLength(Integer.parseInt(name));
+//        } else if (name.startsWith("Number")) {
+//            dt = new GeneralNumberDataType();
+//            s1 = name.substring(7, name.indexOf(","));
+//            ((GeneralNumberDataType) dt).setPrecision(Integer.parseInt(s1));
+//            name = name.substring(name.indexOf(",") + 1, name.length() - 1);
+//            name = name.trim();
+//            ((GeneralNumberDataType) dt).setScale(Integer.parseInt(name));
+//        } else if (name.startsWith("Table of")) {
+//            name = name.substring(9, name.length());
+//            name = name.trim();
+//            dt = new NestedTableDataType(extractDataType(name));
+//        } else if (name.startsWith("Varray")) {
+//            dt = new VarrayDataType();
+//            s1 = name.substring(8, name.indexOf(")"));
+//            ((VarrayDataType) dt).setLength(Integer.parseInt(s1));
+//            name = name.substring(name.indexOf(")") + 4, name.length());
+//            name = name.trim();
+//            ((VarrayDataType) dt).setType(extractDataType(name));
+//        } else if ("Float".equals(name)) {
+//            dt = new FloatDataType();
+//        } else if ("Date".equals(name)) {
+//            dt = new DateDataType();
+//        } else if ("Integer".equals(name)) {
+//            dt = new IntegerDataType();
+//        } else if ("Object".equals(name)) {
+//            dt = new ObjectDataType();
+//        } else
+//            dt = new UserDefinedDataType(name);
+//        return dt;
+//    }
 
     /**
      * Loads desktop from document model
      */
-    public NotationType loadNotation(Document doc) {
-        NotationType notation = NotationType.CHEN;
-        try {
-            ERDocument erdoc = new ERDocument(doc);
-            if (!erdoc.setElements("schema"))
-                return NotationType.CHEN;
-            if (erdoc.getValue("notation") != null) {
-                notation = NotationType.values()[Integer.parseInt(erdoc.getValue("notation"))];
-            }
+//    public String loadDesktop(WorkingDesktop d, int id, Document doc) {
+//        int i, t, l, tt, ll, w, h, notation;
+//        String prefix;
+//        String s;
+//        EntityConstruct ent;
+//        EntityConstruct child;
+//        RelationConstruct rel;
+//        AttributeConstruct atr;
+//        CardinalityConstruct car;
+//        UniqueKeyConstruct uni;
+//        ConceptualObject relationModel;
+//        Atribute atrM;
+//        ConceptualConstruct ccM;
+//        Entity entityModel;
+//        Schema schemaM;
+//        Cardinality carM;
+//        UniqueKey uniM;
+//        cz.felk.cvut.erm.datatype.DataType dt;
+//        ConceptualConstructItem cc;
+//        int schemaID;
+//        Vector<Atribute> attrs = new Vector<Atribute>();
+//        Vector<Integer> attrsPos = new Vector<Integer>();
+//        try {
+//            ERDocument erdoc = new ERDocument(doc);
+//            if (!erdoc.setElements("schema"))
+//                return "";
+//            schemaM = (Schema) d.getModel();
+//            if (schemaM.getID() > 0) {
+//                int[] r = d.getHighestRect();
+//                ll = r[0] + 10;
+//                tt = r[1] + 10;
+//                if (ll > tt)
+//                    ll = 0;
+//                else
+//                    tt = 0;
+//            } else {
+//                ll = 0;
+//                tt = 0;
+//            }
+//            s = erdoc.getValue("name");
+//            if (s == null)
+//                s = "composed";
+//            prefix = s + "_";
+//            schemaID = id + new Integer(erdoc.getValue("id"));
+//            if (erdoc.getValue("notation") != null) {
+//                notation = (Integer.parseInt(erdoc.getValue("notation")));
+//                switch (notation) {
+//                    case 0:
+//                        setChen();
+//                        break;
+//                    case 1:
+//                        setBinary();
+//                        break;
+//                    case 2:
+//                        setUML();
+//                        break;
+//                }
+//            }
+//            if (erdoc.setElements("entity"))
+//                do {
+//                    t = tt + new Integer(erdoc.getValue("top"));
+//                    l = ll + new Integer(erdoc.getValue("left"));
+//                    w = new Integer(erdoc.getValue("width"));
+//                    h = new Integer(erdoc.getValue("height"));
+//                    ent = d.createEntity(l, t, w, h, null);
+//                    ent.setID(id + new Integer(erdoc.getValue("id")));
+//                    entityModel = ent.getModel();
+//                    s = erdoc.getValue("name");
+//                    if (s == null)
+//                        s = "";
+//                    entityModel.setName(s);
+//                    s = erdoc.getValue("comment");
+//                    if (s == null)
+//                        s = "";
+//                    entityModel.setComment(s);
+//                    s = erdoc.getValue("constraints");
+//                    if (s == null)
+//                        s = "";
+//                    entityModel.setConstraints(s);
+//                    if ((s = erdoc.getValue("parent")) != null) {
+//                        i = id + new Integer(s);
+//                        d.getEntity(i).addISAChild(
+//                                ent,
+//                                new ResizeEvent(0, 0, 0, 0,
+//                                        new ResizeRectangle(0,
+//                                                0, 0, 0, 0), this));
+//                    }
+//                } while (erdoc.next());
+//
+//            if (erdoc.setElements("relation"))
+//                do {
+//                    t = tt + new Integer(erdoc.getValue("top"));
+//                    l = ll + new Integer(erdoc.getValue("left"));
+//                    w = new Integer(erdoc.getValue("width"));
+//                    h = new Integer(erdoc.getValue("height"));
+//                    rel = d.createRelation(l, t, w, h);
+//                    rel.setID(id
+//                            + new Integer(erdoc.getValue("id")));
+//                    relationModel = (Relation) rel.getModel();
+//                    s = erdoc.getValue("name");
+//                    if (s == null)
+//                        s = "";
+//                    relationModel.setName(s);
+//                    s = erdoc.getValue("comment");
+//                    if (s == null)
+//                        s = "";
+//                    relationModel.setComment(s);
+//                } while (erdoc.next());
+//
+//            if (erdoc.setElements("atribute"))
+//                do {
+//                    t = tt + new Integer(erdoc.getValue("top"));
+//                    l = ll + new Integer(erdoc.getValue("left"));
+//                    s = erdoc.getValue("ent");
+//                    if (s == null) {
+//                        s = erdoc.getValue("rel");
+//                        cc = d.getRelation(id + new Integer(s));
+//                    } else
+//                        cc = d.getEntity(id + new Integer(s));
+//                    atr = cc.createAtribute(l, t);
+//                    atr.setID(id
+//                            + new Integer(erdoc.getValue("id")));
+//                    atrM = atr
+//                            .getModel();
+//                    attrs.addElement(atr.getModel());
+//                    s = erdoc.getValue("name");
+//                    if (s == null)
+//                        s = "";
+//                    atrM.setName(s);
+//                    s = erdoc.getValue("comment");
+//                    if (s == null)
+//                        s = "";
+//                    atrM.setComment(s);
+//                    s = erdoc.getValue("datatype");
+//                    dt = extractDataType(s);
+//                    atrM.setDataType(dt);
+//                    atrM.setArbitrary(
+//                            Boolean.valueOf(erdoc.getValue("arbitrary")));
+//                    atrM.setPrimary(
+//                            Boolean.valueOf(erdoc.getValue("primary")));
+//                    atrM.setUnique(
+//                            Boolean.valueOf(erdoc.getValue("uniq")));
+//                    attrsPos.addElement(new Integer(erdoc.getValue("position")));
+//                } while (erdoc.next());
+//
+//            if (erdoc.setElements("cardinality"))
+//                do {
+//                    t = tt + new Integer(erdoc.getValue("top"));
+//                    l = ll + new Integer(erdoc.getValue("left"));
+//                    ent = d.getEntity(id + new Integer(erdoc.getValue("ent")));
+//                    rel = d.getRelation(id + new Integer(erdoc.getValue("rel")));
+//                    car = rel.createCardinality(ent, d, l, t);
+//                    car.setID(id + new Integer(erdoc.getValue("id")));
+//                    carM = (Cardinality) car.getModel();
+//                    s = erdoc.getValue("name");
+//                    if (s == null)
+//                        s = "";
+//                    carM.setName(s);
+//                    s = erdoc.getValue("comment");
+//                    if (s == null)
+//                        s = "";
+//                    carM.setComment(s);
+//                    s = erdoc.getValue("arbitrary");
+//                    carM.setArbitrary(Boolean.valueOf(s));
+//                    s = erdoc.getValue("multi");
+//                    carM.setMultiCardinality(Boolean.valueOf(s));
+//                    s = erdoc.getValue("glue");
+//                    carM.setGlue(Boolean.valueOf(s));
+//                } while (erdoc.next());
+//
+//            if (erdoc.setElements("unique"))
+//                do {
+//                    t = tt + new Integer(erdoc.getValue("top"));
+//                    l = ll + new Integer(erdoc.getValue("left"));
+//                    ent = d.getEntity(id + new Integer(erdoc.getValue("ent")));
+//                    uni = ent.createUniqueKey(l, t);
+//                    uni.setID(id + new Integer(erdoc.getValue("id")));
+//                    uniM = (UniqueKey) uni.getModel();
+//                    s = erdoc.getValue("name");
+//                    if (s == null)
+//                        s = "";
+//                    uniM.setName(s);
+//                    s = erdoc.getValue("comment");
+//                    if (s == null)
+//                        s = "";
+//                    uniM.setComment(s);
+//                    erdoc.setNode("atr");
+//                    while ((s = erdoc.getNextValue()) != null) {
+//                        atr = d.getAtribute(id + new Integer(s));
+//                        uni.addAtribute(atr);
+//                    }
+//                    if (Boolean.valueOf(erdoc.getValue("primary")))
+//                        uni.setPrimary();
+//                } while (erdoc.next());
+//
+//            if (erdoc.setElements("strong"))
+//                do {
+//                    t = tt + new Integer(erdoc.getValue("top"));
+//                    l = ll + new Integer(erdoc.getValue("left"));
+//                    i = id + new Integer(erdoc.getValue("ent"));
+//                    int j = id
+//                            + new Integer(erdoc.getValue("child"));
+//                    ent = d.getEntity(i);
+//                    child = (EntityConstruct) d.getConceptualObject(j);
+//                    StrongAddiction.createStrongAddiction(ent, child, child.getManager(), l, t);
+//                } while (erdoc.next());
+//            schemaM.setID(schemaID);
+//            // System.out.println(schemaM.getID());
+//            for (int j = 0; j < attrs.size(); j++)
+//                (attrs.get(j)).setPosition(attrsPos.get(j));
+//            Vector v = d.getAllEntities();
+//            for (Object aV : v) ((EntityConstruct) aV).recalculatePositionsOfAtributes();
+//
+//        } catch (Exception e) {
+//            ShowException se = new ShowException(null, "Error", e, true);
+//            return "";
+//        }
+//        return prefix;
+//    }
+    /**
+     * Loads desktop from document model
+     */
 
-        } catch (Exception e) {
-            ShowException se = new ShowException(null, "Error", e, true);
-            return NotationType.CHEN;
-        }
-        return notation;
-    }
-
+    /**
+     * Loads desktop from document model
+     */
+//    public NotationType loadNotation(Document doc) {
+//        NotationType notation = NotationType.CHEN;
+//        try {
+//            ERDocument erdoc = new ERDocument(doc);
+//            if (!erdoc.setElements("schema"))
+//                return NotationType.CHEN;
+//            if (erdoc.getValue("notation") != null) {
+//                notation = NotationType.values()[Integer.parseInt(erdoc.getValue("notation"))];
+//            }
+//
+//        } catch (Exception e) {
+//            ShowException se = new ShowException(null, "Error", e, true);
+//            return NotationType.CHEN;
+//        }
+//        return notation;
+//    }
+//
     /**
      * Loads schema from file
      */
-    public void loadFromFile(String fileName, int what)
-            throws java.io.IOException, ClassNotFoundException {
-        int i, id;
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder parser = null;
-        try {
-            parser = factory.newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
-            System.err.println("Fatal Error, No XML was found");
-            e.printStackTrace();
-            System.exit(-1);
-        }
+//    public void loadFromFile(String fileName, int what)
+//            throws java.io.IOException, ClassNotFoundException {
+//        int i, id;
+//        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+//        DocumentBuilder parser = null;
+//        try {
+//            parser = factory.newDocumentBuilder();
+//        } catch (ParserConfigurationException e) {
+//            System.err.println("Fatal Error, No XML was found");
+//            e.printStackTrace();
+//            System.exit(-1);
+//        }
+//
+//        String s;
+//        Schema schemaModel;
+//
+//
+//        switch (what) {
+//            case NEW_CTS://uz nepouzivano
+//                getPlace().loadFromFile(fileName);
+//                break;
+//            case LOAD_FROM_XML:
+//                getPlace().setScale(1);
+//                getPlace().clearDesktop();
+//                if ((i = fileName.lastIndexOf("\\")) >= 0)
+//                    s = fileName.substring(i + 1);
+//                else
+//                    s = fileName;
+//                setTitle(TITLE + " - " + s);
+//            case MERGE_WITH_XML: //spolecne i pro LOAD_FROM_XML
+//
+//                Document doc = null;
+//                try {
+//                    doc = parser.parse(new File(fileName));
+//                    loadUserTypes(doc);
+//                    WorkingDesktop d = new WorkingDesktop(place, place.getBounds());
+//                    d.addShowErrorListener(place);
+//                    id = ((Schema) ((WorkingDesktop) place.getDesktop()).getModel()).createID();
+//                    id++;
+//                    System.out.println("id = " + id);
+//                    if (what == MERGE_WITH_XML) {
+//                        NotationType withNotation = loadNotation(doc);
+//                        //		System.out.println("act notation " + ConceptualConstruct.ACTUAL_NOTATION + ", with not " + withNotation);
+//                        if (getNotationType() != withNotation) {
+//                            System.out.println("different notations");
+//                            repaint();
+//                            javax.swing.JOptionPane
+//                                    .showMessageDialog(
+//                                            null,
+//                                            "Refused, the schema to be merged is in different graphic notation",
+//                                            "Compose",
+//                                            javax.swing.JOptionPane.ERROR_MESSAGE);
+//                            break;
+//                        }
+//                    }
+//                    final String prefix = loadDesktop(d, id, doc);
+//                    if (what == LOAD_FROM_XML) {
+//                        place.addDesktop(d);
+//                        getPlace().getDesktop();
+//                        repaint();
+//                        break;
+//                    }
+//                    schemaModel = (Schema) d.getModel();
+//                    ErrorLogList errList = schemaModel.checkConsistency();
+//                    if (errList.size() > 0) {
+//                        repaint();
+//                        javax.swing.JOptionPane
+//                                .showMessageDialog(
+//                                        null,
+//                                        "Refused, the schema to be merged is not consistent",
+//                                        "Compose",
+//                                        javax.swing.JOptionPane.ERROR_MESSAGE);
+//                        break;
+//                    }
+//
+//                    final Collection<Item> itemCollection = d.getItems();
+//                    final WorkingDesktop desktop = (WorkingDesktop) place.getDesktop();
+//                    for (Item item : itemCollection) {
+//                        desktop.addItem(item);
+//                    }
+//
+//                    //loadDesktop(d, id, doc);
+//                    repaint();
+//                    schemaModel = (Schema) desktop.getModel();
+//                    schemaModel.setComposeID(id);
+//                    conflictsDialog.setPrefix(prefix);
+//                    conflictsDialog.setID(id);
+//                    conflictsDialog.setDesktop(desktop);
+//                    conflictsDialog.setErrorLogList(schemaModel.checkConsistency());
+//                    conflictsDialog.setVisible(true);
+//                } catch (Exception e) {
+//                    ShowException se = new ShowException(null, "Error", e, true);
+//                }
+//        }
+//    }
 
-        String s;
-        Schema schemaModel;
-        WorkingDesktop d;
-
-
-        switch (what) {
-            case NEW_CTS://uz nepouzivano
-                getPlace().loadFromFile(fileName);
-                break;
-            case LOAD_FROM_XML:
-                getPlace().setScale(1);
-                getPlace().clearDesktop();
-                if ((i = fileName.lastIndexOf("\\")) >= 0)
-                    s = fileName.substring(i + 1);
-                else
-                    s = fileName;
-                setTitle(TITLE + " - " + s);
-            case MERGE_WITH_XML: //spolecne i pro LOAD_FROM_XML
-
-                Document doc = null;
-                try {
-                    doc = parser.parse(new File(fileName));
-                } catch (Exception e) {
-                    ShowException se = new ShowException(null, "Error", e, true);
-                }
-                //Document doc = parser.getDocument();
-                if (doc != null)
-                    try {
-                        loadUserTypes(doc);
-                        java.awt.Rectangle rb = place.getBounds();
-                        d = new WorkingDesktop(place, rb.x, rb.y, rb.width, rb.height);
-                        d.addShowErrorListener(place);
-                        id = ((Schema) ((WorkingDesktop) place.getDesktop()).getModel()).createID();
-                        id++;
-                        if (what == MERGE_WITH_XML) {
-                            NotationType withNotation = loadNotation(doc);
-                            //		System.out.println("act notation " + ConceptualConstruct.ACTUAL_NOTATION + ", with not " + withNotation);
-                            if (getNotationType() != withNotation) {
-                                System.out.println("different notations");
-                                repaint();
-                                javax.swing.JOptionPane
-                                        .showMessageDialog(
-                                                null,
-                                                "Refused, the schema to be merged is in different graphic notation",
-                                                "Compose",
-                                                javax.swing.JOptionPane.ERROR_MESSAGE);
-                                break;
-                            }
-                        }
-                        String prefix = loadDesktop(d, id, doc);
-                        if (what == LOAD_FROM_XML) {
-                            place.addDesktop(d);
-                            getPlace().getDesktop();
-                            repaint();
-                            break;
-                        }
-                        schemaModel = (Schema) d.getModel();
-                        ErrorLogList errList = schemaModel.checkConsistency();
-                        if (errList.size() > 0) {
-                            repaint();
-                            javax.swing.JOptionPane
-                                    .showMessageDialog(
-                                            null,
-                                            "Refused, the schema to be merged is not consistent",
-                                            "Compose",
-                                            javax.swing.JOptionPane.ERROR_MESSAGE);
-                            break;
-                        }
-                        d = (WorkingDesktop) place.getDesktop();
-                        loadDesktop(d, id, doc);
-                        repaint();
-                        schemaModel = (Schema) d.getModel();
-                        schemaModel.setComposeID(id);
-                        conflictsDialog.setPrefix(prefix);
-                        conflictsDialog.setID(id);
-                        conflictsDialog.setDesktop(d);
-                        conflictsDialog.setErrorLogList(schemaModel.checkConsistency());
-                        conflictsDialog.setVisible(true);
-                    } catch (Exception e) {
-                        ShowException se = new ShowException(null, "Error", e, true);
-                    }
-        }
-    }
+//    /**
+//     * Loads schema from file
+//     */
+//    public void loadFromFile(String fileName, int what)
+//            throws java.io.IOException, ClassNotFoundException {
+//        int i, id;
+//        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+//        DocumentBuilder parser = null;
+//        try {
+//            parser = factory.newDocumentBuilder();
+//        } catch (ParserConfigurationException e) {
+//            System.err.println("Fatal Error, No XML was found");
+//            e.printStackTrace();
+//            System.exit(-1);
+//        }
+//
+//        String s;
+//        Schema schemaModel;
+//
+//
+//        switch (what) {
+//            case NEW_CTS://uz nepouzivano
+//                getPlace().loadFromFile(fileName);
+//                break;
+//            case LOAD_FROM_XML:
+//                getPlace().setScale(1);
+//                getPlace().clearDesktop();
+//                if ((i = fileName.lastIndexOf("\\")) >= 0)
+//                    s = fileName.substring(i + 1);
+//                else
+//                    s = fileName;
+//                setTitle(TITLE + " - " + s);
+//            case MERGE_WITH_XML: //spolecne i pro LOAD_FROM_XML
+//
+//                Document doc = null;
+//                try {
+//                    doc = parser.parse(new File(fileName));
+//                    loadUserTypes(doc);
+//                    WorkingDesktop d = new WorkingDesktop(place, place.getBounds());
+//                    d.addShowErrorListener(place);
+//                    id = ((Schema) ((WorkingDesktop) place.getDesktop()).getModel()).createID();
+//                    id++;
+//                    System.out.println("id = " + id);
+//                    if (what == MERGE_WITH_XML) {
+//                        NotationType withNotation = loadNotation(doc);
+//                        //		System.out.println("act notation " + ConceptualConstruct.ACTUAL_NOTATION + ", with not " + withNotation);
+//                        if (getNotationType() != withNotation) {
+//                            System.out.println("different notations");
+//                            repaint();
+//                            javax.swing.JOptionPane
+//                                    .showMessageDialog(
+//                                            null,
+//                                            "Refused, the schema to be merged is in different graphic notation",
+//                                            "Compose",
+//                                            javax.swing.JOptionPane.ERROR_MESSAGE);
+//                            break;
+//                        }
+//                    }
+//                    final String prefix = loadDesktop(d, id, doc);
+//                    if (what == LOAD_FROM_XML) {
+//                        place.addDesktop(d);
+//                        getPlace().getDesktop();
+//                        repaint();
+//                        break;
+//                    }
+//                    schemaModel = (Schema) d.getModel();
+//                    ErrorLogList errList = schemaModel.checkConsistency();
+//                    if (errList.size() > 0) {
+//                        repaint();
+//                        javax.swing.JOptionPane
+//                                .showMessageDialog(
+//                                        null,
+//                                        "Refused, the schema to be merged is not consistent",
+//                                        "Compose",
+//                                        javax.swing.JOptionPane.ERROR_MESSAGE);
+//                        break;
+//                    }
+//
+//                    final Collection<Item> itemCollection = d.getItems();
+//                    final WorkingDesktop desktop = (WorkingDesktop) place.getDesktop();
+//                    for (Item item : itemCollection) {
+//                        desktop.add(item);
+//                    }
+//
+//                    //loadDesktop(d, id, doc);
+//                    repaint();
+//                    schemaModel = (Schema) desktop.getModel();
+//                    schemaModel.setComposeID(id);
+//                    conflictsDialog.setPrefix(prefix);
+//                    conflictsDialog.setID(id);
+//                    conflictsDialog.setDesktop(desktop);
+//                    conflictsDialog.setErrorLogList(schemaModel.checkConsistency());
+//                    conflictsDialog.setVisible(true);
+//                } catch (Exception e) {
+//                    ShowException se = new ShowException(null, "Error", e, true);
+//                }
+//        }
+//    }
 
 
     /**
@@ -1666,7 +1848,7 @@ public class ERModeller extends JFrame implements
                     }
                     String ext = ((ExtensionFileFilter) chooser.getFileFilter())
                             .getExtension();
-                    if (ext.equals("xml")) {
+                    if ("xml".equals(ext)) {
                         /*
                                * getPlace().saveToFile(fileName); else {
                                */
@@ -1782,7 +1964,6 @@ public class ERModeller extends JFrame implements
                 try {
                     rel.resize(2 * width + height - 7, 3 * height - 7, (ResizePoint.RIGHT | ResizePoint.BOTTOM), true);
                     rel.handleMoveEvent(new MoveEvent(rel.getBounds().x, rel.getBounds().y, -rel.getBounds().width / 2 + 4, -rel.getBounds().height / 2 + 4, null));
-
                 } catch (ItemNotInsideManagerException e) {
                     e.printStackTrace();
                 }
@@ -1993,15 +2174,15 @@ public class ERModeller extends JFrame implements
                     switch (getNotationType()) {
                         case CHEN:
                             sa.getManager().remove(sa);
-                            ent.getManager().add(sa);
+                            ent.getManager().addItem(sa);
                             break;
                         case BINARY:
                             sa.getManager().remove(sa);
-                            ent.getManager().add(sa);
+                            ent.getManager().addItem(sa);
                             break;
                         case UML:
                             sa.getManager().remove(sa);
-                            sa.getParent().getManager().add(sa);
+                            sa.getParent().getManager().addItem(sa);
                             break;
                     }
                 } catch (ItemNotInsideManagerException e1) {

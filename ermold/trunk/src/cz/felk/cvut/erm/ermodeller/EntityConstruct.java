@@ -156,9 +156,7 @@ public class EntityConstruct extends ConceptualConstructItem {
             cz.felk.cvut.erm.event.ResizeRectangle rr = new cz.felk.cvut.erm.event.ResizeRectangle(
                     0, 0, 0, 0, ResizePoint.BOTTOM
                     | ResizePoint.RIGHT);
-            cz.felk.cvut.erm.event.ResizeEvent ev = new cz.felk.cvut.erm.event.ResizeEvent(
-                    event.getX(), event.getY(), dx, dy, rr, event
-                    .getComponent());
+            ResizeEvent ev = new ResizeEvent(event.getX(), event.getY(), dx, dy, rr, event.getComponent());
             handleResizeEvent(ev);
             ent.setISAParent(manager, this,
                     (s[0][1] + s[0][0] + r[0][0] - r[0][1]) / 2, s[1][0]
@@ -330,7 +328,7 @@ public class EntityConstruct extends ConceptualConstructItem {
             }
         }
         if (ISAChilds != null) {
-            Enumeration<EntityConstruct> e = ISAChilds.elements();
+            //Enumeration<EntityConstruct> e = ISAChilds.elements();
             // counts maximal width
             for (EntityConstruct entityConstruct : ISAChilds) {
                 r = entityConstruct.getRect();
@@ -571,13 +569,13 @@ public class EntityConstruct extends ConceptualConstructItem {
                     .createEntity();
             // creates new entity
             EntityConstruct ent = new EntityConstruct(cEnt, manager, left, top);
-            group.add(ent);
+            group.addItem(ent);
             // decompose
             if (old != null) {
                 old.decompose(ent, manager);
             }
             // adds group to the manager
-            manager.add(group);
+            manager.addItem(group);
             manager.repaintItem(group);
             return ent;
         } catch (Throwable x) {
@@ -684,7 +682,7 @@ public class EntityConstruct extends ConceptualConstructItem {
             UniqueKey cUq = cc.createUniqueKey();
             // create unique key
             UniqueKeyConstruct uq = new UniqueKeyConstruct(cUq, this, manager, left, top);
-            manager.add(uq);
+            manager.addItem(uq);
             (manager).repaintItem(uq);
             // create the connection to the
             Connection conn = new ConnectionLine(manager, getModel().getSchema(), uq, this);
@@ -1451,8 +1449,8 @@ public class EntityConstruct extends ConceptualConstructItem {
         (getModel())
                 .setChanged(true);
         java.awt.Rectangle r = getBounds();
-        if (e.getPropertyName().equals("name") ||
-                e.getPropertyName().equals("constraints")) {
+        if ("name".equals(e.getPropertyName()) ||
+                "constraints".equals(e.getPropertyName())) {
             cz.felk.cvut.erm.event.ResizeRectangle rr = new cz.felk.cvut.erm.event.ResizeRectangle(
                     0, 0, 0, 0, ResizePoint.BOTTOM
                     | ResizePoint.RIGHT);
@@ -1461,7 +1459,7 @@ public class EntityConstruct extends ConceptualConstructItem {
                     r.y, r.width, r.height);
             return;
         }
-        if (e.getPropertyName().equals("strongAddictionsParents")) {
+        if ("strongAddictionsParents".equals(e.getPropertyName())) {
             java.util.Vector v = (java.util.Vector) e.getNewValue();
             if (isStrongAddictionChild && (v.size() == 0)) {
                 isStrongAddictionChild = false;
@@ -1510,7 +1508,7 @@ public class EntityConstruct extends ConceptualConstructItem {
             for (int i = 0; i < count; i++) {
                 a = (getAtributes().get(i));
                 if (PKmembers.contains(a)) {
-                    a.PKfirst = a.getPosition() == 1;
+                    a.setPKfirst(a.getPosition() == 1);
                     ALength = 0;
                     position = a.getPosition();
                     if (position > highestPKposition) highestPKposition = position;
@@ -1561,8 +1559,8 @@ public class EntityConstruct extends ConceptualConstructItem {
                 dy = getBounds().y + 10 + a.getPosition() * 20 - a.getBounds().y;
                 try {
                     a.move(dx, dy, true);
-                } catch (ItemNotInsideManagerException e1) {
-                    e1.printStackTrace();
+                } catch (ItemNotInsideManagerException ex) {
+                    throw new RuntimeException(ex);
                 }
             }
             cz.felk.cvut.erm.event.ResizeRectangle rr = new cz.felk.cvut.erm.event.ResizeRectangle(
@@ -1760,7 +1758,7 @@ public class EntityConstruct extends ConceptualConstructItem {
             ((DGroupTool) manager)
                     .handleRemoveEvent(new cz.felk.cvut.erm.event.RemoveEvent(0, 0,
                             null));
-            man.add((Item) manager);
+            man.addItem((Item) manager);
             ISAParent = null;
         } catch (Throwable x) {
             new ShowException(null, "Error", x, true);
@@ -1772,7 +1770,6 @@ public class EntityConstruct extends ConceptualConstructItem {
         try {
             super.resize(7 - width, 7 - height, (ResizePoint.RIGHT | ResizePoint.BOTTOM), true);
         } catch (ItemNotInsideManagerException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     */
@@ -1896,7 +1893,9 @@ public class EntityConstruct extends ConceptualConstructItem {
         int dx = x - source[0][0], dy = y - source[1][0];
         handleMoveEvent(new cz.felk.cvut.erm.event.MoveEvent(event.getX(), event.getY(), dx, dy, event.getComponent()));
         ((Invokable) manager).invokeEventHandler(new cz.felk.cvut.erm.event.RemoveEvent(0, 0, null));
-        man.add((Item) manager);
+
+        man.addItem((Item) manager);
+
         ISAParent = ent;
         setAsISAChild = true;
     }
@@ -1916,7 +1915,6 @@ public class EntityConstruct extends ConceptualConstructItem {
             try {
                 a.move(entWidth + 10, 0, true);
             } catch (ItemNotInsideManagerException e1) {
-                // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
             //((cz.felk.cvut.erm.event.interfaces.PaintableManager) manager).repaintItem(a);

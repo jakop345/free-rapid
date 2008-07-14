@@ -312,7 +312,7 @@ public class ChangeNotationDialog extends JDialog implements java.awt.event.Acti
     }
 
     public String getValue() {
-        // TODO Auto-generated method stub
+
         //value = getValue();
         return Cent.getConstraints();
     }

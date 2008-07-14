@@ -32,9 +32,9 @@ public class ConnectionGroupTool extends GroupTool {
      * Adds <code>item</code> to the top of this group (manager). Doesn't detect the overlapping this group
      * by added window.
      */
-    public void add(Item item) throws ItemNotInsideManagerException {
+    public void addItem(Item item) throws ItemNotInsideManagerException {
         int size = wins.size();
-        item.manager(this);
+        item.setManager(this);
         wins.add(size, item);
     }
 

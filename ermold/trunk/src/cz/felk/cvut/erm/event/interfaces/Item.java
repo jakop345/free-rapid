@@ -120,7 +120,7 @@ public interface Item extends SelectableItem, MovableItem {
      * @throws <code>java.lang.NullPointerException</code>
      *          If <code>manager</code> is equal to <code>null</code>.
      */
-    Manager manager(Manager manager) throws NullPointerException;
+    Manager setManager(Manager manager) throws NullPointerException;
 
     /**
      * This method looks for the most left point except desktop in this

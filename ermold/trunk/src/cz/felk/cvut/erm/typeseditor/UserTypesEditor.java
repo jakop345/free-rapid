@@ -269,10 +269,7 @@ public class UserTypesEditor extends JDialog implements ItemListener, PropertyCh
     }
 
     public void reset() {
-        DataTypeManager.getInstance().getTypeNames().removeAllElements();
-        DataTypeManager.getInstance().removeAllFromNestedNames();
-        DataTypeManager.getInstance().removeAllFromVarrayNames();
-        DataTypeManager.getInstance().removeAllFromObjectNames();
+        DataTypeManager.getInstance().reset();
     }
 
     protected JCheckBox getCheckBox() {

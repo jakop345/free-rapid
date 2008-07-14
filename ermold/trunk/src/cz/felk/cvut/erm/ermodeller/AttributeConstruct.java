@@ -33,15 +33,15 @@ public class AttributeConstruct extends ConceptualConstructObject {
     /**
      * The owner of the atribute
      */
-    ConceptualConstructItem cc = null;
+    private ConceptualConstructItem cc = null;
     /**
      * The model of the atribute - object from the Aleš Kopecký work.
      */
-    Atribute model = null;
+    private Atribute model = null;
     /**
      * Flag; true - Atribute is first member of Primary key
      */
-    boolean PKfirst = false;
+    private boolean PKfirst = false;
 
     /**
      * Constructs atribute for the model. It means to count the needed size and set yourself as
@@ -624,7 +624,15 @@ public class AttributeConstruct extends ConceptualConstructObject {
         }
         updateBackupStroke(g, stroke);
     }
-/**
+
+
+    public boolean isPKfirst() {
+        return PKfirst;
+    }
+
+    public void setPKfirst(boolean PKfirst) {
+        this.PKfirst = PKfirst;
+    } /**
  * Paints atribute as rectangle -- used during moving.
  */
     /*public void paintFast(java.awt.Graphics g) {

@@ -102,7 +102,7 @@ public class StrongAddiction extends ConceptualConstructObject {
             Entity cChild = child.getModel();
             cChild.addStrongAddictionParent(cPar);
             StrongAddiction sa = new StrongAddiction(parent, child, man, left, top);
-            man.add(sa);
+            man.addItem(sa);
             (man).repaintItem(sa);
             //create connection to unique key
             Connection conn = new ConnectionArrow(man, sa, child, child.getSchema());

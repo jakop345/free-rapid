@@ -10,6 +10,8 @@ import cz.felk.cvut.erm.util.IntervalMethodsException;
 import cz.felk.cvut.erm.util.MoveArrayList;
 
 import java.awt.*;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * This class implements the functionality of the <code>EventTree2DItem</code>
@@ -71,23 +73,27 @@ public class GroupWindowItem extends WindowItem implements Manager, java.io.Seri
     /**
      * Adds <code>item</code> to the top of this group (manager).
      *
-     * @see Manager#add(cz.felk.cvut.erm.event.interfaces.Item)
+     * @see Manager#addItem(cz.felk.cvut.erm.event.interfaces.Item)
      */
-    public void add(Item item) throws ItemNotInsideManagerException {
+    public void addItem(Item item) throws ItemNotInsideManagerException {
+
         try {
             if ((item.position(0, rect[0]) != IntervalMethods.IN) || (item.position(1, rect[1]) != IntervalMethods.IN))
                 throw new ItemNotInsideManagerException();
             int size = wins.size();
-            item.manager(this);
+            item.setManager(this);
             wins.add(size, item);
             if (isBottom(item))
                 item.countLinks(null);
             else
                 item.countLinks((Item) wins.get(size - 1));
-        } //this could not apper, else it is critical situation
-        catch (ValueOutOfRangeException e) {
+            repaintItem(item);
         } catch (BadDimensionException e) {
+            e.printStackTrace();
+        } catch (ValueOutOfRangeException e) {
+            e.printStackTrace();
         }
+        //this could not apper, else it is critical situation
     }
 
     /**
@@ -182,6 +188,11 @@ public class GroupWindowItem extends WindowItem implements Manager, java.io.Seri
         return wins.size();
     }
 
+    public Collection<Item> getItems() {
+        return Collections.unmodifiableCollection(wins);
+    }
+
+
     /**
      * Returns the scale for painting its items. For the scale value should ask its manager.
      *
@@ -205,15 +216,16 @@ public class GroupWindowItem extends WindowItem implements Manager, java.io.Seri
      * to this manager, displays it and clears the selected items list.
      *
      * @param <code>event</code> Event with all needed properties.
-     * @see Manager#add(cz.felk.cvut.erm.event.interfaces.Item)
+     * @see Manager#addItem(cz.felk.cvut.erm.event.interfaces.Item)
      * @see PaintableManager#repaintItem(cz.felk.cvut.erm.event.interfaces.PaintableItem)
      */
     public void handleAddItemEvent(AddItemEvent event) {
         try {
-            add(event.getItem());
+            addItem(event.getItem());
             selectItemEx(null, false);
             repaintItem(event.getItem());
         } catch (ItemNotInsideManagerException e) {
+            e.printStackTrace();
         }
     }
 

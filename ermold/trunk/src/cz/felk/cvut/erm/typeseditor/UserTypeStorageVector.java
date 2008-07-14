@@ -4,6 +4,7 @@ import cz.felk.cvut.erm.datatype.*;
 import cz.felk.cvut.erm.sql.TabCreator;
 
 import java.beans.PropertyChangeSupport;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Vector;
@@ -39,7 +40,7 @@ public class UserTypeStorageVector {
      * automatically increases its size
      */
     public void addType(UserTypeStorage s) {
-        userTypeStorageVector.addElement(s);
+        userTypeStorageVector.add(s);
         //System.out.println("Type added to "+userTypeStorageVector.size());
         getPropertyChange().firePropertyChange(ADD_PROPERTYCHANGE, null, s);
     }
@@ -78,8 +79,8 @@ public class UserTypeStorageVector {
 //        getPropertyChange().firePropertyChange(ADD_TO_PROPERTYCHANGE, null, s);
 //    }
 
-    public Vector<UserTypeStorage> getUserTypeStorageVector() {
-        return (Vector<UserTypeStorage>) Collections.unmodifiableCollection(userTypeStorageVector);
+    public Collection<UserTypeStorage> getUserTypeStorageVector() {
+        return Collections.unmodifiableCollection(userTypeStorageVector);
     }
 
     public Enumeration<UserTypeStorage> elements() {
@@ -104,17 +105,17 @@ public class UserTypeStorageVector {
             DataType dt = uts.getDataType();
             //System.out.println("getting next element");
             if (!((dt instanceof VarrayDataType) || (dt instanceof NestedTableDataType) || (dt instanceof ObjectDataType))) {
-                vector.addElement(uts);
-                names.addElement(uts.getTypeName());
+                vector.add(uts);
+                names.add(uts.getTypeName());
             } else if (dt instanceof NestedTableDataType) {
                 if (!(((NestedTableDataType) dt).getType() instanceof UserDefinedDataType)) {
-                    vector.addElement(uts);
-                    names.addElement(uts.getTypeName());
+                    vector.add(uts);
+                    names.add(uts.getTypeName());
                 }
             } else if (dt instanceof VarrayDataType) {
                 if (!(((VarrayDataType) dt).getType() instanceof UserDefinedDataType)) {
-                    vector.addElement(uts);
-                    names.addElement(uts.getTypeName());
+                    vector.add(uts);
+                    names.add(uts.getTypeName());
                 }
             }
             if (dt instanceof ObjectDataType) {
@@ -126,8 +127,8 @@ public class UserTypeStorageVector {
                     //System.out.println("cyklujeme");
                 }
                 if (!dirty) {
-                    vector.addElement(uts);
-                    names.addElement(uts.getTypeName());
+                    vector.add(uts);
+                    names.add(uts.getTypeName());
                 }
             }
         }
@@ -142,14 +143,14 @@ public class UserTypeStorageVector {
                     DataType dt = uts.getDataType();
                     if (dt instanceof NestedTableDataType) {
                         if (names.contains(((NestedTableDataType) dt).getType().toString())) {
-                            vector.addElement(uts);
-                            names.addElement(uts.getTypeName());
+                            vector.add(uts);
+                            names.add(uts.getTypeName());
                             changed = true;
                         }
                     } else if (dt instanceof VarrayDataType) {
                         if (names.contains(((VarrayDataType) dt).getType().toString())) {
-                            vector.addElement(uts);
-                            names.addElement(uts.getTypeName());
+                            vector.add(uts);
+                            names.add(uts.getTypeName());
                             changed = true;
                         }
                     } else if (dt instanceof ObjectDataType) {
@@ -161,8 +162,8 @@ public class UserTypeStorageVector {
                             //System.out.println("cyklujeme");
                         }
                         if (!dirty) {
-                            vector.addElement(uts);
-                            names.addElement(uts.getTypeName());
+                            vector.add(uts);
+                            names.add(uts.getTypeName());
                             changed = true;
                         }
                     }
@@ -172,7 +173,7 @@ public class UserTypeStorageVector {
         for (Enumeration<UserTypeStorage> e = elements(); e.hasMoreElements();) {
             UserTypeStorage uts = e.nextElement();
             if (!vector.contains(uts))
-                vectorIncomplete.addElement(uts);
+                vectorIncomplete.add(uts);
         }
         if (which == DIRECT)
             return vector.elements();

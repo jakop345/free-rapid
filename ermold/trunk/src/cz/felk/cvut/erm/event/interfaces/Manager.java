@@ -18,7 +18,7 @@ public interface Manager extends PaintableManager, MovableManager {
      * @throws <code>cz.green.event.engine.ItemNotInsideManagerException</code>
      *          If the <code>item</code> lies out of this manager.
      */
-    void add(Item item) throws ItemNotInsideManagerException;
+    void addItem(Item item) throws ItemNotInsideManagerException;
 
     /**
      * This methods recounts all links <code>item</code> and all items over

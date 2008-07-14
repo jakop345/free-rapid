@@ -143,7 +143,7 @@ public class RelationConstruct extends ConceptualConstructItem {
                 if (counter >= 2) throw new MustHave2ConnectionsException(this.model);
             }
             car = new CardinalityConstruct(cCar, ent.getManager(), left, top);
-            ent.getManager().add(car);
+            ent.getManager().addItem(car);
             cCar.setName(cEnt.getName());
             //connects it to the relation
             Connection conn = new ConnectionLine(manager, getSchema(), car, this);
@@ -215,9 +215,9 @@ public class RelationConstruct extends ConceptualConstructItem {
             Relation cRel = schema.createRelation();
             //creates new relation
             RelationConstruct rel = new RelationConstruct(cRel, manager, left, right);
-            group.add(rel);
+            group.addItem(rel);
             //adds group to the manager
-            manager.add(group);
+            manager.addItem(group);
             manager.repaintItem(group);
             return rel;
         } catch (Throwable x) {

@@ -590,7 +590,7 @@ public class CardinalityConstruct extends ConceptualConstructObject {
             Entity cEnt = (Entity) cc.getModel();
             try {
                 model.setEntity(cEnt);
-                cc.getManager().add(this);
+                cc.getManager().addItem(this);
                 //reconnect
                 if (conn.getOne() == old) {
                     conn.setOne(cc);

@@ -36,9 +36,13 @@ public class WorkingDesktop extends DesktopTool implements FontManager,
      * The model - object from Aleš Kopecký work
      */
     protected Schema model = null;
-    //public JFrame ERMFrame;
+
 
     private transient java.beans.PropertyChangeSupport pcs = null;
+
+    public WorkingDesktop(ContainerComponent place, Rectangle rect) {
+        this(place, rect.x, rect.y, rect.width, rect.height);
+    }
 
     /**
      * Call inhereted constructor and creates the model - schema.
@@ -46,8 +50,8 @@ public class WorkingDesktop extends DesktopTool implements FontManager,
      * @see cz.felk.cvut.erm.eventtool.DesktopTool#DesktopGroupWindow(cz.felk.cvut.erm.event.ContainerComponent , int,
      *      int, int, int)
      */
-    public WorkingDesktop(ContainerComponent place, int left, int top,
-                          int width, int height) {
+    protected WorkingDesktop(ContainerComponent place, int left, int top,
+                             int width, int height) {
         super(place, left, top, width, height);
         model = new Schema();
         pcs = new java.beans.PropertyChangeSupport(this);
@@ -582,27 +586,32 @@ public class WorkingDesktop extends DesktopTool implements FontManager,
      * Returns highest coordinates in the schema
      */
     public int[] getHighestRect() {
-        int rect[] = {0, 0}, r[] = {0, 0};
-        for (int i = 0; i < getItemCount(); i++) {
-            Item item = getItem(i);
-            if (item instanceof DGroupTool) {
-                r = getHighestRect((DGroupTool) item);
-                if (r[0] > rect[0])
-                    rect[0] = r[0];
-                if (r[1] > rect[1])
-                    rect[1] = r[1];
-            } else {
-                if ((r[0] = ((ConceptualConstructObject) item).getL()) > rect[0])
-                    rect[0] = r[0];
-                if ((r[1] = ((ConceptualConstructObject) item).getT()) > rect[1])
-                    rect[1] = r[1];
-            }
-        }
-        return rect;
+        return getHighestRect(this);
+//        int rect[] = {0, 0};
+//        int[] r = {0, 0};
+//
+//        for (int i = 0; i < getItemCount(); i++) {
+//            Item item = getItem(i);
+//            if (item instanceof DGroupTool) {
+//                r = getHighestRect((DGroupTool) item);
+//                if (r[0] > rect[0])
+//                    rect[0] = r[0];
+//                if (r[1] > rect[1])
+//                    rect[1] = r[1];
+//            } else {
+//                if ((r[0] = ((ConceptualConstructObject) item).getL()) > rect[0])
+//                    rect[0] = r[0];
+//                if ((r[1] = ((ConceptualConstructObject) item).getT()) > rect[1])
+//                    rect[1] = r[1];
+//            }
+//        }
+//        return rect;
     }
 
-    private int[] getHighestRect(DGroupTool dg) {
-        int rect[] = {0, 0}, r[] = {0, 0};
+    private int[] getHighestRect(final GroupWindowItem dg) {
+        int[] rect = {0, 0};
+        int[] r = {0, 0};
+        //int maxLeft = maxTop = 0;
         for (int i = 0; i < dg.getItemCount(); i++) {
             Item item = dg.getItem(i);
             if (item instanceof DGroupTool) {
@@ -612,10 +621,9 @@ public class WorkingDesktop extends DesktopTool implements FontManager,
                 if (r[1] > rect[1])
                     rect[1] = r[1];
             } else {
-                if ((r[0] = ((ConceptualConstructObject) item).getL()) > rect[0])
-                    rect[0] = r[0];
-                if ((r[1] = ((ConceptualConstructObject) item).getT()) > rect[1])
-                    rect[1] = r[1];
+                final ConceptualConstructObject conceptualConstructObject = (ConceptualConstructObject) item;
+                rect[0] = Math.max(rect[0], conceptualConstructObject.getLeftPosition());
+                rect[1] = Math.max(rect[0], conceptualConstructObject.getTopPosition());
             }
         }
         return rect;
@@ -628,6 +636,16 @@ public class WorkingDesktop extends DesktopTool implements FontManager,
      * @see ViewController#getModel()
      */
     public Object getModel() {
+        return model;
+    }
+
+    /**
+     * Returns the model object - from work Aleš kopecký.
+     *
+     * @return The model.
+     * @see ViewController#getModel()
+     */
+    public Schema getSchemaModel() {
         return model;
     }
 
@@ -813,9 +831,13 @@ public class WorkingDesktop extends DesktopTool implements FontManager,
      * @see #connections
      */
     public void repaintItem(PaintableItem item) {
-        super.repaintItem(item);
-        if (connections != null)
-            connections.paint(getPaintPlace().getGraphics());
+        final Graphics g = getPaintPlace().getGraphics();
+        if (g != null) {
+            super.repaintItem(item);
+            if (connections != null) {
+                connections.paint(g);
+            }
+        }
     }
 
     /**
@@ -906,6 +928,7 @@ public class WorkingDesktop extends DesktopTool implements FontManager,
         }
         pw.println("</schema>");
     }
+
 
     private void writeItem(DGroupTool dg, java.io.PrintWriter pw) {
         Item item;

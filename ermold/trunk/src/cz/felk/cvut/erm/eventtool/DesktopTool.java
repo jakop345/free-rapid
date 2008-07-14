@@ -44,7 +44,7 @@ public class DesktopTool extends DesktopGroupWindow implements ConnectionManager
             }
         }
         try {
-            connections.add(conn);
+            connections.addItem(conn);
         } catch (ItemNotInsideManagerException e) {
         }
     }

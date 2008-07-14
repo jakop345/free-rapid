@@ -47,11 +47,11 @@ public class DGroupTool extends GroupTool implements ConnectionManager {
      * then counts the new needed size to hold all old items and the new one. Try to resize by method
      * <code>doResize</code>. When all finished alright, then invokes inherited method.
      *
-     * @see cz.felk.cvut.erm.event.GroupWindowItem#add(cz.felk.cvut.erm.event.interfaces.Item)
+     * @see cz.felk.cvut.erm.event.GroupWindowItem#addItem(cz.felk.cvut.erm.event.interfaces.Item)
      * @see #doResize(int[][])
      * @see #itemsBounds()
      */
-    public void add(Item item) throws ItemNotInsideManagerException {
+    public void addItem(Item item) throws ItemNotInsideManagerException {
         try {
             int[][] h = itemsBounds(), r = new int[2][2];
             //to all tree pointers sets null
@@ -70,11 +70,19 @@ public class DGroupTool extends GroupTool implements ConnectionManager {
             }
             //try resize
             doResize(r);
-            super.add(item);
+            super.addItem(item);
         } //this could not apper, else it is critical situation
         catch (ValueOutOfRangeException x) {
             new ShowException(null, "Error", x, true);
         }
+    }
+
+    @Override
+    public Manager setManager(Manager manager) throws NullPointerException {
+        final Manager m = super.setManager(manager);
+        if (connections != null)
+            connections.setManager(manager);//TODO hack
+        return m;
     }
 
     /**
@@ -95,7 +103,7 @@ public class DGroupTool extends GroupTool implements ConnectionManager {
             }
         }
         try {
-            connections.add(conn);
+            connections.addItem(conn);
         } catch (ItemNotInsideManagerException e) {
         }
     }

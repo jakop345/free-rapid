@@ -14,7 +14,7 @@ public class Consts {
     /**
      * Application version
      */
-    public static final String APPVERSION = "4.23";
+    public static final String APPVERSION = "4.24 alpha";
     /**
      * Application name + version
      */

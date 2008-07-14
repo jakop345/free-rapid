@@ -77,7 +77,7 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
             Atribute cAtr = cCc.createAtribute();
             //create atribute (view-controller)
             AttributeConstruct atr = new AttributeConstruct(cAtr, this, manager, left, top);
-            manager.add(atr);
+            manager.addItem(atr);
             //repaint atribute
             manager.repaintItem(atr);
             //create connection
@@ -332,7 +332,7 @@ public class ConceptualConstructItem extends ConceptualConstructObject {
             //sets new owner
             atr.setOwner(this);
             //puts into new manager
-            manager.add(atr);
+            manager.addItem(atr);
             manager.repaintItem(atr);
             //create new connection
             Connection conn = new ConnectionLine(manager, atr.getSchema(), atr, this);

@@ -122,8 +122,9 @@ public class DesktopContainer extends ContainerToolComponent implements ModeSwit
     /**
      * Adds new desktop
      */
+    @Deprecated
     public void addDesktop(WorkingDesktop d) {
-        desktop = d;
+        setDesktop(d);
     }
 
     /**
@@ -312,11 +313,14 @@ public class DesktopContainer extends ContainerToolComponent implements ModeSwit
      */
     public ContainerDesktop getDesktop() {
         if (desktop == null) {
-            java.awt.Rectangle r = getBounds();
-            desktop = new WorkingDesktop(this, r.x, r.y, r.width, r.height);
-            ((WorkingDesktop) desktop).addShowErrorListener(this);
+            setDesktop(new WorkingDesktop(this, getBounds()));
         }
         return desktop;
+    }
+
+
+    public WorkingDesktop getWorkingDesktop() {
+        return (WorkingDesktop) getDesktop();
     }
 
     /**
@@ -335,8 +339,12 @@ public class DesktopContainer extends ContainerToolComponent implements ModeSwit
      */
     public java.awt.FontMetrics getReferentFontMetrics() {
         if (fm == null) {
-            fm = getGraphics().getFontMetrics();
-            f = getGraphics().getFont();
+            final Graphics graphics = getGraphics();
+            if (graphics == null)
+                return getFontMetrics(getFont());
+            else
+                fm = graphics.getFontMetrics();
+            f = graphics.getFont();
         }
         return fm;
     }
@@ -552,7 +560,7 @@ public class DesktopContainer extends ContainerToolComponent implements ModeSwit
     * @see java.awt.event.KeyListener#keyReleased(java.awt.event.KeyEvent)
     */
     public void keyReleased(KeyEvent e) {
-        // TODO Auto-generated method stub
+
     }
 
     /**
@@ -637,5 +645,12 @@ public class DesktopContainer extends ContainerToolComponent implements ModeSwit
         setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         setWorkMode(WORKING);
         return true;
+    }
+
+    public void setDesktop(WorkingDesktop desktop) {
+        if (this.desktop != null) {
+            ((WorkingDesktop) this.desktop).removeShowErrorListener(this);
+        } else desktop.addShowErrorListener(this);
+        this.desktop = desktop;
     }
 }

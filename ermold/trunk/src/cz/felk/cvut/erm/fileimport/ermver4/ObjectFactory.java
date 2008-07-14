@@ -64,10 +64,24 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link BindDatatypedef }
+     * Create an instance of {@link BindItem }
      */
-    public BindDatatypedef createBindDatatypedef() {
-        return new BindDatatypedef();
+    public BindItem createBindItem() {
+        return new BindItem();
+    }
+
+    /**
+     * Create an instance of {@link BindEntity }
+     */
+    public BindEntity createBindEntity() {
+        return new BindEntity();
+    }
+
+    /**
+     * Create an instance of {@link BindCardinality }
+     */
+    public BindCardinality createBindCardinality() {
+        return new BindCardinality();
     }
 
     /**
@@ -85,27 +99,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link BindEntity }
-     */
-    public BindEntity createBindEntity() {
-        return new BindEntity();
-    }
-
-    /**
-     * Create an instance of {@link BindSchema }
-     */
-    public BindSchema createBindSchema() {
-        return new BindSchema();
-    }
-
-    /**
-     * Create an instance of {@link BindItem }
-     */
-    public BindItem createBindItem() {
-        return new BindItem();
-    }
-
-    /**
      * Create an instance of {@link BindAttribute }
      */
     public BindAttribute createBindAttribute() {
@@ -120,10 +113,10 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link BindCardinality }
+     * Create an instance of {@link BindDatatypeDef }
      */
-    public BindCardinality createBindCardinality() {
-        return new BindCardinality();
+    public BindDatatypeDef createBindDatatypeDef() {
+        return new BindDatatypeDef();
     }
 
     /**
@@ -131,6 +124,13 @@ public class ObjectFactory {
      */
     public BindRelation createBindRelation() {
         return new BindRelation();
+    }
+
+    /**
+     * Create an instance of {@link BindSchema }
+     */
+    public BindSchema createBindSchema() {
+        return new BindSchema();
     }
 
     /**
@@ -206,11 +206,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link BindDatatypedef }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link BindDatatypeDef }{@code >}}
      */
     @XmlElementDecl(namespace = "", name = "datatypedef")
-    public JAXBElement<BindDatatypedef> createDatatypedef(BindDatatypedef value) {
-        return new JAXBElement<BindDatatypedef>(_Datatypedef_QNAME, BindDatatypedef.class, null, value);
+    public JAXBElement<BindDatatypeDef> createDatatypedef(BindDatatypeDef value) {
+        return new JAXBElement<BindDatatypeDef>(_Datatypedef_QNAME, BindDatatypeDef.class, null, value);
     }
 
     /**

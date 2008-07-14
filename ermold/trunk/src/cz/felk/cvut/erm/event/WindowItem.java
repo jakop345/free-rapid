@@ -277,7 +277,7 @@ public class WindowItem implements Item, java.io.Serializable {
         return OBJECT_FOREGROUND_COLOR;
     }
 
-    public int getL() {
+    public int getLeftPosition() {
         return rect[0][1];
     }
 
@@ -331,7 +331,7 @@ public class WindowItem implements Item, java.io.Serializable {
         return Color.yellow;
     }
 
-    public int getT() {
+    public int getTopPosition() {
         return rect[1][1];
     }
 
@@ -340,10 +340,11 @@ public class WindowItem implements Item, java.io.Serializable {
      */
     public void handleAddItemEvent(AddItemEvent event) {
         try {
-            manager.add(event.getItem());
+            manager.addItem(event.getItem());
             (manager).selectItemEx(null, false);
             (manager).repaintItem(event.getItem());
         } catch (ItemNotInsideManagerException e) {
+            e.printStackTrace();
         }
     }
 
@@ -654,9 +655,9 @@ public class WindowItem implements Item, java.io.Serializable {
     /**
      * Set the new managewr for this window.
      *
-     * @see Item#manager(Manager)
+     * @see Item#setManager(Manager)
      */
-    public Manager manager(Manager manager) throws NullPointerException {
+    public Manager setManager(Manager manager) throws NullPointerException {
         if (manager == null)
             throw new NullPointerException();
         return (this.manager = manager);

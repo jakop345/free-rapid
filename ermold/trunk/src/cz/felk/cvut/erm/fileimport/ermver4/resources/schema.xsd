@@ -1,182 +1,184 @@
 <?xml version="1.0" encoding="UTF-8"?>
- <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="1.0">
-     <xs:annotation>
-         <xs:appinfo>
-             <jaxb:globalBindings generateIsSetMethod="true"/>
-             <jaxb:schemaBindings>
-                 <jaxb:package name="cz.felk.cvut.erm.fileimport.ermver4">
-                 </jaxb:package>
-             </jaxb:schemaBindings>
-         </xs:appinfo>
-     </xs:annotation>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="1.0">
+    <xs:annotation>
+        <xs:appinfo>
+            <jaxb:globalBindings generateIsSetMethod="true"/>
+            <jaxb:schemaBindings>
+                <jaxb:package name="cz.felk.cvut.erm.fileimport.ermver4">
+                </jaxb:package>
+            </jaxb:schemaBindings>
+        </xs:appinfo>
+    </xs:annotation>
 
-     <xs:group name="constructGroup">
-         <xs:sequence>
-             <xs:element ref="left"/>
-             <xs:element ref="top"/>
-             <xs:element ref="width"/>
-             <xs:element ref="height"/>
-             <xs:element ref="id"/>
-             <xs:element ref="name"/>
-             <xs:element ref="comment"/>
-         </xs:sequence>
-     </xs:group>
-     <xs:complexType name="Bind_userType">
-         <xs:sequence>
-             <xs:element ref="typename"/>
-             <xs:element ref="datatypedef"/>
-         </xs:sequence>
-     </xs:complexType>
-     <xs:complexType name="Bind_strong">
-         <xs:sequence>
-             <xs:element ref="left"/>
-             <xs:element ref="top"/>
-             <xs:element ref="width"/>
-             <xs:element ref="height"/>
-             <xs:element ref="ent"/>
-             <xs:element ref="child"/>
-         </xs:sequence>
-     </xs:complexType>
-     <xs:complexType name="Bind_unique">
-         <xs:sequence>
-             <xs:group ref="constructGroup"/>
-             <xs:element ref="ent"/>
-             <xs:element ref="atr" maxOccurs="unbounded"/>
-             <xs:element ref="primary"/>
-         </xs:sequence>
-     </xs:complexType>
-     <xs:complexType name="Bind_schema">
-         <xs:sequence>
-             <xs:element ref="scale"/>
-             <xs:element ref="left"/>
-             <xs:element ref="top"/>
-             <xs:element ref="width"/>
-             <xs:element ref="height"/>
-             <xs:element ref="id"/>
-             <xs:element ref="name"/>
-             <xs:element ref="notation"/>
-             <xs:element ref="comment"/>
-             <xs:element ref="usertype" maxOccurs="unbounded"/>
-             <xs:choice maxOccurs="unbounded">
-                 <xs:element ref="relation"/>
-                 <xs:element ref="atribute"/>
-                 <xs:element ref="entity"/>
-                 <xs:element ref="cardinality"/>
-                 <xs:element ref="unique"/>
-                 <xs:element ref="strong"/>
-             </xs:choice>
-         </xs:sequence>
-     </xs:complexType>
-     <xs:complexType name="Bind_relation">
-         <xs:sequence>
-             <xs:group ref="constructGroup"/>
-         </xs:sequence>
-     </xs:complexType>
-     <xs:complexType name="Bind_item">
-         <xs:sequence>
-             <xs:element ref="itemname"/>
-             <xs:element ref="datatype"/>
-         </xs:sequence>
-     </xs:complexType>
-     <xs:complexType name="Bind_entity">
-         <xs:sequence>
-             <xs:group ref="constructGroup"/>
-             <xs:element ref="constraints"/>
-             <xs:element ref="parent" minOccurs="0"/>
-         </xs:sequence>
-     </xs:complexType>
-     <xs:complexType name="Bind_datatypedef">
-         <xs:sequence>
-             <xs:element ref="datatype"/>
-             <xs:element ref="item" minOccurs="0" maxOccurs="unbounded"/>
-         </xs:sequence>
-     </xs:complexType>
-     <xs:complexType name="Bind_cardinality">
-         <xs:sequence>
-             <xs:group ref="constructGroup"/>
-             <xs:element ref="ent"/>
-             <xs:element ref="rel"/>
-             <xs:element ref="arbitrary"/>
-             <xs:element ref="multi"/>
-             <xs:element ref="glue"/>
-         </xs:sequence>
-     </xs:complexType>
-     <xs:complexType name="Bind_attribute">
-         <xs:sequence>
-             <xs:group ref="constructGroup"/>
-             <xs:element ref="datatype"/>
-             <xs:element ref="arbitrary"/>
-             <xs:element ref="primary"/>
-             <xs:element ref="uniq"/>
-             <xs:element ref="position"/>
-             <xs:choice>
-                 <xs:element ref="ent"/>
-                 <xs:element ref="rel"/>
-             </xs:choice>
-         </xs:sequence>
-     </xs:complexType>
-     <xs:element name="width" type="xs:int"/>
-     <xs:element name="usertype" type="Bind_userType">
-         <xs:annotation>
-             <xs:appinfo>
-                 <jaxb:property name="userType"/>
-             </xs:appinfo>
-         </xs:annotation>
-     </xs:element>
-     <xs:element name="unique" type="Bind_unique"/>
-     <xs:element name="uniq" type="xs:boolean"/>
-     <xs:element name="typename" type="xs:string">
-         <xs:annotation>
-             <xs:appinfo>
-                 <jaxb:property name="typeName"/>
-             </xs:appinfo>
-         </xs:annotation>
-     </xs:element>
-     <xs:element name="top" type="xs:int"/>
-     <xs:element name="schema" type="Bind_schema"/>
-     <xs:element name="scale" type="xs:float"/>
-     <xs:element name="relation" type="Bind_relation"/>
-     <xs:element name="rel" type="xs:int"/>
-     <xs:element name="primary" type="xs:boolean"/>
-     <xs:element name="position" type="xs:int"/>
-     <xs:element name="parent" type="xs:int"/>
-     <xs:element name="notation" type="xs:int"/>
-     <xs:element name="name" type="xs:string"/>
-     <xs:element name="multi" type="xs:boolean"/>
-     <xs:element name="left" type="xs:int"/>
-     <xs:element name="itemname" type="xs:string">
-         <xs:annotation>
-             <xs:appinfo>
-                 <jaxb:property name="itemName"/>
-             </xs:appinfo>
-         </xs:annotation>
-     </xs:element>
-     <xs:element name="item" type="Bind_item"/>
-     <xs:element name="id" type="xs:int"/>
-     <xs:element name="height" type="xs:int"/>
-     <xs:element name="glue" type="xs:boolean"/>
-     <xs:element name="entity" type="Bind_entity"/>
-     <xs:element name="ent" type="xs:int"/>
-     <xs:element name="datatypedef" type="Bind_datatypedef">
-         <xs:annotation>
-             <xs:appinfo>
-                 <jaxb:property name="datatypeDef"/>
-             </xs:appinfo>
-         </xs:annotation>
-     </xs:element>
-     <xs:element name="datatype" type="xs:string">
-         <xs:annotation>
-             <xs:appinfo>
-                 <jaxb:property name="dataType"/>
-             </xs:appinfo>
-         </xs:annotation>
-     </xs:element>
-     <xs:element name="constraints" type="xs:string"/>
-     <xs:element name="comment" type="xs:string"/>
-     <xs:element name="cardinality" type="Bind_cardinality"/>
-     <xs:element name="atribute" type="Bind_attribute"/>
-     <xs:element name="atr" type="xs:int"/>
-     <xs:element name="arbitrary" type="xs:boolean"/>
-     <xs:element name="child" type="xs:int"/>
-     <xs:element name="strong" type="Bind_strong"/>
- </xs:schema>
+    <xs:group name="constructGroup">
+        <xs:sequence>
+            <xs:element ref="left"/>
+            <xs:element ref="top"/>
+            <xs:element ref="width"/>
+            <xs:element ref="height"/>
+            <xs:element ref="id"/>
+            <xs:element ref="name"/>
+            <xs:element ref="comment"/>
+        </xs:sequence>
+    </xs:group>
+    <xs:complexType name="Bind_userType">
+        <xs:sequence>
+            <xs:element ref="typename"/>
+            <xs:element ref="datatypedef"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Bind_strong">
+        <xs:sequence>
+            <xs:element ref="left"/>
+            <xs:element ref="top"/>
+            <xs:element ref="width"/>
+            <xs:element ref="height"/>
+            <xs:element ref="ent"/>
+            <xs:element ref="child"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Bind_unique">
+        <xs:sequence>
+            <xs:group ref="constructGroup"/>
+            <xs:element ref="ent"/>
+            <xs:element ref="atr" maxOccurs="unbounded"/>
+            <xs:element ref="primary"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Bind_schema">
+        <xs:sequence>
+            <xs:element ref="scale"/>
+            <xs:element ref="left"/>
+            <xs:element ref="top"/>
+            <xs:element ref="width"/>
+            <xs:element ref="height"/>
+            <xs:element ref="id"/>
+            <xs:element ref="name"/>
+            <xs:element ref="notation"/>
+            <xs:element ref="comment"/>
+            <xs:choice>
+                <xs:element ref="usertype" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:choice>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element ref="relation"/>
+                <xs:element ref="atribute"/>
+                <xs:element ref="entity"/>
+                <xs:element ref="cardinality"/>
+                <xs:element ref="unique"/>
+                <xs:element ref="strong"/>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Bind_relation">
+        <xs:sequence>
+            <xs:group ref="constructGroup"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Bind_item">
+        <xs:sequence>
+            <xs:element ref="itemname"/>
+            <xs:element ref="datatype"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Bind_entity">
+        <xs:sequence>
+            <xs:group ref="constructGroup"/>
+            <xs:element ref="constraints"/>
+            <xs:element ref="parent" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Bind_datatypeDef">
+        <xs:sequence>
+            <xs:element ref="datatype"/>
+            <xs:element ref="item" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Bind_cardinality">
+        <xs:sequence>
+            <xs:group ref="constructGroup"/>
+            <xs:element ref="ent"/>
+            <xs:element ref="rel"/>
+            <xs:element ref="arbitrary"/>
+            <xs:element ref="multi"/>
+            <xs:element ref="glue"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Bind_attribute">
+        <xs:sequence>
+            <xs:group ref="constructGroup"/>
+            <xs:element ref="datatype"/>
+            <xs:element ref="arbitrary"/>
+            <xs:element ref="primary"/>
+            <xs:element ref="uniq"/>
+            <xs:element ref="position"/>
+            <xs:choice>
+                <xs:element ref="ent"/>
+                <xs:element ref="rel"/>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="width" type="xs:int"/>
+    <xs:element name="usertype" type="Bind_userType">
+        <xs:annotation>
+            <xs:appinfo>
+                <jaxb:property name="userType"/>
+            </xs:appinfo>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="unique" type="Bind_unique"/>
+    <xs:element name="uniq" type="xs:boolean"/>
+    <xs:element name="typename" type="xs:string">
+        <xs:annotation>
+            <xs:appinfo>
+                <jaxb:property name="typeName"/>
+            </xs:appinfo>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="top" type="xs:int"/>
+    <xs:element name="schema" type="Bind_schema"/>
+    <xs:element name="scale" type="xs:float"/>
+    <xs:element name="relation" type="Bind_relation"/>
+    <xs:element name="rel" type="xs:int"/>
+    <xs:element name="primary" type="xs:boolean"/>
+    <xs:element name="position" type="xs:int"/>
+    <xs:element name="parent" type="xs:int"/>
+    <xs:element name="notation" type="xs:int"/>
+    <xs:element name="name" type="xs:string"/>
+    <xs:element name="multi" type="xs:boolean"/>
+    <xs:element name="left" type="xs:int"/>
+    <xs:element name="itemname" type="xs:string">
+        <xs:annotation>
+            <xs:appinfo>
+                <jaxb:property name="itemName"/>
+            </xs:appinfo>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="item" type="Bind_item"/>
+    <xs:element name="id" type="xs:int"/>
+    <xs:element name="height" type="xs:int"/>
+    <xs:element name="glue" type="xs:boolean"/>
+    <xs:element name="entity" type="Bind_entity"/>
+    <xs:element name="ent" type="xs:int"/>
+    <xs:element name="datatypedef" type="Bind_datatypeDef">
+        <xs:annotation>
+            <xs:appinfo>
+                <jaxb:property name="datatypeDef"/>
+            </xs:appinfo>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="datatype" type="xs:string">
+        <xs:annotation>
+            <xs:appinfo>
+                <jaxb:property name="dataType"/>
+            </xs:appinfo>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="constraints" type="xs:string"/>
+    <xs:element name="comment" type="xs:string"/>
+    <xs:element name="cardinality" type="Bind_cardinality"/>
+    <xs:element name="atribute" type="Bind_attribute"/>
+    <xs:element name="atr" type="xs:int"/>
+    <xs:element name="arbitrary" type="xs:boolean"/>
+    <xs:element name="child" type="xs:int"/>
+    <xs:element name="strong" type="Bind_strong"/>
+</xs:schema>

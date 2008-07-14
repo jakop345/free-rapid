@@ -133,7 +133,7 @@ public class ConstraintsDialog extends JDialog implements java.awt.event.ActionL
     }
 
     public String getValue() {
-        // TODO Auto-generated method stub
+
         //value = getValue();
         return Cent.getConstraints();
     }

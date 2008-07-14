@@ -419,7 +419,7 @@ public class DesktopGroupWindow extends GroupWindowItem implements ContainerDesk
      * Set the new managewr for this window. This method do nothing
      * because desktop cannot change its manager. It's manager to itself.
      */
-    public Manager manager(Manager manager) {
+    public Manager setManager(Manager manager) {
         return this;
     }
 
@@ -504,6 +504,8 @@ public class DesktopGroupWindow extends GroupWindowItem implements ContainerDesk
      */
     public void repaintItemFast(PaintableItem item) {
         Graphics g = getPaintPlace().getGraphics();
+        if (g == null)
+            return;
         g.setColor(getBackgroundColor());
         g.setXORMode(getXORColor());
         item.paintFast(g);
