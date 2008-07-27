@@ -7,17 +7,17 @@ import cz.felk.cvut.erm.conceptual.exception.IsMemberOfPrimaryKeyException;
 import cz.felk.cvut.erm.conceptual.exception.RelationCannotHavePrimaryKeyException;
 import cz.felk.cvut.erm.datatype.*;
 import cz.felk.cvut.erm.ermodeller.*;
-import cz.felk.cvut.erm.event.ResizeEvent;
-import cz.felk.cvut.erm.event.ResizeRectangle;
+import cz.felk.cvut.erm.event.interfaces.Item;
+import cz.felk.cvut.erm.fileimport.ermver4.jaxb.*;
 import cz.felk.cvut.erm.typeseditor.UserTypeStorage;
 import cz.felk.cvut.erm.typeseditor.UserTypeStorageVector;
 import org.xml.sax.SAXException;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.*;
+import javax.xml.bind.helpers.DefaultValidationEventHandler;
+import javax.xml.validation.SchemaFactory;
 import java.io.File;
+import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 
@@ -38,20 +38,37 @@ public class XMLBind {
         //System.getProperties().put("javax.xml.bind.JAXBContext", "com.sun.xml.internal.bind.v2.ContextFactory");
         final JAXBContext ctx = getContext();
         final Unmarshaller unmarshaller = ctx.createUnmarshaller();
+        unmarshaller.setEventHandler(new DefaultValidationEventHandler());
+        SchemaFactory sf = SchemaFactory.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        unmarshaller.setSchema(sf.newSchema(XMLBind.class.getResource(RESOURCES_SCHEMA_XSD)));
+        final javax.xml.validation.Schema schema = unmarshaller.getSchema();
+        initUnmarshaller();
+        final JAXBElement rootElement = (JAXBElement) unmarshaller.unmarshal(f);
+        return (BindSchema) rootElement.getValue();
+    }
+
+    public void saveSchema(WorkingDesktop d, File f) throws JAXBException, SAXException {
+        //System.getProperties().put("javax.xml.bind.JAXBContext", "com.sun.xml.internal.bind.v2.ContextFactory");
+        final JAXBContext ctx = getContext();
+        final Marshaller marshaller = ctx.createMarshaller();
+        final Collection<Item> items = d.getItems();
+        for (Item item : items) {
+
+        }
+        //marshaller.marshal();
         //unmarshaller.setEventHandler(new DefaultValidationEventHandler());
         //SchemaFactory sf = SchemaFactory.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
         //unmarshaller.setSchema(sf.newSchema(XMLBind.class.getResource(RESOURCES_SCHEMA_XSD)));
         //final javax.xml.validation.Schema schema = unmarshaller.getSchema();
-        init();
-        final JAXBElement rootElement = (JAXBElement) unmarshaller.unmarshal(f);
-        return (BindSchema) rootElement.getValue();
+
+
     }
 
     private JAXBContext getContext() throws JAXBException {
         return JAXBContext.newInstance(BindSchema.class.getPackage().getName());
     }
 
-    private void init() {
+    private void initUnmarshaller() {
         ll = 0;
         tt = 0;
         prefix = "";
@@ -89,7 +106,11 @@ public class XMLBind {
         schemaM.setName(schemaName);
 
         int schemaID = id + erdoc.getId();
-        schemaM.setNotationType(NotationType.values()[erdoc.getNotation()]);
+        final int notation = erdoc.getNotation();
+        if (!(notation >= 0 && notation <= NotationType.values().length)) {
+            throw new UnsupportedOperationException("Unsupported scheme notation:" + notation);
+        }
+        schemaM.setNotationType(NotationType.values()[notation]);
 
         schemaM.setID(schemaID);
 
@@ -184,7 +205,7 @@ public class XMLBind {
             entityModel.setConstraints(bindEntity.getConstraints());
         if (bindEntity.isSetParent()) {
             int i = id + bindEntity.getParent();
-            d.getEntity(i).addISAChild(ent, new ResizeEvent(0, 0, 0, 0, new ResizeRectangle(0, 0, 0, 0, 0), null));
+            d.getEntity(i).addISAChild(ent);
         }
     }
 

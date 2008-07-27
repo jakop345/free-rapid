@@ -68,4 +68,13 @@
     <target name="run">
         <java fork="true" jar="${build}/erm.jar"/>
     </target>
+
+    <target name="jaxb">
+        <exec executable="xjc">
+            <arg value="-no-header"/>
+            <arg value="-extension"/>
+            <arg line="-xmlschema ${src}\cz\felk\cvut\erm\fileimport\ermver4\resources\schema.xsd"/>
+            <arg line="-d ${src}"/>
+        </exec>
+    </target>
 </project>

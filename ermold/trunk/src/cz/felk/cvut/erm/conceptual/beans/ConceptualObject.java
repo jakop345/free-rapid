@@ -438,7 +438,6 @@ public abstract class ConceptualObject implements Serializable, ShowErrorListene
         fieldSchema = schema;
         firePropertyChange(SCHEMA_PROPERTY_CHANGE, oldValue, schema);
         setID(schema.createID());
-        //System.out.println("setSchema \t"+getClass());
     }
 
     /**
@@ -543,6 +542,5 @@ public abstract class ConceptualObject implements Serializable, ShowErrorListene
         pw.println("\t\t<id>" + getID() + "</id>");
         pw.println("\t\t<name>" + getName() + "</name>");
         pw.println("\t\t<comment>" + getComment() + "</comment>");
-        //System.out.println(getID()+"\t"+getName()+"\t"+getClass());
     }
 }

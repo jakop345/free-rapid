@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="1.0">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+           jaxb:version="2.0">
     <xs:annotation>
         <xs:appinfo>
-            <jaxb:globalBindings generateIsSetMethod="true"/>
+            <jaxb:globalBindings generateIsSetMethod="true" enableFailFastCheck="true"/>
             <jaxb:schemaBindings>
-                <jaxb:package name="cz.felk.cvut.erm.fileimport.ermver4">
-                </jaxb:package>
+                <jaxb:package name="cz.felk.cvut.erm.fileimport.ermver4.jaxb"/>
             </jaxb:schemaBindings>
         </xs:appinfo>
     </xs:annotation>
 
-    <xs:group name="constructGroup">
+    <xs:complexType name="BindConstruct" abstract="true">
         <xs:sequence>
             <xs:element ref="left"/>
             <xs:element ref="top"/>
@@ -20,7 +20,7 @@
             <xs:element ref="name"/>
             <xs:element ref="comment"/>
         </xs:sequence>
-    </xs:group>
+    </xs:complexType>
     <xs:complexType name="Bind_userType">
         <xs:sequence>
             <xs:element ref="typename"/>
@@ -38,12 +38,15 @@
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="Bind_unique">
-        <xs:sequence>
-            <xs:group ref="constructGroup"/>
-            <xs:element ref="ent"/>
-            <xs:element ref="atr" maxOccurs="unbounded"/>
-            <xs:element ref="primary"/>
-        </xs:sequence>
+        <xs:complexContent>
+            <xs:extension base="BindConstruct">
+                <xs:sequence>
+                    <xs:element ref="ent"/>
+                    <xs:element ref="atr" maxOccurs="unbounded"/>
+                    <xs:element ref="primary"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
     <xs:complexType name="Bind_schema">
         <xs:sequence>
@@ -59,7 +62,7 @@
             <xs:choice>
                 <xs:element ref="usertype" minOccurs="0" maxOccurs="unbounded"/>
             </xs:choice>
-            <xs:choice maxOccurs="unbounded">
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
                 <xs:element ref="relation"/>
                 <xs:element ref="atribute"/>
                 <xs:element ref="entity"/>
@@ -70,9 +73,9 @@
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="Bind_relation">
-        <xs:sequence>
-            <xs:group ref="constructGroup"/>
-        </xs:sequence>
+        <xs:complexContent>
+            <xs:extension base="BindConstruct"/>
+        </xs:complexContent>
     </xs:complexType>
     <xs:complexType name="Bind_item">
         <xs:sequence>
@@ -81,11 +84,14 @@
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="Bind_entity">
-        <xs:sequence>
-            <xs:group ref="constructGroup"/>
-            <xs:element ref="constraints"/>
-            <xs:element ref="parent" minOccurs="0"/>
-        </xs:sequence>
+        <xs:complexContent>
+            <xs:extension base="BindConstruct">
+                <xs:sequence>
+                    <xs:element ref="constraints"/>
+                    <xs:element ref="parent" minOccurs="0"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
     <xs:complexType name="Bind_datatypeDef">
         <xs:sequence>
@@ -94,28 +100,34 @@
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="Bind_cardinality">
-        <xs:sequence>
-            <xs:group ref="constructGroup"/>
-            <xs:element ref="ent"/>
-            <xs:element ref="rel"/>
-            <xs:element ref="arbitrary"/>
-            <xs:element ref="multi"/>
-            <xs:element ref="glue"/>
-        </xs:sequence>
+        <xs:complexContent>
+            <xs:extension base="BindConstruct">
+                <xs:sequence>
+                    <xs:element ref="ent"/>
+                    <xs:element ref="rel"/>
+                    <xs:element ref="arbitrary"/>
+                    <xs:element ref="multi"/>
+                    <xs:element ref="glue"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
     <xs:complexType name="Bind_attribute">
-        <xs:sequence>
-            <xs:group ref="constructGroup"/>
-            <xs:element ref="datatype"/>
-            <xs:element ref="arbitrary"/>
-            <xs:element ref="primary"/>
-            <xs:element ref="uniq"/>
-            <xs:element ref="position"/>
-            <xs:choice>
-                <xs:element ref="ent"/>
-                <xs:element ref="rel"/>
-            </xs:choice>
-        </xs:sequence>
+        <xs:complexContent>
+            <xs:extension base="BindConstruct">
+                <xs:sequence>
+                    <xs:element ref="datatype"/>
+                    <xs:element ref="arbitrary"/>
+                    <xs:element ref="primary"/>
+                    <xs:element ref="uniq"/>
+                    <xs:element ref="position"/>
+                    <xs:choice>
+                        <xs:element ref="ent"/>
+                        <xs:element ref="rel"/>
+                    </xs:choice>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
     <xs:element name="width" type="xs:int"/>
     <xs:element name="usertype" type="Bind_userType">
@@ -134,6 +146,7 @@
             </xs:appinfo>
         </xs:annotation>
     </xs:element>
+
     <xs:element name="top" type="xs:int"/>
     <xs:element name="schema" type="Bind_schema"/>
     <xs:element name="scale" type="xs:float"/>

@@ -1,7 +1,6 @@
 package cz.felk.cvut.erm.typeseditor;
 
 import cz.felk.cvut.erm.datatype.*;
-import cz.felk.cvut.erm.sql.TabCreator;
 
 import java.beans.PropertyChangeSupport;
 import java.util.Collection;
@@ -192,24 +191,24 @@ public class UserTypeStorageVector {
         return false;
     }
 
-    /**
-     * returns string representation of data types stored in userTypeStorageVector
-     * It will be used for generating SQL script
-     */
-    public String getTypes() {
-        int i;
-        String list = "";
-
-        for (i = 0; i < getSize(); i++) {
-            if (i == 0) {
-                list = TabCreator.getTabs(1) + getTypeAt(i).getTypeName();
-                list += " " + getTypeAt(i).getDataType().toString();
-            } else {
-                list = list + ",\n" + TabCreator.getTabs(1) + getTypeAt(i).getTypeName();
-                list = list + " " + getTypeAt(i).getDataType().toString();
-            }
-        }
-        return list;
-    }
+//    /**
+//     * returns string representation of data types stored in userTypeStorageVector
+//     * It will be used for generating SQL script
+//     */
+//    public String getTypes() {
+//        int i;
+//        String list = "";
+//
+//        for (i = 0; i < getSize(); i++) {
+//            if (i == 0) {
+//                list = TabCreator.getTabs(1) + getTypeAt(i).getTypeName();
+//                list += " " + getTypeAt(i).getDataType().toString();
+//            } else {
+//                list = list + ",\n" + TabCreator.getTabs(1) + getTypeAt(i).getTypeName();
+//                list = list + " " + getTypeAt(i).getDataType().toString();
+//            }
+//        }
+//        return list;
+//    }
 
 }

@@ -125,7 +125,7 @@ public class EntityConstruct extends ConceptualConstructItem {
         String name = (model = ent).getName();
         //ent.setConstraints("éluùouËk˝ k˘Ú");
         EntManager = manager;
-        java.awt.FontMetrics fm;
+        FontMetrics fm;
         PKmembers = new java.util.Vector<AttributeConstruct>(3, 2);
         try {
             fm = ((FontManager) manager).getReferentFontMetrics();
@@ -143,7 +143,7 @@ public class EntityConstruct extends ConceptualConstructItem {
      * @param ent   The added entity.
      * @param event Event to can post remove event.
      */
-    public void addISAChild(EntityConstruct ent, cz.felk.cvut.erm.event.CoordinateEvent event) {
+    private void addISAChild(EntityConstruct ent, CoordinateEvent event) {
         try {
             int[][] r = ent.getRect();
             int height = countResizeBottom(-1);
@@ -153,7 +153,7 @@ public class EntityConstruct extends ConceptualConstructItem {
             int dx = (r[0][1] - r[0][0] + 4 * DIFFERENCE - rect[0][1] + rect[0][0]);
             dx = (dx > 0) ? dx : 0;
             dy = (dy > 0) ? dy : 0;
-            cz.felk.cvut.erm.event.ResizeRectangle rr = new cz.felk.cvut.erm.event.ResizeRectangle(
+            ResizeRectangle rr = new ResizeRectangle(
                     0, 0, 0, 0, ResizePoint.BOTTOM
                     | ResizePoint.RIGHT);
             ResizeEvent ev = new ResizeEvent(event.getX(), event.getY(), dx, dy, rr, event.getComponent());
@@ -288,7 +288,7 @@ public class EntityConstruct extends ConceptualConstructItem {
     protected void countMinSize(cz.felk.cvut.erm.event.ResizeEvent ev) {
         int r[][];
         int width = 60;
-        java.awt.FontMetrics fm;
+        FontMetrics fm;
         fm = ((FontManager) manager).getReferentFontMetrics();
         int nameWidth = fm.stringWidth((getModel()).getName());
         if (nameWidth > width)
@@ -388,7 +388,7 @@ public class EntityConstruct extends ConceptualConstructItem {
         try {
             if (before == -1) {
                 // if it is first -> count size from the top
-                java.awt.FontMetrics fm;
+                FontMetrics fm;
                 fm = ((FontManager) manager).getReferentFontMetrics();
                 top = s[1][0] + 3 * fm.getAscent();
                 if (type != NotationType.CHEN) {
@@ -434,8 +434,8 @@ public class EntityConstruct extends ConceptualConstructItem {
         int[][] r = from.getRect();
         int[][] s = getRect();
         // creates new event
-        cz.felk.cvut.erm.event.ResizeRectangle rr = e.getResizeRect();
-        cz.felk.cvut.erm.event.ResizeRectangle newr = new cz.felk.cvut.erm.event.ResizeRectangle(
+        ResizeRectangle rr = e.getResizeRect();
+        ResizeRectangle newr = new ResizeRectangle(
                 0, 0, 0, 0, 0);
         cz.felk.cvut.erm.event.ResizingEvent newe = new cz.felk.cvut.erm.event.ResizingEvent(e
                 .getX(), e.getY(), 0, 0, newr, e.getComponent());
@@ -475,7 +475,7 @@ public class EntityConstruct extends ConceptualConstructItem {
         final NotationType type = model.getSchema().getNotationType();
         if (from == -1) {
             try {
-                java.awt.FontMetrics fm;
+                FontMetrics fm;
                 fm = ((FontManager) manager).getReferentFontMetrics();
                 height = 3 * fm.getAscent();
                 if (type == BINARY) {
@@ -562,8 +562,9 @@ public class EntityConstruct extends ConceptualConstructItem {
     static public EntityConstruct createEntity(
             Schema schema,
             Manager manager, int left, int top, EntityConstruct old) {
+
         try {
-            // creates the new DGroup instance
+// creates the new DGroup instance
             DGroupTool group = new DGroupTool(manager, left, top, 0, 0);
             Entity cEnt = schema
                     .createEntity();
@@ -578,8 +579,10 @@ public class EntityConstruct extends ConceptualConstructItem {
             manager.addItem(group);
             manager.repaintItem(group);
             return ent;
-        } catch (Throwable x) {
-            new ShowException(null, "Error", x, true);
+        } catch (ImpossibleNegativeValueException e) {
+            e.printStackTrace();
+        } catch (ItemNotInsideManagerException e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -661,7 +664,7 @@ public class EntityConstruct extends ConceptualConstructItem {
         }
     */
     public void minimizeSize(cz.felk.cvut.erm.event.CoordinateEvent e) {
-        cz.felk.cvut.erm.event.ResizeRectangle rr = new cz.felk.cvut.erm.event.ResizeRectangle(
+        ResizeRectangle rr = new ResizeRectangle(
                 0, 0, 0, 0, ResizePoint.BOTTOM
                 | ResizePoint.RIGHT);
 
@@ -1323,7 +1326,7 @@ public class EntityConstruct extends ConceptualConstructItem {
      */
     public void paint(java.awt.Graphics g) {
         int y = 0;
-        java.awt.FontMetrics fm = g.getFontMetrics();
+        FontMetrics fm = g.getFontMetrics();
         String name = model.getName();
         final NotationType type = model.getSchema().getNotationType();
         java.awt.Rectangle r = getBounds();
@@ -1389,7 +1392,7 @@ public class EntityConstruct extends ConceptualConstructItem {
      */
     public void print(java.awt.Graphics g) {
         int y = 0;
-        java.awt.FontMetrics fm = g.getFontMetrics();
+        FontMetrics fm = g.getFontMetrics();
         String name = model.getName();
         final NotationType type = model.getSchema().getNotationType();
         java.awt.Rectangle r = getBounds();
@@ -1451,7 +1454,7 @@ public class EntityConstruct extends ConceptualConstructItem {
         java.awt.Rectangle r = getBounds();
         if ("name".equals(e.getPropertyName()) ||
                 "constraints".equals(e.getPropertyName())) {
-            cz.felk.cvut.erm.event.ResizeRectangle rr = new cz.felk.cvut.erm.event.ResizeRectangle(
+            ResizeRectangle rr = new ResizeRectangle(
                     0, 0, 0, 0, ResizePoint.BOTTOM
                     | ResizePoint.RIGHT);
             this.resizeEntity(new ResizeEvent(getBounds().x, getBounds().y, 0, 0, rr, null));
@@ -1503,7 +1506,7 @@ public class EntityConstruct extends ConceptualConstructItem {
         int PKmembersCount = getPKmembers().size();
         AttributeConstruct a, pk;
         final NotationType type = model.getSchema().getNotationType();
-        java.awt.FontMetrics fm = ((FontManager) manager).getReferentFontMetrics();
+        FontMetrics fm = ((FontManager) manager).getReferentFontMetrics();
         if (type == BINARY) {
             for (int i = 0; i < count; i++) {
                 a = (getAtributes().get(i));
@@ -1538,7 +1541,7 @@ public class EntityConstruct extends ConceptualConstructItem {
             //((cz.felk.cvut.erm.event.interfaces.PaintableManager) manager).repaintItem(this);
             PKwidth = PKlength;
             /* adjust size of entity */
-            cz.felk.cvut.erm.event.ResizeRectangle rr = new cz.felk.cvut.erm.event.ResizeRectangle(
+            ResizeRectangle rr = new ResizeRectangle(
                     0, 0, 0, 0, ResizePoint.BOTTOM
                     | ResizePoint.RIGHT);
 //				java.awt.Rectangle rOld = getBounds();
@@ -1563,7 +1566,7 @@ public class EntityConstruct extends ConceptualConstructItem {
                     throw new RuntimeException(ex);
                 }
             }
-            cz.felk.cvut.erm.event.ResizeRectangle rr = new cz.felk.cvut.erm.event.ResizeRectangle(
+            ResizeRectangle rr = new ResizeRectangle(
                     0, 0, 0, 0, ResizePoint.BOTTOM
                     | ResizePoint.RIGHT);
             this.resizeEntity(new ResizeEvent(getBounds().x, getBounds().y, 0, 0, rr, null));
@@ -2003,4 +2006,7 @@ public class EntityConstruct extends ConceptualConstructItem {
         return selected;
     }
 
+    public void addISAChild(EntityConstruct ent) {
+        addISAChild(ent, new ResizeEvent(0, 0, 0, 0, new ResizeRectangle(0, 0, 0, 0, 0), null));
+    }
 }

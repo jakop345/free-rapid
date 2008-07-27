@@ -616,7 +616,7 @@ public class Entity extends ConceptualConstruct {
      * @param secondVector java.util.Vector
      * @return boolean
      */
-    private static final int isSubset(Vector firstVector, Vector secondVector) {
+    private static int isSubset(Vector firstVector, Vector secondVector) {
         int result = NO_SUBSET;
         synchronized (firstVector) {
             synchronized (secondVector) {
@@ -656,9 +656,11 @@ public class Entity extends ConceptualConstruct {
                 removeStrongAddictionParent(elements.nextElement());
             }
             catch (ParameterCannotBeNullException e) {
-            } // Cannot be thrown.
+                // Cannot be thrown.
+            }
             catch (WasNotFoundException e) {
-            } // Never mind, but shouldn't be thrown.
+                // Never mind, but shouldn't be thrown.
+            }
         }
         getStrongAddictionsParents().trimToSize();
     }
