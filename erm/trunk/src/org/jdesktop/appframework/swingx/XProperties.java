@@ -4,6 +4,7 @@
  */
 package org.jdesktop.appframework.swingx;
 
+import com.jgoodies.binding.list.ArrayListModel;
 import org.jdesktop.application.SessionStorage.Property;
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.SortKey;
@@ -13,8 +14,9 @@ import org.jdesktop.swingx.table.TableColumnExt;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
-import java.beans.DefaultPersistenceDelegate;
-import java.beans.XMLEncoder;
+import java.beans.*;
+import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -36,18 +38,35 @@ public class XProperties {
      * </code></pre>
      */
     public void registerPersistenceDelegates() {
-        XMLEncoder encoder = new XMLEncoder(System.out);
-        encoder.setPersistenceDelegate(SortKeyState.class,
+        XMLEncoder e = new XMLEncoder(System.out);
+        e.setPersistenceDelegate(SortKeyState.class,
                 new DefaultPersistenceDelegate(new String[]{"ascending",
                         "modelIndex", "comparator"}));
-//        encoder.setPersistenceDelegate(ColumnState.class,
-//                new DefaultPersistenceDelegate(
-//                        new String[]{"width", "preferredWidth", "modelIndex",
-//                                "visible", "viewIndex"}));
-//        encoder.setPersistenceDelegate(XTableState.class,
-//                new DefaultPersistenceDelegate(new String[]{"columnStates",
-//                        "sortKeyState", "horizontalScrollEnabled"}));
+        e.setPersistenceDelegate(ColumnState.class,
+                new DefaultPersistenceDelegate(
+                        new String[]{"width", "preferredWidth", "modelIndex",
+                                "visible", "viewIndex"}));
+        e.setPersistenceDelegate(XTableState.class,
+                new DefaultPersistenceDelegate(new String[]{"columnStates",
+                        "sortKeyState", "horizontalScrollEnabled"}));
+        e.setPersistenceDelegate(ArrayListModel.class, e.getPersistenceDelegate(List.class));
+//PersistenceDelegate for URL class ~ This tells XMLEncoder how to deal with these objects
+        final PersistenceDelegate defDelegate = new PersistenceDelegate() {
+            protected Expression instantiate(Object oldInstance, Encoder out) {
+                return new Expression(oldInstance, oldInstance.getClass(), "new", new Object[]{oldInstance.toString()});
+            }
+        };
+        e.setPersistenceDelegate(URL.class, defDelegate);
+        e.setPersistenceDelegate(File.class, defDelegate);
     }
+
+    static class FilePersistenceDelegate extends PersistenceDelegate {
+        protected Expression instantiate(Object oldInstance, Encoder out) {
+            File f = (File) oldInstance;
+            return new Expression(oldInstance, f.getClass(), "new", new Object[]{f.toString()});
+        }
+    }
+
 
     public static class XTableProperty implements Property {
 
@@ -333,12 +352,16 @@ public class XProperties {
 
     }
 
-    public static class VisibleColumnIndexComparator implements Comparator {
+    public static class VisibleColumnIndexComparator implements Comparator<ColumnState> {
 
-        public int compare(Object o1, Object o2) {
-
-            return ((ColumnState) o1).getViewIndex() - ((ColumnState) o2).getViewIndex();
+        public int compare(ColumnState o1, ColumnState o2) {
+            return o1.getViewIndex() - o2.getViewIndex();
         }
+
+//        public int compare(Object o1, Object o2) {
+//
+//            return ((ColumnState) o1).getViewIndex() - ((ColumnState) o2).getViewIndex();
+//        }
 
     }
 }
