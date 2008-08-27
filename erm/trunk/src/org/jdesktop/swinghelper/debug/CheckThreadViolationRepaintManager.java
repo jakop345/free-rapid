@@ -118,7 +118,7 @@ public class CheckThreadViolationRepaintManager extends RepaintManager {
         });
         System.out.println("Valid code passed...");
         repaintTest();
-        System.out.println("Repaint test - correct code");
+        System.out.println("Repaint sandbox - correct code");
         //Invalide code (stack trace expected) 
         test();
     }
@@ -132,7 +132,7 @@ public class CheckThreadViolationRepaintManager extends RepaintManager {
         frame.dispose();
     }
 
-    //this test must pass
+    //this sandbox must pass
     static void imageUpdateTest() {
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
