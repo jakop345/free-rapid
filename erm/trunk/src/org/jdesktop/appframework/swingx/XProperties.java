@@ -46,7 +46,7 @@ public class XProperties {
                 new DefaultPersistenceDelegate(
                         new String[]{"width", "preferredWidth", "modelIndex",
                                 "visible", "viewIndex"}));
-        e.setPersistenceDelegate(XTableState.class,
+        e.setPersistenceDelegate(XProperties.XTableState.class,
                 new DefaultPersistenceDelegate(new String[]{"columnStates",
                         "sortKeyState", "horizontalScrollEnabled"}));
         e.setPersistenceDelegate(ArrayListModel.class, e.getPersistenceDelegate(List.class));
@@ -175,6 +175,9 @@ public class XProperties {
         ColumnState[] columnStates = new ColumnState[0];
         boolean horizontalScrollEnabled;
         SortKeyState sortKeyState;
+
+        public XTableState() {
+        }
 
         public XTableState(ColumnState[] columnStates, SortKeyState sortKeyState, boolean horizontalScrollEnabled) {
             this.columnStates = copyColumnStates(columnStates);
