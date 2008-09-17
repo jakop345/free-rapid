@@ -11,7 +11,7 @@ import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
  * @author Tomáš Procházka &lt;<a href="mailto:tomas.prochazka@atomsoft.cz">tomas.prochazka@atomsoft.cz</a>&gt;
  * @version $Revision$ ($Date$)
  */
-public class BadLoginException extends ErrorDuringDownloadingException {
+class BadLoginException extends ErrorDuringDownloadingException {
 
     /** Constructor */
     public BadLoginException() {

@@ -11,6 +11,8 @@ package cz.vity.freerapid.plugins.services.rapidshare_premium;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 /**
  * POJO for RS account configuration.
@@ -56,6 +58,7 @@ public class RapidShareConfig {
 			try {
 				return login + "-" + URLEncoder.encode(password, "UTF-8");
 			} catch (UnsupportedEncodingException ex1) {
+				Logger.getLogger(RapidShareConfigProvider.class.getName()).log(Level.SEVERE, "Password encoding failed.");
 			}
 		}
 		return "";
