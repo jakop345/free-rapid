@@ -10,6 +10,8 @@
 package cz.vity.freerapid.plugins.services.rapidshare_premium;
 
 import java.awt.Frame;
+import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
+
 
 /**
  * Login UI.
@@ -42,6 +44,7 @@ class RapidShareLoginUI extends javax.swing.JDialog {
         loginField = new javax.swing.JTextField();
         passwordField = new javax.swing.JPasswordField();
         okButton = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setName("Form"); // NOI18N
@@ -64,7 +67,15 @@ class RapidShareLoginUI extends javax.swing.JDialog {
         okButton.setName("okButton"); // NOI18N
         okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                okButtonActionPerformed();
+                okButtonActionPerformed(evt);
+            }
+        });
+
+        cancelButton.setText(bundle.getString("RapidShareLoginUI.cancelButton.text")); // NOI18N
+        cancelButton.setName("cancelButton"); // NOI18N
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
             }
         });
 
@@ -83,11 +94,14 @@ class RapidShareLoginUI extends javax.swing.JDialog {
                         .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(loginField, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
                             .addComponent(passwordField, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)))
-                    .addComponent(okButton, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelLayout.createSequentialGroup()
+                        .addComponent(cancelButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(okButton)))
                 .addContainerGap())
         );
 
-        panelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, loginLabel, passwordLabel);
+        panelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {loginLabel, passwordLabel});
 
         panelLayout.setVerticalGroup(
             panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -101,7 +115,9 @@ class RapidShareLoginUI extends javax.swing.JDialog {
                     .addComponent(passwordLabel)
                     .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(okButton)
+                .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(okButton)
+                    .addComponent(cancelButton))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -119,11 +135,17 @@ class RapidShareLoginUI extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-	private void okButtonActionPerformed() {//GEN-FIRST:event_okButtonActionPerformed
+	private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
 		this.setVisible(false);
 	}//GEN-LAST:event_okButtonActionPerformed
 
-	public String getLogin() {
+	private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+		this.setVisible(false);
+		cancel = true;
+	}//GEN-LAST:event_cancelButtonActionPerformed
+
+	public String getLogin() throws ErrorDuringDownloadingException {
+		if (cancel) throw new ErrorDuringDownloadingException("No RS Premium account login information!");
 		return loginField.getText();
 	}
 
@@ -131,7 +153,10 @@ class RapidShareLoginUI extends javax.swing.JDialog {
 		return new String(passwordField.getPassword());
 	}
 
-	// Variables declaration - do not modify//GEN-BEGIN:variables
+	private boolean cancel = false;
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton cancelButton;
     private javax.swing.JTextField loginField;
     private javax.swing.JLabel loginLabel;
     private javax.swing.JButton okButton;

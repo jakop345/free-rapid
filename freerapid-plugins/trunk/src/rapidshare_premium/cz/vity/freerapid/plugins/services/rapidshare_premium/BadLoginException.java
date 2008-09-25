@@ -17,5 +17,8 @@ class BadLoginException extends ErrorDuringDownloadingException {
     public BadLoginException() {
     }
 
+    public BadLoginException(String message) {
+        super(message);
+    }
 }
 
