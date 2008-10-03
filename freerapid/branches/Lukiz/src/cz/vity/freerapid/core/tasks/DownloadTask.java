@@ -12,6 +12,7 @@ import cz.vity.freerapid.utilities.FileUtils;
 import cz.vity.freerapid.utilities.Sound;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.jdesktop.application.Application;
+import org.jdesktop.application.SingleFrameApplication;
 import org.jdesktop.application.TaskEvent;
 import org.jdesktop.application.TaskListener;
 
@@ -22,6 +23,7 @@ import java.io.*;
 import java.net.NoRouteToHostException;
 import java.net.UnknownHostException;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -43,12 +45,12 @@ public class DownloadTask extends CoreTask<Void, Long> implements HttpFileDownlo
     private DownloadTaskError serviceError;
 
     private int youHaveToSleepSecondsTime = 0;
-    private String captchaResult;
+    private volatile String captchaResult;
     private static final int NO_DATA_TIMEOUT_LIMIT = 75;
     private static final int INPUT_BUFFER_SIZE = 50000;
     private static final int OUTPUT_FILE_BUFFER_SIZE = 600000;
     private volatile boolean connectionTimeOut;
-
+    private final static Object captchaLock = new Object();
 
     public DownloadTask(Application application, HttpDownloadClient client, DownloadFile downloadFile, ShareDownloadService service) {
         super(application);
@@ -86,7 +88,7 @@ public class DownloadTask extends CoreTask<Void, Long> implements HttpFileDownlo
     }
 
     protected OutputStream getFileOutputStream(final File f, final long fileSize) throws NotEnoughSpaceException, IOException {
-        if (f.getParentFile().getFreeSpace() < fileSize) {
+        if (f.getParentFile().getFreeSpace() < fileSize + 10 * 1024 * 1024) { //+ 10MB
             throw new NotEnoughSpaceException();
         }
         final OutputStream fos;
@@ -199,7 +201,7 @@ public class DownloadTask extends CoreTask<Void, Long> implements HttpFileDownlo
 
                 if (!isTerminated()) {
                     if (counter != fileSize)
-                        throw new IOException("Error during download.\nStream was closed unexpectedly.\nFile is not complete");
+                        throw new IOException("ErrorDuringDownload");
                     setDownloaded(fileSize);//100%
                 } else {
                     logger.info("File downloading was terminated");
@@ -230,7 +232,6 @@ public class DownloadTask extends CoreTask<Void, Long> implements HttpFileDownlo
         }
         finally {
             setSpeed(0);
-            setAverageSpeed(0);
             checkDeleteTempFile();
         }
 
@@ -308,8 +309,9 @@ public class DownloadTask extends CoreTask<Void, Long> implements HttpFileDownlo
         error(cause);
         if (cause instanceof NotEnoughSpaceException) {
             Swinger.showErrorMessage(getResourceMap(), "NotEnoughSpaceException", (storeFile != null) ? storeFile : "");
+            setServiceError(DownloadTaskError.NOT_RECOVERABLE_DOWNLOAD_ERROR);
         } else if (cause instanceof UnknownHostException) {
-            downloadFile.setErrorMessage("Unknown host error - connection problem?");
+            downloadFile.setErrorMessage(getResourceMap().getString("UnknownHostError"));
         } else
         if (cause instanceof URLNotAvailableAnymoreException || cause instanceof PluginImplementationException || cause instanceof CaptchaEntryInputMismatchException || cause instanceof NoRouteToHostException) {
             setServiceError(DownloadTaskError.NOT_RECOVERABLE_DOWNLOAD_ERROR);
@@ -323,11 +325,14 @@ public class DownloadTask extends CoreTask<Void, Long> implements HttpFileDownlo
 
     private void error(Throwable cause) {
         downloadFile.setState(DownloadState.ERROR);
-        downloadFile.setErrorMessage(cause.getMessage());
+        if (getResourceMap().containsKey(cause.getMessage()))
+            downloadFile.setErrorMessage(getResourceMap().getString(cause.getMessage()));
+        else
+            downloadFile.setErrorMessage(cause.getMessage());
         setServiceError(DownloadTaskError.GENERAL_ERROR);
         if (!(cause instanceof YouHaveToWaitException)) {
             if (AppPrefs.getProperty(UserProp.PLAY_SOUNDS_FAILED, true))
-                Sound.playSound("error.wav");
+                Sound.playSound(getResourceMap().getString("error.wav"));
         }
     }
 
@@ -344,7 +349,7 @@ public class DownloadTask extends CoreTask<Void, Long> implements HttpFileDownlo
         if (storeFile != null && storeFile.exists()) {
             if (storeFile.equals(outputFile)) //pokud zapisovaci == vystupnimu
             {
-                downloadFile.setState(DownloadState.COMPLETED);
+                setCompleted();
                 return;
             }
             if (outputFile.exists()) {
@@ -368,11 +373,16 @@ public class DownloadTask extends CoreTask<Void, Long> implements HttpFileDownlo
         if (runTask) {
             runMoveFileTask(overWriteFile);
         } else {
-            downloadFile.setState(DownloadState.COMPLETED);
+            setCompleted();
             if (storeFile != null && storeFile.exists()) {
                 storeFile.delete();
             }
         }
+    }
+
+    private void setCompleted() {
+        downloadFile.setCompleteTaskDuration(this.getExecutionDuration(TimeUnit.SECONDS));
+        downloadFile.setState(DownloadState.COMPLETED);
     }
 
     private void runMoveFileTask(boolean overWriteFile) {
@@ -389,7 +399,7 @@ public class DownloadTask extends CoreTask<Void, Long> implements HttpFileDownlo
                     if (allComplete) {
                         final boolean sound = AppPrefs.getProperty(UserProp.PLAY_SOUNDS_OK, true);
                         if (sound)
-                            Sound.playSound("done.wav");
+                            Sound.playSound(getResourceMap().getString("done.wav"));
                         if (AppPrefs.getProperty(UserProp.CLOSE_WHEN_COMPLETED, false)) {
                             app.getContext().getTaskService().execute(new CloseInTimeTask(app));
                         }
@@ -401,7 +411,7 @@ public class DownloadTask extends CoreTask<Void, Long> implements HttpFileDownlo
             @Override
             public void succeeded(TaskEvent<Void> event) {
                 this.succeeded = true;
-                downloadFile.setState(DownloadState.COMPLETED);
+                setCompleted();
             }
 
             @Override
@@ -409,7 +419,7 @@ public class DownloadTask extends CoreTask<Void, Long> implements HttpFileDownlo
                 downloadFile.setState(DownloadState.ERROR);
                 //noinspection ThrowableResultOfMethodCallIgnored
                 downloadFile.setErrorMessage(getResourceMap().getString("transferFailed", event.getValue().getMessage()));
-                Sound.playSound("error.wav");
+                Sound.playSound(getResourceMap().getString("error.wav"));
             }
 
             @Override
@@ -462,26 +472,31 @@ public class DownloadTask extends CoreTask<Void, Long> implements HttpFileDownlo
 
     public BufferedImage loadCaptcha(InputStream inputStream) throws FailedToLoadCaptchaPictureException {
         if (inputStream == null)
-            throw new NullPointerException("Input stream for captcha is null");
+            throw new NullPointerException("InputStreamForCaptchaIsNull");
         try {
             return ImageIO.read(inputStream);
         } catch (IOException e) {
-            throw new FailedToLoadCaptchaPictureException("Reading captcha picture failed", e);
+            throw new FailedToLoadCaptchaPictureException("ReadingCaptchaPictureFailed", e);
         }
     }
 
     public String askForCaptcha(final BufferedImage image) throws Exception {
-        SwingUtilities.invokeAndWait(new Runnable() {
-            public void run() {
-                captchaResult = "";
-                while (captchaResult.isEmpty()) {
-                    captchaResult = (String) JOptionPane.showInputDialog(null, "Insert what you see", "Insert Captcha", JOptionPane.PLAIN_MESSAGE, new ImageIcon(image), null, null);
-                    if (captchaResult == null)
-                        break;
+        synchronized (captchaLock) {
+            SwingUtilities.invokeAndWait(new Runnable() {
+                public void run() {
+                    if (AppPrefs.getProperty(UserProp.ACTIVATE_WHEN_CAPTCHA, UserProp.ACTIVATE_WHEN_CAPTCHA_DEFAULT))
+                        Swinger.bringToFront(((SingleFrameApplication) getApplication()).getMainFrame(), true);
+                    captchaResult = "";
+
+                    while (captchaResult.isEmpty()) {
+                        captchaResult = (String) JOptionPane.showInputDialog(null, getResourceMap().getString("InsertWhatYouSee"), getResourceMap().getString("InsertCaptcha"), JOptionPane.PLAIN_MESSAGE, new ImageIcon(image), null, null);
+                        if (captchaResult == null)
+                            break;
+                    }
                 }
-                image.flush();
-            }
-        });
+            });
+        }
+        image.flush();
         return captchaResult;
     }
 

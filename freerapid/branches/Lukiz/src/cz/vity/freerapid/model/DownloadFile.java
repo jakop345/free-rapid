@@ -37,6 +37,7 @@ public class DownloadFile extends AbstractBean implements PropertyChangeListener
     private String fileType;
     private int timeToQueued = -1;
     private int timeToQueuedMax = -1;
+    private long completeTaskDuration = -1;
     private int errorAttemptsCount;
     private String shareDownloadServiceID;
     private String serviceName = null;
@@ -47,7 +48,7 @@ public class DownloadFile extends AbstractBean implements PropertyChangeListener
             PropertyDescriptor[] propertyDescriptors =
                     info.getPropertyDescriptors();
             for (PropertyDescriptor pd : propertyDescriptors) {
-                if ("task".equals(pd.getName()) || "speed".equals(pd.getName()) || "averageSpeed".equals(pd.getName())) {
+                if ("task".equals(pd.getName()) || "speed".equals(pd.getName())) {
                     pd.setValue("transient", Boolean.TRUE);
                 }
             }
@@ -285,5 +286,13 @@ public class DownloadFile extends AbstractBean implements PropertyChangeListener
     public void resetSpeed() {
         setSpeed(0);
         setAverageSpeed(0);
+    }
+
+    public long getCompleteTaskDuration() {
+        return completeTaskDuration;
+    }
+
+    public void setCompleteTaskDuration(final long completeTaskDuration) {
+        this.completeTaskDuration = completeTaskDuration;
     }
 }

@@ -83,10 +83,11 @@ public abstract class SingleXFrameApplication extends SingleFrameApplication {
      *
      * @param root
      */
+
     protected void prepareWindow(Window root) {
         configureWindow(root);
         // If the window's size doesn't appear to have been set, do it
-        if ((root.getWidth() < 10) || (root.getHeight() < 10)) {
+        if ((root.getWidth() < 150) || (root.getHeight() < 20)) {
             root.pack();
             if (!root.isLocationByPlatform()) {
                 Component owner = (root != getMainFrame()) ? getMainFrame()
@@ -152,7 +153,8 @@ public abstract class SingleXFrameApplication extends SingleFrameApplication {
             windows.add(getMainFrame().getOwnedWindows()[i]);
         }
         for (Window window : windows) {
-            saveSession(window);
+            if (window.isValid())
+                saveSession(window);
         }
     }
 
@@ -178,6 +180,21 @@ public abstract class SingleXFrameApplication extends SingleFrameApplication {
                 logger.log(Level.WARNING, "couldn't save sesssion", e);
             }
         }
+    }
+
+    @Override
+    public void show(JFrame c) {
+        super.show(c);
+
+        if ((c.getWidth() < 150) || (c.getHeight() < 20)) {
+            c.pack();
+            if (!c.isLocationByPlatform()) {
+                Component owner = (c != getMainFrame()) ? getMainFrame()
+                        : null;
+                c.setLocationRelativeTo(owner); // center the window
+            }
+        }
+
     }
 
     /**

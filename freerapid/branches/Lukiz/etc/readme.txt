@@ -3,7 +3,7 @@
 *      by Ladislav Vitasek aka Vity                          *
 *   Mail: info@wordrider.net - questions/suggestions         *
 *   Website/Forum/Bugtracker: http://wordrider.net/freerapid *
-*   Last change: 20th September 2008                         *
+*   Last change: 5th October 2008                            *
 **************************************************************
 
 =======================================
@@ -12,36 +12,36 @@ Content:
  II.   System requirements
 III.   How to run FreeRapid
  IV.   Known problems and limitations
-  V.   FAQ
+  V.   Bug report
+ VI.   FAQ 
 =======================================
 
 
 I.   What is FreeRapid Downloader
 =======================================
 
-FreeRapid downloader is an another simple Java downloader for support downloading from Rapidshare and other file share
-archives.
+FreeRapid downloader is a simple Java downloader for support downloading from Rapidshare and other file share archives.
 
 Main features:
  - support for concurrent downloading from multiple services
  - downloading using proxy list
  - download history
+ - clipboard monitoring 
  - programming interface (API) for adding other services like plugins
- - works on Linux
+ - works on Linux and MacOS
+
 
 Misc.:
  - Drag&Drop URLs
 
 Currently supported services are:
- -  Rapidshare.com
+ -  Rapidshare.com (for Premium account see Homepage for more details)
  -  FileFactory.com
  -  Uploaded.to
+ -  MegaUpload.com (=megarotic.com = sexuploader.com)
+ -  DepositFiles.com
+ -  NetLoad.in
  -  ..others are coming
-
-
-Bug report:
-bugs@wordrider.net
-http://bugtracker.wordrider.net/
 
 
 II. System requirements
@@ -63,11 +63,13 @@ III.  How to run FreeRapid Downloader
 
 Installation
 ------------
-Unzip files to any of your directory. If you make an upgrade to higher version, you can delete previous folder. All user
-settings are preserved. All use settings are saved in home directories:
+Unzip files to any of your directory, but beware special characters (like '+' or '!') on the path.
+If you make an upgrade to higher version, you can delete previous folder. All user
+settings are preserved. All user settings are saved in home directories:
 MS Windows: c:\Documents and Settings\YOUR_USER_NAME\application data\VitySoft\FRD
-            + registry HKEY_CURRENT_USER\Software\JavaSoft\Prefs\vitysoft\frd
+            and in registry HKEY_CURRENT_USER\Software\JavaSoft\Prefs\vitysoft\frd
 Linux: ~/.FRD
+
 DO NOT copy new version over older one.
 
 
@@ -83,8 +85,21 @@ All platforms
  Run command java -jar frd.jar
 
 
+additional parameters for launching are:
+
+java -jar frd.jar [-h -v -d -D<property>=<value>]
+
+options
+  -h (--help,-?)      print this message
+  -v (--version)      print the version information and exit
+  -d (--debug)        print debugging information
+  -Dproperty=value    Passes properties and values to the application (mostly for debug or testing purposes)
+   
+
 IV.   Known bugs and Limitations
 =======================================
+- Application will not start if it's placed on the path with special characters like '+' or '%'
+  - X please move application to another location without such characters
 
 - Selection from "top to bottom" in the main table during dragging while downloading partly disappears
     X select table rows by ctrl+mouse click or select items from bottom to top
@@ -98,11 +113,24 @@ IV.   Known bugs and Limitations
 - Linux users reported not showing icon in tray on Linux
     X the only one known solution for this problem could be an upgrade JRE to version 1.6.0_10-rc or higher
 
-V.   FAQ
+
+V.    Bug report
+=======================================
+If you see a bug, please do not assume that i know about it. Let me know as soon as possible so that i can fix it before
+the next release. Since my resources are limited, i can not backport bug fixes to earlier releases.
+To report a bug, you can use the issue tracker (preferred), project forums or my personal e-mail.
+
+Please report your JRE version and attach file app.log (if neccessary).
+http://bugtracker.wordrider.net/
+bugs@wordrider.net
+
+
+VI.   FAQ
 =======================================
 
 Q: Why did you create another "RapidShare Downloader"?
-A: 1) Because I don't want to be addicted on the russian software, which is probably full of malware and spyware.
+A: 1) Because I don't want to be dependant on the russian software, which is probably full of malware and spyware.
    2) Because I can simply fix automatic downloading myself.
-   3) Because I can.
+   3) Because they have unintuitive user interface and missing important features.
+   4) Because I can.
 

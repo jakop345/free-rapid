@@ -1,5 +1,7 @@
 package cz.vity.freerapid.plugins.webclient;
 
+import org.jdesktop.application.Application;
+
 /**
  * @author Vity
  */
@@ -11,9 +13,11 @@ public class ConnectionSettings {
     private int proxyPort;
     private boolean proxySet;
     private boolean enabled = true;
+    private String defaultConnectionLabel;
 
     public ConnectionSettings() {
         //setProxy("localhost", 8081);
+        defaultConnectionLabel = Application.getInstance().getContext().getResourceMap().getString("defaultConnection");
     }
 
     public void setProxy(String proxyURL, int proxyPort, String userName, String password) {
@@ -61,7 +65,10 @@ public class ConnectionSettings {
             if (hasUserName()) {
                 return getUserName() + "@" + url;
             } else return url;
-        } else return "Default";
+        } else {
+            return defaultConnectionLabel;
+        }
+
     }
 
 //    @SuppressWarnings({"RedundantIfStatement"})

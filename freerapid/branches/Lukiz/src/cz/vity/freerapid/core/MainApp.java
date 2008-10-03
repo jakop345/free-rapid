@@ -8,6 +8,7 @@ import cz.vity.freerapid.swing.LookAndFeels;
 import cz.vity.freerapid.swing.Swinger;
 import cz.vity.freerapid.swing.TrayIconSupport;
 import cz.vity.freerapid.utilities.LogUtils;
+import cz.vity.freerapid.utilities.Utils;
 import org.jdesktop.appframework.swingx.SingleXFrameApplication;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.ApplicationContext;
@@ -16,6 +17,7 @@ import org.jdesktop.application.ResourceConverter;
 import javax.swing.*;
 import java.awt.event.WindowEvent;
 import java.util.EventObject;
+import java.util.List;
 
 
 /**
@@ -35,15 +37,31 @@ public class MainApp extends SingleXFrameApplication {
 
     @Override
     protected void initialize(String[] args) {
-        new CmdLine(this).processCommandLine(args);
+
+        final CmdLine line = new CmdLine(this);
+        final List<String> fileList = line.processCommandLine(args);
 
         LogUtils.initLogging(debug);//logovani nejdrive    
-        this.appPrefs = new AppPrefs(this.getContext());
 
-        if (OneInstanceClient.checkInstance(null)) {
+        this.appPrefs = new AppPrefs(this.getContext(), line.getProperties());
+
+        final String path = Utils.getAppPath();//Utils pouzivaji AppPrefs i logovani
+        int index = path.indexOf('+');
+        if (index == -1)
+            index = path.indexOf('!');
+        if (index > 0) {
+            java.util.logging.Logger logger = java.util.logging.Logger.getLogger(MainApp.class.getName());
+            logger.severe("Application cannot be started on the path containing '+' or '!' characters ('" + path.substring(0, index + 1) + "'...)\nExiting.");
+            System.exit(-1);
+        }
+
+
+        if (OneInstanceClient.checkInstance(fileList, appPrefs)) {
             this.exit();
             return;
         }
+
+        Lng.loadLangProperties();
 
         LookAndFeels.getInstance().loadLookAndFeelSettings();//inicializace LaFu, musi to byt pred vznikem hlavniho panelu
         //Swinger.initLaF(); //inicializace LaFu, musi to byt pred vznikem hlavniho panelu

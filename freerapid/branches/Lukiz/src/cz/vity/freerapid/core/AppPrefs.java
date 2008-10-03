@@ -5,6 +5,7 @@ import org.jdesktop.application.LocalStorage;
 import org.jdesktop.application.ResourceMap;
 
 import java.io.*;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -26,13 +27,18 @@ public final class AppPrefs {
     private final ApplicationContext context;
     private String userNode;
 
-    public AppPrefs(ApplicationContext context) {
+    AppPrefs(ApplicationContext context, Map<String, String> properties) {
         this.context = context;
         final String id = context.getResourceMap().getString("Application.id");
-        if (id.isEmpty())
+        if (id == null || id.isEmpty())
             throw new IllegalStateException("Config property Application.ID is empty!");
         this.propertiesFileName = id.toLowerCase() + ".xml";
-        properties = loadProperties();
+        AppPrefs.properties = loadProperties();
+        if (!properties.isEmpty()) {
+            for (Map.Entry<String, String> entry : properties.entrySet()) {
+                AppPrefs.properties.put(entry.getKey(), entry.getValue());
+            }
+        }
     }
 
 
@@ -104,6 +110,7 @@ public final class AppPrefs {
      *
      * @param key          hodnota klice
      * @param defaultValue hodnota uzivatelskeho nastaveni
+     * @return String value
      */
     public static String getProperty(final String key, final String defaultValue) {
         return getPreferences().get(key, defaultValue);
@@ -163,6 +170,8 @@ public final class AppPrefs {
     /**
      * Provede nacteni properties ze souboru definovaneho systemem. Pokud nacteni selze, vraci prazdne getPreferences().
      * Properties se nacitaji z XML.
+     *
+     * @return User Preferences instance
      */
     private Preferences loadProperties() {
         final LocalStorage localStorage = context.getLocalStorage();

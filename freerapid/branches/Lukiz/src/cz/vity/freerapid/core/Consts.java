@@ -48,7 +48,7 @@ public class Consts {
     /**
      * port na kterem bezi aplikace, aby se zamezilo dvojimu spousteni - kvuli konexeni k databazi
      */
-    public static final int ONE_INSTANCE_SERVER_PORT = 28871;
+    public static final int ONE_INSTANCE_SERVER_PORT = 39871;
 
     /**
      * URL adresa, kam se posilaji reporty o chybach
@@ -60,6 +60,8 @@ public class Consts {
     public static final String WEBURL_CHECKNEWVERSION = "http://wordrider.net/checkfrd.php";
 
     public static final String WEBURL = "http://wordrider.net/freerapid";
+
+    public static final String DEMO_WEBURL = "http://wordrider.net/freerapid/demo";
 
     // hodnoty pro defaultni hodnoty pripojeni
 

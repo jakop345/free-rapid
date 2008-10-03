@@ -36,10 +36,13 @@ public class PluginsManager {
 
     private void loadPlugins() {
 
-        PluginManager pluginManager = ObjectFactory.newInstance().createManager();
+        logger.info("Init Plugins Manager");
+//        final ExtendedProperties config = new ExtendedProperties(Utils.loadProperties("jpf.properties", true));
+        final PluginManager pluginManager = ObjectFactory.newInstance().createManager();
 
 
-        File pluginsDir = new File(Utils.getAppPath(), "plugins");
+        final File pluginsDir = new File(Utils.getAppPath(), "plugins");
+        logger.info("Plugins dir: " + pluginsDir.getAbsolutePath());
 
         File[] plugins = pluginsDir.listFiles(new FilenameFilter() {
 
@@ -54,8 +57,22 @@ public class PluginsManager {
                 throw new IllegalStateException("Plugins directory does not exists");
             final PluginManager.PluginLocation[] loc = new PluginManager.PluginLocation[plugins.length];
 
+
             for (int i = 0; i < plugins.length; i++) {
+
+//                try {
+//                    final String path = fileToUrl(plugins[i]).toExternalForm();
+//                    logger.info("Plugins path:" + path);
+//                    final URL context = new URL("jar:" + path + "!/");
+//                    final URL manifest = new URL("jar:" + path + "!/plugin.xml");
+//
+//                    loc[i] = new StandardPluginLocation(context, manifest);
+//                } catch (MalformedURLException e) {
+//                    LogUtils.processException(logger, e);
+//                }
+
                 loc[i] = StandardPluginLocation.create(plugins[i]);
+                //logger.info("Plugin location: " + loc);
             }
 
             pluginManager.publishPlugins(loc);
@@ -77,6 +94,16 @@ public class PluginsManager {
 //        loadedPlugins.put(factoryShareService.getName(), factoryShareService);
     }
 
+//    private static URL fileToUrl(final File plugin) {
+//        try {
+//            return plugin.toURI().toURL();
+//        } catch (MalformedURLException e) {
+//            LogUtils.processException(logger, e);
+//            return null;
+//        }
+//    }
+
+    //
     public ShareDownloadService getPlugin(String shareDownloadServiceID) throws NotSupportedDownloadServiceException {
         if (!loadedPlugins.containsKey(shareDownloadServiceID))
             throw new NotSupportedDownloadServiceException(shareDownloadServiceID);
