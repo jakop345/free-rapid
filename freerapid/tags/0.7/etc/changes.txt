@@ -1,0 +1,117 @@
+***********************************************************
+*   History of changes for FreeRapid Downloader           *
+*   WebSite: http://wordrider.net/freerapid               *
+*   Mail: info@wordrider.net (issue tracker is preffered) *
+*   Issue tracker: http://bugtracker.wordrider.net/       *
+***********************************************************
+Thanks to all individuals who reported bugs.
+
+Legend :
+Added - indicates new functionality or new part of distribution
+Changed - indicates a change in using/behavior FreeRapid
+Fixed - indicates a bug fix
+
+22th October 2008 - FreeRapid Downloader 0.7 released
+  Added : plugins - support for shareator.com [implemented by Lukiz, thanks!]
+  Added : plugins - support for load.to [implemented by Lukiz, thanks!]
+  Added : plugins - support for uloz.to [implemented by Lukiz, thanks!]
+  Added : plugins - support for iskladka.cz/sk [implemented by Lukiz, thanks!]
+  Added : plugins - support for xtraupload.de [implemented by Lukiz, thanks!]
+  Added : both traditional and simplified chinese translation [thanks to Jodyp!]
+  Added : slovak translation [thanks to dDwarf!]
+  Added : confirm cancel if there are completed downloads [requested by Saymon]  
+  Added : autobackup files (filelist.xml, history.xml)  
+  Added : new download state WAIT! to show to user "you have to wait XX minutes"
+  Added : table scrolls to new position of selection [requested by Pavel]
+  Added : options to control confirmation dialogs 
+  Added : option to disable using history
+  Added : buttons to create desktop, start menu, quick launch, start up shortcuts;
+          Linux/MacOS users can configure syscmd.properties file
+  Added : autoshutdown options - standby, hibernate, reboot, shutdown, quit when all downloads complete; 
+          Linux/MacOS users can configure syscmd.properties file
+  Added : command line option to reset application properties (--reset)
+  Changed : plugins - Rapidshare - support for URLs starting with 'rs123.' [requested by Valor]
+  Changed : updating proxy list or proxy settings for default connection does not require a restart anymore  
+  Changed : force download passes max current number of connections (9 concurrent downloads is a limit)
+  Changed : remapped selection shortcuts - HOME-first row , END-last row, ctrl+HOME-first column, ctrl+END-last column
+            SHIFT + HOME - select to first row, SHIFT + END - select to last row
+  Changed : removed heap memory indicator
+  Changed : updated czech translation
+  Changed : plugin file names renamed - version info removed
+  Changed : new tray icons and splash screen [thanks to Axis!]
+  Fixed : NewLinks dialog - pressed key ENTER caused calling insert action twice  
+  Fixed : fixed renaming file with many dots in its name
+  Fixed : exception when target disk space has not enough space 
+  Fixed : shift+DELETE shortcut does not work in History dialog
+  Fixed : PAUSED state sometimes runs another download
+
+
+8th October 2008 - FreeRapid Downloader 0.65 released
+  Added : plugins - support for letibit.com [FS#25 - requested by Chris C., implemented by Lukiz] 
+  Added : plugins - support for egoshare.com, share-online.biz, easy-share.com [implemented by Lukiz]
+  Added : plugins - support for megarotic.com and sexuploader.com [FS#24 - requested by Anonymous, implemented by Lukiz]
+  Added : new keystroke to activate searching in Downloads History dialog - Ctrl+F key
+  Added : new keystroke for Resume action - SPACE key
+  Added : new alternative keystroke for Open file/Show Information dialog - ENTER key
+  Added : possibility to import (with clipboard monitoring) or paste links without 'http://' at the beginning         
+  Added : Sort by name function - available from Downloads menu - ctrl+S [requested by ATom]
+  Added : link to the Flash video on the web from Help menu
+  Added : option to remove files after completion (NEVER, IMMEDIATELY, AT STARTUP)
+  Added : option to minimize to tray on close
+  Added : option to disable using default connection (warning: only connections from proxy list will be used)
+  Added : possibility to set proxy settings for default connection 
+  Added : support to set application property from command line (mostly for debug or testing purposes)
+  Added : Czech translation [thanks to Lukiz&Kajda!] - more translations will come soon
+  Added : option to select language (translation) for application
+  Changed : improved searching for free available net port on localhost for creating only one instance of the application
+  Changed : average speed and duration time attributes on completed file are stored [requested by Chris C.]
+  Changed : small redesign of Appearance panel in User Preferences dialog
+  Changed : improved pre-allocation files (less file fragmentation)
+  Changed : minor changes in RapidShare, FileFactory, Megaupload, Uploaded.to plugins
+  Changed : plugin extension was renamed from .zip to .frp
+  Changed : default connection timeout is set to 100 seconds
+  Fixed : OK button is not active when pressing shift+DELETE [reported by Saymon]
+  Fixed : window size/position was not restored when application crashed
+  Fixed : description area was not enabled for selection copy after file completion
+  Fixed : removed czech labels from open proxy file dialog for English locales
+
+20th September 2008 - FreeRapid Downloader 0.61 released - bug fix release + 1 great option ;-)
+  Fixed : updated a few labels  
+  Fixed : clipboard monitoring doesn't work properly on Windows [thanks to ATom!]
+  Fixed : last selected dir not saved when files were started as paused [thanks to Savannah&Lukiz!]
+  Added : added option to pre-allocate file to prevent file fragmentation (Options->Preferences->Misc->Advanced)
+  Changed : a change of Look&Feel does not require restart to apply new settings, but application restart is recommended  
+  Changed : minor changes in megaupload, rapidshare and uploaded.to plugins
+  Changed : updated readme.txt
+  Changed : upgraded Substance L&F library to version 0.5 final
+
+
+15th September 2008 - FreeRapid Downloader 0.6 released
+  Fixed : remove selected does not select next line in the table (if filter was applied)
+  Fixed : partly downloaded files were not deleted at some special cases
+  Changed : SwingX library upgraded to version 0.94
+  Changed : property "Max downloads at a time" does not require a restart anymore
+  Changed : show/hide toolbar action has assigned new shortcut - F11
+  Changed : improved internal counting of actual speed
+  Changed : double click opens files if completed or opens download information dialog otherwise
+  Changed : reworked enabled status of action buttons (resume, cancel, pause) - at least one active -> enabled true
+  Added : option to set horizontal and/or vertical lines in table  
+  Added : option to repeat error downloads indefinitely (-1 value in UserPreferences dialog)
+  Added : new Misc panel in UserPreferences dialog      
+  Added : multiple settings dialog (if you select more than 1 file)  
+  Added : status info icon in the statusbar - clipboard monitoring (clickable)      
+  Added : animated tray icon in busy state (optionable) 
+  Added : clipboard monitoring (optionable)
+  Added : frame title information (optionable)
+  Added : ESC key cancels current download(s)
+  Added : new icons in help menu
+  Added : link to paypal.com to support this project
+  Added : automatic smart saving current queue and downloaded files history
+          (if application/OS crashes it preserves everything)
+  Added : support for depositfiles.com [thanks to Lukiz!]
+  Added : support for megaupload.com [thanks to Lukiz!]
+  Added : support for netload.in [thanks to Lukiz!]
+  Added : this file :-)
+
+9th September 2008 - FreeRapid Downloader 0.5 released
+  - initial release
