@@ -69,7 +69,7 @@ public class RapidShareServiceImpl extends AbstractFileShareService {
                 pa = new PremiumAccount();
             }
         } else pa = new PremiumAccount();
-        pa = getPluginContext().getDialogSupport().showAccountDialog(pa, "RapidShare Premium");
+        pa = getPluginContext().getDialogSupport().showAccountDialog(pa, "RapidShare");//vysledek bude Premium ucet - Rapidshare
         if (pa != null) {
             try {
                 storageSupport.storeConfigToFile(pa, PLUGIN_CONFIG_FILE);
