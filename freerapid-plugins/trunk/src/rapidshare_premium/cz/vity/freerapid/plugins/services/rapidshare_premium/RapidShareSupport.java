@@ -22,8 +22,8 @@ package cz.vity.freerapid.plugins.services.rapidshare_premium;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Support class for RS.
@@ -31,22 +31,29 @@ import java.util.logging.Level;
  * @author Tomáš Procházka &lt;<a href="mailto:tomas.prochazka@atomsoft.cz">tomas.prochazka@atomsoft.cz</a>&gt;
  * @version $Revision$ ($Date$)
  */
-public class RapidShareSupport {
+class RapidShareSupport {
 
-	public static String buildCookie(String login, String password) {
-		if (login == null || password == null) return null;
-		
-		try {
-			return login + "-" + URLEncoder.encode(password, "iso-8859-1");
-		} catch (UnsupportedEncodingException ex) {
-			try {
-				return login + "-" + URLEncoder.encode(password, "UTF-8");
-			} catch (UnsupportedEncodingException ex1) {
-				Logger.getLogger(RapidShareSupport.class.getName()).log(Level.SEVERE, "Password encoding failed.");
-			}
-		}
-		return "";
-	}
+
+    /**
+     * Do not instantiate RapidShareSupport.
+     */
+    private RapidShareSupport() {
+    }
+
+    public static String buildCookie(String login, String password) {
+        if (login == null || password == null) return null;
+
+        try {
+            return login + "-" + URLEncoder.encode(password, "iso-8859-1");
+        } catch (UnsupportedEncodingException ex) {
+            try {
+                return login + "-" + URLEncoder.encode(password, "UTF-8");
+            } catch (UnsupportedEncodingException ex1) {
+                Logger.getLogger(RapidShareSupport.class.getName()).log(Level.SEVERE, "Password encoding failed.");
+            }
+        }
+        return "";
+    }
 
 }
 

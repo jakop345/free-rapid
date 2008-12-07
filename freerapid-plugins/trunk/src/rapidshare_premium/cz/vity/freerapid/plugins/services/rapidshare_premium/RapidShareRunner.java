@@ -20,19 +20,13 @@
 
 package cz.vity.freerapid.plugins.services.rapidshare_premium;
 
-import cz.vity.freerapid.plugins.exceptions.BadLoginException;
-import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
-import cz.vity.freerapid.plugins.exceptions.InvalidURLOrServiceProblemException;
-import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;
-import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
-import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
-import cz.vity.freerapid.plugins.exceptions.YouHaveToWaitException;
+import cz.vity.freerapid.plugins.exceptions.*;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.DownloadState;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.hoster.PremiumAccount;
-import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import cz.vity.freerapid.plugins.webclient.interfaces.HttpFileDownloadTask;
+import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpStatus;
@@ -107,7 +101,7 @@ class RapidShareRunner extends AbstractRunner {
             chechFile();
 
             if (client.getContentAsString().contains("Your Cookie has not been recognized")) {
-                throw new BadLoginException("<b>RapidShare known error:</b><br> Bad login or password");
+                throw new BadLoginException("<b>RapidShare error:</b><br> Bad login or password");
             }
 
             Matcher matcher = getMatcherAgainstContent("form id=\"ff\" action=\"([^\"]*)\"");
@@ -260,6 +254,7 @@ class RapidShareRunner extends AbstractRunner {
     private void setBadConfig() {
         badConfig = true;
     }
+
     private boolean badConfig;
 }
 
