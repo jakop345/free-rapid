@@ -53,9 +53,13 @@ public class RapidShareServiceImpl extends AbstractFileShareService {
 
     @Override
     public void showOptions() throws Exception {
-        this.config = showAccountDialog(getConfig(), "RapidShare", PLUGIN_CONFIG_FILE);
+        PremiumAccount pa = showConfigDialog();
+        if (pa != null) config = pa;
     }
 
+    public PremiumAccount showConfigDialog() throws Exception {
+        return showAccountDialog(getConfig(), "RapidShare", PLUGIN_CONFIG_FILE);
+    }
 
     PremiumAccount getConfig() throws Exception {
         if (config == null) {
