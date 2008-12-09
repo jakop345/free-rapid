@@ -22,6 +22,7 @@ package cz.vity.freerapid.plugins.services.rapidshare_premium;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -53,6 +54,13 @@ class RapidShareSupport {
             }
         }
         return "";
+    }
+
+    public static int getSecondToMidnight() {
+		Calendar now = Calendar.getInstance();
+		Calendar midnight =	Calendar.getInstance();
+		midnight.set(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH)+1, 0, 0, 1);
+		return (int) ((midnight.getTimeInMillis() - now.getTimeInMillis()) / 1000f);
     }
 
 }
