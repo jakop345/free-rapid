@@ -104,12 +104,12 @@ class NetloadInRunner {
     }
 
     private boolean stepEnterPage(String contentAsString) throws Exception {
-        Matcher matcher = Pattern.compile("class=\"Free_dl\"><a href=\"([^\"]*)\"", Pattern.MULTILINE).matcher(client.getContentAsString());
+        Matcher matcher = Pattern.compile("class=\"Free_dl\">(.|\\W)*?<a href=\"([^\"]*)\"", Pattern.MULTILINE).matcher(client.getContentAsString());
         if (!matcher.find()) {
             checkProblems();
             throw new InvalidURLOrServiceProblemException("Invalid URL or unindentified service");
         }
-        String s = "/" + replaceEntities(matcher.group(1));
+        String s = "/" + replaceEntities(matcher.group(2));
         client.setReferer(initURL);
 
         logger.info("Go to URL - " + s);
@@ -156,6 +156,7 @@ class NetloadInRunner {
                     }
                 }
             } else {
+                checkProblems();
                 logger.warning(contentAsString);
                 throw new PluginImplementationException("Captcha picture was not found");
             }
@@ -183,7 +184,12 @@ class NetloadInRunner {
         if (matcher.find()) {
             throw new URLNotAvailableAnymoreException(String.format("<b>Requested file isn't hosted. Probably was deleted.</b>"));
         }
-
+                if (client.getContentAsString().contains("This file was damaged")) {
+            throw new URLNotAvailableAnymoreException("This file was damaged by a hard-disc crash.");
+        }
+                if (client.getContentAsString().contains("currently in maintenance work")) {
+            throw new ServiceConnectionProblemException("This Server is currently in maintenance work. Please try it in a few hours again.");
+        }
     }
 
 }
