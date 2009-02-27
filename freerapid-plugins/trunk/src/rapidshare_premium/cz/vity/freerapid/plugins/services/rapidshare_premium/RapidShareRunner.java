@@ -212,6 +212,9 @@ class RapidShareRunner extends AbstractRunner {
             }
             throw new ServiceConnectionProblemException(String.format("<b>RapidShare error:</b><br>Currently a lot of users are downloading files."));
         }
+        if (getContentAsString().contains("momentarily not available")) {
+            throw new ServiceConnectionProblemException("The server is momentarily not available.");
+        }
     }
 
     private void finalDownload(String url, HttpFileDownloadTask downloadTask) throws Exception {
