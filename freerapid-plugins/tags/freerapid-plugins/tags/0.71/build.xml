@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="FreeRapid Downloader" default="all" basedir=".">
+
+    <!-- input data directories -->
+    <property name="src.dir" value="src"/>
+    <property name="etc.dir" value="etc"/>
+    <property name="doc.dir" value="doc"/>
+    <property name="lib.dir" value="lib"/>
+    <property name="dev.dir" value="dev"/>
+    <property name="plugins.dir" value="plugins"/>
+    <property name="lookandfeel.dir" value="lookandfeel"/>
+    <property name="lib-src.dir" value="lib-src"/>
+    <property name="plugins-src.dir" value="plugins-src"/>
+
+    <property name="resources" value="cz/vity/freerapid/core/resources/"/>
+    <property name="splash" value="${resources}icons/splash.jpg"/>
+
+    <fileset id="jars" dir="${lib.dir}" includes="**/*"/>
+
+    <patternset id="compiler.resources">
+        <include name="**/?*.properties"/>
+        <include name="**/?*.xml"/>
+        <include name="**/?*.txt"/>
+        <include name="**/?*.gif"/>
+        <include name="**/?*.png"/>
+        <include name="**/?*.jpeg"/>
+        <include name="**/?*.jpg"/>
+        <include name="**/?*.html"/>
+        <include name="**/?*.dtd"/>
+        <include name="**/?*.tld"/>
+        <include name="**/?*.mid"/>
+        <include name="**/?*.wav"/>
+
+        <exclude name="**/plugin.xml"/>
+    </patternset>
+
+    <path id="cp">
+        <fileset refid="jars"/>
+    </path>
+
+    <!--<path id="dist-jars">-->
+    <!--<fileset dir="${build.dir}/${lib.dir}" includes="**/*.jar"/>-->
+    <!--<fileset dir="${build.dir}/${lookandfeel.dir}" includes="**/*.jar"/>-->
+    <!--<fileset dir="${build.dir}" includes="${mainjar.file}"/>-->
+    <!--</path>-->
+
+    <pathconvert property="lib.prefix" pathsep=" ">
+        <path location="${lib.dir}"/>
+    </pathconvert>
+
+    <pathconvert property="classpath" refid="jars" pathsep=" " dirsep="/">
+        <map from="${lib.prefix}" to="${lib.dir}"/>
+    </pathconvert>
+
+    <target name="build" description="building">
+        <ant dir="${src.dir}/rapidshare/" antfile="build.xml" inheritall="false"/>
+        <ant dir="${src.dir}/rapidshare_premium/" antfile="build.xml" inheritall="false"/>
+        <ant dir="${src.dir}/depositfiles/" antfile="build.xml" inheritall="false"/>
+        <ant dir="${src.dir}/filefactory/" antfile="build.xml" inheritall="false"/>
+        <ant dir="${src.dir}/megaupload/" antfile="build.xml" inheritall="false"/>
+        <ant dir="${src.dir}/netloadin/" antfile="build.xml" inheritall="false"/>
+        <ant dir="${src.dir}/uploadedto/" antfile="build.xml" inheritall="false"/>
+        <ant dir="${src.dir}/egoshare/" antfile="build.xml" inheritall="false"/>
+        <ant dir="${src.dir}/letitbit/" antfile="build.xml" inheritall="false"/>
+        <ant dir="${src.dir}/shareonline/" antfile="build.xml" inheritall="false"/>
+        <ant dir="${src.dir}/easyshare/" antfile="build.xml" inheritall="false"/>
+        <ant dir="${src.dir}/xtraupload/" antfile="build.xml" inheritall="false"/>
+        <ant dir="${src.dir}/iskladka/" antfile="build.xml" inheritall="false"/>
+        <ant dir="${src.dir}/ulozto/" antfile="build.xml" inheritall="false"/>
+        <ant dir="${src.dir}/loadto/" antfile="build.xml" inheritall="false"/>
+        <ant dir="${src.dir}/shareator/" antfile="build.xml" inheritall="false"/>
+        <ant dir="${src.dir}/quickshare/" antfile="build.xml" inheritall="false"/>
+        <ant dir="${src.dir}/hellshare/" antfile="build.xml" inheritall="false"/>
+        <ant dir="${src.dir}/filebaseto/" antfile="build.xml" inheritall="false"/>
+    </target>
+
+
+    <target name="init" description="initialization">
+        <tstamp/>
+    </target>
+
+    <target name="clean" description="clean up">
+    </target>
+
+    <target name="all" depends="clean,init,build" description="build all"/>
+
+
+</project>
