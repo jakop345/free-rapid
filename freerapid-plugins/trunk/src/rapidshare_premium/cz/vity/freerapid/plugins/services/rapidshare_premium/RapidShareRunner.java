@@ -181,17 +181,16 @@ class RapidShareRunner extends AbstractRunner {
             throw new InvalidURLOrServiceProblemException("<b>RapidShare unknown error:</b><br> " + error);
         }
 
-        matcher = PlugUtils.matcher("([^/]+)\\.htm", fileURL);
+        matcher = getMatcherAgainstContent("\"downloadlink\">(.*?)<font");
         if (!matcher.find()) throw new PluginImplementationException("File name not found");
-        logger.info("File name " + matcher.group(1));
-        httpFile.setFileName(matcher.group(1));
+        final String trimmedURL = matcher.group(1).trim();
+        final int i = trimmedURL.lastIndexOf('/');
+        if (i > 0) httpFile.setFileName(trimmedURL.substring(i + 1));
 
         //| 5277 KB</font>
         matcher = getMatcherAgainstContent("\\| (.*? .B)</font>");
         if (!matcher.find()) throw new PluginImplementationException("File size not found");
-        Long a = PlugUtils.getFileSizeFromString(matcher.group(1));
-        logger.info("File size " + a);
-        httpFile.setFileSize(a);
+        httpFile.setFileSize(PlugUtils.getFileSizeFromString(matcher.group(1)));
 
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
