@@ -54,7 +54,9 @@ public class RapidShareServiceImpl extends AbstractFileShareService {
     @Override
     public void showOptions() throws Exception {
         PremiumAccount pa = showConfigDialog();
-        if (pa != null) config = pa;
+        if (pa != null) {
+            config = pa;
+        }
     }
 
     public PremiumAccount showConfigDialog() throws Exception {
@@ -69,6 +71,10 @@ public class RapidShareServiceImpl extends AbstractFileShareService {
         }
 
         return config;
+    }
+
+    public void setConfig(PremiumAccount config) {
+        this.config = config;
     }
 
     private volatile PremiumAccount config;
