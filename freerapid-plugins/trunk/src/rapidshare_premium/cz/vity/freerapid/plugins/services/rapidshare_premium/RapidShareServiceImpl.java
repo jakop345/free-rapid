@@ -38,7 +38,7 @@ public class RapidShareServiceImpl extends AbstractFileShareService {
 
     @Override
     public int getMaxDownloadsFromOneIP() {
-        return Integer.MAX_VALUE;
+        return 20;
     }
 
     @Override
