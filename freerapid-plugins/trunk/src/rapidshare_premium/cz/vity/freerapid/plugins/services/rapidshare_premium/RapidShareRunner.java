@@ -115,7 +115,6 @@ class RapidShareRunner extends AbstractRunner {
         try {
             status = client.makeRequest(method, true);
             responseString = client.getContentAsString();
-            System.out.println("Response check:" + responseString);
             logger.log(Level.INFO, "Response check:{0}", responseString);
         } finally {
             method.abort();
@@ -174,8 +173,7 @@ class RapidShareRunner extends AbstractRunner {
             throw new InterruptedException();
         }
         httpFile.setState(DownloadState.GETTING);
-        final PostMethod method = client.getPostMethod(url);
-        method.addParameter("mirror", "on");
+        final GetMethod method = client.getGetMethod(url);
         try {
             final InputStream inputStream = client.makeFinalRequestForFile(method, httpFile, true);
             if (inputStream != null) {
