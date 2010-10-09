@@ -124,7 +124,7 @@ class RapidShareRunner extends AbstractRunner {
             String[] response = responseString.split(",");
             int fileStatus = Integer.parseInt(response[4]);
 
-            if (fileStatus == 1 || fileStatus == 2 || fileStatus == 6) {
+            if (fileStatus == 1 || fileStatus == 2 || fileStatus == 6 || fileStatus >= 50) {
                 //http://rs$serverid$shorthost.rapidshare.com/files/$fileid/$filename)
                 finalUrl = String.format("http://rs%s%s.rapidshare.com/files/%s/%s?directstart=1", response[3], response[5], response[0], response[1]);
                 logger.info(finalUrl);
@@ -137,6 +137,9 @@ class RapidShareRunner extends AbstractRunner {
             }
             if (fileStatus == 4) {
                 throw new URLNotAvailableAnymoreException("File marked as illegal");
+            }
+            if (fileStatus == 5) {
+                throw new URLNotAvailableAnymoreException("Anonymous file locked, because it has more than 10 downloads already");
             }
             if (fileStatus == 3) {
                 throw new InvalidURLOrServiceProblemException("Server down");
