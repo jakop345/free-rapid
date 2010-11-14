@@ -37,11 +37,6 @@ public class RapidShareServiceImpl extends AbstractFileShareService {
     }
 
     @Override
-    public int getMaxDownloadsFromOneIP() {
-        return 20;
-    }
-
-    @Override
     public boolean supportsRunCheck() {
         return true;
     }
