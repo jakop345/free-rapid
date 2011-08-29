@@ -176,7 +176,10 @@ final public class PluginMetaData extends AbstractBean implements Comparable<Plu
 
     @Override
     public int compareTo(PluginMetaData o) {
-        return this.id.compareToIgnoreCase(o.id);
+        if (this.pluginPriority == o.getPluginPriority()) {
+            return 0;
+        }
+        return (this.pluginPriority < o.getPluginPriority()) ? 1 : -1;
     }
 
     @Override

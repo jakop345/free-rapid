@@ -366,29 +366,39 @@ public class PluginsManager {
      *          pokud zadna zapnuta sluzba neni nalezena
      */
     public String getServiceIDForURL(URL url) throws NotSupportedDownloadServiceException {
+        long start = System.nanoTime();
+
         final String s = url.toExternalForm();
         PluginMetaData disabledPlugin = null;
-        final PluginMetaData[] plugins = getCachedPlugins();
-
-        //iterate through last used
-        for (int i = plugins.length - 1; i >= 0; i--) {
-            PluginMetaData plugin = plugins[i];
-            if (plugin.isSupported(s)) {
-                addToCache(plugin);
-                logger.info("Cache hit");
-                if (plugin.isEnabled()) {
-                    return plugin.getId();
-                }
-            }
-        }
+//        final PluginMetaData[] plugins = getCachedPlugins();
+//        
+//        //iterate through last used
+//        for (int i = plugins.length - 1; i >= 0; i--) {
+//            PluginMetaData plugin = plugins[i];
+//            if (plugin.isSupported(s)) {
+//                addToCache(plugin);
+//                logger.info("Cache hit");
+//                if (plugin.isEnabled()) {
+//                    plugin.getPriority();
+//                    return plugin.getId();
+//                }
+//            }
+//        }
+        
         //iterate through all plugins
-        for (PluginMetaData plugin : this.supportedPlugins.values()) {
+        List<PluginMetaData> allPlugins = getPluginsSordedByPriority();
+        int i = 0;
+        for (PluginMetaData plugin : allPlugins) {
+            //System.out.println(plugin.getId() + " " + plugin.getPriority());
+            i++;
             if (plugin.isSupported(s)) {
                 addToCache(plugin);
                 if (!plugin.isEnabled()) {
                     disabledPlugin = plugin;
-                } else
+                } else {
+                    System.out.println("getPlugin: " + plugin.getId() + ", T:" + (System.nanoTime()-start) + "ns, C:" + i);
                     return plugin.getId();
+                }
             }
         }
         if (disabledPlugin != null)
@@ -518,6 +528,12 @@ public class PluginsManager {
             return new File(new URL(s.substring(0, i)).toURI());
         }
         return new File(plugin.toURI());
+    }
+
+    private List<PluginMetaData> getPluginsSordedByPriority() {
+        List<PluginMetaData> list = new ArrayList<PluginMetaData>(supportedPlugins.values());
+        Collections.sort(list);
+        return list;
     }
 
     private boolean isDirectDownloadEnabled() {
