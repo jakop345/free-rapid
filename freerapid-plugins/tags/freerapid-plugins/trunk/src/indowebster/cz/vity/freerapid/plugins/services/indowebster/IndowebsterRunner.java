@@ -14,7 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @author zhou_id
+ * @author zid
  */
 class IndowebsterRunner extends AbstractRunner {
     private final static Logger logger = Logger.getLogger(IndowebsterRunner.class.getName());
