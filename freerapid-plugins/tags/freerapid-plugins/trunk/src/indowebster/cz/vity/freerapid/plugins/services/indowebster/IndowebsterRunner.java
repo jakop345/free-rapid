@@ -104,7 +104,7 @@ class IndowebsterRunner extends AbstractRunner {
         if (content.contains("File doesn")) {
             throw new URLNotAvailableAnymoreException("<b>Indowebster error:</b><br>File doesn't exist");
         }
-        PlugUtils.checkName(httpFile, content, "class=\"dl-title\" title=\"", "\">");
+        PlugUtils.checkName(httpFile, content, "Description :</span>\n" + "            <p>", "</p>");
         PlugUtils.checkFileSize(httpFile, content, "Size : <span style=\"float:none;\">", "</span>");
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
 
