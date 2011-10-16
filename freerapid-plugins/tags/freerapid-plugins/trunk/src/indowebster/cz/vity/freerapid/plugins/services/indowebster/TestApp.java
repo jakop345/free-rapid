@@ -10,7 +10,7 @@ import java.net.URL;
 /**
  * Test application for indowebster.com
  *
- * @author Alex
+ * @author zid
  */
 public class TestApp extends PluginDevApplication {
     @Override
