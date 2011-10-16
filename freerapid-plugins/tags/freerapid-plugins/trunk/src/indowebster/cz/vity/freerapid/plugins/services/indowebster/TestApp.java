@@ -18,10 +18,14 @@ public class TestApp extends PluginDevApplication {
         final HttpFile httpFile = getHttpFile(); //creates new test instance of HttpFile
         try {
             //we set file URL
-            httpFile.setNewURL(new URL("http://www.indowebster.com/Sims_3_Reloaded_Part_1.html"));
+            //httpFile.setNewURL(new URL("http://v5.indowebster.com//marumo_no_okite_ep01_704x396x264_mp4_005_.html"));
+            //httpFile.setNewURL(new URL("http://indowebster.com/ogon_no_buta_ep03__704x396_xvid_.avi.001_.html"));
+            httpFile.setNewURL(new URL("http://www.indowebster.com/download/video/godofstudye08hdtvx264450pdokgodieavi001"));
+            //httpFile.setNewURL(new URL("http://www.indowebster.com/download/video/ogon_no_buta_ep02__704x396_xvid_.avi.001"));
+
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
-            connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
+            //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
             //then we tries to download
             final IndowebsterServiceImpl service = new IndowebsterServiceImpl(); //instance of service - of our plugin
             testRun(service, httpFile, connectionSettings);//download file with service and its Runner

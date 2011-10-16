@@ -71,52 +71,6 @@
 
     </target>
 
-    <target name="yguard">
-        <taskdef name="yguard" classname="com.yworks.yguard.YGuardTask"
-                 classpath="yguard.jar"/>
-        <yguard>
-            <externalclasses>
-                <fileset refid="jars"/>
-            </externalclasses>
-
-            <inoutpair in="${dist.dir}/${version.name}.frp" out="${dist.dir}/${version.name}.frp"/>
-
-            <shrink logfile="shrinklog.xml">
-                <keep>
-                    <class classes="public"
-                           methods="public" fields="public">
-                        <patternset>
-                            <include name="cz.vity.**.*"/>
-                        </patternset>
-                    </class>
-                    <!--   <class classes="public"
-                    methods="public" fields="public">
-                      <patternset>
-                        <include name="jpswfdec.SWFDec"/>
-                      </patternset>
-                    </class>-->
-                </keep>
-            </shrink>
-            <rename>
-                <keep>
-                    <class classes="public"
-                           methods="public" fields="public">
-                        <patternset>
-                            <include name="cz.vity.**.*"/>
-                        </patternset>
-                    </class>
-                    <!--<class classes="public"
-                    methods="public" fields="public">
-                      <patternset>
-                        <include name="jpswfdec.SWFDec"/>
-                      </patternset>
-                    </class>-->
-                </keep>
-            </rename>
-
-        </yguard>
-    </target>
-
     <target name="compile" depends="clean, init" description="compiling source codes">
         <mkdir dir="${classes.dir}"/>
         <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="cp" optimize="on" target="1.6">
@@ -171,17 +125,6 @@
             </fileset>
         </jar>
 
-        <antcall target="yguard"/>
-        <!--<zip destfile="${dist.dir}/${version.name}-src.frp">-->
-        <!--<fileset dir=".">-->
-        <!--<include name="${lib.dir}/"/>-->
-        <!--<include name="${src.dir}/"/>-->
-
-        <!--<include name="${plugins.dir}/"/>-->
-
-        <!--<include name="build.xml"/>-->
-        <!--</fileset>-->
-        <!--</zip>-->
     </target>
 
 </project>
