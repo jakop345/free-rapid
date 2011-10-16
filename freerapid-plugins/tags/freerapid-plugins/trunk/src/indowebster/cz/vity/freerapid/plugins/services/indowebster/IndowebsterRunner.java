@@ -41,7 +41,7 @@ class IndowebsterRunner extends AbstractRunner {
         super.runCheck();
         final GetMethod getMethod = getGetMethod(fileURL);
         getMethod.setFollowRedirects(true);
-        makeRequest(getMethod);
+        makeRedirectedRequest(getMethod);
         if (isPassworded()) {
             stepPasswordPage();
         }
