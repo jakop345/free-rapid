@@ -11,6 +11,7 @@ import cz.vity.freerapid.swing.SwingUtils;
 import cz.vity.freerapid.swing.Swinger;
 import cz.vity.freerapid.swing.ToolbarSeparator;
 import cz.vity.freerapid.swing.binding.BindUtils;
+import cz.vity.freerapid.swing.components.PopdownButton;
 import org.jdesktop.application.ApplicationContext;
 
 import javax.swing.*;
@@ -102,7 +103,10 @@ public class ToolbarManager implements PropertyChangeListener {
         toolbar.add(getButton(Swinger.getAction("addNewLinksAction")));
         toolbar.add(new ToolbarSeparator());
         toolbar.add(getButton(Swinger.getAction("resumeAction")));
-        toolbar.add(getButton(Swinger.getAction("pauseAction")));
+        final PopdownButton button = new PopdownButton();
+        button.setAction(Swinger.getAction("pauseAction"));
+        setButtonProperties(button, Swinger.getAction("pauseAction"));
+        toolbar.add(button);
         toolbar.add(getButton(Swinger.getAction("cancelAction")));
         toolbar.add(new ToolbarSeparator());
         toolbar.add(getButton(Swinger.getAction("topAction")));
@@ -111,7 +115,6 @@ public class ToolbarManager implements PropertyChangeListener {
         toolbar.add(getButton(Swinger.getAction("bottomAction")));
         toolbar.add(Box.createGlue());
         searchField = new SearchField(context);
-        searchField.setSearchItemList(directorManager.getSearchManager().getSearchItems());
         searchField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -170,6 +173,10 @@ public class ToolbarManager implements PropertyChangeListener {
 //        labelWorkingProgress.setBorder(BorderFactory.createEmptyBorder(2, 10, 2, 10));
 //        setWorkingProgress(false);
 //        toolbar.add(labelWorkingProgress);
+    }
+
+    void initManager() {
+        searchField.setSearchItemList(directorManager.getSearchManager().getSearchItems());
     }
 
     private void checkPreferences() {

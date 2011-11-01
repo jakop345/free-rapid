@@ -70,6 +70,7 @@ public class ManagerDirector {
     private LinkStoreManager linkStoreManager;
 
     private SearchManager searchManager;
+    private SystemManager systemManager;
 
     static {
         // Fix for JDK 6 bug ICO vs WBMP
@@ -113,7 +114,7 @@ public class ManagerDirector {
 
         this.searchManager = new SearchManager(context, this);
 
-        this.updateManager = new UpdateManager(this, context);
+        this.updateManager = new UpdateManager(ManagerDirector.this, context);
 
         this.fileTypeIconProvider = new FileTypeIconProvider(context);
 
@@ -129,17 +130,32 @@ public class ManagerDirector {
 
         this.clipboardMonitorManager = new ClipboardMonitorManager(context, this);
 
-        this.inputDataManager.initProcessManager();
+        this.inputDataManager.initProcessManagerInstance();
+        this.systemManager = new SystemManager(ManagerDirector.this, context);
 
-        linkStoreManager = new LinkStoreManager(this, context);
-
-        this.searchManager.loadSearchData();
 
         rootContainer.add(getToolbarManager().getComponent(), BorderLayout.NORTH);
         rootContainer.add(getContentManager().getComponent(), BorderLayout.CENTER);
         rootContainer.add(getStatusBarManager().getStatusBar(), BorderLayout.SOUTH);
 
         //male popmenu pro jtextcomponenty
+
+    }
+
+    /**
+     * Init when GUI application is ready, it's called just once
+     * @see org.jdesktop.application.Application#ready()
+     */
+    public void guiIsReady() {
+        //initialization of managers
+        inputDataManager.initProcessManagerQueue(); //loads file list from file, fills main table
+        this.systemManager.initManager();
+
+        //linkStoreManager = new LinkStoreManager(ManagerDirector.this, context);
+        searchManager.loadSearchData();
+        toolbarManager.initManager();
+        clipboardMonitorManager.initManager();
+        updateManager.initManager();
         Toolkit.getDefaultToolkit().addAWTEventListener(new TextComponentContextMenuListener(), AWTEvent.MOUSE_EVENT_MASK);
     }
 
@@ -225,4 +241,9 @@ public class ManagerDirector {
     public SearchManager getSearchManager() {
         return searchManager;
     }
+
+    public SystemManager getSystemManager() {
+        return systemManager;
+    }
+
 }

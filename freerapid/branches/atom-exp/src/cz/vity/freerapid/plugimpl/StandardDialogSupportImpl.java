@@ -1,6 +1,7 @@
 package cz.vity.freerapid.plugimpl;
 
 import cz.vity.freerapid.core.AppPrefs;
+import cz.vity.freerapid.core.QuietMode;
 import cz.vity.freerapid.core.UserProp;
 import cz.vity.freerapid.core.tasks.DownloadTask;
 import cz.vity.freerapid.gui.dialogs.AccountDialog;
@@ -101,14 +102,19 @@ public class StandardDialogSupportImpl implements DialogSupport {
     }
 
     private void askCaptcha(Icon image) {
-        if (AppPrefs.getProperty(UserProp.ACTIVATE_WHEN_CAPTCHA, UserProp.ACTIVATE_WHEN_CAPTCHA_DEFAULT))
+        boolean bringToFront = false;
+        if (!QuietMode.getInstance().isActive() || !QuietMode.getInstance().isCaptchaDisabled()) {
             Swinger.bringToFront(((SingleFrameApplication) context.getApplication()).getMainFrame(), true);
+            bringToFront = true;
+        } else {
+            QuietMode.getInstance().playUserInteractionRequiredSound();
+        }
         if (AppPrefs.getProperty(UserProp.BLIND_MODE, UserProp.BLIND_MODE_DEFAULT)) {
             Sound.playSound(context.getResourceMap().getString("captchaWav"));
         }
-        captchaResult = (String) JOptionPane.showInputDialog(null, context.getResourceMap(DownloadTask.class).getString("InsertWhatYouSee"), context.getResourceMap(DownloadTask.class).getString("InsertCaptcha"), JOptionPane.PLAIN_MESSAGE, image, null, null);
+        final Component parentComponent = (bringToFront) ? null : ((SingleFrameApplication) context.getApplication()).getMainFrame();
+        captchaResult = (String) JOptionPane.showInputDialog(parentComponent, context.getResourceMap(DownloadTask.class).getString("InsertWhatYouSee"), context.getResourceMap(DownloadTask.class).getString("InsertCaptcha"), JOptionPane.PLAIN_MESSAGE, image, null, null);
     }
-
 
     private void getAccount(String title, PremiumAccount account, PremiumAccount[] result) {
         final SingleXFrameApplication app = (SingleXFrameApplication) context.getApplication();
@@ -121,7 +127,7 @@ public class StandardDialogSupportImpl implements DialogSupport {
         result[0] = dialog.getAccount();
     }
 
-
+    @Override
     public String askForCaptcha(final Icon image) throws Exception {
         synchronized (captchaLock) {
             captchaResult = "";
@@ -158,14 +164,21 @@ public class StandardDialogSupportImpl implements DialogSupport {
     }
 
     private void askPassword(final String name) {
-        if (AppPrefs.getProperty(UserProp.ACTIVATE_WHEN_CAPTCHA, UserProp.ACTIVATE_WHEN_CAPTCHA_DEFAULT))
-            Swinger.bringToFront(((SingleFrameApplication) context.getApplication()).getMainFrame(), true);
+        boolean bringToFront = false;
+        if (!QuietMode.getInstance().isActive() || !QuietMode.getInstance().isDialogsDisabled()) {
+            bringToFront = true;
+            final JFrame mainFrame = ((SingleFrameApplication) context.getApplication()).getMainFrame();
+            Swinger.bringToFront(mainFrame, true);
+        } else {
+            QuietMode.getInstance().playUserInteractionRequiredSound();
+        }
         /*
         if (AppPrefs.getProperty(UserProp.BLIND_MODE, UserProp.BLIND_MODE_DEFAULT)) {
             Sound.playSound(context.getResourceMap().getString("captchaWav"));
         }
         */
-        passwordResult = (String) JOptionPane.showInputDialog(null, context.getResourceMap(DownloadTask.class).getString("FileIsPasswordProtected", name), context.getResourceMap(DownloadTask.class).getString("InsertPassword"), JOptionPane.PLAIN_MESSAGE, null, null, null);
+        final Component parentComponent = (bringToFront) ? null : ((SingleFrameApplication) context.getApplication()).getMainFrame();
+        passwordResult = (String) JOptionPane.showInputDialog(parentComponent, context.getResourceMap(DownloadTask.class).getString("FileIsPasswordProtected", name), context.getResourceMap(DownloadTask.class).getString("InsertPassword"), JOptionPane.PLAIN_MESSAGE, null, null, null);
     }
 
 }
