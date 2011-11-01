@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 /**
  * @author Vity
  */
-abstract class AppDialog extends JDialog {
+public abstract class AppDialog extends JDialog {
     private final static Logger logger = Logger.getLogger(AppDialog.class.getName());
 
     public final static int RESULT_OK = 0;
@@ -172,7 +172,7 @@ abstract class AppDialog extends JDialog {
      *
      * @param component the component to be centered
      */
-    static void locateOnOpticalScreenCenter(Component component) {
+    protected static void locateOnOpticalScreenCenter(Component component) {
         Dimension paneSize = component.getSize();
         Dimension screenSize = component.getToolkit().getScreenSize();
         component.setLocation(
@@ -237,7 +237,7 @@ abstract class AppDialog extends JDialog {
         return action;
     }
 
-    protected ActionMap getActionMap() {
+    public ActionMap getActionMap() {
         if (this.actionMap == null)
             return actionMap = Swinger.getActionMap(this.getClass(), this);
         else

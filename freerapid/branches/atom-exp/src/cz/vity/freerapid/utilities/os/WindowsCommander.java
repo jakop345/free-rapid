@@ -1,7 +1,11 @@
 package cz.vity.freerapid.utilities.os;
 
+import com.sun.jna.Native;
+import com.sun.jna.NativeLong;
 import com.sun.jna.Pointer;
+import com.sun.jna.WString;
 import com.sun.jna.platform.win32.*;
+import com.sun.jna.win32.StdCallLibrary;
 import cz.vity.freerapid.core.Consts;
 import cz.vity.freerapid.utilities.LogUtils;
 import cz.vity.freerapid.utilities.Utils;
@@ -16,10 +20,20 @@ import java.util.logging.Logger;
  * @author Ladislav Vitasek
  * @author ntoskrnl
  */
-final class WindowsCommander extends AbstractSystemCommander {
+class WindowsCommander extends AbstractSystemCommander {
     private final static Logger logger = Logger.getLogger(WindowsCommander.class.getName());
 
     WindowsCommander() {
+        try {
+            final Shell32 shell32 = (Shell32) Native.loadLibrary("shell32", Shell32.class);
+            shell32.SetCurrentProcessExplicitAppUserModelID(new WString(Consts.PRODUCT));
+        } catch (final UnsatisfiedLinkError e) {
+            //fails on systems earlier than Windows 7
+        }
+    }
+
+    private static interface Shell32 extends StdCallLibrary {
+        public NativeLong SetCurrentProcessExplicitAppUserModelID(WString appID);
     }
 
     @Override
@@ -126,21 +140,21 @@ final class WindowsCommander extends AbstractSystemCommander {
         final String stringToFind = caseSensitive ? windowTitle : windowTitle.toLowerCase();
         final boolean[] result = {false};
         User32.INSTANCE.EnumWindows(new WinUser.WNDENUMPROC() {
-                    @Override
-                    public boolean callback(final WinDef.HWND hwnd, final Pointer pointer) {
-                        String title = getWindowTitle(hwnd);
-                        if (title != null) {
-                            if (!caseSensitive) {
-                                title = title.toLowerCase();
-                            }
-                            if (title.contains(stringToFind)) {
-                                result[0] = true;
-                                return false;
-                            }
-                        }
-                        return true;
+            @Override
+            public boolean callback(final WinDef.HWND hwnd, final Pointer pointer) {
+                String title = getWindowTitle(hwnd);
+                if (title != null) {
+                    if (!caseSensitive) {
+                        title = title.toLowerCase();
                     }
-                }, Pointer.NULL);
+                    if (title.contains(stringToFind)) {
+                        result[0] = true;
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }, Pointer.NULL);
         return result[0];
     }
 
@@ -148,15 +162,15 @@ final class WindowsCommander extends AbstractSystemCommander {
     public List<String> getTopLevelWindowsList() throws IOException {
         final List<String> list = new LinkedList<String>();
         User32.INSTANCE.EnumWindows(new WinUser.WNDENUMPROC() {
-                    @Override
-                    public boolean callback(final WinDef.HWND hwnd, final Pointer pointer) {
-                        final String title = getWindowTitle(hwnd);
-                        if (title != null) {
-                            list.add(title);
-                        }
-                        return true;
-                    }
-                }, Pointer.NULL);
+            @Override
+            public boolean callback(final WinDef.HWND hwnd, final Pointer pointer) {
+                final String title = getWindowTitle(hwnd);
+                if (title != null) {
+                    list.add(title);
+                }
+                return true;
+            }
+        }, Pointer.NULL);
         return list;
     }
 
@@ -170,6 +184,22 @@ final class WindowsCommander extends AbstractSystemCommander {
             }
         }
         return null;
+    }
+
+    @Override
+    public void preventSystemStandby(final boolean prevent) {
+        int flags = ES_CONTINUOUS;
+        if (prevent) flags |= ES_SYSTEM_REQUIRED;
+        Kernel32.INSTANCE.SetThreadExecutionState(flags);
+    }
+
+    private final static int ES_CONTINUOUS = 0x80000000;
+    private final static int ES_SYSTEM_REQUIRED = 0x00000001;
+
+    private static interface Kernel32 extends StdCallLibrary {
+        public final static Kernel32 INSTANCE = (Kernel32) Native.loadLibrary("kernel32", Kernel32.class);
+
+        public void SetThreadExecutionState(int esFlags);
     }
 
 }

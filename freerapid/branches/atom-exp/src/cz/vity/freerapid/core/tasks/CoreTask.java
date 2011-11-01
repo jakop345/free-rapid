@@ -12,11 +12,6 @@ import javax.swing.*;
  * @author Vity
  */
 public abstract class CoreTask<T, V> extends Task<T, V> {
-    static InputBlocker inputBlocker = null;
-
-    public CoreTask(Application application, ResourceMap resourceMap, String resourcePrefix) {
-        super(application, resourceMap, resourcePrefix);
-    }
 
     public CoreTask(Application application) {
         super(application);
@@ -27,9 +22,9 @@ public abstract class CoreTask<T, V> extends Task<T, V> {
         return super.getResourceMap();
     }
 
-    public void postMessage(String s, Object args) {
-        message(s, args);
-    }
+//    public void postMessage(String s, Object args) {
+//        message(s, args);
+//    }
 
     @Override
     protected void failed(Throwable cause) {

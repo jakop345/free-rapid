@@ -4,13 +4,13 @@ import cz.vity.freerapid.core.application.GlobalEDTExceptionHandler;
 import cz.vity.freerapid.core.application.ListItemsConvertor;
 import cz.vity.freerapid.core.tasks.CheckForNewVersionTask;
 import cz.vity.freerapid.gui.managers.ManagerDirector;
-import cz.vity.freerapid.utilities.os.Win7NativeUtils;
 import cz.vity.freerapid.swing.LookAndFeels;
 import cz.vity.freerapid.swing.Swinger;
 import cz.vity.freerapid.swing.TrayIconSupport;
 import cz.vity.freerapid.utilities.Browser;
 import cz.vity.freerapid.utilities.LogUtils;
 import cz.vity.freerapid.utilities.Utils;
+import cz.vity.freerapid.utilities.os.SystemCommanderFactory;
 import org.jdesktop.appframework.swingx.SingleXFrameApplication;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.ApplicationContext;
@@ -19,13 +19,14 @@ import org.jdesktop.application.ResourceConverter;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.net.ProxySelector;
 import java.util.EventObject;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
-
+import java.util.logging.Logger;
 
 /**
  * Hlavni trida aplikace
@@ -34,16 +35,12 @@ import java.util.logging.Level;
  */
 public class MainApp extends SingleXFrameApplication {
 
-    private ManagerDirector director;
+    public static final int BUILD_REQUEST = 5;
     static boolean debug = false;
+    private ManagerDirector director;
     private TrayIconSupport trayIconSupport = null;
     private AppPrefs appPrefs;
-
     private boolean minimizeOnStart = false;
-    public static final int BUILD_REQUEST = 4;
-
-//    private static Logger logger = null;
-
 
     @Override
     protected void initialize(String[] args) {
@@ -61,15 +58,11 @@ public class MainApp extends SingleXFrameApplication {
             e.printStackTrace();
         }
 
-
         try {
             LogUtils.initLogging((debug) ? Consts.LOGDEBUG : Consts.LOGDEFAULT);//logovani nejdrive
         } catch (Exception e) {
-            java.util.logging.Logger logger = getLogger();
-            logger.log(Level.SEVERE, e.getMessage());
+            getLogger().log(Level.SEVERE, e.getMessage());
         }
-
-        Win7NativeUtils.init();
 
         minimizeOnStart = line.isMinimize();
 
@@ -80,9 +73,9 @@ public class MainApp extends SingleXFrameApplication {
         }
 
         final Map<String, String> map = line.getProperties();
-        if (Utils.isWindows() && (new java.io.File("C:/Program files/Eset").exists() || new java.io.File("D:/Program files/Eset").exists())) {
+        if (Utils.isWindows() && (new File("C:/Program files/Eset").exists() || new File("D:/Program files/Eset").exists())) {
             if (!map.containsKey(FWProp.ONEINSTANCE)) {
-                getLogger().warning("Detecting ESET - disabling OneInstance functionality");
+                getLogger().warning("Detected ESET - disabling OneInstance functionality");
                 map.put(FWProp.ONEINSTANCE, "false");
             }
         }
@@ -96,29 +89,34 @@ public class MainApp extends SingleXFrameApplication {
 
         checkBugs();
 
-
         System.getProperties().put("arguments", args);
-        //if (System.getProperty("mrj.version") != null)
+
         System.setProperty("apple.laf.useScreenMenuBar", String.valueOf(AppPrefs.getProperty("apple.laf.useScreenMenuBar", true)));
+
+        SystemCommanderFactory.getInstance().getSystemCommanderInstance(getContext());//trigger initialization
 
         if (OneInstanceClient.checkInstance(fileList, appPrefs, getContext())) {
             this.exit();
             return;
         }
 
+        Lng.loadLangProperties();
+
         this.getContext().getResourceMap();
         ResourceConverter.register(new ListItemsConvertor());
 
         this.getContext().getTaskMonitor().setAutoUpdateForegroundTask(false);
 
-        Lng.loadLangProperties();
+
 
         LookAndFeels.getInstance().loadLookAndFeelSettings();//inicializace LaFu, musi to byt pred vznikem hlavniho panelu
-        //Swinger.initLaF(); //inicializace LaFu, musi to byt pred vznikem hlavniho panelu
 
         super.initialize(args);
+    }
 
-
+    @Override
+    protected void ready() {
+        director.guiIsReady();
     }
 
     private boolean checkInvalidPath() {
@@ -133,14 +131,14 @@ public class MainApp extends SingleXFrameApplication {
             final String msg = String.format("This application cannot be started on the path containing '+' or '!' characters ('%s'...)\nPlease move FRD's folder to another place.\nSorry for inconvenience. Exiting.", path.substring(0, index + 1));
             JOptionPane.showMessageDialog(null, msg, "Error", JOptionPane.ERROR_MESSAGE);
             getLogger().severe(msg);
-            System.exit(-1);
+            System.exit(1);
             return true;
         }
         return false;
     }
 
-    private java.util.logging.Logger getLogger() {
-        return java.util.logging.Logger.getLogger(MainApp.class.getName());
+    private Logger getLogger() {
+        return Logger.getLogger(MainApp.class.getName());
     }
 
     private void checkBugs() {
@@ -154,9 +152,8 @@ public class MainApp extends SingleXFrameApplication {
     private void exitWithErrorMessage(final String s, final Object... args) {
         getLogger().severe(s);
         Swinger.showErrorMessage(this.getContext().getResourceMap(), s, args);
-        System.exit(-1);
+        System.exit(1);
     }
-
 
     @Override
     protected void startup() {
@@ -166,7 +163,6 @@ public class MainApp extends SingleXFrameApplication {
         UIStringsManager.load(this.getContext().getResourceManager());
         initMainFrame();
         this.addExitListener(new MainAppExitListener());
-        //this.getContext().getLocalStorage().load()
         final JFrame mainFrame = getMainFrame();
 
         show(mainFrame);
@@ -178,12 +174,11 @@ public class MainApp extends SingleXFrameApplication {
         }
 
         SwingUtilities.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 paypalRequest();
             }
         });
-
-
     }
 
     private void paypalRequest() {
@@ -220,22 +215,11 @@ public class MainApp extends SingleXFrameApplication {
             startCheckNewVersion();
     }
 
-
     private void setGlobalEDTExceptionHandler() {
         final GlobalEDTExceptionHandler eh = new GlobalEDTExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(eh);
         Thread.currentThread().setUncaughtExceptionHandler(eh);
     }
-
-//    @Override
-//    protected void injectSessionProperties() {
-//        super.injectSessionProperties();
-//        SessionStorage storage = getContext().getSessionStorage();
-//        storage.putProperty(JXStatusBar.class, new StorageProperties.XStatusBarProperty());
-//        storage.putProperty(JToolBar.class, new StorageProperties.JToolbarProperty());
-//        storage.putProperty(JXMultiSplitPane.class, new StorageProperties.XMultipleSplitPaneProperty());
-//        new StorageProperties().registerPersistenceDelegates();
-//    }
 
     /**
      * Vraci komponentu hlavniho panelu obsahujici dalsi komponenty
@@ -253,16 +237,13 @@ public class MainApp extends SingleXFrameApplication {
      * @param args vstupni parametry pro program
      */
     public static void main(String[] args) {
-        //apple stuff
         System.setProperty("com.apple.mrj.application.apple.menu.about.name", "FreeRapid Downloader");
-        //zde prijde overovani vstupnich pridavnych parametru
-        Application.launch(MainApp.class, args); //spusteni
+        Application.launch(MainApp.class, args);
     }
 
     public static ApplicationContext getAContext() {
         return Application.getInstance(MainApp.class).getContext();
     }
-
 
     private void startCheckNewVersion() {
         final Thread appThread = new Thread() {
@@ -279,7 +260,6 @@ public class MainApp extends SingleXFrameApplication {
         appThread.setPriority(Thread.MIN_PRIORITY);
         appThread.start();
     }
-
 
     /**
      * Exit listener. Pri ukoncovani provede ulozeni uzivatelskych properties.

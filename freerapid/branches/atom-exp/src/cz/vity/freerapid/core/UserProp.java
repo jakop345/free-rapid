@@ -81,7 +81,7 @@ final public class UserProp {
     public static final boolean AUTOSAVE_ENABLED_DEFAULT = true;
 
     public static final String AUTOSAVE_TIME = "autosaveTime";
-    public static final int AUTOSAVE_TIME_DEFAULT = 10;//sekundy
+    public static final int AUTOSAVE_TIME_DEFAULT = 20;//seconds
 
     public static final String CLIPBOARD_MONITORING = "clipboardMonitoring";
     public static final boolean CLIPBOARD_MONITORING_DEFAULT = true;
@@ -109,9 +109,6 @@ final public class UserProp {
 
     public static final String OUTPUT_FILE_BUFFER_SIZE = "outputFileBufferSize";
     public static final String INPUT_BUFFER_SIZE = "inputBufferSize";
-
-    public static final String ACTIVATE_WHEN_CAPTCHA = "activateOnCaptcha";
-    public static final boolean ACTIVATE_WHEN_CAPTCHA_DEFAULT = true;
 
     public static final String PAYPAL = "paypal";
     public static final String PAYPAL_DEFAULT = "http://vity.cz/freerapid/paypal";
@@ -347,7 +344,7 @@ final public class UserProp {
     public static final String QUIET_MODE_ACTIVATION_WHEN_WINDOWS_FOUND = "whenWindowsFound";
     public static final String QUIET_MODE_ACTIVATION_MODE_DEFAULT = QUIET_MODE_ACTIVATION_ALWAYS;
     public static final String QUIET_MODE_ACTIVATION_STRINGS = "quietModeActivationStrings";
-    public static final String QUIET_MODE_ACTIVATION_STRINGS_DEFAULT = "VLC media player|iTunes|Call of Duty";
+    public static final String QUIET_MODE_ACTIVATION_STRINGS_DEFAULT = "VLC media player|iTunes|Call of Duty|- SMPlayer";
     public static final String QUIET_MODE_CASE_SENSITIVE_SEARCH = "quietModeCaseSensitiveSearch";
     public static final boolean QUIET_MODE_CASE_SENSITIVE_SEARCH_DEFAULT = false;
     public static final String QUIET_MODE_NO_SOUNDS = "quietModeNoSounds";
@@ -359,6 +356,8 @@ final public class UserProp {
     public static final String QUIET_MODE_PLAY_SOUND_ON_ACTIVATE = "quietModePlaySoundOnActivate";
     public static final boolean QUIET_MODE_PLAY_SOUND_ON_ACTIVATE_DEFAULT = false;
 
+    public static final String PREVENT_STANDBY_WHILE_DOWNLOADING = "preventStandbyWhileDownloading";
+    public static final boolean PREVENT_STANDBY_WHILE_DOWNLOADING_DEFAULT = false;
 
 }
 
