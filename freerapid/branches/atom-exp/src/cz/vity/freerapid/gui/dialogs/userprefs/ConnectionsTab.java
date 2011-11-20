@@ -24,8 +24,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 
 /**
@@ -43,16 +41,9 @@ public class ConnectionsTab extends UserPreferencesTab {
 
     @Override
     public void init() {
-        ValueModel valueModel = bind(checkUseProxyList, UserProp.USE_PROXY_LIST, UserProp.USE_PROXY_LIST_DEFAULT);
-
-        checkUseProxyList.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("Checked");
-            }
-        });
-        PropertyConnector.connectAndUpdate(valueModel, fieldProxyListPath, "enabled");
-        PropertyConnector.connectAndUpdate(valueModel, btnProxyListPathSelect, "enabled");
+        final ValueModel useProxyList = bind(checkUseProxyList, UserProp.USE_PROXY_LIST, UserProp.USE_PROXY_LIST_DEFAULT);
+        PropertyConnector.connectAndUpdate(useProxyList, fieldProxyListPath, "enabled");
+        PropertyConnector.connectAndUpdate(useProxyList, actionMap.get("btnSelectProxyListAction"), "enabled");
 
         String property = AppPrefs.getProperty(UserProp.PROXY_LIST_PATH, "");
         if (!property.isEmpty()) {
@@ -275,14 +266,15 @@ public class ConnectionsTab extends UserPreferencesTab {
                     },
                     new RowSpec[]{
                             FormFactory.DEFAULT_ROWSPEC,
+                            FormFactory.UNRELATED_GAP_ROWSPEC,
                             FormFactory.DEFAULT_ROWSPEC,
                             FormFactory.NARROW_LINE_GAP_ROWSPEC
                     }), panelConnections1);
 
             panelConnections1Builder.add(labelMaxConcurrentDownloads, cc.xy(3, 1));
             panelConnections1Builder.add(spinnerMaxConcurrentDownloads, cc.xy(5, 1));
-            panelConnections1Builder.add(checkUseDefaultConnection, cc.xyw(3, 2, 5));
-            panelConnections1Builder.add(btnSelectConnectionProxy, cc.xy(9, 2));
+            panelConnections1Builder.add(checkUseDefaultConnection, cc.xyw(3, 3, 5));
+            panelConnections1Builder.add(btnSelectConnectionProxy, cc.xy(9, 3));
         }
 
         //======== panelProxySettings ========
