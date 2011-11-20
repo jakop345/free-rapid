@@ -153,10 +153,19 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
 
     @org.jdesktop.application.Action(enabledProperty = COMPLETED_OK_ACTION_ENABLED_PROPERTY)
     public void openFileAction() {
+        openFilesInSystem(false);
+    }
+
+    private void openFilesInSystem(final boolean storeFile) {
         final int[] indexes = getSelectedRows();
-        final java.util.List<DownloadFile> files = manager.getSelectionToList(indexes);
+        final List<DownloadFile> files = manager.getSelectionToList(indexes);
         for (DownloadFile file : files) {
-            OSDesktop.openFile(file.getOutputFile());
+            if (storeFile) {
+                if (file.getStoreFile() != null && file.getStoreFile().length() > 0) {
+                    OSDesktop.openFile(file.getStoreFile());
+                }
+            } else
+                OSDesktop.openFile(file.getOutputFile());
         }
     }
 
@@ -561,7 +570,7 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
     public void openInBrowser() {
         final java.util.List<DownloadFile> files = manager.getSelectionToList(getSelectedRows());
         for (HttpFile file : files) {
-            Browser.openBrowser(file.getFileUrl().toExternalForm());
+            Browser.openBrowser(file.getFileUrl().toExternalForm().replaceAll("%23", "#"));
         }
     }
 
@@ -986,9 +995,13 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
 
     @org.jdesktop.application.Action
     public void smartEnterAction() {
-        if (this.isCompleteWithFilesEnabled() || (isSelectedEnabled() && isCancelledExisting()))
+        if (AppPrefs.getProperty(UserProp.OPEN_INCOMPLETE_FILES, UserProp.OPEN_INCOMPLETE_FILES_DEFAULT) && isSelectedEnabled()) {
+            openFilesInSystem(true);
+            return;
+        }
+        if (this.isCompleteWithFilesEnabled() || (isSelectedEnabled() && isCancelledExisting())) {
             openFileAction();
-        else if (isSelectedEnabled()) {
+        } else if (isSelectedEnabled()) {
             try {
                 downloadInformationAction();
             } catch (Exception ex) {
@@ -1007,7 +1020,7 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
         final java.util.List<DownloadFile> files = manager.getSelectionToList(getSelectedRows());
         StringBuilder builder = new StringBuilder();
         for (DownloadFile file : files) {
-            builder.append(file.toString()).append('\n');
+            builder.append(file.toString().replaceAll("%23", "#")).append('\n');
         }
         SwingUtils.copyToClipboard(builder.toString().trim(), this);
     }
