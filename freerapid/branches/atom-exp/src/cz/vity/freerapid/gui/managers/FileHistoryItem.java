@@ -1,14 +1,25 @@
 package cz.vity.freerapid.gui.managers;
 
+
+import cz.vity.freerapid.gui.managers.interfaces.Identifiable;
 import cz.vity.freerapid.model.DownloadFile;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.io.File;
 import java.net.URL;
 
 /**
  * @author Vity
  */
-final public class FileHistoryItem {
+@Entity
+final public class FileHistoryItem implements Identifiable<Long> {
+
+    @Id()
+    @GeneratedValue()
+    private Long dbId;
+
     private URL url;
     private long finishedTime;
 
@@ -103,7 +114,14 @@ final public class FileHistoryItem {
 
     public String toString() {
         return "FileHistoryItem{" +
-                "url=" + url +
+                "dbId=" + dbId +
+                " url=" + url +
                 '}';
+    }
+
+
+    @Override
+    public Long getIdentificator() {
+        return dbId;
     }
 }
