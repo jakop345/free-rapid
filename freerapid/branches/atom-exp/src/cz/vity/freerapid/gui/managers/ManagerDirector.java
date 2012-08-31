@@ -73,15 +73,16 @@ public class ManagerDirector {
     private SearchManager searchManager;
     private SystemManager systemManager;
     private CountDownLatch countDownLatch = new CountDownLatch(1); //only one purpose barrier simulation
+    private DatabaseManager databaseManager;
 
     static {
         // Fix for JDK 6 bug ICO vs WBMP
         // http://bugs.sun.com/view_bug.do?bug_id=5101862
-        final javax.imageio.spi.IIORegistry registry = javax.imageio.spi.IIORegistry.getDefaultInstance();
         try {
+            final javax.imageio.spi.IIORegistry registry = javax.imageio.spi.IIORegistry.getDefaultInstance();
             final Object spi = registry.getServiceProviderByClass(com.sun.imageio.plugins.wbmp.WBMPImageReaderSpi.class);
             registry.deregisterServiceProvider(spi);
-        } catch (Throwable e) {
+        } catch (final Throwable e) {
             logger.log(Level.WARNING, "Failed to remove WBMP SPI, problems may occur when reading ICO files", e);
         }
     }
@@ -108,6 +109,9 @@ public class ManagerDirector {
 
         taskServiceManager = new TaskServiceManager(context);
         this.clientManager = new ClientManager(this);
+
+
+        this.databaseManager = new DatabaseManager(this);
 
         this.fileHistoryManager = new FileHistoryManager(this, context);
 
@@ -146,6 +150,7 @@ public class ManagerDirector {
 
     /**
      * Init when GUI application is ready, it's called just once
+     *
      * @see org.jdesktop.application.Application#ready()
      */
     public void guiIsReady() {
@@ -201,6 +206,9 @@ public class ManagerDirector {
         return contentManager;
     }
 
+    public DatabaseManager getDatabaseManager() {
+        return databaseManager;
+    }
 
     public ApplicationContext getContext() {
         return context;

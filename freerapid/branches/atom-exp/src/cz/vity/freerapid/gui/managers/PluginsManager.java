@@ -1,6 +1,8 @@
 package cz.vity.freerapid.gui.managers;
 
 import cz.vity.freerapid.core.AppPrefs;
+import cz.vity.freerapid.core.Consts;
+import cz.vity.freerapid.core.MainApp;
 import cz.vity.freerapid.core.UserProp;
 import cz.vity.freerapid.gui.dialogs.WrappedPluginData;
 import cz.vity.freerapid.gui.managers.exceptions.NotSupportedDownloadServiceException;
@@ -14,6 +16,7 @@ import cz.vity.freerapid.plugins.webclient.DownloadState;
 import cz.vity.freerapid.plugins.webclient.interfaces.PluginContext;
 import cz.vity.freerapid.plugins.webclient.interfaces.ShareDownloadService;
 import cz.vity.freerapid.swing.Swinger;
+import cz.vity.freerapid.utilities.FileUtils;
 import cz.vity.freerapid.utilities.LogUtils;
 import cz.vity.freerapid.utilities.Utils;
 import org.java.plugin.JpfException;
@@ -66,7 +69,7 @@ public class PluginsManager {
     public PluginsManager(ApplicationContext context, ManagerDirector director, final CountDownLatch countDownLatch) {
         this.context = context;
         this.director = director;
-        pluginMetaDataManager = new PluginMetaDataManager(context);
+        pluginMetaDataManager = new PluginMetaDataManager(director);
 
         this.context.getApplication().addExitListener(new Application.ExitListener() {
             @Override
@@ -214,7 +217,7 @@ public class PluginsManager {
 
             pluginManager.publishPlugins(getPluginLocations(plugins));
 
-            final Set<PluginMetaData> datas = pluginMetaDataManager.getItems();
+            final Collection<PluginMetaData> datas = pluginMetaDataManager.getItems();
             final Map<String, PluginMetaData> datasId = new HashMap<String, PluginMetaData>(datas.size());
             for (PluginMetaData data : datas) {
                 datasId.put(data.getId(), data);
@@ -266,7 +269,7 @@ public class PluginsManager {
     private File[] searchExistingPlugins() {
         final File pluginsDir = getPluginsDir();
         logger.info("Plugins dir: " + pluginsDir.getAbsolutePath());
-
+        initiatePluginsIfNeccessary(pluginsDir);
         return pluginsDir.listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
@@ -276,15 +279,55 @@ public class PluginsManager {
     }
 
     public File getPluginsDir() {
-        final File dir = new File(Utils.getAppPath(), "plugins");
-        final String path = System.getProperty("plug-dir", dir.getAbsolutePath());
-        final File file = new File(path);
-        if (!file.exists()) {
-            if (!file.mkdirs()) {
-                logger.warning("Failed to create plugin directory");
+        final File parentDir;
+        if (System.getProperties().containsKey("portable")) {
+            parentDir = new File(Utils.getAppPath());
+        } else {
+            parentDir = context.getLocalStorage().getDirectory();
+        }
+        final File pluginsDir = new File(parentDir, Consts.PLUGINS_DIR);
+        if (pluginsDir.exists() && !pluginsDir.isDirectory()) {
+            logger.warning("Deleting file with same name as plugin directory: " + pluginsDir);
+            if (!pluginsDir.delete()) {
+                logger.severe("Failed to delete file with same name as plugin directory: " + pluginsDir);
             }
         }
-        return file;
+
+        if (!pluginsDir.exists()) {
+            if (!pluginsDir.mkdirs()) {
+                logger.severe("Failed to create plugin directory: " + pluginsDir);
+            }
+        }
+        return pluginsDir;
+    }
+
+    private void initiatePluginsIfNeccessary(final File pluginsDir) {
+        boolean extractPlugins = true;
+        if (isPluginsDirForCorrectVersion(pluginsDir)) {
+            extractPlugins = false;
+        } else {
+            logger.info("Deleting old plugins");
+            if (!IoUtil.emptyFolder(pluginsDir)) {
+                logger.severe("Failed to empty plugin directory");//never mind, we give a chance to rewrite plugins
+            }
+        }
+        if (extractPlugins) {
+            logger.info("Extracting dist plugins");
+            final File pluginsDistFile = new File(Utils.getAppPath(), Consts.PLUGINS_DIST_FILE_NAME);
+            FileUtils.extractZipFileInto(pluginsDistFile, pluginsDir);
+            final File file = new File(pluginsDir, Consts.PLUGINS_VERSION_FILE_NAME);
+            //write plugins dir Version file
+            FileUtils.writeFileWithValue(file, String.valueOf(MainApp.BUILD_REQUEST));
+        }
+    }
+
+    @SuppressWarnings("SimplifiableIfStatement")
+    private boolean isPluginsDirForCorrectVersion(final File pluginsDir) {
+        final File versionFile = new File(pluginsDir, Consts.PLUGINS_VERSION_FILE_NAME);
+        if (!versionFile.exists() || versionFile.length() <= 0) {
+            return false;
+        }
+        return Integer.valueOf(MainApp.BUILD_REQUEST).equals(Integer.valueOf(Utils.loadFile(versionFile)));
     }
 
     private void disablePluginsInConflict() {

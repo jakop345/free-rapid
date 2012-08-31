@@ -4,16 +4,20 @@ import cz.vity.freerapid.core.AppPrefs;
 import cz.vity.freerapid.core.FileTypeIconProvider;
 import cz.vity.freerapid.core.UserProp;
 import cz.vity.freerapid.core.tasks.DownloadTask;
+import cz.vity.freerapid.gui.managers.interfaces.Identifiable;
 import cz.vity.freerapid.plugins.container.FileInfo;
 import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
 import cz.vity.freerapid.plugins.webclient.DownloadState;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.interfaces.HttpFile;
-import cz.vity.freerapid.utilities.FileUtils;
-import cz.vity.freerapid.utilities.LogUtils;
 import org.jdesktop.application.AbstractBean;
 
-import java.beans.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Transient;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.net.URL;
 import java.util.Hashtable;
@@ -26,19 +30,21 @@ import java.util.logging.Logger;
  *
  * @author Vity
  */
-public class DownloadFile extends AbstractBean implements PropertyChangeListener, HttpFile {
+
+@Entity
+public class DownloadFile extends AbstractBean implements Identifiable, PropertyChangeListener, HttpFile {
     private final static Logger logger = Logger.getLogger(DownloadFile.class.getName());
 
+    @Id
+    @GeneratedValue
+    private Long dbId;
     private volatile long fileSize;
-    private volatile DownloadTask task = null;
     private volatile DownloadState state = DownloadState.PAUSED;
     private volatile File storeFile;
     private String fileName;
     private volatile long downloaded = 0;
     private int sleep;
     private float averageSpeed;
-    private float shortTimeAvgSpeed;
-    private long speed;
     private volatile String errorMessage;
     private volatile URL fileUrl = null;
     private volatile File saveToDirectory;
@@ -50,32 +56,24 @@ public class DownloadFile extends AbstractBean implements PropertyChangeListener
     private volatile int errorAttemptsCount;
     private volatile String shareDownloadServiceID;
     private volatile String serviceName = null;
-    private volatile ConnectionSettings connectionSettings;
     private volatile FileState fileState = FileState.NOT_CHECKED;
     private volatile Map<String, Object> properties = new Hashtable<String, Object>();
     private int speedLimit = -1;
-    private volatile int tokens;
-    private int takenTokens;
     private volatile long realDownload;
     private volatile boolean resumeSupported = true;
-    private File storeFileDrive;
 
-
-    static {
-        try {
-            BeanInfo info = Introspector.getBeanInfo(DownloadFile.class);
-            PropertyDescriptor[] propertyDescriptors =
-                    info.getPropertyDescriptors();
-            for (PropertyDescriptor pd : propertyDescriptors) {
-                final Object name = pd.getName();
-                if ("task".equals(name) || "speed".equals(name) || "shortTimeAvgSpeed".equals(name) || "connectionSettings".equals(name) || "tokens".equals(name) || "takenTokens".equals(name) || "storeFileDrive".equals(name)) {
-                    pd.setValue("transient", Boolean.TRUE);
-                }
-            }
-        } catch (IntrospectionException e) {
-            LogUtils.processException(logger, e);
-        }
-    }
+    @Transient
+    private volatile DownloadTask task = null;
+    @Transient
+    private volatile ConnectionSettings connectionSettings;
+    @Transient
+    private float shortTimeAvgSpeed;
+    @Transient
+    private long speed;
+    @Transient
+    private volatile int tokens;
+    @Transient
+    private int takenTokens;
 
     /**
      * Constructs a new DownloadFile.
@@ -374,7 +372,6 @@ public class DownloadFile extends AbstractBean implements PropertyChangeListener
      */
     public void setSaveToDirectory(File saveToDirectory) {
         this.saveToDirectory = saveToDirectory;
-        this.storeFileDrive = null;
     }
 
     /**
@@ -630,17 +627,6 @@ public class DownloadFile extends AbstractBean implements PropertyChangeListener
         return this.storeFile;
     }
 
-    public File getStoreFileDrive() {
-        if (storeFileDrive == null) {
-            final File saveTo = getSaveToDirectory();
-            if (saveTo != null) {
-                return storeFileDrive = FileUtils.getFileDrive(saveTo);
-            }
-            return null;
-        } else return storeFileDrive;
-    }
-
-
     @Override
     public void setStoreFile(File storeFile) {
         this.storeFile = storeFile;
@@ -662,5 +648,10 @@ public class DownloadFile extends AbstractBean implements PropertyChangeListener
         final boolean oldValue = this.resumeSupported;
         this.resumeSupported = resumeSupported;
         firePropertyChange("resumeSupported", oldValue, this.resumeSupported);
+    }
+
+    @Override
+    public Object getIdentificator() {
+        return dbId;
     }
 }

@@ -8,6 +8,8 @@ import javax.swing.filechooser.FileSystemView;
 import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
  * @author Ladislav Vitasek
@@ -118,6 +120,48 @@ public class FileUtils {
             return file;
         else return new File(relativeFile);
     }
+
+    public static void extractZipFileInto(final File zipFile, final File targetDirectory) {
+        ZipInputStream zis = null;
+        try {
+            zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(zipFile)));
+            final byte[] buffer = new byte[8192];
+            int len;
+            ZipEntry entry;
+            while ((entry = zis.getNextEntry()) != null) {
+                // Directory structure inside archive isn't preserved, but it's not really needed.
+                if (!entry.isDirectory()) {
+                    final File outputFile = new File(targetDirectory, entry.getName());
+                    OutputStream os = null;
+                    try {
+                        os = new BufferedOutputStream(new FileOutputStream(outputFile));
+                        while ((len = zis.read(buffer)) != -1) {
+                            os.write(buffer, 0, len);
+                        }
+                    } finally {
+                        if (os != null) {
+                            try {
+                                os.close();
+                            } catch (final Exception e) {
+                                LogUtils.processException(logger, e);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (final Exception e) {
+            logger.log(Level.SEVERE, "Failed to extract archive", e);
+        } finally {
+            if (zis != null) {
+                try {
+                    zis.close();
+                } catch (final Exception e) {
+                    LogUtils.processException(logger, e);
+                }
+            }
+        }
+    }
+
 
     private static String getRelativePath(final File base, final File file) throws IOException {
         String basePath;
@@ -280,9 +324,10 @@ public class FileUtils {
         return com.sun.jna.platform.FileUtils.getInstance().hasTrash();
     }
 
-    public static void deleteFileWithRecycleBin(final File... filesToDelete) {
+    public static boolean deleteFileWithRecycleBin(final File... filesToDelete) {
         if (AppPrefs.getProperty(UserProp.USE_RECYCLE_BIN, UserProp.USE_RECYCLE_BIN_DEFAULT) && supportsRecycleBin()) {
             final com.sun.jna.platform.FileUtils fileUtils = com.sun.jna.platform.FileUtils.getInstance();
+            boolean failed = false;
             for (final File file : filesToDelete) {
                 if (!file.exists()) {
                     continue;
@@ -291,23 +336,48 @@ public class FileUtils {
                     fileUtils.moveToTrash(new File[]{file});
                 } catch (final Exception e) {
                     logger.log(Level.WARNING, "Failed to delete file via recycle bin: " + file, e);
+                    failed = true;
                 }
             }
+            return !failed;
         } else {
-            deleteFile(filesToDelete);
+            return deleteFile(filesToDelete);
         }
     }
 
-    public static void deleteFile(final File... filesToDelete) {
+    public static boolean deleteFile(final File... filesToDelete) {
+        boolean failed = false;
         for (final File file : filesToDelete) {
             if (!file.exists()) {
                 continue;
             }
             final boolean delete = file.delete();
             if (!delete) {
+                failed = true;
                 logger.warning("Failed to delete file " + file);
             }
         }
+        return !failed;
     }
+
+
+    public static void writeFileWithValue(final File file, final String stringValue) {
+        OutputStream os = null;
+        try {
+            os = new FileOutputStream(file);
+            os.write(stringValue.getBytes("UTF-8"));
+        } catch (final Exception e) {
+            logger.warning("Failed to write plugin version file: " + e);
+        } finally {
+            if (os != null) {
+                try {
+                    os.close();
+                } catch (final Exception e) {
+                    LogUtils.processException(logger, e);
+                }
+            }
+        }
+    }
+
 
 }
