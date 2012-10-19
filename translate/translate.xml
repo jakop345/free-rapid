@@ -1,0 +1,22 @@
+<launch4jConfig>
+    <dontWrapJar>false</dontWrapJar>
+    <headerType>gui</headerType>
+    <jar>c:\develope\translate\out\artifacts\translate_jar\translate.jar</jar>
+    <outfile>c:\develope\translate\out\artifacts\translate_jar\4translator.exe</outfile>
+    <errTitle></errTitle>
+    <cmdLine></cmdLine>
+    <chdir></chdir>
+    <priority>normal</priority>
+    <downloadUrl>http://java.com/download</downloadUrl>
+    <supportUrl></supportUrl>
+    <customProcName>true</customProcName>
+    <stayAlive>false</stayAlive>
+    <manifest></manifest>
+    <icon>c:\develope\translate\message_edit.ico</icon>
+    <jre>
+        <path></path>
+        <minVersion>1.6.9</minVersion>
+        <maxVersion></maxVersion>
+        <jdkPreference>preferJre</jdkPreference>
+    </jre>
+</launch4jConfig>
