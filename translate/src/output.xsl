@@ -13,42 +13,45 @@
                 <style>
                     .missing {font-color:red;}
                     .title {
-                      font-size: large;
+                    font-size: large;
                     }
                     body {
                     font-family: monospace;
                     }
                     body {
-                       padding: 15px;
+                    padding: 15px;
                     }
                     table.sample {
-                    	border-width: 2px;
-                    	border-spacing: 4px;
-                    	border-style: solid;
-                    	border-color: green;
-                        padding: 4px;
-                    	border-collapse: collapse;
-                    	background-color: white;
+                    border-width: 2px;
+                    border-spacing: 4px;
+                    border-style: solid;
+                    border-color: green;
+                    padding: 4px;
+                    border-collapse: collapse;
+                    background-color: white;
                     }
                     table.sample th {
-                    	border-width: 1px;
-                    	padding: 6px;
-                    	border-style: dotted;
-                    	border-color: gray;
-                    	background-color: white;
-                    	-moz-border-radius: ;
+                    border-width: 1px;
+                    padding: 6px;
+                    border-style: dotted;
+                    border-color: gray;
+                    background-color: white;
+                    -moz-border-radius: ;
                     }
                     table.sample td {
-                    	border-width: 1px;
-                    	padding: 6px;
-                    	border-style: dotted;
-                    	border-color: gray;
-                    	background-color: white;
+                    border-width: 1px;
+                    padding: 6px;
+                    border-style: dotted;
+                    border-color: gray;
+                    background-color: white;
                     }
                 </style>
             </head>
             <body>
                 <h1>FreeRapid translation utility - results</h1>
+                <xsl:if test="not (propertiesFiles)">
+                    <xsl:text>Well done! Translation is complete.</xsl:text>
+                </xsl:if>
                 <xsl:apply-templates select="propertiesFile"/>
             </body>
         </html>
@@ -70,10 +73,10 @@
                         </xsl:when>
                         <xsl:otherwise>
                             <span class="title">
-                            <xsl:text>Properties file: </xsl:text>
-                            <i>
-                                <xsl:value-of select="@name"/>
-                            </i>
+                                <xsl:text>Properties file: </xsl:text>
+                                <i>
+                                    <xsl:value-of select="@name"/>
+                                </i>
                             </span>
                         </xsl:otherwise>
                     </xsl:choose>
