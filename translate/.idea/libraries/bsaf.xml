@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="bsaf">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/bsaf.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-cli-2.0-SNAPSHOT.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jlibs-core.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jlibs-xml.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
