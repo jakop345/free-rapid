@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Class-Path: bsaf.jar commons-cli-2.0-SNAPSHOT.jar jlibs-core.jar jlibs
+ -xml.jar
+Main-Class: MainApp
+
