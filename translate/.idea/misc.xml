@@ -9,6 +9,9 @@
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" assert-keyword="true" jdk-15="true" project-jdk-name="1.7_05" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
+  <component name="SvnBranchConfigurationManager">
+    <option name="mySupportsUserInfoFilter" value="true" />
+  </component>
   <component name="XSLT-Support.FileAssociationsManager">
     <file url="file://$PROJECT_DIR$/src/output.xsl">
       <association url="file://$PROJECT_DIR$/src/test.xml" />

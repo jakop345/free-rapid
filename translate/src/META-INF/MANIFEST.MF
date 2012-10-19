@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Class-Path: bsaf.jar commons-cli-2.0-SNAPSHOT.jar jlibs-core.jar jlibs
+Class-Path: lib/bsaf.jar lib/commons-cli-2.0-SNAPSHOT.jar lib/jlibs-core.jar lib/jlibs
  -xml.jar
 Main-Class: MainApp
 
