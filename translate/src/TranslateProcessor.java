@@ -19,7 +19,10 @@ public class TranslateProcessor {
     private File inputDir;
     private String sourceLanguage;
     private String targetLanguage;
-    private final static Set<String> ignoreMissingFiles = new HashSet<String>(); {
+    private final static Set<String> ignoreMissingFiles = new HashSet<String>();
+    private boolean commentOutStringsForRemoving;
+
+    {
         ignoreMissingFiles.add("UIStringsManager_(en|de|es|fr|it|ja|ko|sv|zh).properties");
         ignoreMissingFiles.add("DatePicker_(cs|da|de|en|en_GB|en_US|es|fr|it|nl|pl_PL|pl|pt|pt_BR|sv).properties");
         ignoreMissingFiles.add("ErrorPane_(cs|da|de|en|en_GB|en_US|es|fr|it|nl|pl_PL|pl|pt|pt_BR|sv).properties");
@@ -29,7 +32,8 @@ public class TranslateProcessor {
     }
 
 
-    public TranslateProcessor(String inputDir, String sourceLanguage, String targetLanguage) {
+    public TranslateProcessor(String inputDir, String sourceLanguage, String targetLanguage, boolean commentOutStringsForRemoving) {
+        this.commentOutStringsForRemoving = commentOutStringsForRemoving;
         this.inputDir = new File(inputDir);
         if (sourceLanguage == null || sourceLanguage.isEmpty()) {
             this.sourceLanguage = "";
@@ -72,7 +76,20 @@ public class TranslateProcessor {
             final PropertiesFile propertiesFile = new PropertiesFile(targetFile, targetLanguage);
             if (!propertiesFile.isFileMissing()) {
                 propertiesFile.setMissingProperties(sourcePropertiesFile.getMissingPropertiesIn(propertiesFile));
-                propertiesFile.setForRemovingProperties(sourcePropertiesFile.getPropertiesForRemovingIn(propertiesFile));
+
+                if (commentOutStringsForRemoving) {
+                    final Set<String> propertiesForRemovingIn = sourcePropertiesFile.getPropertiesForRemovingIn(propertiesFile);
+                    if (!propertiesForRemovingIn.isEmpty()) {
+                        String s = Utils.loadFile(targetFile, "UTF-8");
+                        for (String replaceString : propertiesForRemovingIn) {
+                            s = s.replace(replaceString, "#" + replaceString);
+                        }
+                        final FileWriter fileWriter = new FileWriter(targetFile, false);
+                        fileWriter.write(s);
+                        fileWriter.close();
+                    }
+                } else
+                    propertiesFile.setForRemovingProperties(sourcePropertiesFile.getPropertiesForRemovingIn(propertiesFile));
             }
             targetPropertiesFiles.add(propertiesFile);
         }

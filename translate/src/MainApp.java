@@ -57,7 +57,7 @@ public class MainApp extends SingleFrameApplication {
             JOptionPane.showMessageDialog(mainFrame, "Path " + path + " does not exist!!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        final TranslateProcessor processor = new TranslateProcessor(path, mainFrame.getFieldSourceLangCode().getText(), mainFrame.getFieldTargetLangCode().getText());
+        final TranslateProcessor processor = new TranslateProcessor(path, mainFrame.getFieldSourceLangCode().getText(), mainFrame.getFieldTargetLangCode().getText(), mainFrame.getCheckCommentOut().isSelected());
         try {
             final File run = processor.run();
             if (mainFrame.getCheckRunInBrowser().isSelected()) {
