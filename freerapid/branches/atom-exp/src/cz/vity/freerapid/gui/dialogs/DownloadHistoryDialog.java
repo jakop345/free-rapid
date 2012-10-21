@@ -1,13 +1,12 @@
 package cz.vity.freerapid.gui.dialogs;
 
 import com.jgoodies.binding.adapter.Bindings;
-import com.jgoodies.binding.list.ArrayListModel;
 import com.jgoodies.binding.list.SelectionInList;
 import com.jgoodies.binding.value.DelayedReadValueModel;
 import com.jgoodies.binding.value.ValueHolder;
+import com.jgoodies.common.collect.ArrayListModel;
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.*;
 import cz.vity.freerapid.core.AppPrefs;
 import cz.vity.freerapid.core.FileTypeIconProvider;
@@ -127,7 +126,7 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
 
     private void initTable() {
         table.setName("historyTable");
-        table.setModel(new CustomTableModel(new ArrayListModel<FileHistoryItem>(manager.getItems()), getList("columns")));
+        table.setModel(new CustomTableModel(new ArrayListModel<FileHistoryItem>(manager.getItems()), getList("columns", 5)));
         table.setAutoCreateColumnsFromModel(false);
         table.setEditable(false);
         table.setColumnControlVisible(true);
@@ -327,7 +326,7 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
         Bindings.bind(fieldFilter, delayedReadValueModel);
         //combobox.setModel(new DefaultComboBoxModel(getList("datesFilter")));
 
-        bindCombobox(combobox, UserProp.SELECTED_DOWNLOADS_FILTER, DownloadsFilters.ALL_DOWNLOADS.ordinal(), "datesFilter");
+        bindCombobox(combobox, UserProp.SELECTED_DOWNLOADS_FILTER, DownloadsFilters.ALL_DOWNLOADS.ordinal(), "datesFilter", 6);
 
         combobox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -356,10 +355,8 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
         return Swinger.getSelectedRows(table);
     }
 
-    private void bindCombobox(final JComboBox combobox, final String key, final Object defaultValue, final String propertyResourceMap) {
-        final String[] stringList = getList(propertyResourceMap);
-        if (stringList == null)
-            throw new IllegalArgumentException("Property '" + propertyResourceMap + "' does not provide any string list from resource map.");
+    private void bindCombobox(final JComboBox combobox, final String key, final Object defaultValue, final String resourceKey, final int valueCount) {
+        final String[] stringList = getList(resourceKey, valueCount);
         bindCombobox(combobox, key, defaultValue, stringList);
     }
 
@@ -396,7 +393,7 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
 
         //======== dialogPane ========
         {
-            dialogPane.setBorder(Borders.DIALOG_BORDER);
+            dialogPane.setBorder(Borders.DIALOG);
             dialogPane.setLayout(new BorderLayout());
 
             //======== contentPanel ========
@@ -412,12 +409,12 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
 
                     PanelBuilder panel1Builder = new PanelBuilder(new FormLayout(
                             new ColumnSpec[]{
-                                    new ColumnSpec("max(pref;80dlu)"),
-                                    FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
-                                    FormFactory.DEFAULT_COLSPEC,
-                                    FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+                                    ColumnSpec.decode("max(pref;80dlu)"),
+                                    FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+                                    FormSpecs.DEFAULT_COLSPEC,
+                                    FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
                                     new ColumnSpec(Sizes.dluX(100)),
-                                    FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+                                    FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
                                     new ColumnSpec(ColumnSpec.FILL, Sizes.DEFAULT, FormSpec.DEFAULT_GROW)
                             },
                             RowSpec.decodeSpecs("default")), panel1);
@@ -435,8 +432,8 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
                 PanelBuilder contentPanelBuilder = new PanelBuilder(new FormLayout(
                         ColumnSpec.decodeSpecs("default:grow"),
                         new RowSpec[]{
-                                FormFactory.DEFAULT_ROWSPEC,
-                                FormFactory.LINE_GAP_ROWSPEC,
+                                FormSpecs.DEFAULT_ROWSPEC,
+                                FormSpecs.LINE_GAP_ROWSPEC,
                                 new RowSpec(RowSpec.FILL, Sizes.DEFAULT, FormSpec.DEFAULT_GROW)
                         }), contentPanel);
 
@@ -457,11 +454,11 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
 
                 PanelBuilder buttonBarBuilder = new PanelBuilder(new FormLayout(
                         new ColumnSpec[]{
-                                FormFactory.DEFAULT_COLSPEC,
-                                FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+                                FormSpecs.DEFAULT_COLSPEC,
+                                FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
                                 new ColumnSpec(ColumnSpec.FILL, Sizes.DEFAULT, FormSpec.DEFAULT_GROW),
-                                FormFactory.UNRELATED_GAP_COLSPEC,
-                                new ColumnSpec("max(pref;55dlu)")
+                                FormSpecs.UNRELATED_GAP_COLSPEC,
+                                ColumnSpec.decode("max(pref;55dlu)")
                         },
                         RowSpec.decodeSpecs("fill:pref")), buttonBar);
 
@@ -615,9 +612,7 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
         final ArrayListModel<FileHistoryItem> items = getItems();
         final java.util.List<FileHistoryItem> toRemoveList = getSelectionToList(indexes);
         manager.removeItems(toRemoveList);
-        for (FileHistoryItem file : toRemoveList) {
-            items.remove(file);
-        }
+        items.removeAll(toRemoveList);
     }
 
 
@@ -762,9 +757,14 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
     public void clearHistoryBtnAction() {
         if (Swinger.getChoiceYesNo(getApp().getContext().getResourceMap().getString("confirmClearHistory")) == Swinger.RESULT_YES) {
             final ListSelectionModel selectionModel = table.getSelectionModel();
-            selectionModel.setValueIsAdjusting(true);
-            manager.clearHistory();
-            selectionModel.setValueIsAdjusting(false);
+            manager.clearHistory(new Runnable() {
+                @Override
+                public void run() {
+                    selectionModel.setValueIsAdjusting(true);
+                    getItems().clear();
+                    selectionModel.setValueIsAdjusting(false);
+                }
+            });
         }
     }
 

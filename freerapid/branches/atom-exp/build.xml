@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <project name="FreeRapid Downloader" default="all" basedir=".">
     <property name="application" value="FreeRapid"/>
-    <property name="version" value="0.86u1"/>
+    <property name="version" value="0.9beta"/>
     <property name="version.name" value="${application}-${version}"/>
     <property name="mainclass" value="cz.vity.freerapid.core.MainApp"/>
     <property name="mainjar.file" value="frd.jar"/>
@@ -39,11 +39,11 @@
     <property name="resources" value="cz/vity/freerapid/core/resources/"/>
     <property name="splash" value="${resources}icons/splash.jpg"/>
 
-    <property name="unicodeResources" value="**/?*_zh*.properties,**/?*_ja*.properties"/>
 
     <property name="ignoreProperties" value="log*,lookandfeels*"/>
 
     <fileset id="jars" dir="${lib.dir}" includes="**/*"/>
+    <fileset id="libjars" dir="${lib.dir}" includes="**/?*.jar"/>
     <fileset id="devjars" dir="dev/lib" includes="**/*"/>
 
     <taskdef name="native2AsciiExt" classpath="${dev.dir}/ant-tasks/vityanttasks.jar"
@@ -73,6 +73,11 @@
         <fileset refid="devjars"/>
     </path>
 
+    <path id="test-cp">
+        <fileset refid="libjars"/>
+        <fileset refid="devjars"/>
+    </path>
+
     <path id="dist-jars">
         <fileset dir="${build.dir}/${lib.dir}" includes="**/*.jar"/>
         <fileset dir="${build.dir}/${lookandfeel.dir}" includes="**/*.jar"/>
@@ -88,7 +93,7 @@
     </pathconvert>
 
 
-    <target name="build" depends="compile, tests" description="building">
+    <target name="build" depends="compile, objectDbEnhance, tests" description="building">
         <buildnumber file="build.txt"/>
 
         <!--copying properties files-->
@@ -99,15 +104,12 @@
                     <comment value="#"/>
                 </striplinecomments>
             </filterchain>
-            <fileset dir="${src.dir}" includes="**/?*.properties" excludes="${unicodeResources}"/>
+            <fileset dir="${src.dir}" includes="**/?*.properties"/>
             <mapper type="glob" from="*.properties" to="*.stripped">
             </mapper>
         </copy>
 
         <native2AsciiExt src="${classes.dir}" encoding="utf-8" includes="**/?*.stripped"
-                         dest="${classes.dir}" ext=".properties"/>
-
-        <native2AsciiExt src="${src.dir}" encoding="unicode" includes="${unicodeResources}"
                          dest="${classes.dir}" ext=".properties"/>
 
         <delete>
@@ -146,7 +148,7 @@
         </jar>
 
         <zip file="${build.dir}/${plugins-dist-file-name}" compress="false" basedir="${plugins.dir}">
-            <fileset dir="${plugins.dir}" includes="**/*"/>
+            <!--<fileset dir="${plugins.dir}" includes="**/*"/>-->
         </zip>
 
         <jar jarfile="${dist.dir}/plugin-api.jar" compress="true">
@@ -179,7 +181,7 @@
         </javac>
 
         <mkdir dir="${build.tests}"/>
-        <javac srcdir="${src.tests}" destdir="${build.tests}" classpathref="cp" optimize="false" target="1.7">
+        <javac srcdir="${src.tests}" destdir="${build.tests}" classpathref="test-cp" optimize="false" target="1.6">
             <classpath location="${classes.dir}"/>
         </javac>
 
@@ -276,12 +278,20 @@
             <fileset dir="out/production/freerapid" includes="**/?*.properties" excludes="${ignoreProperties}"/>
         </delete>
 
-        <native2AsciiExt src="${src.dir}" encoding="utf-8" includes="${unicodeResources}"
-                         dest="out/production/freerapid" ext=".properties"/>
-
         <native2AsciiExt src="${src.dir}" encoding="utf-8" includes="**/?*.properties"
-                         excludes="${ignoreProperties},${unicodeResources}"
+                         excludes="${ignoreProperties}"
                          dest="out/production/freerapid" ext=".properties"/>
+    </target>
+
+
+    <target name="objectDbEnhance" description="enhancing Object db entities">
+        <!--@see http://www.objectdb.com/java/jpa/tool/enhancer-->
+        <java classname="com.objectdb.Enhancer" fork="false" classpathref="test-cp">
+            <arg line="-cp ${classes.dir}"/>
+            <arg line="cz.vity.freerapid.gui.managers.FileHistoryItem"/>
+            <arg line="cz.vity.freerapid.model.DownloadFile"/>
+            <arg line="cz.vity.freerapid.model.PluginMetaData"/>
+        </java>
     </target>
 
 
@@ -327,7 +337,8 @@
             <jarfileset dir="./${build.dir}/lookandfeel"/>
             <javafileset dir="./${build.dir}" includes="*/*.xml"/>
             <javafileset dir="./${build.dir}" includes="*/*.txt"/>
-            <javafileset dir="./${build.dir}" includes="*/*.frp"/>
+            <javafileset dir="./${build.dir}" includes="*.conf"/>
+            <javafileset dir="./${build.dir}" includes="*.dat"/>
             <javafileset dir="./${build.dir}" includes="*.properties"/>
         </jarbundler>
         <mkdir dir="${macos.dmg.temp.dir}"/>
@@ -341,7 +352,7 @@
     </target>
 
     <target name="reverseResources" description="Target reverse all properties into UTF-8 encoded files">
-        <native2AsciiExt src="${src.dir}" encoding="utf-8" includes="**/?*.properties" excludes="${unicodeResources}"
+        <native2AsciiExt src="${src.dir}" encoding="utf-8" includes="**/?*.properties" excludes="${ignoreProperties}"
                          dest="${src.dir}" ext=".properties2" reverse="true"/>
 
         <!--<native2AsciiExt src="${src.dir}" encoding="UTF-16LE" includes="${unicodeResources}"-->
