@@ -2,12 +2,11 @@ package cz.vity.freerapid.gui.dialogs.userprefs;
 
 import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.beans.PropertyConnector;
-import com.jgoodies.binding.list.ArrayListModel;
 import com.jgoodies.binding.list.SelectionInList;
 import com.jgoodies.binding.value.ValueModel;
+import com.jgoodies.common.collect.ArrayListModel;
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.*;
 import cz.vity.freerapid.core.AppPrefs;
 import cz.vity.freerapid.core.FWProp;
@@ -50,6 +49,7 @@ public class ViewsTab extends UserPreferencesTab {
         bind(checkServiceAsIconOnly, UserProp.SHOW_SERVICES_ICONS, UserProp.SHOW_SERVICES_ICONS_DEFAULT);
         bind(checkSlimLinesInHistory, UserProp.SLIM_LINES_IN_HISTORY, UserProp.SLIM_LINES_IN_HISTORY_DEFAULT);
         bind(checkBringToFrontWhenPasted, UserProp.BRING_TO_FRONT_WHEN_PASTED, UserProp.BRING_TO_FRONT_WHEN_PASTED_DEFAULT);
+        bind(checkZoomCaptchaImage, UserProp.ZOOM_CAPTCHA_IMAGE, UserProp.ZOOM_CAPTCHA_IMAGE_DEFAULT);
         bind(checkCloseToTray, FWProp.MINIMIZE_ON_CLOSE, FWProp.MINIMIZE_ON_CLOSE_DEFAULT);
         bind(checkShowToolbarText, UserProp.SHOW_TEXT_TOOLBAR, UserProp.SHOW_TEXT_TOOLBAR_DEFAULT);
 
@@ -141,6 +141,8 @@ public class ViewsTab extends UserPreferencesTab {
         checkSlimLinesInHistory.setName("checkSlimLinesInHistory");
         checkBringToFrontWhenPasted = new JCheckBox();
         checkBringToFrontWhenPasted.setName("checkBringToFrontWhenPasted");
+        checkZoomCaptchaImage = new JCheckBox();
+        checkZoomCaptchaImage.setName("checkZoomCaptchaImage");
 
         checkShowIconInSystemTray = new JCheckBox();
         checkShowIconInSystemTray.setName("checkShowIconInSystemTray");
@@ -151,40 +153,41 @@ public class ViewsTab extends UserPreferencesTab {
         checkHideWhenMinimized = new JCheckBox();
         checkHideWhenMinimized.setName("checkHideWhenMinimized");
 
-        this.setBorder(Borders.TABBED_DIALOG_BORDER);
+        this.setBorder(Borders.TABBED_DIALOG);
 
         //======== panelAppearance ========
         {
             panelAppearance.setBorder(new CompoundBorder(
                     new TitledBorder(null, resourceMap.getString("panelAppearance.border"), TitledBorder.LEADING, TitledBorder.TOP),
-                    Borders.DLU2_BORDER));
+                    Borders.DLU2));
 
             PanelBuilder panelAppearanceBuilder = new PanelBuilder(new FormLayout(
                     new ColumnSpec[]{
                             new ColumnSpec(ColumnSpec.LEFT, Sizes.dluX(0), FormSpec.NO_GROW),
-                            FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
-                            FormFactory.DEFAULT_COLSPEC,
-                            FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
-                            FormFactory.PREF_COLSPEC,
-                            FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
-                            FormFactory.PREF_COLSPEC,
-                            FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
-                            FormFactory.PREF_COLSPEC,
-                            FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+                            FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+                            FormSpecs.DEFAULT_COLSPEC,
+                            FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+                            FormSpecs.PREF_COLSPEC,
+                            FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+                            FormSpecs.PREF_COLSPEC,
+                            FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+                            FormSpecs.PREF_COLSPEC,
+                            FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
                             new ColumnSpec(ColumnSpec.FILL, Sizes.DEFAULT, FormSpec.DEFAULT_GROW)
                     },
                     new RowSpec[]{
-                            FormFactory.DEFAULT_ROWSPEC,
-                            FormFactory.DEFAULT_ROWSPEC,
-                            FormFactory.DEFAULT_ROWSPEC,
-                            FormFactory.DEFAULT_ROWSPEC,
-                            FormFactory.DEFAULT_ROWSPEC,
-                            FormFactory.DEFAULT_ROWSPEC,
-                            FormFactory.DEFAULT_ROWSPEC,
-                            FormFactory.DEFAULT_ROWSPEC,
-                            FormFactory.DEFAULT_ROWSPEC,
-                            FormFactory.DEFAULT_ROWSPEC,
-                            FormFactory.DEFAULT_ROWSPEC,
+                            FormSpecs.DEFAULT_ROWSPEC,
+                            FormSpecs.DEFAULT_ROWSPEC,
+                            FormSpecs.DEFAULT_ROWSPEC,
+                            FormSpecs.DEFAULT_ROWSPEC,
+                            FormSpecs.DEFAULT_ROWSPEC,
+                            FormSpecs.DEFAULT_ROWSPEC,
+                            FormSpecs.DEFAULT_ROWSPEC,
+                            FormSpecs.DEFAULT_ROWSPEC,
+                            FormSpecs.DEFAULT_ROWSPEC,
+                            FormSpecs.DEFAULT_ROWSPEC,
+                            FormSpecs.DEFAULT_ROWSPEC,
+                            FormSpecs.DEFAULT_ROWSPEC,
                     }), panelAppearance);
 
             panelAppearanceBuilder.add(labelLaF, cc.xy(3, 1));
@@ -199,27 +202,28 @@ public class ViewsTab extends UserPreferencesTab {
             panelAppearanceBuilder.add(checkServiceAsIconOnly, cc.xywh(3, 9, 7, 1));
             panelAppearanceBuilder.add(checkSlimLinesInHistory, cc.xywh(3, 10, 7, 1));
             panelAppearanceBuilder.add(checkBringToFrontWhenPasted, cc.xywh(3, 11, 7, 1));
+            panelAppearanceBuilder.add(checkZoomCaptchaImage, cc.xywh(3, 12, 7, 1));
         }
 
         //======== panel System tray ========
         {
             panelSystemTray.setBorder(new CompoundBorder(
                     new TitledBorder(null, resourceMap.getString("panelSystemTray.border"), TitledBorder.LEADING, TitledBorder.TOP),
-                    Borders.DLU2_BORDER));
+                    Borders.DLU2));
 
             PanelBuilder panelSystemTrayBuilder = new PanelBuilder(new FormLayout(
                     new ColumnSpec[]{
                             new ColumnSpec(ColumnSpec.LEFT, Sizes.dluX(0), FormSpec.NO_GROW),
-                            FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
-                            FormFactory.DEFAULT_COLSPEC,
-                            FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
-                            FormFactory.PREF_COLSPEC,
-                            FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+                            FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+                            FormSpecs.DEFAULT_COLSPEC,
+                            FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+                            FormSpecs.PREF_COLSPEC,
+                            FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
                             new ColumnSpec(ColumnSpec.FILL, Sizes.DEFAULT, FormSpec.DEFAULT_GROW)
                     },
                     new RowSpec[]{
-                            FormFactory.DEFAULT_ROWSPEC,
-                            FormFactory.DEFAULT_ROWSPEC,
+                            FormSpecs.DEFAULT_ROWSPEC,
+                            FormSpecs.DEFAULT_ROWSPEC,
 
                     }), panelSystemTray);
 
@@ -232,10 +236,10 @@ public class ViewsTab extends UserPreferencesTab {
         PanelBuilder thisBuilder = new PanelBuilder(new FormLayout(
                 ColumnSpec.decodeSpecs("default:grow"),
                 new RowSpec[]{
-                        FormFactory.DEFAULT_ROWSPEC,
-                        FormFactory.RELATED_GAP_ROWSPEC,
-                        FormFactory.DEFAULT_ROWSPEC,
-                        FormFactory.RELATED_GAP_ROWSPEC,
+                        FormSpecs.DEFAULT_ROWSPEC,
+                        FormSpecs.RELATED_GAP_ROWSPEC,
+                        FormSpecs.DEFAULT_ROWSPEC,
+                        FormSpecs.RELATED_GAP_ROWSPEC,
                         new RowSpec(RowSpec.CENTER, Sizes.DEFAULT, FormSpec.DEFAULT_GROW)
                 }), this);
 
@@ -253,6 +257,7 @@ public class ViewsTab extends UserPreferencesTab {
     private JCheckBox checkServiceAsIconOnly;
     private JCheckBox checkSlimLinesInHistory;
     private JCheckBox checkBringToFrontWhenPasted;
+    private JCheckBox checkZoomCaptchaImage;
     private JCheckBox checkShowIconInSystemTray;
     private JCheckBox checkAnimateIcon;
     private JCheckBox checkCloseToTray;

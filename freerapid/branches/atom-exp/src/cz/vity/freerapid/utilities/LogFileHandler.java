@@ -11,16 +11,16 @@ import java.util.logging.FileHandler;
  */
 public class LogFileHandler extends FileHandler {
 
-    public LogFileHandler() throws IOException, SecurityException {
-        super(getLogFile().getAbsolutePath());
-    }
-
-    public static void init() {
+    static {
         final File folder = getLogFile().getParentFile();
         if (!folder.exists()) {
             //noinspection ResultOfMethodCallIgnored
             folder.mkdirs();
         }
+    }
+
+    public LogFileHandler() throws IOException, SecurityException {
+        super(getLogFile().getAbsolutePath());
     }
 
     public static File getLogFile() {

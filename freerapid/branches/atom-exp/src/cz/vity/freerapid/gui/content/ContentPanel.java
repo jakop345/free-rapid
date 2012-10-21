@@ -69,6 +69,7 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
     private static final int COLUMN_AVERAGE_SPEED = 7;
     private static final int COLUMN_SERVICE = 8;
     private static final int COLUMN_PROXY = 9;
+    private static final int COLUMN_DESCRIPTION = 10;
 
     private final ApplicationContext context;
     private final ManagerDirector director;
@@ -160,9 +161,9 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
         final List<DownloadFile> files = manager.getSelectionToList(indexes);
         for (DownloadFile file : files) {
             if (storeFile) {
-                if (file.getStoreFile() != null && file.getStoreFile().length() > 0) {
+                if (file.getStoreFile() != null && file.getStoreFile().length() > 0 && FileUtils.getAbsolutFile(file.getStoreFile()).exists()) {
                     OSDesktop.openFile(file.getStoreFile());
-                }
+                } else OSDesktop.openFile(file.getOutputFile());
             } else
                 OSDesktop.openFile(file.getOutputFile());
         }
@@ -807,7 +808,7 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
     @SuppressWarnings({"unchecked"})
     private void initTable() {
         table.setName("mainTable");
-        final String[] columns = (String[]) context.getResourceMap().getObject("mainTableColumns", String[].class);
+        final String[] columns = Swinger.getList(context.getResourceMap(), "mainTableColumns", 11);
         table.setModel(new CustomTableModel(manager.getDownloadFiles(), columns));
         table.setAutoCreateColumnsFromModel(false);
 
@@ -852,7 +853,7 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
 //        columnID.setMaxWidth(30);
 //        columnID.setWidth(30);
         final TableColumn colName = tableColumnModel.getColumn(COLUMN_NAME);
-        colName.setCellEditor(new RenameFileNameEditor());
+        colName.setCellEditor(new RenameFileNameEditor(director.getFileTypeIconProvider()));
         colName.setCellRenderer(new NameURLCellRenderer(director.getFileTypeIconProvider()));
         colName.setWidth(150);
         colName.setMinWidth(50);
@@ -870,7 +871,9 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
         tableColumnModel.getColumn(COLUMN_AVERAGE_SPEED).setCellRenderer(new AverageSpeedCellRenderer());
         tableColumnModel.getColumn(COLUMN_SERVICE).setCellRenderer(new ServiceCellRenderer(director));
         tableColumnModel.getColumn(COLUMN_PROXY).setCellRenderer(new ConnectionCellRenderer(context));
-
+        final TableColumnExt columnDescription = (TableColumnExt) tableColumnModel.getColumn(COLUMN_DESCRIPTION);
+        columnDescription.setCellRenderer(new DescriptionCellRenderer(context));
+        columnDescription.setVisible(false);
 
         table.addMouseListener(new MouseAdapter() {
             @Override
@@ -1051,6 +1054,11 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
                 public void editingStopped(ChangeEvent e) {
                     final RenameFileNameEditor source = (RenameFileNameEditor) e.getSource();
                     cellEditor.removeCellEditorListener(this);
+                    final DownloadFile resultDownloadFile = (DownloadFile) source.getCellEditorValue();
+                    final File out = resultDownloadFile.getOutputFile();
+                    if (backup.equals(out.getName())) {//nothing was changed
+                        return;
+                    }
                     if (wasExisting) {
                         SwingUtilities.invokeLater(new Runnable() {
                             @Override

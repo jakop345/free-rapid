@@ -8,7 +8,6 @@ import cz.vity.freerapid.swing.LookAndFeels;
 import cz.vity.freerapid.swing.Swinger;
 import cz.vity.freerapid.swing.TrayIconSupport;
 import cz.vity.freerapid.utilities.Browser;
-import cz.vity.freerapid.utilities.LogFileHandler;
 import cz.vity.freerapid.utilities.LogUtils;
 import cz.vity.freerapid.utilities.Utils;
 import cz.vity.freerapid.utilities.os.SystemCommanderFactory;
@@ -36,7 +35,7 @@ import java.util.logging.Logger;
  */
 public class MainApp extends SingleXFrameApplication {
 
-    public static final int BUILD_REQUEST = 6;
+    public static final int BUILD_REQUEST = 7;
     static boolean debug = false;
     private ManagerDirector director;
     private TrayIconSupport trayIconSupport = null;
@@ -60,7 +59,6 @@ public class MainApp extends SingleXFrameApplication {
         }
 
         try {
-            LogFileHandler.init();
             LogUtils.initLogging((debug) ? Consts.LOGDEBUG : Consts.LOGDEFAULT);//logovani nejdrive
         } catch (Exception e) {
             getLogger().log(Level.SEVERE, e.getMessage());
@@ -94,6 +92,8 @@ public class MainApp extends SingleXFrameApplication {
         System.getProperties().put("arguments", args);
 
         System.setProperty("apple.laf.useScreenMenuBar", String.valueOf(AppPrefs.getProperty("apple.laf.useScreenMenuBar", true)));
+
+        System.setProperty("objectdb.conf", new File(Utils.getAppPath(), "objectdb.conf").getAbsolutePath());
 
         SystemCommanderFactory.getInstance().getSystemCommanderInstance(getContext());//trigger initialization
 

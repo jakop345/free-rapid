@@ -1,6 +1,7 @@
 package cz.vity.freerapid.gui.managers;
 
-import com.jgoodies.binding.list.ArrayListModel;
+
+import com.jgoodies.common.collect.ArrayListModel;
 import cz.vity.freerapid.core.AppPrefs;
 import cz.vity.freerapid.core.UserProp;
 import cz.vity.freerapid.gui.actions.DownloadsActions;
@@ -11,7 +12,6 @@ import cz.vity.freerapid.utilities.FileUtils;
 import cz.vity.freerapid.utilities.LogUtils;
 import org.jdesktop.application.ApplicationContext;
 import org.jdesktop.application.LocalStorage;
-import org.jdesktop.application.Task;
 import org.jdesktop.application.TaskService;
 
 import java.io.File;
@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 /**
@@ -32,7 +33,6 @@ class FileListMaintainer {
     private final DataManager dataManager;
     private final Object saveFileLock = new Object();
     private final static Logger logger = Logger.getLogger(FileListMaintainer.class.getName());
-
     private static final String FILES_LIST_XML = "filesList.xml";
 
 
@@ -44,36 +44,50 @@ class FileListMaintainer {
 
 
     private List<DownloadFile> loadFileHistoryList() {
-          List<DownloadFile> result = null;
-          final File srcFile = new File(context.getLocalStorage().getDirectory(), FILES_LIST_XML);
-          if (srcFile.exists()) { //extract from old file, we ignore existence of backup file in case the main file does not exist
-              try {
-                  result = loadList(srcFile);
-              } catch (Exception e) {
-                  LogUtils.processException(logger, e);
-                  logger.info("Trying to renew file from backup");
-                  try {
-                      FileUtils.renewBackup(srcFile);
-                      result = loadList(srcFile);
-                  } catch (FileNotFoundException ex) {
-                      //ignore
-                  } catch (Exception e1) {
-                      LogUtils.processException(logger, e);
-                  }
-              }
-              if (result != null) {
-                  //re-save into database
-                  director.getDatabaseManager().saveCollection(result);
-              } else result = new ArrayList<DownloadFile>();
-              //rename old file history file into another one, so we won't import it again next time
-              //noinspection ResultOfMethodCallIgnored
-              srcFile.renameTo(new File(context.getLocalStorage().getDirectory(), FILES_LIST_XML + ".imported"));
-              return result;
-          } else {
-              //load from database
-              return director.getDatabaseManager().loadAll(DownloadFile.class);
-          }
-      }
+        List<DownloadFile> result = null;
+        final File srcFile = new File(context.getLocalStorage().getDirectory(), FILES_LIST_XML);
+
+
+        if (!srcFile.exists()) { //extract from old file, we ignore existence of backup file in case the main file does not exist
+            final File backupFile = FileUtils.getBackupFile(srcFile);
+            if (backupFile.exists()) {
+                //noinspection ResultOfMethodCallIgnored
+                backupFile.renameTo(srcFile);
+            }
+        }
+
+        if (srcFile.exists()) { //extract from old file, we ignore existence of backup file in case the main file does not exist
+            try {
+                result = loadListFromXML(srcFile);
+            } catch (Exception e) {
+                LogUtils.processException(logger, e);
+                logger.info("Trying to renew file from backup");
+                try {
+                    FileUtils.renewBackup(srcFile);
+                    result = loadListFromXML(srcFile);
+                } catch (FileNotFoundException ex) {
+                    //ignore
+                } catch (Exception e1) {
+                    LogUtils.processException(logger, e);
+                }
+            }
+            if (result != null) {
+                //re-save into database
+                int counter = 0;
+                for (DownloadFile downloadFile : result) {
+                    downloadFile.setListOrder(counter++);
+                }
+                saveToDatabaseOnBackground(result);
+            } else result = new ArrayList<DownloadFile>();
+            //rename old file history file into another one, so we won't import it again next time
+            //noinspection ResultOfMethodCallIgnored
+            srcFile.renameTo(new File(context.getLocalStorage().getDirectory(), FILES_LIST_XML + ".imported"));
+            return result;
+        } else {
+            //load from database
+            return director.getDatabaseManager().loadAll(DownloadFile.class, "c.listOrder ASC, c.dbId DESC");
+        }
+    }
 
     void loadListToBean(Collection<DownloadFile> downloadFiles) {
         final List<DownloadFile> result = loadFileHistoryList();
@@ -81,7 +95,7 @@ class FileListMaintainer {
     }
 
     @SuppressWarnings({"unchecked"})
-    private List<DownloadFile> loadList(final File srcFile) throws IOException {
+    private List<DownloadFile> loadListFromXML(final File srcFile) throws IOException {
         final List<DownloadFile> list = new LinkedList<DownloadFile>();
         final LocalStorage localStorage = context.getLocalStorage();
         if (!srcFile.exists()) {
@@ -102,6 +116,8 @@ class FileListMaintainer {
         final boolean removeCompleted = AppPrefs.getProperty(UserProp.REMOVE_COMPLETED_DOWNLOADS, UserProp.REMOVE_COMPLETED_DOWNLOADS_DEFAULT) == UserProp.REMOVE_COMPLETED_DOWNLOADS_AT_STARTUP;
         final boolean recheckOnStart = AppPrefs.getProperty(UserProp.RECHECK_FILES_ON_START, UserProp.RECHECK_FILES_ON_START_DEFAULT);
 
+
+        int listOrder = 0;
         for (DownloadFile file : o) {
             final DownloadState state = file.getState();
             if (state == DownloadState.DELETED)
@@ -135,47 +151,46 @@ class FileListMaintainer {
                 file.setDownloaded(file.getRealDownload());
             file.resetSpeed();
             file.setTimeToQueued(-1);
+            file.setListOrder(listOrder++);
             file.addPropertyChangeListener(dataManager);
             list.add(file);
         }
     }
 
-    void saveToFile(Collection<DownloadFile> downloadFiles) {
+    void saveToDatabase(Collection<DownloadFile> downloadFiles) {
         synchronized (saveFileLock) {
-            logger.info("=====Saving queue into the XML file=====");
-            try {
-                director.getDatabaseManager().saveCollection(downloadFiles);
-            } catch (Exception e) {
-                LogUtils.processException(logger, e);
-            } finally {
-                logger.info("=====Finishing saving queue into the XML file=====");
-            }
+            logger.info("=====Saving updated/added files into the database (" + downloadFiles.size() + ") =====");
+            director.getDatabaseManager().saveCollection(downloadFiles);
         }
     }
 
-    void saveListToFileOnBackground(final Collection<DownloadFile> downloadFiles) {
-        final TaskService service = director.getTaskServiceManager().getTaskService(TaskServiceManager.WORK_WITH_FILE_SERVICE);
-        service.execute(new Task(context.getApplication()) {
-            protected Object doInBackground() throws Exception {
-                Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
-                logger.info("--------saveListToBeansOnBackground------");
-                final Collection<DownloadFile> files;
-                synchronized (dataManager.getLock()) {
-                    files = new ArrayList<DownloadFile>(downloadFiles);
-                }
-
-                saveToFile(files);
-                logger.info("--------saveListToBeansOnBackground end ------");
-                return null;
+    void removeFromDatabaseOnBackground(final Collection<DownloadFile> downloadFiles) {
+        final Runnable runnable = new Runnable() {
+            public void run() {
+                logger.info("=====Removing deleted files from the database (" + downloadFiles.size() + ") =====");
+                director.getDatabaseManager().removeCollection(downloadFiles);
             }
-
-            @Override
-            protected void failed(Throwable cause) {
-                LogUtils.processException(logger, cause);
-            }
-        });
-
+        };
+        director.getDatabaseManager().runOnTask(runnable);
     }
 
+    void saveToDatabaseOnBackground(final Collection<DownloadFile> downloadFiles) {
+        Runnable runnable = new Runnable() {
+            public void run() {
+                saveToDatabase(downloadFiles);
+            }
+        };
+        director.getDatabaseManager().runOnTask(runnable);
+    }
 
+    void doShutDown() {
+        logger.info("Shutdown database service");
+        final TaskService service = director.getTaskServiceManager().getTaskService(TaskServiceManager.DATABASE_SERVICE);
+        service.shutdown();
+        try {
+            service.awaitTermination(6L, TimeUnit.SECONDS);//saving has X seconds to finish, then exit
+        } catch (InterruptedException e) {
+            LogUtils.processException(logger, e);
+        }
+    }
 }

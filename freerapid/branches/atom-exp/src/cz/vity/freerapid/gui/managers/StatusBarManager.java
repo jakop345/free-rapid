@@ -6,11 +6,7 @@ import com.jgoodies.binding.beans.PropertyConnector;
 import com.jgoodies.binding.value.ConverterFactory;
 import com.jgoodies.binding.value.ValueModel;
 import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.factories.FormFactory;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
+import com.jgoodies.forms.layout.*;
 import cz.vity.freerapid.core.AppPrefs;
 import cz.vity.freerapid.core.MainApp;
 import cz.vity.freerapid.core.UserProp;
@@ -191,7 +187,6 @@ public class StatusBarManager implements PropertyChangeListener, ListDataListene
         final JXCollapsiblePane cp = new JXCollapsiblePane();
         cp.setDirection(JXCollapsiblePane.Direction.RIGHT);
         cp.setBorder(null);
-        cp.addPropertyChangeListener(JXCollapsiblePane.ANIMATION_STATE_KEY, this);
         cp.setAnimated(true);
 
         cp.setPreferredSize(new Dimension(160, BAR_HEIGHT));
@@ -253,7 +248,7 @@ public class StatusBarManager implements PropertyChangeListener, ListDataListene
         PropertyConnector.connectAndUpdate(valueModel, labelSpeedBtn, "enabled");
 
         CellConstraints cc = new CellConstraints();
-        PanelBuilder panelBuilder = new PanelBuilder(new FormLayout(new ColumnSpec[]{FormFactory.PREF_COLSPEC, FormFactory.PREF_COLSPEC, FormFactory.PREF_COLSPEC}, new RowSpec[]{FormFactory.PREF_ROWSPEC}), cp);
+        PanelBuilder panelBuilder = new PanelBuilder(new FormLayout(new ColumnSpec[]{FormSpecs.PREF_COLSPEC, FormSpecs.PREF_COLSPEC, FormSpecs.PREF_COLSPEC}, new RowSpec[]{FormSpecs.PREF_ROWSPEC}), cp);
 
         panelBuilder.add(slider, cc.xy(1, 1));
         panelBuilder.add(labelSpeed, cc.xy(2, 1));
@@ -311,8 +306,6 @@ public class StatusBarManager implements PropertyChangeListener, ListDataListene
         } else if ("downloading".equals(propertyName)) {
             if (AppPrefs.getProperty(UserProp.ANIMATE_ICON, UserProp.ANIMATE_ICON_DEFAULT))
                 updateIconAnimation();
-        } else if (JXCollapsiblePane.ANIMATION_STATE_KEY.equals(propertyName)) {
-            statusbar.repaint();
         }
     }
 
