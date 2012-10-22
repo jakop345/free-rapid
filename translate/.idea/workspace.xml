@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" readonly="true" id="f4db7473-c556-4800-aead-628cab7d69f0" name="Default" comment="">
+    <list default="true" readonly="true" id="f4db7473-c556-4800-aead-628cab7d69f0" name="Default" comment="support for removing strings">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/compiler.xml" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/log/app.log" afterPath="$PROJECT_DIR$/log/app.log" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/MainApp.java" afterPath="$PROJECT_DIR$/src/MainApp.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/MainFrame.form" afterPath="$PROJECT_DIR$/src/MainFrame.form" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/MainFrame.java" afterPath="$PROJECT_DIR$/src/MainFrame.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/TranslateProcessor.java" afterPath="$PROJECT_DIR$/src/TranslateProcessor.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/output.xsl" afterPath="$PROJECT_DIR$/src/output.xsl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test.xml" afterPath="$PROJECT_DIR$/src/test.xml" />
     </list>
     <ignored path="translate.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -65,10 +67,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="MainApp.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="MainApp.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/MainApp.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="59" column="0" selection-start="1649" selection-end="1649" vertical-scroll-proportion="0.4815951">
+            <state line="36" column="0" selection-start="891" selection-end="891" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -79,11 +81,12 @@
       <file leaf-file-name="MainFrame.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/MainFrame.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="201" column="43" selection-start="10948" selection-end="10948" vertical-scroll-proportion="0.0">
+            <state line="246" column="0" selection-start="12743" selection-end="12743" vertical-scroll-proportion="0.0">
               <folding>
-                <element signature="e#530#560#0" expanded="true" />
-                <element signature="e#10347#10469#0" expanded="true" />
-                <element signature="e#10458#10459#0" expanded="true" />
+                <element signature="imports" expanded="true" />
+                <element signature="e#1261#1291#0" expanded="true" />
+                <element signature="e#11307#11429#0" expanded="true" />
+                <element signature="e#11418#11419#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -98,10 +101,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="output.xsl" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="output.xsl" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/output.xsl">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="58" column="0" selection-start="2058" selection-end="2058" vertical-scroll-proportion="0.0">
+            <state line="49" column="18" selection-start="1716" selection-end="1716" vertical-scroll-proportion="0.35015136">
               <folding />
             </state>
           </provider>
@@ -119,7 +122,7 @@
       <file leaf-file-name="test.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/test.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="72" column="0" selection-start="4144" selection-end="4144" vertical-scroll-proportion="0.0">
+            <state line="17" column="0" selection-start="52" selection-end="1049" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -138,15 +141,6 @@
         <entry file="jar://C:/Program Files/Java/jdk1.7.0_05/src.zip!/java/lang/String.java">
           <provider selected="true" editor-type-id="text-editor">
             <state line="2226" column="18" selection-start="87688" selection-end="87688" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="OSDesktop.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/utilities/OSDesktop.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="58" column="0" selection-start="1706" selection-end="1706" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -171,7 +165,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/Consts/Consts.java" />
         <option value="$PROJECT_DIR$/src/utilities/Utils.java" />
         <option value="$PROJECT_DIR$/src/utilities/FileUtilities.java" />
         <option value="$PROJECT_DIR$/src/logdebug.properties" />
@@ -182,11 +175,12 @@
         <option value="$PROJECT_DIR$/src/utilities/OSDesktop.java" />
         <option value="$PROJECT_DIR$/src/CmdLine.java" />
         <option value="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" />
-        <option value="$PROJECT_DIR$/src/test.xml" />
-        <option value="$PROJECT_DIR$/src/output.xsl" />
         <option value="$PROJECT_DIR$/src/TranslateProcessor.java" />
+        <option value="$PROJECT_DIR$/src/Language.java" />
         <option value="$PROJECT_DIR$/src/MainFrame.java" />
         <option value="$PROJECT_DIR$/src/MainApp.java" />
+        <option value="$PROJECT_DIR$/src/test.xml" />
+        <option value="$PROJECT_DIR$/src/output.xsl" />
       </list>
     </option>
   </component>
@@ -268,6 +262,24 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="translate" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="translate" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="output.xsl" />
+              <option name="myItemType" value="org.intellij.lang.xpath.xslt.impl.XsltTreeStructureProvider$XsltFileNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="Scope" />
@@ -281,7 +293,7 @@
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="MemberChooser.sorted" value="false" />
     <property name="recentsLimit" value="5" />
-    <property name="options.lastSelected" value="project.propVCSSupport.Confirmation" />
+    <property name="options.lastSelected" value="project.propCompiler" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
@@ -296,7 +308,7 @@
       <recent name="Consts" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.MainApp">
+  <component name="RunManager" selected="XSLT.xsl">
     <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
       <module name="" />
       <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m" />
@@ -518,7 +530,11 @@
       <created>1350657406126</created>
       <updated>1350657406126</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="support for removing strings">
+      <created>1350721249100</created>
+      <updated>1350721249100</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -539,7 +555,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24959914" sideWeight="0.34184676" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18706574" sideWeight="0.34184676" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.65815324" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -587,7 +603,7 @@
     <option name="SHOW_VCS_ERROR_NOTIFICATIONS" value="true" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="info when translation is complete" />
+    <option name="LAST_COMMIT_MESSAGE" value="support for removing strings" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -602,6 +618,7 @@
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
     <MESSAGE value="import translate project" />
     <MESSAGE value="info when translation is complete" />
+    <MESSAGE value="support for removing strings" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -630,15 +647,6 @@
     </option>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/utilities/LogFileHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="44" selection-start="617" selection-end="617" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/utilities/LogFormatter.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="17" column="36" selection-start="401" selection-end="401" vertical-scroll-proportion="0.0">
@@ -699,20 +707,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="72" column="0" selection-start="4144" selection-end="4144" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/output.xsl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="58" column="0" selection-start="2058" selection-end="2058" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/build.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="26" column="44" selection-start="1642" selection-end="1642" vertical-scroll-proportion="0.0">
@@ -736,21 +730,36 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/MainFrame.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="201" column="43" selection-start="10948" selection-end="10948" vertical-scroll-proportion="0.0">
+        <state line="246" column="0" selection-start="12743" selection-end="12743" vertical-scroll-proportion="0.0">
           <folding>
-            <element signature="e#530#560#0" expanded="true" />
-            <element signature="e#10347#10469#0" expanded="true" />
-            <element signature="e#10458#10459#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+            <element signature="e#1261#1291#0" expanded="true" />
+            <element signature="e#11307#11429#0" expanded="true" />
+            <element signature="e#11418#11419#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/MainApp.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="59" column="0" selection-start="1649" selection-end="1649" vertical-scroll-proportion="0.4815951">
+        <state line="36" column="0" selection-start="891" selection-end="891" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="17" column="0" selection-start="52" selection-end="1049" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/output.xsl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="49" column="18" selection-start="1716" selection-end="1716" vertical-scroll-proportion="0.35015136">
+          <folding />
         </state>
       </provider>
     </entry>

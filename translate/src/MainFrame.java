@@ -1,21 +1,37 @@
-import javax.swing.*;
+import utilities.LogUtils;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Vity
  */
 public class MainFrame extends javax.swing.JFrame {
+    private final static Logger logger = Logger.getLogger(MainFrame.class.getName());
 
     /**
      * Creates new form MainFrame
      */
     public MainFrame() {
         initComponents();
+        jLabel9.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                try {
+                    Desktop.getDesktop().browse(new java.net.URI("http://www.loc.gov/standards/iso639-2/php/code_list.php"));
+                } catch (IOException e1) {
+                    LogUtils.processException(logger, e1);
+                } catch (URISyntaxException e1) {
+                    LogUtils.processException(logger, e1);
+                }
+            }
+        });
     }
 
     /**
@@ -36,14 +52,15 @@ public class MainFrame extends javax.swing.JFrame {
         fieldSourceLangCode = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        fieldTargetLangCode = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         checkCommentOut = new javax.swing.JCheckBox();
+        combotTargetLangCode = new javax.swing.JComboBox();
+        jLabel9 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("FreeRapid Translation utility v1.0 (Vity 2012)");
+        setTitle("FreeRapid Translation utility v1.1 (Vity 2012)");
 
         jLabel1.setText("<html><h1>FreeRapid Translation utility</h1></html>");
 
@@ -62,8 +79,6 @@ public class MainFrame extends javax.swing.JFrame {
 
         jLabel5.setText("Target ISO language code:");
 
-        fieldTargetLangCode.setText("cs");
-
         jLabel6.setText("<html>(like <b>fi</b> for Finnish, <b>cs</b> for Czech etc.)</html>");
 
         jLabel7.setText("(path to FreeRapid src directory)");
@@ -72,6 +87,13 @@ public class MainFrame extends javax.swing.JFrame {
 
         checkCommentOut.setText("Remove strings (comment out) those are not used anymore");
 
+        combotTargetLangCode.setEditable(true);
+        combotTargetLangCode.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"ar", "am", "bg", "cs", "da", "de", "es", "fa", "fi", "fr", "gr", "he", "hr", "hu", "hy", "in", "it", "ja", "ja_JP", "ko_KR", "nl", "pl", "pt", "pt_BR", "ro", "ru", "si", "sk", "tr", "ua", "zh_CN", "zh_TW"}));
+        combotTargetLangCode.setSelectedIndex(3);
+
+        jLabel9.setText("<html><a href=\"http://www.loc.gov/standards/iso639-2/php/code_list.php\">ISO language codes (2 chars)</a></html>");
+        jLabel9.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -79,13 +101,10 @@ public class MainFrame extends javax.swing.JFrame {
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addComponent(checkRunInBrowser)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(btnAnalyze, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(jLabel8)
+                                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGroup(layout.createSequentialGroup()
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(jLabel8)
                                                         .addGroup(layout.createSequentialGroup()
                                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                                         .addComponent(jLabel3)
@@ -93,18 +112,20 @@ public class MainFrame extends javax.swing.JFrame {
                                                                         .addComponent(jLabel2))
                                                                 .addGap(1, 1, 1)
                                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                                        .addComponent(fieldSourcePath, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE)
+                                                                        .addComponent(fieldSourcePath, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
                                                                         .addComponent(fieldSourceLangCode)
-                                                                        .addComponent(fieldTargetLangCode, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE))
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                                        .addComponent(jLabel4)
-                                                                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                        .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(checkCommentOut))
-                                                .addGap(0, 0, Short.MAX_VALUE)))
-                                .addContainerGap())
+                                                                        .addComponent(combotTargetLangCode, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                                        .addComponent(checkCommentOut)
+                                                        .addComponent(checkRunInBrowser))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(btnAnalyze, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                .addComponent(jLabel4)
+                                                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -130,10 +151,12 @@ public class MainFrame extends javax.swing.JFrame {
                                 .addGap(2, 2, 2)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(jLabel5)
-                                        .addComponent(fieldTargetLangCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 4, Short.MAX_VALUE)
-                                .addComponent(checkCommentOut)
+                                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(combotTargetLangCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 6, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(checkCommentOut)
+                                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(btnAnalyze)
@@ -195,9 +218,10 @@ public class MainFrame extends javax.swing.JFrame {
         return fieldSourcePath;
     }
 
-    public JTextField getFieldTargetLangCode() {
-        return fieldTargetLangCode;
+    public JComboBox getCombotTargetLangCode() {
+        return combotTargetLangCode;
     }
+
 
     public JCheckBox getCheckCommentOut() {
         return checkCommentOut;
@@ -207,9 +231,9 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton btnAnalyze;
     private javax.swing.JCheckBox checkCommentOut;
     private javax.swing.JCheckBox checkRunInBrowser;
+    private javax.swing.JComboBox combotTargetLangCode;
     private javax.swing.JTextField fieldSourceLangCode;
     private javax.swing.JTextField fieldSourcePath;
-    private javax.swing.JTextField fieldTargetLangCode;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -218,5 +242,8 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     // End of variables declaration//GEN-END:variables
+
+
 }

@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><translation>
+<?xml version="1.0" encoding="UTF-8"?>
+<translation>
     <propertiesFile name="cz\vity\freerapid\core\resources\MainApp_cs.properties" missing="false">
         <missing>
             <property key="speedSlider.toolTipText" value="Drag to change global speed limit for all files"/>
@@ -15,59 +16,59 @@
             <property key="exportAllAction.Action.accelerator"/>
         </removing>
     </propertiesFile>
-    <propertiesFile name="cz\vity\freerapid\core\resources\UIStringsManager_cs.properties" missing="false">
-        <missing>
-            <property key="FileChooser.cancelButtonTextMnemonic" value="C"/>
-            <property key="FileChooser.openButtonTextMnemonic" value="O"/>
-            <property key="FileChooser.saveButtonTextMnemonic" value="S"/>
-        </missing>
-        <removing>
-            <property key="FileChooser.saveButtonMnemonic"/>
-            <property key="FileChooser.filesOfTypeLabelMnemonic"/>
-            <property key="FileChooser.openButtonMnemonic"/>
-            <property key="FileChooser.fileNameLabelMnemonic"/>
-            <property key="FileChooser.lookInLabelMnemonic"/>
-            <property key="FileChooser.cancelButtonMnemonic"/>
-        </removing>
-    </propertiesFile>
-    <propertiesFile name="cz\vity\freerapid\core\tasks\resources\CheckForNewVersionTask_cs.properties" missing="false">
-        <missing>
-            <property key="message.connect.status.checking" value="Checking for FRD's new version"/>
-            <property key="message.connect.newVersionRequired" value="Great news!\nA new version is now available.\nPlease upgrade to the latest version to get latest features and support for plugins."/>
-        </missing>
-    </propertiesFile>
-    <propertiesFile name="cz\vity\freerapid\core\tasks\resources\CheckPluginUpdateTask_cs.properties" missing="false">
-        <missing>
-            <property key="message.connect.newVersionRequired" value="Great news!\nA new version is now available.\nPlease upgrade to the latest version to get latest features and support for plugins."/>
-        </missing>
-    </propertiesFile>
-    <propertiesFile name="cz\vity\freerapid\core\tasks\resources\CoreTask_cs.properties" missing="false">
-        <missing>
-            <property key="errormessage" value="Error during executing task:\n%s"/>
-        </missing>
-        <removing>
-            <property key="errormessage_submit_failed"/>
-        </removing>
-    </propertiesFile>
-    <propertiesFile name="cz\vity\freerapid\core\tasks\resources\ImportLinksTask_cs.properties" missing="false">
-        <removing>
-            <property key="successfullyExported"/>
-        </removing>
-    </propertiesFile>
-    <propertiesFile name="cz\vity\freerapid\gui\dialogs\resources\ConnectDialog_cs.properties" missing="false">
-        <missing>
-            <property key="checkSocksProxy.text" value="SOC&amp;KS"/>
-        </missing>
-    </propertiesFile>
-    <propertiesFile name="cz\vity\freerapid\gui\dialogs\userprefs\resources\UserPreferencesDialog_cs.properties" missing="false">
-        <missing>
-            <property key="btnSelectProxyListAction.Action.smallIcon" value="${iconsPath}open_small.gif"/>
-            <property key="alertsPanelGeneral.tab.title" value="General"/>
-        </missing>
-        <removing>
-            <property key="checkConfirmDownloadingRemoveOnly.toolTipText"/>
-            <property key="labelMaxConnections.toolTipText"/>
-            <property key="checkPrepareFile.toolTipText"/>
-        </removing>
-    </propertiesFile>
+    <!--<propertiesFile name="cz\vity\freerapid\core\resources\UIStringsManager_cs.properties" missing="false">-->
+    <!--<missing>-->
+    <!--<property key="FileChooser.cancelButtonTextMnemonic" value="C"/>-->
+    <!--<property key="FileChooser.openButtonTextMnemonic" value="O"/>-->
+    <!--<property key="FileChooser.saveButtonTextMnemonic" value="S"/>-->
+    <!--</missing>-->
+    <!--<removing>-->
+    <!--<property key="FileChooser.saveButtonMnemonic"/>-->
+    <!--<property key="FileChooser.filesOfTypeLabelMnemonic"/>-->
+    <!--<property key="FileChooser.openButtonMnemonic"/>-->
+    <!--<property key="FileChooser.fileNameLabelMnemonic"/>-->
+    <!--<property key="FileChooser.lookInLabelMnemonic"/>-->
+    <!--<property key="FileChooser.cancelButtonMnemonic"/>-->
+    <!--</removing>-->
+    <!--</propertiesFile>-->
+    <!--<propertiesFile name="cz\vity\freerapid\core\tasks\resources\CheckForNewVersionTask_cs.properties" missing="false">-->
+    <!--<missing>-->
+    <!--<property key="message.connect.status.checking" value="Checking for FRD's new version"/>-->
+    <!--<property key="message.connect.newVersionRequired" value="Great news!\nA new version is now available.\nPlease upgrade to the latest version to get latest features and support for plugins."/>-->
+    <!--</missing>-->
+    <!--</propertiesFile>-->
+    <!--<propertiesFile name="cz\vity\freerapid\core\tasks\resources\CheckPluginUpdateTask_cs.properties" missing="false">-->
+    <!--<missing>-->
+    <!--<property key="message.connect.newVersionRequired" value="Great news!\nA new version is now available.\nPlease upgrade to the latest version to get latest features and support for plugins."/>-->
+    <!--</missing>-->
+    <!--</propertiesFile>-->
+    <!--<propertiesFile name="cz\vity\freerapid\core\tasks\resources\CoreTask_cs.properties" missing="false">-->
+    <!--<missing>-->
+    <!--<property key="errormessage" value="Error during executing task:\n%s"/>-->
+    <!--</missing>-->
+    <!--<removing>-->
+    <!--<property key="errormessage_submit_failed"/>-->
+    <!--</removing>-->
+    <!--</propertiesFile>-->
+    <!--<propertiesFile name="cz\vity\freerapid\core\tasks\resources\ImportLinksTask_cs.properties" missing="false">-->
+    <!--<removing>-->
+    <!--<property key="successfullyExported"/>-->
+    <!--</removing>-->
+    <!--</propertiesFile>-->
+    <!--<propertiesFile name="cz\vity\freerapid\gui\dialogs\resources\ConnectDialog_cs.properties" missing="false">-->
+    <!--<missing>-->
+    <!--<property key="checkSocksProxy.text" value="SOC&amp;KS"/>-->
+    <!--</missing>-->
+    <!--</propertiesFile>-->
+    <!--<propertiesFile name="cz\vity\freerapid\gui\dialogs\userprefs\resources\UserPreferencesDialog_cs.properties" missing="false">-->
+    <!--<missing>-->
+    <!--<property key="btnSelectProxyListAction.Action.smallIcon" value="${iconsPath}open_small.gif"/>-->
+    <!--<property key="alertsPanelGeneral.tab.title" value="General"/>-->
+    <!--</missing>-->
+    <!--<removing>-->
+    <!--<property key="checkConfirmDownloadingRemoveOnly.toolTipText"/>-->
+    <!--<property key="labelMaxConnections.toolTipText"/>-->
+    <!--<property key="checkPrepareFile.toolTipText"/>-->
+    <!--</removing>-->
+    <!--</propertiesFile>-->
 </translation>
