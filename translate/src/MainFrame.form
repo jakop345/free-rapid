@@ -3,7 +3,7 @@
 <Form version="1.8" maxVersion="1.8" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
-    <Property name="title" type="java.lang.String" value="FreeRapid Translation utility v1.0 (Vity 2012)"/>
+    <Property name="title" type="java.lang.String" value="FreeRapid Translation utility v1.1 (Vity 2012)"/>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
@@ -26,14 +26,10 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="jLabel8" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="checkRunInBrowser" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Component id="btnAnalyze" min="-2" pref="187" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jLabel8" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -42,24 +38,27 @@
                               </Group>
                               <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="fieldSourcePath" pref="217" max="32767" attributes="0"/>
+                                  <Component id="fieldSourcePath" pref="279" max="32767" attributes="0"/>
                                   <Component id="fieldSourceLangCode" max="32767" attributes="0"/>
-                                  <Component id="fieldTargetLangCode" pref="217" max="32767" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel7" alignment="1" min="-2" pref="204" max="-2" attributes="0"/>
+                                  <Component id="combotTargetLangCode" alignment="0" max="32767" attributes="0"/>
                               </Group>
                           </Group>
-                          <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="checkCommentOut" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="checkRunInBrowser" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="btnAnalyze" min="-2" pref="187" max="-2" attributes="0"/>
+                          <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel7" alignment="1" min="-2" pref="204" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
                   </Group>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -92,14 +91,17 @@
               <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="fieldTargetLangCode" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="combotTargetLangCode" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="4" max="32767" attributes="0"/>
-              <Component id="checkCommentOut" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="6" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="checkCommentOut" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="btnAnalyze" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnAnalyze" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="checkRunInBrowser" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -151,11 +153,6 @@
         <Property name="text" type="java.lang.String" value="Target ISO language code:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="fieldTargetLangCode">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="cs"/>
-      </Properties>
-    </Component>
     <Component class="javax.swing.JLabel" name="jLabel6">
       <Properties>
         <Property name="text" type="java.lang.String" value="&lt;html&gt;(like &lt;b&gt;fi&lt;/b&gt; for Finnish, &lt;b&gt;cs&lt;/b&gt; for Czech etc.)&lt;/html&gt;"/>
@@ -174,6 +171,56 @@
     <Component class="javax.swing.JCheckBox" name="checkCommentOut">
       <Properties>
         <Property name="text" type="java.lang.String" value="Remove strings (comment out) those are not used anymore"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="combotTargetLangCode">
+      <Properties>
+        <Property name="editable" type="boolean" value="true"/>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+          <StringArray count="32">
+            <StringItem index="0" value="ar"/>
+            <StringItem index="1" value="am"/>
+            <StringItem index="2" value="bg"/>
+            <StringItem index="3" value="cs"/>
+            <StringItem index="4" value="da"/>
+            <StringItem index="5" value="de"/>
+            <StringItem index="6" value="es"/>
+            <StringItem index="7" value="fa"/>
+            <StringItem index="8" value="fi"/>
+            <StringItem index="9" value="fr"/>
+            <StringItem index="10" value="gr"/>
+            <StringItem index="11" value="he"/>
+            <StringItem index="12" value="hr"/>
+            <StringItem index="13" value="hu"/>
+            <StringItem index="14" value="hy"/>
+            <StringItem index="15" value="in"/>
+            <StringItem index="16" value="it"/>
+            <StringItem index="17" value="ja"/>
+            <StringItem index="18" value="ja_JP"/>
+            <StringItem index="19" value="ko_KR"/>
+            <StringItem index="20" value="nl"/>
+            <StringItem index="21" value="pl"/>
+            <StringItem index="22" value="pt"/>
+            <StringItem index="23" value="pt_BR"/>
+            <StringItem index="24" value="ro"/>
+            <StringItem index="25" value="ru"/>
+            <StringItem index="26" value="si"/>
+            <StringItem index="27" value="sk"/>
+            <StringItem index="28" value="tr"/>
+            <StringItem index="29" value="ua"/>
+            <StringItem index="30" value="zh_CN"/>
+            <StringItem index="31" value="zh_TW"/>
+          </StringArray>
+        </Property>
+        <Property name="selectedIndex" type="int" value="3"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel9">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a href=&quot;http://www.loc.gov/standards/iso639-2/php/code_list.php&quot;&gt;ISO language codes (2 chars)&lt;/a&gt;&lt;/html&gt;"/>
+        <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+          <Color id="Hand Cursor"/>
+        </Property>
       </Properties>
     </Component>
   </SubComponents>

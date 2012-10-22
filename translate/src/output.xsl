@@ -49,8 +49,8 @@
             </head>
             <body>
                 <h1>FreeRapid translation utility - results</h1>
-                <xsl:if test="not (propertiesFiles)">
-                    <xsl:text>Well done! Translation is complete.</xsl:text>
+                <xsl:if test="count(propertiesFile)=0">
+                    <xsl:text>Well done! Translation is now complete.</xsl:text>
                 </xsl:if>
                 <xsl:apply-templates select="propertiesFile"/>
             </body>
