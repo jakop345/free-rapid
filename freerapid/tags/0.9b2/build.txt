@@ -1,0 +1,3 @@
+#Build Number for ANT. Do not edit!
+#Mon Oct 29 11:55:56 CET 2012
+build.number=605
