@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <project name="FreeRapid Downloader" default="all" basedir=".">
     <property name="application" value="FreeRapid"/>
-    <property name="version" value="0.9beta"/>
+    <property name="version" value="0.9"/>
     <property name="version.name" value="${application}-${version}"/>
     <property name="mainclass" value="cz.vity.freerapid.core.MainApp"/>
     <property name="mainjar.file" value="frd.jar"/>
@@ -175,13 +175,14 @@
 
     <target name="compile" depends="init" description="compiling source codes">
         <mkdir dir="${classes.dir}"/>
-        <javac debug="true" srcdir="${src.dir}" destdir="${classes.dir}" classpathref="cp" target="1.7"
-               defaultexcludes="false" excludes="**/sandbox/**">
+        <javac debug="true" srcdir="${src.dir}" destdir="${classes.dir}" classpathref="cp" source="1.6" target="1.6"
+               defaultexcludes="false" excludes="**/sandbox/**" includeantruntime="true">
 
         </javac>
 
         <mkdir dir="${build.tests}"/>
-        <javac srcdir="${src.tests}" destdir="${build.tests}" classpathref="test-cp" optimize="false" target="1.6">
+        <javac srcdir="${src.tests}" destdir="${build.tests}" classpathref="test-cp" optimize="false" source="1.6"
+               target="1.6" includeantruntime="true">
             <classpath location="${classes.dir}"/>
         </javac>
 
@@ -245,7 +246,7 @@
         <mkdir dir="${reports.tests}"/>
         <junit printsummary="yes" haltonfailure="yes">
             <classpath>
-                <path refid="cp"/>
+                <path refid="test-cp"/>
                 <pathelement location="${build.tests}"/>
                 <pathelement location="${classes.dir}"/>
                 <pathelement path="${java.class.path}"/>
