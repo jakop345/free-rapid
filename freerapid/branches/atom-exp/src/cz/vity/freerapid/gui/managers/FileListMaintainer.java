@@ -16,6 +16,7 @@ import org.jdesktop.application.TaskService;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -56,8 +57,22 @@ class FileListMaintainer {
             }
         }
 
-        if (srcFile.exists()) { //extract from old file, we ignore existence of backup file in case the main file does not exist
+        final File targetImportedFile = new File(context.getLocalStorage().getDirectory(), FILES_LIST_XML + ".imported");
+
+        if (srcFile.exists() && !targetImportedFile.exists()) { //extract from old file, we ignore existence of backup file in case the main file does not exist
             try {
+
+                final File[] templists = context.getLocalStorage().getDirectory().listFiles(new FilenameFilter() {
+                    @Override
+                    public boolean accept(File dir, String name) {
+                        return name.contains("templist");
+                    }
+                });
+                for (File file : templists) {
+                    //noinspection ResultOfMethodCallIgnored
+                    file.delete();
+                }
+
                 result = loadListFromXML(srcFile);
             } catch (Exception e) {
                 LogUtils.processException(logger, e);
@@ -86,7 +101,7 @@ class FileListMaintainer {
                 //noinspection ResultOfMethodCallIgnored
                 backupFile.renameTo(new File(context.getLocalStorage().getDirectory(), FILES_LIST_XML + ".backup.imported"));
             }
-            srcFile.renameTo(new File(context.getLocalStorage().getDirectory(), FILES_LIST_XML + ".imported"));
+            srcFile.renameTo(targetImportedFile);
             return result;
         } else {
             //load from database
