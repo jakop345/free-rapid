@@ -1447,7 +1447,8 @@ public abstract class HttpMethodBase implements HttpMethod {
             if (agent == null) {
                 agent = "Jakarta Commons-HttpClient";
             }
-            setRequestHeader("User-Agent", agent);
+            //Allow request header not to have "User-Agent" field
+            //setRequestHeader("User-Agent", agent);
         }
     }
 
