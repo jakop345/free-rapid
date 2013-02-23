@@ -1117,6 +1117,7 @@ public class URI implements Cloneable, Comparable, Serializable {
         hostname.or(toplabel);
         // hostname.or(domainlabel);
         hostname.set('.');
+        hostname.set('_');
     }
 
 
