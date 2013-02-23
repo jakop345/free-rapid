@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="FreeRapid Downloader" default="all" basedir=".">
+    <property name="application" value="commons-httpclient"/>
+    <property name="version" value="3.1-patched"/>
+    <property name="version.name" value="${application}-${version}"/>
+    <property name="mainjar.file" value="${version.name}.jar"/>
+
+    <!--<property name="mainjar-packed.file" value="${mainjar.file}.pack.gz"/>-->
+
+    <!-- output data directories -->
+
+    <property name="classes.dir" value="_classes"/>
+    <property name="build.tests" value="_testClasses"/>
+    <property name="reports.tests" value="_reportTests"/>
+
+    <property name="dist.dir" value="dist"/>
+
+    <property name="javadoc.dir" value="${dist.dir}/javadoc"/>
+
+    <!-- input data directories -->
+    <property name="src.dir" value="src"/>
+    <property name="etc.dir" value="etc"/>
+    <property name="doc.dir" value="doc"/>
+    <property name="lib.dir" value="lib"/>
+    <property name="dev.dir" value="dev"/>
+
+    <property name="lib-src.dir" value="lib-src"/>
+    <property name="build.dir" value="${dist.dir}"/>
+
+    <fileset id="jars" dir="${lib.dir}" includes="**/*"/>
+    <fileset id="libjars" dir="${lib.dir}" includes="**/?*.jar"/>
+    <fileset id="devjars" dir="dev/lib" includes="**/*"/>
+
+    <patternset id="compiler.resources">
+        <!--<include name="**/?*.properties"/>-->
+        <include name="**/?*.xml"/>
+        <include name="**/?*.txt"/>
+        <include name="**/?*.gif"/>
+        <include name="**/?*.png"/>
+        <include name="**/?*.jpeg"/>
+        <include name="**/?*.jpg"/>
+        <include name="**/?*.html"/>
+        <include name="**/?*.dtd"/>
+        <include name="**/?*.tld"/>
+        <include name="**/?*.mid"/>
+        <include name="**/?*.wav"/>
+        <include name="**/?*.xsd"/>
+
+        <exclude name="**/plugin.xml"/>
+        <exclude name="**/Thumbs.db"/>
+    </patternset>
+
+    <path id="cp">
+        <fileset refid="jars"/>
+    </path>
+
+    <pathconvert property="lib.prefix" pathsep=" ">
+        <path location="${lib.dir}"/>
+    </pathconvert>
+
+    <pathconvert property="classpath" refid="jars" pathsep=" " dirsep="/">
+        <map from="${lib.prefix}" to="${lib.dir}"/>
+    </pathconvert>
+
+
+    <target name="build" depends="compile" description="building">
+        <buildnumber file="build.txt"/>
+
+        <!--copying properties files-->
+        <copy todir="${classes.dir}" overwrite="true" encoding="utf-8">
+            <filterchain>
+                <ignoreblank byline="true"/>
+                <striplinecomments>
+                    <comment value="#"/>
+                </striplinecomments>
+            </filterchain>
+            <fileset dir="${src.dir}" includes="**/?*.properties"/>
+            <mapper type="glob" from="*.properties" to="*.stripped">
+            </mapper>
+        </copy>
+
+        <delete>
+            <fileset dir="${classes.dir}" includes="**/?*.stripped"/>
+        </delete>
+
+        <jar jarfile="${build.dir}/${mainjar.file}" compress="false">
+            <manifest>
+                <!--suppress AntResolveInspection -->
+                <attribute name="Build-Date" value="${TODAY}"/>
+            </manifest>
+            <fileset dir="${classes.dir}" includes="**/*"/>
+        </jar>
+    </target>
+
+    <target name="compile" depends="clean, init" description="compiling source codes">
+        <mkdir dir="${classes.dir}"/>
+        <javac debug="true" srcdir="${src.dir}" destdir="${classes.dir}" classpathref="cp" source="1.6" target="1.6"
+               defaultexcludes="false" excludes="**/sandbox/**" includeantruntime="true">
+
+        </javac>
+
+        <!-- zkopirovani resourcu -->
+
+        <copy todir="${classes.dir}">
+            <fileset dir="${src.dir}">
+                <patternset refid="compiler.resources"/>
+                <type type="file"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="init" description="initialization">
+        <tstamp/>
+        <mkdir dir="${classes.dir}"/>
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${dist.dir}"/>
+    </target>
+
+    <target name="javadoc" depends="init" description="Create javadoc">
+        <delete dir="${javadoc.dir}" quiet="true"/>
+        <mkdir dir="${javadoc.dir}"/>
+        <javadoc Author="true" Version="true" charset="utf-8" destdir="${javadoc.dir}" docencoding="utf-8"
+                 encoding="utf-8" link="http://java.sun.com/javase/6/docs/api/" packagenames="*" package="true"
+                 source="1.6">
+            <sourcepath>
+                <pathelement location="${src.dir}"/>
+            </sourcepath>
+            <classpath refid="cp"/>
+        </javadoc>
+    </target>
+
+
+    <target name="clean" description="clean up">
+        <delete dir="${build.dir}" failonerror="false"/>
+        <delete dir="${classes.dir}"/>
+        <delete dir="${dist.dir}" failonerror="false"/>
+        <delete dir="${build.tests}" failonerror="false"/>
+        <delete dir="${reports.tests}" failonerror="false"/>
+    </target>
+
+    <target name="all" depends="clean,init, build" description="build all"/>
+
+
+</project>
