@@ -1,0 +1,512 @@
+=======================================================================================================================
+                                           Version 0.9u1->0.9u2
+=======================================================================================================================
+MainApp.properties
+===================================
+Added:
+mainTableColumns_11=Date
+visitForum.Action.text=FreeRapid Downloader Forum
+
+
+DownloadHistoryDialog.properties
+===================================
+Added:
+columns_5=Connection
+columns_6=Avg. speed
+
+
+UpdateDialog.properties
+===================================
+Added:
+iconsPath=icons/
+selectAll.Action.text=Select &All
+selectAll.Action.smallIcon=${iconsPath}checks.png
+deSelectAll.Action.text=Select &None
+deSelectAll.Action.smallIcon=${iconsPath}uncheck.png
+popmenuButton.text=
+popmenuButton.icon=${iconsPath}right.gif
+
+
+UserPreferencesDialog.properties
+===================================
+Added:
+checkSkipDuplicateFiles.text=Automatically skip downloads with duplicate file names
+checkOpenIncompleteFiles.text=Open files that are currently downloading when double clicking them
+checkUseTemporaryFiles.text=Use temporary file names (*.part) while downloading
+
+
+=======================================================================================================================
+                                           Version 0.86u1->0.9
+=======================================================================================================================
+MainApp.properties
+===================================
+Added:
+targetFileAlreadyExists=Target file %s already exists.\nDo you want to replace/overwrite it?
+message.button.overwrite=Overwrite
+
+renameAction.Action.text=&Rename file
+renameAction.Action.shortDescription=Rename file
+renameAction.Action.accelerator=F2
+
+openLogFile.Action.text=&Open log file
+openLogFile.Action.shortDescription=Open log for viewing
+browseToLogFile.Action.text=&Browse to log file
+browseToLogFile.Action.shortDescription=Open folder of log file
+
+DatabaseManager.databaseIsAlreadyUsed=Another instance of FRD is already running. Multiple instances are not supported.
+
+
+UserPreferencesDialog.properties
+===================================
+Added:
+checkZoomCaptchaImage.text=Zoom captcha images for better legibility
+
+
+=======================================================================================================================
+                                           Version 0.85u1->0.86
+=======================================================================================================================
+MainApp.properties
+===================================
+Added:
+fileIsBeingAlreadyDownloading=File is already downloading
+
+quietModeAction.Action.text=&Quiet Mode
+quietModeAction.Action.shortDescription=Toggle Quiet Mode
+quietModeAction.Action.accelerator=F8
+quietModeAction.Action.smallIcon=${iconsPath}loudspeaker.png
+
+quietModeActionTray=Quiet Mode
+
+labelQuietMode.icon=${iconsPath}loudspeaker.png
+labelQuietMode.toolTipText=Quiet Mode
+
+userInteractionRequiredWav=user_interaction.wav
+
+
+Changed:
+monitorClipboardAction.Action.accelerator=F7
+
+
+UserPreferencesDialog.properties
+===================================
+Added:
+checkPreventStandbyWhileDownloading.text=Prevent standby while downloading (Windows only)
+
+alertsPanelGeneral.tab.title=General
+alertsPanelQM.tab.title=Quiet Mode
+
+panelActivateQM.border=Quiet Mode activation
+radioButtonActivateQMAlways.text=A&lways active when enabled
+radioButtonActivateQMWhenWindowsFound.text=Active when enabled and any of the specified &windows are found
+labelSearchForWindows.text=Search for these window titles:
+btnAddQuietModeDetectionStringAction.Action.text=&Add
+btnRemoveQuietModeDetectionStringAction.Action.text=&Remove
+checkCaseSensitiveSearchQM.text=&Case sensitive search
+panelQMOptions.border=Quiet Mode options
+checkNoSoundsInQM.text=Disable &sounds in quiet mode
+checkNoCaptchaInQM.text=Do not bring captcha &popups to front in quiet mode
+checkNoConfirmDialogsInQM.text=Do not bring confirmation &dialogs to front in quiet mode
+checkPlaySoundForQM.text=&Play sound when user interaction is required
+labelNoteForQM.text=You can enable or disable quiet mode by clicking the icon in the status bar or from the Options menu.
+addNewWindowPopupTitle=Add new window title
+
+
+=======================================================================================================================
+                                           Version 0.85->0.85u1
+=======================================================================================================================
+
+UserPreferencesDialog.properties
+===================================
+Added:
+
+checkUseRecycleBin.text=Use system recycle &bin for deleting files
+
+
+
+MainApp.properties
+===================================
+Added:
+
+searchSubtitlesAction.Action.text=Search subtitles
+searchSubtitlesAction.Action.shortDescription=Search subtitles using opensubtitles.org
+searchSubtitlesAction.Action.smallIcon=${iconsPath}subtitles.png
+
+
+=======================================================================================================================
+                                            Version 0.83->0.85
+=======================================================================================================================
+
+
+NEW FILES:
+ExportLinksTask.properties
+ImportLinksTask.properties
+
+
+UpdateDialog.properties
+===================================
+New:
+stateOldPlugin=NOT SUPPORTED
+
+
+InformationDialog.properties
+===================================
+New:
+connectionLabel.text=Co&nnection:
+
+Changed:
+was:
+InformationDialog.title=File Information
+new:
+InformationDialog.title=Download Information
+
+
+DownloadTask.properties
+====================================
+New:
+InsertPassword=Insert Password
+ErrorDuringDownload=Error during download.\nStream was closed unexpectedly.\nFile is not complete
+fileAlreadyExistsTooltip=File already exists on the disk
+
+
+MainApp.properties
+====================================
+#Changed:
+paypalSupportAction.Action.shortDescription=<html><b>Please, consider a donation to this project!</b><br>FreeRapid downloader is distributed as freeware, <br>but if you wish to express your appreciation for the time and resources <br>the author has spent developing, <br>we do accept and appreciate monetary donations.</html>
+
+
+Removed:
+sortbyServerAction.Action.text=Sort by &Server
+sortbyServerAction.Action.shortDescription=Sort selected downloads by server name
+sortbyServerAction.Action.accelerator=
+sortbyServerAction.Action.smallIcon=${iconsPath}sort_small.gif
+
+
+New:
+speedSlider.toolTipText=Drag to change global speed limit for all files
+
+#do not translate, just place it there:
+searchDefaultIcon=${iconsPath}search.png
+
+manageSearchEngines.Action.text=&Manage search engines...
+manageSearchEngines.Action.shortDescription=Open search engine selection page in web browser
+howToManageSearchEngines=To add a new search engine, browse this site and make your choice.\nRight-click the download link and choose "Save linked content as" (or something similar),\nand save the file into the "search" folder inside FRD's root folder.
+
+checkPluginStatuses.Action.text=&Plugin status
+checkPluginStatuses.Action.shortDescription=Check the status of plugins in web browser
+
+speedLimitMenu.text=Set Download &Limit
+speedLimitMenu.icon=${iconsPath}globalspeedlimit.gif
+limitSpeed=%s kB/s
+unlimitedSpeed=Unlimited
+labelSpeedUnit.text=kB/s
+
+labelSpeedBtn.icon=${iconsPath}globalspeedlimit.gif
+labelSpeedBtn.toolTipText=Enable/Disable global speed limit for all files
+
+globalSpeedLimitAction.Action.text=&Global speed limit
+globalSpeedLimitAction.Action.shortDescription=${labelSpeedBtn.toolTipText}
+globalSpeedLimitAction.Action.smallIcon=${labelSpeedBtn.icon}
+globalSpeedLimitAction.Action.accelerator=F9
+
+removeCompletedAndDeletedAction.Action.text=Remove Completed Links and De&leted Files
+removeCompletedAndDeletedAction.Action.accelerator =shortcut L
+removeCompletedAndDeletedAction.Action.shortDescription = Remove all completed downloads whose files do not exist
+removeCompletedAndDeletedAction.Action.smallIcon=${iconsPath}clean.png
+
+speedLimitIsEnabled=Speed limit is enabled and set to value %s/s
+
+SKIPPED=SKIPPED
+HOLD_ON=HOLD ON
+
+refreshProxyList.Action.text=&Refresh proxy list
+refreshProxyList.Action.shortDescription=Refresh the list of proxies
+refreshProxyList.Action.smallIcon=${iconsPath}refresh_proxy_list.png
+refreshProxyList.Action.accelerator=
+
+andOtherFiles=...and %d other files
+andOtherURLs=...and %d other URLs
+
+importLinksAction.Action.text=&Import links from file...
+importLinksAction.Action.accelerator=shortcut I
+importLinksAction.Action.shortDescription=Import links from container file
+exportSelectedLinksAction.Action.text=&Export selected links to file...
+exportSelectedLinksAction.Action.accelerator=shortcut E
+exportSelectedLinksAction.Action.shortDescription=Export selected links to container file
+exportAllLinksAction.Action.text=Ex&port all links to file...
+#exportAllAction.Action.accelerator=shortcut E
+exportAllLinksAction.Action.shortDescription=Export all links to container file
+
+
+UserPreferencesDialog.properties
+====================================
+New:
+panelGlobalSpeedLimiter.border=Global speed limiter
+panelFileSpeedLimiter.border=File speed limiter
+labelSpeedSliderMinValue.text=Minimum value
+labelSpeedSliderMaxValue.text=Maximum value
+labelSpeedSliderStep.text=Step
+labelSpeedSliderKbps.text=kB/s
+labelFileSpeedLimiterValues.text=Values for file speed limiter (kB/s)
+fieldFileSpeedLimiterValues.toolTipText=Separate values with commas. Two commas indicate a menu separator. 0 means unlimited.
+labelFileSpeedLimiterValuesDesc.text=<html><small>Separate values with commas.<br/>Two commas indicate a menu separator. 0 means unlimited.</small></html>
+
+checkSlimLinesInHistory.text=Slim lines in History dialog
+checkBringToFrontWhenPasted.text=Bring application to the top when clipboard monitoring detects links
+
+checkAutoStartDownloadsFromDecrypter.text=Start downloads from decrypters and folders automatically
+checkEnableDirectDownloads.text=Enable direct downloads
+
+priorityUpAction.Action.text=
+priorityUpAction.Action.shortDescription=Set higher plugin priority
+priorityUpAction.Action.smallIcon=${iconsPath}priority_up.gif
+priorityDownAction.Action.text=
+priorityDownAction.Action.shortDescription=Set lower plugin priority
+priorityDownAction.Action.smallIcon=${iconsPath}priority_down.gif
+
+checkboxPluginIsActive.text=Plugin is active
+checkboxUpdatePlugins.text=Make updates of this plugin
+checkboxClipboardMonitoring.text=Enable plugin for Clipboard monitoring
+labelAuthor.text=Author:
+labelVersion.text=Version:
+labelServices.text=Services:
+labelPriority.text=Priority:
+labelMaxConnections.text=Max downloads:
+
+clipboardMonitoringMenu.text=&Clipboard monitoring
+selectAllCMAction.Action.text=&Enable All
+selectAllCMAction.Action.smallIcon=${iconsPath}checks.png
+deSelectAllCMAction.Action.text=&Disable All
+deSelectAllCMAction.Action.smallIcon=${iconsPath}uncheck.png
+
+Changed:
+
+was:
+pluginTableColumns_list=X|U|Plugin ID|Version|Service|Author|WWW
+new:
+pluginTableColumns_list=X|U|C|Plugin ID|Version|Service|Author|Max Downloads|Priority|WWW
+
+was:
+comboHowToUpdate_list=Ask what to do|Show update dialog first|Update automatically without asking
+new:
+comboHowToUpdate_list=Ask what to do|Show update dialog first|Update automatically and show information dialog|Update completely automatically
+
+
+DownloadNewPluginsTask.properties
+====================================
+New:
+pluginsDirectoryIsNotWriteable=Target plugins directory is not writable. You cannot download plugins.\nIf FreeRapid's directory is placed in 'Program files' directory then run FRD as an administrator or place FreeRapid into another directory.
+installedSuccessFully=New plugins were installed successfuly and they are ready to use.
+DownloadNewPluginsTask.reloadingPlugins=Reloading plugins, please wait...
+
+
+JAppFileChooser.properties
+====================================
+New:
+allSupportedFiles=All supported files (%s)
+filterContainer=%2$s containers (%1$s)
+
+==========================================================================================================================
+==========================================================================================================================
+==========================================================================================================================
+==========================================================================================================================
+
+
+Version 0.82->0.83
+MainApp.properties
+==============================
+Changed:
+-----------
+Was:
+errorInvalidJRE=This application cannot be started with JRE 1.6.0_0 on Linux.\nThis JRE version is buggy therefore FRD wouldn't work properly.\nUpgrade to newer version.\nExiting.
+New:
+errorInvalidJRE=This application cannot be started with JRE 1.6.0_0.\nThis JRE version is buggy therefore FRD wouldn't work properly.\nUpgrade to newer version.\nExiting.
+
+
+ErrorDialog.properties
+===============================
+Added:
+errorMessageMacOSXBug=Call to Steve Jobs... MacOSX bug :-(....
+
+NewLinksDialog.properties
+===============================
+Added:
+btnSelectPathAction.description=Open directory chooser
+
+
+ConnectDialog.properties
+===============================
+Added:
+checkSocksProxy.text=SOC&KS
+
+
+Version 0.8->
+
+MainApp.properties
+==============================
+added
+
+##Cut&Copy actions
+cut.Action.text = Cu&t
+cut.Action.shortDescription = Move the current selection to the clipboard
+
+copy.Action.text = &Copy
+copy.Action.shortDescription = Copy the current selection to the clipboard
+
+paste.Action.text = &Paste
+paste.Action.shortDescription = Paste the contents of the clipboard at the current insertion point
+
+delete.Action.text = &Delete
+delete.Action.shortDescription = Delete current selection
+
+errorInvalidJRE=This application cannot be started with JRE 1.6.0_0 on Linux.\nThis JRE version is buggy therefore FRD wouldn't work properly.\nUpgrade to newer version.\nExiting.
+errorInvalidPath=This application cannot be started on the path containing '+' or '!' characters ('%s'...)\nExiting.
+
+UserPreferencesDialog.properties
+===================================
+Added
+applyLookAndFeelAction.Action.text=&Apply
+
+
+
+
+New files for translation:
+
+CheckPluginUpdateTask.properties, DownloadNewPluginsTask.properties, AccountDialog.properties, UpdateDialog.properties
+
+
+Here is a complete list of added or changes keys in files against 0.71.
+
+
+MainApp.properties
+==================================
+
+#Change
+was: tooltipTrayInfo=FreeRapid Downloader\n\nComplete downloads %d of %d\nCurrent speed: %s/s\n
+is:  tooltipTrayInfo=FreeRapid Downloader%n%nComplete downloads %d of %d%nCurrent speed: %s/s%n
+
+#New
+DISABLED=DISABLED
+TESTING=TESTING
+
+checkForNewPlugins.Action.text=Check for new &plugins
+notFoundIcon=${iconsPath}not_found.png
+checkedIcon=${iconsPath}checked.png
+unknownIcon=${iconsPath}not_tested.png
+
+checked_fileNotFound=File is not available - it was deleted or invalid URL
+checked_success=File is available on the server
+checked_unknown=File was not checked yet or service problem
+
+#dialog when plugin updates were found
+updatesNotFoundMessage=No plugin updates were found.
+updatesFoundMessage=Good news everyone!\nPlugin updates were detected.\nWhat do you want to do?
+#its buttons:
+updateNowButton=Update now
+updateWithDetails=Show details...
+updateCancel=Cancel
+
+restartApplicationAction.Action.text=&Restart
+
+CaptchaEntryInputMismatch=Server requires correct CAPTCHA input from user
+NotEnoughSpaceException=Not enough space on the disk
+URLNotAvailableAnymore=File is not available anymore
+PluginImplementationException=Problem with a connection to service.\nCannot find requested page content.
+InvalidURLOrServiceProblem=Invalid URL or unindentified service
+FileTransferFailedException=File transfer failed.
+FailedToLoadCaptchaPicture=Failed to load captcha picture
+InvalidUsernameOrPassword=Invalid user name or password
+ServiceConnectionProblemException=Cannot download from service
+NotSupportedDownloadByServiceException=No plugin can be associated with this URL
+PluginIsNotEnabled=Plugin %s is not enabled 
+
+confirmClearHistory=Are you sure you want to clear downloads history?
+
+
+validateLinksAction.Action.text=&Validate
+validateLinksAction.Action.shortDescription=Validate selected link(s) on the server
+validateLinksAction.Action.smallIcon=${iconsPath}checked.png
+validateLinksAction.Action.accelerator=ctrl W
+
+removeMenu.text=&Remove
+removeInvalidLinksAction.Action.text=Remove &Invalid Links
+removeInvalidLinksAction.Action.shortDescription=Removes all links marked as not working
+removeInvalidLinksAction.Action.smallIcon=${iconsPath}not_found.png
+removeInvalidLinksAction.Action.accelerator=ctrl DELETE
+
+#column '?' tooltip
+checkedColumnTooltip=URL validation
+
+CoreTask.properties
+==================================
+
+#New
+errormessage_check_inet_settings=Internet connection is not probably available.\nPlease check your proxy settings.
+errormessage=Error during executing task:\n%s
+
+
+
+MoveFileTask.properties
+==================================
+#New
+Moving_file=Moving file
+
+
+UserPreferencesDialog.properties
+==================================
+
+pluginsBtnAction.Action.text=&Plugins
+pluginsBtnAction.Action.largeIcon=${iconsPath}plugin.png
+
+checkDownloadNotExistingPlugins.text=&Download not existing plugins
+check4PluginUpdatesAutomatically.text=Check for p&lugin updates automatically
+
+btnPluginOptionsAction.Action.text=Op&tions
+
+btnResetDefaultPluginServerAction.Action.text=Set De&fault
+
+labelUpdateFromServer.text=&Update from server
+labelPluginInfo.text=<html><b>X</b> - plugin is active, <b>U</b> - update plugin
+
+labelAfterDetectUpdate.text=When plugin updates are detected:
+labelCheckForUpdateEvery.text=Check &for updates every
+labelHours.text=hour(s)
+labelManualCheck.text=For manual check use function in menu "Help - Check for new plugins"
+
+comboHowToUpdate_list=Ask what to do|Show update dialog first|Update automatic without asking
+
+pluginPanelSettings.tab.title=Settings
+pluginPanelUpdates.tab.title=Updates
+
+pluginTableColumns_list=X|U|Plugin ID|Version|Service|Author|WWW
+
+popmenuButton.icon=${iconsPath}right.gif
+
+updatesMenu.text=&Updates
+activityMenu.text=&Activity
+copyPluginListAction.Action.text=Copy &plugin list
+copyPluginListWithVersionAction.Action.text=Copy plugin list with &version info
+copySupportedSitesListAction.Action.text=Copy &supported sites list
+
+selectAllUpdatesAction.Action.text=&Enable All
+selectAllUpdatesAction.Action.smallIcon=${iconsPath}checks.png
+deSelectAllUpdatesAction.Action.text=&Disable All
+deSelectAllUpdatesAction.Action.smallIcon=${iconsPath}uncheck.png
+selectAllActivityAction.Action.text=&Enable All
+selectAllActivityAction.Action.smallIcon=${iconsPath}checks.png
+deSelectAllActivityAction.Action.text=&Disable All
+deSelectAllActivityAction.Action.smallIcon=${iconsPath}uncheck.png
+
+
+checkForFileExistenceBeforeDownload.text=Check for file existence on the server before downloading
+checkServiceAsIconOnly.text=Represent download service only by an icon without text in table
+
+checkRecheckFilesOnStart.text=Re-check for file existence on the server when application starts
+invalidURL=Plugin server address is not valid URL:%n%s
+
+checkShowToolbarText.text=Show toolbar &buttons with text
+
+
+CheckForNewVersionTask.properties
+==============================================
+
+message.connect.status.checking=Checking for FRD's new version
