@@ -3,7 +3,7 @@
 <plugin class="cz.vity.freerapid.plugins.services.dropbox.DropBoxServiceImpl"
         id="dropbox.com" vendor="birchie" version="1.0.0">
     <attributes>
-        <attribute id="urlRegex" value="https://(www\.)?dropbox\.com/.+"/>
+        <attribute id="urlRegex" value="https?://(www\.)?dropbox\.com/.+"/>
         <attribute id="minver" value="0.854"/>
         <attribute id="maxver" value="0.899"/>
         <attribute id="services" value="dropbox.com"/>
