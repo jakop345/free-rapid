@@ -6,12 +6,15 @@ import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.DownloadClientConsts;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
-import cz.vity.freerapid.plugins.webclient.utils.ScriptUtils;
 import cz.vity.freerapid.utilities.LogUtils;
 import org.apache.commons.httpclient.HttpMethod;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URLDecoder;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -46,11 +49,30 @@ class ZippyShareFileRunner extends AbstractRunner {
             checkProblems();
             checkNameAndSize();
             final String url;
-            Matcher matcher = getMatcherAgainstContent("(\"\\d+/\"[^<>]+?/[^<>]+?\";)");
+            Matcher matcher = getMatcherAgainstContent("(?s)<body>(.+?)</body>");
+            if (!matcher.find()) {
+                throw new PluginImplementationException("Script not found (1)");
+            }
+            matcher = PlugUtils.matcher("<script[^<>]*?>([^<>]+?)</script>", matcher.group(1));
             if (matcher.find()) {
-                final String script = matcher.group(1);
-                logger.info("Evaluating script:\n" + script);
-                url = "/d/" + String.valueOf(ScriptUtils.evaluateJavaScript(script));
+                final Matcher buttonId = getMatcherAgainstContent("<a\\b[^<>]*?\\bid=\"([\\w\\-]+?)\"[^<>]*?>.*?alt=\"Download\"");
+                if (!buttonId.find()) {
+                    throw new PluginImplementationException("Download button ID not found");
+                }
+                final ScriptEngine engine = initScriptEngine();
+                try {
+                    do {
+                        final String script = matcher.group(1);
+                        if (script.contains("tumblr") || script.contains("swfobject")) {
+                            continue;
+                        }
+                        logger.info("Evaluating script:\n" + script);
+                        engine.eval(script);
+                    } while (matcher.find());
+                    url = engine.eval("document.getElementById('" + buttonId.group(1) + "').href").toString();
+                } catch (final Exception e) {
+                    throw new PluginImplementationException("Script execution failed", e);
+                }
             } else if (getContentAsString().contains("Recaptcha.create(")) {
                 url = PlugUtils.getStringBetween(getContentAsString(), "document.location = '", "';");
                 final String rcKey = PlugUtils.getStringBetween(getContentAsString(), "Recaptcha.create(\"", "\"");
@@ -99,7 +121,7 @@ class ZippyShareFileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize() throws Exception {
-        Matcher matcher = getMatcherAgainstContent("\"\\d+/\"[^<>]+?/([^<>]+?)\";");
+        Matcher matcher = getMatcherAgainstContent("document\\.getElementById\\([^\\(\\)]*?\\)\\.href[^<>]+/([^<>]+?)\";");
         if (matcher.find()) {
             httpFile.setFileName(URLDecoder.decode(matcher.group(1), "UTF-8"));
         } else {
@@ -116,6 +138,20 @@ class ZippyShareFileRunner extends AbstractRunner {
             logger.info("File size not found");
         }
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
+    }
+
+    private ScriptEngine initScriptEngine() throws Exception {
+        final ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
+        if (engine == null) {
+            throw new RuntimeException("JavaScript engine not found");
+        }
+        final Reader reader = new InputStreamReader(ZippyShareFileRunner.class.getResourceAsStream("zippy.js"), "UTF-8");
+        try {
+            engine.eval(reader);
+        } finally {
+            reader.close();
+        }
+        return engine;
     }
 
     private HttpMethod stepCaptcha(final String rcKey, final String shortencode) throws Exception {
