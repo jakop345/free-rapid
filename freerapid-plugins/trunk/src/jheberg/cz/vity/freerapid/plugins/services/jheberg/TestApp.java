@@ -1,4 +1,4 @@
-package cz.vity.freerapid.plugins.services.flashx;
+package cz.vity.freerapid.plugins.services.jheberg;
 
 import cz.vity.freerapid.plugins.dev.PluginDevApplication;
 import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
@@ -8,7 +8,7 @@ import org.jdesktop.application.Application;
 import java.net.URL;
 
 /**
- * @author ntoskrnl
+ * @author birchie
  */
 public class TestApp extends PluginDevApplication {
     @Override
@@ -16,12 +16,13 @@ public class TestApp extends PluginDevApplication {
         final HttpFile httpFile = getHttpFile(); //creates new test instance of HttpFile
         try {
             //we set file URL
-            httpFile.setNewURL(new URL("http://www.flashx.tv/xcm2rmiuaycv.html"));
+            httpFile.setNewURL(new URL("http://jheberg.net/download/twoddleu-truebloods07e05bdripx264-demand/"));
+            //httpFile.setNewURL(new URL("http://jheberg.net/redirect/twoddleu-truebloods07e03bdripx264-demand/Uptobox/"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
             //then we tries to download
-            final FlashXServiceImpl service = new FlashXServiceImpl(); //instance of service - of our plugin
+            final JhebergServiceImpl service = new JhebergServiceImpl(); //instance of service - of our plugin
             //runcheck makes the validation
             testRun(service, httpFile, connectionSettings);//download file with service and its Runner
             //all output goes to the console
