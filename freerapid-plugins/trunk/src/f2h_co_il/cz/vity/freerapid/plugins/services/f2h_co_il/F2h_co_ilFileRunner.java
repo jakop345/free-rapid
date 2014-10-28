@@ -24,6 +24,7 @@ class F2h_co_ilFileRunner extends AbstractRunner {
     @Override
     public void runCheck() throws Exception { //this method validates file
         super.runCheck();
+        setPageEncoding("Windows-1255");
         final GetMethod getMethod = getGetMethod(fileURL);//make first request
         if (makeRedirectedRequest(getMethod)) {
             checkProblems();
@@ -47,6 +48,7 @@ class F2h_co_ilFileRunner extends AbstractRunner {
     public void run() throws Exception {
         super.run();
         logger.info("Starting download in TASK " + fileURL);
+        setPageEncoding("Windows-1255");
         final GetMethod method = getGetMethod(fileURL); //create GET request
         if (makeRedirectedRequest(method)) { //we make the main request
             final String contentAsString = getContentAsString();//check for response
