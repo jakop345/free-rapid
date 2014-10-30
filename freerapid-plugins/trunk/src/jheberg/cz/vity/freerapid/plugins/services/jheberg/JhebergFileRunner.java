@@ -99,7 +99,7 @@ class JhebergFileRunner extends AbstractRunner {
                 if (!makeRedirectedRequest(hMethod)) {
                     throw new PluginImplementationException("Error getting redirected link");
                 }
-                return new URI(PlugUtils.getStringBetween(getContentAsString(), "url\": \"", "\""));
+                return new URI(getMethodBuilder().setActionFromTextBetween("url\": \"", "\"").getEscapedURI());
             } else {
                 checkProblems();
                 throw new ServiceConnectionProblemException();
