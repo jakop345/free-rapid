@@ -56,6 +56,7 @@ class OneFichierFileRunner extends AbstractRunner {
     }
 
     private void setEnglishURL() {
+        fileURL = fileURL.replaceFirst("https?://", "https://");
         if (!fileURL.contains("/en")) {
             String[] temp = fileURL.split(".com");
             fileURL = temp[0] + ".com/en";
@@ -67,7 +68,12 @@ class OneFichierFileRunner extends AbstractRunner {
         if (fileURL.contains("/dir/")) {
             PlugUtils.checkName(httpFile, content, "<title>", "</title>");
         } else {
-            PlugUtils.checkName(httpFile, content, "name :</th><td>", "</td>");
+            final Matcher match = PlugUtils.matcher("ame\\s*?:\\s*?</t.>\\s*?<t.*?>(.+?)<", getContentAsString());
+            if (!match.find()) throw new PluginImplementationException("File name not found");
+            httpFile.setFileName(match.group(1).trim());
+            final Matcher matchS = PlugUtils.matcher("Size\\s*?:\\s*?</t.>\\s*?<t.*?>(.+?)<", getContentAsString());
+            if (!matchS.find()) throw new PluginImplementationException("File size not found");
+            httpFile.setFileSize(PlugUtils.getFileSizeFromString(matchS.group(1).trim()));
             PlugUtils.checkFileSize(httpFile, content, "Size :</th><td>", "</td>");
         }
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
@@ -137,6 +143,13 @@ class OneFichierFileRunner extends AbstractRunner {
                 delay = PlugUtils.getNumberBetween(contentAsString, "wait up to", "minute");
             } catch (Exception e) {/**/}
             throw new YouHaveToWaitException("You can download only one file at a time and you must wait up to " + delay + " minutes between each downloads", delay * 60);
+        }
+        if (contentAsString.contains("you must wait between downloads")) {
+            final String waitTime  = PlugUtils.getStringBetween(getContentAsString(), "You must wait ", "<");
+            int time = Integer.parseInt(waitTime.split(" ")[0]);
+            if (waitTime.split(" ")[1].equals("minutes"))
+                time = time * 60;
+            throw new YouHaveToWaitException("You must wait between downloads", time);
         }
     }
 
