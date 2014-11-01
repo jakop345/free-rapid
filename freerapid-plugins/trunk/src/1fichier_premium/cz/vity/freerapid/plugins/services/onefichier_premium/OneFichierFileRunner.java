@@ -77,7 +77,6 @@ class OneFichierFileRunner extends AbstractRunner {
             final Matcher matchS = PlugUtils.matcher("Size\\s*?:\\s*?</t.>\\s*?<t.*?>(.+?)<", getContentAsString());
             if (!matchS.find()) throw new PluginImplementationException("File size not found");
             httpFile.setFileSize(PlugUtils.getFileSizeFromString(matchS.group(1).trim()));
-            PlugUtils.checkFileSize(httpFile, content, "Size :</th><td>", "</td>");
         }
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
