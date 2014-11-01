@@ -87,8 +87,9 @@ class MegaApi {
     }
 
     public static void checkProblems(final String content) throws Exception {
-        if (content.contains("\"e\":")) {
-            final int e = Integer.parseInt(PlugUtils.getStringBetween(content, "\"e\":", "}"));
+        final Matcher matcher = PlugUtils.matcher("\\[(\\-\\d+?)\\]", content);
+        if (matcher.find()) {
+            final int e = Integer.parseInt(matcher.group(1));
             switch (e) {
                 case EOVERQUOTA:
                     throw new NotRecoverableDownloadException("Bandwidth quota exceeded");
@@ -98,6 +99,7 @@ class MegaApi {
                     throw new ServiceConnectionProblemException("Temporarily unavailable");
                 case ENOENT:
                 case EACCESS:
+                case EBLOCKED:
                     throw new URLNotAvailableAnymoreException("File not found");
                 case EKEY:
                     throw new NotRecoverableDownloadException("Decryption error");
@@ -128,5 +130,8 @@ class MegaApi {
     private static final int EOVERQUOTA = -17;
     private static final int ETEMPUNAVAIL = -18;
     private static final int ETOOMANYCONNECTIONS = -19;
+    private static final int EWRITE = -20;
+    private static final int EREAD = -21;
+    private static final int EAPPKEY = -22;
 
 }
