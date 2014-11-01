@@ -90,7 +90,7 @@ class OneFichierFileRunner extends AbstractRunner {
             final String dlLink = method.getResponseHeader("Location").getValue();
             httpFile.setFileName(URLDecoder.decode(dlLink.substring(1 + dlLink.lastIndexOf("/")), "UTF-8"));
             if (!tryDownloadAndSaveFile(method)) {
-                checkProblems();//if downloading failed
+                checkDownloadProblems();//if downloading failed
                 throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
             }
         } else if (status1 == 200) {
@@ -107,7 +107,7 @@ class OneFichierFileRunner extends AbstractRunner {
                 httpFile.getProperties().put("removeCompleted", true);
             } else {
                 while (true) {
-                    checkProblems();//check problems
+                    checkDownloadProblems();//check problems
                     try {
                         checkNameAndSize(getContentAsString());//extract file name and size from the page
                     } catch (Exception e) {/**/}
@@ -115,18 +115,18 @@ class OneFichierFileRunner extends AbstractRunner {
                     final int status = client.makeRequest(hMethod, false);
                     if (status / 100 == 3) {
                         if (!tryDownloadAndSaveFile(getGetMethod(hMethod.getResponseHeader("Location").getValue()))) {
-                            checkProblems();//if downloading failed
+                            checkDownloadProblems();//if downloading failed
                             throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
                         }
                         return;
                     } else if (status != 200) {
-                        checkProblems();
+                        checkDownloadProblems();
                         throw new ServiceConnectionProblemException();
                     }
                 }
             }
         } else {
-            checkProblems();
+            checkDownloadProblems();
             throw new ServiceConnectionProblemException();
         }
     }
@@ -144,13 +144,18 @@ class OneFichierFileRunner extends AbstractRunner {
             } catch (Exception e) {/**/}
             throw new YouHaveToWaitException("You can download only one file at a time and you must wait up to " + delay + " minutes between each downloads", delay * 60);
         }
-        if (contentAsString.contains("you must wait between downloads")) {
+    }
+
+    private void checkDownloadProblems() throws ErrorDuringDownloadingException {
+        checkProblems();
+        if (getContentAsString().contains("you must wait between downloads")) {
             final String waitTime  = PlugUtils.getStringBetween(getContentAsString(), "You must wait ", "<");
             int time = Integer.parseInt(waitTime.split(" ")[0]);
             if (waitTime.split(" ")[1].equals("minutes"))
                 time = time * 60;
             throw new YouHaveToWaitException("You must wait between downloads", time);
         }
+
     }
 
 }
