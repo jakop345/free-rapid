@@ -22,13 +22,13 @@ enum VideoQuality {
     private final String name;
 
     private VideoQuality(int quality) {
-        this.quality = quality;       
-	this.name = quality + "p";                
+        this.quality = quality;
+        this.name = quality + "p";
     }
-    
+
     private VideoQuality(int quality, String name) {
-	this.quality = quality;
-	this.name = name;
+        this.quality = quality;
+        this.name = name;
     }
 
     public int getQuality() {

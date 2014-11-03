@@ -103,7 +103,7 @@ class YouTubeSigDecipher {
         if (lstSig.get(0).isEmpty()) { //JRE < 8 regex bug (https://bugs.openjdk.java.net/browse/JDK-8027645)
             lstSig.remove(0); //remove empty char at head
         }
-        Matcher matcher = PlugUtils.matcher(REVERSE_CLONE_SWAP_CALL_PATTERN, bytecode);        
+        Matcher matcher = PlugUtils.matcher(REVERSE_CLONE_SWAP_CALL_PATTERN, bytecode);
         String ret = null;
         while (matcher.find()) {
             int arg = matcher.group(1).charAt(0);
@@ -124,7 +124,7 @@ class YouTubeSigDecipher {
                 }
             } else {
                 throw new PluginImplementationException("Unknown multiname index: " + callPropertyIndex);
-            }            
+            }
             StringBuilder sb = new StringBuilder();
             for (String s : lstSig) {
                 sb.append(s);

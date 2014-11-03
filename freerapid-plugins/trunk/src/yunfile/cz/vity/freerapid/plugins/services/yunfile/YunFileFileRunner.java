@@ -9,7 +9,11 @@ import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.net.URLEncoder;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 
@@ -91,15 +95,8 @@ class YunFileFileRunner extends AbstractRunner {
 
                 downloadTask.sleep(waitTime + 1);
                 if (getContentAsString().contains("vcode")) {
-                    final String captcha;
-                    final String captchaUrl;
-                    matcher = PlugUtils.matcher("$(?!.*?(?:'|//))\\s*?<img [^<>]*?src=\"(/verifyimg/getPcv/[^\"]+?)\"",
-                            getContentAsString().replaceAll("(?s)<script>.*?/getPcv/.*?</script>", ""));
-                    if (!matcher.find()) {
-                        throw new PluginImplementationException("Captcha URL not found");
-                    }
-                    captchaUrl = matcher.group(1);
-                    captcha = getCaptchaSupport().getCaptcha(baseURL + captchaUrl);
+                    final BufferedImage captchaImg = getCaptchaImg(getContentAsString(), baseURL);
+                    final String captcha = getCaptchaSupport().askForCaptcha(captchaImg);
                     if (captcha == null) {
                         throw new CaptchaEntryInputMismatchException();
                     }
@@ -172,6 +169,52 @@ class YunFileFileRunner extends AbstractRunner {
             checkProblems();
             throw new ServiceConnectionProblemException();
         }
+    }
+
+    private BufferedImage getCaptchaImg(String content, String baseUrl) throws ErrorDuringDownloadingException {
+        /*
+        <script>
+	        var cvimg = document.getElementById("cvimg");
+	        cvimg.setAttribute("src","/verifyimg/getPcv/713.html");
+        </script>
+         */
+        List<BufferedImage> images = new LinkedList<BufferedImage>();
+        Matcher matcher = PlugUtils.matcher("['\"](/verifyimg/getPcv/\\d+\\.html)['\"]",
+                content.replaceAll("(?sm)(?:([\\s;])+//(?:.*)$)|(?:/\\*(?:[\\s\\S]*?)\\*/)", "").replaceAll("<!--.*?-->", ""));
+        int totalWidth = 0, totalHeight = 0;
+        int imageType = 0;
+        while (matcher.find()) {
+            BufferedImage tempImage = getCaptchaSupport().getCaptchaImage(baseUrl + matcher.group(1));
+            long sum = 0;
+            int width = tempImage.getWidth();
+            int height = tempImage.getHeight();
+            for (int i = 0; i < width; i++) {
+                for (int j = 0; j < height; j++) {
+                    sum += tempImage.getRGB(i, j);
+                }
+            }
+            long avg = (sum / (width * height));
+            if (avg > (Color.BLACK.getRGB() + 0x000ff)) {
+                if (images.size() > 3) {
+                    throw new PluginImplementationException("Error getting captcha image (2)");
+                }
+                imageType = tempImage.getType();
+                totalWidth += width;
+                totalHeight += height;
+                images.add(tempImage);
+            }
+        }
+
+        if (images.size() == 0) {
+            throw new PluginImplementationException("Error getting captcha image (1)");
+        }
+        BufferedImage compositeImage = new BufferedImage(totalWidth, totalHeight, imageType);
+        for (int i = 0, imageWidth = 0, imagesCount = images.size(); i < imagesCount; i++) {
+            BufferedImage tempImage = images.get(i);
+            compositeImage.createGraphics().drawImage(tempImage, imageWidth, 0, null);
+            imageWidth += tempImage.getWidth();
+        }
+        return compositeImage;
     }
 
     private String getFileIdFromUrl() throws PluginImplementationException {

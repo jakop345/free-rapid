@@ -12,9 +12,18 @@ import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.URI;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Ladislav Vitasek
@@ -70,6 +79,9 @@ class UlozToRunner extends AbstractRunner {
         super.runCheck();
         checkURL();
         setClientParameter(DownloadClientConsts.USER_AGENT, "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:26.0) Gecko/20100101 Firefox/26.0");
+        if (isFolder(fileURL)) {
+            return;
+        }
         final GetMethod getMethod = getGetMethod(fileURL);
         if (makeRedirectedRequest(getMethod)) {
             checkProblems();
@@ -93,27 +105,31 @@ class UlozToRunner extends AbstractRunner {
             checkProblems();
             passwordProtectedCheck();
             ageCheck(getContentAsString());
-            checkNameAndSize(getContentAsString());
-            captchaCount = 0;
-            HttpMethod method = null;
-            while (getContentAsString().contains("captchaContainer") || getContentAsString().contains("?captcha=no")) {
-                //client.getHTTPClient().getParams().setIntParameter(HttpClientParams.MAX_REDIRECTS, 8);
-                method = stepCaptcha();
-                downloadTask.sleep(new Random().nextInt(4) + new Random().nextInt(3));
-                makeRequest(method);
-                if ((method.getStatusCode() == 302) || (method.getStatusCode() == 303)) {
-                    String nextUrl = method.getResponseHeader("Location").getValue();
-                    method = getMethodBuilder().setReferer(fileURL).setAction(nextUrl).toGetMethod();
-                    //downloadTask.sleep(new Random().nextInt(15) + new Random().nextInt(3));
-                    logger.info("Download file location : " + nextUrl);
-                    break;
+            if (isFolder(fileURL)) {
+                parseFolder();
+            } else {
+                checkNameAndSize(getContentAsString());
+                captchaCount = 0;
+                HttpMethod method = null;
+                while (getContentAsString().contains("captchaContainer") || getContentAsString().contains("?captcha=no")) {
+                    //client.getHTTPClient().getParams().setIntParameter(HttpClientParams.MAX_REDIRECTS, 8);
+                    method = stepCaptcha();
+                    downloadTask.sleep(new Random().nextInt(4) + new Random().nextInt(3));
+                    makeRequest(method);
+                    if ((method.getStatusCode() == 302) || (method.getStatusCode() == 303)) {
+                        String nextUrl = method.getResponseHeader("Location").getValue();
+                        method = getMethodBuilder().setReferer(fileURL).setAction(nextUrl).toGetMethod();
+                        //downloadTask.sleep(new Random().nextInt(15) + new Random().nextInt(3));
+                        logger.info("Download file location : " + nextUrl);
+                        break;
+                    }
+                    checkProblems();
                 }
-                checkProblems();
-            }
-            setFileStreamContentTypes("text/plain", "text/texmacs");
-            if (!tryDownloadAndSaveFile(method)) {
-                checkProblems();
-                throw new ServiceConnectionProblemException("Error starting download");
+                setFileStreamContentTypes("text/plain", "text/texmacs");
+                if (!tryDownloadAndSaveFile(method)) {
+                    checkProblems();
+                    throw new ServiceConnectionProblemException("Error starting download");
+                }
             }
         } else {
             checkProblems();
@@ -234,10 +250,9 @@ class UlozToRunner extends AbstractRunner {
         }
         if (captchaTxt == null) {
             throw new CaptchaEntryInputMismatchException();
-        } else {
-            sendForm.setParameter("captcha_value", captchaTxt);
-            return sendForm.toPostMethod();
         }
+        sendForm.setParameter("captcha_value", captchaTxt);
+        return sendForm.toPostMethod();
     }
 
     //"Prekro�en pocet FREE slotu, pouzijte VIP download
@@ -261,4 +276,75 @@ class UlozToRunner extends AbstractRunner {
         }
     }
 
+    private boolean isFolder(String fileUrl) {
+        return fileUrl.contains("/soubory/");
+    }
+
+    private void parseFolder() throws Exception {
+        Pattern pattern = Pattern.compile("<script>(?s)(.*?var kn\\s*?=.+?)</script>");
+        Matcher matcher = pattern.matcher(getContentAsString());
+        if (!matcher.find()) {
+            HttpMethod getMethod = getMethodBuilder().setReferer(fileURL).setAction(fileURL).setAjax().toGetMethod();
+            if (!makeRedirectedRequest(getMethod)) {
+                checkProblems();
+                throw new ServiceConnectionProblemException("");
+            }
+            matcher = pattern.matcher(getContentAsString());
+            if (!matcher.find()) {
+                throw new PluginImplementationException("Error getting 'script vars'");
+            }
+        }
+        String scriptVars = matcher.group(1);
+        ScriptEngine engine = initScriptEngine();
+        engine.eval(scriptVars);
+        List<URI> uriList = new LinkedList<URI>();
+        matcher = PlugUtils.matcher("data-icon=\"([a-z0-9]+)\"", getContentAsString());
+        while (matcher.find()) {
+            String dataIcon = matcher.group(1);
+            try {
+                engine.eval("var decrypted = ad.decrypt(kn[\"" + dataIcon + "\"]);");
+            } catch (ScriptException e) {
+                throw new PluginImplementationException("Script execution failed (1)", e);
+            }
+            String decrypted = (String) engine.get("decrypted");
+            Matcher correspondMatcher = PlugUtils.matcher("<a [^<>]*?(?:data-icon|href)\\s*?=\\s*?\"([a-z0-9]+?|/soubory/[^\"]+?)\"[^<>]*?>", decrypted);
+            if (!correspondMatcher.find()) {
+                logger.warning(decrypted);
+                throw new PluginImplementationException("Error getting corresponding data-icon for: " + dataIcon);
+            }
+            String matchedStr = correspondMatcher.group(1);
+            if (!matchedStr.contains("/soubory/")) { //file
+                try {
+                    engine.eval("var decrypted = ad.decrypt(kn[\"" + correspondMatcher.group(1) + "\"]);");
+                } catch (ScriptException e) {
+                    throw new PluginImplementationException("Script execution failed (2)", e);
+                }
+                decrypted = (String) engine.get("decrypted");
+            } else { //folder
+                decrypted = matchedStr;
+            }
+            uriList.add(new URI(getBaseURL() + decrypted.replace("\u0000", "")));
+        }
+        if (uriList.isEmpty()) {
+            throw new PluginImplementationException("No links found");
+        }
+        getPluginService().getPluginContext().getQueueSupport().addLinksToQueue(httpFile, uriList);
+        httpFile.getProperties().put("removeCompleted", true);
+        logger.info(uriList.size() + " links added");
+    }
+
+
+    private ScriptEngine initScriptEngine() throws Exception {
+        final ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
+        if (engine == null) {
+            throw new RuntimeException("JavaScript engine not found");
+        }
+        final Reader reader = new InputStreamReader(UlozToRunner.class.getResourceAsStream("/resources/crypto.js"), "UTF-8");
+        try {
+            engine.eval(reader);
+        } finally {
+            reader.close();
+        }
+        return engine;
+    }
 }

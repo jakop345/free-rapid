@@ -7,6 +7,7 @@ class YouTubeMedia {
     private final int itag;
     private final Container container;
     private final int videoQuality; // deliberately not using VideoQuality, reason : flexibility, it's possible that YT introduces video quality which is not listed in VideoQuality data structure
+    private final int frameRate;
     private final String audioEncoding;
     private final int audioBitrate;
     private final String url;
@@ -17,6 +18,7 @@ class YouTubeMedia {
         this.itag = itag;
         this.container = getContainer(itag);
         this.videoQuality = (container == Container.dash_a ? -1 : getVideoResolution(itag));
+        this.frameRate = (container == Container.dash_a ? -1 : getFrameRate(itag));
         this.audioEncoding = (isDashVideo() ? "None" : getAudioEncoding(itag));
         this.audioBitrate = (isDashVideo() ? -1 : getAudioBitrate(itag));
         this.url = url;
@@ -56,12 +58,18 @@ class YouTubeMedia {
             case 138:
             case 160:
             case 264:
+            case 298:
+            case 299:
                 return Container.dash_v;
             case 242:
             case 243:
             case 244:
             case 247:
             case 248:
+            case 271:
+            case 272:
+            case 302:
+            case 303:
                 return Container.dash_v_vpx;
             case 139:
             case 140:
@@ -159,11 +167,15 @@ class YouTubeMedia {
             case 120:
             case 136:
             case 247:
+            case 298:
+            case 302:
                 return 720;
             case 37:
             case 46:
             case 137:
             case 248:
+            case 299:
+            case 303:
                 return 1080;
             case 264:
                 return 1440;
@@ -172,6 +184,18 @@ class YouTubeMedia {
                 return 3072;
             default:
                 throw new PluginImplementationException("Unknown video resolution for itag=" + itag);
+        }
+    }
+
+    private int getFrameRate(int itag) {
+        switch (itag) {
+            case 298:
+            case 299:
+            case 302:
+            case 303:
+                return FrameRate._60.getFrameRate();
+            default:
+                return FrameRate._30.getFrameRate();
         }
     }
 
@@ -204,6 +228,10 @@ class YouTubeMedia {
         return videoQuality;
     }
 
+    public int getFrameRate() {
+        return frameRate;
+    }
+
     public String getAudioEncoding() {
         return audioEncoding;
     }
@@ -230,6 +258,7 @@ class YouTubeMedia {
                 "itag=" + itag +
                 ", container=" + container +
                 ", videoQuality=" + videoQuality +
+                ", frameRate=" + frameRate +
                 ", audioEncoding='" + audioEncoding + '\'' +
                 ", audioBitrate=" + audioBitrate +
                 //", url='" + url + '\'' +
