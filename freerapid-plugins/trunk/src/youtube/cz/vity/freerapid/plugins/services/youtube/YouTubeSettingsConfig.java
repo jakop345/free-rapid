@@ -9,6 +9,7 @@ public class YouTubeSettingsConfig {
     private DownloadMode downloadMode = DownloadMode.downloadVideo;
     private VideoQuality videoQuality = VideoQuality._480;
     private Container container = Container.mp4;
+    private FrameRate frameRate = FrameRate._30;
     private AudioQuality convertAudioQuality = AudioQuality._192;
     private AudioQuality extractAudioQuality = AudioQuality._192;
     private boolean reversePlaylistOrder = false;
@@ -30,6 +31,14 @@ public class YouTubeSettingsConfig {
 
     public void setContainer(Container container) {
         this.container = container;
+    }
+
+    public FrameRate getFrameRate() {
+        return frameRate;
+    }
+
+    public void setFrameRate(FrameRate frameRate) {
+        this.frameRate = frameRate;
     }
 
     public DownloadMode getDownloadMode() {
@@ -95,6 +104,7 @@ public class YouTubeSettingsConfig {
                 ", convertAudioQuality=" + convertAudioQuality : (downloadMode == DownloadMode.extractAudio ?
                 ", extractAudioQuality=" + extractAudioQuality :
                 ", videoQuality=" + videoQuality +
+                        ", frameRate=" + frameRate +
                         ", container='" + container + '\'' +
                         ", enableDash=" + enableDash)) +
                 '}';

@@ -126,7 +126,7 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
             }
             //"url_encoded_fmt_stream_map": "type=vi...    " //normal
             //url_encoded_fmt_stream_map=url%3Dhttp%253A... & //embedded
-            Matcher matcher = getMatcherAgainstContent("\"?url_encoded_fmt_stream_map\"?(=|:)(?: \")?([^&\"$]+)(?:\"&|$|)");
+            Matcher matcher = getMatcherAgainstContent("\"?url_encoded_fmt_stream_map\"?(=|:)(?: \")?([^&\"$]+)(?:\"|&|$)");
             if (!matcher.find()) {
                 throw new PluginImplementationException("Fmt stream map not found");
             }
@@ -140,7 +140,7 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
                 Map<Integer, YouTubeMedia> afStreamMap = null; //streams from 'adaptive_fmts', not to be confused with afDashStreamMap
                 Map<Integer, YouTubeMedia> dashStreamMap = null; //streams from 'dashmpd'
                 if (getContentAsString().contains("adaptive_fmts")) {
-                    matcher = getMatcherAgainstContent("\"?adaptive_fmts\"?(=|:)(?: \")?([^&\"$]+)(?:\"&|$|)");
+                    matcher = getMatcherAgainstContent("\"?adaptive_fmts\"?(=|:)(?: \")?([^&\"$]+)(?:\"|&|$)");
                     if (!matcher.find()) {
                         throw new PluginImplementationException("Error getting adaptive fmts");
                     }
@@ -150,7 +150,7 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
                     afStreamMap = getFmtStreamMap(afContent);
                 }
                 if (getContentAsString().contains("dashmpd")) {
-                    matcher = getMatcherAgainstContent("\"?dashmpd\"?(=|:)(?: \")?([^&\"$]+)(?:\"&|$|)");
+                    matcher = getMatcherAgainstContent("\"?dashmpd\"?(=|:)(?: \")?([^&\"$]+)(?:\"|&|$)");
                     if (!matcher.find()) {
                         throw new PluginImplementationException("Error getting dash URL");
                     }
@@ -232,10 +232,10 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
                     checkProblems();
                     throw new ServiceConnectionProblemException("Error starting download");
                 }
+            }
 
-            } else if (config.getDownloadMode() == DownloadMode.convertToAudio) {
+            if (config.getDownloadMode() == DownloadMode.convertToAudio) {
                 convertToAudio(youTubeMedia.getAudioBitrate(), (container == Container.mp4) || (container == Container.dash_a));
-
             } else if (config.getDownloadMode() == DownloadMode.extractAudio) {
                 if ((container == Container.flv) && (youTubeMedia.getAudioEncoding().equalsIgnoreCase("MP3"))) { //to mp3
                     //for MP3 track inside FLV container, convertToAudio is extraction, not conversion
@@ -245,7 +245,6 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
                 } else {
                     throw new PluginImplementationException("Unsupported container : " + container);
                 }
-
             } else if ((config.getDownloadMode() == DownloadMode.downloadVideo)
                     && config.isEnableInternalMultiplexer()
                     && youTubeMedia.isDash()) {
@@ -302,7 +301,7 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
         String content = getContentAsString();
         if (content.contains("It+is+restricted+from+playback+on+certain+sites")
                 || content.contains("This+video+contains+content+from+")) {
-            throw new PluginImplementationException("Error requesting embedded content, video cannot be embedded");
+            throw new PluginImplementationException("Error requesting embedded content, the video cannot be embedded");
         }
     }
 
@@ -496,11 +495,11 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
                     }
                 }
             }
+            final int selectedVideoQuality = ytMediaMap.get(selectedItag).getVideoQuality();
 
             //select container
             final Container configContainer = config.getContainer();
             if (configContainer != Container.Any) {
-                final int selectedVideoQuality = ytMediaMap.get(selectedItag).getVideoQuality();
                 int weight = Integer.MIN_VALUE;
                 for (YouTubeMedia ytMedia : ytMediaMap.values()) {
                     if (ytMedia.getVideoQuality() == selectedVideoQuality) {
@@ -525,6 +524,28 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
                             weight = tempWeight;
                             selectedItag = ytMedia.getItag();
                         }
+                    }
+                }
+            }
+            final Container selectedContainer = ytMediaMap.get(selectedItag).getContainer();
+
+            //select frame rate
+            final FrameRate configFrameRate = config.getFrameRate();
+            int weight = Integer.MIN_VALUE;
+            for (YouTubeMedia ytMedia : ytMediaMap.values()) {
+                if ((ytMedia.getVideoQuality() == selectedVideoQuality) && (ytMedia.getContainer() == selectedContainer)) {
+                    int tempWeight = 0;
+                    int frameRate = ytMedia.getFrameRate();
+                    if (configFrameRate.getFrameRate() == frameRate) {
+                        tempWeight = 100;
+                    } else if (frameRate == FrameRate._60.getFrameRate()) {
+                        tempWeight = 50;
+                    } else if (frameRate == FrameRate._30.getFrameRate()) {
+                        tempWeight = 49;
+                    }
+                    if (tempWeight > weight) {
+                        weight = tempWeight;
+                        selectedItag = ytMedia.getItag();
                     }
                 }
             }
@@ -994,7 +1015,6 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
         }
     }
 
-
     private void bypassAgeVerification(HttpMethod method) throws Exception {
         if (method.getURI().toString().matches("https?://(www\\.)?youtube\\.com/verify_age.*")
                 || getContentAsString().contains("watch7-player-age-gate-content")
@@ -1008,7 +1028,7 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
             logger.info("Requesting embed SWF: " + embedSwfUrl);
             InputStream is = client.makeRequestForFile(client.getGetMethod(embedSwfUrl));
             if (is == null) {
-                throw new ServiceConnectionProblemException("Error downloading SWF");
+                throw new ServiceConnectionProblemException("Error downloading embed SWF");
             }
             String embedSwfContent = YouTubeSigDecipher.readSwfStreamToString(is);
 

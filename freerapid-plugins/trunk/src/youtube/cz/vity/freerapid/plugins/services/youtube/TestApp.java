@@ -54,7 +54,8 @@ public class TestApp extends PluginDevApplication {
             //httpFile.setNewURL(new URL("https://www.youtube.com/watch?v=E7WuQoF3fAQ")); //primary dash audio fails for the highest video quality
             //httpFile.setNewURL(new URL("https://www.youtube.com/watch?v=E7WuQoF3fAQ&dashaudioitag=141&secondarydashaudioitag=140"));
             //httpFile.setNewURL(new URL("https://www.youtube.com/watch?v=kTqgsKxv-0Q"));
-            httpFile.setNewURL(new URL("http://www.youtube.com/watch?v=gY5rztWa1TM"));
+            //httpFile.setNewURL(new URL("http://www.youtube.com/watch?v=gY5rztWa1TM"));
+            httpFile.setNewURL(new URL("https://www.youtube.com/watch?v=5laMCk6JQN0")); //60 fps
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 8118); //eg we can use local proxy to sniff HTTP communication
@@ -69,6 +70,7 @@ public class TestApp extends PluginDevApplication {
             config.setDownloadSubtitles(true);
             config.setDownloadMode(DownloadMode.downloadVideo);
             config.setConvertAudioQuality(AudioQuality._128);
+            config.setFrameRate(FrameRate._60);
             service.setConfig(config);
 
             testRun(service, httpFile, connectionSettings);//download file with service and its Runner

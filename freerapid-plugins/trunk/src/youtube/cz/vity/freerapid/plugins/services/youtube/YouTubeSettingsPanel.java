@@ -28,6 +28,8 @@ class YouTubeSettingsPanel extends JPanel {
         final JComboBox<VideoQuality> videoQualityList = new JComboBox<VideoQuality>(VideoQuality.getItems());
         final JLabel containerLabel = new JLabel("Preferred container:");
         final JComboBox<Container> containerList = new JComboBox<Container>(Container.getItems());
+        final JLabel frameRateLabel = new JLabel("Preferred frame rate:");
+        final JComboBox<FrameRate> frameRateList = new JComboBox<FrameRate>(FrameRate.getItems());
         final JLabel convertAudioQualityLabel = new JLabel("Audio bitrate:");
         final JComboBox<AudioQuality> convertAudioQualityList = new JComboBox<AudioQuality>(AudioQuality.getItems());
         final JLabel extractAudioQualityLabel = new JLabel("Audio bitrate:");
@@ -51,6 +53,8 @@ class YouTubeSettingsPanel extends JPanel {
         videoQualityList.setAlignmentX(Component.LEFT_ALIGNMENT);
         containerLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         containerList.setAlignmentX(Component.LEFT_ALIGNMENT);
+        frameRateLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        frameRateList.setAlignmentX(Component.LEFT_ALIGNMENT);
         convertAudioQualityLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         convertAudioQualityList.setAlignmentX(Component.LEFT_ALIGNMENT);
         extractAudioQualityLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -72,6 +76,7 @@ class YouTubeSettingsPanel extends JPanel {
 
         videoQualityList.setSelectedItem(config.getVideoQuality());
         containerList.setSelectedItem(config.getContainer());
+        frameRateList.setSelectedItem(config.getFrameRate());
         convertAudioQualityList.setSelectedItem(config.getConvertAudioQuality());
         extractAudioQualityList.setSelectedItem(config.getExtractAudioQuality());
 
@@ -85,6 +90,7 @@ class YouTubeSettingsPanel extends JPanel {
         extractAudioRb.setSelected(config.getDownloadMode() == DownloadMode.extractAudio);
 
         videoQualityList.setEnabled(config.getDownloadMode() == DownloadMode.downloadVideo);
+        frameRateList.setEnabled(config.getDownloadMode() == DownloadMode.downloadVideo);
         containerList.setEnabled(config.getDownloadMode() == DownloadMode.downloadVideo);
         convertAudioQualityList.setEnabled(config.getDownloadMode() == DownloadMode.convertToAudio);
         extractAudioQualityList.setEnabled(config.getDownloadMode() == DownloadMode.extractAudio);
@@ -97,6 +103,7 @@ class YouTubeSettingsPanel extends JPanel {
                 boolean isExtractAudio = e.getActionCommand().equals(DownloadMode.extractAudio.toString());
                 videoQualityList.setEnabled(isDownloadVideo);
                 containerList.setEnabled(isDownloadVideo);
+                frameRateList.setEnabled(isDownloadVideo);
                 convertAudioQualityList.setEnabled(isConvertAudio);
                 extractAudioQualityList.setEnabled(isExtractAudio);
                 DownloadMode downloadMode = (isDownloadVideo ? DownloadMode.downloadVideo :
@@ -118,6 +125,12 @@ class YouTubeSettingsPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 config.setContainer((Container) containerList.getSelectedItem());
+            }
+        });
+        frameRateList.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                config.setFrameRate((FrameRate) frameRateList.getSelectedItem());
             }
         });
         convertAudioQualityList.addActionListener(new ActionListener() {
@@ -175,6 +188,8 @@ class YouTubeSettingsPanel extends JPanel {
         downloadVideoPanel.add(videoQualityList);
         downloadVideoPanel.add(containerLabel);
         downloadVideoPanel.add(containerList);
+        downloadVideoPanel.add(frameRateLabel);
+        downloadVideoPanel.add(frameRateList);
         convertToAudioPanel.setLayout(new BoxLayout(convertToAudioPanel, BoxLayout.Y_AXIS));
         convertToAudioPanel.add(convertAudioQualityLabel);
         convertToAudioPanel.add(convertAudioQualityList);
