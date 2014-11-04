@@ -64,7 +64,7 @@ public class TestApp extends PluginDevApplication {
 
             YouTubeSettingsConfig config = new YouTubeSettingsConfig();
             config.setEnableDash(true);
-            config.setVideoQuality(VideoQuality.Highest);
+            config.setVideoQuality(VideoQuality._720);
             config.setContainer(Container.flv);
             config.setReversePlaylistOrder(false);
             config.setDownloadSubtitles(true);
