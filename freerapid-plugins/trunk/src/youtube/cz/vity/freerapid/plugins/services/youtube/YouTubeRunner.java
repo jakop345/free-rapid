@@ -497,12 +497,34 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
             }
             final int selectedVideoQuality = ytMediaMap.get(selectedItag).getVideoQuality();
 
+            //select frame rate
+            final FrameRate configFrameRate = config.getFrameRate();
+            int weight = Integer.MIN_VALUE;
+            for (YouTubeMedia ytMedia : ytMediaMap.values()) {
+                if (ytMedia.getVideoQuality() == selectedVideoQuality) {
+                    int tempWeight = 0;
+                    int frameRate = ytMedia.getFrameRate();
+                    if (configFrameRate.getFrameRate() == frameRate) {
+                        tempWeight = 100;
+                    } else if (frameRate == FrameRate._60.getFrameRate()) {
+                        tempWeight = 50;
+                    } else if (frameRate == FrameRate._30.getFrameRate()) {
+                        tempWeight = 49;
+                    }
+                    if (tempWeight > weight) {
+                        weight = tempWeight;
+                        selectedItag = ytMedia.getItag();
+                    }
+                }
+            }
+            final int selectedFrameRate = ytMediaMap.get(selectedItag).getFrameRate();
+
             //select container
             final Container configContainer = config.getContainer();
             if (configContainer != Container.Any) {
-                int weight = Integer.MIN_VALUE;
+                weight = Integer.MIN_VALUE;
                 for (YouTubeMedia ytMedia : ytMediaMap.values()) {
-                    if (ytMedia.getVideoQuality() == selectedVideoQuality) {
+                    if ((ytMedia.getVideoQuality() == selectedVideoQuality) && (ytMedia.getFrameRate() == selectedFrameRate)) {
                         int tempWeight = 0;
                         Container container = ytMedia.getContainer();
                         if (configContainer == container) {
@@ -524,28 +546,6 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
                             weight = tempWeight;
                             selectedItag = ytMedia.getItag();
                         }
-                    }
-                }
-            }
-            final Container selectedContainer = ytMediaMap.get(selectedItag).getContainer();
-
-            //select frame rate
-            final FrameRate configFrameRate = config.getFrameRate();
-            int weight = Integer.MIN_VALUE;
-            for (YouTubeMedia ytMedia : ytMediaMap.values()) {
-                if ((ytMedia.getVideoQuality() == selectedVideoQuality) && (ytMedia.getContainer() == selectedContainer)) {
-                    int tempWeight = 0;
-                    int frameRate = ytMedia.getFrameRate();
-                    if (configFrameRate.getFrameRate() == frameRate) {
-                        tempWeight = 100;
-                    } else if (frameRate == FrameRate._60.getFrameRate()) {
-                        tempWeight = 50;
-                    } else if (frameRate == FrameRate._30.getFrameRate()) {
-                        tempWeight = 49;
-                    }
-                    if (tempWeight > weight) {
-                        weight = tempWeight;
-                        selectedItag = ytMedia.getItag();
                     }
                 }
             }
