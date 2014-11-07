@@ -66,7 +66,7 @@ class OneFichierFileRunner extends AbstractRunner {
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
         if (fileURL.contains("/dir/")) {
-            PlugUtils.checkName(httpFile, content, "<title>", "</title>");
+            PlugUtils.checkName(httpFile, content, "box_header\">", "<");
         } else {
             final Matcher match = PlugUtils.matcher("ame\\s*?:\\s*?</t.>\\s*?<t.*?>(.+?)<", getContentAsString());
             if (!match.find()) throw new PluginImplementationException("File name not found");
@@ -95,7 +95,7 @@ class OneFichierFileRunner extends AbstractRunner {
         } else if (status1 == 200) {
             if (fileURL.contains("/dir/")) {
                 List<URI> list = new LinkedList<URI>();
-                final Matcher match = PlugUtils.matcher("<a href=\"(https?://(\\w+)\\.(1fichier|desfichiers)\\..+?)\"", getContentAsString());
+                final Matcher match = PlugUtils.matcher("<a href=\"(https?://(1fichier|desfichiers)\\.com/\\?.+?)\"", getContentAsString());
                 while (match.find()) {
                     list.add(new URI(match.group(1).trim()));
                 }

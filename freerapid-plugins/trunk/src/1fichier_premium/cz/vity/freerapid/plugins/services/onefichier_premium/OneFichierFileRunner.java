@@ -23,7 +23,7 @@ import java.util.regex.Matcher;
  */
 class OneFichierFileRunner extends AbstractRunner {
     private final static Logger logger = Logger.getLogger(OneFichierFileRunner.class.getName());
-    private final static String loginUrl = "http://www.1fichier.com/en/login.pl";
+    private final static String loginUrl = "https://1fichier.com/en/login.pl";
 
     @Override
     public void runCheck() throws Exception { //this method validates file
@@ -69,7 +69,7 @@ class OneFichierFileRunner extends AbstractRunner {
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
         if (fileURL.contains("/dir/")) {
-            PlugUtils.checkName(httpFile, content, "<title>", "</title>");
+            PlugUtils.checkName(httpFile, content, "box_header\">", "<");
         } else {
             final Matcher match = PlugUtils.matcher("ame\\s*?:\\s*?</t.>\\s*?<t.*?>(.+?)<", getContentAsString());
             if (!match.find()) throw new PluginImplementationException("File name not found");
@@ -99,7 +99,7 @@ class OneFichierFileRunner extends AbstractRunner {
         } else if (status == 200) {
             if (fileURL.contains("/dir/")) {
                 List<URI> list = new LinkedList<URI>();
-                final Matcher match = PlugUtils.matcher("<a href=\"(https?://(\\w+)\\.(1fichier|desfichiers)\\..+?)\"", getContentAsString());
+                final Matcher match = PlugUtils.matcher("<a href=\"(https?://(1fichier|desfichiers)\\.com/\\?.+?)\"", getContentAsString());
                 while (match.find()) {
                     list.add(new URI(match.group(1).trim()));
                 }
@@ -113,7 +113,7 @@ class OneFichierFileRunner extends AbstractRunner {
                 checkProblems();//check problems
                 checkNameAndSize(contentAsString);//extract file name and size from the page
                 final HttpMethod httpMethod = getMethodBuilder().setReferer(fileURL)
-                        .setActionFromFormWhereTagContains("Download the file", true).toPostMethod(); //  2do ?
+                        .setActionFromFormWhereTagContains("Download the file", true).toPostMethod();
 
                 //here is the download link extraction
                 if (!tryDownloadAndSaveFile(httpMethod)) {
@@ -153,7 +153,7 @@ class OneFichierFileRunner extends AbstractRunner {
                     .setAction(loginUrl).setReferer(loginUrl)
                     .setParameter("mail", pa.getUsername())
                     .setParameter("pass", pa.getPassword())
-                    .setParameter("Login", "Login")
+                    .setParameter("valider", "Send")
                     .toPostMethod();
             if (!makeRedirectedRequest(method)) {
                 throw new ServiceConnectionProblemException("Error posting login info");
