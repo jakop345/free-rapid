@@ -53,7 +53,7 @@ class ZippyShareFileRunner extends AbstractRunner {
             if (!matcher.find()) {
                 throw new PluginImplementationException("Script not found (1)");
             }
-            matcher = PlugUtils.matcher("<script[^<>]*?>([^<>]+?)</script>", matcher.group(1));
+            matcher = PlugUtils.matcher("(?s)<script[^<>]*?>(.+?)</script>", matcher.group(1));
             if (matcher.find()) {
                 final Matcher buttonId = getMatcherAgainstContent("<a\\b[^<>]*?\\bid=\"([\\w\\-]+?)\"[^<>]*?>.*?alt=\"Download\"");
                 if (!buttonId.find()) {
@@ -121,7 +121,7 @@ class ZippyShareFileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize() throws Exception {
-        Matcher matcher = getMatcherAgainstContent("document\\.getElementById\\([^\\(\\)]*?\\)\\.href[^<>]+/([^<>]+?)\";");
+        Matcher matcher = getMatcherAgainstContent("\\d+/\"[^<>]+?/([^<>]+?)\";");
         if (matcher.find()) {
             httpFile.setFileName(URLDecoder.decode(matcher.group(1), "UTF-8"));
         } else {
