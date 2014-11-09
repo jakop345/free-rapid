@@ -1,6 +1,9 @@
 package cz.vity.freerapid.plugins.services.mega;
 
-import cz.vity.freerapid.plugins.exceptions.*;
+import cz.vity.freerapid.plugins.exceptions.NotRecoverableDownloadException;
+import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;
+import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
+import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
 import cz.vity.freerapid.plugins.webclient.DownloadClient;
 import cz.vity.freerapid.plugins.webclient.MethodBuilder;
 import cz.vity.freerapid.plugins.webclient.interfaces.HttpDownloadClient;
@@ -91,20 +94,17 @@ class MegaApi {
         if (matcher.find()) {
             final int e = Integer.parseInt(matcher.group(1));
             switch (e) {
-                case EOVERQUOTA:
-                    throw new NotRecoverableDownloadException("Bandwidth quota exceeded");
                 case ETOOMANYCONNECTIONS:
                     throw new ServiceConnectionProblemException("Too many connections for this download");
+                case ENOENT:
+                case EBLOCKED:
+                case ETOOMANY:
+                case EACCESS:
+                    throw new URLNotAvailableAnymoreException("File not found");
+                case EOVERQUOTA:
+                case EAGAIN:
                 case ETEMPUNAVAIL:
                     throw new ServiceConnectionProblemException("Temporarily unavailable");
-                case ENOENT:
-                case EACCESS:
-                case EBLOCKED:
-                    throw new URLNotAvailableAnymoreException("File not found");
-                case EKEY:
-                    throw new NotRecoverableDownloadException("Decryption error");
-                case EAGAIN:
-                    throw new YouHaveToWaitException("Temporary server error", 5 * 60);
                 default:
                     throw new NotRecoverableDownloadException("Unknown server error (" + e + ")");
             }
