@@ -90,24 +90,28 @@ class MegaApi {
     }
 
     public static void checkProblems(final String content) throws Exception {
-        final Matcher matcher = PlugUtils.matcher("\\[(\\-\\d+?)\\]", content);
-        if (matcher.find()) {
-            final int e = Integer.parseInt(matcher.group(1));
-            switch (e) {
-                case ETOOMANYCONNECTIONS:
-                    throw new ServiceConnectionProblemException("Too many connections for this download");
-                case ENOENT:
-                case EBLOCKED:
-                case ETOOMANY:
-                case EACCESS:
-                    throw new URLNotAvailableAnymoreException("File not found");
-                case EOVERQUOTA:
-                case EAGAIN:
-                case ETEMPUNAVAIL:
-                    throw new ServiceConnectionProblemException("Temporarily unavailable");
-                default:
-                    throw new NotRecoverableDownloadException("Unknown server error (" + e + ")");
+        Matcher matcher = PlugUtils.matcher("\\[(\\-\\d+?)\\]", content);
+        if (!matcher.find()) {
+            matcher = PlugUtils.matcher("\"e\":(\\-\\d+)", content);
+            if (!matcher.find()) {
+                return;
             }
+        }
+        final int e = Integer.parseInt(matcher.group(1));
+        switch (e) {
+            case ETOOMANYCONNECTIONS:
+                throw new ServiceConnectionProblemException("Too many connections for this download");
+            case ENOENT:
+            case EBLOCKED:
+            case ETOOMANY:
+            case EACCESS:
+                throw new URLNotAvailableAnymoreException("File not found");
+            case EOVERQUOTA:
+            case EAGAIN:
+            case ETEMPUNAVAIL:
+                throw new ServiceConnectionProblemException("Temporary error");
+            default:
+                throw new NotRecoverableDownloadException("Unknown server error (" + e + ")");
         }
     }
 
