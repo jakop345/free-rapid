@@ -177,7 +177,7 @@ class UlozToRunner extends AbstractRunner {
         }
         final MethodBuilder sendForm = getMethodBuilder()
                 .setReferer(fileURL)
-                .setActionFromFormWhereActionContains("do=downloadDialog-freeDownloadForm-submit", true);
+                .setActionFromFormWhereTagContains("freeDownloadForm", true);
 
         HttpMethod method = getMethodBuilder()
                 .setReferer(fileURL)
