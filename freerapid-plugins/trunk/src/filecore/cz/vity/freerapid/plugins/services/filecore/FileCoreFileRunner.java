@@ -51,6 +51,8 @@ class FileCoreFileRunner extends XFileSharingRunner {
     protected List<String> getDownloadPageMarkers() {
         final List<String> downloadPageMarkers = super.getDownloadPageMarkers();
         downloadPageMarkers.add("images/dl.png");
+        downloadPageMarkers.add("images/download");
+        downloadPageMarkers.add("eval(function(p,a,c,k,e,d)");
         return downloadPageMarkers;
     }
 
