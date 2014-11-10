@@ -53,7 +53,7 @@ class ZippyShareFileRunner extends AbstractRunner {
             if (!matcher.find()) {
                 throw new PluginImplementationException("Script not found (1)");
             }
-            matcher = PlugUtils.matcher("(?s)<script[^<>]*?>(.+?)</script>", matcher.group(1));
+            matcher = PlugUtils.matcher("(?s)<script[^<>]*?>(.*?)</script>", matcher.group(1));
             if (matcher.find()) {
                 final Matcher buttonId = getMatcherAgainstContent("<a\\b[^<>]*?\\bid=\"([\\w\\-]+?)\"[^<>]*?>.*?alt=\"Download\"");
                 if (!buttonId.find()) {
@@ -63,7 +63,7 @@ class ZippyShareFileRunner extends AbstractRunner {
                 try {
                     do {
                         final String script = matcher.group(1);
-                        if (script.contains("tumblr") || script.contains("swfobject")) {
+                        if (script.isEmpty() || script.contains("tumblr") || script.contains("swfobject")) {
                             continue;
                         }
                         logger.info("Evaluating script:\n" + script);
