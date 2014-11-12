@@ -1,3 +1,18 @@
+Java = undefined;
+Packages = undefined;
+com = undefined;
+edu = undefined;
+java = undefined;
+javafx = undefined;
+javax = undefined;
+org = undefined;
+JavaImporter = undefined;
+importClass = undefined;
+importPackage = undefined;
+JavaAdapter = undefined;
+exit = undefined;
+quit = undefined;
+
 document = {
     elements: {},
 
