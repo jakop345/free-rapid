@@ -88,6 +88,7 @@ class CzshareRunner extends AbstractRunner {
                 }
             }
             final HttpMethod method = getMethodBuilder()
+                    .setReferer(BASE_URL)
                     .setAction("http://sdilej.cz/index.php")
                     .setParameter("login-name", pa.getUsername())
                     .setParameter("login-password", pa.getPassword())
@@ -118,9 +119,11 @@ class CzshareRunner extends AbstractRunner {
         if (matcher.find()) {
             throw new URLNotAvailableAnymoreException("<b>Soubor byl smaz�n jeho odesilatelem</b><br>");
         }
-        matcher = getMatcherAgainstContent("Tento soubor byl na upozorn.n. identifikov.n jako warez\\.</strong>");
-        if (matcher.find()) {
-            throw new URLNotAvailableAnymoreException("<b>Tento soubor byl na upozorn�n� identifikov�n jako warez</b><br>");
+        if (getContentAsString().contains("Tento soubor byl na upozornění identifikován jako warez")) {
+            throw new URLNotAvailableAnymoreException("Tento soubor byl na upozornění identifikován jako warez");
+        }
+        if (getContentAsString().contains("Tato IP není u tohoto účtu povolena")) {
+            throw new NotRecoverableDownloadException("Tato IP není u tohoto účtu povolena");
         }
         matcher = getMatcherAgainstContent("Bohu.el je vy.erp.na maxim.ln. kapacita FREE download.");
         if (matcher.find()) {
