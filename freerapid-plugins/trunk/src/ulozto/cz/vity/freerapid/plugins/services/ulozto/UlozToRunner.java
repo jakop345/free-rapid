@@ -63,7 +63,7 @@ class UlozToRunner extends AbstractRunner {
                 throw new PluginImplementationException("This file is secured with a password");
             }
             HttpMethod hm = getMethodBuilder()
-                    .setActionFromFormWhereActionContains("passwordProtected", true)
+                    .setActionFromFormWhereTagContains("passwordProtected", true)
                     .setReferer(fileURL)
                     .setParameter("password", password)
                     .toPostMethod();
