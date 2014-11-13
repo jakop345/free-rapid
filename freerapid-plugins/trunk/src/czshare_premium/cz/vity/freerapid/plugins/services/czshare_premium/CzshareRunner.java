@@ -96,8 +96,11 @@ class CzshareRunner extends AbstractRunner {
                     .setParameter("Prihlasit", "Přihlásit SSL")
                     .setBaseURL(BASE_URL)
                     .toPostMethod();
-            if (!makeRedirectedRequest(method)) {
-                throw new ServiceConnectionProblemException();
+            final int status = client.makeRequest(method, false);
+            if (status/100 == 3)
+                return;
+            else if (status != 200){
+                throw new ServiceConnectionProblemException("Unknown login error");
             }
             if (getContentAsString().contains("Zadané jméno se neshoduje s heslem")) {
                 throw new BadLoginException("Invalid CZShare/Sdilej premium account login information");
