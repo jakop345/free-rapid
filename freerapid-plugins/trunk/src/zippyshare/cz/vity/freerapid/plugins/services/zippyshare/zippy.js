@@ -25,3 +25,4 @@ document = {
         return element;
     }
 };
+EnvJs = true;
