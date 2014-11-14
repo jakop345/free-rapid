@@ -71,6 +71,8 @@ class ItEbooksFileRunner extends AbstractRunner {
             }
             mb = getMethodBuilder().setReferer(fileURL).setAction(matcher.group(1));
             setClientParameter(DownloadClientConsts.DONT_USE_HEADER_FILENAME, true);
+            setClientParameter(DownloadClientConsts.IGNORE_ACCEPT_RANGES, true);
+            httpFile.setResumeSupported(true);
             if (!tryDownloadAndSaveFile(mb.toHttpMethod())) {
                 checkProblems();
                 throw new ServiceConnectionProblemException("Error starting download");

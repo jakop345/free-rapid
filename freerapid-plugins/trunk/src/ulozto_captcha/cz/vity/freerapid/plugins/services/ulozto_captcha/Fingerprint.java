@@ -1,4 +1,4 @@
-package cz.vity.freerapid.plugins.services.ulozto.captcha;
+package cz.vity.freerapid.plugins.services.ulozto_captcha;
 
 /**
  * @author tong2shot

@@ -1,7 +1,7 @@
 package cz.vity.freerapid.plugins.services.ulozto;
 
 import cz.vity.freerapid.plugins.exceptions.*;
-import cz.vity.freerapid.plugins.services.ulozto.captcha.SoundReader;
+import cz.vity.freerapid.plugins.services.ulozto_captcha.SoundReader;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.DownloadClientConsts;
 import cz.vity.freerapid.plugins.webclient.FileState;
@@ -34,16 +34,16 @@ import java.util.regex.Pattern;
  */
 class UlozToRunner extends AbstractRunner {
     private final static Logger logger = Logger.getLogger(UlozToRunner.class.getName());
+    public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:33.0) Gecko/20100101 Firefox/33.0";
     private int captchaCount = 0;
     private final Random random = new Random();
 
     private void ageCheck(String content) throws Exception {
         if (content.contains("confirmContent")) { //eroticky obsah vyzaduje potvruemo
             final PostMethod confirmMethod = (PostMethod) getMethodBuilder()
-                    .setActionFromFormWhereActionContains("askAgeForm", true)
-                    .removeParameter("disagree")
+                    .setActionFromFormWhereTagContains("askAgeForm", true)
                     .setReferer(fileURL)
-                    .setEncodeParameters(true)
+                    .removeParameter("disagree")
                     .toPostMethod();
             makeRedirectedRequest(confirmMethod);
             if (getContentAsString().contains("confirmContent")) {
@@ -78,7 +78,7 @@ class UlozToRunner extends AbstractRunner {
     public void runCheck() throws Exception {
         super.runCheck();
         checkURL();
-        setClientParameter(DownloadClientConsts.USER_AGENT, "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:26.0) Gecko/20100101 Firefox/26.0");
+        setClientParameter(DownloadClientConsts.USER_AGENT, USER_AGENT);
         if (isFolder(fileURL)) {
             return;
         }
@@ -99,12 +99,13 @@ class UlozToRunner extends AbstractRunner {
     public void run() throws Exception {
         super.run();
         checkURL();
-        setClientParameter(DownloadClientConsts.USER_AGENT, "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:26.0) Gecko/20100101 Firefox/26.0");
+        setClientParameter(DownloadClientConsts.USER_AGENT, USER_AGENT);
         final GetMethod getMethod = getGetMethod(fileURL);
         if (makeRedirectedRequest(getMethod)) {
             checkProblems();
             passwordProtectedCheck();
             ageCheck(getContentAsString());
+            fileURL = getMethod.getURI().toString(); // '/m/' folder redirected to '/soubory/'
             if (isFolder(fileURL)) {
                 parseFolder();
             } else {
@@ -277,7 +278,7 @@ class UlozToRunner extends AbstractRunner {
     }
 
     private boolean isFolder(String fileUrl) {
-        return fileUrl.contains("/soubory/");
+        return fileUrl.contains("uloz.to/soubory/") || fileUrl.contains("uloz.to/m/");
     }
 
     private void parseFolder() throws Exception {
@@ -287,8 +288,9 @@ class UlozToRunner extends AbstractRunner {
             HttpMethod getMethod = getMethodBuilder().setReferer(fileURL).setAction(fileURL).setAjax().toGetMethod();
             if (!makeRedirectedRequest(getMethod)) {
                 checkProblems();
-                throw new ServiceConnectionProblemException("");
+                throw new ServiceConnectionProblemException();
             }
+            checkProblems();
             matcher = pattern.matcher(getContentAsString());
             if (!matcher.find()) {
                 throw new PluginImplementationException("Error getting 'script vars'");
@@ -296,7 +298,11 @@ class UlozToRunner extends AbstractRunner {
         }
         String scriptVars = matcher.group(1);
         ScriptEngine engine = initScriptEngine();
-        engine.eval(scriptVars);
+        try {
+            engine.eval(scriptVars);
+        } catch (ScriptException e) {
+            throw new PluginImplementationException("Script execution failed (1)", e);
+        }
         List<URI> uriList = new LinkedList<URI>();
         matcher = PlugUtils.matcher("data-icon=\"([a-z0-9]+)\"", getContentAsString());
         while (matcher.find()) {
@@ -304,7 +310,7 @@ class UlozToRunner extends AbstractRunner {
             try {
                 engine.eval("var decrypted = ad.decrypt(kn[\"" + dataIcon + "\"]);");
             } catch (ScriptException e) {
-                throw new PluginImplementationException("Script execution failed (1)", e);
+                throw new PluginImplementationException("Script execution failed (2)", e);
             }
             String decrypted = (String) engine.get("decrypted");
             Matcher correspondMatcher = PlugUtils.matcher("<a [^<>]*?(?:data-icon|href)\\s*?=\\s*?\"([a-z0-9]+?|/soubory/[^\"]+?)\"[^<>]*?>", decrypted);
@@ -315,9 +321,9 @@ class UlozToRunner extends AbstractRunner {
             String matchedStr = correspondMatcher.group(1);
             if (!matchedStr.contains("/soubory/")) { //file
                 try {
-                    engine.eval("var decrypted = ad.decrypt(kn[\"" + correspondMatcher.group(1) + "\"]);");
+                    engine.eval("var decrypted = ad.decrypt(kn[\"" + matchedStr + "\"]);");
                 } catch (ScriptException e) {
-                    throw new PluginImplementationException("Script execution failed (2)", e);
+                    throw new PluginImplementationException("Script execution failed (3)", e);
                 }
                 decrypted = (String) engine.get("decrypted");
             } else { //folder
