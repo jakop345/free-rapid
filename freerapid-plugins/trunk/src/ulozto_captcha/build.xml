@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<project name="UlozTo Plugin" default="all" basedir=".">
-    <property name="application" value="ulozto"/>
+<project name="UlozTo_captcha" default="all" basedir=".">
+    <property name="application" value="ulozto_captcha"/>
+
     <property name="version" value="1.0"/>
     <property name="version.name" value="${application}"/>
 
+    <property name="mainjar.file" value="ulozto_captcha.jar"/>
 
     <!--<property name="mainjar-packed.file" value="${mainjar.file}.pack.gz"/>-->
 
@@ -29,7 +31,6 @@
         <include name="**/?*.xml"/>
         <include name="**/?*.txt"/>
         <include name="**/?*.gif"/>
-        <include name="**/?*.bin"/>
         <include name="**/?*.png"/>
         <include name="**/?*.jpeg"/>
         <include name="**/?*.jpg"/>
@@ -37,9 +38,8 @@
         <include name="**/?*.dtd"/>
         <include name="**/?*.tld"/>
         <include name="**/?*.mid"/>
-        <include name="**/?*.ser"/>
         <include name="**/?*.wav"/>
-        <include name="**/?*.js"/>
+        <include name="**/?*.bin"/>
 
         <exclude name="**/plugin.xml"/>
     </patternset>
@@ -50,6 +50,7 @@
 
     <path id="dist-jars">
         <fileset dir="${build.dir}/${lib.dir}" includes="**/*.jar"/>
+        <fileset dir="${build.dir}" includes="${mainjar.file}"/>
     </path>
 
     <pathconvert property="lib.prefix" pathsep=" ">
@@ -63,8 +64,7 @@
     <target name="build" depends="compile" description="building ERModeller">
 
         <copy todir="${build.dir}">
-            <fileset dir="${classes.dir}" includes="**/${application}/**, resources/**"
-                     excludes="**/TestApp*"/>
+            <fileset dir="${classes.dir}" includes="**/${application}/**, resources/**, com/**" excludes="**/TestApp*"/>
         </copy>
 
         <copy todir="${build.dir}">
@@ -76,7 +76,7 @@
     <target name="compile" depends="clean, init" description="compiling source codes">
         <mkdir dir="${classes.dir}"/>
         <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="cp" optimize="on" target="1.6">
-            <sourcepath location="../ulozto_captcha"/>
+
             <sourcepath location="../devapp"/>
         </javac>
         <!-- zkopirovani resourcu -->
@@ -124,12 +124,6 @@
         <!--<include name="build.xml"/>-->
         <!--</fileset>-->
         <!--</zip>-->
-    </target>
-
-    <target name="run" depends="clean, init, compile" description="runing TestApp">
-        <java dir="${classes.dir}" classname="cz.vity.freerapid.plugins.services.ulozto.TestApp"
-              classpath="${classes.dir}" classpathref="cp" spawn="true" fork="true">
-        </java>
     </target>
 
 </project>

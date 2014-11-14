@@ -264,3 +264,18 @@ kapp[_0x8141[24]][_0x8141[33]] = function () {
     a[_0x8141[19]] = c;
     a[_0x8141[20]] = b
 };
+
+Java = undefined;
+Packages = undefined;
+com = undefined;
+edu = undefined;
+java = undefined;
+javafx = undefined;
+javax = undefined;
+org = undefined;
+JavaImporter = undefined;
+importClass = undefined;
+importPackage = undefined;
+JavaAdapter = undefined;
+exit = undefined;
+quit = undefined;

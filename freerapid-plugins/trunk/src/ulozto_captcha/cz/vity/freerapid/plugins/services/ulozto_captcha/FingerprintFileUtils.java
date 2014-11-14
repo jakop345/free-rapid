@@ -1,4 +1,4 @@
-package cz.vity.freerapid.plugins.services.ulozto.captcha;
+package cz.vity.freerapid.plugins.services.ulozto_captcha;
 
 import com.musicg.wave.Wave;
 import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;

@@ -31,7 +31,9 @@ public class TestApp extends PluginDevApplication {
             //httpFile.setNewURL(new URL("http://uloz.to/soubory/ladaber/mlp/s04/"));
             //httpFile.setNewURL(new URL("http://uloz.to/soubory/pesicestice/video/the-originals/2-serie/"));
             //httpFile.setNewURL(new URL("http://www.uloz.to/soubory/readykirken/box/"));
-            httpFile.setNewURL(new URL("http://uloz.to/soubory/readykirken/box/wav-pro-vypaleni/"));
+            //httpFile.setNewURL(new URL("http://uloz.to/soubory/readykirken/box/wav-pro-vypaleni/"));
+            //httpFile.setNewURL(new URL("http://uloz.to/m/ladaber/mlp/s04/"));
+            httpFile.setNewURL(new URL("http://www.uloz.to/m/hkey/farmacia-lobing-a-ich-spinave-praktiky"));
             final ConnectionSettings settings = new ConnectionSettings();
             //settings.setProxy("localhost", 8081);
             testRun(new UlozToServiceImpl(), httpFile, settings);

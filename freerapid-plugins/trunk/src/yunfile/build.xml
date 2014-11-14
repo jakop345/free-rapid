@@ -39,6 +39,7 @@
         <include name="**/?*.tld"/>
         <include name="**/?*.mid"/>
         <include name="**/?*.wav"/>
+        <include name="**/?*.js"/>
 
         <exclude name="**/plugin.xml"/>
     </patternset>

@@ -177,7 +177,7 @@ public class FingerprintManager {
      *
      * @param fingerprint fingerprint bytes
      * @param filename    fingerprint filename
-     * @see    fingerprint file saved
+     * @see fingerprint file saved
      */
     public void saveFingerprintAsFile(byte[] fingerprint, String filename) {
 

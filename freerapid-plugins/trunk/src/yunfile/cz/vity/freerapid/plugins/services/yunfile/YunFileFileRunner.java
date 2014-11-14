@@ -5,12 +5,18 @@ import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.DownloadClientConsts;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
+import cz.vity.freerapid.utilities.LogUtils;
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URLEncoder;
 import java.util.LinkedList;
 import java.util.List;
@@ -171,32 +177,32 @@ class YunFileFileRunner extends AbstractRunner {
         }
     }
 
-    private BufferedImage getCaptchaImg(String content, String baseUrl) throws ErrorDuringDownloadingException {
+    private BufferedImage getCaptchaImg(String content, String baseUrl) throws Exception {
         /*
         <script>
 	        var cvimg = document.getElementById("cvimg");
-	        cvimg.setAttribute("src","/verifyimg/getPcv/713.html");
+	        cvimg.setAttribute("src","/verifyimg/getPcv"+"/754"+".html");
         </script>
          */
+        Matcher matcher = PlugUtils.matcher("(?s)<body[^<>]*?>(.+?)</body>", content);
+        if (!matcher.find()) {
+            throw new PluginImplementationException("Body content not found");
+        }
+        String bodyContent = matcher.group(1);
+
+        String buttonId = "cvimg";
         List<BufferedImage> images = new LinkedList<BufferedImage>();
-        Matcher matcher = PlugUtils.matcher("['\"](/verifyimg/getPcv/\\d+\\.html)['\"]",
-                content.replaceAll("(?sm)(?:([\\s;])+//(?:.*)$)|(?:/\\*(?:[\\s\\S]*?)\\*/)", "").replaceAll("<!--.*?-->", ""));
+        matcher = PlugUtils.matcher("['\"](/verifyimg/getPcv/\\d+\\.html)['\"]",
+                bodyContent.replaceAll("(?sm)(?:([\\s;])+//(?:.*)$)|(?:/\\*(?:[\\s\\S]*?)\\*/)", "").replaceAll("<!--.*?-->", ""));
         int totalWidth = 0, totalHeight = 0;
         int imageType = 0;
         while (matcher.find()) {
             BufferedImage tempImage = getCaptchaSupport().getCaptchaImage(baseUrl + matcher.group(1));
-            long sum = 0;
             int width = tempImage.getWidth();
             int height = tempImage.getHeight();
-            for (int i = 0; i < width; i++) {
-                for (int j = 0; j < height; j++) {
-                    sum += tempImage.getRGB(i, j);
-                }
-            }
-            long avg = (sum / (width * height));
-            if (avg > (Color.BLACK.getRGB() + 0x000ff)) {
+            if (isValidImage(tempImage, width, height)) {
                 if (images.size() > 3) {
-                    throw new PluginImplementationException("Error getting captcha image (2)");
+                    throw new PluginImplementationException("Error getting captcha image (1)");
                 }
                 imageType = tempImage.getType();
                 totalWidth += width;
@@ -205,8 +211,37 @@ class YunFileFileRunner extends AbstractRunner {
             }
         }
 
+        matcher = PlugUtils.matcher("(?s)<script>(.+?)</script>", bodyContent);
+        ScriptEngine engine = initScriptEngine();
+        while (matcher.find()) {
+            String script = matcher.group(1);
+            logger.info("Evaluating script:\n" + script);
+            try {
+                engine.eval(script);
+            } catch (ScriptException e) {
+                LogUtils.processException(logger, e);
+            }
+        }
+        try {
+            String imgSrc = (String) engine.eval(buttonId + ".getAttribute(\"src\")");
+            BufferedImage tempImage = getCaptchaSupport().getCaptchaImage(baseUrl + imgSrc);
+            int width = tempImage.getWidth();
+            int height = tempImage.getHeight();
+            if (isValidImage(tempImage, width, height)) {
+                if (images.size() > 3) {
+                    throw new PluginImplementationException("Error getting captcha image (2)");
+                }
+                imageType = tempImage.getType();
+                totalWidth += width;
+                totalHeight += height;
+                images.add(tempImage);
+            }
+        } catch (Exception e) {
+            LogUtils.processException(logger, e);
+        }
+
         if (images.size() == 0) {
-            throw new PluginImplementationException("Error getting captcha image (1)");
+            throw new PluginImplementationException("Error getting captcha image (3)");
         }
         BufferedImage compositeImage = new BufferedImage(totalWidth, totalHeight, imageType);
         for (int i = 0, imageWidth = 0, imagesCount = images.size(); i < imagesCount; i++) {
@@ -215,6 +250,17 @@ class YunFileFileRunner extends AbstractRunner {
             imageWidth += tempImage.getWidth();
         }
         return compositeImage;
+    }
+
+    private boolean isValidImage(BufferedImage tempImage, int width, int height) throws PluginImplementationException {
+        long sum = 0;
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                sum += tempImage.getRGB(i, j);
+            }
+        }
+        long avg = (sum / (width * height));
+        return (avg > (Color.BLACK.getRGB() + 0x000ff));
     }
 
     private String getFileIdFromUrl() throws PluginImplementationException {
@@ -252,5 +298,19 @@ class YunFileFileRunner extends AbstractRunner {
     @Override
     protected String getBaseURL() {
         return "http://yunfile.com";
+    }
+
+    private ScriptEngine initScriptEngine() throws Exception {
+        final ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
+        if (engine == null) {
+            throw new RuntimeException("JavaScript engine not found");
+        }
+        final Reader reader = new InputStreamReader(YunFileFileRunner.class.getResourceAsStream("/resources/yunfile.js"), "UTF-8");
+        try {
+            engine.eval(reader);
+        } finally {
+            reader.close();
+        }
+        return engine;
     }
 }
