@@ -1,6 +1,6 @@
 package cz.vity.freerapid.plugins.services.flashx;
 
-import cz.vity.freerapid.plugins.services.xfileplayer.XFilePlayerServiceImpl;
+import cz.vity.freerapid.plugins.webclient.AbstractFileShareService;
 import cz.vity.freerapid.plugins.webclient.interfaces.PluginRunner;
 
 /**
@@ -8,7 +8,7 @@ import cz.vity.freerapid.plugins.webclient.interfaces.PluginRunner;
  *
  * @author ntoskrnl
  */
-public class FlashXServiceImpl extends XFilePlayerServiceImpl {
+public class FlashXServiceImpl extends AbstractFileShareService {
 
     @Override
     public String getName() {
@@ -16,8 +16,8 @@ public class FlashXServiceImpl extends XFilePlayerServiceImpl {
     }
 
     @Override
-    public String getServiceTitle() {
-        return "FlashX";
+    public boolean supportsRunCheck() {
+        return true;
     }
 
     @Override

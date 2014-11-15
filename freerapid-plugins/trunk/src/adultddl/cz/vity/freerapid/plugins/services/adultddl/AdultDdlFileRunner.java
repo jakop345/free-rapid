@@ -62,7 +62,9 @@ class AdultDdlFileRunner extends AbstractRunner {
                     List<URI> list = new LinkedList<URI>();
                     final Matcher match = PlugUtils.matcher("href=['\"](http.+?)['\"][^>]*?>\\1<", getContentAsString());
                     while (match.find()) {
-                        list.add(new URI(match.group(1)));
+                        try {
+                            list.add(new URI(match.group(1)));
+                        } catch (Exception e) {/*ignore invalid links*/}
                     }
                     if (list.isEmpty()) throw new PluginImplementationException("No links found");
                     getPluginService().getPluginContext().getQueueSupport().addLinksToQueue(httpFile, list);

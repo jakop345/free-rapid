@@ -4,6 +4,7 @@ import cz.vity.freerapid.plugins.exceptions.*;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.DownloadState;
 import cz.vity.freerapid.plugins.webclient.FileState;
+import cz.vity.freerapid.plugins.webclient.hoster.PremiumAccount;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -22,6 +23,7 @@ import java.util.regex.Matcher;
  */
 class OneFichierFileRunner extends AbstractRunner {
     private final static Logger logger = Logger.getLogger(OneFichierFileRunner.class.getName());
+    private final static String loginUrl = "https://1fichier.com/en/login.pl";
 
     @Override
     public void runCheck() throws Exception { //this method validates file
@@ -82,6 +84,7 @@ class OneFichierFileRunner extends AbstractRunner {
     public void run() throws Exception {
         super.run();
         setEnglishURL();
+        login();
         logger.info("Starting download in TASK " + fileURL);
         final GetMethod method = getGetMethod(fileURL); //create GET request
         final int status1 = client.makeRequest(method, false);
@@ -155,6 +158,31 @@ class OneFichierFileRunner extends AbstractRunner {
             throw new YouHaveToWaitException("You must wait between downloads", time);
         }
 
+    }
+
+    private void login() throws Exception {
+        synchronized (OneFichierFileRunner.class) {
+            OneFichierServiceImpl service = (OneFichierServiceImpl) getPluginService();
+            PremiumAccount pa = service.getConfig();
+            if (pa.isSet()) {
+                final HttpMethod method = getMethodBuilder()
+                        .setAction(loginUrl).setReferer(loginUrl)
+                        .setParameter("mail", pa.getUsername())
+                        .setParameter("pass", pa.getPassword())
+                        .setParameter("valider", "Send")
+                        .toPostMethod();
+                if (!makeRedirectedRequest(method)) {
+                    throw new ServiceConnectionProblemException("Error posting login info");
+                }
+                if (getContentAsString().contains("Invalid username or password") ||
+                        getContentAsString().contains("Invalid email address") ||
+                        getContentAsString().contains("Invalid password")) {
+                    throw new BadLoginException("Invalid 1Fichier account login information!");
+                }
+                else logger.info("Logged in.");
+            }
+            else logger.info("No account details");
+        }
     }
 
 }
