@@ -117,16 +117,17 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
             }
 
             bypassAgeVerification(method);
+            Matcher matcher;
             if (swfUrl == null) {
-                try {
-                    swfUrl = PlugUtils.getStringBetween(getContentAsString(), "\"url\": \"", "\"").replace("\\/", "/");
-                } catch (PluginImplementationException e) {
+                matcher = getMatcherAgainstContent("\"url\":\\s*?\"([^\"]+?)\"");
+                if (!matcher.find()) {
                     throw new PluginImplementationException("SWF URL not found");
                 }
+                swfUrl = matcher.group(1).replace("\\/", "/");
             }
             //"url_encoded_fmt_stream_map": "type=vi...    " //normal
             //url_encoded_fmt_stream_map=url%3Dhttp%253A... & //embedded
-            Matcher matcher = getMatcherAgainstContent("\"?url_encoded_fmt_stream_map\"?(=|:)(?: \")?([^&\"$]+)(?:\"|&|$)");
+            matcher = getMatcherAgainstContent("\"?url_encoded_fmt_stream_map\"?(=|:)(?: \")?([^&\"$]+)(?:\"|&|$)");
             if (!matcher.find()) {
                 throw new PluginImplementationException("Fmt stream map not found");
             }

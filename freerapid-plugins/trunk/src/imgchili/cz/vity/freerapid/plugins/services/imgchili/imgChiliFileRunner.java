@@ -46,7 +46,7 @@ class imgChiliFileRunner extends AbstractRunner {
             final String contentAsString = getContentAsString();//check for response
             checkProblems();//check problems
             checkNameAndSize(contentAsString);//extract file name and size from the page
-            final HttpMethod httpMethod = getMethodBuilder().setReferer(fileURL).setActionFromImgSrcWhereTagContains("show_image").toHttpMethod();
+            final HttpMethod httpMethod = getMethodBuilder().setReferer(null).setActionFromImgSrcWhereTagContains("show_image").toHttpMethod();
 
             //here is the download link extraction
             if (!tryDownloadAndSaveFile(httpMethod)) {
