@@ -64,7 +64,7 @@ class BbcFileRunner extends AbstractRtmpRunner {
     private void checkNameAndSize(String playlistContent) throws ErrorDuringDownloadingException {
         String name;
         try {
-            name = PlugUtils.getStringBetween(playlistContent, "<title>", "</title>").replace(": ", " - ");
+            name = PlugUtils.getStringBetween(playlistContent, "\"title\":\"", "\"").replace(": ", " - ");
         } catch (PluginImplementationException e) {
             throw new PluginImplementationException("Programme title not found");
         }
@@ -87,13 +87,18 @@ class BbcFileRunner extends AbstractRtmpRunner {
             setConfig();
             String vpid;
             try {
-                vpid = PlugUtils.getStringBetween(mainPageContent, "\"vpid\":\"", "\""); //TV
+                vpid = PlugUtils.getStringBetween(mainPageContent, "\"vpid\":\"", "\"");
             } catch (PluginImplementationException e) {
-                Matcher matcher = getMatcherAgainstContent("<item[^<>]*?identifier=\"([^<>]+?)\""); //radio
-                if (!matcher.find()) {
-                    throw new PluginImplementationException("Identifier not found");
+                Matcher matcher = getMatcherAgainstContent("<item[^<>]*?identifier=\"([^<>]+?)\"");
+                if (matcher.find()) {
+                    vpid = matcher.group(1);
+                } else {
+                    try {
+                        vpid = PlugUtils.getStringBetween(getContentAsString(), "\"vpid\":\"", "\"");
+                    } catch (PluginImplementationException e1) {
+                        throw new PluginImplementationException("Identifier not found");
+                    }
                 }
-                vpid = matcher.group(1);
             }
             String atk = Hex.encodeHexString(DigestUtils.sha(MEDIA_SELECTOR_HASH + vpid));
             String mediaSelector = String.format("http://open.live.bbc.co.uk/mediaselector/5/select/version/2.0/mediaset/pc/vpid/%s/atk/%s/asn/%s/", vpid, atk, MEDIA_SELECTOR_ASN);
@@ -131,11 +136,9 @@ class BbcFileRunner extends AbstractRtmpRunner {
 
     private void checkPlaylistProblems() throws NotRecoverableDownloadException {
         String content = getContentAsString();
-        /* Bugs on their side, false negative.
-        if (content.contains("<noItems reason=\"")) {
+        if (getContentAsString().contains("\"defaultAvailableVersion\":null")) {
             throw new URLNotAvailableAnymoreException("This programme is not available anymore");
         }
-        */
         if (content.contains("<h1>404</h1>")) {
             throw new URLNotAvailableAnymoreException("Page not found");
         }
@@ -156,10 +159,6 @@ class BbcFileRunner extends AbstractRtmpRunner {
     }
 
     private void checkProblems() throws ErrorDuringDownloadingException {
-        /*
-         Using page scraping method to get file availability info is not reliable (false negative).
-         But at this moment the API also broken.
-         */
         if (getContentAsString().contains("this programme is not available")
                 || getContentAsString().contains("Not currently available on BBC iPlayer")) {
             throw new URLNotAvailableAnymoreException("This programme is not available anymore");
@@ -180,7 +179,7 @@ class BbcFileRunner extends AbstractRtmpRunner {
     }
 
     private void requestPlaylist(String pid) throws Exception {
-        GetMethod method = getGetMethod("http://www.bbc.co.uk/iplayer/playlist/" + pid);
+        GetMethod method = getGetMethod(String.format("http://www.bbc.co.uk/programmes/%s/playlist.json", pid));
         if (!makeRedirectedRequest(method)) {
             checkPlaylistProblems();
             throw new ServiceConnectionProblemException();
