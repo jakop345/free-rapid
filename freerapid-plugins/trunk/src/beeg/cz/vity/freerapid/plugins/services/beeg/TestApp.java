@@ -1,4 +1,4 @@
-package cz.vity.freerapid.plugins.services.uploadedto;
+package cz.vity.freerapid.plugins.services.beeg;
 
 import cz.vity.freerapid.plugins.dev.PluginDevApplication;
 import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
@@ -8,9 +8,7 @@ import org.jdesktop.application.Application;
 import java.net.URL;
 
 /**
- * Test application for uploaded.to
- *
- * @author Ladislav Vitasek
+ * @author birchie
  */
 public class TestApp extends PluginDevApplication {
     @Override
@@ -18,20 +16,14 @@ public class TestApp extends PluginDevApplication {
         final HttpFile httpFile = getHttpFile(); //creates new test instance of HttpFile
         try {
             //we set file URL
-            //httpFile.setNewURL(new URL("http://uploaded.net/file/5wnd0ouw/Scryed_Alteration.part31.rar"));
-            httpFile.setNewURL(new URL("http://ul.to/0clln81f"));
+            httpFile.setNewURL(new URL("http://beeg.com/6822971"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
-            //connectionSettings.setProxy("localhost", 8118); //eg we can use local proxy to sniff HTTP communication
+            //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
             //then we tries to download
-            final UploadedToShareServiceImpl service = new UploadedToShareServiceImpl(); //instance of service - of our plugin
-            /*
-            final PremiumAccount config = new PremiumAccount();
-            config.setUsername("*****");
-            config.setPassword("*****");
-            service.setConfig(config);
-            //*/
-           testRun(service, httpFile, connectionSettings);//download file with service and its Runner
+            final BeegServiceImpl service = new BeegServiceImpl(); //instance of service - of our plugin
+            //runcheck makes the validation
+            testRun(service, httpFile, connectionSettings);//download file with service and its Runner
             //all output goes to the console
         } catch (Exception e) {//catch possible exception
             e.printStackTrace(); //writes error output - stack trace to console
