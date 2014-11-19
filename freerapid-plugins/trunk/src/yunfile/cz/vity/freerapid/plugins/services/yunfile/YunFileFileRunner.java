@@ -180,8 +180,8 @@ class YunFileFileRunner extends AbstractRunner {
     private BufferedImage getCaptchaImg(String content, String baseUrl) throws Exception {
         /*
         <script>
-	        var cvimg = document.getElementById("cvimg");
-	        cvimg.setAttribute("src","/verifyimg/getPcv"+"/754"+".html");
+	        var cvimg2 = document.getElementById("cvimg2");
+	        cvimg2.setAttribute("src","/verifyimg/getPcv"+"/754"+".html");
         </script>
          */
         Matcher matcher = PlugUtils.matcher("(?s)<body[^<>]*?>(.+?)</body>", content);
@@ -190,11 +190,11 @@ class YunFileFileRunner extends AbstractRunner {
         }
         String bodyContent = matcher.group(1);
 
-        String buttonId = "cvimg";
+        String buttonId = "cvimg2";
         List<BufferedImage> images = new LinkedList<BufferedImage>();
         matcher = PlugUtils.matcher("['\"](/verifyimg/getPcv/\\d+\\.html)['\"]",
                 bodyContent.replaceAll("(?sm)(?:([\\s;])+//(?:.*)$)|(?:/\\*(?:[\\s\\S]*?)\\*/)", "").replaceAll("<!--.*?-->", ""));
-        int totalWidth = 0, totalHeight = 0;
+        int totalWidth = 0, maxHeight = 0;
         int imageType = 0;
         while (matcher.find()) {
             BufferedImage tempImage = getCaptchaSupport().getCaptchaImage(baseUrl + matcher.group(1));
@@ -206,7 +206,7 @@ class YunFileFileRunner extends AbstractRunner {
                 }
                 imageType = tempImage.getType();
                 totalWidth += width;
-                totalHeight += height;
+                maxHeight = Math.max(maxHeight, height);
                 images.add(tempImage);
             }
         }
@@ -233,17 +233,17 @@ class YunFileFileRunner extends AbstractRunner {
                 }
                 imageType = tempImage.getType();
                 totalWidth += width;
-                totalHeight += height;
+                maxHeight = Math.max(maxHeight, height);
                 images.add(tempImage);
             }
-        } catch (Exception e) {
+        } catch (ScriptException e) {
             LogUtils.processException(logger, e);
         }
 
         if (images.size() == 0) {
             throw new PluginImplementationException("Error getting captcha image (3)");
         }
-        BufferedImage compositeImage = new BufferedImage(totalWidth, totalHeight, imageType);
+        BufferedImage compositeImage = new BufferedImage(totalWidth, maxHeight, imageType);
         for (int i = 0, imageWidth = 0, imagesCount = images.size(); i < imagesCount; i++) {
             BufferedImage tempImage = images.get(i);
             compositeImage.createGraphics().drawImage(tempImage, imageWidth, 0, null);

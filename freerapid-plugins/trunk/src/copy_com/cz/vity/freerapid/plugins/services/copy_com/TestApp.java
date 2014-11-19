@@ -17,13 +17,19 @@ public class TestApp extends PluginDevApplication {
         try {
             //we set file URL
             //httpFile.setNewURL(new URL("https://copy.com/0JMAsqGSaU9L"));                      // root folder
-            httpFile.setNewURL(new URL("https://copy.com/s/0JMAsqGSaU9L/002"));                // sub folder
+            //httpFile.setNewURL(new URL("https://copy.com/s/0JMAsqGSaU9L/002"));                // sub folder
             //httpFile.setNewURL(new URL("https://copy.com/0JMAsqGSaU9L/002/torneo.part1.rev")); // file
+            //httpFile.setNewURL(new URL("https://www.copy.com/s/VKi8D4z6fiuwsWS8"));
+            //httpFile.setNewURL(new URL("https://copy.com/VKi8D4z6fiuwsWS8/Free%20Trackz"));
+            httpFile.setNewURL(new URL("https://copy.com/VKi8D4z6fiuwsWS8/Free%20Trackz/More%20Free%20Tracks.zip"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
             //then we tries to download
             final Copy_comServiceImpl service = new Copy_comServiceImpl(); //instance of service - of our plugin
+            SettingsConfig config = new SettingsConfig();
+            config.setAppendPathToFilename(true);
+            service.setConfig(config);
             //runcheck makes the validation
             testRun(service, httpFile, connectionSettings);//download file with service and its Runner
             //all output goes to the console

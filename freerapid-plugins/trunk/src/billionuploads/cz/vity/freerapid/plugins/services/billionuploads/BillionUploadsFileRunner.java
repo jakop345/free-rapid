@@ -12,6 +12,7 @@ import org.apache.commons.httpclient.HttpMethod;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.LinkedList;
 import java.util.List;
@@ -127,8 +128,44 @@ class BillionUploadsFileRunner extends XFileSharingRunner {
             } catch (Exception e) {
                 throw new PluginImplementationException("#$^%&?* BillionUploads !!!");
             }
+        } else if (getContentAsString().contains("document.createElement(\"img\").src=\"/_Incapsula_Resource")) {
+            String b;
+            try {
+                b = PlugUtils.getStringBetween(getContentAsString(), "b=\"", "\"");
+            } catch (PluginImplementationException e) {
+                throw new PluginImplementationException("Error evading robot detection: b value");
+            }
+            /*
+            for (var i = 0; i < b.length; i += 2) {
+                z = z + parseInt(b.substring(i, i + 2), 16) + ",";
+            }
+            z = z.substring(0, z.length - 1);
+            eval(eval('String.fromCharCode(' + z + ')'));
+             */
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0, length = b.length(); i < length; i += 2) {
+                sb.append((char) Integer.parseInt(b.substring(i, i + 2), 16));
+            }
+            String scriptContent = sb.toString();
+            String cookieSetterUrl;
+            try {
+                cookieSetterUrl = "http://billionuploads.com" + PlugUtils.getStringBetween(scriptContent, "\"GET\",\"", "\"");
+            } catch (Exception e) {
+                throw new PluginImplementationException("Error evading robot detection: cookie setter URL");
+            }
+            try {
+                if (!makeRedirectedRequest(getGetMethod(cookieSetterUrl))) {
+                    throw new ServiceConnectionProblemException();
+                }
+                if (!makeRedirectedRequest(getGetMethod(fileURL))) {
+                    throw new ServiceConnectionProblemException();
+                }
+            } catch (IOException e) {
+                throw new PluginImplementationException("Error evading robot detection: requesting cookie");
+            }
+
         } else {
-            throw new YouHaveToWaitException("RobotDecection MUST DIE BillionUploads DIE", 5);
+            throw new YouHaveToWaitException("RobotDetection MUST DIE BillionUploads DIE", 5);
         }
         checkFileProblems();
     }
