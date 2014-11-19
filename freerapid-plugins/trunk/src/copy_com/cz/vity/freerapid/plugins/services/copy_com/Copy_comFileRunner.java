@@ -5,13 +5,20 @@ import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;
 import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
 import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
+import cz.vity.freerapid.plugins.webclient.DownloadClientConsts;
 import cz.vity.freerapid.plugins.webclient.DownloadState;
 import cz.vity.freerapid.plugins.webclient.FileState;
+import cz.vity.freerapid.plugins.webclient.utils.JsonMapper;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
+import cz.vity.freerapid.utilities.LogUtils;
 import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.StringRequestEntity;
+import org.apache.commons.httpclient.util.URIUtil;
+import org.codehaus.jackson.JsonNode;
 
 import java.net.URI;
+import java.net.URLDecoder;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -21,21 +28,26 @@ import java.util.regex.Matcher;
  * Class which contains main code
  *
  * @author birchie
+ * @author tong2shot
  */
 class Copy_comFileRunner extends AbstractRunner {
     private final static Logger logger = Logger.getLogger(Copy_comFileRunner.class.getName());
+    private SettingsConfig config;
 
-    private String fileData;
-    private boolean folder = false;
+    private void setConfig() throws Exception {
+        Copy_comServiceImpl service = (Copy_comServiceImpl) getPluginService();
+        config = service.getConfig();
+    }
 
     @Override
-    public void runCheck() throws Exception { //this method validates file
+    public void runCheck() throws Exception {
         checkUrl();
         super.runCheck();
-        final GetMethod getMethod = getGetMethod(fileURL);//make first request
-        if (makeRedirectedRequest(getMethod)) {
+        final PostMethod postMethod = getGetLinkMethod(fileURL);
+        if (makeRedirectedRequest(postMethod)) {
+            setConfig();
             checkProblems();
-            checkNameAndSize(getContentAsString());//ok let's extract file name and size from the page
+            checkNameAndSize(getRootNode(getContentAsString()));
         } else {
             checkProblems();
             throw new ServiceConnectionProblemException();
@@ -47,28 +59,17 @@ class Copy_comFileRunner extends AbstractRunner {
             fileURL = fileURL.replaceFirst("copy\\.com/", "copy.com/s/");
     }
 
-    private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        final Matcher matchData = PlugUtils.matcher("(?s)Browser.Models.Obj.findOrCreate\\(\\{(.+?)\\}\\);", content);
-        fileData = "";
-        while (matchData.find())
-            fileData = matchData.group(1);
-        if (fileData.equals(""))
-            throw new PluginImplementationException("File information not found");
-        final Matcher matchName = PlugUtils.matcher("\"name\":\"(.+?)\",\"type\":\"(.+?)\"", fileData.substring(0, fileData.indexOf("\"children\":[")));
-        if (!matchName.find()) {
-            folder = true; //root folder
-            final String name = PlugUtils.getStringBetween(fileData, "\"id\":\"", "\"");
-            httpFile.setFileName(name.substring(name.lastIndexOf("/") + 1));
-        } else {
-            httpFile.setFileName(matchName.group(1));
-            if (matchName.group(2).equals("dir"))
-                folder = true;
+    private void checkNameAndSize(JsonNode rootNode) throws ErrorDuringDownloadingException {
+        JsonNode nameNode = (config.isAppendPathToFilename() ? rootNode.findPath("parent").findPath("path") : rootNode.findPath("parent").findPath("name"));
+        String name = (!nameNode.isMissingNode() ? nameNode.getTextValue() : rootNode.findPath("link_name").getTextValue());
+        if (name == null) {
+            throw new PluginImplementationException("File name not found");
         }
-        if (folder) {
-            httpFile.setFileName("Folder: " + httpFile.getFileName());
-            PlugUtils.checkFileSize(httpFile, fileData, "\"children_count\":", "}");
-        } else {
-            PlugUtils.checkFileSize(httpFile, fileData, "\"size\":", ",");
+        httpFile.setFileName(name.replaceFirst("^/", "").replaceAll("/", " - "));
+        JsonNode typeNode = rootNode.findPath("parent").findPath("type");
+        if (!typeNode.isMissingNode() && typeNode.getTextValue().equals("file")) {
+            long size = rootNode.findPath("parent").findPath("size").getValueAsLong();
+            httpFile.setFileSize(size);
         }
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
@@ -78,17 +79,23 @@ class Copy_comFileRunner extends AbstractRunner {
         checkUrl();
         super.run();
         logger.info("Starting download in TASK " + fileURL);
-        final GetMethod method = getGetMethod(fileURL); //create GET request
-        if (makeRedirectedRequest(method)) { //we make the main request
-            final String content = getContentAsString();//check for response
-            checkProblems();//check problems
-            checkNameAndSize(content);//extract file name and size from the page
-            if (folder) {
+        final PostMethod method = getGetLinkMethod(fileURL);
+        if (makeRedirectedRequest(method)) {
+            setConfig();
+            JsonNode rootNode = getRootNode(getContentAsString());
+            checkProblems();
+            checkNameAndSize(rootNode);
+            if (isRoot(rootNode) || isFolder(rootNode)) {
                 List<URI> list = new LinkedList<URI>();
-                final String childData = fileData.substring(fileData.indexOf("\"children\":[{"), fileData.indexOf("}],"));
-                final Matcher matchChildren = PlugUtils.matcher("\"url\":\"(.+?)\",", childData);
-                while (matchChildren.find()) {
-                    list.add(new URI(matchChildren.group(1).replace("\\/", "/")));
+                JsonNode objectsNodes = rootNode.findPath("objects");
+                for (JsonNode objectsNode : objectsNodes) {
+                    try {
+                        String url = objectsNode.get("url").getTextValue();
+                        //they encode '/' as '%2F', so we have to decode it first, then encode the path & query components
+                        list.add(new URI(URIUtil.encodePathQuery(URLDecoder.decode(url, "UTF-8"))));
+                    } catch (Exception e) {
+                        LogUtils.processException(logger, e);
+                    }
                 }
                 if (list.isEmpty()) throw new PluginImplementationException("No links found");
                 getPluginService().getPluginContext().getQueueSupport().addLinksToQueue(httpFile, list);
@@ -96,11 +103,15 @@ class Copy_comFileRunner extends AbstractRunner {
                 httpFile.setState(DownloadState.COMPLETED);
                 httpFile.getProperties().put("removeCompleted", true);
             } else {
-                final String dlUrl = PlugUtils.getStringBetween(fileData, "\"url\":\"", "\",").replace("\\/", "/");
-                final HttpMethod httpMethod = getGetMethod(dlUrl + "?download=1");
+                final String dlUrl = rootNode.findPath("parent").findPath("download_url").getTextValue();
+                if (dlUrl == null) {
+                    throw new PluginImplementationException("Error getting download URL");
+                }
+                setClientParameter(DownloadClientConsts.DONT_USE_HEADER_FILENAME, true);
+                final HttpMethod httpMethod = getGetMethod(URLDecoder.decode(dlUrl, "UTF-8"));
                 if (!tryDownloadAndSaveFile(httpMethod)) {
-                    checkProblems();//if downloading failed
-                    throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
+                    checkProblems();
+                    throw new ServiceConnectionProblemException("Error starting download");
                 }
             }
         } else {
@@ -112,8 +123,47 @@ class Copy_comFileRunner extends AbstractRunner {
     private void checkProblems() throws ErrorDuringDownloadingException {
         final String contentAsString = getContentAsString();
         if (contentAsString.contains("message\":\"Cannot find")) {
-            throw new URLNotAvailableAnymoreException("File not found"); //let to know user in FRD
+            throw new URLNotAvailableAnymoreException("File not found");
         }
+    }
+
+    private PostMethod getGetLinkMethod(String fileUrl) throws Exception {
+        PostMethod postMethod = (PostMethod) getMethodBuilder()
+                .setReferer(fileUrl)
+                .setAction("https://apiweb.copy.com/jsonrpc")
+                .setHeader("X-Api-Version", "1.0")
+                .setHeader("X-Client-Type", "API")
+                .setHeader("X-Client-Version", "1.0.00")
+                .toPostMethod();
+        Matcher matcher = PlugUtils.matcher("/s/([^/]+)(/.+)?", URLDecoder.decode(fileUrl, "UTF-8"));
+        if (!matcher.find()) {
+            throw new PluginImplementationException("Unknown URL pattern");
+        }
+        String linkToken = matcher.group(1);
+        String group2 = matcher.group(2);
+        String path = (group2 == null ? "" : String.format("\"path\":\"%s\",", group2)); //path should be in decoded form
+        String requestContent = String.format("{\"jsonrpc\":\"2.0\",\"method\":\"get_link\",\"params\":{\"link_token\":\"%s\",%s\"limit\":100,\"list_watermark\":0,\"max_items\":100,\"offset\":0,\"include_total_items\":true},\"id\":1}", linkToken, path);
+        postMethod.setRequestEntity(new StringRequestEntity(requestContent, "application/x-www-form-urlencoded", "UTF-8"));
+        return postMethod;
+    }
+
+    private JsonNode getRootNode(String content) throws PluginImplementationException {
+        JsonNode rootNode;
+        try {
+            rootNode = new JsonMapper().getObjectMapper().readTree(content);
+        } catch (Exception e) {
+            throw new PluginImplementationException("Error getting root node");
+        }
+        return rootNode;
+    }
+
+    private boolean isFolder(JsonNode rootNode) {
+        JsonNode typeNode = rootNode.findPath("parent").findPath("type");
+        return !typeNode.isMissingNode() && typeNode.getTextValue().equals("dir");
+    }
+
+    private boolean isRoot(JsonNode rootNode) {
+        return rootNode.findPath("parent").isMissingNode();
     }
 
 }
