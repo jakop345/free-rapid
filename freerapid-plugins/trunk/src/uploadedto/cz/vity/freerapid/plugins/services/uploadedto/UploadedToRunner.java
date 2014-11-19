@@ -5,6 +5,7 @@ import cz.vity.freerapid.plugins.services.recaptcha.ReCaptcha;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.DownloadState;
 import cz.vity.freerapid.plugins.webclient.FileState;
+import cz.vity.freerapid.plugins.webclient.hoster.PremiumAccount;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpMethod;
@@ -40,6 +41,7 @@ class UploadedToRunner extends AbstractRunner {
         super.run();
         logger.info("Starting download in TASK " + fileURL);
         addCookie(new Cookie(".uploaded.net", "lang", "en", "/", 86400, false));
+        login();
         HttpMethod method = getGetMethod(fileURL);
         if (makeRedirectedRequest(method)) {
             checkProblems();
@@ -160,4 +162,27 @@ class UploadedToRunner extends AbstractRunner {
         ).toPostMethod();
     }
 
+    private void login() throws Exception {
+        synchronized (UploadedToRunner.class) {
+            UploadedToShareServiceImpl service = (UploadedToShareServiceImpl) getPluginService();
+            PremiumAccount pa = service.getConfig();
+            if (pa.isSet()) {
+                final HttpMethod method = getMethodBuilder()
+                        .setAction("http://uploaded.net/io/login")
+                        .setParameter("id", pa.getUsername())
+                        .setParameter("pw", pa.getPassword())
+                        .toPostMethod();
+                method.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+                setFileStreamContentTypes(new String[0], new String[]{"application/javascript"});
+                if (!makeRedirectedRequest(method)) {
+                    throw new ServiceConnectionProblemException("Error posting login info");
+                }
+                if (getContentAsString().contains("err")) {
+                    throw new BadLoginException("Invalid Uploaded account login information!");
+                }
+                logger.info("Logged in.!");
+            }
+            else logger.info("No account details.");
+        }
+    }
 }
