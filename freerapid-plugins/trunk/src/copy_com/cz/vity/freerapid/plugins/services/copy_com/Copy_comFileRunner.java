@@ -99,7 +99,7 @@ class Copy_comFileRunner extends AbstractRunner {
                 }
                 if (list.isEmpty()) throw new PluginImplementationException("No links found");
                 getPluginService().getPluginContext().getQueueSupport().addLinksToQueue(httpFile, list);
-                httpFile.setFileName("Link(s) Extracted !");
+                httpFile.setFileName(list.size() + " Link(s) Extracted !");
                 httpFile.setState(DownloadState.COMPLETED);
                 httpFile.getProperties().put("removeCompleted", true);
             } else {
@@ -142,7 +142,7 @@ class Copy_comFileRunner extends AbstractRunner {
         String linkToken = matcher.group(1);
         String group2 = matcher.group(2);
         String path = (group2 == null ? "" : String.format("\"path\":\"%s\",", group2)); //path should be in decoded form
-        String requestContent = String.format("{\"jsonrpc\":\"2.0\",\"method\":\"get_link\",\"params\":{\"link_token\":\"%s\",%s\"limit\":100,\"list_watermark\":0,\"max_items\":100,\"offset\":0,\"include_total_items\":true},\"id\":1}", linkToken, path);
+        String requestContent = String.format("{\"jsonrpc\":\"2.0\",\"method\":\"get_link\",\"params\":{\"link_token\":\"%s\",%s\"limit\":10000,\"list_watermark\":0,\"max_items\":10000,\"offset\":0,\"include_total_items\":true},\"id\":1}", linkToken, path);
         postMethod.setRequestEntity(new StringRequestEntity(requestContent, "application/x-www-form-urlencoded", "UTF-8"));
         return postMethod;
     }
