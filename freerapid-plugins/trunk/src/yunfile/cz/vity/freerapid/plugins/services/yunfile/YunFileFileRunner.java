@@ -223,7 +223,7 @@ class YunFileFileRunner extends AbstractRunner {
             }
         }
         try {
-            String imgSrc = (String) engine.eval(buttonId + ".getAttribute(\"src\")");
+            String imgSrc = (String) engine.eval("document.getElementById(\"" + buttonId + "\")" + ".getAttribute(\"src\")");
             BufferedImage tempImage = getCaptchaSupport().getCaptchaImage(baseUrl + imgSrc);
             int width = tempImage.getWidth();
             int height = tempImage.getHeight();
