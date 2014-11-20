@@ -29,7 +29,8 @@ public class TestApp extends PluginDevApplication {
             //httpFile.setNewURL(new URL("http://www.bbc.co.uk/programmes/b043pmd0"));
             //httpFile.setNewURL(new URL("http://www.bbc.co.uk/iplayer/cbbc/episode/b03y70vb/"));
             //httpFile.setNewURL(new URL("http://www.bbc.co.uk/programmes/p027f9q0"));
-            httpFile.setNewURL(new URL("http://www.bbc.co.uk/programmes/b007wvmw"));
+            //httpFile.setNewURL(new URL("http://www.bbc.co.uk/programmes/b007wvmw"));
+            httpFile.setNewURL(new URL("http://www.bbc.co.uk/iplayer/episode/b03x1285/shaun-the-sheep-series-4-19-phoney-farmer"));
 
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection

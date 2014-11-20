@@ -66,7 +66,11 @@ class BbcFileRunner extends AbstractRtmpRunner {
         try {
             name = PlugUtils.getStringBetween(playlistContent, "\"title\":\"", "\"").replace(": ", " - ");
         } catch (PluginImplementationException e) {
-            throw new PluginImplementationException("Programme title not found");
+            try {
+                name = PlugUtils.getStringBetween(playlistContent, "<title>", "</title>").replace(": ", " - ");
+            } catch (PluginImplementationException e1) {
+                throw new PluginImplementationException("Programme title not found");
+            }
         }
         httpFile.setFileName(name + DEFAULT_EXT);
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
@@ -136,7 +140,7 @@ class BbcFileRunner extends AbstractRtmpRunner {
 
     private void checkPlaylistProblems() throws NotRecoverableDownloadException {
         String content = getContentAsString();
-        if (getContentAsString().contains("\"defaultAvailableVersion\":null")) {
+        if (content.contains("\"defaultAvailableVersion\":null")) {
             throw new URLNotAvailableAnymoreException("This programme is not available anymore");
         }
         if (content.contains("<h1>404</h1>")) {
@@ -159,11 +163,12 @@ class BbcFileRunner extends AbstractRtmpRunner {
     }
 
     private void checkProblems() throws ErrorDuringDownloadingException {
-        if (getContentAsString().contains("this programme is not available")
-                || getContentAsString().contains("Not currently available on BBC iPlayer")) {
+        String content = getContentAsString();
+        if (content.contains("this programme is not available")
+                || content.contains("Not currently available on BBC iPlayer")) {
             throw new URLNotAvailableAnymoreException("This programme is not available anymore");
         }
-        if (getContentAsString().contains("Page not found") || getContentAsString().contains("page was not found")) {
+        if (content.contains("Page not found") || content.contains("page was not found")) {
             throw new URLNotAvailableAnymoreException("Page not found");
         }
     }
@@ -179,8 +184,17 @@ class BbcFileRunner extends AbstractRtmpRunner {
     }
 
     private void requestPlaylist(String pid) throws Exception {
+        //some programmes use xml (old) style, while the rest use json style
         GetMethod method = getGetMethod(String.format("http://www.bbc.co.uk/programmes/%s/playlist.json", pid));
-        if (!makeRedirectedRequest(method)) {
+        int httpStatus = client.makeRequest(method, false);
+        if (httpStatus / 100 == 3) {
+            method = getGetMethod("http://www.bbc.co.uk/iplayer/playlist/" + pid);
+            if (!makeRedirectedRequest(method)) {
+                checkPlaylistProblems();
+                throw new ServiceConnectionProblemException();
+            }
+            checkPlaylistProblems();
+        } else if (httpStatus != 200) {
             checkPlaylistProblems();
             throw new ServiceConnectionProblemException();
         }
