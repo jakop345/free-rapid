@@ -179,9 +179,10 @@ class YunFileFileRunner extends AbstractRunner {
 
     private BufferedImage getCaptchaImg(String content, String baseUrl) throws Exception {
         /*
+        <img  src="/verifyimg/getPcv/754.html" id="cvimg2" />&nbsp;</td><td align="left">
         <script>
-	        var cvimg2 = document.getElementById("cvimg2");
-	        cvimg2.setAttribute("src","/verifyimg/getPcv"+"/754"+".html");
+	        var cvimg2b = document.getElementById("cvimg2");
+            //	cvimg2.setAttribute("src","/verifyimg/getPcv.html");
         </script>
          */
         Matcher matcher = PlugUtils.matcher("(?s)<body[^<>]*?>(.+?)</body>", content);
@@ -236,7 +237,7 @@ class YunFileFileRunner extends AbstractRunner {
                 maxHeight = Math.max(maxHeight, height);
                 images.add(tempImage);
             }
-        } catch (ScriptException e) {
+        } catch (Exception e) {
             LogUtils.processException(logger, e);
         }
 
