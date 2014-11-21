@@ -39,7 +39,7 @@ class SuperBShareFileRunner extends AbstractRunner {
         if (!matchN.find())
             throw new PluginImplementationException("File name not found");
         httpFile.setFileName(matchN.group(1));
-        final Matcher matchS = PlugUtils.matcher("Velikost:</.+?>\\s*?<.+?>\\((.+?)\\)<", content);
+        final Matcher matchS = PlugUtils.matcher("Velikost:</.+?>\\s*?<.+?>.*?\\((.+?)\\)<", content);
         if (!matchS.find())
             throw new PluginImplementationException("File size not found");
         httpFile.setFileSize(PlugUtils.getFileSizeFromString(matchS.group(1)));
@@ -58,7 +58,7 @@ class SuperBShareFileRunner extends AbstractRunner {
             checkNameAndSize(contentAsString);//extract file name and size from the page
             final HttpMethod httpMethod = getMethodBuilder()
                     .setReferer(fileURL)
-                    .setActionFromAHrefWhereATagContains("Klikni a stahuj").toHttpMethod();
+                    .setActionFromAHrefWhereATagContains("Stáhnout").toHttpMethod();
             if (!tryDownloadAndSaveFile(httpMethod)) {
                 checkProblems();//if downloading failed
                 throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
