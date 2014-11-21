@@ -5,7 +5,6 @@ import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
 import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.FileState;
-import cz.vity.freerapid.plugins.webclient.MethodBuilder;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -40,8 +39,10 @@ class FShareFileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        PlugUtils.checkName(httpFile, content, "tin:</b>", "</p>");
-        PlugUtils.checkFileSize(httpFile, content, "ng: </b>", "</p>");
+        PlugUtils.checkName(httpFile, content, "title\" content=\"", "\"");
+        final Matcher match = PlugUtils.matcher("class=\"capital\">(?:\\s|<[^>]+?>)+(.+?)<", content);
+        if (match.find())
+            httpFile.setFileSize(PlugUtils.getFileSizeFromString(match.group(1).trim()));
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
 
@@ -55,7 +56,7 @@ class FShareFileRunner extends AbstractRunner {
             checkProblems();//check problems
             if (fileURL.contains("/folder/")) {
                 final List<URI> uriList = new LinkedList<URI>();
-                final Matcher urlListMatcher = getMatcherAgainstContent("href=\"(http.+?/file/.+?)\".+?<span class=\"filename\">");
+                final Matcher urlListMatcher = getMatcherAgainstContent("class=\"filename\"[^<>]+?href=\"(http.+?/file/.+?)\"");
                 while (urlListMatcher.find()) {
                     uriList.add(new java.net.URI(new org.apache.commons.httpclient.URI(urlListMatcher.group(1), false, "UTF-8").toString()));
                 }
@@ -63,19 +64,9 @@ class FShareFileRunner extends AbstractRunner {
                 httpFile.getProperties().put("removeCompleted", true);
             } else if (fileURL.contains("/file/")) {
                 checkNameAndSize(contentAsString);//extract file name and size from the page
-                final MethodBuilder builder = getMethodBuilder()
-                        .setActionFromFormWhereTagContains("download_file", true)
-                        .setAction(fileURL)
-                        .setReferer(fileURL);
-                if (!makeRedirectedRequest(builder.toPostMethod())) {
-                    checkProblems();
-                    throw new ServiceConnectionProblemException();
-                }
-                checkProblems();
                 final int count = PlugUtils.getNumberBetween(getContentAsString(), "var count = ", ";");
                 downloadTask.sleep(count + 1);
-                final HttpMethod httpMethod = getGetMethod(PlugUtils.getStringBetween(getContentAsString(), "document.location = '", "'"));
-
+                final HttpMethod httpMethod = getGetMethod(PlugUtils.getStringBetween(getContentAsString(), "var url = '", "'"));
                 if (!tryDownloadAndSaveFile(httpMethod)) {
                     checkProblems();//if downloading failed
                     throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
