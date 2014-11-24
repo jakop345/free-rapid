@@ -60,6 +60,7 @@ class AdultDdlFileRunner extends AbstractRunner {
                     } while (captchaLoop);
 
                     List<URI> list = new LinkedList<URI>();
+                    list.add(new URI(getMethodBuilder().setActionFromAHrefWhereATagContains("Mirror").getEscapedURI()));
                     final Matcher match = PlugUtils.matcher("href=['\"](http.+?)['\"][^>]*?>\\1<", getContentAsString());
                     while (match.find()) {
                         try {
