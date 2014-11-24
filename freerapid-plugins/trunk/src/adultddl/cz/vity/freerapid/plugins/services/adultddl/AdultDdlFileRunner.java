@@ -72,15 +72,23 @@ class AdultDdlFileRunner extends AbstractRunner {
                     httpFile.setState(DownloadState.COMPLETED);
                     httpFile.getProperties().put("removeCompleted", true);
                 } else {
+                    final String content = getContentAsString();
                     final List<FileInfo> list = new LinkedList<FileInfo>();
                     list.add(new FileInfo(new URL(getMethodBuilder().setReferer(fileURL).setActionFromImgSrcWhereTagContains("aligncenter").getEscapedURI())));
-                    final Matcher matchL = PlugUtils.matcher("href=['\"](http.+?)['\"][^>]*?_blank[^>]*?><strong>", getContentAsString());
+                    final Matcher matchL = PlugUtils.matcher("href=['\"](http.+?)['\"][^>]*?_blank[^>]*?><strong>", content);
                     while (matchL.find()) {
-                        list.add(new FileInfo(new URL(matchL.group(1))));
+                        String imgLink = matchL.group(1).trim();
+                        if (imgLink.contains("?l=")) {
+                            final HttpMethod imgMethod = getGetMethod(imgLink);
+                            if (makeRedirectedRequest(imgMethod))
+                                imgLink = imgMethod.getURI().getURI();
+                        }
+                        list.add(new FileInfo(new URL(imgLink)));
                     }
-                    FileInfo linkList = new FileInfo(new URL(getMethodBuilder().setReferer(fileURL).setActionFromIFrameSrcWhereTagContains("secure").getEscapedURI()));
+                    FileInfo linkList = new FileInfo(new URL(getMethodBuilder(content).setReferer(fileURL).setActionFromIFrameSrcWhereTagContains("secure").getEscapedURI()));
                     linkList.setFileName("Extract links > ");
-                    try { linkList.setFileName(linkList.getFileName() + PlugUtils.getStringBetween(getContentAsString(), "<h1>", "</h1>").trim()); } catch (Exception e) { /**/ }
+                    try { linkList.setFileName(linkList.getFileName() + PlugUtils.getStringBetween(content, "<title>", "- AdultDDL</title>").trim()); } catch (Exception e) { /**/ }
+                    logger.info(linkList.getFileName());
                     list.add(linkList);
                     if (list.isEmpty()) throw new PluginImplementationException("No links found");
                     getPluginService().getPluginContext().getQueueSupport().addLinksToQueueFromContainer(httpFile, list);
