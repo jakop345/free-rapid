@@ -32,11 +32,14 @@ class EuroShareFileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        Matcher match = PlugUtils.matcher("<h1.*?>(.+) \\((.+?)\\)</h1>", content);
+        Matcher match = PlugUtils.matcher("<h1.*?>(.+)</h1>", content);
         if (!match.find())
-            throw new PluginImplementationException("File name/size not found");
+            throw new PluginImplementationException("File name not found");
         httpFile.setFileName(match.group(1).trim());
-        httpFile.setFileSize(PlugUtils.getFileSizeFromString(match.group(2).trim()));
+        match = PlugUtils.matcher("posledni vpravo\">.+?\\| (.+?)</p>", content);
+        if (!match.find())
+            throw new PluginImplementationException("File size not found");
+        httpFile.setFileSize(PlugUtils.getFileSizeFromString(match.group(1).trim()));
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
 
@@ -50,9 +53,7 @@ class EuroShareFileRunner extends AbstractRunner {
             checkProblems();//check problems
             checkNameAndSize(contentAsString);//extract file name and size from the page
             final HttpMethod httpMethod = getMethodBuilder().setReferer(fileURL)
-                    .setActionFromAHrefWhereATagContains("STIAHNUŤ ZDARMA").toHttpMethod();
-
-            //here is the download link extraction
+                    .setActionFromAHrefWhereATagContains("DOWNLOAD FOR FREE").toHttpMethod();
             if (!tryDownloadAndSaveFile(httpMethod)) {
                 checkProblems();//if downloading failed
                 throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
@@ -66,6 +67,7 @@ class EuroShareFileRunner extends AbstractRunner {
     private void checkProblems() throws ErrorDuringDownloadingException {
         final String contentAsString = getContentAsString();
         if (contentAsString.contains("Požadovaný súbor sa na serveri nenachádza alebo bol odstránený") ||
+                contentAsString.contains("súbor bol odstránený") ||
                 contentAsString.contains("Súbor neexistuje")) {
             throw new URLNotAvailableAnymoreException("File not found"); //let to know user in FRD
         }
