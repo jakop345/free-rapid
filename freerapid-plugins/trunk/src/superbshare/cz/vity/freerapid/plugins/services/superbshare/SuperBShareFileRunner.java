@@ -100,6 +100,7 @@ class SuperBShareFileRunner extends AbstractRunner {
             }
             checkProblems();
             final String eq = PlugUtils.getStringBetween(getContentAsString(), "var js_val =", ";");
+            logger.info("Human check equation = " + eq);
             final HttpMethod httpMethod = getMethodBuilder()
                     .setActionFromFormWhereActionContains("signIn", true)
                     .setParameter("username", pa.getUsername())
@@ -119,9 +120,15 @@ class SuperBShareFileRunner extends AbstractRunner {
         try {
             ScriptEngineManager mgr = new ScriptEngineManager();
             ScriptEngine engine = mgr.getEngineByName("JavaScript");
-            return ((Double) engine.eval(equationString)).intValue();
+            int value;
+            try {
+                value = ((Double) engine.eval(equationString)).intValue();
+            } catch (Exception e) {
+                value = (Integer) engine.eval(equationString);
+            }
+            return value;
         } catch (Exception e) {
-            throw new ErrorDuringDownloadingException(e.getMessage());
+            throw new PluginImplementationException(e.getMessage());
         }
     }
 }
