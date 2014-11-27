@@ -10,12 +10,15 @@ import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.*;
 import cz.vity.freerapid.core.AppPrefs;
 import cz.vity.freerapid.core.FileTypeIconProvider;
+import cz.vity.freerapid.core.MainApp;
 import cz.vity.freerapid.core.UserProp;
 import cz.vity.freerapid.gui.content.ContentPanel;
 import cz.vity.freerapid.gui.managers.FileHistoryItem;
 import cz.vity.freerapid.gui.managers.FileHistoryManager;
 import cz.vity.freerapid.gui.managers.ManagerDirector;
 import cz.vity.freerapid.gui.managers.MenuManager;
+import cz.vity.freerapid.model.DownloadFile;
+import cz.vity.freerapid.plugins.webclient.DownloadState;
 import cz.vity.freerapid.swing.SwingUtils;
 import cz.vity.freerapid.swing.SwingXUtils;
 import cz.vity.freerapid.swing.Swinger;
@@ -110,6 +113,7 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
         setAction(okButton, "okBtnAction");
         setAction(clearHistoryBtn, "clearHistoryBtnAction");
 
+        registerKeyboardAction("downloadInformationAction");
         registerKeyboardAction("openFileAction");
         registerKeyboardAction("deleteFileAction");
         registerKeyboardAction("openDirectoryAction");
@@ -235,6 +239,38 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
         SwingUtils.copyToClipboard(builder.toString().trim(), this);
     }
 
+    @org.jdesktop.application.Action(enabledProperty = SELECTED_ACTION_ENABLED_PROPERTY)
+    public void downloadInformationAction() throws Exception {
+        final int[] indexes = getSelectedRows();
+        final java.util.List<FileHistoryItem> filesH = getSelectionToList(indexes);
+        if (filesH.isEmpty())
+            return;
+        final java.util.List<DownloadFile> files = new ArrayList<DownloadFile>();
+        for (FileHistoryItem fileH : filesH) {
+            final DownloadFile down = new DownloadFile();
+            down.setFileUrl(fileH.getUrl());
+            down.setStoreFile(fileH.getOutputFile());
+            down.setSaveToDirectory(new File(fileH.getOutputFile().getAbsolutePath()));
+            down.setDescription(fileH.getDescription());
+            down.setFileName(fileH.getFileName());
+            down.setFileSize(fileH.getFileSize());
+            down.setDownloaded(fileH.getFileSize());
+            down.setRealDownload(fileH.getFileSize());
+            down.setFileType(fileH.getFileType());
+            down.setAverageSpeed(fileH.getAverageSpeed());
+            down.setPluginID(fileH.getShareDownloadServiceID());
+            down.setState(DownloadState.COMPLETED);
+            files.add(down);
+        }
+        if (files.size() == 1) {
+            final InformationDialog dialog = new InformationDialog(owner, director, files.get(0));
+            ((MainApp)director.getContext().getApplication()).show(dialog);
+        } else {
+            final MultipleSettingsDialog dialog = new MultipleSettingsDialog(owner, files);
+            ((MainApp)director.getContext().getApplication()).show(dialog);
+        }
+    }
+
     @org.jdesktop.application.Action(enabledProperty = FILE_EXISTS_ENABLED_PROPERTY)
     public void openFileAction() {
         final int[] indexes = getSelectedRows();
@@ -332,8 +368,14 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
         Bindings.bind(fieldFilter, delayedReadValueModel);
         //combobox.setModel(new DefaultComboBoxModel(getList("datesFilter")));
 
-        bindCombobox(combobox, UserProp.SELECTED_DOWNLOADS_FILTER, DownloadsFilters.ALL_DOWNLOADS.ordinal(), "datesFilter", 6);
+        bindCheckbox(checkbox, UserProp.CHECK_RECENT_DOWNLOAD_HISTORY, UserProp.CHECK_RECENT_DOWNLOAD_HISTORY_DEFAULT);
+        bindCombobox(combobox, UserProp.SELECTED_DOWNLOADS_FILTER, DownloadsFilters.ALL_DOWNLOADS.ordinal(), "datesFilter", 8);
 
+        checkbox.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                updateFilters();
+            }
+        });
         combobox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 updateFilters();
@@ -361,6 +403,11 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
         return Swinger.getSelectedRows(table);
     }
 
+    private void bindCheckbox(final JCheckBox checkbox, final String key, final Object defaultValue) {
+        final MyPreferencesAdapter checkAdapter = new MyPreferencesAdapter(key, defaultValue);
+        Bindings.bind(checkbox, checkAdapter);
+    }
+
     private void bindCombobox(final JComboBox combobox, final String key, final Object defaultValue, final String resourceKey, final int valueCount) {
         final String[] stringList = getList(resourceKey, valueCount);
         bindCombobox(combobox, key, defaultValue, stringList);
@@ -383,9 +430,12 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
         JPanel dialogPane = new JPanel();
         JPanel contentPanel = new JPanel();
         JPanel panel1 = new JPanel();
+        checkbox = new JCheckBox();
+        checkbox.setName("recentHistory");
         combobox = new JComboBox();
         JLabel labelFilter = new JLabel();
         fieldFilter = new JTextField();
+        fileCount = new JLabel();
         JScrollPane scrollPane2 = new JScrollPane();
         table = new JXTable();
         JXButtonPanel buttonBar = new JXButtonPanel();
@@ -415,19 +465,25 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
 
                     PanelBuilder panel1Builder = new PanelBuilder(new FormLayout(
                             new ColumnSpec[]{
+                                    FormSpecs.DEFAULT_COLSPEC,
+                                    FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
                                     ColumnSpec.decode("max(pref;80dlu)"),
                                     FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
                                     FormSpecs.DEFAULT_COLSPEC,
                                     FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
                                     new ColumnSpec(Sizes.dluX(100)),
                                     FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-                                    new ColumnSpec(ColumnSpec.FILL, Sizes.DEFAULT, FormSpec.DEFAULT_GROW)
+                                    new ColumnSpec(ColumnSpec.FILL, Sizes.DEFAULT, FormSpec.DEFAULT_GROW),
+                                    FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+                                    new ColumnSpec(ColumnSpec.FILL, Sizes.DEFAULT, FormSpec.DEFAULT_GROW )
                             },
                             RowSpec.decodeSpecs("default")), panel1);
 
-                    panel1Builder.add(combobox, cc.xy(1, 1));
-                    panel1Builder.add(labelFilter, cc.xy(3, 1));
-                    panel1Builder.add(fieldFilter, cc.xy(5, 1));
+                    panel1Builder.add(checkbox, cc.xy(1, 1));
+                    panel1Builder.add(combobox, cc.xy(3, 1));
+                    panel1Builder.add(labelFilter, cc.xy(5, 1));
+                    panel1Builder.add(fieldFilter, cc.xy(7, 1));
+                    panel1Builder.add(fileCount, cc.xy(9, 1, CellConstraints.RIGHT, CellConstraints.DEFAULT));
                 }
 
                 //======== scrollPane2 ========
@@ -593,7 +649,7 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
                 }
             }
         });
-
+        displayFileCount();
     }
 
 
@@ -754,7 +810,7 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
 
         final MenuManager menuManager = director.getMenuManager();
         final JPopupMenu popup = new JPopupMenu();
-        final Object[] objects = {"openFileAction", "deleteFileAction", "openDirectoryAction", MenuManager.MENU_SEPARATOR, "copyContent", MenuManager.MENU_SEPARATOR, "copyURL", "openInBrowser", MenuManager.MENU_SEPARATOR, "removeSelectedAction"};
+        final Object[] objects = {"downloadInformationAction", MenuManager.MENU_SEPARATOR, "openFileAction", "deleteFileAction", "openDirectoryAction", MenuManager.MENU_SEPARATOR, "copyContent", MenuManager.MENU_SEPARATOR, "copyURL", "openInBrowser", MenuManager.MENU_SEPARATOR, "removeSelectedAction"};
         menuManager.processMenu(popup, "popup", getActionMap(), objects);
         SwingUtils.showPopMenu(popup, e, table, this);
     }
@@ -781,6 +837,7 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
         if (exampleSearchString.equals(filterText))
             filterText = "";
         final int selectedIndex = combobox.getSelectedIndex();
+        final boolean recentHistory = checkbox.isSelected();
 
         final DownloadsFilters filter;
         RowFilter<Object, Object> rowFilter = null;
@@ -789,9 +846,10 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
         else {
             filter = DownloadsFilters.values()[selectedIndex];
         }
+        checkbox.setEnabled(filter != DownloadsFilters.ALL_DOWNLOADS);
 
         if (filter != DownloadsFilters.ALL_DOWNLOADS) {
-            rowFilter = new DateTimeFilter(filter);
+            rowFilter = new DateTimeFilter(filter, recentHistory);
         }
 
         if (!filterText.isEmpty()) {
@@ -806,6 +864,11 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
             }
         }
         ((DefaultRowSorter) table.getRowSorter()).setRowFilter(rowFilter);
+        displayFileCount();
+    }
+
+    private void displayFileCount() {
+        fileCount.setText(table.getRowCount() + " " + getResourceMap().getString("textDownloads"));
     }
 
 //    /**
@@ -842,9 +905,11 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
 
     private static class DateTimeFilter extends RowFilter<Object, Object> {
         private final DownloadsFilters filter;
+        private boolean recent;
 
-        private DateTimeFilter(DownloadsFilters filter) {
+        private DateTimeFilter(DownloadsFilters filter, boolean recent) {
             this.filter = filter;
+            this.recent = recent;
         }
 
         @Override
@@ -869,56 +934,61 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
             switch (filter) {
                 case TODAY:
                     if (valueDate.after(today))
-                        return true;
+                        return recent;
                     break;
                 case YESTERDAY:
                     final Calendar yesterday = Calendar.getInstance();
+                    yesterday.setTime(today.getTime());
                     yesterday.add(Calendar.DATE, -1);
-                    yesterday.set(Calendar.HOUR_OF_DAY, 0);
-                    yesterday.set(Calendar.MINUTE, 0);
-                    yesterday.set(Calendar.SECOND, 1);
 
-                    if (valueDate.after(yesterday) && valueDate.before(today)) {
-                        return true;
-                    }
-
+                    if (valueDate.after(yesterday) && valueDate.before(today))
+                        return recent;
                     break;
                 case LAST_WEEK:
-                    final Calendar last7Days = Calendar.getInstance();
-                    last7Days.set(Calendar.HOUR_OF_DAY, 0);
-                    last7Days.set(Calendar.MINUTE, 0);
-                    last7Days.set(Calendar.SECOND, 1);
-                    last7Days.add(Calendar.DATE, -7);
+                    final Calendar lastWeek = Calendar.getInstance();
+                    lastWeek.setTime(today.getTime());
+                    lastWeek.add(Calendar.DATE, -7);
 
-                    if (valueDate.after(last7Days))
-                        return true;
-
+                    if (valueDate.after(lastWeek))
+                        return recent;
                     break;
                 case LAST_MONTH:
-                    final Calendar last31Days = Calendar.getInstance();
-                    last31Days.set(Calendar.HOUR_OF_DAY, 0);
-                    last31Days.set(Calendar.MINUTE, 0);
-                    last31Days.set(Calendar.SECOND, 1);
-                    last31Days.add(Calendar.DATE, -31);
+                    final Calendar lastMonth = Calendar.getInstance();
+                    lastMonth.setTime(today.getTime());
+                    lastMonth.add(Calendar.MONTH, -1);
 
-                    if (valueDate.after(last31Days))
-                        return true;
+                    if (valueDate.after(lastMonth))
+                        return recent;
                     break;
-                case THIS_CALENDAR_MONTH:
-                    today.set(Calendar.DAY_OF_MONTH, 1);
-                    today.set(Calendar.HOUR_OF_DAY, 0);
-                    today.set(Calendar.MINUTE, 0);
-                    today.set(Calendar.SECOND, 1);
+                case THREE_MONTHS:
+                    final Calendar last3Months = Calendar.getInstance();
+                    last3Months.setTime(today.getTime());
+                    last3Months.add(Calendar.MONTH, -3);
 
-                    if (valueDate.after(today))
-                        return true;
+                    if (valueDate.after(last3Months))
+                        return recent;
+                    break;
+                case SIX_MONTHS:
+                    final Calendar last6Months = Calendar.getInstance();
+                    last6Months.setTime(today.getTime());
+                    last6Months.add(Calendar.MONTH, -6);
+
+                    if (valueDate.after(last6Months))
+                        return recent;
+                    break;
+                case LAST_YEAR:
+                    final Calendar lastYear = Calendar.getInstance();
+                    lastYear.setTime(today.getTime());
+                    lastYear.add(Calendar.YEAR, -1);
+
+                    if (valueDate.after(lastYear))
+                        return recent;
                     break;
                 default:
                     assert false;
             }
 
-
-            return false;
+            return !recent;
         }
     }
 
@@ -1068,15 +1138,17 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
         }
     }
 
+    private JCheckBox checkbox;
     private JComboBox combobox;
     private JTextField fieldFilter;
+    private JLabel fileCount;
     private JXTable table;
     private JButton clearHistoryBtn;
     private JButton okButton;
 
 
     private static enum DownloadsFilters {
-        ALL_DOWNLOADS, TODAY, YESTERDAY, LAST_WEEK, LAST_MONTH, THIS_CALENDAR_MONTH
+        ALL_DOWNLOADS, TODAY, YESTERDAY, LAST_WEEK, LAST_MONTH, THREE_MONTHS, SIX_MONTHS, LAST_YEAR
     }
 
 }
