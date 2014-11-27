@@ -99,6 +99,7 @@ public class DownloadNewPluginsTask extends DownloadTask {
                 }
             }
         }
+        setProgress(fileList.size(), 0, fileList.size());
         message("DownloadNewPluginsTask.reloadingPlugins");
         updatePlugins();
         if (!success)
