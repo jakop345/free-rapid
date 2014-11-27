@@ -22,6 +22,7 @@ final class ProgressBarCellRenderer extends JProgressBar implements TableCellRen
     private static final Color BG_BLACK = new Color(0xFFCE9B);
     private static final Color BG_PINK = Color.PINK;
     private static final Color BG_GREY = new Color(0xAAAAAA);
+    private static final Color BG_PURPLE = new Color(0xDD99EE);
     private final Color defaultColor;
 
     private String autoReconnectIn;
@@ -72,6 +73,9 @@ final class ProgressBarCellRenderer extends JProgressBar implements TableCellRen
                 break;
             case COMPLETED:
                 this.setBackground(defaultColor);
+                break;
+            case TESTING:
+                this.setBackground(BG_PURPLE);
                 break;
             default:
                 assert false;

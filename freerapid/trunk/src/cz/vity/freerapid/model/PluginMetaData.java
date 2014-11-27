@@ -93,7 +93,7 @@ final public class PluginMetaData extends AbstractBean implements Identifiable<L
         if (maxAllowedDownloads > 1) {
             setMaxAllowedDownloads(Math.min(maxParallelDownloads, maxAllowedDownloads));
         } else {
-            if (maxAllowedDownloads == -1) setMaxAllowedDownloads(getMaxParallelDownloads());
+            if (maxAllowedDownloads == -1) setMaxAllowedDownloads(Math.max(1, Math.min(DescriptorUtils.getAttribute("defaultDownloads", maxParallelDownloads, descriptor), maxParallelDownloads)));
         }
 
         resumeSupported = DescriptorUtils.getAttribute("resumeSupported", true, descriptor);

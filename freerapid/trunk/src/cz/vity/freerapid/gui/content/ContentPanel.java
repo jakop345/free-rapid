@@ -1103,7 +1103,7 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
      * @param source editor
      * @param originalOuputFile original name before editing
      * @param backupFileName original file name
-     * @param row index of selected row
+     * @param selectedRow index of selected row
      */
     private void renameFile(RenameFileNameEditor source, File originalOuputFile, String backupFileName, int selectedRow) {
         boolean succeeded;
@@ -1437,7 +1437,7 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
         @Override
         public void mousePressed(MouseEvent e) {
             if (SwingUtilities.isRightMouseButton(e)) {
-                if (!table.getRowSorter().getSortKeys().isEmpty())
+                if (!table.getRowSorter().getSortKeys().isEmpty() && isSorted())
                     return;
                 if (AppPrefs.getProperty(UserProp.DRAG_ON_RIGHT_MOUSE, UserProp.DRAG_ON_RIGHT_MOUSE_DEFAULT)) {
                     rowPosition = table.rowAtPoint(e.getPoint());
