@@ -10,9 +10,7 @@ import cz.vity.freerapid.core.UserProp;
 import cz.vity.freerapid.gui.FRDUtils;
 import cz.vity.freerapid.gui.actions.URLTransferHandler;
 import cz.vity.freerapid.gui.dialogs.filechooser.OpenSaveDialogFactory;
-import cz.vity.freerapid.gui.managers.DataManager;
-import cz.vity.freerapid.gui.managers.ManagerDirector;
-import cz.vity.freerapid.gui.managers.PluginsManager;
+import cz.vity.freerapid.gui.managers.*;
 import cz.vity.freerapid.model.DownloadFile;
 import cz.vity.freerapid.swing.ComponentFactory;
 import cz.vity.freerapid.swing.Swinger;
@@ -46,6 +44,7 @@ public class NewLinksDialog extends AppDialog implements ClipboardOwner {
 
     private final ManagerDirector director;
     private final DataManager dataManager;
+    private FileHistoryManager historyManager;
     private final PluginsManager pluginsManager;
     private EditorPaneLinkDetector urlsArea;
     private boolean startPaused = false;
@@ -54,6 +53,7 @@ public class NewLinksDialog extends AppDialog implements ClipboardOwner {
         super(owner, true);
         this.director = director;
         this.dataManager = director.getDataManager();
+        this.historyManager = director.getFileHistoryManager();
         this.pluginsManager = director.getPluginsManager();
         this.setName("NewLinksDialog");
         try {
@@ -208,12 +208,9 @@ public class NewLinksDialog extends AppDialog implements ClipboardOwner {
     }
 
     private boolean validateStart() {
-        final List<URL> urlList = urlsArea.getURLs();
-        if (urlList.isEmpty()) {
-            Swinger.showErrorMessage(getResourceMap(), "noURLMessage");
-            Swinger.inputFocus(urlsArea);
+        List<URL> urlList = urlsArea.getURLs();
+        if (isValidateListEmpty(urlList))
             return false;
-        }
 
         //check directory where the downloads are going to be saved to
         final String dir = (String) comboPath.getEditor().getItem();
@@ -256,13 +253,9 @@ public class NewLinksDialog extends AppDialog implements ClipboardOwner {
                 final List<URL> newList = removeAll(urlList, notSupportedList);
                 urlsArea.setText("");
                 urlsArea.setURLList(newList);
-                if (newList.isEmpty()) {
-                    Swinger.showErrorMessage(getResourceMap(), "noURLMessage");
-                    Swinger.inputFocus(urlsArea);
+                if (isValidateListEmpty(newList))
                     return false;
-                }
-            } else {
-                return false;
+                urlList = urlsArea.getURLs();
             }
         }
 
@@ -278,23 +271,56 @@ public class NewLinksDialog extends AppDialog implements ClipboardOwner {
             final int result = Swinger.getChoiceYesNoCancel(getResourceMap().getString("alreadyContainsMessage", urlListToString(removeList)));
             switch (result) {
                 case Swinger.RESULT_YES:
-                    return true;
+                    break;
                 case Swinger.RESULT_NO:
                     final List<URL> newList = removeAll(urlList, removeList);
                     urlsArea.setText("");
                     urlsArea.setURLList(newList);
-                    if (newList.isEmpty()) {
-                        Swinger.showErrorMessage(getResourceMap(), "noURLMessage");
-                        Swinger.inputFocus(urlsArea);
+                    if (isValidateListEmpty(newList))
                         return false;
-                    }
-                    return true;
+                    urlList = urlsArea.getURLs();
+                    break;
                 default:
                     return false;
             }
         }
 
+        //check if links to be added already exist in the download history
+        if (AppPrefs.getProperty(UserProp.ENABLE_NEW_LINK_CHECK_DOWNLOAD_HISTORY, UserProp.ENABLE_NEW_LINK_CHECK_DOWNLOAD_HISTORY_DEFAULT)) {
+            final List<URL> alreadyDownloadedList = new ArrayList<URL>();
+            for (final FileHistoryItem file : historyManager.getItems()) {
+                alreadyDownloadedList.add(file.getUrl());
+            }
+            final List<URL> downloadedList = getCommonElements(alreadyDownloadedList, urlList);
+            if (!downloadedList.isEmpty()) {
+                final int result = Swinger.getChoiceYesNoCancel(getResourceMap().getString("alreadyDownloadedMessage", urlListToString(downloadedList)));
+                switch (result) {
+                    case Swinger.RESULT_YES:
+                        break;
+                    case Swinger.RESULT_NO:
+                        final List<URL> newList = removeAll(urlList, downloadedList);
+                        urlsArea.setText("");
+                        urlsArea.setURLList(newList);
+                        if (isValidateListEmpty(newList))
+                            return false;
+                        urlList = urlsArea.getURLs();
+                        break;
+                    default:
+                        return false;
+                }
+            }
+        }
+
         return true;
+    }
+
+    private boolean isValidateListEmpty(final List<URL> aList) {
+        if (aList.isEmpty()) {
+            Swinger.showErrorMessage(getResourceMap(), "noURLMessage");
+            Swinger.inputFocus(urlsArea);
+            return true;
+        }
+        return false;
     }
 
     public List<DownloadFile> getDownloadFiles() {

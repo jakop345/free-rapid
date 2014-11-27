@@ -51,6 +51,9 @@ final public class UserProp {
 
     public static final String CONTAIN_DOWNLOADS_FILTER = "containDownloadsFilter";
 
+    public static final String CHECK_RECENT_DOWNLOAD_HISTORY = "checkRecentDownloadHistory";
+    public static final boolean CHECK_RECENT_DOWNLOAD_HISTORY_DEFAULT = true;
+
     public static final String SELECTED_DOWNLOADS_FILTER = "selectedDownloadsFilter";
 
     public static final String SHOW_COMPLETED = "removeCompleted";
@@ -298,6 +301,9 @@ final public class UserProp {
 
     public static final String CONNECTION_TIMEOUT = "connectionTimeoutMS";
     public static final int CONNECTION_TIMEOUT_DEFAULT = 120 * 1000;
+
+    public static final String ENABLE_NEW_LINK_CHECK_DOWNLOAD_HISTORY = "enableNewLinkCheckDownloadHistory";
+    public static final boolean ENABLE_NEW_LINK_CHECK_DOWNLOAD_HISTORY_DEFAULT = false;
 
     public static final String ENABLE_DIRECT_DOWNLOADS = "enableDirectDownloads";
     public static final boolean ENABLE_DIRECT_DOWNLOADS_DEFAULT = false;

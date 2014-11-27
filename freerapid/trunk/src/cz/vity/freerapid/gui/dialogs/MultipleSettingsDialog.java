@@ -372,8 +372,8 @@ public class MultipleSettingsDialog extends AppFrame implements PropertyChangeLi
         } else {
             value = getResourceMap().getString("unknown");
         }
-
-        fieldSize.setText(value);
+        String fileCount = "["+ NumberFormat.getIntegerInstance().format(files.size()) + " " + getResourceMap().getString("textFiles") + "] ";
+        fieldSize.setText(fileCount + value);
     }
 
 
