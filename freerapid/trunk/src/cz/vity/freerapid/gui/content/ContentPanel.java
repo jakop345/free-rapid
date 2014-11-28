@@ -1198,6 +1198,7 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
 //        popup.add(menu);
         JMenu forceMenu = new JMenu();
         forceMenu.setName("forceDownloadMenu");
+        forceMenu.setIcon(rMap.getIcon("forceDownloadMenu_smallIcon"));
         rMap.injectComponent(forceMenu);
 
         final String[] speedStrings = AppPrefs.getProperty(UserProp.SPEED_LIMIT_SPEEDS, UserProp.SPEED_LIMIT_SPEEDS_DEFAULT).split(",");

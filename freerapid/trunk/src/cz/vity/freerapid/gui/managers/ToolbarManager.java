@@ -6,8 +6,10 @@ import com.jgoodies.binding.value.ValueModel;
 import cz.vity.freerapid.core.AppPrefs;
 import cz.vity.freerapid.core.UserProp;
 import cz.vity.freerapid.gui.SearchField;
+import cz.vity.freerapid.gui.actions.DownloadsActions;
 import cz.vity.freerapid.gui.dialogs.CompoundUndoManager;
 import cz.vity.freerapid.gui.managers.search.SearchItem;
+import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
 import cz.vity.freerapid.swing.SwingUtils;
 import cz.vity.freerapid.swing.Swinger;
 import cz.vity.freerapid.swing.ToolbarSeparator;
@@ -18,10 +20,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.prefs.PreferenceChangeEvent;
@@ -89,6 +88,169 @@ public class ToolbarManager implements PropertyChangeListener {
         }
     }
 
+    private JButton forceDownloadButton = new JButton();
+    private JPopupMenu forceDownloadButtonMenu = new JPopupMenu();
+
+    private void initForceDownloadButton() {
+        final ForceDownloadButtonAction forceButtonAction = new ForceDownloadButtonAction(
+                context.getResourceMap().getString("forceDownloadMenu.text"), 
+                context.getResourceMap().getIcon("forceDownloadMenu_largeIcon"));
+        forceDownloadButton.setAction(forceButtonAction);
+        setButtonProperties(forceDownloadButton, forceButtonAction);
+
+        directorManager.getContentManager().getContentPanel().addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                forceDownloadButton.setEnabled(getForceEnabled());
+                if (!forceDownloadButton.isEnabled()) forceDownloadButtonMenu.setVisible(false);
+            }
+        } );
+        forceDownloadButton.setEnabled(false);
+    }
+
+    private boolean getForceEnabled() {
+        return directorManager.getContentManager().getContentPanel().isSelectedEnabled() &&
+                directorManager.getDataManager().hasDownloadFilesStates(directorManager.getContentManager().getContentPanel().getSelectedRows(), DownloadsActions.forceEnabledStates);
+    }
+
+    private void updateForceDownloadButtonMenu() {
+        boolean forceEnabled = getForceEnabled();
+        forceDownloadButton.setEnabled(forceEnabled);
+        if (forceEnabled) {
+            forceDownloadButtonMenu.removeAll();
+            final java.util.List<ConnectionSettings> connectionSettingses = directorManager.getClientManager().getAvailableConnections();
+            boolean anyEnabled = false;
+            for (ConnectionSettings settings : connectionSettingses) {
+                final ForceDownloadOptionAction action = new ForceDownloadOptionAction(settings);
+                forceDownloadButtonMenu.add(action);
+                action.setEnabled(forceEnabled);
+                if (settings.isEnabled())
+                    anyEnabled = true;
+            }
+            forceDownloadButton.setEnabled(anyEnabled);
+        }
+    }
+
+    private class ForceDownloadButtonAction extends AbstractAction {
+        public ForceDownloadButtonAction(String name, Icon largeIcon) {
+            this.putValue(Action.NAME, name.replace("&", ""));
+            this.putValue(Action.SHORT_DESCRIPTION, name.replace("&", ""));
+            this.putValue(Action.LARGE_ICON_KEY, largeIcon);
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            updateForceDownloadButtonMenu();
+            if (forceDownloadButton.isEnabled())
+                forceDownloadButtonMenu.show((JComponent) e.getSource(), forceDownloadButtonMenu.getX(), forceDownloadButtonMenu.getY() + (int)(forceDownloadButton.getPreferredSize().getHeight()*2/3));
+        }
+    }
+
+    private class ForceDownloadOptionAction extends AbstractAction {
+        private final ConnectionSettings settings;
+
+        public ForceDownloadOptionAction(ConnectionSettings settings) {
+            this.settings = settings;
+            this.putValue(NAME, settings.toString());
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            directorManager.getDataManager().forceDownload(settings, directorManager.getContentManager().getContentPanel().getSelectedRows());
+        }
+    }
+
+    private void addToolbarButtons() {
+        final String customButtons = AppPrefs.getProperty(UserProp.CUSTOM_TOOLBAR_BUTTONS, UserProp.CUSTOM_TOOLBAR_BUTTONS_DEFAULT);
+        for (char button : customButtons.toUpperCase().toCharArray()) {
+            switch (button) {
+                case '|' :
+                case '-' :
+                case '_' :
+                    toolbar.add(new ToolbarSeparator());
+                    break;
+                case 'A' :
+                    toolbar.add(getButton(Swinger.getAction("addNewLinksAction")));
+                    break;
+                case 'B' :
+                    toolbar.add(getButton(Swinger.getAction("resumeAction")));
+                    break;
+                case 'C' :
+                    toolbar.add(getButton(Swinger.getAction("pauseAction")));
+                    break;
+                case 'D' :
+                    toolbar.add(getButton(Swinger.getAction("cancelAction")));
+                    break;
+                case 'E' :
+                    toolbar.add(getButton(Swinger.getAction("topAction")));
+                    break;
+                case 'F' :
+                    toolbar.add(getButton(Swinger.getAction("upAction")));
+                    break;
+                case 'G' :
+                    toolbar.add(getButton(Swinger.getAction("downAction")));
+                    break;
+                case 'H' :
+                    toolbar.add(getButton(Swinger.getAction("bottomAction")));
+                    break;
+                case 'I' :
+                    toolbar.add(getButton(Swinger.getAction("downloadInformationAction")));
+                    break;
+                case 'J' :
+                    toolbar.add(getButton(Swinger.getAction("copyContent")));
+                    break;
+                case 'K' :
+                    toolbar.add(getButton(Swinger.getAction("openLogFile")));
+                    break;
+                case 'L' :
+                    toolbar.add(getButton(Swinger.getAction("browseToLogFile")));
+                    break;
+                case 'M' :
+                    toolbar.add(getButton(Swinger.getAction("checkForNewPlugins")));
+                    break;
+                case 'N' :
+                    toolbar.add(getButton(Swinger.getAction("checkForNewVersion")));
+                    break;
+                case 'O' :
+                    toolbar.add(getButton(Swinger.getAction("openInBrowser")));
+                    break;
+                case 'P' :
+                    toolbar.add(getButton(Swinger.getAction("options")));
+                    break;
+                case 'Q' :
+                    toolbar.add(getButton(Swinger.getAction("showDownloadHistoryAction")));
+                    break;
+                case 'R' :
+                    toolbar.add(getButton(Swinger.getAction("removeCompletedAction")));
+                    break;
+                case 'S' :
+                    toolbar.add(getButton(Swinger.getAction("removeCompletedAndDeletedAction")));
+                    break;
+                case 'T' :
+                    toolbar.add(getButton(Swinger.getAction("removeInvalidLinksAction")));
+                    break;
+                case 'U' :
+                    toolbar.add(getButton(Swinger.getAction("removeSelectedAction")));
+                    break;
+                case 'V' :
+                    toolbar.add(getButton(Swinger.getAction("validateLinksAction")));
+                    break;
+                case 'W' :
+                    initForceDownloadButton();
+                    toolbar.add(forceDownloadButton);
+                    break;
+                case 'X' :
+                    toolbar.add(getButton(Swinger.getAction("retryAllErrorAction")));
+                    break;
+                case 'Y' :
+                    toolbar.add(getButton(Swinger.getAction("selectAllAction")));
+                    break;
+                case 'Z' :
+                    toolbar.add(getButton(Swinger.getAction("invertSelectionAction")));
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
 
     private void createToolbar() {
         toolbarPanel.add(toolbar);
@@ -100,19 +262,7 @@ public class ToolbarManager implements PropertyChangeListener {
             toolbar.setBorder(BorderFactory.createCompoundBorder(border, innerBorder));
         else
             toolbar.setBorder(innerBorder);
-        toolbar.add(getButton(Swinger.getAction("addNewLinksAction")));
-        toolbar.add(new ToolbarSeparator());
-        toolbar.add(getButton(Swinger.getAction("resumeAction")));
-//        final PopdownButton button = new PopdownButton();
-//        button.setAction(Swinger.getAction("pauseAction"));
-        //setButtonProperties(button, Swinger.getAction("pauseAction"));
-        toolbar.add(getButton(Swinger.getAction("pauseAction")));
-        toolbar.add(getButton(Swinger.getAction("cancelAction")));
-        toolbar.add(new ToolbarSeparator());
-        toolbar.add(getButton(Swinger.getAction("topAction")));
-        toolbar.add(getButton(Swinger.getAction("upAction")));
-        toolbar.add(getButton(Swinger.getAction("downAction")));
-        toolbar.add(getButton(Swinger.getAction("bottomAction")));
+        addToolbarButtons();
         toolbar.add(Box.createGlue());
         searchField = new SearchField(context);
         new CompoundUndoManager(searchField);
