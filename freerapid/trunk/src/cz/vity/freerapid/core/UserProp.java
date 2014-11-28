@@ -38,6 +38,9 @@ final public class UserProp {
     public static final String LAST_COMBO_PATH = "lastComboPath";
 
 
+    public static final String CUSTOM_TOOLBAR_BUTTONS = "customToolbarButtons";
+    public static final String CUSTOM_TOOLBAR_BUTTONS_DEFAULT = "A-BCD-EFGH";
+
     public static final String MAX_DOWNLOADS_AT_A_TIME = "maxDownloadsAtATime";
     public static final int MAX_DOWNLOADS_AT_A_TIME_DEFAULT = 5;
 
