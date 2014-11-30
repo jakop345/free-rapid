@@ -92,7 +92,7 @@ class SendspaceFileRunner extends AbstractRunner {
 
     private void checkNameAndSize() throws ErrorDuringDownloadingException {
         final String contentAsString = getContentAsString();
-        final Matcher matcher = getMatcherAgainstContent("<h2 class=\"bgray\"><(?:b|strong)>(.+?)</");
+        final Matcher matcher = getMatcherAgainstContent("<h2 class=\"bgray\"[^<>]*?><(?:b|strong)>(.+?)</");
         if (!matcher.find()) {
             throw new PluginImplementationException("File name not found");
         }
