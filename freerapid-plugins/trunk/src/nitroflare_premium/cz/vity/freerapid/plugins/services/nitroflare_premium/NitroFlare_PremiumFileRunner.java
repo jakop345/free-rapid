@@ -1,6 +1,7 @@
 package cz.vity.freerapid.plugins.services.nitroflare_premium;
 
 import cz.vity.freerapid.plugins.exceptions.*;
+import cz.vity.freerapid.plugins.services.recaptcha.ReCaptcha;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.MethodBuilder;
@@ -119,7 +120,16 @@ class NitroFlare_PremiumFileRunner extends AbstractRunner {
                             .setParameter("password", pa.getPassword())
                             .setParameter("login", "")
                             .setAjax();
-                    if (getContentAsString().contains("captcha")) {
+                    if (getContentAsString().contains("recaptcha")) {
+                        String key = PlugUtils.getStringBetween(getContentAsString(), "/recaptcha/api/noscript?k=", "\"");
+                        final ReCaptcha reCaptcha = new ReCaptcha(key, client);
+                        final String captcha = getCaptchaSupport().getCaptcha(reCaptcha.getImageURL());
+                        if (captcha == null)
+                            throw new CaptchaEntryInputMismatchException();
+                        reCaptcha.setRecognized(captcha);
+                        reCaptcha.modifyResponseMethod(builder);
+                    }
+                    else if (getContentAsString().contains("captcha")) {
                         final CaptchaSupport captchaSupport = getCaptchaSupport();
                         final String captchaSrc = getMethodBuilder().setActionFromImgSrcWhereTagContains("captcha").getEscapedURI();
                         final String captcha;
