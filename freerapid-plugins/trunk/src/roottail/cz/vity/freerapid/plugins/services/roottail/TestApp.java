@@ -1,4 +1,4 @@
-package cz.vity.freerapid.plugins.services.turbobit;
+package cz.vity.freerapid.plugins.services.roottail;
 
 import cz.vity.freerapid.plugins.dev.PluginDevApplication;
 import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
@@ -8,7 +8,7 @@ import org.jdesktop.application.Application;
 import java.net.URL;
 
 /**
- * @author Arthur Gunawan
+ * @author birchie
  */
 public class TestApp extends PluginDevApplication {
     @Override
@@ -16,17 +16,18 @@ public class TestApp extends PluginDevApplication {
         final HttpFile httpFile = getHttpFile(); //creates new test instance of HttpFile
         try {
             //we set file URL
-            //httpFile.setNewURL(new URL("http://turbobit.net/j5ymo3novrfi.html"));
-            //    httpFile.setNewURL(new URL("http://turbobit.net/papr4dwbykf9.html"));
-            //httpFile.setNewURL(new URL("http://new.turbobit.net/eu5bhkvpcy7j.html"));
-            //httpFile.setNewURL(new URL("http://turo-bit.net/xfsd1eygf59l/diiig.rar.html"));
-            httpFile.setNewURL(new URL("http://dl.rapidlinks.org/znva9t0e8nrm.html"));
-
+            httpFile.setNewURL(new URL("http://roottail.com/i8ougeuyqdcb/The.Sims.4-RELOADED.part10.rar.html"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
-            //then we tries to download
-            final TurboBitServiceImpl service = new TurboBitServiceImpl(); //instance of service - of our plugin
+            final RootTailServiceImpl service = new RootTailServiceImpl(); //instance of service - of our plugin
+            /*
+            //we set premium account details
+            final PremiumAccount config = new PremiumAccount();
+            config.setUsername("****");
+            config.setPassword("****");
+            service.setConfig(config);
+            //*/
             //runcheck makes the validation
             testRun(service, httpFile, connectionSettings);//download file with service and its Runner
             //all output goes to the console
