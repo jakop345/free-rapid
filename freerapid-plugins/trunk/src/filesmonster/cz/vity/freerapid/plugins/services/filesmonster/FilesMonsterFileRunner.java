@@ -4,6 +4,7 @@ import cz.vity.freerapid.plugins.container.FileInfo;
 import cz.vity.freerapid.plugins.exceptions.*;
 import cz.vity.freerapid.plugins.services.recaptcha.ReCaptcha;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
+import cz.vity.freerapid.plugins.webclient.DownloadClientConsts;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.hoster.CaptchaSupport;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
@@ -140,6 +141,8 @@ class FilesMonsterFileRunner extends AbstractRunner {
                         //          .setParameter("X-File-Request", fileRequest)
                 .setParameter("x", "688").setParameter("y", "258").toPostMethod(); // mouse position when clicked to download button - not necessary but what if...
         postMethodForDownload.addRequestHeader(AJAX_HEADER_FIELD, AJAX_HEADER_VALUE); // send as AJAX
+        setFileStreamContentTypes("text/plain");
+        setClientParameter(DownloadClientConsts.DONT_USE_HEADER_FILENAME, true); //sometimes they use encoded HTML for filename header
         if (!tryDownloadAndSaveFile(postMethodForDownload)) {
             checkJSONProblems(getContentAsString());
             checkProblems();//if downloading failed

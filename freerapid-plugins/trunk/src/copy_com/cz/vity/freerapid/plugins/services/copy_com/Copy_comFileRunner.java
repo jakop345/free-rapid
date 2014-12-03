@@ -43,7 +43,7 @@ class Copy_comFileRunner extends AbstractRunner {
     public void runCheck() throws Exception {
         checkUrl();
         super.runCheck();
-        final PostMethod postMethod = getGetLinkMethod(fileURL);
+        final PostMethod postMethod = getGetLinkMethod(fileURL, 2);
         if (makeRedirectedRequest(postMethod)) {
             setConfig();
             checkProblems();
@@ -127,7 +127,7 @@ class Copy_comFileRunner extends AbstractRunner {
         }
     }
 
-    private PostMethod getGetLinkMethod(String fileUrl) throws Exception {
+    private PostMethod getGetLinkMethod(String fileUrl, int limit) throws Exception {
         PostMethod postMethod = (PostMethod) getMethodBuilder()
                 .setReferer(fileUrl)
                 .setAction("https://apiweb.copy.com/jsonrpc")
@@ -142,9 +142,13 @@ class Copy_comFileRunner extends AbstractRunner {
         String linkToken = matcher.group(1);
         String group2 = matcher.group(2);
         String path = (group2 == null ? "" : String.format("\"path\":\"%s\",", group2)); //path should be in decoded form
-        String requestContent = String.format("{\"jsonrpc\":\"2.0\",\"method\":\"get_link\",\"params\":{\"link_token\":\"%s\",%s\"limit\":10000,\"list_watermark\":0,\"max_items\":10000,\"offset\":0,\"include_total_items\":true},\"id\":1}", linkToken, path);
+        String requestContent = String.format("{\"jsonrpc\":\"2.0\",\"method\":\"get_link\",\"params\":{\"link_token\":\"%s\",%s\"limit\":%d,\"list_watermark\":0,\"max_items\":%d,\"offset\":0,\"include_total_items\":true},\"id\":1}", linkToken, path, limit, limit);
         postMethod.setRequestEntity(new StringRequestEntity(requestContent, "application/x-www-form-urlencoded", "UTF-8"));
         return postMethod;
+    }
+
+    private PostMethod getGetLinkMethod(String fileUrl) throws Exception {
+        return getGetLinkMethod(fileUrl, 10000);
     }
 
     private JsonNode getRootNode(String content) throws PluginImplementationException {

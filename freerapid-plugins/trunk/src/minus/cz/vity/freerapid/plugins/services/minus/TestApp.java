@@ -16,10 +16,12 @@ public class TestApp extends PluginDevApplication {
         final HttpFile httpFile = getHttpFile(); //creates new test instance of HttpFile
         try {
             //we set file URL
-//            httpFile.setNewURL(new URL("http://minus.com/m3NkzQYFn"));       // file list of 1 file
-//            httpFile.setNewURL(new URL("http://minus.com/mbzWKzrOt/"));      // file list of many files
-            httpFile.setNewURL(new URL("http://minus.com/lyGHOEFKYlVVa"));
-//            httpFile.setNewURL(new URL("http://min.us/mIIOD4rnI/1"));
+            //httpFile.setNewURL(new URL("http://minus.com/m3NkzQYFn"));       // file list of 1 file
+            //httpFile.setNewURL(new URL("http://minus.com/mbzWKzrOt/"));      // file list of many files
+            //httpFile.setNewURL(new URL("http://minus.com/lyGHOEFKYlVVa"));
+            //httpFile.setNewURL(new URL("http://min.us/mIIOD4rnI/1"));
+            //httpFile.setNewURL(new URL("http://konikpk.minus.com/i/5R7f7Q2a0mvp"));
+            httpFile.setNewURL(new URL("http://konikpk.minus.com/i/o0xJCqaEaYB0"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("127.0.0.1", 8098); //eg we can use local proxy to sniff HTTP communication
