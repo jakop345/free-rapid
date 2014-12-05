@@ -20,6 +20,11 @@ import java.util.List;
 class LetWatchFileRunner extends XFilePlayerRunner {
 
     @Override
+    protected void correctURL() throws Exception {
+        fileURL = fileURL.replaceFirst("letwatch\\.us/", "letwatch.us.com/");
+    }
+
+    @Override
     protected List<FileNameHandler> getFileNameHandlers() {
         final List<FileNameHandler> fileNameHandlers = super.getFileNameHandlers();
         fileNameHandlers.add(new FileNameHandler() {
