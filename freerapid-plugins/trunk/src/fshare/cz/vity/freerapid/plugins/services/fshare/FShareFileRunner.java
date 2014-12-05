@@ -10,6 +10,7 @@ import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
 import java.net.URI;
+import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -65,8 +66,14 @@ class FShareFileRunner extends AbstractRunner {
             } else if (fileURL.contains("/file/")) {
                 checkNameAndSize(contentAsString);//extract file name and size from the page
                 final int count = PlugUtils.getNumberBetween(getContentAsString(), "var count = ", ";");
+                HttpMethod getMethod = getMethodBuilder().setReferer(fileURL)
+                        .setActionFromTextBetween(".get('", "')").setAjax().toGetMethod();
+                if (!makeRedirectedRequest(getMethod)) {
+                    checkProblems();
+                    throw new ServiceConnectionProblemException();
+                }
                 downloadTask.sleep(count + 1);
-                final HttpMethod httpMethod = getGetMethod(PlugUtils.getStringBetween(getContentAsString(), "var url = '", "'"));
+                final HttpMethod httpMethod = getGetMethod((new URL(getContentAsString())).toString());
                 if (!tryDownloadAndSaveFile(httpMethod)) {
                     checkProblems();//if downloading failed
                     throw new ServiceConnectionProblemException("Error starting download");//some unknown problem

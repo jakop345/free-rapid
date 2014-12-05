@@ -33,7 +33,7 @@ class VishareFileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        PlugUtils.checkName(httpFile, content, "<title>Vishare -", "</title");
+        PlugUtils.checkName(httpFile, content, "video_title\">", "<");
         httpFile.setFileName(httpFile.getFileName() + ".flv");
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
 <plugin class="cz.vity.freerapid.plugins.services.letwatch.LetWatchServiceImpl"
-        id="letwatch.us" vendor="birchie" version="1.0.0">
+        id="letwatch.us" vendor="birchie" version="1.0.1">
     <attributes>
-        <attribute id="urlRegex" value="https?://(www\.)?letwatch\.us/.+"/>
+        <attribute id="urlRegex" value="https?://(www\.)?letwatch\.us(\.com)?/.+"/>
         <attribute id="minver" value="0.855"/>
         <attribute id="maxver" value="0.899"/>
-        <attribute id="services" value="letwatch.us"/>
+        <attribute id="services" value="letwatch.us letwatch.us.com"/>
         <attribute id="maxDownloads" value="100"/>
         <attribute id="defaultDownloads" value="1"/>
         <attribute id="premium" value="false"/>
