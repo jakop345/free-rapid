@@ -69,14 +69,11 @@ class IndoAkatsukiFileRunner extends AbstractRunner {
             if (!matcher.find()) {
                 throw new PluginImplementationException("Content generator javascript not found");
             }
-            String jsString = matcher.group(1).replaceFirst(Pattern.quote("eval(function(p,a,c,k,e,d)"), "function test(p,a,c,k,e,d)")
-                    .replaceFirst(Pattern.quote("return p}"), "return p};test")
-                    .replaceFirst(Pattern.quote(".split('|')))"), ".split('|'));");
             String evaluated;
             try {
-                evaluated = ScriptUtils.evaluateJavaScriptToString(jsString);
+                evaluated = ScriptUtils.evaluateJavaScriptToString(matcher.group(1).substring(4));
             } catch (PluginImplementationException e) {
-                throw new PluginImplementationException("Error evaluating content generator");
+                throw new PluginImplementationException("Error evaluating content generator", e);
             }
             String downloadUrl;
             try {
