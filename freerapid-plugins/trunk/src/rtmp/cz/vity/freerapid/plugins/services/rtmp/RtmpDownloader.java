@@ -10,6 +10,7 @@ import cz.vity.freerapid.plugins.webclient.interfaces.HttpFileDownloadTask;
 import cz.vity.freerapid.plugins.webclient.utils.HttpUtils;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import cz.vity.freerapid.utilities.LogUtils;
+import cz.vity.freerapid.utilities.Utils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -78,7 +79,7 @@ public class RtmpDownloader {
             while (t.getCause() != null) {
                 t = t.getCause();
             }
-            throw new PluginImplementationException("RTMP error - " + cz.vity.freerapid.utilities.Utils.getThrowableDescription(t));
+            throw new PluginImplementationException("RTMP error - " + Utils.getThrowableDescription(t));
         } finally {
             if (rtmpClient != null) {
                 try {
@@ -90,7 +91,7 @@ public class RtmpDownloader {
             if (rtmpSession.isRedirected()) {
                 RedirectHandler redirectHandler = rtmpSession.getRedirectHandler();
                 if (redirectHandler != null) {
-                    redirectHandler.handle(rtmpSession);
+                    redirectHandler.handleRedirect(rtmpSession);
                 }
             }
         }

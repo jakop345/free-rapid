@@ -1,7 +1,6 @@
 package cz.vity.freerapid.plugins.services.videopremium_tv;
 
 import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
-import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;
 import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
 import cz.vity.freerapid.plugins.services.rtmp.RedirectHandler;
 import cz.vity.freerapid.plugins.services.rtmp.RtmpDownloader;
@@ -72,24 +71,15 @@ class VideoPremium_tvFileRunner extends XFilePlayerRunner implements RedirectHan
     }
 
     @Override
-    public boolean handle(RtmpSession rtmpSession) {
-        String redirectTo = rtmpSession.getRedirectTo();
+    public boolean handleRedirect(RtmpSession rtmpSession) throws Exception {
+        String redirectTo = rtmpSession.getRedirectTarget();
         if (redirectTo == null) {
             return false;
         }
         logger.info("Redirecting to: " + redirectTo);
-        RtmpSession newSession;
-        try {
-            newSession = new RtmpSession(redirectTo, rtmpSession.getPlayName());
-        } catch (PluginImplementationException e) {
-            throw new RuntimeException("Invalid RTMP url: " + redirectTo);
-        }
+        RtmpSession newSession = new RtmpSession(redirectTo, rtmpSession.getPlayName());
         newSession.getConnectParams().put("swfUrl", rtmpSession.getConnectParams().get("swfUrl"));
         newSession.getConnectParams().put("pageUrl", rtmpSession.getConnectParams().get("pageUrl"));
-        try {
-            return new RtmpDownloader(client, downloadTask).tryDownloadAndSaveFile(newSession);
-        } catch (Exception e) {
-            throw new RuntimeException("Error downloading stream", e);
-        }
+        return new RtmpDownloader(client, downloadTask).tryDownloadAndSaveFile(newSession);
     }
 }

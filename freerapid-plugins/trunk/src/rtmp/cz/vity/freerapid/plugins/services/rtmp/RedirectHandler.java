@@ -4,5 +4,5 @@ package cz.vity.freerapid.plugins.services.rtmp;
  * @author tong2shot
  */
 public interface RedirectHandler {
-    public boolean handle(RtmpSession rtmpSession);
+    public boolean handleRedirect(RtmpSession rtmpSession) throws Exception;
 }

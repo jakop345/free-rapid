@@ -67,9 +67,9 @@ public class RtmpSession {
     private ConnectionSettings connectionSettings;
     private String secureToken;
     private int bwCheckCounter;
-    private RedirectHandler redirectHandler = null;
-    private boolean redirected = false;
-    private String redirectTo;
+    private RedirectHandler redirectHandler;
+    private boolean redirected;
+    private String redirectTarget;
 
     /**
      * Empty constructor. Mainly for internal use.
@@ -569,11 +569,11 @@ public class RtmpSession {
         this.redirected = redirected;
     }
 
-    public String getRedirectTo() {
-        return redirectTo;
+    public String getRedirectTarget() {
+        return redirectTarget;
     }
 
-    public void setRedirectTo(String redirectTo) {
-        this.redirectTo = redirectTo;
+    public void setRedirectTarget(String redirectTarget) {
+        this.redirectTarget = redirectTarget;
     }
 }
