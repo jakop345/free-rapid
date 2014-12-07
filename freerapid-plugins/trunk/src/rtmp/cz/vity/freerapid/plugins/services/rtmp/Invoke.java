@@ -81,6 +81,12 @@ public class Invoke {
                     @SuppressWarnings("unchecked")
                     Map<String, Object> map = (Map<String, Object>) arg;
                     list.add(new AmfObject(map));
+                } else if (arg instanceof List) {
+                    @SuppressWarnings("unchecked")
+                    List<Object> items = (List<Object>) arg;
+                    for (Object item : items) {
+                        list.add(item);
+                    }
                 } else {
                     list.add(arg);
                 }
