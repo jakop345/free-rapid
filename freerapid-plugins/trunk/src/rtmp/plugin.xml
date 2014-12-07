@@ -4,7 +4,7 @@
         id="rtmp" vendor="ntoskrnl" version="2.3.0">
     <attributes>
         <attribute id="libraryPlugin" value="true"/>
-        <attribute id="minver" value="0.854"/>
+        <attribute id="minver" value="0.855"/>
         <attribute id="maxver" value="0.899"/>
         <attribute id="services" value="rtmp"/>
     </attributes>

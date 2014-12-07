@@ -84,9 +84,7 @@ public class Invoke {
                 } else if (arg instanceof List) {
                     @SuppressWarnings("unchecked")
                     List<Object> items = (List<Object>) arg;
-                    for (Object item : items) {
-                        list.add(item);
-                    }
+                    list.addAll(items);
                 } else {
                     list.add(arg);
                 }

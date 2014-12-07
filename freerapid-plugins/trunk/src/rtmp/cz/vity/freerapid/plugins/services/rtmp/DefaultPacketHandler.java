@@ -90,11 +90,11 @@ class DefaultPacketHandler implements PacketHandler {
                         AmfProperty property = properties.get(1);
                         if (property != null) {
                             Object value = property.getValue();
-                            if (value != null && value instanceof AmfObject) {
+                            if (value instanceof AmfObject) {
                                 AmfProperty pDuration = ((AmfObject) value).getProperty("duration");
                                 if (pDuration != null) {
                                     Object oDuration = pDuration.getValue();
-                                    if (oDuration != null && oDuration instanceof Double) {
+                                    if (oDuration instanceof Double) {
                                         double duration = (Double) oDuration;
                                         logger.info("Stream duration: " + duration + " seconds");
                                         session.setStreamDuration((int) (duration * 1000));
@@ -181,29 +181,32 @@ class DefaultPacketHandler implements PacketHandler {
                 } else if (methodName.equals("_onbwdone")) {
                     logger.info("Server invoked _onbwdone");
                 } else if (methodName.equals("_error")) {
-                    logger.warning("Server sent error: " + invoke);
-                    //Redirect
+                    boolean redirected = false;
                     AmfProperty pEx = invoke.getSecondArgAsAmfObject().getProperty("ex");
                     if (pEx != null) {
                         Object exValue = pEx.getValue();
-                        if ((exValue != null) && (exValue instanceof AmfObject)) {
+                        if (exValue instanceof AmfObject) {
                             AmfObject oEx = (AmfObject) pEx.getValue();
                             AmfProperty pCode = oEx.getProperty("code");
                             AmfProperty pRedirect = oEx.getProperty("redirect");
                             if ((pCode != null) && (pRedirect != null)) {
                                 Object codeValue = pCode.getValue();
                                 Object redirectValue = pRedirect.getValue();
-                                if ((codeValue != null) && (codeValue instanceof Double)
-                                        && (redirectValue != null) && (redirectValue instanceof String)) {
+                                if ((codeValue instanceof Double) && (redirectValue instanceof String)) {
                                     Double code = (Double) codeValue;
                                     String redirect = (String) redirectValue;
                                     if (code.equals(302.0)) {
                                         session.setRedirected(true);
-                                        session.setRedirectTo(redirect);
+                                        session.setRedirectTarget(redirect);
+                                        redirected = true;
+                                        logger.info("Server sent redirect");
                                     }
                                 }
                             }
                         }
+                    }
+                    if (!redirected) {
+                        logger.warning("Server sent error: " + invoke);
                     }
                 } else if (methodName.equals("close")) {
                     logger.info("Server requested close, disconnecting");
