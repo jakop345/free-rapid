@@ -182,6 +182,29 @@ class DefaultPacketHandler implements PacketHandler {
                     logger.info("Server invoked _onbwdone");
                 } else if (methodName.equals("_error")) {
                     logger.warning("Server sent error: " + invoke);
+                    //Redirect
+                    AmfProperty pEx = invoke.getSecondArgAsAmfObject().getProperty("ex");
+                    if (pEx != null) {
+                        Object exValue = pEx.getValue();
+                        if ((exValue != null) && (exValue instanceof AmfObject)) {
+                            AmfObject oEx = (AmfObject) pEx.getValue();
+                            AmfProperty pCode = oEx.getProperty("code");
+                            AmfProperty pRedirect = oEx.getProperty("redirect");
+                            if ((pCode != null) && (pRedirect != null)) {
+                                Object codeValue = pCode.getValue();
+                                Object redirectValue = pRedirect.getValue();
+                                if ((codeValue != null) && (codeValue instanceof Double)
+                                        && (redirectValue != null) && (redirectValue instanceof String)) {
+                                    Double code = (Double) codeValue;
+                                    String redirect = (String) redirectValue;
+                                    if (code.equals(302.0)) {
+                                        session.setRedirected(true);
+                                        session.setRedirectTo(redirect);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 } else if (methodName.equals("close")) {
                     logger.info("Server requested close, disconnecting");
                     session.getDecoderOutput().disconnect();

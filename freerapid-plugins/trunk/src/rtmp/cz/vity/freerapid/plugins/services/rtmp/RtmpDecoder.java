@@ -30,7 +30,7 @@ class RtmpDecoder extends CumulativeProtocolDecoder {
             session.setServerHandshakeReceived(true);
             logger.info("server handshake processed, sending reply");
             session.send(Handshake.generateClientRequest2(session));
-            session.send(new Invoke("connect", 3, session.getConnectParams()));
+            session.send(new Invoke("connect", 3, session.getConnectParams(), session.getConnectPrimitiveParams()));
             return true;
         }
 

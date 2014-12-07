@@ -39,6 +39,7 @@ public class RtmpSession {
     private long nextInvokeId;
     private long bytesReadLastSent;
     private Map<String, Object> connectParams;
+    private List<Object> connectPrimitiveParams;
     private String playName;
     private int playStart;
     private int playDuration = -2;
@@ -66,6 +67,9 @@ public class RtmpSession {
     private ConnectionSettings connectionSettings;
     private String secureToken;
     private int bwCheckCounter;
+    private RedirectHandler redirectHandler = null;
+    private boolean redirected = false;
+    private String redirectTo;
 
     /**
      * Empty constructor. Mainly for internal use.
@@ -186,6 +190,7 @@ public class RtmpSession {
         this.encrypted = encrypted;
         String tcUrl = (encrypted ? "rtmpe://" : "rtmp://") + host + ":" + port + "/" + app;
         connectParams = new HashMap<String, Object>();
+        connectPrimitiveParams = new LinkedList<Object>();
         connectParams.put("objectEncoding", 0);
         connectParams.put("app", app);
         connectParams.put("flashVer", "WIN 10,1,53,64");
@@ -362,6 +367,14 @@ public class RtmpSession {
         return packetHandlers;
     }
 
+    public void setRedirectHandler(RedirectHandler redirectHandler) {
+        this.redirectHandler = redirectHandler;
+    }
+
+    public RedirectHandler getRedirectHandler() {
+        return redirectHandler;
+    }
+
     /**
      * Adds a PacketHandler as first in the list
      *
@@ -430,6 +443,10 @@ public class RtmpSession {
 
     public Map<String, Object> getConnectParams() {
         return connectParams;
+    }
+
+    public List<Object> getConnectPrimitiveParams() {
+        return connectPrimitiveParams;
     }
 
     public void setConnectParams(Map<String, Object> connectParams) {
@@ -544,4 +561,19 @@ public class RtmpSession {
         this.bwCheckCounter = bwCheckCounter;
     }
 
+    public boolean isRedirected() {
+        return redirected;
+    }
+
+    public void setRedirected(boolean redirected) {
+        this.redirected = redirected;
+    }
+
+    public String getRedirectTo() {
+        return redirectTo;
+    }
+
+    public void setRedirectTo(String redirectTo) {
+        this.redirectTo = redirectTo;
+    }
 }

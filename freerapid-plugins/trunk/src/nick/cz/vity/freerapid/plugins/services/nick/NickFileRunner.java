@@ -166,7 +166,9 @@ class NickFileRunner extends AbstractRtmpRunner {
     }
 
     private void checkProblems() throws ErrorDuringDownloadingException {
-        if (getContentAsString().isEmpty() || getContentAsString().contains("The page you're looking for")) {
+        if (getContentAsString().isEmpty()
+                || getContentAsString().contains("The page you're looking for")
+                || getContentAsString().contains("The Page You're Looking For")) {
             throw new URLNotAvailableAnymoreException("File not found");
         }
     }
@@ -226,6 +228,7 @@ class NickFileRunner extends AbstractRtmpRunner {
             return url;
         }
 
+        @SuppressWarnings("NullableProblems")
         @Override
         public int compareTo(final Stream that) {
             return Integer.valueOf(this.bitrate).compareTo(that.bitrate);

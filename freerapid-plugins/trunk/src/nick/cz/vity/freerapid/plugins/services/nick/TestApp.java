@@ -18,8 +18,11 @@ public class TestApp extends PluginDevApplication {
             //InputStream is = new BufferedInputStream(new FileInputStream("E:\\Stuff\\logtest.properties"));
             //LogManager.getLogManager().readConfiguration(is);
             //we set file URL
-            httpFile.setNewURL(new URL("http://www.nick.com/videos/clip/winx-413-help-from-the-boys-clip.html"));
-            httpFile.setNewURL(new URL("http://nicktoons.nick.com/videos/clip/alien-dawn-genesis-pt-2-full-episode.html"));
+            //httpFile.setNewURL(new URL("http://www.nick.com/videos/clip/winx-413-help-from-the-boys-clip.html"));
+            //httpFile.setNewURL(new URL("http://nicktoons.nick.com/videos/clip/dragon-ball-gt-super-saiyan-4-vegeta-full.html"));
+            httpFile.setNewURL(new URL("http://nicktoons.nick.com/videos/clip/dragon-ball-gt-super-saiyan-4-vegeta-cart-a14.html"));
+            //httpFile.setNewURL(new URL("http://nicktoons.nick.com/videos/clip/dragon-ball-gt-rescue-goku-full.html"));
+            //httpFile.setNewURL(new URL("http://nicktoons.nick.com/videos/clip/dragon-ball-gt-super-saiyan-4-vegeta-cart-b21.html"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 8118); //eg we can use local proxy to sniff HTTP communication
