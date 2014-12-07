@@ -91,6 +91,7 @@ public class RtmpDownloader {
             if (rtmpSession.isRedirected()) {
                 RedirectHandler redirectHandler = rtmpSession.getRedirectHandler();
                 if (redirectHandler != null) {
+                    downloadTask.sleep(5); //give rtmpClient a change to disconnect gracefully
                     redirectHandler.handleRedirect(rtmpSession);
                 }
             }

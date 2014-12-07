@@ -182,24 +182,27 @@ class DefaultPacketHandler implements PacketHandler {
                     logger.info("Server invoked _onbwdone");
                 } else if (methodName.equals("_error")) {
                     boolean redirected = false;
-                    AmfProperty pEx = invoke.getSecondArgAsAmfObject().getProperty("ex");
-                    if (pEx != null) {
-                        Object exValue = pEx.getValue();
-                        if (exValue instanceof AmfObject) {
-                            AmfObject oEx = (AmfObject) pEx.getValue();
-                            AmfProperty pCode = oEx.getProperty("code");
-                            AmfProperty pRedirect = oEx.getProperty("redirect");
-                            if ((pCode != null) && (pRedirect != null)) {
-                                Object codeValue = pCode.getValue();
-                                Object redirectValue = pRedirect.getValue();
-                                if ((codeValue instanceof Double) && (redirectValue instanceof String)) {
-                                    Double code = (Double) codeValue;
-                                    String redirect = (String) redirectValue;
-                                    if (code.equals(302.0)) {
-                                        session.setRedirected(true);
-                                        session.setRedirectTarget(redirect);
-                                        redirected = true;
-                                        logger.info("Server sent redirect");
+                    AmfObject oSecondArg = invoke.getSecondArgAsAmfObject();
+                    if (oSecondArg != null) {
+                        AmfProperty pEx = oSecondArg.getProperty("ex");
+                        if (pEx != null) {
+                            Object exValue = pEx.getValue();
+                            if (exValue instanceof AmfObject) {
+                                AmfObject oEx = (AmfObject) pEx.getValue();
+                                AmfProperty pCode = oEx.getProperty("code");
+                                AmfProperty pRedirect = oEx.getProperty("redirect");
+                                if ((pCode != null) && (pRedirect != null)) {
+                                    Object codeValue = pCode.getValue();
+                                    Object redirectValue = pRedirect.getValue();
+                                    if ((codeValue instanceof Double) && (redirectValue instanceof String)) {
+                                        Double code = (Double) codeValue;
+                                        String redirect = (String) redirectValue;
+                                        if (code.equals(302.0)) {
+                                            session.setRedirected(true);
+                                            session.setRedirectTarget(redirect);
+                                            redirected = true;
+                                            logger.info("Server sent redirect");
+                                        }
                                     }
                                 }
                             }
