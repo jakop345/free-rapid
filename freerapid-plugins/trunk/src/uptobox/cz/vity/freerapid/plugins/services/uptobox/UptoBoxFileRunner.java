@@ -58,4 +58,12 @@ class UptoBoxFileRunner extends XFileSharingRunner {
         return downloadPageMarkers;
     }
 
+    @Override
+    protected String getDownloadLinkFromRegexes() throws ErrorDuringDownloadingException {
+        String ret = super.getDownloadLinkFromRegexes();
+        if (fileURL.startsWith("https")) {
+            ret = ret.replaceFirst("http://", "https://");
+        }
+        return ret;
+    }
 }
