@@ -2,11 +2,15 @@ package cz.vity.freerapid.plugins.services.euroshare;
 
 import cz.vity.freerapid.plugins.exceptions.*;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
+import cz.vity.freerapid.plugins.webclient.DownloadState;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
+import java.net.URI;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 
@@ -36,10 +40,15 @@ class EuroShareFileRunner extends AbstractRunner {
         if (!match.find())
             throw new PluginImplementationException("File name not found");
         httpFile.setFileName(match.group(1).trim());
-        match = PlugUtils.matcher("posledni vpravo\">.+?\\| (.+?)</p>", content);
-        if (!match.find())
-            throw new PluginImplementationException("File size not found");
-        httpFile.setFileSize(PlugUtils.getFileSizeFromString(match.group(1).trim()));
+        if (fileURL.contains("/folder/")) {
+            httpFile.setFileName("Folder > " + httpFile.getFileName());
+        }
+        else {
+            match = PlugUtils.matcher("posledni vpravo\">.+?\\| (.+?)</p>", content);
+            if (!match.find())
+                throw new PluginImplementationException("File size not found");
+            httpFile.setFileSize(PlugUtils.getFileSizeFromString(match.group(1).trim()));
+        }
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
 
@@ -52,11 +61,33 @@ class EuroShareFileRunner extends AbstractRunner {
             final String contentAsString = getContentAsString();//check for response
             checkProblems();//check problems
             checkNameAndSize(contentAsString);//extract file name and size from the page
-            final HttpMethod httpMethod = getMethodBuilder().setReferer(fileURL)
-                    .setActionFromAHrefWhereATagContains("DOWNLOAD FOR FREE").toHttpMethod();
-            if (!tryDownloadAndSaveFile(httpMethod)) {
-                checkProblems();//if downloading failed
-                throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
+            if (fileURL.contains("/folder/")) {
+                final List<URI> list = new LinkedList<URI>();
+                final Matcher matcher = getMatcherAgainstContent("href=\"([^\"]+?)\" class=\"blank\" target=\"_blank\"");
+                 while (matcher.find()) {
+                    final String link = getMethodBuilder().setReferer(fileURL).setAction(matcher.group(1).trim()).getEscapedURI();
+                    list.add(new URI(link));
+                }
+                // add urls to queue
+                if (list.isEmpty()) throw new PluginImplementationException("No links found");
+                getPluginService().getPluginContext().getQueueSupport().addLinksToQueue(httpFile, list);
+                httpFile.setFileName("Link(s) Extracted !");
+                httpFile.setState(DownloadState.COMPLETED);
+                httpFile.getProperties().put("removeCompleted", true);
+            }
+            else {
+                HttpMethod httpMethod;
+                try {
+                    httpMethod = getMethodBuilder().setReferer(fileURL)
+                            .setActionFromAHrefWhereATagContains("DOWNLOAD FOR FREE").toHttpMethod();
+                } catch (Exception x) {
+                    httpMethod = getMethodBuilder().setReferer(fileURL)
+                            .setActionFromAHrefWhereATagContains("STIAHNUŤ BEZ REGISTRACIE").toHttpMethod();
+                }
+                if (!tryDownloadAndSaveFile(httpMethod)) {
+                    checkProblems();//if downloading failed
+                    throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
+                }
             }
         } else {
             checkProblems();

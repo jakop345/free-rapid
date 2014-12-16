@@ -1,6 +1,6 @@
 package cz.vity.freerapid.plugins.services.expressleech;
 
-import cz.vity.freerapid.plugins.services.xfilesharing.XFileSharingServiceImpl;
+import cz.vity.freerapid.plugins.webclient.AbstractFileShareService;
 import cz.vity.freerapid.plugins.webclient.interfaces.PluginRunner;
 
 /**
@@ -8,11 +8,11 @@ import cz.vity.freerapid.plugins.webclient.interfaces.PluginRunner;
  *
  * @author birchie
  */
-public class ExpressLeechServiceImpl extends XFileSharingServiceImpl {
+public class ExpressLeechServiceImpl extends AbstractFileShareService {
 
     @Override
-    public String getServiceTitle() {
-        return "ExpressLeech";
+    public boolean supportsRunCheck() {
+        return true;
     }
 
     @Override

@@ -22,6 +22,7 @@ class LetWatchFileRunner extends XFilePlayerRunner {
     @Override
     protected void correctURL() throws Exception {
         fileURL = fileURL.replaceFirst("letwatch\\.us/", "letwatch.us.com/");
+        fileURL = fileURL.replaceFirst("letwatch\\.us\\.com/", "letwatch.co.uk/");
     }
 
     @Override

@@ -1,11 +1,13 @@
 package cz.vity.freerapid.plugins.services.loadto;
 
 import cz.vity.freerapid.plugins.exceptions.*;
+import cz.vity.freerapid.plugins.services.solvemediacaptcha.SolveMediaCaptcha;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.FileState;
+import cz.vity.freerapid.plugins.webclient.MethodBuilder;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
+import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.methods.PostMethod;
 
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -37,13 +39,8 @@ class LoadToRunner extends AbstractRunner {
         getMethod.setFollowRedirects(true);
         if (makeRequest(getMethod)) {
             checkNameAndSize(getContentAsString());
-            downloadTask.sleep(5);
-            Matcher matcher = PlugUtils.matcher("<form method=\"post\" action=\"(http[^\"]*)\"", getContentAsString());
-            if (!matcher.find()) {
-                checkProblems();
-                throw new ServiceConnectionProblemException("Problem with a connection to service.\nCannot find requested page content");
-            }
-            final PostMethod method = getPostMethod(matcher.group(1));
+            final HttpMethod method = doCaptcha(getMethodBuilder().setReferer(fileURL)
+                    .setActionFromFormWhereActionContains("load.to", true)).toPostMethod();
             if (!tryDownloadAndSaveFile(method)) {
                 checkProblems();
                 logger.info(getContentAsString());
@@ -72,7 +69,7 @@ class LoadToRunner extends AbstractRunner {
             httpFile.setFileName(fn);
 
         }
-        matcher = PlugUtils.matcher("([0-9.]+ Bytes)", content);
+        matcher = PlugUtils.matcher("([0-9\\.]+ Bytes|[0-9\\.]+ .B)", content);
         if (matcher.find()) {
             Long a = PlugUtils.getFileSizeFromString(matcher.group(1));
             logger.info("File size " + a);
@@ -90,4 +87,13 @@ class LoadToRunner extends AbstractRunner {
         }
     }
 
+    private MethodBuilder doCaptcha(MethodBuilder builder) throws Exception {
+        final Matcher m = getMatcherAgainstContent("challenge\\.(?:no)?script\\?k=(.+?)\"");
+        if (!m.find()) throw new PluginImplementationException("Captcha key not found");
+        final String captchaKey = m.group(1);
+        final SolveMediaCaptcha solveMediaCaptcha = new SolveMediaCaptcha(captchaKey, client, getCaptchaSupport(), true);
+        solveMediaCaptcha.askForCaptcha();
+        solveMediaCaptcha.modifyResponseMethod(builder);
+        return builder;
+    }
 }

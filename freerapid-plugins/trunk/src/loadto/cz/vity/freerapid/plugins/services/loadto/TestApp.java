@@ -1,4 +1,4 @@
-package cz.vity.freerapid.plugins.services.expressleech;
+package cz.vity.freerapid.plugins.services.loadto;
 
 import cz.vity.freerapid.plugins.dev.PluginDevApplication;
 import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
@@ -8,7 +8,7 @@ import org.jdesktop.application.Application;
 import java.net.URL;
 
 /**
- * @author birchie
+ * @author Alex
  */
 public class TestApp extends PluginDevApplication {
     @Override
@@ -16,21 +16,12 @@ public class TestApp extends PluginDevApplication {
         final HttpFile httpFile = getHttpFile(); //creates new test instance of HttpFile
         try {
             //we set file URL
-            //httpFile.setNewURL(new URL("http://expressleech.com/4h4s0fh1v9sz/Spartacus.S03E06.HDTV.XviD-TVSR.avi.html"));
-            //httpFile.setNewURL(new URL("http://expressleech.com/hv9b7oc5dm45.html"));            // pass = 123
-            httpFile.setNewURL(new URL("http://4upld.com/1w0qn"));
+            httpFile.setNewURL(new URL("http://www.load.to/LbXqLMjijR/nazis.in.the.cia.hdtv.x264-w4f.mp4"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
-            final ExpressLeechServiceImpl service = new ExpressLeechServiceImpl(); //instance of service - of our plugin
-            /*
-            //we set premium account details
-            final PremiumAccount config = new PremiumAccount();
-            config.setUsername("****");
-            config.setPassword("****");
-            service.setConfig(config);
-            */
-            //runcheck makes the validation
+            //then we tries to download
+            final LoadToServiceImpl service = new LoadToServiceImpl(); //instance of service - of our plugin
             testRun(service, httpFile, connectionSettings);//download file with service and its Runner
             //all output goes to the console
         } catch (Exception e) {//catch possible exception
