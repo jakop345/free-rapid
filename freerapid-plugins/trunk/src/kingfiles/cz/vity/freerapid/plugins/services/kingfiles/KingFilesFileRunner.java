@@ -4,6 +4,8 @@ import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
 import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
 import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
 import cz.vity.freerapid.plugins.services.xfilesharing.XFileSharingRunner;
+import cz.vity.freerapid.plugins.services.xfilesharing.nameandsize.FileSizeHandler;
+import cz.vity.freerapid.plugins.services.xfilesharing.nameandsize.FileSizeHandlerNoSize;
 
 import java.util.List;
 import java.util.regex.Pattern;
@@ -14,6 +16,13 @@ import java.util.regex.Pattern;
  * @author birchie
  */
 class KingFilesFileRunner extends XFileSharingRunner {
+
+    @Override
+    protected List<FileSizeHandler> getFileSizeHandlers() {
+        final List<FileSizeHandler> fileSizeHandlers = super.getFileSizeHandlers();
+        fileSizeHandlers.add(new FileSizeHandlerNoSize());
+        return fileSizeHandlers;
+    }
 
     @Override
     protected List<String> getDownloadPageMarkers() {
