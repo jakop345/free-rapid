@@ -19,10 +19,24 @@ document = {
     getElementById: function (id) {
         var element = this.elements[id];
         if (element === undefined) {
-            element = {};
+            element = {
+                attr: function (a, v) {
+                    this[a] = v;
+                }
+            };
             this.elements[id] = element;
         }
         return element;
+    },
+
+    ready: function (f) {
+        f();
     }
 };
-EnvJs = true;
+
+$ = function (arg) {
+    if (typeof arg === "string" && arg.substring(0, 1) === "#") {
+        return document.getElementById(arg.substring(1));
+    }
+    return arg;
+};
