@@ -40,3 +40,5 @@ $ = function (arg) {
     }
     return arg;
 };
+
+EnvJs = true;
