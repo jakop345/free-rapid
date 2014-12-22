@@ -8,7 +8,6 @@ import cz.vity.freerapid.plugins.webclient.hoster.PremiumAccount;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.methods.PostMethod;
 
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -35,8 +34,12 @@ class Data_PremiumFileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        PlugUtils.checkName(httpFile, content, "Fájl letöltés: <div class=\"download_filename\">", "</div>");
-        PlugUtils.checkFileSize(httpFile, content.replace("1,000.0 MB", "1 GB"), "fájlméret: <div class=\"download_filename\">", "</div>");
+        final Matcher matchN = PlugUtils.matcher("download_page_filename\".*?>\\s*?.*?\\s*?.*?\\s*?<.+?>(.+?)</div>", content);
+        if (!matchN.find()) throw new PluginImplementationException("File name not found");
+        httpFile.setFileName(matchN.group(1).trim());
+        final Matcher matchS = PlugUtils.matcher("download_page_filesize\".*?>\\s*?.*?\\s*?<.+?>(.+?)</span>", content);
+        if (!matchS.find()) throw new PluginImplementationException("File size not found");
+        httpFile.setFileSize(PlugUtils.getFileSizeFromString(matchS.group(1).replaceAll("<[^>]*>", "").trim()));
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
 
@@ -49,30 +52,23 @@ class Data_PremiumFileRunner extends AbstractRunner {
         if (makeRedirectedRequest(getMethod)) {
             checkProblems();
             checkNameAndSize(getContentAsString());
-            Matcher matcher = getMatcherAgainstContent("class=\"login_button\"");
-            if (matcher.find()) {
-                logger.info("Starting login");
-                Login();
-            }
+            Login();
 
             makeRedirectedRequest(getMethod);
-            matcher = getMatcherAgainstContent("Nincs érvényes prémium elõfizetésed!");
+            Matcher matcher = getMatcherAgainstContent("Nincs érvényes prémium elõfizetésed!");
             if (matcher.find()) {
                 logger.info("No premium");
                 throw new NotRecoverableDownloadException("Not premium account!");
             }
             matcher = getMatcherAgainstContent("window.location.href='(.*?)';");
-            if (matcher.find()) {
-                String downURL = matcher.group(1);
-                logger.info("downURL: " + downURL);
-                final GetMethod getmethod = getGetMethod(downURL);
-                httpFile.setState(DownloadState.GETTING);
-                if (!tryDownloadAndSaveFile(getmethod)) {
-                    checkProblems();
-                    logger.info(getContentAsString());
-                    throw new PluginImplementationException();
-                }
-            } else {
+            if (!matcher.find()) {
+                throw new PluginImplementationException("download link not found");
+            }
+            String downURL = matcher.group(1);
+            logger.info("downURL: " + downURL);
+            final GetMethod getmethod = getGetMethod(downURL);
+            httpFile.setState(DownloadState.GETTING);
+            if (!tryDownloadAndSaveFile(getmethod)) {
                 checkProblems();
                 logger.info(getContentAsString());
                 throw new PluginImplementationException();
@@ -83,6 +79,7 @@ class Data_PremiumFileRunner extends AbstractRunner {
     }
 
     private void Login() throws Exception {
+        logger.info("Starting login");
         synchronized (Data_PremiumFileRunner.class) {
             Data_PremiumServiceImpl service = (Data_PremiumServiceImpl) getPluginService();
             PremiumAccount pa = service.getConfig();
@@ -93,49 +90,27 @@ class Data_PremiumFileRunner extends AbstractRunner {
                 }
                 badConfig = false;
             }
-            Matcher redir = PlugUtils.matcher("name=\"target\" value=\"([^\"]+)\"", getContentAsString());
-            if (!redir.find()) {
-                throw new PluginImplementationException();
-            }
-            String redirname = redir.group(1);
-
-            Matcher matcher = PlugUtils.matcher("<form name=\"([^\"]+)\" id=\"([^\"]+)\" action=\"([^\"]+)\" method=\"post\" autocomplete=\"off\">", getContentAsString());
-            if (!matcher.find()) {
-                throw new PluginImplementationException();
-            }
-            String postURL = matcher.group(3);
-            Matcher pass = PlugUtils.matcher("<input type=\"password\" name=\"([^\"]+)\"", getContentAsString());
-            if (!pass.find()) {
-                throw new PluginImplementationException();
-            }
-            String passname = pass.group(1);
-
-            PostMethod postmethod = getPostMethod("http://data.hu/" + postURL);
-
-            postmethod.addParameter("act", "dologin");
-            postmethod.addParameter("login_passfield", passname);
-            postmethod.addParameter("t", "");
-            postmethod.addParameter("id", "");
-            postmethod.addParameter("data", "");
-            postmethod.addParameter("username", pa.getUsername());
-            postmethod.addParameter(passname, pa.getPassword());
-            postmethod.addParameter("target", redirname);
-            postmethod.addParameter("remember", "on");
-            postmethod.addParameter("url_for_login", redirname);
-            logger.info(redirname);
-            if (makeRedirectedRequest(postmethod)) {
-                matcher = getMatcherAgainstContent("class=\"login_button\"");
-                if (matcher.find()) {
+            final String passTag = PlugUtils.getStringBetween(getContentAsString(), "<input type=\"password\" name=\"", "\"");
+            HttpMethod postMethod = getMethodBuilder()
+                    .setActionFromFormWhereActionContains("login", true)
+                    .setParameter("username", pa.getUsername())
+                    .setParameter(passTag, pa.getPassword())
+                    .setParameter("login_passfield", passTag)
+                    .setParameter("target", fileURL)
+                    .setParameter("url_for_login", fileURL)
+                    .setReferer(fileURL).setAjax()
+                    .toPostMethod();
+            if (makeRedirectedRequest(postMethod)) {
+                if (getContentAsString().contains("error\":1")) {
                     badConfig = true;
                     logger.info("bad info");
-                    throw new NotRecoverableDownloadException("Bad data.hu login information!");
+                    throw new PluginImplementationException("Bad data.hu login information!");
                 }
             } else {
-                logger.info(postURL);
-                throw new PluginImplementationException("Bad login URL");
+                throw new ServiceConnectionProblemException("Error logging in");
             }
         }
-
+        logger.info("Logged in");
     }
 
     private void checkProblems() throws ErrorDuringDownloadingException {

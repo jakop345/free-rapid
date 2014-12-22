@@ -1,4 +1,4 @@
-package cz.vity.freerapid.plugins.services.data;
+package cz.vity.freerapid.plugins.services.gcash;
 
 import cz.vity.freerapid.plugins.dev.PluginDevApplication;
 import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
@@ -8,7 +8,7 @@ import org.jdesktop.application.Application;
 import java.net.URL;
 
 /**
- * @author Javi
+ * @author birchie
  */
 public class TestApp extends PluginDevApplication {
     @Override
@@ -16,13 +16,12 @@ public class TestApp extends PluginDevApplication {
         final HttpFile httpFile = getHttpFile(); //creates new test instance of HttpFile
         try {
             //we set file URL
-            //httpFile.setNewURL(new URL("http://data.hu/get/3959775/Metro.part1.rar"));
-            httpFile.setNewURL(new URL("http://data.hu/get/8311709/mnsktt_104.part1.rar"));
+            httpFile.setNewURL(new URL("http://gca.sh/KwrDP"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
             //then we tries to download
-            final DataServiceImpl service = new DataServiceImpl(); //instance of service - of our plugin
+            final GCashServiceImpl service = new GCashServiceImpl(); //instance of service - of our plugin
             //runcheck makes the validation
             testRun(service, httpFile, connectionSettings);//download file with service and its Runner
             //all output goes to the console

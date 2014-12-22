@@ -33,8 +33,12 @@ class DataFileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        PlugUtils.checkName(httpFile, content, "Fájl letöltés: <div class=\"download_filename\">", "</div>");
-        PlugUtils.checkFileSize(httpFile, content.replace("1,000.0 MB", "1 GB"), "fájlméret: <div class=\"download_filename\">", "</div>");
+        final Matcher matchN = PlugUtils.matcher("download_page_filename\".*?>\\s*?.*?\\s*?.*?\\s*?<.+?>(.+?)</div>", content);
+        if (!matchN.find()) throw new PluginImplementationException("File name not found");
+        httpFile.setFileName(matchN.group(1).trim());
+        final Matcher matchS = PlugUtils.matcher("download_page_filesize\".*?>\\s*?.*?\\s*?<.+?>(.+?)</span>", content);
+        if (!matchS.find()) throw new PluginImplementationException("File size not found");
+        httpFile.setFileSize(PlugUtils.getFileSizeFromString(matchS.group(1).replaceAll("<[^>]*>", "").trim()));
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
 
@@ -47,7 +51,7 @@ class DataFileRunner extends AbstractRunner {
             final String contentAsString = getContentAsString();
             checkProblems();
             checkNameAndSize(contentAsString);
-            final Matcher matcher = getMatcherAgainstContent("download_box_button\"><a href=\"(.*?)\"");
+            final Matcher matcher = getMatcherAgainstContent("<a.*?href='(.+?)'>Lassú letöltés</a");
             if (matcher.find()) {
                 final String downURL = matcher.group(1);
                 logger.info("downURL: " + downURL);
