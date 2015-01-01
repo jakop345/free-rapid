@@ -40,7 +40,9 @@ class TvReleaseFileRunner extends AbstractRunner {
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
         PlugUtils.checkName(httpFile, content, "Release</td><td class=\"td_col\">", "<");
         httpFile.setFileName("Extract Link(s): " + httpFile.getFileName());
-        PlugUtils.checkFileSize(httpFile, content, "Size</td><td class=\"td_col\">", "<");
+        try {
+            PlugUtils.checkFileSize(httpFile, content, "Size</td><td class=\"td_col\">", "<");
+        } catch(Exception x) { /**/ }
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
 

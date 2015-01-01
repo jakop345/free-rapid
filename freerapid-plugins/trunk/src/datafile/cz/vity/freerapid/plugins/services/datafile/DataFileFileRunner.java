@@ -8,10 +8,14 @@ import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.MethodBuilder;
 import cz.vity.freerapid.plugins.webclient.utils.HttpUtils;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
 
 /**
  * Class which contains main code
@@ -97,7 +101,7 @@ class DataFileFileRunner extends AbstractRunner {
         }
     }
 
-    private void checkProblems() throws ErrorDuringDownloadingException {
+    private void checkProblems() throws Exception {
         final String contentAsString = getContentAsString();
         if (contentAsString.contains("File not found") || contentAsString.contains("ErrorCode 3: This file was deleted")) {
             throw new URLNotAvailableAnymoreException("File not found"); //let to know user in FRD
@@ -105,8 +109,37 @@ class DataFileFileRunner extends AbstractRunner {
         if (contentAsString.contains("This file can be downloaded only users with<br />Premium account")) {
             throw new NotRecoverableDownloadException("This file can be downloaded by premium users"); //let to know user in FRD
         }
+
+        if (contentAsString.contains("\"JavaScript\">s=")) {
+            final Matcher match = PlugUtils.matcher("<script language=\"JavaScript\">s=.+?eval\\(m\\);(.+?)</script>", contentAsString);
+            if (match.find()) {
+                final String newUrl = decodeRedirectUrl(match.group(1));
+                if (!makeRedirectedRequest(getMethodBuilder().setReferer(fileURL).setAction(newUrl).toGetMethod())) {
+                    checkProblems();
+                    throw new ServiceConnectionProblemException();
+                }
+                checkProblems();
+            }
+        }
     }
 
+    private String decodeRedirectUrl(String script) throws PluginImplementationException {
+        try {
+            final Matcher match = PlugUtils.matcher("eval\\((atob\\(\"(.+?)\"\\))\\);", script);
+            if (!match.find()) throw new PluginImplementationException("JS evaluation error 1");
+            final String replace = match.group(1);
+            final String encBase64 = match.group(2);
+            final String notBase64 = new String(Base64.decodeBase64(encBase64));
+            script = script.replace(replace, "notBase64");
+            script = script.replace("window.location.href", "OUTPUT");
+            ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
+            engine.put("notBase64", notBase64);
+            engine.eval(script);
+            return engine.get("OUTPUT").toString();
+        } catch (Exception e) {
+            throw new PluginImplementationException("JS evaluation error 2 " + e.getLocalizedMessage());
+        }
+    }
 
     private void doCaptcha(MethodBuilder methodBuilder) throws Exception {
         final String reCaptchaKey = PlugUtils.getStringBetween(getContentAsString(), "recaptcha/api/challenge?k=", "\"");
