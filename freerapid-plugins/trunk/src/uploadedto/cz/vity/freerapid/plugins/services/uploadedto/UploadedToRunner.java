@@ -75,22 +75,7 @@ class UploadedToRunner extends AbstractRunner {
                         throw new ServiceConnectionProblemException();
                     }
                 } while (getMatcherAgainstContent("err\"?:\"?captcha").find());
-
-                if (getContentAsString().contains("You have reached") || getContentAsString().contains("limit-dl")) {
-                    throw new YouHaveToWaitException("Free download limit reached", 3 * 60 * 60);
-                }
-                if (getContentAsString().contains("available download slots")) {
-                    throw new YouHaveToWaitException("All download slots are busy currently, please try again within a few minutes.", 120);
-                }
-                if (getContentAsString().contains("You are already")) {
-                    throw new ServiceConnectionProblemException("You are already downloading a file");
-                }
-                if (getContentAsString().contains("Only premium users") || getContentAsString().contains("In order to download files bigger") || getContentAsString().contains("This file exceeds the max")) {
-                    throw new NotRecoverableDownloadException("This file exceeds the maximum file size which can be downloaded by free users");
-                }
-                if (getContentAsString().contains("The free download") || getContentAsString().contains("In order to download files bigger")) {
-                    throw new NotRecoverableDownloadException("The free download is currently not available - Please try again later");
-                }
+                checkProblems();
                 method = getMethodBuilder().setReferer(fileURL).setActionFromTextBetween("url:'", "'").toGetMethod();
                 if (!tryDownloadAndSaveFile(method)) {
                     checkProblems();
@@ -139,6 +124,22 @@ class UploadedToRunner extends AbstractRunner {
         }
         if (getContentAsString().contains("Uploaded is in maintenance mode")) {
             throw new ServiceConnectionProblemException("Uploaded is in maintenance mode");
+        }
+
+        if (getContentAsString().contains("You have reached") || getContentAsString().contains("limit-dl")) {
+            throw new YouHaveToWaitException("Free download limit reached", 3 * 60 * 60);
+        }
+        if (getContentAsString().contains("available download slots")) {
+            throw new YouHaveToWaitException("All download slots are busy currently, please try again within a few minutes.", 120);
+        }
+        if (getContentAsString().contains("You are already")) {
+            throw new ServiceConnectionProblemException("You are already downloading a file");
+        }
+        if (getContentAsString().contains("Only premium users") || getContentAsString().contains("In order to download files bigger") || getContentAsString().contains("This file exceeds the max")) {
+            throw new NotRecoverableDownloadException("This file exceeds the maximum file size which can be downloaded by free users");
+        }
+        if (getContentAsString().contains("The free download") || getContentAsString().contains("In order to download files bigger")) {
+            throw new NotRecoverableDownloadException("The free download is currently not available - Please try again later");
         }
     }
 

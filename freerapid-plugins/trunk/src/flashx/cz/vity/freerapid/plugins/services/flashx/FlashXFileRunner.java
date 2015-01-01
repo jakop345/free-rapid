@@ -71,14 +71,24 @@ class FlashXFileRunner extends AbstractRtmpRunner {
             if (matchFSize.find()) {
                 httpFile.setFileSize(Long.parseLong(matchFSize.group(1).trim()));
             }
-            final String jsText = unPackJavaScript();
-            logger.info("Text from JavaScript: " + jsText);
-            final String smilFile = PlugUtils.getStringBetween(jsText, "file:\"", "\"");
+            String jsText;
+            if (getContentAsString().contains("eval(function(p,a,c,k,e,d)")) {
+                jsText = unPackJavaScript();
+                logger.info("Text from JavaScript: " + jsText);
+            } else {
+                jsText = getContentAsString();
+            }
+            final Matcher matchSmil = PlugUtils.matcher("file\\s*?:\\s*?\"(.+?smil)\"", jsText);
+            if (!matchSmil.find()) {
+          //      logger.warning(jsText);
+                throw new PluginImplementationException("SMIL file not found ");
+            }
+            final String smilFile = matchSmil.group(1);
             if (!makeRedirectedRequest(getGetMethod(smilFile))) {
                 checkProblems();
                 throw new ServiceConnectionProblemException();
             }
-            logger.info("Text from .smil File: " + jsText);
+            logger.info("Text from .smil File: " + getContentAsString());
             final String url = PlugUtils.getStringBetween(getContentAsString(), "base=\"", "\"");
             final String file = PlugUtils.getStringBetween(getContentAsString(), "video src=\"", "\"");
             final RtmpSession rtmpSession = new RtmpSession(url, file);

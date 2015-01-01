@@ -51,7 +51,7 @@ class xVideosFileRunner extends AbstractRunner {
             final HttpMethod httpMethod = getMethodBuilder()
                     .setReferer(fileURL)
                     .setAction(URLDecoder.decode(PlugUtils.getStringBetween(contentAsString, "flv_url=", "&amp"), "UTF-8"))
-                    .toHttpMethod();
+                    .toGetMethod();
             setClientParameter(DownloadClientConsts.IGNORE_ACCEPT_RANGES, true);
             httpFile.setResumeSupported(true);
             if (!tryDownloadAndSaveFile(httpMethod)) {
