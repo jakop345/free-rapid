@@ -23,6 +23,7 @@ import java.util.regex.Pattern;
  * Class which contains main code
  *
  * @author ntoskrnl
+ * @author birchie
  */
 class FlashXFileRunner extends AbstractRtmpRunner {
     private final static Logger logger = Logger.getLogger(FlashXFileRunner.class.getName());
@@ -80,7 +81,7 @@ class FlashXFileRunner extends AbstractRtmpRunner {
             }
             final Matcher matchSmil = PlugUtils.matcher("file\\s*?:\\s*?\"(.+?smil)\"", jsText);
             if (!matchSmil.find()) {
-          //      logger.warning(jsText);
+                //      logger.warning(jsText);
                 throw new PluginImplementationException("SMIL file not found ");
             }
             final String smilFile = matchSmil.group(1);
@@ -102,20 +103,15 @@ class FlashXFileRunner extends AbstractRtmpRunner {
     private void checkProblems() throws ErrorDuringDownloadingException {
         final String content = getContentAsString();
         if (content.contains("File Not Found")) {
-            throw new URLNotAvailableAnymoreException("File not found"); //let to know user in FRD
+            throw new URLNotAvailableAnymoreException("File not found");
         }
-    }
-
-    private int getPort(final String s) {
-        return s == null ? 1935 : Integer.parseInt(s);
     }
 
     protected String unPackJavaScript() throws ErrorDuringDownloadingException {
         final Matcher jsMatcher = getMatcherAgainstContent("<script type='text/javascript'>\\s*?(" + Pattern.quote("eval(function(p,a,c,k,e,d)") + ".+?)\\s*?</script>");
         String jsString = null;
         while (jsMatcher.find()) {
-            jsString = jsMatcher.group(1).replaceFirst(Pattern.quote("eval(function(p,a,c,k,e,d)"), "function test(p,a,c,k,e,d)")
-                    .replaceFirst(Pattern.quote("return p}"), "return p};test").replaceFirst(Pattern.quote(".split('|')))"), ".split('|'));");
+            jsString = jsMatcher.group(1).substring(4);
             if (jsString.contains("jwplayer"))
                 break;
         }
@@ -127,7 +123,7 @@ class FlashXFileRunner extends AbstractRtmpRunner {
         try {
             return (String) engine.eval(jsString);
         } catch (ScriptException e) {
-            throw new PluginImplementationException("JavaScript eval failed");
+            throw new PluginImplementationException("JavaScript eval failed", e);
         }
     }
 }
