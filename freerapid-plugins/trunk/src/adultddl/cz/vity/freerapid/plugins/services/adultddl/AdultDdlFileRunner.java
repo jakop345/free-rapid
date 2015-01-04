@@ -75,16 +75,26 @@ class AdultDdlFileRunner extends AbstractRunner {
                 } else {
                     final String content = getContentAsString();
                     final List<FileInfo> list = new LinkedList<FileInfo>();
-                    list.add(new FileInfo(new URL(getMethodBuilder().setReferer(fileURL).setActionFromImgSrcWhereTagContains("aligncenter").getEscapedURI())));
+                    try {
+                        list.add(new FileInfo(new URL(getMethodBuilder().setReferer(fileURL).setActionFromImgSrcWhereTagContains("aligncenter").getEscapedURI())));
+                    } catch (Exception x) {/*ignore missing link*/}
                     final Matcher matchL = PlugUtils.matcher("href=['\"](http.+?)['\"][^>]*?_blank[^>]*?><strong>", content);
                     while (matchL.find()) {
                         String imgLink = matchL.group(1).trim();
                         if (imgLink.contains("?l=")) {
                             final HttpMethod imgMethod = getGetMethod(imgLink);
-                            if (makeRedirectedRequest(imgMethod))
+                            int status = client.makeRequest(imgMethod, false);
+                            if (status == 400)
                                 imgLink = imgMethod.getURI().getURI();
+                            else if (status/100 == 3) {
+                                Matcher match = PlugUtils.matcher("(http[^'\"]+)", imgMethod.getResponseHeader("Location").getValue());
+                                if (match.find())
+                                    imgLink = match.group(1);
+                            } else
+                                imgLink = null;
                         }
-                        list.add(new FileInfo(new URL(imgLink)));
+                        if (imgLink != null)
+                            list.add(new FileInfo(new URL(imgLink)));
                     }
                     FileInfo linkList = new FileInfo(new URL(getMethodBuilder(content).setReferer(fileURL).setActionFromIFrameSrcWhereTagContains("secure").getEscapedURI()));
                     linkList.setFileName("Extract links > ");

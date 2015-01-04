@@ -47,6 +47,8 @@ class ShareonlineRunner extends AbstractRunner {
             logger.warning("div = " + div);
             throw new PluginImplementationException("Error parsing file info", e);
         }
+        if (httpFile.getFileName().equals("file.name"))
+            PlugUtils.checkName(httpFile, getContentAsString(), "var fn=\"", "\";");
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
 

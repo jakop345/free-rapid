@@ -49,7 +49,8 @@ class YunFileFileRunner extends AbstractRunner {
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
         String filename = null;
-        Matcher matcher = PlugUtils.matcher("^\\s*?(?!<[^<>]+?display:none[^<>]*?>)<h2[^<>]*?>(?:Downloading\\s*?:\\s*?)?.*?(.+?)</h2>", content);
+        long fileSize = 0;
+        Matcher matcher = PlugUtils.matcher("<h2[^<>]*?>\\s*?Downloading\\s*?:\\s*?(.+?) - (\\d.+?)</?h2>", content.replace("&nbsp;"," "));
         while (matcher.find()) {
             String group1 = matcher.group(1);
             if (!group1.contains("Please") || !group1.contains("premium")) {
@@ -58,12 +59,13 @@ class YunFileFileRunner extends AbstractRunner {
                         .replaceAll("<!--.*?-->", "")
                         .trim();
             }
+            fileSize = PlugUtils.getFileSizeFromString(matcher.group(2));
         }
         if (filename == null) {
             throw new PluginImplementationException("File name not found");
         }
         httpFile.setFileName(filename);
-        PlugUtils.checkFileSize(httpFile, content, "File Size: <b>", "</b>");
+        httpFile.setFileSize(fileSize);
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
 

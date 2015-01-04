@@ -60,9 +60,9 @@ class Data_PremiumFileRunner extends AbstractRunner {
                 logger.info("No premium");
                 throw new NotRecoverableDownloadException("Not premium account!");
             }
-            matcher = getMatcherAgainstContent("window.location.href='(.*?)';");
+			matcher = getMatcherAgainstContent("<div class=\"download_it\">\\s+<a class=\"btn btn-primary\" href=\"(.*?)\">");
             if (!matcher.find()) {
-                throw new PluginImplementationException("download link not found");
+                throw new PluginImplementationException("Download link not found!");
             }
             String downURL = matcher.group(1);
             logger.info("downURL: " + downURL);
