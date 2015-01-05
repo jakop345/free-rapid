@@ -5,13 +5,16 @@ import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;
 import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
 import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
-import cz.vity.freerapid.plugins.webclient.DownloadClientConsts;
 import cz.vity.freerapid.plugins.webclient.FileState;
-import cz.vity.freerapid.plugins.webclient.MethodBuilder;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 
@@ -19,9 +22,16 @@ import java.util.regex.Matcher;
  * Class which contains main code
  *
  * @author TommyTom
+ * @author tong2shot
  */
 class Tube8FileRunner extends AbstractRunner {
     private final static Logger logger = Logger.getLogger(Tube8FileRunner.class.getName());
+    private SettingsConfig config;
+
+    private void setConfig() throws Exception {
+        Tube8ServiceImpl service = (Tube8ServiceImpl) getPluginService();
+        config = service.getConfig();
+    }
 
     @Override
     public void runCheck() throws Exception { //this method validates file
@@ -54,41 +64,26 @@ class Tube8FileRunner extends AbstractRunner {
         logger.info("Starting download in TASK " + fileURL);
         final GetMethod method = getGetMethod(fileURL); //create GET request
         if (makeRedirectedRequest(method)) { //we make the main request
-            String contentAsString = getContentAsString();//check for response
+            String content = getContentAsString();//check for response
             checkProblems();//check problems
-            checkNameAndSize(contentAsString);//extract file name and size from the page
+            checkNameAndSize(content);//extract file name and size from the page
+            fileURL = method.getURI().toString(); //sometimes redirected
 
-            Matcher match = PlugUtils.matcher("videoHash\\s*?=\\s*?['\"]([^\"']+?)['\"]", contentAsString);
-            if (!match.find())
-                throw new PluginImplementationException("Token 'hash' not found");
-            final String hash = match.group(1).trim();
-            match = PlugUtils.matcher("videoidVar\\s*?=\\s*?['\"]([^'\"]+?)['\"]", contentAsString);
-            if (!match.find())
-                throw new PluginImplementationException("Token 'videoId' not found");
-            final String videoId = match.group(1).trim();
-            final MethodBuilder ajaxMethodBuilder = getMethodBuilder()
-                    .setAjax()
-                    .setAction("http://www.tube8.com/ajax/getVideoDownloadURL.php")
-                    .setParameter("hash", hash)
-                    .setParameter("video", videoId);
-            final HttpMethod ajaxMethod = ajaxMethodBuilder.toGetMethod();
+            setConfig();
+            Tube8Video selectedVideo = getSelectedVideo(content);
+            final String encURL = URLDecoder.decode(selectedVideo.url, "UTF-8").replace(" ", "+");
+            final String name = PlugUtils.getStringBetween(content, "\"video_title\":\"", "\"").replace('+', ' ');
+            logger.info("Video title: " + name);
+            logger.info("Config settings: " + config);
+            logger.info("Selected video: " + selectedVideo);
+            logger.info("Encrypted URL: " + encURL);
+            String videoUrl = new Crypto().decrypt(encURL, name);
+            logger.info("Decrypted URL: " + videoUrl);
 
-            logger.info("Making ajax request..");
-            if (makeRequest(ajaxMethod)) {
-                contentAsString = getContentAsString();
-                logger.info("Ajax response : " + contentAsString);
-                //there are 2 options for video to download : standard and mobile
-                //we choose standard
-                final String videoURL = PlugUtils.getStringBetween(contentAsString, "\"standard_url\":\"", "\",").replace("\\", "");
-                final HttpMethod httpMethod = getMethodBuilder().setReferer(fileURL).setAction(videoURL).toGetMethod();
-                setClientParameter(DownloadClientConsts.DONT_USE_HEADER_FILENAME, true);
-                if (!tryDownloadAndSaveFile(httpMethod)) {
-                    checkProblems();//if downloading failed
-                    throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
-                }
-            } else {
-                checkProblems();
-                throw new ServiceConnectionProblemException();
+            final HttpMethod httpMethod = getGetMethod(videoUrl);
+            if (!tryDownloadAndSaveFile(httpMethod)) {
+                checkProblems();//if downloading failed
+                throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
             }
         } else {
             checkProblems();
@@ -103,6 +98,56 @@ class Tube8FileRunner extends AbstractRunner {
         } else if (contentAsString.contains("This video is deleted") ||
                 contentAsString.contains("video-removed-div")) {
             throw new URLNotAvailableAnymoreException("This video is deleted");
+        }
+    }
+
+    private Tube8Video getSelectedVideo(String content) throws PluginImplementationException, UnsupportedEncodingException {
+        List<Tube8Video> videoList = new LinkedList<Tube8Video>();
+        for (VideoQuality videoQuality : VideoQuality.values()) {
+            Matcher matcher = PlugUtils.matcher("\"" + videoQuality.getLabel() + "\":\"(.+?)\",", content);
+            if (matcher.find()) {
+                Tube8Video tube8Video = new Tube8Video(videoQuality, matcher.group(1));
+                videoList.add(tube8Video);
+                logger.info("Found video: " + tube8Video);
+            }
+        }
+        if (videoList.isEmpty()) {
+            throw new PluginImplementationException("No available videos");
+        }
+        return Collections.min(videoList);
+    }
+
+    private class Tube8Video implements Comparable<Tube8Video> {
+        private final static int LOWER_QUALITY_PENALTY = 10;
+        private final VideoQuality videoQuality;
+        private final String url;
+        private final int weight;
+
+        public Tube8Video(final VideoQuality videoQuality, final String url) {
+            this.videoQuality = videoQuality;
+            this.url = url;
+            this.weight = calcWeight();
+        }
+
+        private int calcWeight() {
+            VideoQuality configQuality = config.getVideoQuality();
+            int deltaQ = videoQuality.getQuality() - configQuality.getQuality();
+            return (deltaQ < 0 ? Math.abs(deltaQ) + LOWER_QUALITY_PENALTY : deltaQ);
+        }
+
+        @SuppressWarnings("NullableProblems")
+        @Override
+        public int compareTo(final Tube8Video that) {
+            return Integer.valueOf(this.weight).compareTo(that.weight);
+        }
+
+        @Override
+        public String toString() {
+            return "Tube8Video{" +
+                    "videoQuality=" + videoQuality +
+                    ", url='" + url + '\'' +
+                    ", weight=" + weight +
+                    '}';
         }
     }
 
