@@ -23,6 +23,9 @@ public class TestApp extends PluginDevApplication {
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
             //then we tries to download
             final Tube8ServiceImpl service = new Tube8ServiceImpl(); //instance of service - of our plugin
+            SettingsConfig config = new SettingsConfig();
+            config.setVideoQuality(VideoQuality._480);
+            service.setConfig(config);
             //runcheck makes the validation
             testRun(service, httpFile, connectionSettings);//download file with service and its Runner
             //all output goes to the console

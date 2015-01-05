@@ -1,4 +1,4 @@
-package cz.vity.freerapid.plugins.services.tube8;
+package cz.vity.freerapid.plugins.services.spankbang;
 
 import cz.vity.freerapid.plugins.webclient.AbstractFileShareService;
 import cz.vity.freerapid.plugins.webclient.interfaces.ConfigurationStorageSupport;
@@ -7,16 +7,15 @@ import cz.vity.freerapid.plugins.webclient.interfaces.PluginRunner;
 /**
  * Class that provides basic info about plugin
  *
- * @author TommyTom
+ * @author tong2shot
  */
-public class Tube8ServiceImpl extends AbstractFileShareService {
-
-    private static final String CONFIG_FILE = "plugin_Tube8.xml";
+public class SpankBangServiceImpl extends AbstractFileShareService {
+    private static final String CONFIG_FILE = "plugin_SpankBang.xml";
     private volatile SettingsConfig config;
 
     @Override
     public String getName() {
-        return "tube8.com";
+        return "spankbang.com";
     }
 
     @Override
@@ -26,19 +25,19 @@ public class Tube8ServiceImpl extends AbstractFileShareService {
 
     @Override
     protected PluginRunner getPluginRunnerInstance() {
-        return new Tube8FileRunner();
+        return new SpankBangFileRunner();
     }
 
     @Override
     public void showOptions() throws Exception {
         super.showOptions();
-        if (getPluginContext().getDialogSupport().showOKCancelDialog(new SettingsPanel(this), "Tube8 settings")) {
+        if (getPluginContext().getDialogSupport().showOKCancelDialog(new SettingsPanel(this), "SpankBang settings")) {
             getPluginContext().getConfigurationStorageSupport().storeConfigToFile(config, CONFIG_FILE);
         }
     }
 
     SettingsConfig getConfig() throws Exception {
-        synchronized (Tube8ServiceImpl.class) {
+        synchronized (SpankBangServiceImpl.class) {
             final ConfigurationStorageSupport storage = getPluginContext().getConfigurationStorageSupport();
             if (config == null) {
                 if (!storage.configFileExists(CONFIG_FILE)) {
@@ -52,7 +51,7 @@ public class Tube8ServiceImpl extends AbstractFileShareService {
     }
 
     void setConfig(final SettingsConfig config) {
-        synchronized (Tube8ServiceImpl.class) {
+        synchronized (SpankBangServiceImpl.class) {
             this.config = config;
         }
     }
