@@ -49,6 +49,7 @@ class UlozToRunner extends AbstractRunner {
             if (getContentAsString().contains("confirmContent")) {
                 throw new PluginImplementationException("Cannot confirm age");
             }
+            fileURL = fileURL.replaceFirst("^http://uloz\\.to", "http://pornfile.uloz.to"); //porn redirected to pornfile, explicit because of POST
         }
     }
 
@@ -104,8 +105,8 @@ class UlozToRunner extends AbstractRunner {
         if (makeRedirectedRequest(getMethod)) {
             checkProblems();
             passwordProtectedCheck();
-            ageCheck(getContentAsString());
             fileURL = getMethod.getURI().toString(); // '/m/' folder redirected to '/soubory/'
+            ageCheck(getContentAsString());
             if (isFolder(fileURL)) {
                 parseFolder();
             } else {
