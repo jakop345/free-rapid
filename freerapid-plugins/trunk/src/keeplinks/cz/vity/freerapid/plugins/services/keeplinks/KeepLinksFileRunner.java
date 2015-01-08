@@ -2,6 +2,7 @@ package cz.vity.freerapid.plugins.services.keeplinks;
 
 import cz.vity.freerapid.plugins.exceptions.*;
 import cz.vity.freerapid.plugins.services.recaptcha.ReCaptcha;
+import cz.vity.freerapid.plugins.services.solvemediacaptcha.SolveMediaCaptcha;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.DownloadState;
 import cz.vity.freerapid.plugins.webclient.FileState;
@@ -171,6 +172,13 @@ class KeepLinksFileRunner extends AbstractRunner {
                 }
             }
             method.setParameter("norobot", captcha);
+        } else if (getContentAsString().contains("papi/challenge")) {
+            final Matcher matcher = getMatcherAgainstContent("papi/challenge\\.noscript\\?k=(.*?)\"");
+            if (!matcher.find()) throw new PluginImplementationException("Captcha key not found");
+            final String captchaKey = matcher.group(1);
+            SolveMediaCaptcha solveMediaCaptcha = new SolveMediaCaptcha(captchaKey, client, getCaptchaSupport());
+            solveMediaCaptcha.askForCaptcha();
+            solveMediaCaptcha.modifyResponseMethod(method);
         } else {
             throw new PluginImplementationException("Unknown captcha type");
         }

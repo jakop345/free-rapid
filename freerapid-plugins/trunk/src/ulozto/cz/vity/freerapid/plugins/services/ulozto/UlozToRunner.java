@@ -138,13 +138,17 @@ class UlozToRunner extends AbstractRunner {
         }
     }
 
+    private boolean isPornFile() {
+        return fileURL.contains("pornfile.uloz");
+    }
+
     private void checkURL() {
         fileURL = fileURL.replaceFirst("(ulozto\\.net|ulozto\\.cz|ulozto\\.sk)", "uloz.to").replaceFirst("http://www\\.uloz\\.to", "http://uloz.to");
     }
 
     @Override
     protected String getBaseURL() {
-        return "http://uloz.to";
+        return !isPornFile() ? "http://uloz.to" : "http://pornfile.uloz.to";
     }
 
     private void checkNameAndSize(String content) throws Exception {
@@ -155,7 +159,7 @@ class UlozToRunner extends AbstractRunner {
         if (getContentAsString().contains("soubor nebyl nalezen")) {
             throw new URLNotAvailableAnymoreException("Pozadovany soubor nebyl nalezen");
         }
-        PlugUtils.checkName(httpFile, content, "<title>", " | Ulo");
+        PlugUtils.checkName(httpFile, content, "<title>", !isPornFile() ? " | Ulo" : " | PORNfile");
         String size;
         try {
             //tady nema byt id=, jinak to prestane fungovat
