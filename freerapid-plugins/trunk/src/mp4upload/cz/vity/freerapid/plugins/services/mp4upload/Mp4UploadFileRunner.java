@@ -8,4 +8,10 @@ import cz.vity.freerapid.plugins.services.xfilesharing.XFileSharingRunner;
  * @author birchie
  */
 class Mp4UploadFileRunner extends XFileSharingRunner {
+
+    @Override
+    protected void correctURL() throws Exception {
+        fileURL = fileURL.replaceFirst("/embed-", "/");
+    }
+
 }
