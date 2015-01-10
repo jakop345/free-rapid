@@ -16,7 +16,8 @@ public class TestApp extends PluginDevApplication {
         final HttpFile httpFile = getHttpFile(); //creates new test instance of HttpFile
         try {
             //we set file URL
-            httpFile.setNewURL(new URL("http://filecore.co.nz/h1u7lq5v8mwu"));
+            //httpFile.setNewURL(new URL("http://filecore.co.nz/h1u7lq5v8mwu"));
+            httpFile.setNewURL(new URL("http://filecore.co.nz/xkfrrpenoi1u/danger.5.s01e00.the.diamond.girls.webrip.x264-w4f.mp4"));
             //httpFile.setNewURL(new URL("http://fcore.eu/7lhwc5tvwc18"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection

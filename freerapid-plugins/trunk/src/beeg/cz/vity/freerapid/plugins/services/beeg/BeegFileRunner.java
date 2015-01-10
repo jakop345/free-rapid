@@ -6,7 +6,6 @@ import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
-import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
 import java.util.logging.Logger;
@@ -19,6 +18,12 @@ import java.util.regex.Matcher;
  */
 class BeegFileRunner extends AbstractRunner {
     private final static Logger logger = Logger.getLogger(BeegFileRunner.class.getName());
+    private SettingsConfig config;
+
+    private void setConfig() throws Exception {
+        BeegServiceImpl service = (BeegServiceImpl) getPluginService();
+        config = service.getConfig();
+    }
 
     @Override
     public void runCheck() throws Exception { //this method validates file
@@ -50,10 +55,19 @@ class BeegFileRunner extends AbstractRunner {
             final String contentAsString = getContentAsString();//check for response
             checkProblems();//check problems
             checkNameAndSize(contentAsString);//extract file name and size from the page
-            final HttpMethod httpMethod = getGetMethod(PlugUtils.getStringBetween(contentAsString, "'file': '", "',"));
+
+            setConfig();
+            final String quality = config.toString();
+            logger.info("Preferred Quality : " + quality);
+            String fileUrl;
+            final Matcher match = PlugUtils.matcher("'"+quality+"'\\s*?:\\s*?'(.+?"+quality+".+?)'", contentAsString);
+            if (match.find())
+                fileUrl = match.group(1);
+            else // default quality on page
+                fileUrl = PlugUtils.getStringBetween(contentAsString, "'file': '", "',");
 
             //here is the download link extraction
-            if (!tryDownloadAndSaveFile(httpMethod)) {
+            if (!tryDownloadAndSaveFile(getGetMethod(fileUrl))) {
                 checkProblems();//if downloading failed
                 throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
             }

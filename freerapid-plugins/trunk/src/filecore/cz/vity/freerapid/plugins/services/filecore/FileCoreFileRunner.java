@@ -1,11 +1,14 @@
 package cz.vity.freerapid.plugins.services.filecore;
 
+import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
 import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
 import cz.vity.freerapid.plugins.services.xfilesharing.XFileSharingRunner;
 import cz.vity.freerapid.plugins.services.xfilesharing.nameandsize.FileNameHandler;
 import cz.vity.freerapid.plugins.services.xfilesharing.nameandsize.FileSizeHandler;
 import cz.vity.freerapid.plugins.services.xfilesharing.nameandsize.FileSizeHandlerNoSize;
 import cz.vity.freerapid.plugins.webclient.MethodBuilder;
+import cz.vity.freerapid.plugins.webclient.interfaces.HttpFile;
+import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.HttpMethod;
 
 import java.util.List;
@@ -29,6 +32,12 @@ class FileCoreFileRunner extends XFileSharingRunner {
     @Override
     protected List<FileSizeHandler> getFileSizeHandlers() {
         final List<FileSizeHandler> fileSizeHandlers = super.getFileSizeHandlers();
+        fileSizeHandlers.add(new FileSizeHandler() {
+            @Override
+            public void checkFileSize(HttpFile httpFile, String content) throws ErrorDuringDownloadingException {
+                PlugUtils.checkFileSize(httpFile, content, "Size: </b>", "</td>");
+            }
+        });
         fileSizeHandlers.add(new FileSizeHandlerNoSize());
         return fileSizeHandlers;
     }
@@ -61,6 +70,7 @@ class FileCoreFileRunner extends XFileSharingRunner {
         final List<String> downloadLinkRegexes = super.getDownloadLinkRegexes();
         downloadLinkRegexes.add("onclick=\"window.open\\('(http.+?" + Pattern.quote(httpFile.getFileName().split("\\.")[0]) + ".+?)'\\);\"");
         downloadLinkRegexes.add("<a.+?href\\s?=\\s?[\"'](http.+?" + Pattern.quote(httpFile.getFileName().split("\\.")[0]) + ".+?)[\"']");
+        downloadLinkRegexes.add("file\\s*?:\\s*?['\"](.+?" + Pattern.quote(httpFile.getFileName()) + ")['\"]");
         return downloadLinkRegexes;
     }
 
