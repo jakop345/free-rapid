@@ -49,13 +49,25 @@ class ZippyShareFileRunner extends AbstractRunner {
             checkProblems();
             checkNameAndSize();
             final String url;
-            Matcher matcher = getMatcherAgainstContent("(?s)<body>(.+?)</body>");
-            if (!matcher.find()) {
-                throw new PluginImplementationException("Script not found (1)");
-            }
-            matcher = PlugUtils.matcher("(?s)<script[^<>]*?>(.*?)</script>", matcher.group(1));
-            if (matcher.find()) {
-                final Matcher buttonId = getMatcherAgainstContent("<a\\b[^<>]*?\\bid=\"([\\w\\-]+?)\"[^<>]*?>.*?alt=\"Download\"");
+            if (getContentAsString().contains("'sitekey': '")) {
+                url = PlugUtils.getStringBetween(getContentAsString(), "document.location = '", "';");
+                final String rcKey = PlugUtils.getStringBetween(getContentAsString(), "'sitekey': '", "'");
+                final String shortencode = PlugUtils.getStringBetween(getContentAsString(), "shortencode: '", "'");
+                do {
+                    if (!makeRedirectedRequest(stepCaptcha(rcKey, shortencode))) {
+                        throw new ServiceConnectionProblemException();
+                    }
+                } while (!getContentAsString().contains("true"));
+            } else {
+                Matcher matcher = getMatcherAgainstContent("(?s)<body>(.+?)</body>");
+                if (!matcher.find()) {
+                    throw new PluginImplementationException("Script not found (1)");
+                }
+                matcher = PlugUtils.matcher("(?s)<script[^<>]*?>(.*?)</script>", matcher.group(1));
+                if (!matcher.find()) {
+                    throw new PluginImplementationException("Script not found (2)");
+                }
+                final Matcher buttonId = getMatcherAgainstContent("(?s)<a\\b[^<>]*?\\bid=\"([\\w\\-]+?)\"[^<>]*?>.*?alt=\"Download\"");
                 if (!buttonId.find()) {
                     throw new PluginImplementationException("Download button ID not found");
                 }
@@ -73,16 +85,9 @@ class ZippyShareFileRunner extends AbstractRunner {
                 } catch (final Exception e) {
                     throw new PluginImplementationException("Script execution failed", e);
                 }
-            } else if (getContentAsString().contains("Recaptcha.create(")) {
-                url = PlugUtils.getStringBetween(getContentAsString(), "document.location = '", "';");
-                final String rcKey = PlugUtils.getStringBetween(getContentAsString(), "Recaptcha.create(\"", "\"");
-                final String shortencode = PlugUtils.getStringBetween(getContentAsString(), "shortencode: '", "'");
-                do {
-                    if (!makeRedirectedRequest(stepCaptcha(rcKey, shortencode))) {
-                        throw new ServiceConnectionProblemException();
-                    }
-                } while (!getContentAsString().contains("true"));
-            } else {
+            }
+            /* Not sure if this is still relevant.
+            else {
                 matcher = getMatcherAgainstContent("url\\s*:\\s*'(.+?)'");
                 if (!matcher.find()) {
                     throw new PluginImplementationException("Download link not found");
@@ -94,7 +99,7 @@ class ZippyShareFileRunner extends AbstractRunner {
                 }
                 final int seed = Integer.parseInt(matcher.group(1));
                 url = urlParam + "&time=" + getRequestValue(seed);
-            }
+            } */
             if (url == null) {
                 throw new PluginImplementationException("Download URL not found");
             }
@@ -125,11 +130,16 @@ class ZippyShareFileRunner extends AbstractRunner {
         if (matcher.find()) {
             httpFile.setFileName(URLDecoder.decode(matcher.group(1), "UTF-8"));
         } else {
-            matcher = getMatcherAgainstContent("Name:\\s*?<[^<>]+?>\\s*?<[^<>]+?>([^<>]+?)<[^<>]+?>");
-            if (!matcher.find()) {
-                throw new PluginImplementationException("File name not found");
+            matcher = getMatcherAgainstContent("d/\\d+/\\d+/([^<>]+?)';");
+            if (matcher.find()) {
+                httpFile.setFileName(URLDecoder.decode(matcher.group(1), "UTF-8"));
+            } else {
+                matcher = getMatcherAgainstContent("Name:\\s*?<[^<>]+?>\\s*?<[^<>]+?>([^<>]+?)<[^<>]+?>");
+                if (!matcher.find()) {
+                    throw new PluginImplementationException("File name not found");
+                }
+                httpFile.setFileName(matcher.group(1));
             }
-            httpFile.setFileName(matcher.group(1));
         }
         matcher = getMatcherAgainstContent("Size:\\s*?<[^<>]+?>\\s*?<[^<>]+?>([^<>]+?)<[^<>]+?>");
         if (matcher.find()) {
