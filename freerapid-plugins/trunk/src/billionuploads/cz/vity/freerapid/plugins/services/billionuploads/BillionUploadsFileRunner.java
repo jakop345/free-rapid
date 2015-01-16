@@ -44,6 +44,7 @@ class BillionUploadsFileRunner extends XFileSharingRunner {
     protected List<String> getDownloadPageMarkers() {
         final List<String> downloadPageMarkers = super.getDownloadPageMarkers();
         downloadPageMarkers.add("Download you file easily with Billion Uploads download manager");
+        downloadPageMarkers.add("target=\"_blank\" download=\"\">Download</a>");
         return downloadPageMarkers;
     }
 
@@ -52,6 +53,7 @@ class BillionUploadsFileRunner extends XFileSharingRunner {
         final List<String> downloadLinkRegexes = new LinkedList<String>();
         downloadLinkRegexes.add("<a href\\s?=\\s?(?:\"|')(http.+?)(?:\"|') id=\"_tlink\"");
         downloadLinkRegexes.add("<span subway=\"metro\">.+?XXX(.+?)XXX.+?<");
+        downloadLinkRegexes.add("<a .*?href=\"(.+?)\" target=\"_blank\" download=\".*?\">Download");
         return downloadLinkRegexes;
     }
 
@@ -67,7 +69,7 @@ class BillionUploadsFileRunner extends XFileSharingRunner {
     protected MethodBuilder getXFSMethodBuilder() throws Exception {
         final String content = getContentAsString();
         if (!content.contains("decodeURIComponent("))
-            throw new PluginImplementationException("error loading page");
+            return super.getXFSMethodBuilder();
         final String secretInput = URLDecoder.decode(PlugUtils.getStringBetween(content, "decodeURIComponent(\"", "\")"), "UTF-8");
         final String name = PlugUtils.getStringBetween(secretInput, " name=\"", "\"");
         final String value = PlugUtils.getStringBetween(secretInput, " value=\"", "\"");

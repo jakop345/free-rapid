@@ -50,16 +50,15 @@ class DataFileFileRunner extends AbstractRunner {
         logger.info("Starting download in TASK " + fileURL);
         final GetMethod method = getGetMethod(fileURL); //create GET request
         if (makeRedirectedRequest(method)) { //we make the main request
-            final String contentAsString = getContentAsString();//check for response
+            final String content = getContentAsString();//check for response
             checkProblems();//check problems
-            checkNameAndSize(contentAsString);//extract file name and size from the page
+            checkNameAndSize(content);//extract file name and size from the page
 
             MethodBuilder builder = getMethodBuilder()
                     .setAjax()
                     .setAction("/files/ajax.html")
                     .setReferer(fileURL)
-                    .setParameter("doaction", "getFileDownloadLink")
-                    .setParameter("fileid", PlugUtils.getStringBetween(getContentAsString(), "getFileDownloadLink('", "'"));
+                    .setParameter("doaction", "validateCaptcha");
             boolean captchaLoop = false;
             do {
                 if (captchaLoop) {
@@ -72,8 +71,7 @@ class DataFileFileRunner extends AbstractRunner {
                 final int waitTime = 1 + PlugUtils.getNumberBetween(getContentAsString(), "counter.contdownTimer('", "'");
                 if (waitTime > 123) throw new YouHaveToWaitException("Wait between downloads", waitTime);
                 final long startTime = System.currentTimeMillis();
-                if (captchaLoop)
-                    doCaptcha(builder);
+                doCaptcha(builder);
                 final long endTime = System.currentTimeMillis();
                 downloadTask.sleep(waitTime - (int) ((endTime - startTime) / 1000));
                 setFileStreamContentTypes(new String[0], new String[]{"application/x-www-form-urlencoded"});
@@ -85,6 +83,14 @@ class DataFileFileRunner extends AbstractRunner {
                 captchaLoop = true;
             } while (!getContentAsString().contains("success\":1"));
 
+            builder.setParameter("doaction", "getFileDownloadLink")
+                    .setParameter("token", PlugUtils.getStringBetween(getContentAsString(), "token\":\"", "\""))
+                    .setParameter("fileid", PlugUtils.getStringBetween(content, "getFileDownloadLink('", "'"));
+            if (!makeRedirectedRequest(builder.toPostMethod())) {
+                checkProblems();
+                throw new ServiceConnectionProblemException();
+            }
+            checkProblems();
             final String url = PlugUtils.getStringBetween(getContentAsString(), "link\":\"", "\"").replace("\\/", "/");
             client.getHTTPClient().getParams().setBooleanParameter(DownloadClientConsts.DONT_USE_HEADER_FILENAME, true);
             final HttpMethod httpMethod = getGetMethod(url);
@@ -108,6 +114,10 @@ class DataFileFileRunner extends AbstractRunner {
         }
         if (contentAsString.contains("This file can be downloaded only users with<br />Premium account")) {
             throw new NotRecoverableDownloadException("This file can be downloaded by premium users"); //let to know user in FRD
+        }
+        if (contentAsString.contains("You are downloading another file at this moment") ||
+                contentAsString.contains("You can not download more than one file at a time")) {
+            throw new YouHaveToWaitException("You can not download more than one file at a time", 5*60);
         }
 
         if (contentAsString.contains("\"JavaScript\">s=")) {

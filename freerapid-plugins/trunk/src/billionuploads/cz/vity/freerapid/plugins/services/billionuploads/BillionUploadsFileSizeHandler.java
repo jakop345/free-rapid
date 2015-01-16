@@ -12,7 +12,7 @@ public class BillionUploadsFileSizeHandler implements FileSizeHandler {
 
     @Override
     public void checkFileSize(final HttpFile httpFile, final String content) throws ErrorDuringDownloadingException {
-        final Matcher match = PlugUtils.matcher("File ?[Ss]ize:(?:<[^>]+>)*?([^<]+?)<", content.replaceAll("\\s", ""));
+        final Matcher match = PlugUtils.matcher("File ?[Ss]ize:(?:<[^>]+>)*?(\\d[^<]+?)<", content.replaceAll("\\s", ""));
         if (!match.find())
             throw new PluginImplementationException("File size not found");
         httpFile.setFileSize(PlugUtils.getFileSizeFromString(match.group(1).trim()));
