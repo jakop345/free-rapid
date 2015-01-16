@@ -126,20 +126,15 @@ class ZippyShareFileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize() throws Exception {
-        Matcher matcher = getMatcherAgainstContent("\\d+/\"[^<>]+?/([^<>]+?)\";");
+        Matcher matcher = getMatcherAgainstContent("d/[^<>\r\n]+/([^<>\r\n]+?)\";");
         if (matcher.find()) {
             httpFile.setFileName(URLDecoder.decode(matcher.group(1), "UTF-8"));
         } else {
-            matcher = getMatcherAgainstContent("d/\\d+/\\d+/([^<>]+?)';");
-            if (matcher.find()) {
-                httpFile.setFileName(URLDecoder.decode(matcher.group(1), "UTF-8"));
-            } else {
-                matcher = getMatcherAgainstContent("Name:\\s*?<[^<>]+?>\\s*?<[^<>]+?>([^<>]+?)<[^<>]+?>");
-                if (!matcher.find()) {
-                    throw new PluginImplementationException("File name not found");
-                }
-                httpFile.setFileName(matcher.group(1));
+            matcher = getMatcherAgainstContent("Name:\\s*?<[^<>]+?>\\s*?<[^<>]+?>([^<>]+?)<[^<>]+?>");
+            if (!matcher.find()) {
+                throw new PluginImplementationException("File name not found");
             }
+            httpFile.setFileName(matcher.group(1));
         }
         matcher = getMatcherAgainstContent("Size:\\s*?<[^<>]+?>\\s*?<[^<>]+?>([^<>]+?)<[^<>]+?>");
         if (matcher.find()) {
