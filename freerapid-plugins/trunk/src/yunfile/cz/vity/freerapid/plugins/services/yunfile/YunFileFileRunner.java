@@ -195,12 +195,12 @@ class YunFileFileRunner extends AbstractRunner {
 
         String buttonId = "cvimg2";
         List<BufferedImage> images = new LinkedList<BufferedImage>();
-        matcher = PlugUtils.matcher("['\"](/verifyimg/getPcv/\\d+\\.html)['\"]",
+        matcher = PlugUtils.matcher("['\"](/verifyimg/getPcv/\\d+\\.html|/verifyimg/getPcv\"\\+\"/\\d+\"\\+\"\\.html)['\"]",
                 bodyContent.replaceAll("(?sm)(?:([\\s;])+//(?:.*)$)|(?:/\\*(?:[\\s\\S]*?)\\*/)", "").replaceAll("<!--.*?-->", ""));
         int totalWidth = 0, maxHeight = 0;
         int imageType = 0;
         while (matcher.find()) {
-            BufferedImage tempImage = getCaptchaSupport().getCaptchaImage(baseUrl + matcher.group(1));
+            BufferedImage tempImage = getCaptchaSupport().getCaptchaImage(baseUrl + matcher.group(1).replaceAll("\"\\+\"", ""));
             int width = tempImage.getWidth();
             int height = tempImage.getHeight();
             if (isValidImage(tempImage, width, height)) {
@@ -213,7 +213,7 @@ class YunFileFileRunner extends AbstractRunner {
                 images.add(tempImage);
             }
         }
-
+logger.info("# "+images.size()+" #####"+getContentAsString()+"####");
         matcher = PlugUtils.matcher("(?s)<script>(.+?)</script>", bodyContent);
         ScriptEngine engine = initScriptEngine();
         while (matcher.find()) {
