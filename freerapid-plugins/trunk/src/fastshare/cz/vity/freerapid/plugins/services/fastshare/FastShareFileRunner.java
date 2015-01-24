@@ -33,10 +33,15 @@ class FastShareFileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        PlugUtils.checkName(httpFile, content, "<h1 class=\"dwp\">", "</h1>");
         try {
-            PlugUtils.checkFileSize(httpFile, content, "Velikost:", ", ");
+            PlugUtils.checkName(httpFile, content, "<h1 class=\"dwp\">", "</h1>");
         } catch (Exception e) {
+            PlugUtils.checkName(httpFile, content, "<h3 class=\"section_title\">", "</h3>");
+        }
+        final Matcher match = PlugUtils.matcher("Velikost\\s*?:\\s*?(?:<[^<>]+?>)?(.+?)<", content);
+        if (match.find()) {
+            httpFile.setFileSize(PlugUtils.getFileSizeFromString(match.group(1).trim()));
+        } else {
             PlugUtils.checkFileSize(httpFile, content, ": ", ", File type");
         }
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
@@ -64,7 +69,9 @@ class FastShareFileRunner extends AbstractRunner {
                 .toPostMethod();
 
         if (!tryDownloadAndSaveFile(httpMethod)) {
-            if (getContentAsString().contains("Opište kód")) {
+            if (getContentAsString().contains("Opište kód") ||
+                    getContentAsString().contains("Špatně zadaný kód") ||
+                    getContentAsString().contains("Zkuste to znovu")) {
                 throw new YouHaveToWaitException("Wrong captcha", 8);
             }
             checkDownloadProblems();

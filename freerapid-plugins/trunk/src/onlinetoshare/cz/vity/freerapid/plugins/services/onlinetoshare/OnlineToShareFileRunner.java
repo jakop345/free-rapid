@@ -59,6 +59,10 @@ class OnlineToShareFileRunner extends AbstractRunner {
                     .toGetMethod();
             final int wait = PlugUtils.getNumberBetween(getContentAsString(), "var seconds = ", ";");
             downloadTask.sleep(wait + 1);
+            if (!tryDownloadAndSaveFile(httpMethod)) {
+                checkProblems();//if downloading failed
+                throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
+            }  /*
             if (!makeRedirectedRequest(httpMethod)) {
                 checkProblems();//if downloading failed
                 throw new ServiceConnectionProblemException("Error submitting password");
@@ -76,7 +80,7 @@ class OnlineToShareFileRunner extends AbstractRunner {
                     else
                         throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
                 }
-            }
+            }  */
         } else {
             checkProblems();
             if (method.getStatusCode() == 404)
