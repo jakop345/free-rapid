@@ -42,13 +42,17 @@ public class CeskaTelevizeServiceImpl extends AbstractFileShareService {
             if (!storage.configFileExists(CONFIG_FILE)) {
                 config = new CeskaTelevizeSettingsConfig();
             } else {
-                config = storage.loadConfigFromFile(CONFIG_FILE, CeskaTelevizeSettingsConfig.class);
+                try {
+                    config = storage.loadConfigFromFile(CONFIG_FILE, CeskaTelevizeSettingsConfig.class);
+                } catch (Exception e) {
+                    config = new CeskaTelevizeSettingsConfig();
+                }
             }
         }
         return config;
     }
 
-    public void setConfig(final CeskaTelevizeSettingsConfig config) {
+    void setConfig(final CeskaTelevizeSettingsConfig config) {
         synchronized (CeskaTelevizeServiceImpl.class) {
             this.config = config;
         }

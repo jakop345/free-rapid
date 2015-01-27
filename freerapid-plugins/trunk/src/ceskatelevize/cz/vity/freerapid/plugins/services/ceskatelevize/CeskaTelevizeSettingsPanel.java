@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
  * @author JPEXS
  * @author tong2shot
  */
-public class CeskaTelevizeSettingsPanel extends JPanel {
+class CeskaTelevizeSettingsPanel extends JPanel {
     private CeskaTelevizeSettingsConfig config;
 
     public CeskaTelevizeSettingsPanel(CeskaTelevizeServiceImpl service) throws Exception {
