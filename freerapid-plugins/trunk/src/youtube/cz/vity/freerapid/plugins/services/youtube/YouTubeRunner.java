@@ -125,9 +125,9 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
                 }
                 swfUrl = matcher.group(1).replace("\\/", "/");
             }
-            //"url_encoded_fmt_stream_map": "type=vi...    " //normal
+            //"url_encoded_fmt_stream_map":"type=vi...    " //normal
             //url_encoded_fmt_stream_map=url%3Dhttp%253A... & //embedded
-            matcher = getMatcherAgainstContent("\"?url_encoded_fmt_stream_map\"?(=|:)(?: \")?([^&\"$]+)(?:\"|&|$)");
+            matcher = getMatcherAgainstContent("\"?url_encoded_fmt_stream_map\"?(=|:)(?: ?\")?([^&\"$]+)(?:\"|&|$)");
             if (!matcher.find()) {
                 throw new PluginImplementationException("Fmt stream map not found");
             }
@@ -141,7 +141,7 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
                 Map<Integer, YouTubeMedia> afStreamMap = null; //streams from 'adaptive_fmts', not to be confused with afDashStreamMap
                 Map<Integer, YouTubeMedia> dashStreamMap = null; //streams from 'dashmpd'
                 if (getContentAsString().contains("adaptive_fmts")) {
-                    matcher = getMatcherAgainstContent("\"?adaptive_fmts\"?(=|:)(?: \")?([^&\"$]+)(?:\"|&|$)");
+                    matcher = getMatcherAgainstContent("\"?adaptive_fmts\"?(=|:)(?: ?\")?([^&\"$]+)(?:\"|&|$)");
                     if (!matcher.find()) {
                         throw new PluginImplementationException("Error getting adaptive fmts");
                     }
@@ -151,7 +151,7 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
                     afStreamMap = getFmtStreamMap(afContent);
                 }
                 if (getContentAsString().contains("dashmpd")) {
-                    matcher = getMatcherAgainstContent("\"?dashmpd\"?(=|:)(?: \")?([^&\"$]+)(?:\"|&|$)");
+                    matcher = getMatcherAgainstContent("\"?dashmpd\"?(=|:)(?: ?\")?([^&\"$]+)(?:\"|&|$)");
                     if (!matcher.find()) {
                         throw new PluginImplementationException("Error getting dash URL");
                     }
@@ -238,7 +238,7 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
             if (config.getDownloadMode() == DownloadMode.convertToAudio) {
                 convertToAudio(youTubeMedia.getAudioBitrate(), (container == Container.mp4) || (container == Container.dash_a));
             } else if (config.getDownloadMode() == DownloadMode.extractAudio) {
-                if ((container == Container.flv) && (youTubeMedia.getAudioEncoding().equalsIgnoreCase("MP3"))) { //to mp3
+                if ((container == Container.flv) && (youTubeMedia.getAudioEncoding() == AudioEncoding.MP3)) { //to mp3
                     //for MP3 track inside FLV container, convertToAudio is extraction, not conversion
                     convertToAudio(youTubeMedia.getAudioBitrate(), false);
                 } else if ((container == Container.flv) || (container == Container.mp4) || (container == Container.dash_a)) { //to m4a
@@ -561,7 +561,7 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
         int weight = Integer.MIN_VALUE;
         int secondaryWeight = Integer.MIN_VALUE;
         for (YouTubeMedia ytMedia : afDashStreamMap.values()) {
-            if ((ytMedia.getContainer() != Container.dash_a) || (ytMedia.getAudioEncoding().equalsIgnoreCase("Vorbis"))) { //skip non DASH audio or Vorbis
+            if ((ytMedia.getContainer() != Container.dash_a) || (ytMedia.getAudioEncoding() == AudioEncoding.Vorbis)) { //skip non DASH audio or Vorbis
                 continue;
             }
             int tempWeight = Integer.MIN_VALUE;
