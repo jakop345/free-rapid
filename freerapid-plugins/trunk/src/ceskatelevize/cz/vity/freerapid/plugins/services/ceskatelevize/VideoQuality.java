@@ -6,34 +6,29 @@ import java.util.Collections;
 /**
  * @author tong2shot
  */
-public enum VideoQuality {
-    Lowest(0),
-    _288(288),
-    _404(404),
-    _576(576),
-    _720(720),
-    Highest(10000);
+enum VideoQuality {
+    Lowest(0, "Lowest bitrate"),
+    _500(500),
+    _1000(1000),
+    _2000(2000),
+    _4000(4000),
+    Highest(100000, "Highest bitrate");
 
-    private final int quality;
+    private final int bitrate;
     private final String name;
 
-    private VideoQuality(int quality) {
-        this.quality = quality;
-        switch (quality) {
-            case 0:
-                this.name = "Lowest available";
-                break;
-            case 10000:
-                this.name = "Highest available";
-                break;
-            default:
-                this.name = quality + "p";
-                break;
-        }
+    private VideoQuality(int bitrate) {
+        this.bitrate = bitrate;
+        this.name = bitrate + " Kbps";
     }
 
-    public int getQuality() {
-        return quality;
+    private VideoQuality(int bitrate, String name) {
+        this.bitrate = bitrate;
+        this.name = name;
+    }
+
+    public int getBitrate() {
+        return bitrate;
     }
 
     public String getName() {

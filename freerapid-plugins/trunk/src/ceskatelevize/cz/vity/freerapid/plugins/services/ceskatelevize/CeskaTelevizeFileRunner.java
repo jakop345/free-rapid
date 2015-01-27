@@ -4,20 +4,22 @@ import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
 import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;
 import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
 import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
-import cz.vity.freerapid.plugins.services.rtmp.AbstractRtmpRunner;
-import cz.vity.freerapid.plugins.services.rtmp.RtmpSession;
+import cz.vity.freerapid.plugins.services.applehls.AdjustableBitrateHlsDownloader;
+import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.DownloadState;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.utils.HttpUtils;
+import cz.vity.freerapid.plugins.webclient.utils.JsonMapper;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import cz.vity.freerapid.utilities.LogUtils;
 import jlibs.core.net.URLUtil;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.codehaus.jackson.JsonNode;
 
+import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -30,11 +32,11 @@ import java.util.regex.Pattern;
  * @author JPEXS
  * @author tong2shot
  */
-class CeskaTelevizeFileRunner extends AbstractRtmpRunner {
+class CeskaTelevizeFileRunner extends AbstractRunner {
     private final static Logger logger = Logger.getLogger(CeskaTelevizeFileRunner.class.getName());
     private final static String FNAME = "fname";
     private final static String SWITCH_ITEM_ID = "switchitemid";
-    private final static String DEFAULT_EXT = ".flv";
+    private final static String DEFAULT_EXT = ".ts";
     private String switchItemIdFromUrl = null;
     private CeskaTelevizeSettingsConfig config;
 
@@ -218,7 +220,7 @@ class CeskaTelevizeFileRunner extends AbstractRtmpRunner {
         httpMethod = getMethodBuilder()
                 .setReferer(referer)
                 .setAjax()
-                .setAction("http://www.ceskatelevize.cz/ivysilani/ajax/get-playlist-url")
+                .setAction("http://www.ceskatelevize.cz/ivysilani/ajax/get-client-playlist")
                 .setParameter("playlist[0][id]", videoId)
                 .setParameter("playlist[0][startTime]", "")
                 .setParameter("playlist[0][stopTime]", "")
@@ -234,7 +236,7 @@ class CeskaTelevizeFileRunner extends AbstractRtmpRunner {
         }
         checkProblems();
 
-        Matcher matcher = getMatcherAgainstContent("\"url\":\"(.+?)\"");
+        Matcher matcher = getMatcherAgainstContent("\"url\":\"(http.+?)\"");
         if (!matcher.find()) {
             throw new PluginImplementationException("Playlist URL not found");
         }
@@ -250,12 +252,11 @@ class CeskaTelevizeFileRunner extends AbstractRtmpRunner {
         if (switchItems.size() == 1) {
             SwitchItem selectedSwitchItem = switchItems.get(0);
             logger.info("Selected switch item : " + selectedSwitchItem);
-            Video selectedVideo = getSelectedVideo(selectedSwitchItem);
-            RtmpSession rtmpSession = new RtmpSession(selectedSwitchItem.getBase(), selectedVideo.getSrc());
-            rtmpSession.disablePauseWorkaround();
-            tryDownloadAndSaveFile(rtmpSession);
+            logger.info("Settings config: " + config);
+            final AdjustableBitrateHlsDownloader downloader = new AdjustableBitrateHlsDownloader(client, httpFile, downloadTask, config.getVideoQuality().getBitrate());
+            downloader.tryDownloadAndSaveFile(selectedSwitchItem.getUrl());
         } else {
-            queueSwitchItems(switchItems);
+            queueMultiparts(switchItems);
         }
     }
 
@@ -274,25 +275,27 @@ class CeskaTelevizeFileRunner extends AbstractRtmpRunner {
     }
 
     private List<SwitchItem> getSwitchItems(String playlistContent) throws PluginImplementationException {
-        final Matcher switchMatcher = Pattern.compile("<switchItem id=\"([^\"]+)\" base=\"([^\"]+)\" begin=\"([^\"]+)\" duration=\"([^\"]+)\" clipBegin=\"([^\"]+)\".*?>\\s*(<video[^>]*>\\s*)*</switchItem>", Pattern.MULTILINE + Pattern.DOTALL).matcher(playlistContent);
-        logger.info("Available switch items : ");
+        JsonNode rootNode;
+        try {
+            rootNode = new JsonMapper().getObjectMapper().readTree(playlistContent);
+        } catch (IOException e) {
+            throw new PluginImplementationException("Error parsing playlist", e);
+        }
+
+        JsonNode playlistNode = rootNode.findPath("playlist");
         List<SwitchItem> switchItems = new ArrayList<SwitchItem>();
-        while (switchMatcher.find()) {
-            String swItemId = switchMatcher.group(1);
+        for (JsonNode playlistItem : playlistNode) {
+            String swItemId = playlistItem.findPath("id").getTextValue();
+            double duration = playlistItem.findPath("duration").getValueAsDouble();
+            String url = playlistItem.findPath("main").getTextValue();
             if ((switchItemIdFromUrl != null) && (!swItemId.equals(switchItemIdFromUrl))) {
                 continue;
             }
-            String swItemText = switchMatcher.group(0);
-            String base = PlugUtils.replaceEntities(switchMatcher.group(2));
-            double duration = Double.parseDouble(switchMatcher.group(4));
-            SwitchItem newItem = new SwitchItem(swItemId, base, duration);
-            Matcher videoMatcher = Pattern.compile("<video src=\"([^\"]+)\" system-bitrate=\"([0-9]+)\" label=\"([0-9]+)p\" enabled=\"true\" */>").matcher(swItemText);
-            while (videoMatcher.find()) {
-                newItem.addVideo(new Video(videoMatcher.group(1), Integer.parseInt(videoMatcher.group(3))));
-            }
-            switchItems.add(newItem);
-            logger.info(newItem.toString());
+            SwitchItem switchItem = new SwitchItem(swItemId, duration, url);
+            switchItems.add(switchItem);
+            logger.info("Found switch item: " + switchItem);
         }
+
         if (switchItems.size() > 1) {
             for (int i = 0; i < switchItems.size(); ) {
                 SwitchItem switchItem = switchItems.get(i);
@@ -309,33 +312,7 @@ class CeskaTelevizeFileRunner extends AbstractRtmpRunner {
         return switchItems;
     }
 
-    private Video getSelectedVideo(SwitchItem switchItem) throws PluginImplementationException {
-        Video selectedVideo = null;
-        logger.info("Config settings : " + config);
-        if (config.getVideoQuality() == VideoQuality.Highest) {
-            selectedVideo = Collections.max(switchItem.getVideos());
-        } else if (config.getVideoQuality() == VideoQuality.Lowest) {
-            selectedVideo = Collections.min(switchItem.getVideos());
-        } else {
-            final int LOWER_QUALITY_PENALTY = 10;
-            int weight = Integer.MAX_VALUE;
-            for (Video video : switchItem.getVideos()) {
-                int deltaQ = video.getVideoQuality() - config.getVideoQuality().getQuality();
-                int tempWeight = (deltaQ < 0 ? Math.abs(deltaQ) + LOWER_QUALITY_PENALTY : deltaQ);
-                if (tempWeight < weight) {
-                    weight = tempWeight;
-                    selectedVideo = video;
-                }
-            }
-        }
-        if (selectedVideo == null) {
-            throw new PluginImplementationException("Cannot select video");
-        }
-        logger.info("Video to be downloaded : " + selectedVideo);
-        return selectedVideo;
-    }
-
-    private void queueSwitchItems(List<SwitchItem> switchItems) throws Exception {
+    private void queueMultiparts(List<SwitchItem> switchItems) throws Exception {
         List<URI> list = new LinkedList<URI>();
         for (int i = 0; i < switchItems.size(); i++) {
             SwitchItem switchItem = switchItems.get(i);

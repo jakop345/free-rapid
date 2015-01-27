@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<project name="CeskaTelevize.cz" default="all" basedir=".">
-    <property name="application" value="ceskatelevize"/>
+<project name="AppleHls.com" default="all" basedir=".">
+    <property name="application" value="applehls"/>
 
     <property name="version" value="1.0"/>
     <property name="version.name" value="${application}"/>
 
-    <property name="mainjar.file" value="ceskatelevize.jar"/>
+    <property name="mainjar.file" value="applehls.jar"/>
 
     <!--<property name="mainjar-packed.file" value="${mainjar.file}.pack.gz"/>-->
 
@@ -75,7 +75,7 @@
     <target name="compile" depends="clean, init" description="compiling source codes">
         <mkdir dir="${classes.dir}"/>
         <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="cp" optimize="on" target="1.6">
-            <sourcepath location="../applehls"/>
+
             <sourcepath location="../devapp"/>
         </javac>
         <!-- zkopirovani resourcu -->
