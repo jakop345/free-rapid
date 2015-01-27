@@ -8,7 +8,7 @@ class YouTubeMedia {
     private final Container container;
     private final int videoQuality; // deliberately not using VideoQuality, reason : flexibility, it's possible that YT introduces video quality which is not listed in VideoQuality data structure
     private final int frameRate;
-    private final String audioEncoding;
+    private final AudioEncoding audioEncoding;
     private final int audioBitrate;
     private final String url;
     private final String signature;
@@ -19,7 +19,7 @@ class YouTubeMedia {
         this.container = getContainer(itag);
         this.videoQuality = (container == Container.dash_a ? -1 : getVideoResolution(itag));
         this.frameRate = (container == Container.dash_a ? -1 : getFrameRate(itag));
-        this.audioEncoding = (isDashVideo() ? "None" : getAudioEncoding(itag));
+        this.audioEncoding = (isDashVideo() ? AudioEncoding.None : getAudioEncoding(itag));
         this.audioBitrate = (isDashVideo() ? -1 : getAudioBitrate(itag));
         this.url = url;
         this.signature = signature;
@@ -82,20 +82,20 @@ class YouTubeMedia {
         }
     }
 
-    private String getAudioEncoding(int itag) {
+    private AudioEncoding getAudioEncoding(int itag) {
         switch (itag) {
             case 5:
             case 6:
-                return "MP3";
+                return AudioEncoding.MP3;
             case 43:
             case 44:
             case 45:
             case 46:
             case 171:
             case 172:
-                return "Vorbis";
+                return AudioEncoding.Vorbis;
             default:
-                return "AAC";
+                return AudioEncoding.AAC;
         }
     }
 
@@ -201,7 +201,7 @@ class YouTubeMedia {
 
     public boolean isVid2AudSupported() {
         return ((container == Container.mp4 || container == Container.flv || container == Container.dash_a)
-                && (audioEncoding.equalsIgnoreCase("MP3") || audioEncoding.equalsIgnoreCase("AAC")));
+                && (audioEncoding == AudioEncoding.MP3 || audioEncoding == AudioEncoding.AAC));
     }
 
     public boolean isAudioExtractSupported() {
@@ -232,7 +232,7 @@ class YouTubeMedia {
         return frameRate;
     }
 
-    public String getAudioEncoding() {
+    public AudioEncoding getAudioEncoding() {
         return audioEncoding;
     }
 
