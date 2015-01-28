@@ -60,7 +60,7 @@ class HlsPlaylist {
         Matcher matcher;
         while (scanner.hasNext()) {
             String line = scanner.nextLine();
-            if (master) {
+            if (master) { //master playlist
                 if (line.contains("BANDWIDTH")) {
                     quality = 0;
                     matcher = PlugUtils.matcher("BANDWIDTH=(\\d+)", line);
@@ -76,7 +76,7 @@ class HlsPlaylist {
                     line = scanner.nextLine();
                     medias.add(new HlsMedia(getUrl(baseUrl, line), bandwidth, quality));
                 }
-            } else {
+            } else { //segments playlist
                 if ((line.length() > 0) && (!line.startsWith("#"))) {
                     medias.add(new HlsMedia(getUrl(baseUrl, line), bandwidth, quality));
                 }

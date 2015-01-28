@@ -232,7 +232,7 @@ class CeskaTelevizeFileRunner extends AbstractRunner {
                 .toPostMethod();
         if (!makeRedirectedRequest(httpMethod)) {
             checkProblems();
-            throw new ServiceConnectionProblemException("Cannot load playlist URL");
+            throw new ServiceConnectionProblemException("Error loading playlist URL");
         }
         checkProblems();
 
@@ -244,7 +244,7 @@ class CeskaTelevizeFileRunner extends AbstractRunner {
         httpMethod = new GetMethod(playlistUrl);
         if (!makeRedirectedRequest(httpMethod)) {
             checkProblems();
-            throw new ServiceConnectionProblemException("Cannot connect to playlist");
+            throw new ServiceConnectionProblemException("Error connecting to playlist");
         }
         checkProblems();
         setConfig();
@@ -288,6 +288,9 @@ class CeskaTelevizeFileRunner extends AbstractRunner {
             String swItemId = playlistItem.findPath("id").getTextValue();
             double duration = playlistItem.findPath("duration").getValueAsDouble();
             String url = playlistItem.findPath("main").getTextValue();
+            if ((swItemId == null) || (duration == 0.0) || (url == null)) {
+                throw new PluginImplementationException("Error parsing playlist (2)");
+            }
             if ((switchItemIdFromUrl != null) && (!swItemId.equals(switchItemIdFromUrl))) {
                 continue;
             }
@@ -307,7 +310,7 @@ class CeskaTelevizeFileRunner extends AbstractRunner {
             }
         }
         if (switchItems.isEmpty()) {
-            throw new PluginImplementationException("No stream found");
+            throw new PluginImplementationException("No streams found");
         }
         return switchItems;
     }

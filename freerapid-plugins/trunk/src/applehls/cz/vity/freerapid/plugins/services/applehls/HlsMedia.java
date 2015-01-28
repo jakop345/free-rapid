@@ -5,7 +5,7 @@ package cz.vity.freerapid.plugins.services.applehls;
  */
 public class HlsMedia implements Comparable<HlsMedia> {
     protected final String url;
-    protected final int bandwidth;
+    protected final int bandwidth; //in Kbps
     protected final int quality; //height
 
     public HlsMedia(final String url, final int bandwidth, final int quality) {
@@ -29,7 +29,7 @@ public class HlsMedia implements Comparable<HlsMedia> {
     @SuppressWarnings("NullableProblems")
     @Override
     public int compareTo(final HlsMedia that) {
-        return Integer.valueOf(this.quality).compareTo(that.quality);
+        return Integer.valueOf(this.bandwidth).compareTo(that.bandwidth);
     }
 
     @Override
