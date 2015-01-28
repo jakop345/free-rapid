@@ -19,8 +19,8 @@ public class SegmentRequester {
     protected final HttpFile httpFile;
     protected final HttpDownloadClient client;
     protected final List<HlsMedia> medias;
-    private int currentFragment = 1;
-    private long totalFragmentsSize;
+    private int currentSegment = 1;
+    private long totalSegmentsSize;
 
     public SegmentRequester(final HttpFile httpFile, final HttpDownloadClient client, final List<HlsMedia> medias) {
         this.httpFile = httpFile;
@@ -29,23 +29,23 @@ public class SegmentRequester {
     }
 
     public InputStream nextFragment() throws IOException {
-        if (currentFragment > medias.size()) {
+        if (currentSegment > medias.size()) {
             return null;
         }
-        final String url = medias.get(currentFragment - 1).getUrl();
+        final String url = medias.get(currentSegment - 1).getUrl();
         logger.info("Downloading: " + url);
         final HttpMethod method = client.getGetMethod(url);
         final InputStream in = client.makeRequestForFile(method);
         if (in == null) {
-            throw new IOException("Failed to request fragment " + currentFragment);
+            throw new IOException("Failed to request fragment " + currentSegment);
         }
         final Header header = method.getResponseHeader("Content-Length");
         if (header != null) {
             final long fragmentSize = Long.parseLong(header.getValue());
-            totalFragmentsSize += fragmentSize;
-            httpFile.setFileSize((totalFragmentsSize / currentFragment) * medias.size());//estimate
+            totalSegmentsSize += fragmentSize;
+            httpFile.setFileSize((totalSegmentsSize / currentSegment) * medias.size());//estimate
         }
-        currentFragment++;
+        currentSegment++;
         return in;
     }
 
