@@ -26,9 +26,13 @@ public class SegmentRequester {
         this.httpFile = httpFile;
         this.client = client;
         this.medias = medias;
+        Long segmentLastPos = (Long) httpFile.getProperties().get(HlsConsts.SEGMENT_LAST_POST);
+        this.totalSegmentsSize = (segmentLastPos == null ? 0 : segmentLastPos);
+        Integer currentSegment = (Integer) httpFile.getProperties().get(HlsConsts.CURRENT_SEGMENT);
+        this.currentSegment = (currentSegment == null ? 1 : currentSegment);
     }
 
-    public InputStream nextFragment() throws IOException {
+    public InputStream nextSegment() throws IOException {
         if (currentSegment > medias.size()) {
             return null;
         }
@@ -37,14 +41,15 @@ public class SegmentRequester {
         final HttpMethod method = client.getGetMethod(url);
         final InputStream in = client.makeRequestForFile(method);
         if (in == null) {
-            throw new IOException("Failed to request fragment " + currentSegment);
+            throw new IOException("Failed to request segment " + currentSegment);
         }
         final Header header = method.getResponseHeader("Content-Length");
         if (header != null) {
-            final long fragmentSize = Long.parseLong(header.getValue());
-            totalSegmentsSize += fragmentSize;
+            final long segmentSize = Long.parseLong(header.getValue());
+            totalSegmentsSize += segmentSize;
             httpFile.setFileSize((totalSegmentsSize / currentSegment) * medias.size());//estimate
         }
+        httpFile.getProperties().put(HlsConsts.CURRENT_SEGMENT, currentSegment);
         currentSegment++;
         return in;
     }

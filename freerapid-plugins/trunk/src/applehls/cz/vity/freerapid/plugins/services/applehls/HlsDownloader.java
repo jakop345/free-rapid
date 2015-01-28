@@ -41,18 +41,24 @@ public class HlsDownloader {
 
     public void tryDownloadAndSaveFile(final String playlistUrl) throws Exception {
         client.getHTTPClient().getParams().setParameter(DownloadClientConsts.FILE_STREAM_RECOGNIZER, new DefaultFileStreamRecognizer(new String[0], new String[]{"mpegurl"}, false));
-        HlsPlaylist hlsPlaylist = new HlsPlaylist(client, playlistUrl);
+        HlsPlaylist hlsPlaylist = new HlsPlaylist(client, playlistUrl); //master playlist
         HlsMedia media = getSelectedMedia(hlsPlaylist.getMedias());
         logger.info("Downloading media: " + media);
 
-        hlsPlaylist = new HlsPlaylist(client, media.url, false, media.getBandwidth(), media.getQuality());
+        hlsPlaylist = new HlsPlaylist(client, media.url, false, media.getBandwidth(), media.getQuality()); //segments playlist
 
         httpFile.setState(DownloadState.GETTING);
         logger.info("Starting HLS download");
 
-        httpFile.getProperties().remove(DownloadClient.START_POSITION);
-        httpFile.getProperties().remove(DownloadClient.SUPPOSE_TO_DOWNLOAD);
-        httpFile.setResumeSupported(false);
+        Long segmentLastPos = (Long) httpFile.getProperties().get(HlsConsts.SEGMENT_LAST_POST);
+        if (segmentLastPos == null) {
+            httpFile.getProperties().remove(DownloadClient.START_POSITION);
+            httpFile.getProperties().remove(DownloadClient.SUPPOSE_TO_DOWNLOAD);
+        } else {
+            httpFile.getProperties().put(DownloadClient.START_POSITION, segmentLastPos);
+            httpFile.getProperties().remove(DownloadClient.SUPPOSE_TO_DOWNLOAD);
+        }
+        httpFile.setResumeSupported(true);
 
         final String fn = httpFile.getFileName();
         if (fn == null || fn.isEmpty())
