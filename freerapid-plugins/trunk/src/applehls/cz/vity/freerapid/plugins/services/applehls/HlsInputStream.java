@@ -12,8 +12,8 @@ import java.io.InputStream;
 public class HlsInputStream extends InputStream {
 
     private final SegmentRequester requester;
-    private long pos;
-    private InputStream currentStream = null;
+    private long pos; //global pos
+    private InputStream currentStream = null; //current segment input stream
 
     public HlsInputStream(final SegmentRequester requester) {
         this.requester = requester;

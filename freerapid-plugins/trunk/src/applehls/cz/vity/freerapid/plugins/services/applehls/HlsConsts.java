@@ -5,6 +5,9 @@ package cz.vity.freerapid.plugins.services.applehls;
  */
 public final class HlsConsts {
 
-    public final static String SEGMENT_LAST_POST = "segmentLastPos";
-    public final static String CURRENT_SEGMENT = "currentSegment";
+    public final static String SEGMENT_LAST_POST = "segmentLastPos"; //the last successfully downloaded segment's last position
+    public final static String CURRENT_SEGMENT = "currentSegment"; //currently downloaded segment
+
+    private HlsConsts() {
+    }
 }
