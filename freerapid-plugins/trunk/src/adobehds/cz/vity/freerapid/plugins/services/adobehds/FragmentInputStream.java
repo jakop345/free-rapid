@@ -24,18 +24,29 @@ class FragmentInputStream extends InputStream {
 
     @Override
     public int read() throws IOException {
+        final byte[] b = new byte[1];
+        final int len = read(b, 0, 1);
+        if (len == -1) {
+            return -1;
+        }
+        return b[0] & 0xff;
+    }
+
+    @Override
+    public synchronized int read(final byte[] b, final int off, int len) throws IOException {
         if (dataAvailable == -1) {
             init();
         }
         if (dataAvailable <= 0) {
             return -1;
         }
-        int read = in.read();
-        if (read == -1) {
+        len = Math.min(len, dataAvailable);
+        final int bytesRead = in.read(b, off, len);
+        if (bytesRead == -1) {
             throw new IOException("Unexpected EOF");
         }
-        dataAvailable--;
-        return read;
+        dataAvailable -= bytesRead;
+        return bytesRead;
     }
 
     @Override

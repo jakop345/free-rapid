@@ -57,11 +57,11 @@ public class HdsDownloader {
             httpFile.getProperties().remove(HdsConsts.AAC_SEQUENCE_HEADER_WRITTEN);
         }
 
-        Long segmentLastPos = (Long) httpFile.getProperties().get(HdsConsts.FRAGMENT_LAST_POS);
-        if (segmentLastPos == null) {
+        Long fragmentLastPos = (Long) httpFile.getProperties().get(HdsConsts.FRAGMENT_LAST_POS);
+        if (fragmentLastPos == null) {
             httpFile.getProperties().remove(DownloadClient.START_POSITION);
         } else {
-            httpFile.getProperties().put(DownloadClient.START_POSITION, segmentLastPos);
+            httpFile.getProperties().put(DownloadClient.START_POSITION, fragmentLastPos);
         }
         httpFile.getProperties().remove(DownloadClient.SUPPOSE_TO_DOWNLOAD);
         httpFile.setResumeSupported(true);
