@@ -23,8 +23,18 @@ public class HlsInputStream extends InputStream {
 
     @Override
     public int read() throws IOException {
+        final byte[] b = new byte[1];
+        final int len = read(b, 0, 1);
+        if (len == -1) {
+            return -1;
+        }
+        return b[0] & 0xff;
+    }
+
+    @Override
+    public int read(byte[] b, int off, int len) throws IOException {
         int read = 0;
-        if ((currentStream == null) || (read = currentStream.read()) == -1) {
+        if ((currentStream == null) || (read = currentStream.read(b, off, len)) == -1) {
             if (read == -1) {
                 requester.httpFile.getProperties().put(HlsConsts.SEGMENT_LAST_POST, pos);
                 //currentStream.close(); //org.apache.commons.httpclient.AutoCloseInputStream
@@ -34,10 +44,10 @@ public class HlsInputStream extends InputStream {
                 return -1;
             }
             currentStream = stream;
-            pos++;
-            return currentStream.read();
+            pos += read;
+            return currentStream.read(b, off, len);
         }
-        pos++;
+        pos += read;
         return read;
     }
 }

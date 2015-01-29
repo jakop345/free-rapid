@@ -34,7 +34,6 @@ public class HdsInputStream extends InputStream {
 
     private boolean aacHeaderWritten;
     private boolean avcHeaderWritten;
-    private boolean packetRead;
 
     public HdsInputStream(final FragmentRequester requester) {
         this.requester = requester;
@@ -44,6 +43,7 @@ public class HdsInputStream extends InputStream {
             currentPacket.put(getFlvHeader());
             currentPacket.flip();
         }
+        logger.info("Initialize pos to: " + this.pos);
         Boolean aacHeaderWritten = (Boolean) requester.httpFile.getProperties().get(HdsConsts.AAC_SEQUENCE_HEADER_WRITTEN);
         this.aacHeaderWritten = (aacHeaderWritten == null ? false : aacHeaderWritten);
         Boolean avcHeaderWritten = (Boolean) requester.httpFile.getProperties().get(HdsConsts.AVC_SEQUENCE_HEADER_WRITTEN);
@@ -52,14 +52,26 @@ public class HdsInputStream extends InputStream {
 
     @Override
     public int read() throws IOException {
-        while ((!currentPacket.hasRemaining() || !packetRead) && (pos >= FLV_HEADER_SIZE)) {
+        final byte[] b = new byte[1];
+        final int len = read(b, 0, 1);
+        if (len == -1) {
+            return -1;
+        }
+        return b[0] & 0xff;
+    }
+
+    @Override
+    public synchronized int read(final byte[] b, final int off, final int len) throws IOException {
+        while ((!currentPacket.hasRemaining() || (currentStream == null)) && (pos >= FLV_HEADER_SIZE)) {
             if (finished) {
                 return -1;
             }
             readPacket();
         }
-        pos++;
-        return currentPacket.get() & 0xff;
+        final int numToCopy = Math.min(currentPacket.remaining(), len);
+        pos += numToCopy;
+        currentPacket.get(b, off, numToCopy);
+        return numToCopy;
     }
 
     @Override
@@ -71,7 +83,6 @@ public class HdsInputStream extends InputStream {
 
     private void readPacket() throws IOException {
         while (true) {
-            packetRead = true;
             int type = 0;
             while (currentStream == null || (type = currentStream.read()) == -1) {
                 if (type == -1) {
