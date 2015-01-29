@@ -18,13 +18,17 @@ public class FragmentRequester {
     protected final HttpFile httpFile;
     protected final HttpDownloadClient client;
     protected final HdsMedia media;
-    private int currentFragment = 1;
+    private int currentFragment;
     private long totalFragmentsSize;
 
     public FragmentRequester(final HttpFile httpFile, final HttpDownloadClient client, final HdsMedia media) {
         this.httpFile = httpFile;
         this.client = client;
         this.media = media;
+        Long fragmentLastPos = (Long) httpFile.getProperties().get(HdsConsts.FRAGMENT_LAST_POS);
+        this.totalFragmentsSize = (fragmentLastPos == null ? 0 : fragmentLastPos);
+        Integer currentFragment = (Integer) httpFile.getProperties().get(HdsConsts.CURRENT_FRAGMENT);
+        this.currentFragment = (currentFragment == null ? 1 : currentFragment);
     }
 
     public InputStream nextFragment() throws IOException {
@@ -44,6 +48,7 @@ public class FragmentRequester {
             totalFragmentsSize += fragmentSize;
             httpFile.setFileSize((totalFragmentsSize / currentFragment) * media.getFragmentCount());//estimate
         }
+        httpFile.getProperties().put(HdsConsts.CURRENT_FRAGMENT, currentFragment);
         currentFragment++;
         return new FragmentInputStream(method, in);
     }
