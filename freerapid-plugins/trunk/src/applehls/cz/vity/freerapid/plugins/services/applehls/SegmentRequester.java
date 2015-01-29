@@ -19,7 +19,7 @@ public class SegmentRequester {
     protected final HttpFile httpFile;
     protected final HttpDownloadClient client;
     protected final List<HlsMedia> medias;
-    private int currentSegment = 1;
+    private int currentSegment;
     private long totalSegmentsSize;
 
     public SegmentRequester(final HttpFile httpFile, final HttpDownloadClient client, final List<HlsMedia> medias) {

@@ -50,14 +50,18 @@ public class HlsDownloader {
         httpFile.setState(DownloadState.GETTING);
         logger.info("Starting HLS download");
 
+        if ((httpFile.getStoreFile() == null) || (httpFile.getStoreFile().length() == 0)) {  //cancelled
+            httpFile.getProperties().remove(HlsConsts.SEGMENT_LAST_POST);
+            httpFile.getProperties().remove(HlsConsts.CURRENT_SEGMENT);
+        }
+
         Long segmentLastPos = (Long) httpFile.getProperties().get(HlsConsts.SEGMENT_LAST_POST);
         if (segmentLastPos == null) {
             httpFile.getProperties().remove(DownloadClient.START_POSITION);
-            httpFile.getProperties().remove(DownloadClient.SUPPOSE_TO_DOWNLOAD);
         } else {
             httpFile.getProperties().put(DownloadClient.START_POSITION, segmentLastPos);
-            httpFile.getProperties().remove(DownloadClient.SUPPOSE_TO_DOWNLOAD);
         }
+        httpFile.getProperties().remove(DownloadClient.SUPPOSE_TO_DOWNLOAD);
         httpFile.setResumeSupported(true);
 
         final String fn = httpFile.getFileName();
