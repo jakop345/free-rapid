@@ -50,9 +50,21 @@ public class HdsDownloader {
         httpFile.setState(DownloadState.GETTING);
         logger.info("Starting HDS download");
 
-        httpFile.getProperties().remove(DownloadClient.START_POSITION);
+        if ((httpFile.getStoreFile() == null) || (httpFile.getStoreFile().length() == 0)) {  //cancelled
+            httpFile.getProperties().remove(HdsConsts.FRAGMENT_LAST_POS);
+            httpFile.getProperties().remove(HdsConsts.CURRENT_FRAGMENT);
+            httpFile.getProperties().remove(HdsConsts.AVC_SEQUENCE_HEADER_WRITTEN);
+            httpFile.getProperties().remove(HdsConsts.AAC_SEQUENCE_HEADER_WRITTEN);
+        }
+
+        Long segmentLastPos = (Long) httpFile.getProperties().get(HdsConsts.FRAGMENT_LAST_POS);
+        if (segmentLastPos == null) {
+            httpFile.getProperties().remove(DownloadClient.START_POSITION);
+        } else {
+            httpFile.getProperties().put(DownloadClient.START_POSITION, segmentLastPos);
+        }
         httpFile.getProperties().remove(DownloadClient.SUPPOSE_TO_DOWNLOAD);
-        httpFile.setResumeSupported(false);
+        httpFile.setResumeSupported(true);
 
         final String fn = httpFile.getFileName();
         if (fn == null || fn.isEmpty())

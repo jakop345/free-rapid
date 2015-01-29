@@ -1,5 +1,7 @@
 package cz.vity.freerapid.plugins.services.adobehds;
 
+import cz.vity.freerapid.plugins.webclient.DownloadClient;
+
 import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.IOException;
@@ -22,47 +24,42 @@ public class HdsInputStream extends InputStream {
     private static final int SEQUENCE_HEADER = 0x00;
     private static final int FRAME_TYPE_INFO = 0x05;
     private static final int FLV_PACKET_HEADER_SIZE = 11;
+    private static final int FLV_HEADER_SIZE = 13;
 
     private final FragmentRequester requester;
     private final ByteBuffer currentPacket = ByteBuffer.allocate(1024 * 1024);
     private DataInputStream currentStream;
     private boolean finished;
+    private long pos;
 
     private boolean aacHeaderWritten;
     private boolean avcHeaderWritten;
+    private boolean packetRead;
 
     public HdsInputStream(final FragmentRequester requester) {
         this.requester = requester;
-        currentPacket.put(getFlvHeader());
-        currentPacket.flip();
+        Long startPos = (Long) requester.httpFile.getProperties().get(DownloadClient.START_POSITION);
+        this.pos = (startPos == null ? 0 : startPos);
+        if (this.pos == 0) {
+            currentPacket.put(getFlvHeader());
+            currentPacket.flip();
+        }
+        Boolean aacHeaderWritten = (Boolean) requester.httpFile.getProperties().get(HdsConsts.AAC_SEQUENCE_HEADER_WRITTEN);
+        this.aacHeaderWritten = (aacHeaderWritten == null ? false : aacHeaderWritten);
+        Boolean avcHeaderWritten = (Boolean) requester.httpFile.getProperties().get(HdsConsts.AVC_SEQUENCE_HEADER_WRITTEN);
+        this.avcHeaderWritten = (avcHeaderWritten == null ? false : avcHeaderWritten);
     }
 
     @Override
     public int read() throws IOException {
-        final byte[] b = new byte[1];
-        final int len = read(b, 0, 1);
-        if (len == -1) {
-            return -1;
-        }
-        return b[0] & 0xff;
-    }
-
-    @Override
-    public int read(final byte[] b) throws IOException {
-        return read(b, 0, b.length);
-    }
-
-    @Override
-    public synchronized int read(final byte[] b, final int off, final int len) throws IOException {
-        while (!currentPacket.hasRemaining()) {
+        while ((!currentPacket.hasRemaining() || !packetRead) && (pos >= FLV_HEADER_SIZE)) {
             if (finished) {
                 return -1;
             }
             readPacket();
         }
-        final int numToCopy = Math.min(currentPacket.remaining(), len);
-        currentPacket.get(b, off, numToCopy);
-        return numToCopy;
+        pos++;
+        return currentPacket.get() & 0xff;
     }
 
     @Override
@@ -74,8 +71,13 @@ public class HdsInputStream extends InputStream {
 
     private void readPacket() throws IOException {
         while (true) {
-            int type;
+            packetRead = true;
+            int type = 0;
             while (currentStream == null || (type = currentStream.read()) == -1) {
+                if (type == -1) {
+                    logger.info("Fragment last pos: " + pos);
+                    requester.httpFile.getProperties().put(HdsConsts.FRAGMENT_LAST_POS, pos);
+                }
                 close();
                 final InputStream stream = requester.nextFragment();
                 if (stream == null) {
@@ -108,6 +110,7 @@ public class HdsInputStream extends InputStream {
                                 continue;
                             }
                             aacHeaderWritten = true;
+                            requester.httpFile.getProperties().put(HdsConsts.AAC_SEQUENCE_HEADER_WRITTEN, true);
                             logger.info("Writing AAC sequence header");
                         }
                     }
@@ -132,6 +135,7 @@ public class HdsInputStream extends InputStream {
                                 continue;
                             }
                             avcHeaderWritten = true;
+                            requester.httpFile.getProperties().put(HdsConsts.AVC_SEQUENCE_HEADER_WRITTEN, true);
                             logger.info("Writing AVC sequence header");
                         }
                     }
