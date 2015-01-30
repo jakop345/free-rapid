@@ -1,9 +1,10 @@
 package cz.vity.freerapid.plugins.services.vidxden;
 
-import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
 import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;
 import cz.vity.freerapid.plugins.services.xfilesharing.XFileSharingRunner;
 import cz.vity.freerapid.plugins.services.xfilesharing.nameandsize.FileNameHandler;
+import cz.vity.freerapid.plugins.services.xfilesharing.nameandsize.FileSizeHandler;
+import cz.vity.freerapid.plugins.services.xfilesharing.nameandsize.FileSizeHandlerNoSize;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.HttpMethod;
 
@@ -30,7 +31,10 @@ class VidXDenFileRunner extends XFileSharingRunner {
     }
 
     @Override
-    protected void checkFileSize() throws ErrorDuringDownloadingException {
+    protected List<FileSizeHandler> getFileSizeHandlers() {
+        final List<FileSizeHandler> fileSizeHandlers = super.getFileSizeHandlers();
+        fileSizeHandlers.add(new FileSizeHandlerNoSize());
+        return fileSizeHandlers;
     }
 
     @Override
