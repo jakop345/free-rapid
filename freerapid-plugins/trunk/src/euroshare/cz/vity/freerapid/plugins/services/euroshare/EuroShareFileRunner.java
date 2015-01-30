@@ -44,10 +44,7 @@ class EuroShareFileRunner extends AbstractRunner {
             httpFile.setFileName("Folder > " + httpFile.getFileName());
         }
         else {
-            match = PlugUtils.matcher("posledni vpravo\">.+?\\| (.+?)</p>", content);
-            if (!match.find())
-                throw new PluginImplementationException("File size not found");
-            httpFile.setFileSize(PlugUtils.getFileSizeFromString(match.group(1).trim()));
+            PlugUtils.checkFileSize(httpFile, content, "Velikosť súboru:", "</p>");
         }
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
