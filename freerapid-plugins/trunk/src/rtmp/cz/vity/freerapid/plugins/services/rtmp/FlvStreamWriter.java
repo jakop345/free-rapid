@@ -27,9 +27,16 @@ class FlvStreamWriter implements OutputWriter {
     private boolean headerWritten = false;
     private int lastAudioTime = -1;
     private int lastVideoTime = -1;
+    private long pos;
 
-    public FlvStreamWriter(int seekTime, RtmpSession session) {
+    public FlvStreamWriter(int seekTime, RtmpSession session, boolean headerWritten, long pos) {
+        logger.info("Stream writer init..");
+        logger.info("Seek time: " + seekTime);
+        logger.info("Header written: " + headerWritten);
+        logger.info("Start logical pos in disk: " + pos);
         this.session = session;
+        this.headerWritten = headerWritten;
+        this.pos = pos;
         this.status = new WriterStatus(seekTime, session);
         try {
             out = new PipedOutputStream();
@@ -105,15 +112,15 @@ class FlvStreamWriter implements OutputWriter {
             }
         }
         if (packetType == Packet.Type.AUDIO_DATA) {
-            if (time < lastAudioTime) { //  "<=" does not work
-                logger.info("Skipping duplicate audio data packet");
+            if (time <= lastAudioTime) {
+                logger.info(String.format("Skipping duplicate audio data packet: time=%d, lastaudiotime=%d", time, lastAudioTime));
                 return;
             }
             lastAudioTime = time;
         }
         if (packetType == Packet.Type.VIDEO_DATA) {
-            if (time < lastVideoTime) {  //  "<=" does not work
-                logger.info("Skipping duplicate video data packet");
+            if (time <= lastVideoTime) {
+                logger.info(String.format("Skipping duplicate video data packet: time=%d, lastvideotime=%d", time, lastVideoTime));
                 return;
             }
             lastVideoTime = time;
@@ -139,10 +146,13 @@ class FlvStreamWriter implements OutputWriter {
     private void write(IoBuffer buffer) {
         if (!headerWritten) {
             headerWritten = true;
+            session.getHttpFile().getProperties().put(RtmpConsts.FLV_HEADER_WRITTEN, true);
             logger.info("First data packet received, writing FLV header");
             writeHeader();
         }
         try {
+            pos += buffer.buf().remaining();
+            session.setPos(pos);
             channel.write(buffer.buf());
         } catch (Exception e) {
             if ("Pipe closed".equals(e.getMessage())) {

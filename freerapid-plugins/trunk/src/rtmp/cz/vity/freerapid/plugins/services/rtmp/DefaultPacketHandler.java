@@ -133,7 +133,7 @@ class DefaultPacketHandler implements PacketHandler {
                     } else if (resultFor.equals("createStream")) {
                         int streamId = invoke.getLastArgAsInt();
                         logger.info("value of streamId to play: " + streamId);
-                        Invoke play = new Invoke(streamId, "play", 8, null, session.getPlayName(), 0);
+                        Invoke play = new Invoke(streamId, "play", 8, null, session.getPlayName(), session.getPlayStart());
                         session.send(play);
                         session.send(Packet.ping(3, streamId, BUFFER_TIME));
                     } else if (resultFor.equals("secureTokenResponse")) {

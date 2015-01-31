@@ -32,7 +32,7 @@ class WriterStatus {
             logger.warning("video duration is null");
             return;
         }
-        logger.info("final video duration: " + (time - seekTime) / 1000 + " seconds, start (seek) time: " + seekTime);
+        logger.info("final video duration: " + (time - seekTime) / 1000 + " seconds, start (seek) time: " + seekTime + ", pos: " + session.getPos());
     }
 
     public int getChannelAbsoluteTime(Header header) {
