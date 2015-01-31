@@ -3,6 +3,7 @@ package com.subgraph.orchid.directory;
 import com.subgraph.orchid.Descriptor;
 import com.subgraph.orchid.DirectoryStore;
 import com.subgraph.orchid.DirectoryStore.CacheFile;
+import com.subgraph.orchid.Threading;
 import com.subgraph.orchid.data.HexDigest;
 import com.subgraph.orchid.directory.parsing.DocumentParser;
 import com.subgraph.orchid.directory.parsing.DocumentParsingResult;
@@ -11,7 +12,6 @@ import com.subgraph.orchid.misc.GuardedBy;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -23,7 +23,9 @@ public abstract class DescriptorCache<T extends Descriptor> {
     private final DescriptorCacheData<T> data;
 
     private final DirectoryStore store;
-    private final ScheduledExecutorService rebuildExecutor = Executors.newScheduledThreadPool(1);
+    private final ScheduledExecutorService rebuildExecutor =
+            Threading.newScheduledPool("DescriptorCache rebuild worker");
+
     private final CacheFile cacheFile;
     private final CacheFile journalFile;
 

@@ -21,9 +21,15 @@ public class OrchidSocketFactory extends SocketFactory {
     }
 
     @Override
+    public Socket createSocket() throws IOException {
+        return createSocketInstance();
+    }
+
+    @Override
     public Socket createSocket(String host, int port) throws IOException,
             UnknownHostException {
-        return createOrchidSocket(host, port);
+        final Socket s = createSocketInstance();
+        return connectOrchidSocket(s, host, port);
     }
 
     @Override
@@ -37,7 +43,8 @@ public class OrchidSocketFactory extends SocketFactory {
 
     @Override
     public Socket createSocket(InetAddress address, int port) throws IOException {
-        return createOrchidSocket(address.getHostAddress(), port);
+        final Socket s = createSocketInstance();
+        return connectOrchidSocket(s, address.getHostAddress(), port);
     }
 
     @Override
@@ -49,8 +56,7 @@ public class OrchidSocketFactory extends SocketFactory {
         return createSocket(address, port);
     }
 
-    private Socket createOrchidSocket(String host, int port) throws IOException {
-        final Socket s = createSocketInstance();
+    private Socket connectOrchidSocket(Socket s, String host, int port) throws IOException {
         final SocketAddress endpoint = InetSocketAddress.createUnresolved(host, port);
         s.connect(endpoint);
         return s;

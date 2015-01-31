@@ -10,7 +10,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,7 +42,7 @@ public class CircuitCreationTask implements Runnable {
         this.circuitManager = circuitManager;
         this.initializationTracker = initializationTracker;
         this.pathChooser = pathChooser;
-        this.executor = Executors.newCachedThreadPool();
+        this.executor = Threading.newPool("CircuitCreationTask worker");
         this.buildHandler = createCircuitBuildHandler();
         this.internalBuildHandler = createInternalCircuitBuildHandler();
         this.predictor = new CircuitPredictor();
@@ -134,6 +133,11 @@ public class CircuitCreationTask implements Runnable {
     }
 
     private void buildCircuitIfNeeded() {
+        if (connectionCache.isClosed()) {
+            logger.warning("Not building circuits, because connection cache is closed");
+            return;
+        }
+
         final List<StreamExitRequest> pendingExitStreams = circuitManager.getPendingExitStreams();
         final List<PredictedPortTarget> predictedPorts = predictor.getPredictedPortTargets();
         final List<ExitTarget> exitTargets = new ArrayList<ExitTarget>();

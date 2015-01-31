@@ -8,7 +8,6 @@ import com.subgraph.orchid.crypto.TorRandom;
 
 import java.util.*;
 import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
@@ -38,7 +37,7 @@ public class EntryGuards {
         this.pendingProbes = new HashSet<GuardEntry>();
         this.bridges = new Bridges(config, directoryDownloader);
         this.lock = new Object();
-        this.executor = Executors.newCachedThreadPool();
+        this.executor = Threading.newPool("EntryGuards worker");
     }
 
     public boolean isUsingBridges() {
@@ -275,7 +274,7 @@ public class EntryGuards {
     private static long daysToMs(long n) {
         return TimeUnit.MILLISECONDS.convert(n, TimeUnit.DAYS);
     }
-	/*
+    /*
 	 * path-spec 5.
 	 * 
 	 * If Tor fails to connect to an otherwise usable guard, it retries

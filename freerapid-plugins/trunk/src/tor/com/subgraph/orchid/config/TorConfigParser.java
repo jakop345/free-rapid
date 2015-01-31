@@ -1,6 +1,5 @@
 package com.subgraph.orchid.config;
 
-import com.subgraph.orchid.TorConfig;
 import com.subgraph.orchid.TorConfig.AutoBoolValue;
 import com.subgraph.orchid.TorConfig.ConfigVarType;
 
@@ -62,7 +61,7 @@ public class TorConfigParser {
         return list;
     }
 
-    private TorConfig.AutoBoolValue parseAutoBool(String value) {
+    private AutoBoolValue parseAutoBool(String value) {
         if ("auto".equalsIgnoreCase(value)) {
             return AutoBoolValue.AUTO;
         } else if ("true".equalsIgnoreCase(value)) {
