@@ -112,14 +112,14 @@ class FlvStreamWriter implements OutputWriter {
             }
         }
         if (packetType == Packet.Type.AUDIO_DATA) {
-            if (time <= lastAudioTime) {
+            if (time < lastAudioTime) { //  "<=" does not work, multiple packets with the same timestamp are valid
                 logger.info(String.format("Skipping duplicate audio data packet: time=%d, lastaudiotime=%d", time, lastAudioTime));
                 return;
             }
             lastAudioTime = time;
         }
         if (packetType == Packet.Type.VIDEO_DATA) {
-            if (time <= lastVideoTime) {
+            if (time < lastVideoTime) { //  "<=" does not work, multiple packets with the same timestamp are valid
                 logger.info(String.format("Skipping duplicate video data packet: time=%d, lastvideotime=%d", time, lastVideoTime));
                 return;
             }
@@ -146,14 +146,14 @@ class FlvStreamWriter implements OutputWriter {
     private void write(IoBuffer buffer) {
         if (!headerWritten) {
             headerWritten = true;
-            session.getHttpFile().getProperties().put(RtmpConsts.FLV_HEADER_WRITTEN, true);
             logger.info("First data packet received, writing FLV header");
             writeHeader();
+            session.getHttpFile().getProperties().put(RtmpConsts.FLV_HEADER_WRITTEN, true);
         }
         try {
+            channel.write(buffer.buf());
             pos += buffer.buf().remaining();
             session.setPos(pos);
-            channel.write(buffer.buf());
         } catch (Exception e) {
             if ("Pipe closed".equals(e.getMessage())) {
                 logger.info("Pipe closed, skipping packet");
