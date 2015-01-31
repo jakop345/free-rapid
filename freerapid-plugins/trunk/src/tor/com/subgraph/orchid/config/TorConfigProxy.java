@@ -191,7 +191,7 @@ public class TorConfigProxy implements InvocationHandler {
         final String getName = "get" + varName;
         for (Method m : TorConfig.class.getDeclaredMethods()) {
             if (getName.equals(m.getName())) {
-                return m.getAnnotation(TorConfig.ConfigVar.class);
+                return m.getAnnotation(ConfigVar.class);
             }
         }
         return null;

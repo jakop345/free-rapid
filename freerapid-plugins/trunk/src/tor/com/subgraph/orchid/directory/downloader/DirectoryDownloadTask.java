@@ -8,7 +8,6 @@ import com.subgraph.orchid.data.Timestamp;
 
 import java.util.*;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
@@ -23,7 +22,7 @@ public class DirectoryDownloadTask implements Runnable {
     private final TorRandom random;
     private final DescriptorProcessor descriptorProcessor;
 
-    private final ExecutorService executor = Executors.newCachedThreadPool();
+    private final ExecutorService executor = Threading.newPool("DirectoryDownloadTask worker");
 
     private volatile boolean isDownloadingCertificates;
     private volatile boolean isDownloadingConsensus;

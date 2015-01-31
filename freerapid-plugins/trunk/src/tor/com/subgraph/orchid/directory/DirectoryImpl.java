@@ -34,7 +34,7 @@ public class DirectoryImpl implements Directory {
     private final Map<HexDigest, RouterImpl> routersByIdentity;
     private final Map<String, RouterImpl> routersByNickname;
     private final RandomSet<RouterImpl> directoryCaches;
-    private final Set<ConsensusDocument.RequiredCertificate> requiredCertificates;
+    private final Set<RequiredCertificate> requiredCertificates;
     private boolean haveMinimumRouterInfo;
     private boolean needRecalculateMinimumRouterInfo;
     private final EventManager consensusChangedManager;
@@ -53,7 +53,7 @@ public class DirectoryImpl implements Directory {
         routersByIdentity = new HashMap<HexDigest, RouterImpl>();
         routersByNickname = new HashMap<String, RouterImpl>();
         directoryCaches = new RandomSet<RouterImpl>();
-        requiredCertificates = new HashSet<ConsensusDocument.RequiredCertificate>();
+        requiredCertificates = new HashSet<RequiredCertificate>();
         consensusChangedManager = new EventManager();
         random = new TorRandom();
     }
@@ -204,8 +204,8 @@ public class DirectoryImpl implements Directory {
         return servers.get(idx);
     }
 
-    public Set<ConsensusDocument.RequiredCertificate> getRequiredCertificates() {
-        return new HashSet<ConsensusDocument.RequiredCertificate>(requiredCertificates);
+    public Set<RequiredCertificate> getRequiredCertificates() {
+        return new HashSet<RequiredCertificate>(requiredCertificates);
     }
 
     public void addCertificate(KeyCertificate certificate) {

@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -45,7 +46,9 @@ public class ConnectionImpl implements Connection, DashboardRenderable {
     private boolean isConnected;
     private volatile boolean isClosed;
     private final Thread readCellsThread;
-    private final Object connectLock = new Object();
+    private final ReentrantLock connectLock = Threading.lock("connect");
+    private final ReentrantLock circuitsLock = Threading.lock("circuits");
+    private final ReentrantLock outputLock = Threading.lock("output");
     private final AtomicLong lastActivity = new AtomicLong();
 
 
@@ -76,13 +79,16 @@ public class ConnectionImpl implements Connection, DashboardRenderable {
     }
 
     public int bindCircuit(Circuit circuit) {
-        synchronized (circuitMap) {
+        circuitsLock.lock();
+        try {
             while (circuitMap.containsKey(currentId))
                 incrementNextId();
             final int id = currentId;
             incrementNextId();
             circuitMap.put(id, circuit);
             return id;
+        } finally {
+            circuitsLock.unlock();
         }
     }
 
@@ -93,7 +99,8 @@ public class ConnectionImpl implements Connection, DashboardRenderable {
     }
 
     void connect() throws ConnectionFailedException, ConnectionTimeoutException, ConnectionHandshakeException {
-        synchronized (connectLock) {
+        connectLock.lock();
+        try {
             if (isConnected) {
                 return;
             }
@@ -112,6 +119,8 @@ public class ConnectionImpl implements Connection, DashboardRenderable {
                 throw new ConnectionFailedException(e.getMessage());
             }
             isConnected = true;
+        } finally {
+            connectLock.unlock();
         }
     }
 
@@ -155,7 +164,8 @@ public class ConnectionImpl implements Connection, DashboardRenderable {
             throw new ConnectionIOException("Cannot send cell because connection is not connected");
         }
         updateLastActivity();
-        synchronized (output) {
+        outputLock.lock();
+        try {
             try {
                 output.write(cell.getCellBytes());
             } catch (IOException e) {
@@ -163,6 +173,8 @@ public class ConnectionImpl implements Connection, DashboardRenderable {
                 closeSocket();
                 throw new ConnectionIOException(e.getClass().getName() + " : " + e.getMessage());
             }
+        } finally {
+            outputLock.unlock();
         }
     }
 
@@ -260,32 +272,45 @@ public class ConnectionImpl implements Connection, DashboardRenderable {
     }
 
     private void processRelayCell(Cell cell) {
-        synchronized (circuitMap) {
-            final Circuit circuit = circuitMap.get(cell.getCircuitId());
+        Circuit circuit;
+        circuitsLock.lock();
+        try {
+            circuit = circuitMap.get(cell.getCircuitId());
             if (circuit == null) {
                 logger.warning("Could not deliver relay cell for circuit id = " + cell.getCircuitId() + " on connection " + this + ". Circuit not found");
                 return;
             }
-            circuit.deliverRelayCell(cell);
+        } finally {
+            circuitsLock.unlock();
         }
+
+        circuit.deliverRelayCell(cell);
     }
 
     private void processControlCell(Cell cell) {
-        synchronized (circuitMap) {
-            final Circuit circuit = circuitMap.get(cell.getCircuitId());
-            if (circuit != null) {
-                circuit.deliverControlCell(cell);
-            }
+        Circuit circuit;
+        circuitsLock.lock();
+        try {
+            circuit = circuitMap.get(cell.getCircuitId());
+        } finally {
+            circuitsLock.unlock();
+        }
+
+        if (circuit != null) {
+            circuit.deliverControlCell(cell);
         }
     }
 
     void idleCloseCheck() {
-        synchronized (circuitMap) {
+        circuitsLock.lock();
+        try {
             final boolean needClose = (!isClosed && circuitMap.isEmpty() && getIdleMilliseconds() > CONNECTION_IDLE_TIMEOUT);
             if (needClose) {
                 logger.fine("Closing connection to " + this + " on idle timeout");
                 closeSocket();
             }
+        } finally {
+            circuitsLock.unlock();
         }
     }
 
@@ -301,8 +326,11 @@ public class ConnectionImpl implements Connection, DashboardRenderable {
     }
 
     public void removeCircuit(Circuit circuit) {
-        synchronized (circuitMap) {
+        circuitsLock.lock();
+        try {
             circuitMap.remove(circuit.getCircuitId());
+        } finally {
+            circuitsLock.unlock();
         }
     }
 
@@ -312,8 +340,11 @@ public class ConnectionImpl implements Connection, DashboardRenderable {
 
     public void dashboardRender(DashboardRenderer renderer, PrintWriter writer, int flags) throws IOException {
         final int circuitCount;
-        synchronized (circuitMap) {
+        circuitsLock.lock();
+        try {
             circuitCount = circuitMap.size();
+        } finally {
+            circuitsLock.unlock();
         }
         if (circuitCount == 0 && (flags & DASHBOARD_CONNECTIONS_VERBOSE) == 0) {
             return;

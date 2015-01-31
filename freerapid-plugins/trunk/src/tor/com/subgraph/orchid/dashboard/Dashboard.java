@@ -1,5 +1,6 @@
 package com.subgraph.orchid.dashboard;
 
+import com.subgraph.orchid.Threading;
 import com.subgraph.orchid.data.IPv4Address;
 import com.subgraph.orchid.misc.GuardedBy;
 
@@ -10,7 +11,6 @@ import java.net.Socket;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 /**
@@ -41,7 +41,7 @@ public class Dashboard implements DashboardRenderable, DashboardRenderer {
     public Dashboard() {
         renderables = new CopyOnWriteArrayList<DashboardRenderable>();
         renderables.add(this);
-        executor = Executors.newCachedThreadPool();
+        executor = Threading.newPool("Dashboard worker");
         listeningPort = chooseListeningPort();
     }
 
