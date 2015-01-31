@@ -70,6 +70,8 @@ public class RtmpSession {
     private RedirectHandler redirectHandler;
     private boolean redirected;
     private String redirectTarget;
+    private long pos; //logical position in disk, for log purpose, it's actually valid if there is no deadlock
+    private boolean flvHeaderWritten;
 
     /**
      * Empty constructor. Mainly for internal use.
@@ -200,7 +202,7 @@ public class RtmpSession {
         connectParams.put("videoFunction", 1);
         connectParams.put("capabilities", 239);
         connectParams.put("videoCodecs", 252);
-        outputWriter = new FlvStreamWriter(playStart, this);
+        //outputWriter = new FlvStreamWriter(playStart, this, flvHeaderWritten, pos);
         packetHandlers = new LinkedList<PacketHandler>();
         addPacketHandler(new DefaultPacketHandler());
     }
@@ -575,5 +577,21 @@ public class RtmpSession {
 
     public void setRedirectTarget(String redirectTarget) {
         this.redirectTarget = redirectTarget;
+    }
+
+    public long getPos() {
+        return pos;
+    }
+
+    public void setPos(long pos) {
+        this.pos = pos;
+    }
+
+    public boolean isFlvHeaderWritten() {
+        return flvHeaderWritten;
+    }
+
+    public void setFlvHeaderWritten(boolean flvHeaderWritten) {
+        this.flvHeaderWritten = flvHeaderWritten;
     }
 }
