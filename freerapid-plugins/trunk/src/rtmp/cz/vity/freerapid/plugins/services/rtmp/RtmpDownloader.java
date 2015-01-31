@@ -118,9 +118,9 @@ public class RtmpDownloader {
         return true;
     }
 
-    private class KeyFrameInfo {
-        private final int timestamp;
-        private final long pos;
+    private static class KeyFrameInfo {
+        public final int timestamp;
+        public final long pos;
 
         public KeyFrameInfo(int timestamp, long pos) {
             this.timestamp = timestamp;
@@ -128,7 +128,7 @@ public class RtmpDownloader {
         }
     }
 
-    private KeyFrameInfo getKeyFrameInfo(File flvFile) throws Exception {
+    private static KeyFrameInfo getKeyFrameInfo(File flvFile) throws Exception {
         FileInputStream fis = new FileInputStream(flvFile);
         DataInputStream dis = new DataInputStream(fis);
         FileChannel channel = fis.getChannel();
@@ -171,7 +171,7 @@ public class RtmpDownloader {
         return new KeyFrameInfo(timestamp, pos);
     }
 
-    private int readInt24(DataInputStream dis) throws IOException {
+    private static int readInt24(DataInputStream dis) throws IOException {
         int ch1 = dis.read();
         int ch2 = dis.read();
         int ch3 = dis.read();
