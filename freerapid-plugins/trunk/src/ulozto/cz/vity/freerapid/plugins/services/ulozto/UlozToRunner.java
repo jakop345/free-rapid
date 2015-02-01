@@ -270,6 +270,9 @@ class UlozToRunner extends AbstractRunner {
         if (content.contains("soubor nebyl nalezen")) {
             throw new URLNotAvailableAnymoreException("Pozadovany soubor nebyl nalezen");
         }
+        if (content.contains("Stránka nenalezena")) {
+            throw new URLNotAvailableAnymoreException("Stránka nenalezena - Page not found");
+        }
         if (content.contains("stahovat pouze jeden soubor")) {
             throw new ServiceConnectionProblemException("Muzete stahovat pouze jeden soubor naraz");
         }

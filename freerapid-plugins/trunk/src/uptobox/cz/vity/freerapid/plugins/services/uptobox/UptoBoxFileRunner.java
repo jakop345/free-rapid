@@ -9,6 +9,7 @@ import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 
 import java.util.List;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Class which contains main code
@@ -56,6 +57,12 @@ class UptoBoxFileRunner extends XFileSharingRunner {
         final List<String> downloadPageMarkers = super.getDownloadPageMarkers();
         downloadPageMarkers.add("Click here to start your download");
         return downloadPageMarkers;
+    }
+
+    @Override    protected List<String> getDownloadLinkRegexes() {
+        final List<String> downloadLinkRegexes = super.getDownloadLinkRegexes();
+        downloadLinkRegexes.add(0, "product_download_url\\s*?=\\s*?(http.+?" + Pattern.quote(httpFile.getFileName()) + ")[\"']");
+        return downloadLinkRegexes;
     }
 
     @Override
