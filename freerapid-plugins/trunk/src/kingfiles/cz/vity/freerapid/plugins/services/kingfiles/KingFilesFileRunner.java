@@ -1,13 +1,16 @@
 package cz.vity.freerapid.plugins.services.kingfiles;
 
 import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
+import cz.vity.freerapid.plugins.exceptions.InvalidURLOrServiceProblemException;
 import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
 import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
 import cz.vity.freerapid.plugins.services.xfilesharing.XFileSharingRunner;
 import cz.vity.freerapid.plugins.services.xfilesharing.nameandsize.FileSizeHandler;
 import cz.vity.freerapid.plugins.services.xfilesharing.nameandsize.FileSizeHandlerNoSize;
+import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -16,6 +19,14 @@ import java.util.regex.Pattern;
  * @author birchie
  */
 class KingFilesFileRunner extends XFileSharingRunner {
+
+    @Override
+    protected void correctURL() throws Exception {
+        final Matcher match = PlugUtils.matcher("kingfiles\\.net/([\\w\\d]+)", fileURL);
+        if (!match.find())
+            throw new InvalidURLOrServiceProblemException("File ID missing from URL");
+        fileURL = "http://www.kingfiles.net/" + match.group(1);
+    }
 
     @Override
     protected List<FileSizeHandler> getFileSizeHandlers() {
@@ -41,19 +52,14 @@ class KingFilesFileRunner extends XFileSharingRunner {
     @Override
     protected void checkFileProblems() throws ErrorDuringDownloadingException {
         final String content = getContentAsString();
-        if (content.contains("File Not Found")) {
-            if (!content.contains("visibility:hidden\"><b>File Not Found") &&
-                    !content.contains("font-size:0\"><b>File Not Found"))
-                throw new URLNotAvailableAnymoreException("File not found");
-        }
-        if (content.contains("file was removed") || content.contains("file has been removed")
-                || content.contains("file was deleted")) {
-            if (!content.contains("visibility:hidden\"><h3>The file was removed"))
-                throw new URLNotAvailableAnymoreException("File not found");
-        }
-        if (content.contains("server is in maintenance mode")) {
-            if (!content.contains("font-size:0\">>This server is in maintenance mode"))
-                throw new ServiceConnectionProblemException("This server is in maintenance mode. Please try again later.");
+        try {
+            super.checkFileProblems();
+        } catch (URLNotAvailableAnymoreException e) {
+            final Matcher match = PlugUtils.matcher("(visibility:hidden|font-size:0).+?>(File Not Found|The file was removed|Reason for deletion)", content);
+            if (!match.find())  throw e;
+        } catch (ServiceConnectionProblemException e) {
+            final Matcher match = PlugUtils.matcher("(visibility:hidden|font-size:0).+?>(This server is in maintenance mode)", content);
+            if (!match.find())  throw e;
         }
     }
 }

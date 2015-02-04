@@ -20,4 +20,10 @@ class FileForeverFileRunner extends XFileSharingRunner {
         return fileSizeHandlers;
     }
 
+    @Override
+    protected List<String> getDownloadPageMarkers() {
+        final List<String> downloadPageMarkers = super.getDownloadPageMarkers();
+        downloadPageMarkers.add("download_link");
+        return downloadPageMarkers;
+    }
 }

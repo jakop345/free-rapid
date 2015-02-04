@@ -1,4 +1,4 @@
-package cz.vity.freerapid.plugins.services.fileforever;
+package cz.vity.freerapid.plugins.services.rockfile;
 
 import cz.vity.freerapid.plugins.dev.PluginDevApplication;
 import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
@@ -16,18 +16,18 @@ public class TestApp extends PluginDevApplication {
         final HttpFile httpFile = getHttpFile(); //creates new test instance of HttpFile
         try {
             //we set file URL
-            httpFile.setNewURL(new URL("http://fileforever.net/0jl09hfohrx8.html"));
+            httpFile.setNewURL(new URL("http://rockfile.eu/42fwaikdkupj.html"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
-            final FileForeverServiceImpl service = new FileForeverServiceImpl(); //instance of service - of our plugin
+            final RockFileServiceImpl service = new RockFileServiceImpl(); //instance of service - of our plugin
             /*
             //we set premium account details
             final PremiumAccount config = new PremiumAccount();
             config.setUsername("****");
             config.setPassword("****");
             service.setConfig(config);
-            */
+            //*/
             //runcheck makes the validation
             testRun(service, httpFile, connectionSettings);//download file with service and its Runner
             //all output goes to the console
