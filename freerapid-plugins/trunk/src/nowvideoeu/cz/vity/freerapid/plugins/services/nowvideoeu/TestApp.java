@@ -20,7 +20,9 @@ public class TestApp extends PluginDevApplication {
             //httpFile.setNewURL(new URL("http://www.nowvideo.co/video/wyh83opcge6at"));
             //httpFile.setNewURL(new URL("http://www.nowvideo.eu/video/yeziziv4rzkmg"));
             //httpFile.setNewURL(new URL("http://www.nowvideo.eu/video/314c2008cbc5f"));
-            httpFile.setNewURL(new URL("http://www.nowvideo.sx/player.php?v=2v7o4xk0w5yil"));
+            //httpFile.setNewURL(new URL("http://www.nowvideo.sx/player.php?v=2v7o4xk0w5yil"));
+            //httpFile.setNewURL(new URL("http://www.nowvideo.li/video/5356fc4201a95"));
+            httpFile.setNewURL(new URL("http://www.nowvideo.sx/video/1b7f99baf8cde"));
             //httpFile.setNewURL(new URL("http://embed.nowvideo.eu/embed.php?v=314c2008cbc5f"));
             final ConnectionSettings connectionSettings = new ConnectionSettings();
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
