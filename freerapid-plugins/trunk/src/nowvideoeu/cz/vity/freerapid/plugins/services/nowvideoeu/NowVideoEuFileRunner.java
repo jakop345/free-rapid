@@ -103,7 +103,7 @@ class NowVideoEuFileRunner extends AbstractRunner {
     private MethodBuilder getPlayerApiMethodBuilder(String fileId, String fileKey) throws BuildMethodException {
         return getMethodBuilder()
                 .setReferer(fileURL)
-                .setAction("http://www.nowvideo.eu/api/player.api.php")
+                .setAction("/api/player.api.php")
                 .setParameter("cid3", "undefined")
                 .setParameter("user", "undefined")
                 .setParameter("cid2", "undefined")
