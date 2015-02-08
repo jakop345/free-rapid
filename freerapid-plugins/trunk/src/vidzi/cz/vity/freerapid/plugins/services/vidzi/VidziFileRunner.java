@@ -67,7 +67,8 @@ class VidziFileRunner extends AbstractRunner {
 
     private void checkProblems() throws ErrorDuringDownloadingException {
         final String contentAsString = getContentAsString();
-        if (contentAsString.contains("File Not Found")) {
+        if (contentAsString.contains("File Not Found") ||
+                contentAsString.contains("404 Not Found")) {
             throw new URLNotAvailableAnymoreException("File not found"); //let to know user in FRD
         }
     }
