@@ -5,6 +5,7 @@ import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.DownloadState;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
+import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
@@ -25,6 +26,7 @@ class EuroShareFileRunner extends AbstractRunner {
     @Override
     public void runCheck() throws Exception { //this method validates file
         super.runCheck();
+        setCookie();
         final GetMethod getMethod = getGetMethod(fileURL);//make first request
         if (makeRedirectedRequest(getMethod)) {
             checkProblems();
@@ -33,6 +35,10 @@ class EuroShareFileRunner extends AbstractRunner {
             checkProblems();
             throw new ServiceConnectionProblemException();
         }
+    }
+
+    private void setCookie() {
+        addCookie(new Cookie("euroshare.eu", "lang", "sk", "/", 86400, false));
     }
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
@@ -48,7 +54,7 @@ class EuroShareFileRunner extends AbstractRunner {
             if (match.find())
                 httpFile.setFileSize(PlugUtils.getFileSizeFromString(match.group(1).trim()));
             else
-                PlugUtils.checkFileSize(httpFile, content, "Velikosť súboru:", "</p>");
+                PlugUtils.checkFileSize(httpFile, content, "Veľkosť súboru:", "</p>");
         }
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
@@ -56,6 +62,7 @@ class EuroShareFileRunner extends AbstractRunner {
     @Override
     public void run() throws Exception {
         super.run();
+        setCookie();
         logger.info("Starting download in TASK " + fileURL);
         final GetMethod method = getGetMethod(fileURL); //create GET request
         if (makeRedirectedRequest(method)) { //we make the main request

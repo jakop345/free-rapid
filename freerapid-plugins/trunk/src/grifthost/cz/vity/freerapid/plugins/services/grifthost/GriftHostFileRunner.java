@@ -32,4 +32,13 @@ class GriftHostFileRunner extends XFilePlayerRunner {
         });
         return fileNameHandlers;
     }
+
+    @Override
+    protected List<String> getDownloadLinkRegexes() {
+        final List<String> downloadLinkRegexes = super.getDownloadLinkRegexes();
+        downloadLinkRegexes.add(0, "<param name\\s*?=\\s*?['\"]src['\"]\\s*?value\\s*?=\\s*?['\"](http[^'\"]+?)['\"]");
+        downloadLinkRegexes.add(0, "type\\s*?=\\s*?['\"]video/divx['\"]\\s*?src\\s*?=\\s*?['\"](http[^'\"]+?)['\"]");
+        return downloadLinkRegexes;
+    }
+
 }

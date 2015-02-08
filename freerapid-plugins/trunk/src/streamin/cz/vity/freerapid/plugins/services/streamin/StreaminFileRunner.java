@@ -74,7 +74,8 @@ class StreaminFileRunner extends AbstractRtmpRunner {
 
     private void checkProblems() throws ErrorDuringDownloadingException {
         final String content = getContentAsString();
-        if (content.contains("File Not Found")) {
+        if (content.contains("File Not Found") || content.contains("file was deleted") ||
+                content.contains(">File Removed") || content.contains(">File Deleted")) {
             throw new URLNotAvailableAnymoreException("File not found"); //let to know user in FRD
         }
     }
