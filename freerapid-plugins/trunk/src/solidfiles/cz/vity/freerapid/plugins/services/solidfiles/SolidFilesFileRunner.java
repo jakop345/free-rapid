@@ -1,17 +1,16 @@
 package cz.vity.freerapid.plugins.services.solidfiles;
 
-import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
-import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;
-import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
-import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
+import cz.vity.freerapid.plugins.exceptions.*;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.FileState;
+import cz.vity.freerapid.plugins.webclient.hoster.PremiumAccount;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Class which contains main code
@@ -46,22 +45,20 @@ class SolidFilesFileRunner extends AbstractRunner {
     public void run() throws Exception {
         super.run();
         logger.info("Starting download in TASK " + fileURL);
+        doLogin();
         final GetMethod method = getGetMethod(fileURL); //create GET request
         if (makeRedirectedRequest(method)) { //we make the main request
             final String contentAsString = getContentAsString();//check for response
             checkProblems();//check problems
             checkNameAndSize(contentAsString);
-            String link;
-            final Matcher match = PlugUtils.matcher("<a.+?id=\"direct-download-link\".+?href=\"(.+?)\".*?>", contentAsString);
-            if (match.find()) {
-                link = match.group(1);
-            } else {
-                final Matcher match2 = PlugUtils.matcher("<a.+?id=\"download-button\".+?href=\"(.+?)\".*?>", contentAsString);
-                if (!match2.find())
-                    throw new PluginImplementationException("Download link not found");
-                link = match2.group(1);
+            String name = httpFile.getFileName();
+            if (name.contains(" "))
+                name = name.substring(name.lastIndexOf(" ") +1);
+            final Matcher match = PlugUtils.matcher("<a[^<>]+?href=\"(http.+?" + Pattern.quote(name) + ")\"", contentAsString);
+            if (!match.find()) {
+                throw new PluginImplementationException("Download link not found");
             }
-            final HttpMethod httpMethod = getMethodBuilder().setReferer(fileURL).setAction(link).toGetMethod();
+            final HttpMethod httpMethod = getMethodBuilder().setReferer(fileURL).setAction(match.group(1)).toGetMethod();
             if (!tryDownloadAndSaveFile(httpMethod)) {
                 checkProblems();//if downloading failed
                 throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
@@ -76,6 +73,30 @@ class SolidFilesFileRunner extends AbstractRunner {
         final String contentAsString = getContentAsString();
         if (contentAsString.contains("We couldn't find the file you requested")) {
             throw new URLNotAvailableAnymoreException("File not found"); //let to know user in FRD
+        }
+    }
+
+    private void doLogin() throws Exception {
+        synchronized (SolidFilesFileRunner.class) {
+            SolidFilesServiceImpl service = (SolidFilesServiceImpl) getPluginService();
+            PremiumAccount pa = service.getConfig();
+            if (pa.isSet()) {
+                if (!makeRedirectedRequest(getGetMethod("https://www.solidfiles.com/login/"))) {
+                    throw new ServiceConnectionProblemException("Login page unavailable");
+                }
+                final HttpMethod method = getMethodBuilder()
+                        .setActionFromFormWhereActionContains("login", true)
+                        .setParameter("username", pa.getUsername())
+                        .setParameter("password", pa.getPassword())
+                        .toPostMethod();
+                if (!makeRedirectedRequest(method)) {
+                    throw new ServiceConnectionProblemException("Error posting login info");
+                }
+                if (getContentAsString().contains("enter a correct username and password")) {
+                    throw new BadLoginException("Invalid SolidFiles account login information!");
+                }
+                logger.info("Logged in.");
+            }
         }
     }
 
