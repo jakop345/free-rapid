@@ -10,6 +10,8 @@ import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 
@@ -23,9 +25,9 @@ class UpStoreFileRunner extends AbstractRunner {
 
     @Override
     public void runCheck() throws Exception { //this method validates file
-        addCookie(new Cookie(".upstore.net", "lang", "en", "/", 86400, false));
-        if (fileURL.contains("upsto.re/")) fileURL = fileURL.replace("upsto.re/", "upstore.net/");
+        setCookieUrl();
         super.runCheck();
+        doDDoSCheck();
         final GetMethod getMethod = getGetMethod(fileURL);//make first request
         if (makeRedirectedRequest(getMethod)) {
             checkProblems();
@@ -45,12 +47,50 @@ class UpStoreFileRunner extends AbstractRunner {
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
 
+    private void setCookieUrl() {
+        addCookie(new Cookie(".upstore.net", "lang", "en", "/", 86400, false));
+        fileURL = fileURL.replaceFirst("upsto.re/", "upstore.net/");
+        fileURL = fileURL.replaceFirst("https?://www\\.", "http://");
+    }
+
+    private void doDDoSCheck() throws Exception{
+        makeRedirectedRequest(getGetMethod(fileURL));
+        if (getContentAsString().contains("DDoS protection")) {
+            logger.info("Found DDoS Protection");
+            final Matcher matchT = PlugUtils.matcher("https?://(.+?)/", fileURL);
+            if (!matchT.find()) throw new PluginImplementationException("DDoS Err 1");
+            final String var_t = matchT.group(1);
+            final Matcher matchScript = PlugUtils.matcher("(?s)var t,r,a,f,(.+?)a.value", getContentAsString());
+            if (!matchScript.find()) throw new PluginImplementationException("DDoS Script not found");
+            final String scriptA = matchScript.group(1).replaceFirst("(?s)t = document.create.+?'challenge-form'\\);", "");
+            final String scriptB = PlugUtils.getStringBetween(getContentAsString(), "a.value = ", " + t.length");
+            String result;
+            try {
+                ScriptEngineManager mgr = new ScriptEngineManager();
+                ScriptEngine engine = mgr.getEngineByName("JavaScript");
+                result = "" + engine.eval(scriptA + scriptB);
+            } catch (Exception e) {
+                throw new ErrorDuringDownloadingException(e.getMessage());
+            }
+            int var_aValue = Integer.parseInt(result.split("\\.")[0].split("\\.")[0].split("\\.")[0]);
+            HttpMethod method = getMethodBuilder().setReferer(fileURL).setBaseURL("http://upstore.net/")
+                    .setActionFromFormWhereActionContains("chk", true)
+                    .setParameter("jschl_answer", "" + (var_aValue + var_t.length()) )
+                    .toGetMethod();
+            if (!makeRedirectedRequest(method)) {
+                checkProblems();
+                throw new ServiceConnectionProblemException("DDoS Protection avoidance failed");
+            }
+
+        }
+    }
+
     @Override
     public void run() throws Exception {
-        addCookie(new Cookie(".upstore.net", "lang", "en", "/", 86400, false));
-        if (fileURL.contains("upsto.re/")) fileURL = fileURL.replace("upsto.re/", "upstore.net/");
+        setCookieUrl();
         super.run();
         logger.info("Starting download in TASK " + fileURL);
+        doDDoSCheck();
         final GetMethod method = getGetMethod(fileURL); //create GET request
         if (makeRedirectedRequest(method)) { //we make the main request
             final String contentAsString = getContentAsString();//check for response

@@ -16,6 +16,7 @@ public class TestApp extends PluginDevApplication {
         final HttpFile httpFile = getHttpFile(); //creates new test instance of HttpFile
         try {
             //we set file URL
+            //httpFile.setNewURL(new URL("http://www.solidfiles.com/d/565cfda92d/Everything_Burns_-_Vincent_Zandri.epub"));
             httpFile.setNewURL(new URL("http://www.solidfiles.com/d/56f79b9767/"));
             //httpFile.setNewURL(new URL("https://www.solidfiles.com/d/61d8b71dc7/"));
             //the way we connect to the internet
@@ -23,6 +24,13 @@ public class TestApp extends PluginDevApplication {
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
             //then we tries to download
             final SolidFilesServiceImpl service = new SolidFilesServiceImpl(); //instance of service - of our plugin
+            /*
+            //we set premium account details
+            final PremiumAccount config = new PremiumAccount();
+            config.setUsername("****");
+            config.setPassword("****");
+            service.setConfig(config);
+            //*/
             //runcheck makes the validation
             testRun(service, httpFile, connectionSettings);//download file with service and its Runner
             //all output goes to the console
