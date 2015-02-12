@@ -151,8 +151,8 @@ class FlvStreamWriter implements OutputWriter {
             session.getHttpFile().getProperties().put(RtmpConsts.FLV_HEADER_WRITTEN, true);
         }
         try {
-            channel.write(buffer.buf());
             pos += buffer.buf().remaining();
+            channel.write(buffer.buf());
             session.setPos(pos);
         } catch (Exception e) {
             if ("Pipe closed".equals(e.getMessage())) {
