@@ -78,11 +78,12 @@ class FlickrFileRunner extends AbstractRunner {
         } catch (Exception e) {
             throw new PluginImplementationException("Error getting media info root node");
         }
-        String title = PlugUtils.unescapeUnicode(mediaInfoRootNode.findPath("title").findPath("_content").getTextValue());
+        String title = mediaInfoRootNode.findPath("title").findPath("_content").getTextValue();
         final String media = mediaInfoRootNode.findPath("media").getTextValue();
         if ((title == null) || (media == null)) {
             throw new PluginImplementationException("Error parsing media info JSON content");
         }
+        title = PlugUtils.unescapeUnicode(title);
         if (title.length() > 200) {
             title = title.substring(0, 199);
         }
@@ -116,6 +117,7 @@ class FlickrFileRunner extends AbstractRunner {
                 .setAction(source)
                 .toGetMethod();
         setClientParameter(DownloadClientConsts.DONT_USE_HEADER_FILENAME, true);
+        setFileStreamContentTypes("text/plain");
         if (!tryDownloadAndSaveFile(method)) {
             checkProblems();
             if (method.getURI().toString().contains("/photo_unavailable")) {
