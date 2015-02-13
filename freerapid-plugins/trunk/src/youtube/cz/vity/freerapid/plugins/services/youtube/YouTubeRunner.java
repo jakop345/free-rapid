@@ -1048,7 +1048,7 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
                     .setParameter("width", "1366")
                     .setParameter("sts", "16345")
                     .setParameter("height", "239")
-                    .setAndEncodeParameter("eurl", embedSwfUrl)
+                    .setAndEncodeParameter("eurl", fileURL)
                     .toGetMethod();
             setTextContentTypes("application/x-www-form-urlencoded");
             if (!makeRedirectedRequest(method)) {
