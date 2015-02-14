@@ -11,7 +11,10 @@
         <attribute id="hasOptions" value="true"/>
         <attribute id="faviconImage" value="resources/favicon.png"/>
     </attributes>
-
+    <requires>
+        <import exported="false" match="greater-or-equal" optional="false" plugin-id="applehls" plugin-version="1.0.4"
+                reverse-lookup="false"/>
+    </requires>
     <runtime>
         <library id="zeetv.com" path="/" type="code"/>
     </runtime>
