@@ -112,14 +112,14 @@ class FlvStreamWriter implements OutputWriter {
             }
         }
         if (packetType == Packet.Type.AUDIO_DATA) {
-            if (time <= lastAudioTime) {
+            if (time < lastAudioTime) { // "<=" does not work, multiple packets with the same timestamp are valid
                 logger.info(String.format("Skipping duplicate audio data packet: time=%d, lastaudiotime=%d", time, lastAudioTime));
                 return;
             }
             lastAudioTime = time;
         }
         if (packetType == Packet.Type.VIDEO_DATA) {
-            if (time <= lastVideoTime) {
+            if (time < lastVideoTime) { // "<=" does not work, multiple packets with the same timestamp are valid
                 logger.info(String.format("Skipping duplicate video data packet: time=%d, lastvideotime=%d", time, lastVideoTime));
                 return;
             }
