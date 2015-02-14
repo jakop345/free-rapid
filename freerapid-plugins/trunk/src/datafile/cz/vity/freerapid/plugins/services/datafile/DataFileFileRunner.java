@@ -58,7 +58,8 @@ class DataFileFileRunner extends AbstractRunner {
                     .setAjax()
                     .setAction("/files/ajax.html")
                     .setReferer(fileURL)
-                    .setParameter("doaction", "validateCaptcha");
+                    .setParameter("doaction", "validateCaptcha")
+                    .setParameter("fileid", PlugUtils.getStringBetween(content, "getFileDownloadLink('", "'"));
             boolean captchaLoop = false;
             do {
                 if (captchaLoop) {
@@ -91,6 +92,9 @@ class DataFileFileRunner extends AbstractRunner {
                 throw new ServiceConnectionProblemException();
             }
             checkProblems();
+            if (getContentAsString().contains("success\":0")) {
+                throw new NotRecoverableDownloadException("Plugin Broken: "+PlugUtils.getStringBetween(getContentAsString(), "msg\":\"", "\""));
+            }
             final String url = PlugUtils.getStringBetween(getContentAsString(), "link\":\"", "\"").replace("\\/", "/");
             client.getHTTPClient().getParams().setBooleanParameter(DownloadClientConsts.DONT_USE_HEADER_FILENAME, true);
             final HttpMethod httpMethod = getGetMethod(url);
