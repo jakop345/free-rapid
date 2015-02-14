@@ -10,7 +10,8 @@ enum VideoQuality {
     _240(240),
     _360(360),
     _480(480),
-    _720(720);
+    _720(720),
+    _1080(1080);
 
     private final int quality;
     private final String name;

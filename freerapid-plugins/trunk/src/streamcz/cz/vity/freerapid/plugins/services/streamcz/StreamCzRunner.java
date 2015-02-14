@@ -9,10 +9,13 @@ import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.utils.JsonMapper;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import cz.vity.freerapid.utilities.LogUtils;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.httpclient.HttpMethod;
 import org.codehaus.jackson.JsonNode;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,6 +30,7 @@ import java.util.regex.Matcher;
  */
 class StreamCzRunner extends AbstractRunner {
     private final static Logger logger = Logger.getLogger(StreamCzRunner.class.getName());
+    private final static String API_KEY = "fb5f58a820353bd7095de526253c14fd";
 
     private SettingsConfig config;
 
@@ -37,39 +41,49 @@ class StreamCzRunner extends AbstractRunner {
 
     public void runCheck() throws Exception {
         super.runCheck();
-        final HttpMethod method = getGetMethod(getEpisodeApiUrl(getVideoId()));
-        if (makeRedirectedRequest(method)) {
-            checkProblems();
-            String content = getContentAsString().replaceAll("[\\n\\t\\r]", ""); //remove possible illegal chars.
-            checkName(getRootNode(content));
-        } else {
-            checkProblems();
-            throw new ServiceConnectionProblemException();
+        if (isEpisode()) {
+            final HttpMethod method = getApiMethod();
+            if (makeRedirectedRequest(method)) {
+                checkProblems();
+                String content = getContentAsString().replaceAll("[\\n\\t\\r]", ""); //remove possible illegal chars.
+                checkName(getRootNode(content));
+            } else {
+                checkProblems();
+                throw new ServiceConnectionProblemException();
+            }
         }
     }
 
     public void run() throws Exception {
         super.run();
         logger.info("Starting download in TASK " + fileURL);
-        HttpMethod method = getGetMethod(getEpisodeApiUrl(getVideoId()));
+        HttpMethod method = getApiMethod();
         if (makeRedirectedRequest(method)) {
             checkProblems();
             String content = getContentAsString().replaceAll("[\\n\\t\\r]", ""); //remove possible illegal chars.
             JsonNode rootNode = getRootNode(content);
-            checkName(rootNode);
-            setConfig();
-            StreamCzVideo streamCzVideo = getSelectedVideo(rootNode);
-            logger.info("Config settings : " + config);
-            logger.info("Downloading video : " + streamCzVideo);
-            method = getGetMethod(streamCzVideo.url);
-            if (!tryDownloadAndSaveFile(method)) {
-                checkProblems();
-                throw new ServiceConnectionProblemException("Error starting download");
+            if (isEpisode()) {
+                checkName(rootNode);
+                setConfig();
+                StreamCzVideo streamCzVideo = getSelectedVideo(rootNode);
+                logger.info("Config settings : " + config);
+                logger.info("Downloading video : " + streamCzVideo);
+                method = getGetMethod(streamCzVideo.url);
+                if (!tryDownloadAndSaveFile(method)) {
+                    checkProblems();
+                    throw new ServiceConnectionProblemException("Error starting download");
+                }
+            } else {
+                parseShow(rootNode);
             }
         } else {
             checkProblems();
             throw new ServiceConnectionProblemException();
         }
+    }
+
+    private boolean isEpisode() {
+        return fileURL.matches("http.+?[^/]+/(\\d+)-[^/]+");
     }
 
     private String getVideoId() throws ErrorDuringDownloadingException {
@@ -80,8 +94,31 @@ class StreamCzRunner extends AbstractRunner {
         return matcher.group(1);
     }
 
-    private String getEpisodeApiUrl(String videoId) {
-        return "http://www.stream.cz/API/episode/" + videoId;
+    private String getShowId() throws ErrorDuringDownloadingException {
+        Matcher matcher = PlugUtils.matcher("[^/]+/([^/]+?)$", fileURL);
+        if (!matcher.find()) {
+            throw new PluginImplementationException("Error getting show ID");
+        }
+        return matcher.group(1);
+    }
+
+    //debug https://www.stream.cz/static/js/stream.all.js?1f34f56 to get api password
+    private String getApiPassword(String url) {
+        long timestamp = System.currentTimeMillis() / 1000;
+        return DigestUtils.md5Hex(API_KEY + url + String.valueOf(Math.round(timestamp / 24 / 3600)));
+    }
+
+    private HttpMethod getApiMethod() throws ErrorDuringDownloadingException {
+        String href = isEpisode() ? "/episode/" + getVideoId() : "/show/" + getShowId();
+        return getApiMethod(href);
+    }
+
+    private HttpMethod getApiMethod(String href) throws ErrorDuringDownloadingException {
+        return getMethodBuilder()
+                .setReferer(fileURL)
+                .setAction("https://www.stream.cz/API" + href)
+                .setHeader("Api-Password", getApiPassword(href))
+                .toGetMethod();
     }
 
     private JsonNode getRootNode(String content) throws ErrorDuringDownloadingException {
@@ -116,7 +153,7 @@ class StreamCzRunner extends AbstractRunner {
         }
     }
 
-    StreamCzVideo getSelectedVideo(JsonNode rootNode) throws Exception {
+    private StreamCzVideo getSelectedVideo(JsonNode rootNode) throws Exception {
         List<StreamCzVideo> streamCzVideos = new LinkedList<StreamCzVideo>();
         JsonNode videoQualitiesNode = rootNode.findPath("video_qualities");
         try {
@@ -141,6 +178,55 @@ class StreamCzRunner extends AbstractRunner {
             throw new PluginImplementationException("No available videos");
         }
         return Collections.min(streamCzVideos);
+    }
+
+    private void parseShow(JsonNode rootNode) throws Exception {
+        List<URI> uriList = new LinkedList<URI>();
+        do {
+            JsonNode streamEpisodeNode = rootNode.findPath("stream:episode");
+            if (streamEpisodeNode.isMissingNode()) {
+                throw new PluginImplementationException("Error getting 'stream:episode' node");
+            }
+            String id, name;
+            for (JsonNode episodeNode : streamEpisodeNode) {
+                id = episodeNode.findPath("id").getValueAsText();
+                name = episodeNode.findPath("url_name").getTextValue();
+                if ((id != null) && (name != null)) {
+                    try {
+                        uriList.add(new URI(fileURL + "/" + id + "-" + name));
+                    } catch (URISyntaxException e) {
+                        LogUtils.processException(logger, e);
+                    }
+                }
+            }
+            JsonNode linksNode = rootNode.get("_links");
+            if (linksNode == null) {
+                throw new PluginImplementationException("Error getting '_links' node");
+            }
+            JsonNode nextNode = linksNode.get("next");
+            if (nextNode == null) {
+                break;
+            } else {
+                String href = nextNode.findPath("href").getTextValue();
+                if (href == null) {
+                    throw new PluginImplementationException("Error getting 'next' episodes URL");
+                }
+                HttpMethod httpMethod = getApiMethod(href);
+                if (!makeRedirectedRequest(httpMethod)) {
+                    checkProblems();
+                    throw new ServiceConnectionProblemException();
+                }
+                checkProblems();
+                String content = getContentAsString().replaceAll("[\\n\\t\\r]", ""); //remove possible illegal chars.
+                rootNode = getRootNode(content);
+            }
+        } while (true);
+        if (uriList.isEmpty()) {
+            throw new PluginImplementationException("No episodes found");
+        }
+        getPluginService().getPluginContext().getQueueSupport().addLinksToQueue(httpFile, uriList);
+        httpFile.getProperties().put("removeCompleted", true);
+        logger.info(uriList.size() + " episodes added");
     }
 
     private class StreamCzVideo implements Comparable<StreamCzVideo> {
