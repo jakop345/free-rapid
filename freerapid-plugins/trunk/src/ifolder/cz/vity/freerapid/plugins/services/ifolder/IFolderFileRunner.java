@@ -63,14 +63,19 @@ class IFolderFileRunner extends AbstractRunner {
                 if (!matcher.find()) {
                     matcher = getMatcherAgainstContent("<a\\s*href\\s*=\\s*\"(.+/ints/.+)\"");
                     if (!matcher.find()) {
-                        throw new PluginImplementationException("Cannot find link on first page");
+                        matcher = getMatcherAgainstContent("location.href\\s*=\\s*'(.+/ints/.+)';");
+                        if (!matcher.find()) {
+                            throw new PluginImplementationException("Cannot find link on first page");
+                        }
                     }
                 }
                 method = getMethodBuilder().setReferer(fileURL).setAction(matcher.group(1)).toGetMethod();
                 if (!makeRedirectedRequest(method)) {
                     throw new ServiceConnectionProblemException();
                 }
-                method = getMethodBuilder().setReferer("").setAction(PlugUtils.getStringBetween(getContentAsString(), "<font size=\"+1\" class=\"color_black\"><a href=", ">")).toHttpMethod();
+                matcher = PlugUtils.matcher("class=\"color_black\">\\s*?<a[^<>]*?href=\"?(.+/ints/sponsor/.+?)\"?>", getContentAsString());
+                if (!matcher.find()) throw new PluginImplementationException("Advertising link not found");
+                method = getMethodBuilder().setReferer("").setAction(matcher.group(1)).toHttpMethod();
                 if (!makeRedirectedRequest(method)) {
                     throw new ServiceConnectionProblemException();
                 }
