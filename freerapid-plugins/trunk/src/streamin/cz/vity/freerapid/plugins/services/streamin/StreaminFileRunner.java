@@ -63,8 +63,9 @@ class StreaminFileRunner extends AbstractRtmpRunner {
             }
             checkProblems();
             final String streamer = PlugUtils.getStringBetween(getContentAsString(), "streamer: \"", "\"");
-            final String file = "mp4:" + PlugUtils.getStringBetween(getContentAsString(), "file: \"", "\"");
-            final RtmpSession rtmpSession = new RtmpSession(streamer, file);
+            final String file = PlugUtils.getStringBetween(getContentAsString(), "file: \"", "\"");
+            final String playName = ((file.contains(".mp4") && !file.startsWith("mp4:")) ? "mp4:" + file : file);
+            final RtmpSession rtmpSession = new RtmpSession(streamer, playName);
             tryDownloadAndSaveFile(rtmpSession);
         } else {
             checkProblems();

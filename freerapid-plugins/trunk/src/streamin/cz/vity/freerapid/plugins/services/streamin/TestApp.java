@@ -16,12 +16,14 @@ public class TestApp extends PluginDevApplication {
         final HttpFile httpFile = getHttpFile(); //creates new test instance of HttpFile
         try {
             //we set file URL
-            httpFile.setNewURL(new URL("http://streamin.to/7524jav2g1yj"));
+            //httpFile.setNewURL(new URL("http://streamin.to/7524jav2g1yj"));
+            httpFile.setNewURL(new URL("http://streamin.to/uyyk1dur60ng"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
             final StreaminServiceImpl service = new StreaminServiceImpl(); //instance of service - of our plugin
             //runcheck makes the validation
+            //setUseTempFiles(true);
             testRun(service, httpFile, connectionSettings);//download file with service and its Runner
             //all output goes to the console
         } catch (Exception e) {//catch possible exception
