@@ -33,6 +33,7 @@ import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.*;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -118,6 +119,7 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
 
             bypassAgeVerification(method);
             Matcher matcher;
+            String mainpageContent = getContentAsString();
             if (swfUrl == null) {
                 matcher = getMatcherAgainstContent("\"url\":\\s*?\"([^\"]+?)\"");
                 if (!matcher.find()) {
@@ -203,6 +205,7 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
                     //fmtStreamMap doesn't contain dash, use afDashStreamMap instead of ytStreamMap
                     queueDashAudio(afDashStreamMap, youTubeMedia);
                 }
+                queueSubtitle(mainpageContent);
             } else { //dash audio
                 //at this moment dash audio set from afStreamMap is subset of dash audio set from dashStreamMap,
                 //so it is ok to get youTubeMedia from dashStreamMap, but it's safer to get it from afDashStream.
@@ -495,6 +498,9 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
                         selectedItag = ytMedia.getItag();
                     }
                 }
+            }
+            if (selectedItag == -1) {
+                throw new PluginImplementationException("Unable to select YouTube media");
             }
             final int selectedVideoQuality = ytMediaMap.get(selectedItag).getVideoQuality();
 
@@ -836,16 +842,21 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
                 throw new PluginImplementationException("Error converting and saving subtitles", e);
             }
             return true;
-        } else if (config.isDownloadSubtitles() && isVideo()) {
+        }
+        return false;
+    }
+
+    private void queueSubtitle(String mainpageContent) throws Exception {
+        if (config.isDownloadSubtitles() && isVideo()) {
             final String id = getIdFromUrl();
-            final HttpMethod method = getGetMethod("http://www.youtube.com/api/timedtext?type=list&v=" + id);
+            HttpMethod method = getGetMethod("http://www.youtube.com/api/timedtext?type=list&v=" + id);
             if (makeRedirectedRequest(method)) {
                 final List<URI> list = new LinkedList<URI>();
-                matcher = getMatcherAgainstContent("<track id=\"\\d*\" name=\"(.*?)\" lang_code=\"(.*?)\"");
+                Matcher matcher = getMatcherAgainstContent("<track id=\"\\d*\" name=\"(.*?)\" lang_code=\"(.*?)\"");
                 while (matcher.find()) {
                     final String name = matcher.group(1);
                     final String lang = matcher.group(2);
-                    final String url = fileURL + "#subtitles:" + lang + ":&v=" + id + "&name=" + name + "&lang=" + lang;
+                    final String url = fileURL + "#subtitles:" + lang + ":&v=" + id + "&name=" + URLEncoder.encode(name, "UTF-8") + "&lang=" + lang;
                     try {
                         list.add(new URI(url));
                     } catch (final URISyntaxException e) {
@@ -854,10 +865,67 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
                 }
                 if (!list.isEmpty()) {
                     getPluginService().getPluginContext().getQueueSupport().addLinksToQueue(httpFile, list);
+                } else {
+                    String captionTracks = null;
+                    try {
+                        captionTracks = PlugUtils.getStringBetween(mainpageContent, "\"caption_tracks\":\"", "\"");
+                    } catch (PluginImplementationException e) {
+                        //
+                    }
+                    //it's probably possible that caption tracks contain more than one language,
+                    //at this moment only one language is supported, can't find sample for multilanguage
+                    if (captionTracks != null) {
+                        String captionTracksComponents[] = PlugUtils.unescapeUnicode(captionTracks).split("&");
+                        String url = null;
+                        String lang = null;
+                        for (String captionTracksComponent : captionTracksComponents) {
+                            String[] captionTracksComponentParts = captionTracksComponent.split("=");
+                            String key = captionTracksComponentParts[0];
+                            String value = captionTracksComponentParts[1];
+                            if (key.equals("lc")) {
+                                lang = value;
+                            } else if (key.equals("u")) {
+                                url = URLDecoder.decode(value, "UTF-8");
+                            }
+                        }
+                        if (url != null) {
+                            //silent download, because it contains on "expire" and "signature" params
+                            String fileExtension;
+                            if (lang != null) {
+                                fileExtension = "." + lang + ".srt";
+                            } else {
+                                fileExtension = ".srt";
+                            }
+                            method = client.getGetMethod(url);
+                            if (200 == client.makeRequest(method, true)) {
+                                String fnameNoExt = PlugUtils.unescapeHtml(URLDecoder.decode(HttpUtils.replaceInvalidCharsForFileSystem(
+                                        httpFile.getFileName().replaceFirst("\\.[^\\.]{3,4}$", ""), "_"), "UTF-8"));
+                                String fnameOutput = fnameNoExt + fileExtension;
+                                File outputFile = new File(httpFile.getSaveToDirectory(), fnameOutput);
+                                BufferedWriter bw = null;
+                                int outputFileCounter = 2;
+                                try {
+                                    while (outputFile.exists()) {
+                                        fnameOutput = fnameNoExt + "-" + outputFileCounter++ + fileExtension;
+                                        outputFile = new File(httpFile.getSaveToDirectory(), fnameOutput);
+                                    }
+                                    bw = new BufferedWriter(new FileWriter((outputFile)));
+                                    bw.write(Transcription2SrtUtil.convert(getContentAsString()));
+                                } finally {
+                                    if (bw != null) {
+                                        try {
+                                            bw.close();
+                                        } catch (IOException e) {
+                                            LogUtils.processException(logger, e);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
-        return false;
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
