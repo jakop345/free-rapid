@@ -174,7 +174,7 @@ class DepositFilesRunner extends AbstractRunner {
             throw new PluginImplementationException("File name not found (1)");
         }
         final String nameContent = PlugUtils.unescapeUnicode(matcher.group(1).replace("%u", "\\u"));
-        matcher = PlugUtils.matcher("File name: <b title=\"(.+?)\"", nameContent);
+        matcher = PlugUtils.matcher("(?:File name:\\s*?)?<b title=\"(.+?)\"", nameContent);
         if (!matcher.find()) {
             throw new PluginImplementationException("File name not found (2)");
         }
