@@ -22,7 +22,7 @@ import java.util.zip.Inflater;
 /**
  * @author tong2shot
  */
-public class SubtitleDownloader {
+class SubtitleDownloader {
     private final static Logger logger = Logger.getLogger(SubtitleDownloader.class.getName());
     private final static int HASH_MAGIC_INT = 88140282; // (int) Math.floor(Math.sqrt(6.9) * Math.pow(2,25))
     private final static String HASH_MAGIC_STRING = "$&).6CXzPHw=2N_+isZK";
@@ -129,7 +129,7 @@ public class SubtitleDownloader {
             return;
         }
 
-        String fnameNoExt = HttpUtils.replaceInvalidCharsForFileSystem(httpFile.getFileName().replaceFirst("\\..{3,4}$", ""), "_");
+        String fnameNoExt = HttpUtils.replaceInvalidCharsForFileSystem(httpFile.getFileName().replaceFirst("\\.[^\\.]{3,4}$", ""), "_");
         String fnameOutput = fnameNoExt + ".srt";
         File outputFile = new File(httpFile.getSaveToDirectory(), fnameOutput);
         BufferedWriter bw = null;

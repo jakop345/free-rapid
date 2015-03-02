@@ -61,8 +61,19 @@ class CrunchyRollFileRunner extends AbstractRtmpRunner {
         if (makeRedirectedRequest(method)) {
             checkProblems();
             checkName();
+
             setConfig();
-            logger.info("Settings config : " + config);
+            QualityUrl selectedQualityUrl = getQualityUrl(getContentAsString());
+            fileURL = new URI(fileURL).resolve(selectedQualityUrl.url).toString();
+            method = getGetMethod(fileURL);
+            if (!makeRedirectedRequest(method)) {
+                checkProblems();
+                throw new ServiceConnectionProblemException();
+            }
+            checkProblems();
+
+            logger.info("Config settings : " + config);
+            logger.info("Selected video : " + selectedQualityUrl);
             final String loaderSwfUrl = PlugUtils.getStringBetween(getContentAsString(), ".embedSWF(\"", "\"").replace("\\/", "/");
             final String configUrl = URLDecoder.decode(PlugUtils.getStringBetween(getContentAsString(), "\"config_url\":\"", "\""), "UTF-8");
             method = getMethodBuilder().setReferer(null).setAction(configUrl).setParameter("current_page", fileURL).toPostMethod();
@@ -71,7 +82,8 @@ class CrunchyRollFileRunner extends AbstractRtmpRunner {
                 throw new ServiceConnectionProblemException();
             }
             checkProblems();
-            final String host = PlugUtils.getStringBetween(getContentAsString(), "<host>", "</host>");
+
+            final String host = PlugUtils.replaceEntities(PlugUtils.getStringBetween(getContentAsString(), "<host>", "</host>"));
             final String file = PlugUtils.replaceEntities(PlugUtils.getStringBetween(getContentAsString(), "<file>", "</file>"));
             final String playerSwfUrl = PlugUtils.replaceEntities(PlugUtils.getStringBetween(getContentAsString(), "<default:chromelessPlayerUrl>", "</default:chromelessPlayerUrl>"));
             final String swfUrl;
@@ -117,6 +129,50 @@ class CrunchyRollFileRunner extends AbstractRtmpRunner {
                 helper = new SwfVerificationHelper(swfUrl);
             }
             helper.setSwfVerification(session, client);
+        }
+    }
+
+    private QualityUrl getQualityUrl(String content) throws PluginImplementationException {
+        Matcher matcher = PlugUtils.matcher("<a href=\"([^\"]+?)\".+?token=\"showmedia.(\\d+)p\"[^<>]+?>", content);
+        int weight = Integer.MAX_VALUE;
+        int LOWER_QUALITY_PENALTY = 1;
+        QualityUrl selectedQualityUrl = null;
+        while (matcher.find()) {
+            int quality = Integer.parseInt(matcher.group(2));
+            String url = matcher.group(1);
+            if ((quality > 480) || (url.startsWith("/freetrial/"))) { // 720 and 1080 only for premium
+                continue;
+            }
+            QualityUrl qualityUrl = new QualityUrl(quality, url);
+            logger.info("Found video: " + qualityUrl);
+            int deltaQ = quality - config.getVideoQuality().getQuality();
+            int tempWeight = (deltaQ < 0 ? Math.abs(deltaQ) + LOWER_QUALITY_PENALTY : deltaQ);
+            if (tempWeight < weight) {
+                weight = tempWeight;
+                selectedQualityUrl = qualityUrl;
+            }
+        }
+        if (selectedQualityUrl == null) {
+            throw new PluginImplementationException("No quality URL found");
+        }
+        return selectedQualityUrl;
+    }
+
+    private class QualityUrl {
+        private final int quality;
+        private final String url;
+
+        private QualityUrl(int quality, String url) {
+            this.quality = quality;
+            this.url = url;
+        }
+
+        @Override
+        public String toString() {
+            return "QualityUrl{" +
+                    "quality=" + quality +
+                    ", url='" + url + '\'' +
+                    '}';
         }
     }
 

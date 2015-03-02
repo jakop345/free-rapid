@@ -129,7 +129,7 @@ class SubtitleDownloader {
             return;
         }
 
-        String fnameNoExt = HttpUtils.replaceInvalidCharsForFileSystem(httpFile.getFileName().replaceFirst("\\..{3,4}$", ""), "_");
+        String fnameNoExt = HttpUtils.replaceInvalidCharsForFileSystem(httpFile.getFileName().replaceFirst("\\.[^\\.]{3,4}$", ""), "_");
         String fnameOutput = fnameNoExt + ".srt";
         File outputFile = new File(httpFile.getSaveToDirectory(), fnameOutput);
         BufferedWriter bw = null;

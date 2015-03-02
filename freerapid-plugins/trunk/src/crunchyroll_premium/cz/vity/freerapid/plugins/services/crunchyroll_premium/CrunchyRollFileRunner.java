@@ -67,6 +67,7 @@ class CrunchyRollFileRunner extends AbstractRtmpRunner {
         if (makeRedirectedRequest(method)) {
             checkProblems();
             checkName();
+
             QualityUrl selectedQualityUrl = getQualityUrl(getContentAsString());
             fileURL = new URI(fileURL).resolve(selectedQualityUrl.url).toString();
             method = getGetMethod(fileURL);
@@ -77,7 +78,7 @@ class CrunchyRollFileRunner extends AbstractRtmpRunner {
             checkProblems();
 
             logger.info("Config settings : " + config);
-            logger.info("Selected stream quality : " + selectedQualityUrl.quality + "p");
+            logger.info("Selected video : " + selectedQualityUrl);
             final String loaderSwfUrl = PlugUtils.getStringBetween(getContentAsString(), ".embedSWF(\"", "\"").replace("\\/", "/");
             final String configUrl = URLDecoder.decode(PlugUtils.getStringBetween(getContentAsString(), "\"config_url\":\"", "\""), "UTF-8");
             method = getMethodBuilder().setReferer(null).setAction(configUrl).setParameter("current_page", fileURL).toPostMethod();
@@ -86,7 +87,8 @@ class CrunchyRollFileRunner extends AbstractRtmpRunner {
                 throw new ServiceConnectionProblemException();
             }
             checkProblems();
-            final String host = PlugUtils.getStringBetween(getContentAsString(), "<host>", "</host>");
+
+            final String host = PlugUtils.replaceEntities(PlugUtils.getStringBetween(getContentAsString(), "<host>", "</host>"));
             final String file = PlugUtils.replaceEntities(PlugUtils.getStringBetween(getContentAsString(), "<file>", "</file>"));
             final String playerSwfUrl = PlugUtils.replaceEntities(PlugUtils.getStringBetween(getContentAsString(), "<default:chromelessPlayerUrl>", "</default:chromelessPlayerUrl>"));
             final String swfUrl;
@@ -144,11 +146,13 @@ class CrunchyRollFileRunner extends AbstractRtmpRunner {
         while (matcher.find()) {
             int quality = Integer.parseInt(matcher.group(2));
             String url = matcher.group(1);
+            QualityUrl qualityUrl = new QualityUrl(quality, url);
+            logger.info("Found video: " + qualityUrl);
             int deltaQ = quality - config.getVideoQuality().getQuality();
             int tempWeight = (deltaQ < 0 ? Math.abs(deltaQ) + LOWER_QUALITY_PENALTY : deltaQ);
             if (tempWeight < weight) {
                 weight = tempWeight;
-                selectedQualityUrl = new QualityUrl(quality, url);
+                selectedQualityUrl = qualityUrl;
             }
         }
         if (selectedQualityUrl == null) {
@@ -239,6 +243,14 @@ class CrunchyRollFileRunner extends AbstractRtmpRunner {
         private QualityUrl(int quality, String url) {
             this.quality = quality;
             this.url = url;
+        }
+
+        @Override
+        public String toString() {
+            return "QualityUrl{" +
+                    "quality=" + quality +
+                    ", url='" + url + '\'' +
+                    '}';
         }
     }
 
