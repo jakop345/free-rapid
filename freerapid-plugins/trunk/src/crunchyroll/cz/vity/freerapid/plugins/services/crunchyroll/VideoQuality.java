@@ -1,4 +1,4 @@
-package cz.vity.freerapid.plugins.services.crunchyroll_premium;
+package cz.vity.freerapid.plugins.services.crunchyroll;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -8,9 +8,7 @@ import java.util.Collections;
  */
 enum VideoQuality {
     _360(360),
-    _480(480),
-    _720(720),
-    _1080(1080);
+    _480(480);
 
     private final int quality;
     private final String name;

@@ -19,14 +19,15 @@ public class TestApp extends PluginDevApplication {
             //InputStream is = new BufferedInputStream(new FileInputStream("E:\\Stuff\\logtest.properties"));
             //LogManager.getLogManager().readConfiguration(is);
             //we set file URL
-            //httpFile.setNewURL(new URL("http://www.crunchyroll.com/naruto-shippuden/episode-233-narutos-imposter-585248"));
-            httpFile.setNewURL(new URL("http://www.crunchyroll.com/jojos-bizarre-adventure/episode-8-the-devil-652591"));
+            httpFile.setNewURL(new URL("http://www.crunchyroll.com/naruto-shippuden/episode-233-narutos-imposter-585248"));
+            //httpFile.setNewURL(new URL("http://www.crunchyroll.com/jojos-bizarre-adventure/episode-8-the-devil-652591"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 9050, Proxy.Type.SOCKS); //eg we can use local proxy to sniff HTTP communication
             //then we tries to download
             final CrunchyRollServiceImpl service = new CrunchyRollServiceImpl(); //instance of service - of our plugin
             SettingsConfig config = new SettingsConfig();
+            config.setVideoQuality(VideoQuality._360);
             config.setDownloadSubtitle(true);
             service.setConfig(config);
             //runcheck makes the validation

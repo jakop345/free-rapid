@@ -5,7 +5,16 @@ package cz.vity.freerapid.plugins.services.crunchyroll;
  */
 public class SettingsConfig {
 
+    private VideoQuality videoQuality = VideoQuality._480;
     private boolean downloadSubtitle = false;
+
+    public VideoQuality getVideoQuality() {
+        return videoQuality;
+    }
+
+    public void setVideoQuality(VideoQuality videoQuality) {
+        this.videoQuality = videoQuality;
+    }
 
     public boolean isDownloadSubtitle() {
         return downloadSubtitle;
@@ -18,7 +27,8 @@ public class SettingsConfig {
     @Override
     public String toString() {
         return "SettingsConfig{" +
-                "downloadSubtitle=" + downloadSubtitle +
+                "videoQuality=" + videoQuality +
+                ", downloadSubtitle=" + downloadSubtitle +
                 '}';
     }
 }
