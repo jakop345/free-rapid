@@ -98,7 +98,7 @@ class ZidduFileRunner extends AbstractRunner {
 
     private void checkNameAndSize() throws ErrorDuringDownloadingException {
         final String contentAsString = getContentAsString();
-        PlugUtils.checkName(httpFile, contentAsString, "top.document.title=\"Download ", " in Ziddu");
+        PlugUtils.checkName(httpFile, contentAsString, "title>Download ", " in Ziddu");
         final Matcher match = PlugUtils.matcher("File Size(?:\\s|&nbsp;)*?:(?:\\s|&nbsp;)*?(\\d.+?)(?:\\s|&nbsp;)*?\\|", contentAsString);
         if (!match.find())
             throw new PluginImplementationException("File size not found");

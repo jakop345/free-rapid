@@ -17,7 +17,7 @@ public class TestApp extends PluginDevApplication {
         try {
             //we set file URL
 
-            httpFile.setNewURL(new URL("http://www.ziddu.com/download/20592095/HotspotShecildbyitalerts.blogspotcom.rar.html"));
+            httpFile.setNewURL(new URL("http://www.ziddu.com/download/1068184/RajawaliEmas-TMT.pdf.html"));
             //httpFile.setNewURL(new URL("http://www.ziddu.com/download/7345480/MEPRAVDYMP3.part01.rar.html"));
             //httpFile.setNewURL(new URL("http://www.ziddu.com/download/4173360/esktest.zip.html"));
             //the way we connect to the internet
