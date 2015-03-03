@@ -64,7 +64,7 @@ class BbcFileRunner extends AbstractRtmpRunner {
     private void checkNameAndSize(String playlistContent) throws ErrorDuringDownloadingException {
         String name;
         try {
-            name = PlugUtils.getStringBetween(playlistContent, "\"title\":\"", "\"").replace(": ", " - ");
+            name = PlugUtils.getStringBetween(playlistContent, "\"title\":\"", "\"").replace("\\/", "/").replace(": ", " - ");
         } catch (PluginImplementationException e) {
             try {
                 name = PlugUtils.getStringBetween(playlistContent, "<title>", "</title>").replace(": ", " - ");
@@ -294,6 +294,28 @@ class BbcFileRunner extends AbstractRtmpRunner {
                     return Integer.valueOf(o1.bitrate).compareTo(o2.bitrate);
                 }
             });
+            int selectedBitrate = selectedStream.bitrate;
+
+            //select CDN
+            int weight = Integer.MIN_VALUE;
+            for (Stream stream : streamList) {
+                if (stream.bitrate == selectedBitrate) {
+                    int tempWeight = 0;
+                    if (stream.supplier.equalsIgnoreCase(config.getCdn().toString())) {
+                        tempWeight = 100;
+                    } else if (stream.supplier.equalsIgnoreCase(Cdn.Level3.toString())) { //level3>limelight>akamai
+                        tempWeight = 50;
+                    } else if (stream.supplier.equalsIgnoreCase(Cdn.Limelight.toString())) {
+                        tempWeight = 49;
+                    } else if (stream.supplier.equalsIgnoreCase(Cdn.Akamai.toString())) {
+                        tempWeight = 48;
+                    }
+                    if (tempWeight > weight) {
+                        weight = tempWeight;
+                        selectedStream = stream;
+                    }
+                }
+            }
         }
 
         logger.info("Stream kind : " + (video ? "TV" : "Radio"));

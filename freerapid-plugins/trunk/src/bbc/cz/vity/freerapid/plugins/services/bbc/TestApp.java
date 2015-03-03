@@ -5,7 +5,6 @@ import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
 import cz.vity.freerapid.plugins.webclient.interfaces.HttpFile;
 import org.jdesktop.application.Application;
 
-import java.net.Proxy;
 import java.net.URL;
 
 /**
@@ -30,17 +29,18 @@ public class TestApp extends PluginDevApplication {
             //httpFile.setNewURL(new URL("http://www.bbc.co.uk/iplayer/cbbc/episode/b03y70vb/"));
             //httpFile.setNewURL(new URL("http://www.bbc.co.uk/programmes/p027f9q0"));
             //httpFile.setNewURL(new URL("http://www.bbc.co.uk/programmes/b007wvmw"));
-            httpFile.setNewURL(new URL("http://www.bbc.co.uk/iplayer/episode/b03x1285/shaun-the-sheep-series-4-19-phoney-farmer"));
+            //httpFile.setNewURL(new URL("http://www.bbc.co.uk/iplayer/cbbc/episode/b03wc2yj/"));
+            httpFile.setNewURL(new URL("http://www.bbc.co.uk/programmes/b0540ndg"));
 
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
-            connectionSettings.setProxy("localhost", 9090, Proxy.Type.SOCKS); //eg we can use local proxy to sniff HTTP communication
+            //connectionSettings.setProxy("localhost", 9040, Proxy.Type.SOCKS); //eg we can use local proxy to sniff HTTP communication
             //then we tries to download
             final BbcServiceImpl service = new BbcServiceImpl(); //instance of service - of our plugin
             SettingsConfig config = new SettingsConfig();
             config.setVideoQuality(VideoQuality._360);
             config.setDownloadSubtitles(true);
-            config.setRtmpPort(RtmpPort._80);
+            config.setRtmpPort(RtmpPort._1935);
             config.setEnableTor(false);
             config.setCdn(Cdn.Limelight);
             service.setConfig(config);
