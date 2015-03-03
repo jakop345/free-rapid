@@ -20,6 +20,7 @@ import cz.vity.freerapid.plugins.exceptions.*;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.hoster.CaptchaSupport;
+import cz.vity.freerapid.plugins.webclient.hoster.PremiumAccount;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.HttpMethod;
 
@@ -83,6 +84,7 @@ class GigaPetaFileRunner extends AbstractRunner {
     public void run() throws Exception {
         super.run();
         logger.info("Starting download in TASK " + fileURL);
+        login();
         runCheck();
         checkDownloadProblems();
 
@@ -139,6 +141,32 @@ class GigaPetaFileRunner extends AbstractRunner {
         if (ret == null)
             throw new CaptchaEntryInputMismatchException();
         return ret;
+    }
+
+    private void login() throws Exception {
+        synchronized (GigaPetaFileRunner.class) {
+            GigaPetaServiceImpl service = (GigaPetaServiceImpl) getPluginService();
+            PremiumAccount pa = service.getConfig();
+            if (pa.isSet()) {
+                if (!makeRedirectedRequest(getGetMethod("http://gigapeta.com/")))
+                    throw new ServiceConnectionProblemException();
+                final HttpMethod method = getMethodBuilder()
+                        .setActionFromFormWhereTagContains("auth_", true)
+                        .setReferer("http://gigapeta.com/").setAction("http://gigapeta.com/")
+                        .setParameter("auth_login", pa.getUsername())
+                        .setParameter("auth_passwd", pa.getPassword())
+                        .toPostMethod();
+                if (!makeRedirectedRequest(method)) {
+                    checkProblems();
+                    throw new ServiceConnectionProblemException();
+                }
+                if (getContentAsString().contains("Пароль или Логин введены не верно") ||
+                        getContentAsString().contains("Wrong password or login")) {
+                    throw new BadLoginException("Invalid GigaPeta account login information!");
+                }
+                logger.info("Logged in :)");
+            }
+        }
     }
 
 }

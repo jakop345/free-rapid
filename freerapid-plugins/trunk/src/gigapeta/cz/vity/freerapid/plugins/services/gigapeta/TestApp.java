@@ -19,13 +19,20 @@ public class TestApp extends PluginDevApplication {
             //httpFile.setNewURL(new URL(/*"http://gigapeta.com/dl/392427ad2d5f7"*/
             		/*"http://gigapeta.com/dl/71696a9dfea1"*/
             //		"http://gigapeta.com/dl/520551a25c404"));
-            httpFile.setNewURL(new URL("http://gigapeta.com/dl/1958272a2b3b68"));
+            httpFile.setNewURL(new URL("http://gigapeta.com/dl/5511376a4444b3"));
             //httpFile.setNewURL(new URL("http://gigapeta.com/dl/557999ad11dd7"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
             //then we tries to download
             final GigaPetaServiceImpl service = new GigaPetaServiceImpl(); //instance of service - of our plugin
+            /*
+            //we set registered account details
+            final PremiumAccount config = new PremiumAccount();
+            config.setUsername("****");
+            config.setPassword("****");
+            service.setConfig(config);
+            //*/
             //runcheck makes the validation
             testRun(service, httpFile, connectionSettings);//download file with service and its Runner
             //all output goes to the console
