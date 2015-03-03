@@ -1,20 +1,18 @@
 package cz.vity.freerapid.plugins.services.direct;
 
 import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
-import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;
 import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
 import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.DownloadClientConsts;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.interfaces.FileStreamRecognizer;
+import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpStatus;
 
 import java.io.IOException;
-import java.net.URL;
-import java.net.URLDecoder;
 
 /**
  * @author ntoskrnl
@@ -41,20 +39,9 @@ class DirectDownloadRunner extends AbstractRunner implements FileStreamRecognize
     }
 
     private void checkName() throws ErrorDuringDownloadingException {
-        String filename = findName(fileURL);
+        String filename = PlugUtils.suggestFilename(fileURL);
         logger.info("File name : " + filename);
         httpFile.setFileName(filename);
-    }
-
-    private static String findName(final String url) throws PluginImplementationException {
-        String filename;
-        try {
-            String path = new URL(url).getPath();
-            filename = URLDecoder.decode(path.substring(path.lastIndexOf("/") + 1), "UTF-8");
-        } catch (Exception e) {
-            throw new PluginImplementationException("Error getting file name");
-        }
-        return filename;
     }
 
     @Override
@@ -79,9 +66,9 @@ class DirectDownloadRunner extends AbstractRunner implements FileStreamRecognize
             method2.abort();
             method2.releaseConnection();
         } while (locationHeader != null);
-        httpFile.setFileName(findName(action));
         setClientParameter(DownloadClientConsts.FILE_STREAM_RECOGNIZER, this);
         method = getMethodBuilder().setReferer(fileURL).setAction(action).toGetMethod();
+        httpFile.setFileName(PlugUtils.suggestFilename(method.getURI().toString()));
         return super.tryDownloadAndSaveFile(method);
     }
 
