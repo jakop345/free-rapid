@@ -30,7 +30,8 @@ public class TestApp extends PluginDevApplication {
             //httpFile.setNewURL(new URL("http://www.bbc.co.uk/programmes/p027f9q0"));
             //httpFile.setNewURL(new URL("http://www.bbc.co.uk/programmes/b007wvmw"));
             //httpFile.setNewURL(new URL("http://www.bbc.co.uk/iplayer/cbbc/episode/b03wc2yj/"));
-            httpFile.setNewURL(new URL("http://www.bbc.co.uk/programmes/b0540ndg"));
+            //httpFile.setNewURL(new URL("http://www.bbc.co.uk/programmes/b0540ndg"));
+            httpFile.setNewURL(new URL("http://www.bbc.co.uk/programmes/p00fpv1w")); //non RTMP for non UK ip address
 
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
