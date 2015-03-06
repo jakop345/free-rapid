@@ -23,7 +23,7 @@ public class TestApp extends PluginDevApplication {
             //httpFile.setNewURL(new URL("http://rapids.cz/stahuj/1047774/windows-7-loader.rar"));
             //httpFile.setNewURL(new URL("http://www.share-rapid.cz/stahuj/4294279/kol-sv-90-2010.rar"));
             //httpFile.setNewURL(new URL("http://share-rapid.cz/stahuj/as081zu1"));
-            httpFile.setNewURL(new URL("http://sharerapid.cz/soubor/35151/jenicek-a-marenka-lovci-carodejnic_avi"));
+            httpFile.setNewURL(new URL("http://megarapid.cz/soubor/301716/predestination-dvdrip-xvid-cz_avi"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
