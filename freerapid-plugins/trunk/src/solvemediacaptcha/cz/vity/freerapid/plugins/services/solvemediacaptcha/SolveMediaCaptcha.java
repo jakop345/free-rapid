@@ -120,11 +120,12 @@ public class SolveMediaCaptcha {
                     int cn = 0;
                     char[] captchaResponse = new char[slog.length()];
                     for (int i = 0; i < slog.length(); i++) {
-                        char x = (char) ((secr.charAt(i) ^ (cn | 1) ^ (((cn++ & 1) != 0) ? i : 0) ^ 0x55) ^ (slog.charAt(i) ^ (cn | 1)
+                        char x = (char) ((secr.charAt(i) - 33 ^ (cn | 1) ^ (((cn++ & 1) != 0) ? i : 0) ^ 0x55) ^ (slog.charAt(i) ^ (cn | 1)
                                 ^ (((cn++ & 1) != 0) ? i : 0) ^ 0x55));
                         captchaResponse[i] = x;
                     }
                     response = new String(captchaResponse);
+                    logger.info("Auto recognized: " + response);
                 } else if (client.getContentAsString().contains("base64")) {
                     String base64Str;
                     try {
