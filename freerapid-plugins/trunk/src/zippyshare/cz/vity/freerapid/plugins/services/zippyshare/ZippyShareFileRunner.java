@@ -126,7 +126,7 @@ class ZippyShareFileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize() throws Exception {
-        Matcher matcher = getMatcherAgainstContent("d/[^<>\r\n]+/([^<>\r\n]+?)\";");
+        Matcher matcher = getMatcherAgainstContent("i/[^<>\r\n]+/([^<>\r\n]+?)\";");
         if (matcher.find()) {
             httpFile.setFileName(URLDecoder.decode(matcher.group(1), "UTF-8"));
         } else {
