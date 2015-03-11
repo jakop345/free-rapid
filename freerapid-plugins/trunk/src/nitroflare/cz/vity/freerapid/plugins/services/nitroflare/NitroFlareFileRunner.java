@@ -28,6 +28,7 @@ class NitroFlareFileRunner extends AbstractRunner {
     public void runCheck() throws Exception {
         super.runCheck();
         setClientParameter(DownloadClientConsts.USER_AGENT, USER_AGENT);
+        checkURL();
         final GetMethod getMethod = getGetMethod(fileURL);
         if (makeRedirectedRequest(getMethod)) {
             checkProblems();
@@ -54,12 +55,13 @@ class NitroFlareFileRunner extends AbstractRunner {
     public void run() throws Exception {
         super.run();
         setClientParameter(DownloadClientConsts.USER_AGENT, USER_AGENT);
+        checkURL();
         logger.info("Starting download in TASK " + fileURL);
         HttpMethod method = getGetMethod(fileURL);
         if (makeRedirectedRequest(method)) {
             checkProblems();
             checkNameAndSize(getContentAsString());
-            fileURL = method.getURI().toString(); //http redirected to https
+            fileURL = method.getURI().toString(); //http://www.nitroflare redirected to http://nitrofla
 
             String fileId = getFileId(fileURL);
             String freePageContent = null;
@@ -87,7 +89,7 @@ class NitroFlareFileRunner extends AbstractRunner {
 
             method = getMethodBuilder()
                     .setReferer(fileURL)
-                    .setAction("https://www.nitroflare.com/ajax/freeDownload.php")
+                    .setAction("http://nitroflare.com/ajax/freeDownload.php")
                     .setParameter("fileId", fileId)
                     .setParameter("method", "startTimer")
                     .setAjax()
@@ -108,7 +110,7 @@ class NitroFlareFileRunner extends AbstractRunner {
             try {
                 method = getMethodBuilder().setReferer(fileURL).setActionFromAHrefWhereATagContains("Click here to download").toGetMethod();
             } catch (BuildMethodException e) {
-                throw new PluginImplementationException("Download URL not found");
+                throw new PluginImplementationException("Download URL not found", e);
             }
             if (!tryDownloadAndSaveFile(method)) {
                 checkProblems();
@@ -139,6 +141,10 @@ class NitroFlareFileRunner extends AbstractRunner {
         }
     }
 
+    private void checkURL() {
+        fileURL = fileURL.replaceFirst("https://", "http://");
+    }
+
     private String getFileId(String fileUrl) throws PluginImplementationException {
         Matcher matcher = PlugUtils.matcher("/view/([^/]+?)(?:/.*)?$", fileUrl);
         if (!matcher.find()) {
@@ -151,7 +157,7 @@ class NitroFlareFileRunner extends AbstractRunner {
         HttpMethod method;
         method = getMethodBuilder()
                 .setReferer(fileURL)
-                .setAction("https://www.nitroflare.com/ajax/setCookie.php")
+                .setAction("http://nitroflare.com/ajax/setCookie.php")
                 .setParameter("fileId", fileId)
                 .setAjax()
                 .toPostMethod();
@@ -180,7 +186,7 @@ class NitroFlareFileRunner extends AbstractRunner {
         HttpMethod method = reCaptcha.modifyResponseMethod(getMethodBuilder()
                 .setReferer(fileURL)
                 .setAjax()
-                .setAction("https://www.nitroflare.com/ajax/freeDownload.php")
+                .setAction("http://nitroflare.com/ajax/freeDownload.php")
                 .setParameter("method", "fetchDownload"))
                 .toPostMethod();
         if (!makeRedirectedRequest(method)) {

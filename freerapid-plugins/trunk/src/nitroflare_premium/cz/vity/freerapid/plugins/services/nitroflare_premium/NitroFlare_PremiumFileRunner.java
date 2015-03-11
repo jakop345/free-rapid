@@ -56,6 +56,7 @@ class NitroFlare_PremiumFileRunner extends AbstractRunner {
     @Override
     public void run() throws Exception {
         super.run();
+        //client.getHTTPClient().getState().clearCookies(); //uncomment this in dev environment
         logger.info("Starting download in TASK " + fileURL);
         login();
         final GetMethod method = getGetMethod(fileURL); //create GET request
@@ -109,13 +110,13 @@ class NitroFlare_PremiumFileRunner extends AbstractRunner {
                     }
                 }
                 do {
-                    if (!makeRedirectedRequest(getGetMethod("https://www.nitroflare.com/login"))) {
+                    if (!makeRedirectedRequest(getGetMethod("https://nitroflare.com/login"))) {
                         throw new ServiceConnectionProblemException("Error getting login page");
                     }
                     final MethodBuilder builder = getMethodBuilder()
                             .setActionFromFormWhereTagContains("login", true)
-                            .setAction("https://www.nitroflare.com/login")
-                            .setReferer("https://www.nitroflare.com/login")
+                            .setAction("https://nitroflare.com/login")
+                            .setReferer("https://nitroflare.com/login")
                             .setParameter("email", pa.getUsername())
                             .setParameter("password", pa.getPassword())
                             .setParameter("login", "")
@@ -128,8 +129,7 @@ class NitroFlare_PremiumFileRunner extends AbstractRunner {
                             throw new CaptchaEntryInputMismatchException();
                         reCaptcha.setRecognized(captcha);
                         reCaptcha.modifyResponseMethod(builder);
-                    }
-                    else if (getContentAsString().contains("captcha")) {
+                    } else if (getContentAsString().contains("captcha")) {
                         final CaptchaSupport captchaSupport = getCaptchaSupport();
                         final String captchaSrc = getMethodBuilder().setActionFromImgSrcWhereTagContains("captcha").getEscapedURI();
                         final String captcha;
