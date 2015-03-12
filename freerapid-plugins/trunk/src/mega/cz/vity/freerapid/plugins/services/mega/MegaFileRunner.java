@@ -49,7 +49,7 @@ class MegaFileRunner extends AbstractRunner {
 
     private void init() throws Exception {
         if (id == null) {
-            Matcher matcher = PlugUtils.matcher("#(N)?!([a-zA-Z\\d]{8})!([a-zA-Z\\d\\-_]{43})$", fileURL);
+            Matcher matcher = PlugUtils.matcher("#(N)?(?:!|%21)([a-zA-Z\\d]{8})(?:!|%21)([a-zA-Z\\d\\-_]{43})$", fileURL);
             if (matcher.find()) {
                 if (matcher.group(1) != null) {
                     type = LinkType.N;
@@ -57,7 +57,7 @@ class MegaFileRunner extends AbstractRunner {
                 id = matcher.group(2);
                 api = new MegaApi(client, matcher.group(3));
             } else {
-                matcher = PlugUtils.matcher("#F!([a-zA-Z\\d]{8})!([a-zA-Z\\d\\-_]{22})$", fileURL);
+                matcher = PlugUtils.matcher("#F(?:!|%21)([a-zA-Z\\d]{8})(?:!|%21)([a-zA-Z\\d\\-_]{22})$", fileURL);
                 if (!matcher.find()) {
                     throw new PluginImplementationException("Error parsing file URL");
                 }
