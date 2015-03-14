@@ -5,6 +5,7 @@ import cz.vity.freerapid.plugins.services.recaptcha.ReCaptcha;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.MethodBuilder;
+import cz.vity.freerapid.plugins.webclient.hoster.CaptchaSupport;
 import cz.vity.freerapid.plugins.webclient.hoster.PremiumAccount;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.Cookie;
@@ -148,6 +149,7 @@ class Keep2Share_PremiumFileRunner extends AbstractRunner {
                     checkProblems();
                     throw new ServiceConnectionProblemException();
                 }
+                int verificationCount = 0;
                 do {
                     final HttpMethod httpMethod = doCaptcha(getMethodBuilder()
                             .setActionFromFormWhereTagContains("LoginForm", true)
@@ -164,6 +166,9 @@ class Keep2Share_PremiumFileRunner extends AbstractRunner {
                     } else if (status / 100 != 2) {
                         throw new ServiceConnectionProblemException("Error posting login info");
                     }
+                    verificationCount++;
+                    if (verificationCount > 5)
+                        throw new PluginImplementationException("Excessive incorrect verification codes entered");
                 } while (getContentAsString().contains("The verification code is incorrect"));
                 if (getContentAsString().contains("Incorrect username or password"))
                     throw new BadLoginException("Incorrect username or password!");
@@ -186,6 +191,13 @@ class Keep2Share_PremiumFileRunner extends AbstractRunner {
                 throw new CaptchaEntryInputMismatchException();
             reCaptcha.setRecognized(captchaTxt);
             return reCaptcha.modifyResponseMethod(builder);
+        } else if (getContentAsString().contains("/auth/captcha.html")) {
+            final String captchaImg = getMethodBuilder().setActionFromImgSrcWhereTagContains("/auth/captcha.html").getEscapedURI();
+            final CaptchaSupport captchaSupport = getCaptchaSupport();
+            final String captchaTxt = captchaSupport.getCaptcha(captchaImg);
+            if (captchaTxt == null)
+                throw new CaptchaEntryInputMismatchException();
+            builder.setParameter("LoginForm[verifyCode]", captchaTxt);
         }
         return builder;
     }
