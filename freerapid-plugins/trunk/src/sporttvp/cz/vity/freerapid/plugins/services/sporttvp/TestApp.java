@@ -23,6 +23,9 @@ public class TestApp extends PluginDevApplication {
             //then we tries to download
             final SportTvpServiceImpl service = new SportTvpServiceImpl(); //instance of service - of our plugin
             //runcheck makes the validation
+            SettingsConfig config = new SettingsConfig();
+            config.setVideoQuality(VideoQuality._480);
+            service.setConfig(config);
             testRun(service, httpFile, connectionSettings);//download file with service and its Runner
             //all output goes to the console
         } catch (Exception e) {//catch possible exception
