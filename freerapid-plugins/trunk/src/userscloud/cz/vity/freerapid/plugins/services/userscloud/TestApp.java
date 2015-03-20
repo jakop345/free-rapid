@@ -17,7 +17,7 @@ public class TestApp extends PluginDevApplication {
         try {
             //we set file URL
             //httpFile.setNewURL(new URL("https://userscloud.com/0sz0j47hqqh0/Effigy_002_"));
-            httpFile.setNewURL(new URL("https://userscloud.com/ugfbx0snl0u8/Colder_-_The_Bad_Seed_005_"));
+            httpFile.setNewURL(new URL("https://userscloud.com/5653rhkzlkdl/Street_Fighter_Legends_-_Sakura_"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
