@@ -5,6 +5,7 @@ import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;
 import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
 import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
+import cz.vity.freerapid.plugins.webclient.DownloadClientConsts;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.HttpMethod;
@@ -75,6 +76,7 @@ class MinhatecaFileRunner extends AbstractRunner {
                     .setAction(PlugUtils.unescapeUnicode(PlugUtils.getStringBetween(getContentAsString(), "Url\":\"", "\"")))
                     .toGetMethod();
             setFileStreamContentTypes("text/multipart");
+            setClientParameter(DownloadClientConsts.NO_CONTENT_LENGTH_AVAILABLE, true);  //not always available
             if (!tryDownloadAndSaveFile(downloadMethod)) {
                 checkProblems();//if downloading failed
                 throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
