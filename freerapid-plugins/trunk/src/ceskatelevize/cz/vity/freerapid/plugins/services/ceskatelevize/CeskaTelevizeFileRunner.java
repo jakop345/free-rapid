@@ -182,7 +182,35 @@ class CeskaTelevizeFileRunner extends AbstractRunner {
                 start = matcher.end();
             }
             if (action == null) {
-                throw new PluginImplementationException("Error getting playlist URL");
+                matcher = PlugUtils.matcher("\\(q='([^']+)'", getContentAsString());
+                if (!matcher.find()) {
+                    throw new PluginImplementationException("Error getting playlist URL (1)");
+                }
+                String q = matcher.group(1);
+                matcher = PlugUtils.matcher("url:\\s*?\"([^\"]+)\"", getContentAsString());
+                if (!matcher.find()) {
+                    throw new PluginImplementationException("Error getting playlist URL (2)");
+                }
+                httpMethod = getMethodBuilder()
+                        .setAction(matcher.group(1))
+                        .setParameter("autoStart", "true")
+                        .setParameter("cmd", "getVideoPlayerUrl")
+                        .setParameter("q", q)
+                        .toPostMethod();
+                if (!makeRedirectedRequest(httpMethod)) {
+                    checkProblems();
+                    throw new ServiceConnectionProblemException("Error requesting video player URL");
+                }
+                JsonNode rootNode;
+                try {
+                    rootNode = new JsonMapper().getObjectMapper().readTree(getContentAsString());
+                } catch (IOException e) {
+                    throw new PluginImplementationException("Error parsing video player JSON", e);
+                }
+                action = rootNode.findPath("videoPlayerUrl").getTextValue();
+                if (action == null) {
+                    throw new PluginImplementationException("Error getting playlist URL (3)");
+                }
             }
 
             httpMethod = getMethodBuilder().setReferer(referer).setAction(action).toGetMethod();
