@@ -28,11 +28,12 @@ import java.util.regex.Matcher;
  */
 class MyZukaRuFileRunner extends AbstractRunner {
     private final static Logger logger = Logger.getLogger(MyZukaRuFileRunner.class.getName());
-    private final static String SERVICE_BASE_URL = "http://www.myzuka.ru";
+    private final static String SERVICE_BASE_URL = "http://www.myzuka.org";
 
     @Override
     public void runCheck() throws Exception {
         super.runCheck();
+        checkUrl();
         final GetMethod getMethod = getGetMethod(fileURL);
         if (makeRedirectedRequest(getMethod)) {
             checkProblems();
@@ -60,6 +61,7 @@ class MyZukaRuFileRunner extends AbstractRunner {
     public void run() throws Exception {
         super.run();
         logger.info("Starting download in TASK " + fileURL);
+        checkUrl();
         final GetMethod method = getGetMethod(fileURL);
         if (makeRedirectedRequest(method)) {
             final String contentAsString = getContentAsString();
@@ -94,8 +96,12 @@ class MyZukaRuFileRunner extends AbstractRunner {
         }
     }
 
+    private void checkUrl() {
+        fileURL = fileURL.replaceFirst("myzuka\\.ru", "myzuka.org");
+    }
+
     private boolean isSongUrl(final String url) {
-        return url.matches("http://(?:www\\.)?myzuka\\.ru/Song/.+");
+        return url.matches("http://(?:www\\.)?myzuka\\.org/Song/.+");
     }
 
     private boolean isAlbum() {
