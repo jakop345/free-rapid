@@ -45,7 +45,11 @@ class SubtitleDownloader {
                 outputFile = new File(httpFile.getSaveToDirectory(), fnameOutput);
             }
             bw = new BufferedWriter(new FileWriter((outputFile)));
-            bw.write(TimedText2Srt.convert(timedTextXml));
+            if (subtitleUrl.endsWith(".srt")) {
+                bw.write(timedTextXml);
+            } else {
+                bw.write(TimedText2Srt.convert(timedTextXml));
+            }
         } finally {
             if (bw != null) {
                 try {

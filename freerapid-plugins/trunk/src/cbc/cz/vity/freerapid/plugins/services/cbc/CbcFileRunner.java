@@ -5,7 +5,6 @@ import cz.vity.freerapid.plugins.services.rtmp.AbstractRtmpRunner;
 import cz.vity.freerapid.plugins.services.rtmp.RtmpSession;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
-import cz.vity.freerapid.utilities.LogUtils;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
@@ -89,11 +88,11 @@ class CbcFileRunner extends AbstractRtmpRunner {
 
             setConfig();
             String subtitleUrl = null;
-            try {
-                subtitleUrl = PlugUtils.getStringBetween(getContentAsString(), "<param name=\"ClosedCaptionURL\" value=\"", "\"");
-            } catch (PluginImplementationException e) {
-                logger.warning("Subtitle URL not found");
-                LogUtils.processException(logger, e);
+            Matcher matcher = PlugUtils.matcher("(?:<param name=\"ClosedCaptionURL\" value=\"|<textstream src=\")([^\"]+)", releaseContent);
+            if (!matcher.find()) {
+                logger.info("Subtitle URL not found");
+            } else {
+                subtitleUrl = matcher.group(1).trim();
             }
             if (config.isDownloadSubtitles() && subtitleUrl != null && !subtitleUrl.isEmpty()) {
                 SubtitleDownloader subtitleDownloader = new SubtitleDownloader();
