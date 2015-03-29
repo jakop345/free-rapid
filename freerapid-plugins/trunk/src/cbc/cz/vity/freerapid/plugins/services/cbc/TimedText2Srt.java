@@ -56,14 +56,22 @@ class TimedText2Srt {
     }
 
     private static String toTimeFormat(String value) {
-        String[] split1 = value.replace(".", ",").split(",");
-        String hms = split1[0];
-        int millis = (split1.length == 1 ? 0 : Integer.parseInt(split1[1]));
-        int h, m, s;
-        String[] split2 = hms.split(":");
-        h = Integer.parseInt(split2[0]);
-        m = Integer.parseInt(split2[1]);
-        s = Integer.parseInt(split2[2]);
-        return String.format("%02d:%02d:%02d,%03d", h, m, s, millis);
+        int h, m, s, millis;
+        String[] split1 = value.replace(".", ",").replace("s", "").split(",");
+        if (!value.endsWith("s")) {
+            String hms = split1[0];
+            String[] split2 = hms.split(":");
+            h = Integer.parseInt(split2[0]);
+            m = Integer.parseInt(split2[1]);
+            s = Integer.parseInt(split2[2]);
+        } else {
+            int sec = Integer.parseInt(split1[0]);
+            h = sec / 3600;
+            m = (sec / 60) % 60;
+            s = sec % 60;
+        }
+        millis = (split1.length == 1 ? 0 : Integer.parseInt(split1[1]));
+        String smillis = String.format("%03d", millis).substring(0, 3);
+        return String.format("%02d:%02d:%02d,%s", h, m, s, smillis);
     }
 }

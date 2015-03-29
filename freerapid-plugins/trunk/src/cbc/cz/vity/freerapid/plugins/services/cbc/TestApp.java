@@ -17,7 +17,8 @@ public class TestApp extends PluginDevApplication {
         try {
             //httpFile.setNewURL(new URL("http://www.cbc.ca/player/Radio/Canada%20Reads/ID/2659629901/"));
             //httpFile.setNewURL(new URL("http://www.cbc.ca/player/Shows/ID/2661057045/"));
-            httpFile.setNewURL(new URL("http://www.cbc.ca/player/News/ID/2660371774/?page=6&sort=MostRecent"));
+            //httpFile.setNewURL(new URL("http://www.cbc.ca/player/News/ID/2660371774/?page=6&sort=MostRecent")); //srt
+            httpFile.setNewURL(new URL("http://www.cbc.ca/player/News/ID/2661249760/?sort=MostRecent")); //dfxp 's' style
             final ConnectionSettings connectionSettings = new ConnectionSettings();
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
             final CbcServiceImpl service = new CbcServiceImpl();
