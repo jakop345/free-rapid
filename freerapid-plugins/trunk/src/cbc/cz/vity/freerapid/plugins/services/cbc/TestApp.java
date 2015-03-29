@@ -16,12 +16,14 @@ public class TestApp extends PluginDevApplication {
         final HttpFile httpFile = getHttpFile();
         try {
             //httpFile.setNewURL(new URL("http://www.cbc.ca/player/Radio/Canada%20Reads/ID/2659629901/"));
-            httpFile.setNewURL(new URL("http://www.cbc.ca/player/Shows/ID/2661057045/"));
+            //httpFile.setNewURL(new URL("http://www.cbc.ca/player/Shows/ID/2661057045/"));
+            httpFile.setNewURL(new URL("http://www.cbc.ca/player/News/ID/2660371774/?page=6&sort=MostRecent"));
             final ConnectionSettings connectionSettings = new ConnectionSettings();
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
             final CbcServiceImpl service = new CbcServiceImpl();
             SettingsConfig config = new SettingsConfig();
             config.setVideoQuality(VideoQuality._360);
+            config.setDownloadSubtitles(true);
             service.setConfig(config);
             testRun(service, httpFile, connectionSettings);
         } catch (Exception e) {
