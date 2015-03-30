@@ -37,15 +37,18 @@ public class HlsDownloader {
         this.client = client;
         this.httpFile = httpFile;
         this.downloadTask = downloadTask;
+        client.getHTTPClient().getParams().setParameter(DownloadClientConsts.FILE_STREAM_RECOGNIZER, new DefaultFileStreamRecognizer(new String[0], new String[]{"mpegurl"}, false));
     }
 
     public void tryDownloadAndSaveFile(final String playlistUrl) throws Exception {
-        client.getHTTPClient().getParams().setParameter(DownloadClientConsts.FILE_STREAM_RECOGNIZER, new DefaultFileStreamRecognizer(new String[0], new String[]{"mpegurl"}, false));
         HlsPlaylist hlsPlaylist = new HlsPlaylist(client, playlistUrl); //master playlist
         HlsMedia media = getSelectedMedia(hlsPlaylist.getMedias());
         logger.info("Downloading media: " + media);
+        tryDownloadAndSaveFile(media.url, media.getBandwidth(), media.getQuality());
+    }
 
-        hlsPlaylist = new HlsPlaylist(client, media.url, false, media.getBandwidth(), media.getQuality()); //segments playlist
+    public void tryDownloadAndSaveFile(final String playlistUrl, final int bandwidth, final int quality) throws Exception {
+        HlsPlaylist hlsPlaylist = new HlsPlaylist(client, playlistUrl, false, bandwidth, quality); //segments playlist
 
         httpFile.setState(DownloadState.GETTING);
         logger.info("Starting HLS download");

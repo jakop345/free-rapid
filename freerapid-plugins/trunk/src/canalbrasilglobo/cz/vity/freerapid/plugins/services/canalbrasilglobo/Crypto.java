@@ -44,13 +44,7 @@ class Crypto {
     }
 
     private String randomPadding() {
-        String strRandom = String.valueOf(Math.round(Math.random() * 1.0E10));
-        if (strRandom.length() < 10) {
-            for (int i = 0, strRandomLength = strRandom.length(); i < (10 - strRandomLength); i++) {
-                strRandom = "0" + strRandom;
-            }
-        }
-        return strRandom;
+        return String.format("%010d", Math.round(Math.random() * 1.0E10));
     }
 
     private String signTime() {
@@ -62,13 +56,13 @@ class Crypto {
     }
 
     public String sign() {
-        String _loc1_ = signTime();
-        String _loc2_ = randomPadding();
+        String signTime = signTime();
+        String randomPadding = randomPadding();
         String receivedMD5 = receivedMD5();
-        String _loc3_ = Base64.encodeBase64String(DigestUtils.md5(receivedMD5 + _loc1_ + _loc2_ + PADDING)).replace("+", "-").replace("/", "_").replaceFirst("==?$", "");
+        String base64str = Base64.encodeBase64String(DigestUtils.md5(receivedMD5 + signTime + randomPadding + PADDING)).replace("+", "-").replace("/", "_").replaceFirst("==?$", "");
         String hashVersion = hashVersion();
         String receivedTime = receivedTime();
         String receivedRandom = receivedRandom();
-        return hashVersion + receivedTime + receivedRandom + _loc1_ + _loc2_ + _loc3_;
+        return hashVersion + receivedTime + receivedRandom + signTime + randomPadding + base64str;
     }
 }
