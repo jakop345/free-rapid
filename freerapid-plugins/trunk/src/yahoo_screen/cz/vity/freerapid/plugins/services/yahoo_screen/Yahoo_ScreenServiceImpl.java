@@ -1,4 +1,4 @@
-package cz.vity.freerapid.plugins.services.canalbrasilglobo;
+package cz.vity.freerapid.plugins.services.yahoo_screen;
 
 import cz.vity.freerapid.plugins.webclient.AbstractFileShareService;
 import cz.vity.freerapid.plugins.webclient.interfaces.ConfigurationStorageSupport;
@@ -9,13 +9,13 @@ import cz.vity.freerapid.plugins.webclient.interfaces.PluginRunner;
  *
  * @author tong2shot
  */
-public class CanalBrasilGloboServiceImpl extends AbstractFileShareService {
-    private static final String CONFIG_FILE = "plugin_CanalBrasilGlobo.xml";
+public class Yahoo_ScreenServiceImpl extends AbstractFileShareService {
+    private static final String CONFIG_FILE = "plugin_Yahoo_Screen.xml";
     private volatile SettingsConfig config;
 
     @Override
     public String getName() {
-        return "canalbrasil.globo.com";
+        return "screen.yahoo.com";
     }
 
     @Override
@@ -25,19 +25,19 @@ public class CanalBrasilGloboServiceImpl extends AbstractFileShareService {
 
     @Override
     protected PluginRunner getPluginRunnerInstance() {
-        return new CanalBrasilGloboFileRunner();
+        return new Yahoo_ScreenFileRunner();
     }
 
     @Override
     public void showOptions() throws Exception {
         super.showOptions();
-        if (getPluginContext().getDialogSupport().showOKCancelDialog(new SettingsPanel(this), "CanalBrasil.Globo.com settings")) {
+        if (getPluginContext().getDialogSupport().showOKCancelDialog(new SettingsPanel(this), "Yahoo Screen settings")) {
             getPluginContext().getConfigurationStorageSupport().storeConfigToFile(config, CONFIG_FILE);
         }
     }
 
     SettingsConfig getConfig() throws Exception {
-        synchronized (CanalBrasilGloboServiceImpl.class) {
+        synchronized (Yahoo_ScreenServiceImpl.class) {
             final ConfigurationStorageSupport storage = getPluginContext().getConfigurationStorageSupport();
             if (config == null) {
                 if (!storage.configFileExists(CONFIG_FILE)) {
@@ -55,7 +55,7 @@ public class CanalBrasilGloboServiceImpl extends AbstractFileShareService {
     }
 
     void setConfig(final SettingsConfig config) {
-        synchronized (CanalBrasilGloboServiceImpl.class) {
+        synchronized (Yahoo_ScreenServiceImpl.class) {
             this.config = config;
         }
     }
