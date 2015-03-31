@@ -16,7 +16,7 @@ public class TestApp extends PluginDevApplication {
         final HttpFile httpFile = getHttpFile(); //creates new test instance of HttpFile
         try {
             //we set file URL
-            httpFile.setNewURL(new URL("http://uploadrocket.net/ejphricdf9zq"));
+            httpFile.setNewURL(new URL("http://uploadrocket.net/dyfbx5pocimr"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
@@ -27,7 +27,7 @@ public class TestApp extends PluginDevApplication {
             config.setUsername("****");
             config.setPassword("****");
             service.setConfig(config);
-            */
+            //*/
             //runcheck makes the validation
             testRun(service, httpFile, connectionSettings);//download file with service and its Runner
             //all output goes to the console
