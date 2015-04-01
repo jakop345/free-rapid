@@ -1,8 +1,13 @@
 package cz.vity.freerapid.plugins.services.filejoker;
 
 import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
+import cz.vity.freerapid.plugins.exceptions.NotRecoverableDownloadException;
+import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;
 import cz.vity.freerapid.plugins.exceptions.YouHaveToWaitException;
 import cz.vity.freerapid.plugins.services.xfilesharing.XFileSharingRunner;
+import cz.vity.freerapid.plugins.services.xfilesharing.nameandsize.FileNameHandler;
+import cz.vity.freerapid.plugins.webclient.interfaces.HttpFile;
+import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -15,6 +20,21 @@ import java.util.regex.Matcher;
 class FileJokerFileRunner extends XFileSharingRunner {
 
     @Override
+    protected List<FileNameHandler> getFileNameHandlers() {
+        final List<FileNameHandler> fileNameHandlers = super.getFileNameHandlers();
+        fileNameHandlers.add(new FileNameHandler() {
+            @Override
+            public void checkFileName(HttpFile httpFile, String content) throws ErrorDuringDownloadingException {
+                final Matcher match = PlugUtils.matcher("class=\"name[^>]*?>(.+?)<", content);
+                if (!match.find())
+                    throw new PluginImplementationException("File name not found");
+                httpFile.setFileName(match.group(1).trim());
+            }
+        });
+        return fileNameHandlers;
+    }
+
+    @Override
     protected List<String> getDownloadPageMarkers() {
         final List<String> downloadPageMarkers = super.getDownloadPageMarkers();
         downloadPageMarkers.add("This link will be available for ");
@@ -25,6 +45,10 @@ class FileJokerFileRunner extends XFileSharingRunner {
     protected void checkDownloadProblems() throws ErrorDuringDownloadingException {
         super.checkDownloadProblems();
         final String content = getContentAsString();
+        final Matcher match = PlugUtils.matcher("This file can be downloaded by (<.+?>)?Premium Members", content);
+        if (match.find()) {
+            throw new NotRecoverableDownloadException("This file is only available to premium users");
+        }
         if (content.contains("until the next download")) {
             final Matcher matcher = getMatcherAgainstContent("(?:(\\d+) hours? )?(?:(\\d+) minutes? )?(?:(\\d+) seconds?)");
             int waitHours = 0, waitMinutes = 0, waitSeconds = 0;

@@ -10,7 +10,6 @@ import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
 import java.net.URI;
-import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -40,7 +39,7 @@ class FShareFileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        PlugUtils.checkName(httpFile, content, "title\" content=\"", "\"");
+        PlugUtils.checkName(httpFile, content, "file\" title=\"", "\"");
         final Matcher match = PlugUtils.matcher("class=\"capital\">(?:\\s|<[^>]+?>)+(.+?)<", content);
         if (match.find())
             httpFile.setFileSize(PlugUtils.getFileSizeFromString(match.group(1).trim()));
@@ -65,16 +64,20 @@ class FShareFileRunner extends AbstractRunner {
                 httpFile.getProperties().put("removeCompleted", true);
             } else if (fileURL.contains("/file/")) {
                 checkNameAndSize(contentAsString);//extract file name and size from the page
-                final int count = PlugUtils.getNumberBetween(getContentAsString(), "var count = ", ";");
-                HttpMethod getMethod = getMethodBuilder().setReferer(fileURL)
-                        .setActionFromTextBetween(".get('", "')").setAjax().toGetMethod();
+                fileURL = method.getURI().getURI();
+                HttpMethod getMethod = getMethodBuilder().setReferer(fileURL).setBaseURL(fileURL.split("/file/")[0])
+                        .setActionFromTextBetween(".post('", "'")
+                        .setParameter("speed", "slow")
+                        .setParameter("fs_csrf", PlugUtils.getStringBetween(contentAsString, "fs_csrf: '", "'"))
+                        .setAjax().toPostMethod();
                 if (!makeRedirectedRequest(getMethod)) {
                     checkProblems();
                     throw new ServiceConnectionProblemException();
                 }
+                final int count = PlugUtils.getNumberBetween(getContentAsString(), "wait_time\":", "}");
+                final String url = PlugUtils.getStringBetween(getContentAsString(), "url\":\"", "\"").replaceAll("\\\\/", "/");
                 downloadTask.sleep(count + 1);
-                final HttpMethod httpMethod = getGetMethod((new URL(getContentAsString())).toString());
-                if (!tryDownloadAndSaveFile(httpMethod)) {
+                if (!tryDownloadAndSaveFile(getGetMethod(url))) {
                     checkProblems();//if downloading failed
                     throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
                 }
