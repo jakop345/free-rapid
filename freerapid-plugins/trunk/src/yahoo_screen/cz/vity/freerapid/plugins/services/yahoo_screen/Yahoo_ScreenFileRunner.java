@@ -126,7 +126,7 @@ class Yahoo_ScreenFileRunner extends AbstractRunner {
                 String source = closedCaptionItem.findPath("source").getTextValue();
                 String contentType = closedCaptionItem.findPath("content_type").getTextValue();
                 String lang = closedCaptionItem.findPath("lang").getTextValue();
-                if (source.contains("provider") || (contentType.contains("ttml") && contentType.contains("srt"))) {
+                if (source.contains("provider") && (contentType.contains("ttml") || contentType.contains("srt"))) {
                     new SubtitleDownloader().downloadSubtitle(client, httpFile, url, lang);
                 }
             }

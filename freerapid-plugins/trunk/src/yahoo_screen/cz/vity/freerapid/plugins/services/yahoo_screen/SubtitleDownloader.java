@@ -34,7 +34,7 @@ class SubtitleDownloader {
         String timedTextXml = client.getContentAsString();
 
         String fnameNoExt = PlugUtils.unescapeHtml(URLDecoder.decode(HttpUtils.replaceInvalidCharsForFileSystem(
-                httpFile.getFileName().replaceFirst("\\.[^\\.]{3,4}$", ""), "_"), "UTF-8"));
+                httpFile.getFileName().replaceFirst("\\.[^\\.]{2,4}$", ""), "_"), "UTF-8"));
         String fnameOutput = fnameNoExt + "." + lang + ".srt";
         File outputFile = new File(httpFile.getSaveToDirectory(), fnameOutput);
         BufferedWriter bw = null;
