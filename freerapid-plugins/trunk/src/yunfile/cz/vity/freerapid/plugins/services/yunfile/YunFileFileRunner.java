@@ -50,7 +50,7 @@ class YunFileFileRunner extends AbstractRunner {
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
         String filename = null;
         long fileSize = 0;
-        Matcher matcher = PlugUtils.matcher("<h2[^<>]*?>\\s*?Downloading\\s*?:\\s*?(.+?) - (\\d.+?)</?h2>", content.replace("&nbsp;"," "));
+        Matcher matcher = PlugUtils.matcher("<h2[^<>]*?>\\s*?Downloading\\s*?:\\s*?(.+?) - (\\d.+?B(ytes)?)(?:</?h2>|\\s)", content.replace("&nbsp;"," "));
         while (matcher.find()) {
             String group1 = matcher.group(1);
             if (!group1.contains("Please") || !group1.contains("premium")) {
@@ -213,7 +213,6 @@ class YunFileFileRunner extends AbstractRunner {
                 images.add(tempImage);
             }
         }
-logger.info("# "+images.size()+" #####"+getContentAsString()+"####");
         matcher = PlugUtils.matcher("(?s)<script>(.+?)</script>", bodyContent);
         ScriptEngine engine = initScriptEngine();
         while (matcher.find()) {

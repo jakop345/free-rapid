@@ -34,8 +34,10 @@ class SolidFilesFileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        PlugUtils.checkName(httpFile, content, "<h2 title=\"", "\"");
-        final Matcher match = PlugUtils.matcher("File size</dt>\\s*?<dd>(.+?)</dd>", content);
+        final Matcher matchN = PlugUtils.matcher("<h[12] title=\"(.+?)\"", content);
+        if (!matchN.find()) throw new PluginImplementationException("File name not found");
+        httpFile.setFileName(matchN.group(1));
+        final Matcher match = PlugUtils.matcher("(?:class=\"meta\">|File size</dt>\\s*?<dd>)(.+?)(?:, <|</dd>)", content);
         if (!match.find()) throw new PluginImplementationException("File size not found");
         httpFile.setFileSize(PlugUtils.getFileSizeFromString(match.group(1)));
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
