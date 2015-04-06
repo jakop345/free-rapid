@@ -57,9 +57,10 @@ public class TestApp extends PluginDevApplication {
             //httpFile.setNewURL(new URL("http://www.youtube.com/watch?v=gY5rztWa1TM"));
             //httpFile.setNewURL(new URL("https://www.youtube.com/watch?v=5laMCk6JQN0")); //60 fps
             //httpFile.setNewURL(new URL("https://www.youtube.com/watch?v=Yx9t-Q84l60"));  // 18+
-            httpFile.setNewURL(new URL("https://www.youtube.com/watch?v=TSodL9uBKqc")); //contains subtitle
+            //httpFile.setNewURL(new URL("https://www.youtube.com/watch?v=TSodL9uBKqc")); //contains subtitle
             //httpFile.setNewURL(new URL("https://www.youtube.com/watch?v=TSodL9uBKqc#subtitles:en:&v=TSodL9uBKqc&name=Beginner+Ski+Lesson+2.2+-+Commitment+Exercise&lang=en"));
             //httpFile.setNewURL(new URL("https://www.youtube.com/watch?v=bEBIAfZ0iW4")); //subtitle silent download
+            httpFile.setNewURL(new URL("https://www.youtube.com/watch?v=e-GYrbecb88")); //2160
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 8118); //eg we can use local proxy to sniff HTTP communication
@@ -68,7 +69,7 @@ public class TestApp extends PluginDevApplication {
 
             YouTubeSettingsConfig config = new YouTubeSettingsConfig();
             config.setEnableDash(true);
-            config.setVideoQuality(VideoQuality._720);
+            config.setVideoQuality(VideoQuality._2160);
             config.setContainer(Container.flv);
             config.setReversePlaylistOrder(false);
             config.setDownloadSubtitles(true);
