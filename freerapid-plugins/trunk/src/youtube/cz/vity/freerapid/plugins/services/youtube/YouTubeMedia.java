@@ -58,6 +58,7 @@ class YouTubeMedia {
             case 138:
             case 160:
             case 264:
+            case 266:
             case 298:
             case 299:
                 return Container.dash_v;
@@ -179,9 +180,12 @@ class YouTubeMedia {
                 return 1080;
             case 264:
                 return 1440;
+            case 266:
+                return 2160;
             case 38:
-            case 138: //138=original
                 return 3072;
+            case 138: //138=original
+                return 4320;
             default:
                 throw new PluginImplementationException("Unknown video resolution for itag=" + itag);
         }

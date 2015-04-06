@@ -17,10 +17,7 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 
@@ -87,40 +84,47 @@ class BbcFileRunner extends AbstractRtmpRunner {
             fileURL = method.getURI().toString();
             String mainPageContent = getContentAsString();
             requestPlaylist(getPid(fileURL));
-            checkNameAndSize(getContentAsString());
+            String playlistContent = getContentAsString();
+            checkNameAndSize(playlistContent);
             setConfig();
-            String vpid;
-            try {
-                vpid = PlugUtils.getStringBetween(mainPageContent, "\"vpid\":\"", "\"");
-            } catch (PluginImplementationException e) {
-                Matcher matcher = getMatcherAgainstContent("<item[^<>]*?identifier=\"([^<>]+?)\"");
-                if (matcher.find()) {
-                    vpid = matcher.group(1);
-                } else {
-                    try {
-                        vpid = PlugUtils.getStringBetween(getContentAsString(), "\"vpid\":\"", "\"");
-                    } catch (PluginImplementationException e1) {
-                        throw new PluginImplementationException("Identifier not found");
+
+            Set<String> vpids = getVpids(mainPageContent, playlistContent);
+            logger.info("VPIDs: " + vpids);
+            boolean mediaSelectorOk = true;
+            for (String vpid : vpids) {
+                mediaSelectorOk = true;
+                logger.info("Requesting media selector for VPID: " + vpid);
+                String atk = Hex.encodeHexString(DigestUtils.sha(MEDIA_SELECTOR_HASH + vpid));
+                String mediaSelector = String.format("http://open.live.bbc.co.uk/mediaselector/5/select/version/2.0/mediaset/pc/vpid/%s/atk/%s/asn/%s/", vpid, atk, MEDIA_SELECTOR_ASN);
+                try {
+                    method = getGetMethod(mediaSelector);
+                    if (config.isEnableTor()) {
+                        //internally, UK & proxy users don't use Tor
+                        final TorProxyClient torClient = TorProxyClient.forCountry("gb", client, getPluginService().getPluginContext().getConfigurationStorageSupport());
+                        if (!torClient.makeRequest(method)) {
+                            checkMediaSelectorProblems();
+                            throw new ServiceConnectionProblemException();
+                        }
+                    } else {
+                        if (!makeRedirectedRequest(method)) {
+                            checkMediaSelectorProblems();
+                            throw new ServiceConnectionProblemException();
+                        }
                     }
+                    checkMediaSelectorProblems();
+                } catch (Exception e) {
+                    logger.warning("Error getting media selector for VPID: " + vpid);
+                    mediaSelectorOk = false;
+                }
+                if (mediaSelectorOk) {
+                    break;
                 }
             }
-            String atk = Hex.encodeHexString(DigestUtils.sha(MEDIA_SELECTOR_HASH + vpid));
-            String mediaSelector = String.format("http://open.live.bbc.co.uk/mediaselector/5/select/version/2.0/mediaset/pc/vpid/%s/atk/%s/asn/%s/", vpid, atk, MEDIA_SELECTOR_ASN);
-            method = getGetMethod(mediaSelector);
-            if (config.isEnableTor()) {
-                //internally, UK & proxy users don't use Tor
-                final TorProxyClient torClient = TorProxyClient.forCountry("gb", client, getPluginService().getPluginContext().getConfigurationStorageSupport());
-                if (!torClient.makeRequest(method)) {
-                    checkMediaSelectorProblems();
-                    throw new ServiceConnectionProblemException();
-                }
-            } else {
-                if (!makeRedirectedRequest(method)) {
-                    checkMediaSelectorProblems();
-                    throw new ServiceConnectionProblemException();
-                }
+            if (!mediaSelectorOk) {
+                checkMediaSelectorProblems();
+                throw new ServiceConnectionProblemException();
             }
-            checkMediaSelectorProblems();
+
             Stream selectedStream = getStream(getContentAsString());
             final RtmpSession rtmpSession = getRtmpSession(selectedStream);
             boolean isLimelight = selectedStream.supplier.equalsIgnoreCase("limelight");
@@ -136,6 +140,34 @@ class BbcFileRunner extends AbstractRtmpRunner {
             checkProblems();
             throw new ServiceConnectionProblemException();
         }
+    }
+
+    private Set<String> getVpids(String mainPageContent, String playlistContent) throws PluginImplementationException {
+        /*
+        http://www.bbc.co.uk/iplayer/episode/b05pl7rt/top-of-the-pops-20031980
+        {"info":{"readme":"For the use of Radio, Music and Programmes only"},"statsObject":{"parentPID":"b05pl7rt","parentPIDType":"episode"},"defaultAvailableVersion":{"pid":"b05pvl0w","types":["Original"],"smpConfig":{"title":"Top of the Pops, 20\/03\/1980","summary":"With Squeeze, Shakin' Stevens, Martha and the Muffins, UB40,  the Lambrettas and the Jam.","masterBrandName":"BBC One","items":[{"vpid":"b05pvl0w","kind":"programme","duration":2100}],"holdingImageURL":"http:\/\/ichef.bbci.co.uk\/images\/ic\/$recipe\/p02mx9ml.jpg","guidance":null,"embedRights":"blocked"},"markers":[]},"allAvailableVersions":[{"pid":"b05pvl0w","types":["Original"],"smpConfig":{"title":"Top of the Pops, 20\/03\/1980","summary":"With Squeeze, Shakin' Stevens, Martha and the Muffins, UB40,  the Lambrettas and the Jam.","masterBrandName":"BBC One","items":[{"vpid":"b05pvl0w","kind":"programme","duration":2100}],"holdingImageURL":"http:\/\/ichef.bbci.co.uk\/images\/ic\/$recipe\/p02mx9ml.jpg","guidance":null,"embedRights":"blocked"},"markers":[]},{"pid":"b05pl7rr","types":["Shortened"],"smpConfig":{"title":"Top of the Pops, 20\/03\/1980","summary":"With Squeeze, Shakin' Stevens, Martha and the Muffins, UB40,  the Lambrettas and the Jam.","masterBrandName":"BBC One","items":[{"vpid":"b05pl7rr","kind":"programme","duration":1800}],"holdingImageURL":"http:\/\/ichef.bbci.co.uk\/images\/ic\/$recipe\/p02mx9ml.jpg","guidance":null,"embedRights":"blocked"},"markers":[]}],"holdingImage":"http:\/\/ichef.bbci.co.uk\/images\/ic\/976x549\/p02mx9ml.jpg"}
+         */
+        Set<String> vpids = new LinkedHashSet<String>();
+        Matcher matcher = PlugUtils.matcher("\"vpid\":\"([^\"]+)\"", playlistContent);
+        while (matcher.find()) {
+            vpids.add(matcher.group(1));
+        }
+        if (vpids.size() <= 0) {
+            matcher = PlugUtils.matcher("<item[^<>]*?identifier=\"([^<>]+?)\"", playlistContent);
+            while (matcher.find()) {
+                vpids.add(matcher.group(1));
+            }
+            if (vpids.size() <= 0) {
+                matcher = PlugUtils.matcher("\"vpid\":\"([^\"]+)\"", mainPageContent);
+                while (matcher.find()) {
+                    vpids.add(matcher.group(1));
+                }
+                if (vpids.size() <= 0) {
+                    throw new PluginImplementationException("Identifier not found");
+                }
+            }
+        }
+        return vpids;
     }
 
     private void checkPlaylistProblems() throws NotRecoverableDownloadException {

@@ -889,7 +889,7 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
                             }
                         }
                         if (url != null) {
-                            //silent download, because it contains on "expire" and "signature" params
+                            //silent download, because it contains "expire" and "signature" params
                             String fileExtension;
                             if (lang != null) {
                                 fileExtension = "." + lang + ".srt";

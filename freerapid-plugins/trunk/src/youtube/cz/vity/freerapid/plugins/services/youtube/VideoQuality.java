@@ -16,6 +16,7 @@ enum VideoQuality {
     _1440(1440),
     _2160(2160),
     _3072(3072),
+    _4320(4320),
     Highest(10000, "Highest available");
 
     private final int quality;

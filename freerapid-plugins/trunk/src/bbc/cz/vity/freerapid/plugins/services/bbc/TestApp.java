@@ -31,7 +31,8 @@ public class TestApp extends PluginDevApplication {
             //httpFile.setNewURL(new URL("http://www.bbc.co.uk/programmes/b007wvmw"));
             //httpFile.setNewURL(new URL("http://www.bbc.co.uk/iplayer/cbbc/episode/b03wc2yj/"));
             //httpFile.setNewURL(new URL("http://www.bbc.co.uk/programmes/b0540ndg"));
-            httpFile.setNewURL(new URL("http://www.bbc.co.uk/programmes/p00fpv1w")); //non RTMP for non UK ip address
+            //httpFile.setNewURL(new URL("http://www.bbc.co.uk/programmes/p00fpv1w")); //non RTMP for non UK ip address
+            httpFile.setNewURL(new URL("http://www.bbc.co.uk/iplayer/episode/b05pl7rt/top-of-the-pops-20031980")); //contains 2 vpids, only 1 works
 
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
@@ -45,6 +46,7 @@ public class TestApp extends PluginDevApplication {
             config.setEnableTor(false);
             config.setCdn(Cdn.Limelight);
             service.setConfig(config);
+            //setUseTempFiles(true);
             //runcheck makes the validation
             testRun(service, httpFile, connectionSettings);//download file with service and its Runner
             //all output goes to the console
