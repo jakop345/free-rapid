@@ -46,11 +46,11 @@ class NetloadInRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize() throws ErrorDuringDownloadingException {
-        Matcher matcher = getMatcherAgainstContent("dl_first_filename\">\\s*(.*)<span");
+        Matcher matcher = getMatcherAgainstContent("dl_first_filename\">\\s*(?:<!-- filename:)?(.+?)(?:-->)?<span");
         if (matcher.find()) {
             httpFile.setFileName(matcher.group(1));
         }
-        matcher = getMatcherAgainstContent(">, ([0-9.]+ .B)</span>");
+        matcher = getMatcherAgainstContent(">,? ?([0-9.]+ .B)</span>");
         if (matcher.find()) {
             httpFile.setFileSize(PlugUtils.getFileSizeFromString(matcher.group(1)));
         }
