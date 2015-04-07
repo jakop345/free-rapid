@@ -116,8 +116,8 @@ class DataFileFileRunner extends AbstractRunner {
         if (contentAsString.contains("File not found") || contentAsString.contains("ErrorCode 3: This file was deleted")) {
             throw new URLNotAvailableAnymoreException("File not found"); //let to know user in FRD
         }
-        if (contentAsString.contains("This file can be downloaded only users with<br />Premium account")) {
-            throw new NotRecoverableDownloadException("This file can be downloaded by premium users"); //let to know user in FRD
+        if (contentAsString.contains("This file can be downloaded only by users with<br />Premium account")) {
+            throw new NotRecoverableDownloadException("This file can only be downloaded by premium users"); //let to know user in FRD
         }
         if (contentAsString.contains("You are downloading another file at this moment") ||
                 contentAsString.contains("You can not download more than one file at a time")) {

@@ -2,6 +2,7 @@ package cz.vity.freerapid.plugins.services.uptobox;
 
 import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
 import cz.vity.freerapid.plugins.exceptions.NotRecoverableDownloadException;
+import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;
 import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
 import cz.vity.freerapid.plugins.services.xfilesharing.XFileSharingRunner;
 import cz.vity.freerapid.plugins.services.xfilesharing.nameandsize.FileNameHandler;
@@ -49,7 +50,11 @@ class UptoBoxFileRunner extends XFileSharingRunner {
         if (content.contains("Vous ne pouvez pas t&eacute;l&eacute;charger des fichiers de taille sup&eacute;rieur &agrave")) {
             throw new NotRecoverableDownloadException(PlugUtils.getStringBetween(content, " class=\"err\">", "<br").replace("Vous ne pouvez pas t&eacute;l&eacute;charger des fichiers de taille sup&eacute;rieur &agrave", "You can not download file sizes greater than"));
         }
-        super.checkDownloadProblems();
+        try {super.checkDownloadProblems();
+        } catch (PluginImplementationException x) {
+            if (!x.getMessage().contains("Skipped countdown"))      // ignore error
+                throw new PluginImplementationException(x.getMessage());
+        }
     }
 
     @Override
