@@ -7,6 +7,7 @@ class YouTubeMedia {
     private final int itag;
     private final Container container;
     private final int videoQuality; // deliberately not using VideoQuality, reason : flexibility, it's possible that YT introduces video quality which is not listed in VideoQuality data structure
+    private final DashType dashType;
     private final int frameRate;
     private final AudioEncoding audioEncoding;
     private final int audioBitrate;
@@ -14,11 +15,16 @@ class YouTubeMedia {
     private final String signature;
     private final boolean cipherSignature;
 
+    private static enum DashType {
+        VIDEO, AUDIO, NONE
+    }
+
     public YouTubeMedia(int itag, String url, String signature, boolean cipherSignature) throws ErrorDuringDownloadingException {
         this.itag = itag;
         this.container = getContainer(itag);
-        this.videoQuality = (container == Container.dash_a ? -1 : getVideoResolution(itag));
-        this.frameRate = (container == Container.dash_a ? -1 : getFrameRate(itag));
+        this.dashType = getDashType(itag);
+        this.videoQuality = (isDashAudio() ? -1 : getVideoResolution(itag));
+        this.frameRate = (isDashAudio() ? -1 : getFrameRate(itag));
         this.audioEncoding = (isDashVideo() ? AudioEncoding.None : getAudioEncoding(itag));
         this.audioBitrate = (isDashVideo() ? -1 : getAudioBitrate(itag));
         this.url = url;
@@ -26,7 +32,7 @@ class YouTubeMedia {
         this.cipherSignature = cipherSignature;
     }
 
-    //source : http://en.wikipedia.org/wiki/YouTube#Quality_and_codecs
+    //source : https://en.wikipedia.org/wiki/YouTube#Quality_and_formats
     private Container getContainer(int itag) {
         switch (itag) {
             case 13:
@@ -41,15 +47,6 @@ class YouTubeMedia {
             case 83:
             case 84:
             case 85:
-                return Container.mp4;
-            case 43:
-            case 44:
-            case 45:
-            case 46:
-            case 100:
-            case 101:
-            case 102:
-                return Container.webm;
             case 133:
             case 134:
             case 135:
@@ -61,7 +58,17 @@ class YouTubeMedia {
             case 266:
             case 298:
             case 299:
-                return Container.dash_v;
+            case 139:
+            case 140:
+            case 141:
+                return Container.mp4;
+            case 43:
+            case 44:
+            case 45:
+            case 46:
+            case 100:
+            case 101:
+            case 102:
             case 242:
             case 243:
             case 244:
@@ -71,15 +78,45 @@ class YouTubeMedia {
             case 272:
             case 302:
             case 303:
-                return Container.dash_v_vpx;
+            case 171:
+            case 172:
+                return Container.webm;
+            default:
+                return Container.flv;
+        }
+    }
+
+    private DashType getDashType(int itag) {
+        switch (itag) {
+            case 133:
+            case 134:
+            case 135:
+            case 136:
+            case 137:
+            case 138:
+            case 160:
+            case 264:
+            case 266:
+            case 298:
+            case 299:
+            case 242:
+            case 243:
+            case 244:
+            case 247:
+            case 248:
+            case 271:
+            case 272:
+            case 302:
+            case 303:
+                return DashType.VIDEO;
             case 139:
             case 140:
             case 141:
             case 171:
             case 172:
-                return Container.dash_a;
+                return DashType.AUDIO;
             default:
-                return Container.flv;
+                return DashType.NONE;
         }
     }
 
@@ -204,7 +241,7 @@ class YouTubeMedia {
     }
 
     public boolean isVid2AudSupported() {
-        return ((container == Container.mp4 || container == Container.flv || container == Container.dash_a)
+        return ((container == Container.mp4 || container == Container.flv)
                 && (audioEncoding == AudioEncoding.MP3 || audioEncoding == AudioEncoding.AAC));
     }
 
@@ -213,11 +250,15 @@ class YouTubeMedia {
     }
 
     public boolean isDashVideo() {
-        return (container == Container.dash_v) || (container == Container.dash_v_vpx);
+        return dashType == DashType.VIDEO;
+    }
+
+    public boolean isDashAudio() {
+        return dashType == DashType.AUDIO;
     }
 
     public boolean isDash() {
-        return isDashVideo() || (container == Container.dash_a);
+        return dashType != DashType.NONE;
     }
 
     public int getItag() {
@@ -262,12 +303,10 @@ class YouTubeMedia {
                 "itag=" + itag +
                 ", container=" + container +
                 ", videoQuality=" + videoQuality +
+                ", dashType=" + dashType +
                 ", frameRate=" + frameRate +
-                ", audioEncoding='" + audioEncoding + '\'' +
+                ", audioEncoding=" + audioEncoding +
                 ", audioBitrate=" + audioBitrate +
-                //", url='" + url + '\'' +
-                //", signature='" + signature + '\'' +
-                //", cipherSignature=" + cipherSignature +
                 '}';
     }
 }
