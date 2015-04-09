@@ -12,6 +12,8 @@ import org.apache.commons.httpclient.HttpMethod;
 import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 
@@ -22,6 +24,7 @@ import java.util.regex.Matcher;
  */
 class RapidGatorFileRunner extends AbstractRunner {
     private final static Logger logger = Logger.getLogger(RapidGatorFileRunner.class.getName());
+    private final static Map<Class<?>, LoginData> LOGIN_CACHE = new WeakHashMap<Class<?>, LoginData>(2);
     final static String BaseURL = "http://rapidgator.net";
 
     @Override
@@ -110,33 +113,86 @@ class RapidGatorFileRunner extends AbstractRunner {
 
     private void checkProblems() throws ErrorDuringDownloadingException {
         final String contentAsString = getContentAsString();
-        if (contentAsString.contains("File not found")) {
+        if (contentAsString.contains("File not found") ||
+                contentAsString.contains("<title>Rapidgator.net: Fast, safe and secure file hosting</title>")) {
             throw new URLNotAvailableAnymoreException("File not found");
         }
     }
 
-    private void login() throws Exception {
-        synchronized (RapidGatorFileRunner.class) {
+    private boolean login() throws Exception {
+        synchronized (getClass()) {
             RapidGatorServiceImpl service = (RapidGatorServiceImpl) getPluginService();
-            PremiumAccount pa = service.getConfig();
-            if (!pa.isSet()) {
-                pa = service.showConfigDialog();
-                if (pa == null || !pa.isSet()) {
-                    throw new BadLoginException("No RapidGator account login information!");
+            PremiumAccount config = service.getConfig();
+            String username = config.getUsername();
+            String password = config.getPassword();
+            if (username == null || username.isEmpty()) {
+                LOGIN_CACHE.remove(getClass());
+                throw new BadLoginException("No RapidGator account login information!");
+            }
+            final LoginData loginData = LOGIN_CACHE.get(getClass());
+            if (loginData == null || !username.equals(loginData.getUsername()) || loginData.isStale()) {
+                logger.info("Logging in");
+                doLogin(username, password);
+                final Cookie[] cookies = getCookies();
+                if ((cookies == null) || (cookies.length == 0)) {
+                    throw new PluginImplementationException("Login cookies not found");
                 }
+                LOGIN_CACHE.put(getClass(), new LoginData(username, password, cookies));
+            } else {
+                logger.info("Login data cache hit");
+                client.getHTTPClient().getState().addCookies(loginData.getCookies());
             }
-            final HttpMethod method = getMethodBuilder().setBaseURL(BaseURL)
-                    .setAction("https://rapidgator.net/auth/login")
-                    .setParameter("LoginForm[email]", pa.getUsername())
-                    .setParameter("LoginForm[password]", pa.getPassword())
-                    .setParameter("LoginForm[rememberMe]", "1")
-                    .toPostMethod();
-            if (!makeRedirectedRequest(method)) {
-                throw new ServiceConnectionProblemException("Error posting login info");
-            }
-            if (getContentAsString().contains("Please fix the following input errors")) {
-                throw new BadLoginException("Invalid RapidGator account login information!");
-            }
+            return true;
+        }
+    }
+
+    private boolean doLogin(final String username, final String password) throws Exception {
+        final HttpMethod method = getMethodBuilder().setBaseURL(BaseURL)
+                .setAction("https://rapidgator.net/auth/login")
+                .setParameter("LoginForm[email]", username)
+                .setParameter("LoginForm[password]", password)
+                .setParameter("LoginForm[rememberMe]", "1")
+                .toPostMethod();
+        if (!makeRedirectedRequest(method)) {
+            throw new ServiceConnectionProblemException("Error posting login info");
+        }
+        if (getContentAsString().contains("Frequent logins. Please wait")) {
+            throw new YouHaveToWaitException("Frequent logins, please wait", 30);
+        }
+        if (getContentAsString().contains("Please fix the following input errors")) {
+            throw new BadLoginException("Invalid RapidGator account login information!");
+        }
+        return true;
+    }
+
+    private static class LoginData {
+        private final static long MAX_AGE = 86400000;//1 day
+        private final long created;
+        private final String username;
+        private final String password;
+        private final Cookie[] cookies;
+
+        public LoginData(final String username, final String password, final Cookie[] cookies) {
+            this.created = System.currentTimeMillis();
+            this.username = username;
+            this.password = password;
+            this.cookies = cookies;
+        }
+
+        public boolean isStale() {
+            return System.currentTimeMillis() - created > MAX_AGE;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public Cookie[] getCookies() {
+            return cookies;
         }
     }
 
