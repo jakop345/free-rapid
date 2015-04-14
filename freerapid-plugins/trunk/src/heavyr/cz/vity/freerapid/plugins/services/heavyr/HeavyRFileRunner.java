@@ -1,25 +1,22 @@
-package cz.vity.freerapid.plugins.services.imageporter;
+package cz.vity.freerapid.plugins.services.heavyr;
 
 import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
-import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;
 import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
 import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
-import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
 
 /**
  * Class which contains main code
  *
  * @author birchie
  */
-public class ImagePorterFileRunner extends AbstractRunner {
-    private final static Logger logger = Logger.getLogger(ImagePorterFileRunner.class.getName());
+class HeavyRFileRunner extends AbstractRunner {
+    private final static Logger logger = Logger.getLogger(HeavyRFileRunner.class.getName());
 
     @Override
     public void runCheck() throws Exception { //this method validates file
@@ -34,9 +31,9 @@ public class ImagePorterFileRunner extends AbstractRunner {
         }
     }
 
-    protected void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        PlugUtils.checkName(httpFile, content, "Filename:</b></td><td nowrap>", "</td>");
-        PlugUtils.checkFileSize(httpFile, content, "Size:</b></td><td>", "<small>");
+    private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
+        PlugUtils.checkName(httpFile, content, "<title>", "</title>");
+        httpFile.setFileName(httpFile.getFileName() + ".mp4");
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
 
@@ -44,17 +41,13 @@ public class ImagePorterFileRunner extends AbstractRunner {
     public void run() throws Exception {
         super.run();
         logger.info("Starting download in TASK " + fileURL);
-        GetMethod method = getGetMethod(fileURL); //create GET request
+        final GetMethod method = getGetMethod(fileURL); //create GET request
         if (makeRedirectedRequest(method)) { //we make the main request
-            final String content = getContentAsString();//check for response
+            final String contentAsString = getContentAsString();//check for response
             checkProblems();//check problems
-            checkNameAndSize(content);//extract file name and size from the page
-
-            final Matcher match = PlugUtils.matcher("\\(\\);?\" ?><img src=\"([^\"]+?)\" id=", content);
-            if (!match.find())
-                throw new PluginImplementationException("Image not found");
-            final HttpMethod httpMethod = getGetMethod(match.group(1).trim());
-            if (!tryDownloadAndSaveFile(httpMethod)) {
+            checkNameAndSize(contentAsString);
+            final String dlUrl = PlugUtils.getStringBetween(contentAsString, "file: '", "'");
+            if (!tryDownloadAndSaveFile(getGetMethod(dlUrl))) {
                 checkProblems();//if downloading failed
                 throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
             }
@@ -64,12 +57,9 @@ public class ImagePorterFileRunner extends AbstractRunner {
         }
     }
 
-    protected void checkProblems() throws ErrorDuringDownloadingException {
+    private void checkProblems() throws ErrorDuringDownloadingException {
         final String contentAsString = getContentAsString();
-        if (contentAsString.contains("The file you were looking for could not be found") ||
-                contentAsString.contains("No such file with this filename") ||
-                contentAsString.contains("The file was deleted") ||
-                contentAsString.contains("The file expired")) {
+        if (contentAsString.contains("Video not found")) {
             throw new URLNotAvailableAnymoreException("File not found"); //let to know user in FRD
         }
     }

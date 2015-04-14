@@ -8,4 +8,8 @@ import cz.vity.freerapid.plugins.services.xfileplayer.XFilePlayerRunner;
  * @author birchie
  */
 class FastStreamFileRunner extends XFilePlayerRunner {
+    @Override
+    protected void correctURL() throws Exception {
+        fileURL = fileURL.replaceFirst("faststream.in/", "fastvideo.in/");
+    }
 }
