@@ -155,20 +155,22 @@ class StreamCzRunner extends AbstractRunner {
 
     private StreamCzVideo getSelectedVideo(JsonNode rootNode) throws Exception {
         List<StreamCzVideo> streamCzVideos = new LinkedList<StreamCzVideo>();
-        JsonNode videoQualitiesNode = rootNode.findPath("video_qualities");
+        List<JsonNode> videoQualitiesNodes = rootNode.findValues("video_qualities"); //can be multi nodes
         try {
-            for (JsonNode videoQualitesValue : videoQualitiesNode) {
-                JsonNode formatsNode = videoQualitesValue.findPath("formats");
-                for (JsonNode formatValue : formatsNode) {
-                    JsonNode quality = formatValue.get("quality");
-                    JsonNode type = formatValue.get("type");
-                    JsonNode source = formatValue.get("source");
-                    if ((quality == null) || (type == null) || (source == null)) {
-                        continue;
+            for (JsonNode videoQualitiesNode : videoQualitiesNodes) {
+                for (JsonNode videoQualitiesItem : videoQualitiesNode) {
+                    JsonNode formatsNode = videoQualitiesItem.findPath("formats");
+                    for (JsonNode formatValue : formatsNode) {
+                        JsonNode quality = formatValue.get("quality");
+                        JsonNode type = formatValue.get("type");
+                        JsonNode source = formatValue.get("source");
+                        if ((quality == null) || (type == null) || (source == null) || (!type.getTextValue().startsWith("video"))) {
+                            continue;
+                        }
+                        StreamCzVideo streamCzVideo = new StreamCzVideo(Integer.parseInt(quality.getTextValue().replace("p", "")), type.getTextValue(), source.getTextValue());
+                        streamCzVideos.add(streamCzVideo);
+                        logger.info("Found video : " + streamCzVideo);
                     }
-                    StreamCzVideo streamCzVideo = new StreamCzVideo(Integer.parseInt(quality.getTextValue().replace("p", "")), type.getTextValue(), source.getTextValue());
-                    streamCzVideos.add(streamCzVideo);
-                    logger.info("Found video : " + streamCzVideo);
                 }
             }
         } catch (Exception e) {
