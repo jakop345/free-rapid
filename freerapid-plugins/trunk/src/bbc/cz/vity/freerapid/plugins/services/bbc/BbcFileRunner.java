@@ -38,6 +38,7 @@ class BbcFileRunner extends AbstractRtmpRunner {
     private final static String MEDIA_SELECTOR_ASN = "1";
 
     private SettingsConfig config;
+    private boolean video = false;
 
     private void setConfig() throws Exception {
         final BbcServiceImpl service = (BbcServiceImpl) getPluginService();
@@ -90,6 +91,7 @@ class BbcFileRunner extends AbstractRtmpRunner {
 
             Set<String> vpids = getVpids(mainPageContent, playlistContent);
             logger.info("VPIDs: " + vpids);
+            List<Stream> streamList = new LinkedList<Stream>();
             boolean mediaSelectorOk = true;
             for (String vpid : vpids) {
                 mediaSelectorOk = true;
@@ -112,12 +114,10 @@ class BbcFileRunner extends AbstractRtmpRunner {
                         }
                     }
                     checkMediaSelectorProblems();
+                    streamList.addAll(getStreams(getContentAsString()));
                 } catch (Exception e) {
                     logger.warning("Error getting media selector for VPID: " + vpid);
                     mediaSelectorOk = false;
-                }
-                if (mediaSelectorOk) {
-                    break;
                 }
             }
             if (!mediaSelectorOk) {
@@ -125,7 +125,7 @@ class BbcFileRunner extends AbstractRtmpRunner {
                 throw new ServiceConnectionProblemException();
             }
 
-            Stream selectedStream = getStream(getContentAsString());
+            Stream selectedStream = getSelectedStream(streamList);
             final RtmpSession rtmpSession = getRtmpSession(selectedStream);
             boolean isLimelight = selectedStream.supplier.equalsIgnoreCase("limelight");
             rtmpSession.getConnectParams().put("pageUrl", fileURL);
@@ -237,8 +237,7 @@ class BbcFileRunner extends AbstractRtmpRunner {
         return new RtmpSession(stream.server, config.getRtmpPort().getPort(), stream.app, stream.play, stream.encrypted);
     }
 
-    private Stream getStream(String content) throws Exception {
-        boolean video = false;
+    private List<Stream> getStreams(String content) throws Exception {
         final List<Stream> streamList = new ArrayList<Stream>();
         try {
             final NodeList mediaElements = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new ByteArrayInputStream(content.getBytes("UTF-8"))
@@ -268,10 +267,13 @@ class BbcFileRunner extends AbstractRtmpRunner {
         } catch (Exception e) {
             throw new PluginImplementationException("Error parsing playlist XML", e);
         }
+        return streamList;
+    }
+
+    private Stream getSelectedStream(List<Stream> streamList) throws PluginImplementationException {
         if (streamList.isEmpty()) {
             throw new PluginImplementationException("No suitable streams found");
         }
-
         Stream selectedStream = null;
         if (video) { //video/tv
             final int LOWER_QUALITY_PENALTY = 10;
@@ -289,7 +291,7 @@ class BbcFileRunner extends AbstractRtmpRunner {
             }
             int selectedQuality = selectedStream.quality;
 
-            //select the highest bitrate for the selected quality            
+            //select the highest bitrate for the selected quality
             int selectedBitrate = Integer.MIN_VALUE;
             for (Stream stream : streamList) {
                 if ((stream.quality == selectedQuality) && (stream.bitrate > selectedBitrate)) {

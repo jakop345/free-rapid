@@ -20,9 +20,10 @@ public class TestApp extends PluginDevApplication {
             //httpFile.setNewURL(new URL("http://www.stream.cz/fenomen/562584-apokalypsa"));
             //httpFile.setNewURL(new URL("https://www.stream.cz/jidlo-s-r-o/10004917-cukr-1-repny-cukrovar"));
             //httpFile.setNewURL(new URL("https://www.stream.cz/jidlo-s-r-o/10004829-chlazene-pastiky-2-malovyroba"));
-            httpFile.setNewURL(new URL("https://www.stream.cz/pohadky/krasty-a-moucha/10004521-brusleni"));
+            //httpFile.setNewURL(new URL("https://www.stream.cz/pohadky/krasty-a-moucha/10004521-brusleni"));
             //httpFile.setNewURL(new URL("https://www.stream.cz/pohadky/krasty-a-moucha")); //show
             //httpFile.setNewURL(new URL("https://www.stream.cz/porady/menudomu")); //show
+            httpFile.setNewURL(new URL("https://www.stream.cz/pohadky/plesk/10004597-talisman")); //multinodes video_qualities
             StreamCzServiceImpl service = new StreamCzServiceImpl();
             SettingsConfig config = new SettingsConfig();
             //config.setVideoQuality(VideoQuality._1080);
