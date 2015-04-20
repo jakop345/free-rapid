@@ -42,3 +42,5 @@ $ = function (arg) {
 };
 
 EnvJs = true;
+somffunction = function () {
+};
