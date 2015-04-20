@@ -2,7 +2,6 @@ package cz.vity.freerapid.plugins.services.facebook;
 
 import cz.vity.freerapid.plugins.dev.PluginDevApplication;
 import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
-import cz.vity.freerapid.plugins.webclient.hoster.PremiumAccount;
 import cz.vity.freerapid.plugins.webclient.interfaces.HttpFile;
 import org.jdesktop.application.Application;
 
@@ -31,7 +30,9 @@ public class TestApp extends PluginDevApplication {
             //httpFile.setNewURL(new URL("https://www.facebook.com/media/set/?set=a.164285996985064.42434.114536695293328&type=3"));// album, more than 28 pics
             //httpFile.setNewURL(new URL("https://www.facebook.com/media/set/?set=a.99394368305.88399.40796308305&type=3"));
             //httpFile.setNewURL(new URL("https://www.facebook.com/media/set/?set=a.10151858931788306.457282.40796308305&type=3"));
-            httpFile.setNewURL(new URL("https://www.facebook.com/photo.php?fbid=164287113651619&set=a.164285996985064.42434.114536695293328&type=3"));
+            //httpFile.setNewURL(new URL("https://www.facebook.com/photo.php?fbid=164287113651619&set=a.164285996985064.42434.114536695293328&type=3"));
+            //httpFile.setNewURL(new URL("https://www.facebook.com/video.php?v=1572031679717313&theater"));
+            httpFile.setNewURL(new URL("https://www.facebook.com/I.live.Tv/videos/1572031679717313/?theater"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
