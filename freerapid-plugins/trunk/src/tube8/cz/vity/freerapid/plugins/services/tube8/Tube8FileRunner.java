@@ -10,7 +10,6 @@ import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -101,10 +100,11 @@ class Tube8FileRunner extends AbstractRunner {
         }
     }
 
-    private Tube8Video getSelectedVideo(String content) throws PluginImplementationException, UnsupportedEncodingException {
+    private Tube8Video getSelectedVideo(String content) throws PluginImplementationException {
         List<Tube8Video> videoList = new LinkedList<Tube8Video>();
         for (VideoQuality videoQuality : VideoQuality.values()) {
-            Matcher matcher = PlugUtils.matcher("\"" + videoQuality.getLabel() + "\":\"(.+?)\",", content);
+            logger.info("Searching video: " + videoQuality.toString());
+            Matcher matcher = PlugUtils.matcher("\"" + videoQuality.getLabel() + "\":\"(.+?)\"", content);
             if (matcher.find()) {
                 Tube8Video tube8Video = new Tube8Video(videoQuality, matcher.group(1));
                 videoList.add(tube8Video);

@@ -91,6 +91,7 @@ class DailymotionRunner extends AbstractRunner {
         super.run();
         logger.info("Starting download in TASK " + fileURL);
         addCookie(new Cookie(".dailymotion.com", "lang", "en_EN", "/", 86400, false));
+        addCookie(new Cookie(".dailymotion.com", "ff", "off", "/", 86400, false));
         setFileStreamContentTypes(new String[0], new String[]{"application/json"});
         if (isPlaylist()) {
             parsePlaylist();
@@ -118,8 +119,7 @@ class DailymotionRunner extends AbstractRunner {
             final DailyMotionVideo dmv = getSelectedDailyMotionVideo(dailyMotionVideos);
             logger.info("Quality setting : " + config.getVideoQuality());
             logger.info("Video to be downloaded : " + dmv);
-            String url = dmv.url;
-            method = getMethodBuilder().setReferer(fileURL).setAction(url).toGetMethod();
+            method = getMethodBuilder().setReferer(fileURL).setAction(dmv.url).toGetMethod();
             setClientParameter(DownloadClientConsts.IGNORE_ACCEPT_RANGES, true);
             httpFile.setResumeSupported(true);
             if (!tryDownloadAndSaveFile(method)) {
@@ -128,14 +128,14 @@ class DailymotionRunner extends AbstractRunner {
             }
         } else {
             checkProblems();
-            throw new ServiceConnectionProblemException("Error getting embed URL");
+            throw new ServiceConnectionProblemException("Error getting embed content");
         }
     }
 
     private List<DailyMotionVideo> getDailyMotionVideosFromSequence(String sequence, Container container) {
         final List<DailyMotionVideo> dailyMotionVideos = new LinkedList<DailyMotionVideo>();
         for (VideoQuality videoQuality : VideoQuality.getItems()) {
-            final String urlRegex = String.format("\"stream_h264_?(?:%s)_url\":\"(.+?)\"", videoQuality.getQualityToken1() + "|" + videoQuality.getQualityToken2());
+            final String urlRegex = String.format("\"stream_h264_?(?:%s|%s)_url\":\"(.+?)\"", videoQuality.getQualityToken1(), videoQuality.getQualityToken2());
             final Matcher matcher = PlugUtils.matcher(urlRegex, sequence);
             if (matcher.find()) {
                 final String url = matcher.group(1).replace("\\/", "/");
