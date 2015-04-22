@@ -1,4 +1,4 @@
-package cz.vity.freerapid.plugins.services.chayfile;
+package cz.vity.freerapid.plugins.services.rapidvideo;
 
 import cz.vity.freerapid.plugins.dev.PluginDevApplication;
 import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
@@ -16,11 +16,11 @@ public class TestApp extends PluginDevApplication {
         final HttpFile httpFile = getHttpFile(); //creates new test instance of HttpFile
         try {
             //we set file URL
-            httpFile.setNewURL(new URL("http://www.chayfile.com/peajkl6gklte.html"));
+            httpFile.setNewURL(new URL("http://rapidvideo.ws/7sxygnw3qzt7"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
-            final ChayFileServiceImpl service = new ChayFileServiceImpl(); //instance of service - of our plugin
+            final RapidVideoServiceImpl service = new RapidVideoServiceImpl(); //instance of service - of our plugin
             /*
             //we set premium account details
             final PremiumAccount config = new PremiumAccount();
