@@ -62,7 +62,7 @@ class SpeedyShareFileRunner extends AbstractRunner {
             if (fileURL.contains("speedyshare.com/files/")) {
                 matcher = getMatcherAgainstContent("href=[\"'](/files/(\\d+?)/download/([^/<>\"']+?))[\"']>");
             } else {
-                matcher = getMatcherAgainstContent("href=[\"'](/([^/<>\"']+?)/download/([^/<>\"']+?))[\"']>");
+                matcher = getMatcherAgainstContent("href=[\"'](/([^<>\"']+?)/download/([^/<>\"']+?))[\"']>");
             }
 
             if (!matcher.find()) throw new PluginImplementationException("Download link not found");
