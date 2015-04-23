@@ -24,6 +24,11 @@ import java.util.regex.Matcher;
 class TusFilesFileRunner extends XFileSharingRunner {
 
     @Override
+    protected void correctURL() throws Exception {
+        fileURL = fileURL.replaceFirst("https://", "http://");
+    }
+
+    @Override
     protected List<FileNameHandler> getFileNameHandlers() {
         final List<FileNameHandler> fileNameHandlers = super.getFileNameHandlers();
         fileNameHandlers.add(0, new TusFilesFileNameHandler());

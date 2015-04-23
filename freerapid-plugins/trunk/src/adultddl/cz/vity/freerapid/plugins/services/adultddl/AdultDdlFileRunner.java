@@ -2,6 +2,7 @@ package cz.vity.freerapid.plugins.services.adultddl;
 
 import cz.vity.freerapid.plugins.container.FileInfo;
 import cz.vity.freerapid.plugins.exceptions.*;
+import cz.vity.freerapid.plugins.services.sweetcaptcha.SweetCaptcha;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.DownloadState;
 import cz.vity.freerapid.plugins.webclient.MethodBuilder;
@@ -31,6 +32,7 @@ class AdultDdlFileRunner extends AbstractRunner {
         final GetMethod method = getGetMethod(fileURL); //create GET request
         if (fileURL.contains("img.adultddl")) {
             httpFile.setFileName(fileURL.substring(1 + fileURL.lastIndexOf("/")));
+            method.setRequestHeader("Referer", fileURL);
             if (!tryDownloadAndSaveFile(method)) {
                 checkProblems();//if downloading failed
                 throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
@@ -46,16 +48,18 @@ class AdultDdlFileRunner extends AbstractRunner {
                         captchaLoop = false;
                         if (!makeRequest(captchaMethod)) {
                             checkProblems();
-                            throw new ServiceConnectionProblemException("Error posting login info");
+                            throw new ServiceConnectionProblemException("");
                         }
-                        final HttpMethod verifyMethod = stepCaptcha(getMethodBuilder().setReferer(fileURL)
-                                .setActionFromFormWhereActionContains("verify", true)).toPostMethod();
+                        final HttpMethod verifyMethod = stepCaptcha(getMethodBuilder()
+                                .setActionFromFormWhereTagContains("captcha", true))
+                                .toPostMethod();
                         if (!makeRequest(verifyMethod)) {
                             checkProblems();
-                            throw new ServiceConnectionProblemException("Error posting login info");
+                            throw new ServiceConnectionProblemException();
                         }
                         checkProblems();
-                        if (getContentAsString().contains("The CAPTCHA entered was incorrect"))
+                        if (getContentAsString().contains("The CAPTCHA entered was incorrect") ||
+                                getContentAsString().contains("sweetcaptcha"))
                             captchaLoop = true;
                     } while (captchaLoop);
 
@@ -125,11 +129,20 @@ class AdultDdlFileRunner extends AbstractRunner {
     }
 
     private MethodBuilder stepCaptcha(MethodBuilder builder) throws Exception {
-        final String captchaSrc = getMethodBuilder().setActionFromImgSrcWhereTagContains("captcha").getEscapedURI();
-        logger.info("Captcha URL " + captchaSrc);
-        final String captcha = getCaptchaSupport().getCaptcha(captchaSrc);
-        if (captcha == null) throw new CaptchaEntryInputMismatchException();
-        logger.info("Manual captcha " + captcha);
-        return builder.setParameter("captcha_code", captcha);
+        final String content = getContentAsString();
+        if (content.contains("sweetcaptcha")) {
+            final SweetCaptcha sweetCaptcha = new SweetCaptcha(getDialogSupport(), client);
+            sweetCaptcha.askForCaptcha(content);
+            sweetCaptcha.modifyResponseMethod(builder);
+            builder.setAction(builder.getReferer());
+            return builder;
+        } else {
+            final String captchaSrc = getMethodBuilder().setActionFromImgSrcWhereTagContains("captcha").getEscapedURI();
+            logger.info("Captcha URL " + captchaSrc);
+            final String captcha = getCaptchaSupport().getCaptcha(captchaSrc);
+            if (captcha == null) throw new CaptchaEntryInputMismatchException();
+            logger.info("Manual captcha " + captcha);
+            return builder.setParameter("captcha_code", captcha);
+        }
     }
 }
