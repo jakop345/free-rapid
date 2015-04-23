@@ -69,7 +69,8 @@ public class ConfidentCaptcha {
 
     public MethodBuilder modifyResponseMethod(MethodBuilder methodBuilder, String content) throws Exception {
         HttpMethod post = new MethodBuilder(client)
-                .setAction("http://gca.sh/confidentincludes/callback.php")
+                .setBaseURL(methodBuilder.getReferer().substring(0, methodBuilder.getReferer().indexOf("/", 7)))
+                .setAction(PlugUtils.getStringBetween(content, "callback_url: '", "'"))
                 .setParameter("confidentcaptcha_captcha_id", PlugUtils.getStringBetween(content, "id=\"confidentcaptcha_id_captcha_id\" value=\"", "\""))
                 .setParameter("confidentcaptcha_code", code)
                 .setParameter("confidentcaptcha_click_coordinates", coordinates)
