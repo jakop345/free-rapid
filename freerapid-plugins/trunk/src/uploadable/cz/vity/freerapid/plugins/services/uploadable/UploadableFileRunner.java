@@ -5,6 +5,7 @@ import cz.vity.freerapid.plugins.services.recaptcha.ReCaptcha;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.MethodBuilder;
+import cz.vity.freerapid.plugins.webclient.hoster.PremiumAccount;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -61,6 +62,7 @@ class UploadableFileRunner extends AbstractRunner {
         super.run();
         checkUrl();
         logger.info("Starting download in TASK " + fileURL);GetMethod getMethod = getGetMethod(fileURL);//make first request
+        login();
         int status = client.makeRequest(getMethod,  false);
         if (status/100 == 3) {
             String redirect = getMethod.getResponseHeader("Location").getValue();
@@ -156,4 +158,30 @@ class UploadableFileRunner extends AbstractRunner {
         return reCaptcha.modifyResponseMethod(builder);
     }
 
+    final static String LOGIN_URL = "http://www.uploadable.ch/login.php";
+
+    private void login() throws Exception {
+        synchronized (UploadableFileRunner.class) {
+            UploadableServiceImpl service = (UploadableServiceImpl) getPluginService();
+            PremiumAccount pa = service.getConfig();
+            if (pa.isSet()) {
+                final HttpMethod method = getMethodBuilder()
+                        .setAction(LOGIN_URL).setReferer(LOGIN_URL)
+                        .setParameter("userName", pa.getUsername())
+                        .setParameter("userPassword", pa.getPassword())
+                        .setParameter("action__login", "normalLogin")
+                        .setAjax().toPostMethod();
+                if (!makeRedirectedRequest(method)) {
+                    throw new ServiceConnectionProblemException("Error posting login info");
+                }
+                if (getContentAsString().contains("Login failed") || getContentAsString().contains("Enter a valid user name") ||
+                        getContentAsString().contains("length of user name should be larger than") ||
+                        getContentAsString().contains("length of user password should be larger than")) {
+                    throw new BadLoginException("Invalid Uploadable account login information!");
+                }
+                logger.info("Logged in.!");
+            }
+            else logger.info("Login: No account details.");
+        }
+    }
 }

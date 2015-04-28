@@ -144,7 +144,7 @@ class UlozToRunner extends AbstractRunner {
     }
 
     private void checkURL() {
-        fileURL = fileURL.replaceFirst("(ulozto\\.net|ulozto\\.cz|ulozto\\.sk)", "uloz.to").replaceFirst("http://www\\.uloz\\.to", "http://uloz.to");
+        fileURL = fileURL.replaceFirst("(ulozto\\.net|ulozto\\.cz|ulozto\\.sk)", "uloz.to").replaceFirst("http://(m|www)\\.uloz\\.to", "http://uloz.to");
     }
 
     @Override

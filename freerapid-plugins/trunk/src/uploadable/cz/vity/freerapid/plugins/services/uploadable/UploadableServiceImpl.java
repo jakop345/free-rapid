@@ -1,6 +1,7 @@
 package cz.vity.freerapid.plugins.services.uploadable;
 
 import cz.vity.freerapid.plugins.webclient.AbstractFileShareService;
+import cz.vity.freerapid.plugins.webclient.hoster.PremiumAccount;
 import cz.vity.freerapid.plugins.webclient.interfaces.PluginRunner;
 
 /**
@@ -9,6 +10,8 @@ import cz.vity.freerapid.plugins.webclient.interfaces.PluginRunner;
  * @author birchie
  */
 public class UploadableServiceImpl extends AbstractFileShareService {
+    private static final String PLUGIN_CONFIG_FILE = "plugin_Uploadable_Registered.xml";
+    private volatile PremiumAccount config;
 
     @Override
     public String getName() {
@@ -25,4 +28,25 @@ public class UploadableServiceImpl extends AbstractFileShareService {
         return new UploadableFileRunner();
     }
 
+    @Override
+    public void showOptions() throws Exception {
+        PremiumAccount pa = showConfigDialog();
+        if (pa != null) config = pa;
+    }
+
+    PremiumAccount showConfigDialog() throws Exception {
+        return showAccountDialog(getConfig(), "Uploadable.ch Registered user", PLUGIN_CONFIG_FILE);
+    }
+
+    PremiumAccount getConfig() throws Exception {
+        synchronized (UploadableServiceImpl.class) {
+            if (config == null)
+                config = getAccountConfigFromFile(PLUGIN_CONFIG_FILE);
+        }
+        return config;
+    }
+
+    void setConfig(final PremiumAccount config) {
+        this.config = config;
+    }
 }
