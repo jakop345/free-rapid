@@ -237,7 +237,7 @@ class FlickrFileRunner extends AbstractRunner {
         final String action = getFlickrMethodBuilder(METHOD_PHOTOSETS_GET_PHOTOS)
                 .setParameter("photoset_id", getPhotoSetIdFromURL())
                 .getEscapedURI();
-        final List<URI> uriList = getURIList(action, "\"id\":\"(\\d+)\", \"secret\"", false);
+        final List<URI> uriList = getURIList(action, "\"id\":\"(\\d+)\",\\s?\"secret\"", false);
         queueLinks(uriList);
     }
 
@@ -262,7 +262,7 @@ class FlickrFileRunner extends AbstractRunner {
         final String action = getFlickrMethodBuilder(METHOD_GALLERIES_GET_PHOTOS)
                 .setParameter("gallery_id", getGalleryId())
                 .getEscapedURI();
-        final List<URI> uriList = getURIList(action, "\"id\":\"(\\d+)\", \"owner\":\"(.+?)\", \"secret\"", true);
+        final List<URI> uriList = getURIList(action, "\"id\":\"(\\d+)\",\\s?\"owner\":\"(.+?)\",\\s?\"secret\"", true);
         queueLinks(uriList);
     }
 
@@ -288,7 +288,7 @@ class FlickrFileRunner extends AbstractRunner {
         final String action = getFlickrMethodBuilder(METHOD_FAVORITES_GET_PUBLIC_LIST)
                 .setParameter("user_id", getUserId())
                 .getEscapedURI();
-        final List<URI> uriList = getURIList(action, "\"id\":\"(\\d+)\", \"owner\":\"(.+?)\", \"secret\"", true);
+        final List<URI> uriList = getURIList(action, "\"id\":\"(\\d+)\",\\s?\"owner\":\"(.+?)\",\\s?\"secret\"", true);
         queueLinks(uriList);
     }
 
