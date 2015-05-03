@@ -23,6 +23,7 @@ import java.net.URLDecoder;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
 
 /**
  * Class which contains main code
@@ -43,21 +44,19 @@ class TwitchTvFileRunner extends AbstractRunner {
         if (makeRedirectedRequest(getMethod)) {
             isAtHomePage(getMethod);
             checkProblems();
-            checkNameAndSize(getContentAsString());
+            checkNameAndSize(getVideoInfoNode(getVideoId()));
         } else {
             checkProblems();
             throw new ServiceConnectionProblemException();
         }
     }
 
-    private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        String filename;
-        try {
-            filename = PlugUtils.getStringBetween(content, "content='", "' property='og:title'");
-        } catch (PluginImplementationException e) {
-            throw new PluginImplementationException("Filename not found");
+    private void checkNameAndSize(JsonNode videoInfoNode) throws ErrorDuringDownloadingException {
+        String title = videoInfoNode.findPath("title").getTextValue();
+        if (title == null) {
+            throw new PluginImplementationException("File name not found");
         }
-        httpFile.setFileName(PlugUtils.unescapeHtml(filename.trim()).replaceAll("\\s", " "));
+        httpFile.setFileName(PlugUtils.unescapeHtml(title.trim()).replaceAll("\\s", " "));
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
 
@@ -71,17 +70,11 @@ class TwitchTvFileRunner extends AbstractRunner {
         }
         final GetMethod method = getGetMethod(fileURL);
         if (makeRedirectedRequest(method)) {
-            final String contentAsString = getContentAsString();
             isAtHomePage(method);
             checkProblems();
-            checkNameAndSize(contentAsString);
+            String videoId = getVideoId();
+            checkNameAndSize(getVideoInfoNode(videoId));
 
-            final String videoId;
-            try {
-                videoId = PlugUtils.getStringBetween(getContentAsString(), "\"videoId\":\"", "\"");
-            } catch (PluginImplementationException e) {
-                throw new PluginImplementationException("Video id not found");
-            }
             final HttpMethod httpMethod = getGetMethod(String.format("https://api.twitch.tv/api/videos/%s?as3=t", videoId));
             if (!makeRedirectedRequest(httpMethod)) {
                 checkProblems();
@@ -115,7 +108,7 @@ class TwitchTvFileRunner extends AbstractRunner {
                     uriList.add(new URI(url));
                 }
             } catch (Exception e) {
-                throw new PluginImplementationException("Error parsing JSON content");
+                throw new PluginImplementationException("Error parsing JSON content", e);
             }
             if (uriList.isEmpty()) {
                 throw new PluginImplementationException("No video link found");
@@ -127,6 +120,30 @@ class TwitchTvFileRunner extends AbstractRunner {
             checkProblems();
             throw new ServiceConnectionProblemException();
         }
+    }
+
+    private String getVideoId() throws PluginImplementationException {
+        Matcher matcher = PlugUtils.matcher("/([^/])/(\\d+)$", fileURL);
+        if (!matcher.find()) {
+            throw new PluginImplementationException("Video ID not found");
+        }
+        return (matcher.group(1).equals("b") ? "a" : "c") + matcher.group(2);
+    }
+
+    private JsonNode getVideoInfoNode(String videoId) throws Exception {
+        GetMethod getMethod = getGetMethod(String.format("http://api.twitch.tv/kraken/videos/%s?on_site=1", videoId));
+        if (!makeRedirectedRequest(getMethod)) {
+            checkProblems();
+            throw new ServiceConnectionProblemException();
+        }
+        checkProblems();
+        JsonNode rootNode;
+        try {
+            rootNode = new JsonMapper().getObjectMapper().readTree(getContentAsString());
+        } catch (IOException e) {
+            throw new PluginImplementationException("Error parsing video info");
+        }
+        return rootNode;
     }
 
     private void checkProblems() throws ErrorDuringDownloadingException {
