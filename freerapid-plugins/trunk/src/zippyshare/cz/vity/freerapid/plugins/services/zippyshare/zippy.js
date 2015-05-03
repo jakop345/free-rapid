@@ -22,6 +22,10 @@ document = {
             element = {
                 attr: function (a, v) {
                     this[a] = v;
+                },
+
+                getAttribute: function (a) {
+                    return this[a];
                 }
             };
             this.elements[id] = element;
@@ -42,5 +46,6 @@ $ = function (arg) {
 };
 
 EnvJs = true;
+document.getElementById("omg").attr("class", "2");
 somffunction = function () {
 };
