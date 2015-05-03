@@ -5,6 +5,7 @@ import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.hoster.PremiumAccount;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
+import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
@@ -21,8 +22,8 @@ class FileFactoryRunner extends AbstractRunner {
     @Override
     public void runCheck() throws Exception {
         super.runCheck();
+        setLanguageCookie();
         final GetMethod getMethod = getGetMethod(fileURL);
-
         if (makeRedirectedRequest(getMethod)) {
             checkPasswordProtected();
             checkSeriousProblems();
@@ -31,6 +32,10 @@ class FileFactoryRunner extends AbstractRunner {
             checkSeriousProblems();
             throw new ServiceConnectionProblemException();
         }
+    }
+
+    private void setLanguageCookie() throws Exception {
+        addCookie(new Cookie(".filefactory.com", "locale", "en_US.utf8", "/", 86400, false));
     }
 
     private void checkPasswordProtected() throws Exception {
@@ -56,6 +61,7 @@ class FileFactoryRunner extends AbstractRunner {
     public void run() throws Exception {
         super.run();
         logger.info("Starting download in TASK " + fileURL);
+        setLanguageCookie();
         GetMethod getMethod = getGetMethod(fileURL);
         login();
         if (makeRedirectedRequest(getMethod)) {
