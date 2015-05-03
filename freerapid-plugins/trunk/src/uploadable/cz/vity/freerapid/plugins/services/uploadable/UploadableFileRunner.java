@@ -11,6 +11,7 @@ import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
 
 /**
  * Class which contains main code
@@ -119,7 +120,7 @@ class UploadableFileRunner extends AbstractRunner {
         }
     }
 
-    private void checkProblems() throws ErrorDuringDownloadingException {
+    private void checkProblems() throws Exception {
         final String contentAsString = getContentAsString();
         if (contentAsString.contains("The file could not be found") ||
                 contentAsString.contains("This file is no longer available") ||
@@ -127,8 +128,30 @@ class UploadableFileRunner extends AbstractRunner {
                 contentAsString.contains("File not available")) {
             throw new URLNotAvailableAnymoreException("File not found"); //let to know user in FRD
         }
-        if (getContentAsString().contains("fail\":\"timeLimit"))
-            throw new YouHaveToWaitException("Please wait for 60 minutes to download the next file", 60 * 60);
+        if (getContentAsString().contains("fail\":\"timeLimit")) {
+            String timeString = "60 minutes";
+            int waitTime = 60 * 60;
+            final HttpMethod jsonMethod = getMethodBuilder()
+                    .setReferer(fileURL).setAction(fileURL).setAjax()
+                    .setParameter("checkDownload", "showError")
+                    .setParameter("errorType", "timeLimit")
+                    .toPostMethod();
+            if (makeRedirectedRequest(jsonMethod)) {
+                final Matcher match = PlugUtils.matcher("wait for\\s*?((?:(\\d+) hours?)?(?:, )?(?:(\\d+) minutes?)?(?:, )?(?:(\\d+) seconds?)?)\\s*?to download the next file", getContentAsString());
+                if (match.find()) {
+                    timeString = match.group(1).trim();
+                    int waitHours = 0, waitMinutes = 0, waitSeconds = 0;
+                    if (match.group(2) != null)
+                        waitHours = Integer.parseInt(match.group(2));
+                    if (match.group(3) != null)
+                        waitMinutes = Integer.parseInt(match.group(3));
+                    if (match.group(4) != null)
+                        waitSeconds = Integer.parseInt(match.group(4));
+                    waitTime = (waitHours * 60 * 60) + (waitMinutes * 60) + waitSeconds;
+                }
+            }
+            throw new YouHaveToWaitException("Please wait for " + timeString + " to download the next file", waitTime);
+        }
         if (getContentAsString().contains("fail\":\"parallelDownload"))
             throw new YouHaveToWaitException("1 download at a time", 300);
     }
