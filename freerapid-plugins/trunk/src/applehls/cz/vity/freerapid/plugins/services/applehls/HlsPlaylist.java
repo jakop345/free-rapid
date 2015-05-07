@@ -7,9 +7,7 @@ import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpStatus;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -54,7 +52,6 @@ class HlsPlaylist {
         }
 
         final String content = client.getContentAsString();
-        final String baseUrl = getBaseUrl(playlistUrl);
         final Scanner scanner = new Scanner(content);
         final List<HlsMedia> medias = new ArrayList<HlsMedia>();
         Matcher matcher;
@@ -74,20 +71,15 @@ class HlsPlaylist {
                     }
 
                     line = scanner.nextLine();
-                    medias.add(new HlsMedia(getUrl(baseUrl, line), bandwidth, quality));
+                    medias.add(new HlsMedia(getUrl(playlistUrl, line), bandwidth, quality));
                 }
             } else { //segments playlist
                 if ((line.length() > 0) && (!line.startsWith("#"))) {
-                    medias.add(new HlsMedia(getUrl(baseUrl, line), bandwidth, quality));
+                    medias.add(new HlsMedia(getUrl(playlistUrl, line), bandwidth, quality));
                 }
             }
         }
         return medias;
-    }
-
-    private String getBaseUrl(final String urlStr) throws MalformedURLException {
-        URL url = new URL(urlStr);
-        return url.getProtocol() + "://" + url.getAuthority();
     }
 
     private String getUrl(final String baseUrl, final String url) throws Exception {
