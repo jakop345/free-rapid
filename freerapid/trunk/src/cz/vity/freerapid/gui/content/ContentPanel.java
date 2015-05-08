@@ -109,6 +109,8 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
     private static final String MOVEENABLED_ACTION_ENABLED_PROPERTY = "moveEnabled";
     private boolean moveEnabled = false;
 
+    private Map<Integer, Comparator<?>> columnComparators = new HashMap<Integer, Comparator<?>>();
+
     static {
         numberFormatInstance.setMaximumFractionDigits(2);
         numberFormatInstance.setMinimumFractionDigits(1);
@@ -777,6 +779,7 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
 
         setSelectedEnabled(indexes.length > 0);
         setMoveEnabled(isSelectedEnabled() && !isSorted());
+        setSorterComparators();
 
         final boolean allCompleted = this.manager.hasDownloadFilesStates(indexes, DownloadsActions.completedStates);
 
@@ -823,7 +826,6 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
         table.setAutoStartEditOnKeyStroke(false);
         table.setColumnControlVisible(true);
         table.setColumnSelectionAllowed(false);
-        final DefaultRowSorter sorter = (DefaultRowSorter) table.getRowSorter();
 
         //table.setColumnMargin(10);
         final WinampMoveStyle w = new WinampMoveStyle();
@@ -893,27 +895,7 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
             }
         });
 
-
-        final boolean b = AppPrefs.getProperty(UserProp.TABLE_SORTABLE, UserProp.TABLE_SORTABLE_DEFAULT);
-        table.setSortable(b);
-        if (b) {
-            final SortController rowSorter = (SortController) table.getRowSorter();
-            rowSorter.setSortOrderCycle(SortOrder.ASCENDING, SortOrder.DESCENDING, SortOrder.UNSORTED);
-            ((DefaultRowSorter) rowSorter).setMaxSortKeys(1);
-            sorter.setComparator(COLUMN_NAME, new NameColumnComparator());
-            sorter.setComparator(COLUMN_AVERAGE_SPEED, new AvgSpeedColumnComparator());
-            sorter.setComparator(COLUMN_CHECKED, new CheckedColumnComparator());
-            sorter.setComparator(COLUMN_PROGRESS, new ProgressColumnComparator());
-            sorter.setComparator(COLUMN_PROXY, new ConnectionColumnComparator());
-            sorter.setComparator(COLUMN_SERVICE, new ServiceColumnComparator());
-            sorter.setComparator(COLUMN_SIZE, new SizeColumnComparator());
-            sorter.setComparator(COLUMN_SPEED, new SpeedColumnComparator());
-            sorter.setComparator(COLUMN_STATE, new EstTimeColumnComparator());
-            sorter.setComparator(COLUMN_PROGRESSBAR, new ProgressBarColumnComparator());
-            sorter.setComparator(COLUMN_DESCRIPTION, new DescriptionColumnComparator());
-            sorter.setComparator(COLUMN_DATE_INSERTED, new DateColumnComparator());
-        }
-        table.setUpdateSelectionOnSort(b);
+        setSorterComparators();
 
         columnDescription.setVisible(false);
         columnDate.setVisible(false);
@@ -1016,6 +998,43 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
             }
         }.install(table);
 
+    }
+
+
+    private void setSorterComparators() {
+        final DefaultRowSorter sorter = (DefaultRowSorter) table.getRowSorter();
+        final boolean b = AppPrefs.getProperty(UserProp.TABLE_SORTABLE, UserProp.TABLE_SORTABLE_DEFAULT);
+        table.setSortable(b);
+        if (b) {
+            final SortController rowSorter = (SortController) table.getRowSorter();
+            rowSorter.setSortOrderCycle(SortOrder.ASCENDING, SortOrder.DESCENDING, SortOrder.UNSORTED);
+            ((DefaultRowSorter) rowSorter).setMaxSortKeys(1);
+            if (!columnComparators.containsKey(COLUMN_NAME)) columnComparators.put(COLUMN_NAME, new NameColumnComparator());
+            sorter.setComparator(COLUMN_NAME, columnComparators.get(COLUMN_NAME));
+            if (!columnComparators.containsKey(COLUMN_AVERAGE_SPEED)) columnComparators.put(COLUMN_AVERAGE_SPEED, new AvgSpeedColumnComparator());
+            sorter.setComparator(COLUMN_AVERAGE_SPEED, columnComparators.get(COLUMN_AVERAGE_SPEED));
+            if (!columnComparators.containsKey(COLUMN_CHECKED)) columnComparators.put(COLUMN_CHECKED, new CheckedColumnComparator());
+            sorter.setComparator(COLUMN_CHECKED, columnComparators.get(COLUMN_CHECKED));
+            if (!columnComparators.containsKey(COLUMN_PROGRESS)) columnComparators.put(COLUMN_PROGRESS, new ProgressColumnComparator());
+            sorter.setComparator(COLUMN_PROGRESS, columnComparators.get(COLUMN_PROGRESS));
+            if (!columnComparators.containsKey(COLUMN_PROXY)) columnComparators.put(COLUMN_PROXY, new ConnectionColumnComparator());
+            sorter.setComparator(COLUMN_PROXY, columnComparators.get(COLUMN_PROXY));
+            if (!columnComparators.containsKey(COLUMN_SERVICE)) columnComparators.put(COLUMN_SERVICE, new ServiceColumnComparator());
+            sorter.setComparator(COLUMN_SERVICE, columnComparators.get(COLUMN_SERVICE));
+            if (!columnComparators.containsKey(COLUMN_SIZE)) columnComparators.put(COLUMN_SIZE, new SizeColumnComparator());
+            sorter.setComparator(COLUMN_SIZE, columnComparators.get(COLUMN_SIZE));
+            if (!columnComparators.containsKey(COLUMN_SPEED)) columnComparators.put(COLUMN_SPEED, new SpeedColumnComparator());
+            sorter.setComparator(COLUMN_SPEED, columnComparators.get(COLUMN_SPEED));
+            if (!columnComparators.containsKey(COLUMN_STATE)) columnComparators.put(COLUMN_STATE, new EstTimeColumnComparator());
+            sorter.setComparator(COLUMN_STATE, columnComparators.get(COLUMN_STATE));
+            if (!columnComparators.containsKey(COLUMN_PROGRESSBAR)) columnComparators.put(COLUMN_PROGRESSBAR, new ProgressBarColumnComparator());
+            sorter.setComparator(COLUMN_PROGRESSBAR, columnComparators.get(COLUMN_PROGRESSBAR));
+            if (!columnComparators.containsKey(COLUMN_DESCRIPTION)) columnComparators.put(COLUMN_DESCRIPTION, new DescriptionColumnComparator());
+            sorter.setComparator(COLUMN_DESCRIPTION, columnComparators.get(COLUMN_DESCRIPTION));
+            if (!columnComparators.containsKey(COLUMN_DATE_INSERTED)) columnComparators.put(COLUMN_DATE_INSERTED, new DateColumnComparator());
+            sorter.setComparator(COLUMN_DATE_INSERTED, columnComparators.get(COLUMN_DATE_INSERTED));
+        }
+        table.setUpdateSelectionOnSort(b);
     }
 
     private TableColumnExt initColumn(int columnIndex, TableCellRenderer tableCellRenderer, Comparator comparator) {
@@ -1141,6 +1160,37 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
         SwingUtils.copyToClipboard(builder.toString().trim(), this);
     }
 
+    private JMenuItem getPluginOptions(int[] selectedRows) {
+        if (selectedRows.length == 0)
+            return null;  // nothing selected
+        final String pluginID = manager.getSelectionToList(selectedRows).get(0).getPluginID();
+        if (!director.getPluginsManager().getPluginMetadata(pluginID).isOptionable())
+            return null;   // plugin has no options
+
+        JMenuItem pluginOptions = new JMenuItem(new PluginOptionsAction(pluginID));
+        pluginOptions.setText(context.getResourceMap().getString("textPluginOptions", pluginID));
+        if (director.getPluginsManager().getPluginMetadata(pluginID).hasFavicon())
+            pluginOptions.setIcon(director.getPluginsManager().getPluginInstance(pluginID).getFaviconImage());
+        return pluginOptions;
+    }
+
+    private class PluginOptionsAction extends AbstractAction {
+        private final String pluginID;
+
+        public PluginOptionsAction(String pluginID) {
+            this.pluginID = pluginID;
+            this.putValue(NAME, pluginID);
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            try {
+                director.getPluginsManager().getPluginInstance(pluginID).showOptions();
+            } catch (Exception x) {
+                LogUtils.processException(logger, x);
+            }
+        }
+    }
+
     private void showPopMenu(MouseEvent e) {
         int[] selectedRows = getSelectedRows();//vraci model
         if (selectedRows.length == 0)
@@ -1177,6 +1227,9 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
         rMap.injectComponent(speedLimitMenu);
 
         popup.add(map.get("downloadInformationAction"));
+        final JMenuItem pluginOptions = getPluginOptions(selectedRows);
+        if (pluginOptions != null)
+            popup.add(pluginOptions);
         popup.addSeparator();
         popup.add(map.get("openFileAction"));
         popup.add(map.get("deleteFileAction"));
