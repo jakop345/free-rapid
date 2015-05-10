@@ -19,12 +19,12 @@ public class TestApp extends PluginDevApplication {
             //InputStream is = new BufferedInputStream(new FileInputStream("E:\\Stuff\\logtest.properties"));
             //LogManager.getLogManager().readConfiguration(is);
             //we set file URL
-            //httpFile.setNewURL(new URL("http://www.nbc.com/saturday-night-live/video/secret-word/1368180"));
-            httpFile.setNewURL(new URL("http://www.nbc.com/late-night-with-seth-meyers/video/al-roker-jenny-slate-paul-haggis/2790244"));
+            httpFile.setNewURL(new URL("http://www.nbc.com/saturday-night-live/video/may-2-scarlett-johansson/2862376"));
+            //httpFile.setNewURL(new URL("http://www.nbc.com/saturday-night-live/video/weekend-update-5215-part-2-of-2/2863479"));
             //httpFile.setNewURL(new URL("http://www.nbc.com/the-tonight-show/segments/6471"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
-            //connectionSettings.setProxy("localhost", 9060, Proxy.Type.SOCKS); //eg we can use local proxy to sniff HTTP communication
+            //connectionSettings.setProxy("localhost", 9050, Proxy.Type.SOCKS); //eg we can use local proxy to sniff HTTP communication
             //then we tries to download
             final NbcServiceImpl service = new NbcServiceImpl(); //instance of service - of our plugin
             SettingsConfig config = new SettingsConfig();
