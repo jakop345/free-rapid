@@ -64,8 +64,9 @@ class CloudyEcFileRunner extends AbstractRunner {
             checkProblems();
 
             String fileKey;
-            String content = getContentAsString().contains(".file=") ? getContentAsString() : findParameterContent();
-            Matcher matcher = PlugUtils.matcher("\\.filekey=([\"']?.+?[\"'])?;", content);
+            String embedContent = getContentAsString();
+            String content = embedContent.contains("key:") ? embedContent : findParameterContent();
+            Matcher matcher = PlugUtils.matcher("key\\s*:\\s*([\"']?.+?[\"'])?,", content);
             if (matcher.find()) {
                 fileKey = matcher.group(1);
                 if (fileKey.contains("\"") || fileKey.contains("'")) { //filekey is string
