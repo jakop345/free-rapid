@@ -41,12 +41,9 @@ class NbcFileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize() throws ErrorDuringDownloadingException {
-        Matcher matcher = getMatcherAgainstContent("\"title\":\"(?:Watch)?([^\"]+?)(?:on NBC\\.com)?\"");
+        Matcher matcher = getMatcherAgainstContent("\"og:title\" content=\"(?:Watch)?([^\"]+?)(?:on NBC\\.com)?\"");
         if (!matcher.find()) {
-            matcher = getMatcherAgainstContent("data-title=\"([^\"]+)\"");
-            if (!matcher.find()) {
-                throw new PluginImplementationException("Video title not found");
-            }
+            throw new PluginImplementationException("Video title not found");
         }
         final String name = PlugUtils.unescapeHtml(PlugUtils.unescapeHtml(PlugUtils.unescapeUnicode(matcher.group(1).trim()))) + ".flv";
         httpFile.setFileName(name);
