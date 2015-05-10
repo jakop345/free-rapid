@@ -42,7 +42,8 @@ class iPrimaFileRunner extends AbstractRtmpRunner {
     }
 
     private void checkNameAndSize() throws Exception {
-        final String name = PlugUtils.getStringBetween(getContentAsString(), "<meta property=\"og:title\" content=\"", "\"");
+        final String name = PlugUtils.getStringBetween(getContentAsString(), "<meta property=\"og:title\" content=\"", "\"")
+                .replace("| Prima PLAY", "").trim();
         httpFile.setFileName(name + ".flv");
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
@@ -82,7 +83,7 @@ class iPrimaFileRunner extends AbstractRtmpRunner {
                 }
                 final String auth = PlugUtils.getStringBetween(getContentAsString(), "'?auth='+\"\"+'", "';", 2);
                 app += "?auth=" + auth;
-                final RtmpSession rtmpSession = new RtmpSession("bcastmw.livebox.cz", 80, app, playName);
+                final RtmpSession rtmpSession = new RtmpSession("bcastmw.livebox.cz", 1935, app, playName);
                 rtmpSession.getConnectParams().put("pageUrl", fileURL);
                 rtmpSession.getConnectParams().put("swfUrl", "http://embed.livebox.cz/iprimaplay/flash/LiveboxPlayer.swf?nocache=" + System.currentTimeMillis());
                 rtmpSession.disablePauseWorkaround();
