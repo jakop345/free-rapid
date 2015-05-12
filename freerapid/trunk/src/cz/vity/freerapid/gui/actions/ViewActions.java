@@ -6,6 +6,7 @@ import cz.vity.freerapid.core.UserProp;
 import cz.vity.freerapid.gui.content.ContentPanel;
 import cz.vity.freerapid.gui.dialogs.DownloadHistoryDialog;
 import cz.vity.freerapid.gui.dialogs.SpeedMeterDialog;
+import cz.vity.freerapid.gui.dialogs.ToolbarDialog;
 import cz.vity.freerapid.gui.managers.ManagerDirector;
 import org.jdesktop.application.AbstractBean;
 import org.jdesktop.application.Action;
@@ -52,6 +53,14 @@ public class ViewActions extends AbstractBean {
     @Action
     public void showToolbar() {
         AppPrefs.negateProperty(UserProp.SHOW_TOOLBAR, UserProp.SHOW_TOOLBAR_DEFAULT);
+    }
+
+    @Action
+    public void showToolbarEditorAction() {
+        try {
+            final ToolbarDialog toolbarDialog = new ToolbarDialog(app.getMainFrame());
+            app.show(toolbarDialog);
+        } catch(Exception x) {/**/}
     }
 
     @Action

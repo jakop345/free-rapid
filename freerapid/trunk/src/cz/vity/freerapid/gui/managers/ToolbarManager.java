@@ -23,6 +23,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.LinkedHashMap;
+import java.util.Set;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 
@@ -52,7 +54,7 @@ public class ToolbarManager implements PropertyChangeListener {
     /**
      * samotny toolbar
      */
-    private JToolBar toolbar = new JToolBar("mainToolbar");
+    private JToolBar toolbar;
     //private JXBusyLabel labelWorkingProgress;
 
     private float fontSize;
@@ -76,6 +78,8 @@ public class ToolbarManager implements PropertyChangeListener {
 
 
         fontSize = context.getResourceMap().getFloat("buttonBarFontSize");
+        toolbar = new JToolBar("mainToolbar");
+        initToolbarButtons();
         createToolbar();
     }
 
@@ -158,98 +162,61 @@ public class ToolbarManager implements PropertyChangeListener {
         }
     }
 
+    private void initToolbarButtons() {
+        toolbarButtons = new LinkedHashMap<String, ToolbarButtonProperties>();
+        toolbarButtons.put("-", new ToolbarButtonProperties(""));        //**
+        toolbarButtons.get("-").setName("   ----");
+        toolbarButtons.put("A", new ToolbarButtonProperties("addNewLinksAction"));
+        toolbarButtons.put("B", new ToolbarButtonProperties("resumeAction"));
+        toolbarButtons.put("C", new ToolbarButtonProperties("pauseAction"));
+        toolbarButtons.put("D", new ToolbarButtonProperties("cancelAction"));
+        toolbarButtons.put("E", new ToolbarButtonProperties("topAction"));
+        toolbarButtons.put("F", new ToolbarButtonProperties("upAction"));
+        toolbarButtons.put("G", new ToolbarButtonProperties("downAction"));
+        toolbarButtons.put("H", new ToolbarButtonProperties("bottomAction"));
+        toolbarButtons.put("I", new ToolbarButtonProperties("downloadInformationAction"));
+        toolbarButtons.put("J", new ToolbarButtonProperties("copyContent"));
+        toolbarButtons.put("K", new ToolbarButtonProperties("openLogFile"));
+        toolbarButtons.put("L", new ToolbarButtonProperties("browseToLogFile"));
+        toolbarButtons.put("M", new ToolbarButtonProperties("checkForNewPlugins"));
+        toolbarButtons.put("N", new ToolbarButtonProperties("checkForNewVersion"));
+        toolbarButtons.put("O", new ToolbarButtonProperties("openInBrowser"));
+        toolbarButtons.put("P", new ToolbarButtonProperties("options"));
+        toolbarButtons.put("Q", new ToolbarButtonProperties("showDownloadHistoryAction"));
+        toolbarButtons.get("Q").setSmallIcon("showDownloadHistoryAction_smallIcon");
+        toolbarButtons.put("R", new ToolbarButtonProperties("removeCompletedAction"));
+        toolbarButtons.put("S", new ToolbarButtonProperties("removeCompletedAndDeletedAction"));
+        toolbarButtons.put("T", new ToolbarButtonProperties("removeInvalidLinksAction"));
+        toolbarButtons.put("U", new ToolbarButtonProperties("removeSelectedAction"));
+        toolbarButtons.put("V", new ToolbarButtonProperties("validateLinksAction"));
+        toolbarButtons.put("W", new ToolbarButtonProperties(""));     //**
+        toolbarButtons.get("W").setName(context.getResourceMap().getString("forceDownloadMenu.text").replace("&", ""));
+        toolbarButtons.get("W").setSmallIcon("forceDownloadMenu_smallIcon");
+        toolbarButtons.put("X", new ToolbarButtonProperties("retryAllErrorAction"));
+        toolbarButtons.put("Y", new ToolbarButtonProperties("selectAllAction"));
+        toolbarButtons.put("Z", new ToolbarButtonProperties("invertSelectionAction"));
+    }
+
     private void addToolbarButtons() {
         final String customButtons = AppPrefs.getProperty(UserProp.CUSTOM_TOOLBAR_BUTTONS, UserProp.CUSTOM_TOOLBAR_BUTTONS_DEFAULT);
         for (char button : customButtons.toUpperCase().toCharArray()) {
-            switch (button) {
-                case '|' :
-                case '-' :
-                case '_' :
-                    toolbar.add(new ToolbarSeparator());
-                    break;
-                case 'A' :
-                    toolbar.add(getButton(Swinger.getAction("addNewLinksAction")));
-                    break;
-                case 'B' :
-                    toolbar.add(getButton(Swinger.getAction("resumeAction")));
-                    break;
-                case 'C' :
-                    toolbar.add(getButton(Swinger.getAction("pauseAction")));
-                    break;
-                case 'D' :
-                    toolbar.add(getButton(Swinger.getAction("cancelAction")));
-                    break;
-                case 'E' :
-                    toolbar.add(getButton(Swinger.getAction("topAction")));
-                    break;
-                case 'F' :
-                    toolbar.add(getButton(Swinger.getAction("upAction")));
-                    break;
-                case 'G' :
-                    toolbar.add(getButton(Swinger.getAction("downAction")));
-                    break;
-                case 'H' :
-                    toolbar.add(getButton(Swinger.getAction("bottomAction")));
-                    break;
-                case 'I' :
-                    toolbar.add(getButton(Swinger.getAction("downloadInformationAction")));
-                    break;
-                case 'J' :
-                    toolbar.add(getButton(Swinger.getAction("copyContent")));
-                    break;
-                case 'K' :
-                    toolbar.add(getButton(Swinger.getAction("openLogFile")));
-                    break;
-                case 'L' :
-                    toolbar.add(getButton(Swinger.getAction("browseToLogFile")));
-                    break;
-                case 'M' :
-                    toolbar.add(getButton(Swinger.getAction("checkForNewPlugins")));
-                    break;
-                case 'N' :
-                    toolbar.add(getButton(Swinger.getAction("checkForNewVersion")));
-                    break;
-                case 'O' :
-                    toolbar.add(getButton(Swinger.getAction("openInBrowser")));
-                    break;
-                case 'P' :
-                    toolbar.add(getButton(Swinger.getAction("options")));
-                    break;
-                case 'Q' :
-                    toolbar.add(getButton(Swinger.getAction("showDownloadHistoryAction")));
-                    break;
-                case 'R' :
-                    toolbar.add(getButton(Swinger.getAction("removeCompletedAction")));
-                    break;
-                case 'S' :
-                    toolbar.add(getButton(Swinger.getAction("removeCompletedAndDeletedAction")));
-                    break;
-                case 'T' :
-                    toolbar.add(getButton(Swinger.getAction("removeInvalidLinksAction")));
-                    break;
-                case 'U' :
-                    toolbar.add(getButton(Swinger.getAction("removeSelectedAction")));
-                    break;
-                case 'V' :
-                    toolbar.add(getButton(Swinger.getAction("validateLinksAction")));
-                    break;
-                case 'W' :
-                    initForceDownloadButton();
-                    toolbar.add(forceDownloadButton);
-                    break;
-                case 'X' :
-                    toolbar.add(getButton(Swinger.getAction("retryAllErrorAction")));
-                    break;
-                case 'Y' :
-                    toolbar.add(getButton(Swinger.getAction("selectAllAction")));
-                    break;
-                case 'Z' :
-                    toolbar.add(getButton(Swinger.getAction("invertSelectionAction")));
-                    break;
-                default:
-                    break;
+            if (button == '-') {
+                toolbar.add(new ToolbarSeparator());
+            } else if (button == 'W') {
+                initForceDownloadButton();
+                toolbar.add(forceDownloadButton);
+            } else {
+                if (toolbarButtons.containsKey(""+button))
+                    toolbar.add(getButton(toolbarButtons.get(""+button).getAction()));
             }
         }
+    }
+
+    public void reloadToolbar() {
+        toolbar = new JToolBar("mainToolbar");
+        toolbarPanel.removeAll();
+        createToolbar();
+        initManager();
     }
 
     private void createToolbar() {
@@ -314,6 +281,16 @@ public class ToolbarManager implements PropertyChangeListener {
         }
         toolbar.add(Box.createHorizontalStrut(18));
 
+        toolbar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    final JPopupMenu popup = new JPopupMenu();
+                    popup.add(new JMenuItem(context.getActionMap().get("showToolbarEditorAction")));
+                    SwingUtils.showPopMenu(popup, e, toolbar, toolbar);
+                }
+            }
+        });
 
         updateButtons(AppPrefs.getProperty(UserProp.SHOW_TEXT_TOOLBAR, UserProp.SHOW_TEXT_TOOLBAR_DEFAULT));
 
@@ -440,5 +417,59 @@ public class ToolbarManager implements PropertyChangeListener {
 
     public SearchField getSearchField() {
         return searchField;
+    }
+
+
+    private LinkedHashMap<String, ToolbarButtonProperties> toolbarButtons;
+
+    public Set<String> getToolbarButtonList() {
+        return toolbarButtons.keySet();
+    }
+    public String getToolbarButtonName(String key) {
+        if (toolbarButtons.containsKey(key))
+            return toolbarButtons.get(key).getName();
+        return key;
+    }
+    public Icon getToolbarButtonSmallIcon(String key) {
+        if (toolbarButtons.containsKey(key))
+            return toolbarButtons.get(key).getSmallIcon();
+        return null;
+    }
+
+    private class ToolbarButtonProperties {
+        private String actionProperty = "";
+        private String name = "";
+        private Icon smallIcon;
+
+        ToolbarButtonProperties(String actionProperty) {
+            this.actionProperty = actionProperty;
+        }
+
+        void setName(String name) {
+            this.name = name;
+        }
+        void setSmallIcon(String smallIconProperty) {
+            this.smallIcon = context.getResourceMap().getIcon(smallIconProperty);
+        }
+
+        Action getAction() {
+            if (!actionProperty.isEmpty())
+                return Swinger.getAction(actionProperty);
+            return null;
+        }
+        String getName() {
+            if (!name.isEmpty())
+                return name;
+            if (!actionProperty.isEmpty())
+                return (String) Swinger.getAction(actionProperty).getValue(Action.NAME);
+            return "";
+        }
+        Icon getSmallIcon() {
+            if (smallIcon != null)
+                return smallIcon;
+            else if (!actionProperty.isEmpty())
+                return (Icon) Swinger.getAction(actionProperty).getValue(Action.SMALL_ICON);
+            return null;
+        }
     }
 }
