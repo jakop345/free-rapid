@@ -10,6 +10,7 @@ import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.*;
 import cz.vity.freerapid.core.AppPrefs;
 import cz.vity.freerapid.core.FWProp;
+import cz.vity.freerapid.core.MainApp;
 import cz.vity.freerapid.core.UserProp;
 import cz.vity.freerapid.swing.LaF;
 import cz.vity.freerapid.swing.LookAndFeels;
@@ -116,7 +117,7 @@ public class ViewsTab extends UserPreferencesTab {
     public void build(final CellConstraints cc) {
         JPanel panelAppearance = new JPanel();
         JPanel panelSystemTray = new JPanel();
-
+        JPanel panelToolbarEditor = new JPanel();
         comboLaF = new JComboBox();
         JLabel labelLaF = new JLabel();
         labelLaF.setName("labelLaF");
@@ -233,9 +234,16 @@ public class ViewsTab extends UserPreferencesTab {
             panelSystemTrayBuilder.add(checkHideWhenMinimized, cc.xy(5, 2));
         }
 
+        //======== panelToolbarEditor ========
+        {
+            JButton toolbarEditorButton = new JButton(MainApp.getAContext().getActionMap().get("showToolbarEditorAction"));
+            panelToolbarEditor.add(toolbarEditorButton);
+        }
         PanelBuilder thisBuilder = new PanelBuilder(new FormLayout(
                 ColumnSpec.decodeSpecs("default:grow"),
                 new RowSpec[]{
+                        FormSpecs.DEFAULT_ROWSPEC,
+                        FormSpecs.RELATED_GAP_ROWSPEC,
                         FormSpecs.DEFAULT_ROWSPEC,
                         FormSpecs.RELATED_GAP_ROWSPEC,
                         FormSpecs.DEFAULT_ROWSPEC,
@@ -245,6 +253,7 @@ public class ViewsTab extends UserPreferencesTab {
 
         thisBuilder.add(panelAppearance, cc.xy(1, 1));
         thisBuilder.add(panelSystemTray, cc.xy(1, 3));
+        thisBuilder.add(panelToolbarEditor, cc.xy(1, 5));
     }
 
     private JComboBox comboLaF;
