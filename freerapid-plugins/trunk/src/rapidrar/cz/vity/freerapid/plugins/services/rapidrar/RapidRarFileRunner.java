@@ -27,7 +27,7 @@ class RapidRarFileRunner extends XFileSharingRunner {
                 throw new PluginImplementationException("error finding next page detail 1");
             if (!makeRedirectedRequest(getGetMethod(match.group(1).trim())))
                 throw new ServiceConnectionProblemException();
-            match = PlugUtils.matcher("\\('span#(.+?)'\\)", getContentAsString());
+            match = PlugUtils.matcher("^\\s+\\$.+?\\('span#(.+?)'\\)", getContentAsString());
             if (!match.find())
                 throw new PluginImplementationException("error finding next page detail 2");
             String token1 = match.group(1).trim();
