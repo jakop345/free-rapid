@@ -56,18 +56,23 @@ public class StandardDialogSupportImpl implements DialogSupport {
     }
 
     @Override
-    public PremiumAccount showAccountDialog(final PremiumAccount account, final String title) throws Exception {
+    public PremiumAccount showAccountDialog(final PremiumAccount account, final String title, final boolean emptyAllowed) throws Exception {
         final PremiumAccount[] result = new PremiumAccount[]{null};
         if (!EventQueue.isDispatchThread()) {
             SwingUtilities.invokeAndWait(new Runnable() {
                 @Override
                 public void run() {
-                    getAccount(title, account, result);
+                    getAccount(title, account, result, emptyAllowed);
                 }
             });
-        } else getAccount(title, account, result);
+        } else getAccount(title, account, result, emptyAllowed);
 
         return result[0];
+    }
+
+    @Override
+    public PremiumAccount showAccountDialog(final PremiumAccount account, final String title) throws Exception {
+        return showAccountDialog(account, title, false);
     }
 
     @Override
@@ -135,15 +140,19 @@ public class StandardDialogSupportImpl implements DialogSupport {
         captchaResult = (String) JOptionPane.showInputDialog(parentComponent, context.getResourceMap(DownloadTask.class).getString("InsertWhatYouSee"), context.getResourceMap(DownloadTask.class).getString("InsertCaptcha"), JOptionPane.PLAIN_MESSAGE, new ImageIcon(image), null, null);
     }
 
-    private void getAccount(String title, PremiumAccount account, PremiumAccount[] result) {
+    private void getAccount(String title, PremiumAccount account, PremiumAccount[] result, boolean emptyAllowed) {
         final SingleXFrameApplication app = (SingleXFrameApplication) context.getApplication();
-        final AccountDialog dialog = new AccountDialog(app.getMainFrame(), title, account);
+        final AccountDialog dialog = new AccountDialog(app.getMainFrame(), title, account, emptyAllowed);
         try {
             app.prepareDialog(dialog, true);
         } catch (IllegalStateException e) {
             LogUtils.processException(logger, e);
         }
         result[0] = dialog.getAccount();
+    }
+
+    private void getAccount(String title, PremiumAccount account, PremiumAccount[] result) {
+        getAccount(title, account, result, false);
     }
 
     @Override

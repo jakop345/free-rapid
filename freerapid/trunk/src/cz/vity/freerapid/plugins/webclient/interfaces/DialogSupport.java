@@ -23,6 +23,17 @@ public interface DialogSupport {
     PremiumAccount showAccountDialog(PremiumAccount premiumAccount, String dialogTitle) throws Exception;
 
     /**
+     * Method shows simple input dialog with username and password fields and OK/Cancel buttons
+     *
+     * @param premiumAccount object with data about username and password
+     * @param dialogTitle    title for dialog - usually plugin's name
+     * @param emptyAllowed   if true, empty account is allowed - for free user, multi account types eg. XFS plugin
+     * @return if user pressed OK, returns updated instance of the premiumAccount parameter , otherwise it returns null value
+     * @throws Exception if something went wrong
+     */
+    PremiumAccount showAccountDialog(PremiumAccount premiumAccount, String dialogTitle, boolean emptyAllowed) throws Exception;
+
+    /**
      * Shows simple OK/Cancel dialog with given content of given container
      *
      * @param container   a container with SWING components to show

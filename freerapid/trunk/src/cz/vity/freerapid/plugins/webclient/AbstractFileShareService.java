@@ -140,12 +140,13 @@ public abstract class AbstractFileShareService extends Plugin implements ShareDo
      * @param account          account with user name and password
      * @param dialogTitle      title for dialog
      * @param pluginConfigFile file name for storing configuration
+     * @param emptyAllowed     if true, empty account is allowed - for free user, multi account types eg. XFS plugin
      * @return returns account parametr, if user pressed Cancel button, otherwise it returns updated account instance
      */
-    protected PremiumAccount showAccountDialog(final PremiumAccount account, String dialogTitle, final String pluginConfigFile) {
+    protected PremiumAccount showAccountDialog(final PremiumAccount account, String dialogTitle, final String pluginConfigFile, final boolean emptyAllowed) {
         final DialogSupport dialogSupport = getPluginContext().getDialogSupport();
         try {//saving new username/password
-            final PremiumAccount pa = dialogSupport.showAccountDialog(account, dialogTitle);//vysledek bude Premium ucet - Rapidshare
+            final PremiumAccount pa = dialogSupport.showAccountDialog(account, dialogTitle, emptyAllowed);//vysledek bude Premium ucet - Rapidshare
             if (pa != null) {
                 getPluginContext().getConfigurationStorageSupport().storeConfigToFile(pa, pluginConfigFile);
                 return pa;//return new username/password
@@ -154,6 +155,18 @@ public abstract class AbstractFileShareService extends Plugin implements ShareDo
             LogUtils.processException(logger, e);
         }
         return account;
+    }
+
+    /**
+     * Shows standard account dialog with given account
+     *
+     * @param account          account with user name and password
+     * @param dialogTitle      title for dialog
+     * @param pluginConfigFile file name for storing configuration
+     * @return returns account parametr, if user pressed Cancel button, otherwise it returns updated account instance
+     */
+    protected PremiumAccount showAccountDialog(final PremiumAccount account, String dialogTitle, final String pluginConfigFile) {
+        return showAccountDialog(account, dialogTitle, pluginConfigFile, false);
     }
 
     /**
