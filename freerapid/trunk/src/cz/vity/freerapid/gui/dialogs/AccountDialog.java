@@ -23,8 +23,9 @@ public class AccountDialog extends AppDialog {
     private final static Logger logger = Logger.getLogger(AccountDialog.class.getName());
     private PresentationModel<PremiumAccount> model;
     private PremiumAccount account;
+    private boolean emptyAllowed;
 
-    public AccountDialog(Frame owner, String title, PremiumAccount account) throws HeadlessException {
+    public AccountDialog(Frame owner, String title, PremiumAccount account, boolean emptyAllowed) throws HeadlessException {
         super(owner, true);
         this.setName("AccountDialog");
         if (account == null)
@@ -39,8 +40,12 @@ public class AccountDialog extends AppDialog {
         }
         if (title != null)
             this.setTitle(this.getTitle() + " - " + title);
+        this.emptyAllowed = emptyAllowed;
     }
 
+    public AccountDialog(Frame owner, String title, PremiumAccount account) throws HeadlessException {
+        this(owner, title, account, false);
+    }
 
     @Override
     protected AbstractButton getBtnOK() {
@@ -76,7 +81,7 @@ public class AccountDialog extends AppDialog {
 
     @Action
     public void okBtnAction() {
-        if (!validated())
+        if (!emptyAllowed && !validated())
             return;
         if (model != null)
             model.triggerCommit();
