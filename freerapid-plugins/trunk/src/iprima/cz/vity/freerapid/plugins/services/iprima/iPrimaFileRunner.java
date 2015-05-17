@@ -100,7 +100,7 @@ class iPrimaFileRunner extends AbstractRtmpRunner {
         switch (config.getVideoQuality()) {
             case HD:
                 try {
-                    playName = PlugUtils.getStringBetween(getContentAsString(), "\"hd_id\":\"", "\"");
+                    playName = "hq/" + PlugUtils.getStringBetween(getContentAsString(), "\"hd_id\":\"", "\"");
                     break;
                 } catch (final PluginImplementationException e) {
                     logger.info("HD quality not found, using High");
