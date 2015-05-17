@@ -23,6 +23,11 @@ public class DevDialogSupport implements DialogSupport {
     }
 
     @Override
+    public PremiumAccount showAccountDialog(PremiumAccount account, String title, boolean emptyAllowed) throws Exception {
+        return account;
+    }
+
+    @Override
     public PremiumAccount showAccountDialog(final PremiumAccount account, final String title) throws Exception {
         return account;
     }
