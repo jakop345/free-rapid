@@ -1,4 +1,4 @@
-package cz.vity.freerapid.plugins.services.exashare;
+package cz.vity.freerapid.plugins.services.filehoot;
 
 import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
 import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;
@@ -8,7 +8,6 @@ import cz.vity.freerapid.plugins.webclient.interfaces.HttpFile;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 
 import java.util.List;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 
 /**
@@ -16,8 +15,7 @@ import java.util.regex.Matcher;
  *
  * @author birchie
  */
-class ExaShareFileRunner extends XFilePlayerRunner {
-    private final static Logger logger = Logger.getLogger(ExaShareFileRunner.class.getName());
+class FileHootFileRunner extends XFilePlayerRunner {
 
     @Override
     protected List<FileSizeHandler> getFileSizeHandlers() {
@@ -25,13 +23,11 @@ class ExaShareFileRunner extends XFilePlayerRunner {
         fileSizeHandlers.add(0, new FileSizeHandler() {
             @Override
             public void checkFileSize(HttpFile httpFile, String content) throws ErrorDuringDownloadingException {
-                final Matcher match = PlugUtils.matcher("<b>([^<>]+?)</b></a></li>", content);
-                if (!match.find())
-                    throw new PluginImplementationException("File size not found");
+                final Matcher match = PlugUtils.matcher("(?s)<[^<>]+?label[^<>]+?>(.+?)\\s*?<", content);
+                if (!match.find()) throw new PluginImplementationException("File size not found");
                 httpFile.setFileSize(PlugUtils.getFileSizeFromString(match.group(1).trim()));
             }
         });
         return fileSizeHandlers;
     }
-
 }
