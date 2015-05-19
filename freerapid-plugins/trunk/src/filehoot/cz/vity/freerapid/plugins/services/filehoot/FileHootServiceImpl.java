@@ -1,4 +1,4 @@
-package cz.vity.freerapid.plugins.services.exashare;
+package cz.vity.freerapid.plugins.services.filehoot;
 
 import cz.vity.freerapid.plugins.services.xfileplayer.XFilePlayerServiceImpl;
 import cz.vity.freerapid.plugins.webclient.interfaces.PluginRunner;
@@ -8,26 +8,21 @@ import cz.vity.freerapid.plugins.webclient.interfaces.PluginRunner;
  *
  * @author birchie
  */
-public class ExaShareServiceImpl extends XFilePlayerServiceImpl {
-
-    @Override
-    public String getName() {
-        return "exashare.com";
-    }
+public class FileHootServiceImpl extends XFilePlayerServiceImpl {
 
     @Override
     public String getServiceTitle() {
-        return "ExaShare";
+        return "FileHoot";
     }
 
     @Override
-    public boolean supportsRunCheck() {
-        return true;
+    public String getName() {
+        return "filehoot.com";
     }
 
     @Override
     protected PluginRunner getPluginRunnerInstance() {
-        return new ExaShareFileRunner();
+        return new FileHootFileRunner();
     }
 
 }

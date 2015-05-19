@@ -1,6 +1,6 @@
-package cz.vity.freerapid.plugins.services.exashare;
+package cz.vity.freerapid.plugins.services.uptodo;
 
-import cz.vity.freerapid.plugins.services.xfileplayer.XFilePlayerServiceImpl;
+import cz.vity.freerapid.plugins.webclient.AbstractFileShareService;
 import cz.vity.freerapid.plugins.webclient.interfaces.PluginRunner;
 
 /**
@@ -8,16 +8,11 @@ import cz.vity.freerapid.plugins.webclient.interfaces.PluginRunner;
  *
  * @author birchie
  */
-public class ExaShareServiceImpl extends XFilePlayerServiceImpl {
+public class UpToDoServiceImpl extends AbstractFileShareService {
 
     @Override
     public String getName() {
-        return "exashare.com";
-    }
-
-    @Override
-    public String getServiceTitle() {
-        return "ExaShare";
+        return "uptodo.net";
     }
 
     @Override
@@ -27,7 +22,7 @@ public class ExaShareServiceImpl extends XFilePlayerServiceImpl {
 
     @Override
     protected PluginRunner getPluginRunnerInstance() {
-        return new ExaShareFileRunner();
+        return new UpToDoFileRunner();
     }
 
 }

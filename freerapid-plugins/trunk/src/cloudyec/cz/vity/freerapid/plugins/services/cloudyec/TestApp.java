@@ -16,6 +16,7 @@ public class TestApp extends PluginDevApplication {
         final HttpFile httpFile = getHttpFile();
         try {
             httpFile.setNewURL(new URL("https://www.cloudy.ec/v/a8d6293413786"));
+            httpFile.setNewURL(new URL("http://www.videohut.to/v/6c018b445ce5c"));
             final ConnectionSettings connectionSettings = new ConnectionSettings();
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
             final CloudyEcServiceImpl service = new CloudyEcServiceImpl();

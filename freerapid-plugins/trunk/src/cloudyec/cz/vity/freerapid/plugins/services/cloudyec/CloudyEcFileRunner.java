@@ -22,6 +22,7 @@ import java.util.regex.Matcher;
  */
 class CloudyEcFileRunner extends AbstractRunner {
     private final static Logger logger = Logger.getLogger(CloudyEcFileRunner.class.getName());
+    private String baseUrl = "https://www.cloudy.ec";
 
     @Override
     public void runCheck() throws Exception {
@@ -49,11 +50,13 @@ class CloudyEcFileRunner extends AbstractRunner {
         if (makeRedirectedRequest(method)) {
             checkProblems();
             checkNameAndSize(getContentAsString());
+            Matcher match = PlugUtils.matcher("(https?://.+?)/", method.getURI().getURI());
+            if (match.find()) baseUrl = match.group(1);
 
             String fileId = getFileId(fileURL);
             HttpMethod httpMethod = getMethodBuilder()
                     .setReferer(fileURL)
-                    .setAction("https://www.cloudy.ec/embed.php")
+                    .setAction(baseUrl + "/embed.php")
                     .setParameter("id", fileId)
                     .setParameter("autoplay", "1")
                     .toGetMethod();
@@ -109,10 +112,13 @@ class CloudyEcFileRunner extends AbstractRunner {
     }
 
     private MethodBuilder getPlayerApiMethodBuilder(String fileId, String fileKey) throws BuildMethodException {
+        String cid3 = "cloudy.ec";
+        Matcher match = PlugUtils.matcher("https?://(?:www\\.)?(.+?)/", fileURL);
+        if (match.find()) cid3 = match.group(1);
         return getMethodBuilder()
                 .setReferer(fileURL)
-                .setAction("https://www.cloudy.ec/api/player.api.php")
-                .setParameter("cid3", "cloudy.ec")
+                .setAction(baseUrl + "/api/player.api.php")
+                .setParameter("cid3", cid3)
                 .setParameter("user", "undefined")
                 .setParameter("cid2", "undefined")
                 .setParameter("file", fileId)
