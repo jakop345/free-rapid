@@ -10,7 +10,6 @@ import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
-import java.net.URLDecoder;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,12 +32,12 @@ class Tube8FileRunner extends AbstractRunner {
     }
 
     @Override
-    public void runCheck() throws Exception { //this method validates file
+    public void runCheck() throws Exception {
         super.runCheck();
-        final GetMethod getMethod = getGetMethod(fileURL);//make first request
+        final GetMethod getMethod = getGetMethod(fileURL);
         if (makeRedirectedRequest(getMethod)) {
             checkProblems();
-            checkNameAndSize(getContentAsString());//ok let's extract file name and size from the page
+            checkNameAndSize(getContentAsString());
         } else {
             checkProblems();
             throw new ServiceConnectionProblemException();
@@ -46,14 +45,8 @@ class Tube8FileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        final Matcher match = PlugUtils.matcher("videotitle\\s*?=\\s*?['\"]([^'\"]+?)['\"]", content);
-        if (!match.find())
-            throw new PluginImplementationException("File name not found");
-        //remove old extension if it exists
-        String name = match.group(1).trim();
-        final int pos = name.lastIndexOf('.');
-        if (pos != -1) name = name.substring(0, pos);
-        httpFile.setFileName(name + ".flv");
+        PlugUtils.checkName(httpFile, content, "<span class=\"item\">", "</span");
+        httpFile.setFileName(httpFile.getFileName() + ".flv");
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
 
@@ -61,28 +54,24 @@ class Tube8FileRunner extends AbstractRunner {
     public void run() throws Exception {
         super.run();
         logger.info("Starting download in TASK " + fileURL);
-        final GetMethod method = getGetMethod(fileURL); //create GET request
-        if (makeRedirectedRequest(method)) { //we make the main request
-            String content = getContentAsString();//check for response
-            checkProblems();//check problems
-            checkNameAndSize(content);//extract file name and size from the page
-            fileURL = method.getURI().toString(); //sometimes redirected
+        final GetMethod method = getGetMethod(fileURL);
+        if (makeRedirectedRequest(method)) {
+            String content = getContentAsString();
+            checkProblems();
+            checkNameAndSize(content);
+            fileURL = method.getURI().toString();
 
             setConfig();
-            Tube8Video selectedVideo = getSelectedVideo(content);
-            final String encURL = URLDecoder.decode(selectedVideo.url, "UTF-8").replace(" ", "+");
-            final String name = PlugUtils.getStringBetween(content, "\"video_title\":\"", "\"").replace('+', ' ');
-            logger.info("Video title: " + name);
+            final String title = PlugUtils.getStringBetween(content, "\"video_title\":\"", "\"").replace('+', ' ');
+            Tube8Video selectedVideo = getSelectedVideo(content, title);
+            logger.info("Video title: " + title);
             logger.info("Config settings: " + config);
             logger.info("Selected video: " + selectedVideo);
-            logger.info("Encrypted URL: " + encURL);
-            String videoUrl = new Crypto().decrypt(encURL, name);
-            logger.info("Decrypted URL: " + videoUrl);
 
-            final HttpMethod httpMethod = getGetMethod(videoUrl);
+            final HttpMethod httpMethod = getGetMethod(selectedVideo.url);
             if (!tryDownloadAndSaveFile(httpMethod)) {
-                checkProblems();//if downloading failed
-                throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
+                checkProblems();
+                throw new ServiceConnectionProblemException("Error starting download");
             }
         } else {
             checkProblems();
@@ -100,13 +89,13 @@ class Tube8FileRunner extends AbstractRunner {
         }
     }
 
-    private Tube8Video getSelectedVideo(String content) throws PluginImplementationException {
+    private Tube8Video getSelectedVideo(String content, String title) throws Exception {
         List<Tube8Video> videoList = new LinkedList<Tube8Video>();
         for (VideoQuality videoQuality : VideoQuality.values()) {
             logger.info("Searching video: " + videoQuality.toString());
             Matcher matcher = PlugUtils.matcher("\"" + videoQuality.getLabel() + "\":\"(.+?)\"", content);
             if (matcher.find()) {
-                Tube8Video tube8Video = new Tube8Video(videoQuality, matcher.group(1));
+                Tube8Video tube8Video = new Tube8Video(videoQuality, new Crypto().decrypt(matcher.group(1), title));
                 videoList.add(tube8Video);
                 logger.info("Found video: " + tube8Video);
             }

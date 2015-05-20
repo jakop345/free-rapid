@@ -37,6 +37,7 @@ class FlickrFileRunner extends AbstractRunner {
     private final static String METHOD_URLS_LOOKUP_GALLERY = "flickr.urls.lookupGallery";
     private final static String METHOD_URLS_LOOKUP_USER = "flickr.urls.lookupUser";
     private final static String METHOD_FAVORITES_GET_PUBLIC_LIST = "flickr.favorites.getPublicList";
+    private final static String METHOD_GROUPS_POOLS_GET_PHOTOS = "flickr.groups.pools.getPhotos";
 
     private static enum MediaType {PHOTO, VIDEO}
 
@@ -51,6 +52,8 @@ class FlickrFileRunner extends AbstractRunner {
             parseGalleries();
         } else if (isFavorites()) {
             parseFavorites();
+        } else if (isGroups()) {
+            parseGroupsPools();
         } else {
             downloadContent();
         }
@@ -173,7 +176,7 @@ class FlickrFileRunner extends AbstractRunner {
 
     private LinkedList<URI> getURIList(final String action, final String URIRegex, final boolean isOwnerInRegex) throws Exception {
         final LinkedList<URI> uriList = new LinkedList<URI>();
-        final String userIdFromURL = getUserIdFromURL();
+        String userIdFromURL = null;
         int page = 1;
         int numberOfPages = 0;
         do {
@@ -192,7 +195,7 @@ class FlickrFileRunner extends AbstractRunner {
             final Matcher matcher = getMatcherAgainstContent(URIRegex);
             while (matcher.find()) {
                 try {
-                    final String owner = isOwnerInRegex ? matcher.group(2) : userIdFromURL;
+                    final String owner = (isOwnerInRegex ? matcher.group(2) : (userIdFromURL == null ? (userIdFromURL = getUserIdFromURL()) : userIdFromURL));
                     uriList.add(new URI(String.format("http://www.flickr.com/photos/%s/%s/", owner, matcher.group(1))));
                 } catch (final URISyntaxException e) {
                     LogUtils.processException(logger, e);
@@ -287,6 +290,27 @@ class FlickrFileRunner extends AbstractRunner {
     private void parseFavorites() throws Exception {
         final String action = getFlickrMethodBuilder(METHOD_FAVORITES_GET_PUBLIC_LIST)
                 .setParameter("user_id", getUserId())
+                .getEscapedURI();
+        final List<URI> uriList = getURIList(action, "\"id\":\"(\\d+)\",\\s?\"owner\":\"(.+?)\",\\s?\"secret\"", true);
+        queueLinks(uriList);
+    }
+
+    private boolean isGroups() {
+        return fileURL.contains("/groups/");
+    }
+
+    private String getGroupIdFromUrl() throws PluginImplementationException {
+        final Matcher matcher = PlugUtils.matcher("/groups/([^/]+)/pool/", fileURL);
+        if (!matcher.find()) {
+            throw new PluginImplementationException("Can't get group ID");
+        }
+        return matcher.group(1);
+    }
+
+    //reference : https://www.flickr.com/services/api/flickr.groups.pools.getPhotos.html
+    private void parseGroupsPools() throws Exception {
+        final String action = getFlickrMethodBuilder(METHOD_GROUPS_POOLS_GET_PHOTOS)
+                .setParameter("group_id", getGroupIdFromUrl())
                 .getEscapedURI();
         final List<URI> uriList = getURIList(action, "\"id\":\"(\\d+)\",\\s?\"owner\":\"(.+?)\",\\s?\"secret\"", true);
         queueLinks(uriList);
