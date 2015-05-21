@@ -16,8 +16,9 @@ public class TestApp extends PluginDevApplication {
         final HttpFile httpFile = getHttpFile(); //creates new test instance of HttpFile
         try {
             //we set file URL
-            httpFile.setNewURL(new URL("http://soundcloud.com/farace/disco-decay-felguk-remix-farace-reedit"));
-            httpFile.setNewURL(new URL("https://soundcloud.com/big-boi/lines"));
+            //httpFile.setNewURL(new URL("https://soundcloud.com/big-boi/lines"));
+            //httpFile.setNewURL(new URL("https://soundcloud.com/eric-prydz/eric-prydz-generate-out-13th-april")); //rtmp
+            httpFile.setNewURL(new URL("https://soundcloud.com/mialch/major-lazer-dj-snake-lean-on-feat-momialch-remix")); //downloadable
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
