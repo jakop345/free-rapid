@@ -68,6 +68,7 @@ class UptoBoxFileRunner extends XFileSharingRunner {
     protected List<String> getDownloadLinkRegexes() {
         final List<String> downloadLinkRegexes = super.getDownloadLinkRegexes();
         downloadLinkRegexes.add(0, "product_download_url\\s*?=\\s*?(http.+?" + Pattern.quote(httpFile.getFileName()) + ")[\"']");
+        downloadLinkRegexes.add(0, "<a[^<>]*?href\\s*=\\s*[\"'](?:http.+?)?(http.+?" + Pattern.quote(httpFile.getFileName()) + ")[\"']");
         return downloadLinkRegexes;
     }
 

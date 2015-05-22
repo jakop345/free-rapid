@@ -73,11 +73,11 @@ class NowDownloadFileRunner extends AbstractRunner {
                 }
                 httpMethod = getMethodBuilder().setReferer(fileURL)
                         .setActionFromAHrefWhereATagContains("Click here to download").toHttpMethod();
-                final String dlUrl = httpMethod.getURI().getURI();
-                final String fName = dlUrl.substring(dlUrl.lastIndexOf("/") + 1);
-                if (!fName.contains("?")) httpFile.setFileName(fName);
-                else httpFile.setFileName(fName.substring(0, fName.indexOf("?")));
             }
+            final String dlUrl = httpMethod.getURI().getURI();
+            final String fName = dlUrl.substring(dlUrl.lastIndexOf("/") + 1);
+            if (!fName.contains("?")) httpFile.setFileName(fName);
+            else httpFile.setFileName(fName.substring(0, fName.indexOf("?")));
             if (!tryDownloadAndSaveFile(httpMethod)) {
                 checkProblems();//if downloading failed
                 throw new ServiceConnectionProblemException("Error starting download");//some unknown problem

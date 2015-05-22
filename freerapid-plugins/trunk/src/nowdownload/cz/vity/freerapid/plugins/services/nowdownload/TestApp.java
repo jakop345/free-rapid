@@ -18,6 +18,7 @@ public class TestApp extends PluginDevApplication {
             //we set file URL
             //httpFile.setNewURL(new URL("http://www.nowdownload.ch/dl/0c31fe0d8a11b"));
             httpFile.setNewURL(new URL("http://www.nowdownload.sx/dl/cdfc2e036cff2"));
+            httpFile.setNewURL(new URL("http://www.nowdownload.ag/dl/a42235d636435"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
