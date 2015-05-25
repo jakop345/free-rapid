@@ -256,7 +256,7 @@ public class DownloadTask extends CoreTask<Void, Long> implements HttpFileDownlo
                 //-----------------------------------------------
                 if (!isTerminated()) {
                     if (client.getHTTPClient().getParams().isParameterTrue(DownloadClientConsts.NO_CONTENT_LENGTH_AVAILABLE)) {
-                        downloadFile.setFileSize(counter);
+                        downloadFile.setFileSize(startPosition + counter); //it's possible startPosition!=0 in case of resumable dynamic file size (eg. RTMP,HDS,HLS).
                     } else {
                         if (counter != suppose) {
                             logger.info("File size does not match - expected " + suppose + " but " + counter + " was downloaded");
