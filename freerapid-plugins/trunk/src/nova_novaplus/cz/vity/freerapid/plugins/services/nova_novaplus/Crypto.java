@@ -12,7 +12,7 @@ import java.util.Arrays;
  * @author tong2shot
  */
 class Crypto {
-    private final static String PASSWORD = "EaDUutg4ppGYXwNMFdRJsadenFSnI6gJ";
+    private final static byte[] PASSWORD = "EaDUutg4ppGYXwNMFdRJsadenFSnI6gJ".getBytes();
     
     private SecretKey generateKey(byte[] pwBytes) throws Exception {
         byte[] _pwBytes = Arrays.copyOf(pwBytes, 16);
@@ -27,7 +27,7 @@ class Crypto {
         byte[] nonceBytes = Arrays.copyOf(Arrays.copyOf(cipherTextBytes, 8), 16);
         IvParameterSpec nonce = new IvParameterSpec(nonceBytes);
         Cipher cipher = Cipher.getInstance("AES/CTR/NoPadding");
-        cipher.init(Cipher.DECRYPT_MODE, generateKey(PASSWORD.getBytes()), nonce);
+        cipher.init(Cipher.DECRYPT_MODE, generateKey(PASSWORD), nonce);
         byte[] decrypted = cipher.doFinal(cipherTextBytes, 8, cipherTextBytes.length - 8);
         return new String(decrypted);
     }

@@ -113,13 +113,13 @@ class Nova_NovaPlusFileRunner extends AbstractRtmpRunner {
         String timeStr = getTimeString();
         String mediaId;
         String resolverContent;
-        String serviceUrl;
+        //String serviceUrl;
         String appId;
         String secret;
         try {
             mediaId = PlugUtils.getStringBetween(configDecrypted, "\"mediaId\":", ",");
             resolverContent = PlugUtils.getStringBetween(configDecrypted, "\"nacevi-resolver\":{", "},");
-            serviceUrl = PlugUtils.getStringBetween(resolverContent, "\"serviceUrl\":\"", "\"").replace("\\/", "/");
+            //serviceUrl = PlugUtils.getStringBetween(resolverContent, "\"serviceUrl\":\"", "\"").replace("\\/", "/");
             appId = PlugUtils.getStringBetween(resolverContent, "\"appId\":\"", "\"");
             secret = PlugUtils.getStringBetween(resolverContent, "\"secret\":\"", "\"");
         } catch (PluginImplementationException e) {
@@ -127,8 +127,10 @@ class Nova_NovaPlusFileRunner extends AbstractRtmpRunner {
         }
         String hashString = appId + "|" + mediaId + "|" + timeStr + "|" + secret;
         String base64FromBA = Base64.encodeBase64String(DigestUtils.md5(hashString));
+        //using serviceUrl as action, sometimes doesn't work. hardcoded for now.
         HttpMethod method = getMethodBuilder()
-                .setAction(serviceUrl)
+                //.setAction(serviceUrl)
+                .setAction("http://voyo.nova.cz/lbin/cdn-cra-r.php")
                 .setParameter("c", appId + "|" + mediaId)
                 .setParameter("h", "0")
                 .setParameter("t", timeStr)
@@ -147,7 +149,6 @@ class Nova_NovaPlusFileRunner extends AbstractRtmpRunner {
         List<Nova_NovaPlusVideo> videoList = new ArrayList<Nova_NovaPlusVideo>();
         String baseUrl = PlugUtils.getStringBetween(content, "<baseUrl>", "</baseUrl>").replace("<![CDATA[", "").replace("]]>", "");
         Matcher mediaMatcher = PlugUtils.matcher("(?s)<media>(.+?)</media>", content);
-        logger.info("Available videos :");
         while (mediaMatcher.find()) {
             String mediaContent = mediaMatcher.group(1);
             Matcher qualityMatcher = PlugUtils.matcher("(?s)<quality>(.+?)</quality>", mediaContent);
@@ -157,17 +158,14 @@ class Nova_NovaPlusFileRunner extends AbstractRtmpRunner {
             }
             String quality = qualityMatcher.group(1).replace("<![CDATA[", "").replace("]]>", "");
             String url = urlMatcher.group(1).replace("<![CDATA[", "").replace("]]>", "");
-            VideoQuality videoQuality;
-            if (quality.contains("hd")) {
-                videoQuality = VideoQuality.HD;
-            } else if (quality.contains("hq")) {
-                videoQuality = VideoQuality.HQ;
-            } else {
-                videoQuality = VideoQuality.LQ;
+            for (VideoQuality videoQuality : VideoQuality.values()) {
+                if (videoQuality.getLabel().contains(quality)) {
+                    Nova_NovaPlusVideo novaPlusVideo = new Nova_NovaPlusVideo(videoQuality, baseUrl, url);
+                    videoList.add(novaPlusVideo);
+                    logger.info("Found video: " + novaPlusVideo);
+                    break;
+                }
             }
-            Nova_NovaPlusVideo novaPlusVideo = new Nova_NovaPlusVideo(videoQuality, baseUrl, url);
-            logger.info(novaPlusVideo.toString());
-            videoList.add(novaPlusVideo);
         }
         if (videoList.isEmpty()) {
             throw new PluginImplementationException("No available videos");
