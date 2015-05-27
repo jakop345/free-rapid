@@ -51,7 +51,8 @@ class MediafireRunner extends AbstractRunner {
 
     private void checkUrl() {
         // HTTPS works but redirects to HTTP in browser
-        fileURL = fileURL.replaceFirst("https:", "http:");
+        fileURL = fileURL.replaceFirst("https:", "http:")
+                .replace("/file/", "/download/");
     }
 
     private void checkNameAndSize() throws Exception {
