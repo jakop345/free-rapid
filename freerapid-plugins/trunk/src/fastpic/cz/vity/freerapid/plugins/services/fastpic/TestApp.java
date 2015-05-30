@@ -1,4 +1,4 @@
-package cz.vity.freerapid.plugins.services.keep2share;
+package cz.vity.freerapid.plugins.services.fastpic;
 
 import cz.vity.freerapid.plugins.dev.PluginDevApplication;
 import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
@@ -16,13 +16,13 @@ public class TestApp extends PluginDevApplication {
         final HttpFile httpFile = getHttpFile(); //creates new test instance of HttpFile
         try {
             //we set file URL
-            //httpFile.setNewURL(new URL("http://keep2share.cc/file/51c9bf2585296/gb08_9977.part2.rar"));
-            httpFile.setNewURL(new URL("http://k2s.cc/file/1383d19a45b06/cat_23_2.jpg"));
+            httpFile.setNewURL(new URL("http://i69.fastpic.ru/big/2015/0527/70/f0dc32caa0b371eb92ed543abb2c5270.jpeg"));
+            httpFile.setNewURL(new URL("http://fastpic.ru/view/71/2015/0529/92b5b8893a441486ae47beabae505636.gif.html"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
             //then we tries to download
-            final Keep2ShareServiceImpl service = new Keep2ShareServiceImpl(); //instance of service - of our plugin
+            final FastPicServiceImpl service = new FastPicServiceImpl(); //instance of service - of our plugin
             //runcheck makes the validation
             testRun(service, httpFile, connectionSettings);//download file with service and its Runner
             //all output goes to the console
