@@ -108,7 +108,10 @@ class Keep2ShareFileRunner extends AbstractRunner {
                 }
                 checkProblems();
             }
-            final HttpMethod httpMethod = getGetMethod(baseUrl + PlugUtils.getStringBetween(getContentAsString(), "<a href=\"", "\">this link"));
+            final Matcher match = PlugUtils.matcher("<a[^<>]+?href=\"(.+?)\"[^<>]+?>this link", getContentAsString());
+            if (!match.find())
+                throw new PluginImplementationException("download link url not found");
+            final HttpMethod httpMethod = getGetMethod(baseUrl + match.group(1));
             if (!tryDownloadAndSaveFile(httpMethod)) {
                 checkProblems();//if downloading failed
                 throw new ServiceConnectionProblemException("Error starting download");//some unknown problem

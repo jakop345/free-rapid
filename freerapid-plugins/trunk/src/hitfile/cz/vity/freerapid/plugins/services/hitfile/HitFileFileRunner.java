@@ -17,16 +17,16 @@ class HitFileFileRunner extends TurboBitFileRunner {
 
     @Override
     protected void checkNameAndSize() throws ErrorDuringDownloadingException {
-        Matcher matcher = getMatcherAgainstContent("Download file.+?<span.+?>(.+?)</span>");
+        Matcher matcher = getMatcherAgainstContent("are downloading.+?<span.+?>(.+?)</span>");
         if (!matcher.find()) {
             throw new PluginImplementationException("File name not found");
         }
         httpFile.setFileName(matcher.group(1));
-        matcher = getMatcherAgainstContent("File size:</b>\\s*(.+?)</div>");
+        matcher = getMatcherAgainstContent("file-size.+?\\((.+?)\\)");
         if (!matcher.find()) {
             throw new PluginImplementationException("File size not found");
         }
-        httpFile.setFileSize(PlugUtils.getFileSizeFromString(matcher.group(1)));
+        httpFile.setFileSize(PlugUtils.getFileSizeFromString(matcher.group(1).replaceAll("б", "B")));
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
 
