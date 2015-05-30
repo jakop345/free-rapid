@@ -44,10 +44,20 @@ public class iPrimaServiceImpl extends AbstractFileShareService {
                 if (!storage.configFileExists(CONFIG_FILE)) {
                     config = new iPrimaSettingsConfig();
                 } else {
-                    config = storage.loadConfigFromFile(CONFIG_FILE, iPrimaSettingsConfig.class);
+                    try {
+                        config = storage.loadConfigFromFile(CONFIG_FILE, iPrimaSettingsConfig.class);
+                    } catch (Exception e) {
+                        config = new iPrimaSettingsConfig();
+                    }
                 }
             }
             return config;
+        }
+    }
+
+    public void setConfig(final iPrimaSettingsConfig config) {
+        synchronized (iPrimaServiceImpl.class) {
+            this.config = config;
         }
     }
 

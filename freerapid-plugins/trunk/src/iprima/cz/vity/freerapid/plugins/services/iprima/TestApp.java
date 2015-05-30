@@ -27,6 +27,10 @@ public class TestApp extends PluginDevApplication {
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
             //then we tries to download
             final iPrimaServiceImpl service = new iPrimaServiceImpl(); //instance of service - of our plugin
+            iPrimaSettingsConfig config = new iPrimaSettingsConfig();
+            config.setVideoQuality(VideoQuality.HD);
+            config.setPort(Port._1935);
+            service.setConfig(config);
             //runcheck makes the validation
             //setUseTempFiles(true);
             testRun(service, httpFile, connectionSettings);//download file with service and its Runner

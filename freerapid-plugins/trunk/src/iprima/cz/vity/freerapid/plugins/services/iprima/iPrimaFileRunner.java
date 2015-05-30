@@ -65,6 +65,7 @@ class iPrimaFileRunner extends AbstractRtmpRunner {
                     throw new ServiceConnectionProblemException("Error starting download");
                 }
             } else {
+                logger.info("Settings config: " + config);
                 final String playName = getPlayName();
                 final String geoZone = PlugUtils.getStringBetween(getContentAsString(), "\"zoneGEO\":", ",");
                 final Random rnd = new Random();
@@ -83,7 +84,7 @@ class iPrimaFileRunner extends AbstractRtmpRunner {
                 }
                 final String auth = PlugUtils.getStringBetween(getContentAsString(), "'?auth='+\"\"+'", "';", 2);
                 app += "?auth=" + auth;
-                final RtmpSession rtmpSession = new RtmpSession("bcastmw.livebox.cz", 1935, app, playName);
+                final RtmpSession rtmpSession = new RtmpSession("bcastmw.livebox.cz", config.getPort().getPort(), app, playName);
                 rtmpSession.getConnectParams().put("pageUrl", fileURL);
                 rtmpSession.getConnectParams().put("swfUrl", "http://embed.livebox.cz/iprimaplay/flash/LiveboxPlayer.swf?nocache=" + System.currentTimeMillis());
                 rtmpSession.disablePauseWorkaround();
@@ -97,12 +98,14 @@ class iPrimaFileRunner extends AbstractRtmpRunner {
 
     private String getPlayName() throws ErrorDuringDownloadingException {
         String playName;
+        VideoQuality selectedVideoQuality = config.getVideoQuality();
         switch (config.getVideoQuality()) {
             case HD:
                 try {
                     playName = "hq/" + PlugUtils.getStringBetween(getContentAsString(), "\"hd_id\":\"", "\"");
                     break;
                 } catch (final PluginImplementationException e) {
+                    selectedVideoQuality = VideoQuality.High;
                     logger.info("HD quality not found, using High");
                 }
                 //fallthrough
@@ -115,6 +118,7 @@ class iPrimaFileRunner extends AbstractRtmpRunner {
             default:
                 throw new PluginImplementationException("Unknown video quality: " + config.getVideoQuality());
         }
+        logger.info("Selected quality: " + selectedVideoQuality);
         if (playName.contains(".mp4") && !playName.startsWith("mp4:")) {
             playName = "mp4:" + playName;
         }

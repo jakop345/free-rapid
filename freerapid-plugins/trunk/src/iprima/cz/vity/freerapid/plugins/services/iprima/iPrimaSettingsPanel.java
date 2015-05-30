@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
  * @author JPEXS
  * @author ntoskrnl
  */
-public class iPrimaSettingsPanel extends JPanel {
+class iPrimaSettingsPanel extends JPanel {
     private iPrimaSettingsConfig config;
 
     public iPrimaSettingsPanel(iPrimaServiceImpl service) throws Exception {
@@ -21,19 +21,36 @@ public class iPrimaSettingsPanel extends JPanel {
     private void initPanel() {
         final JLabel qualityLabel = new JLabel("Preferred quality level:");
         final JComboBox<VideoQuality> qualityList = new JComboBox<VideoQuality>(VideoQuality.values());
+        final JLabel lblPort = new JLabel("Preferred RTMP port:");
+        final JComboBox cbbPort = new JComboBox<Port>(Port.values());
+
         qualityLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         qualityList.setAlignmentX(Component.LEFT_ALIGNMENT);
+        lblPort.setAlignmentX(Component.LEFT_ALIGNMENT);
+        cbbPort.setAlignmentX(Component.LEFT_ALIGNMENT);
+
         qualityList.setSelectedItem(config.getVideoQuality());
+        cbbPort.setSelectedItem(config.getPort());
+
         qualityList.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 config.setVideoQuality((VideoQuality) qualityList.getSelectedItem());
             }
         });
+        cbbPort.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                config.setPort((Port) cbbPort.getSelectedItem());
+            }
+        });
+
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         add(qualityLabel);
         add(qualityList);
-        //add(Box.createRigidArea(new Dimension(0, 15)));
+        add(Box.createRigidArea(new Dimension(0, 5)));
+        add(lblPort);
+        add(cbbPort);
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
     }
 
