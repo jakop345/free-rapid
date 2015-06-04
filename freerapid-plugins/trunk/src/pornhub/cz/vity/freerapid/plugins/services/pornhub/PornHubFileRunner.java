@@ -64,8 +64,10 @@ class PornHubFileRunner extends AbstractRunner {
             checkProblems();//check problems
             checkNameAndSize(content);//extract file name and size from the page
 
-            final String encURL = URLDecoder.decode(findBestQuality(content), "UTF-8");
+            final String encURL = URLDecoder.decode(findBestQuality(content), "UTF-8").replace(" ", "+");
             final String name = PlugUtils.getStringBetween(content, "\"video_title\":\"", "\"").replace('+', ' ');
+            logger.info("Encoded URL: " + encURL);
+            logger.info("Video title: " + name);
             final HttpMethod httpMethod = getGetMethod(decodeAesUrl(encURL, name));
             if (!tryDownloadAndSaveFile(httpMethod)) {
                 checkProblems();//if downloading failed
@@ -79,7 +81,8 @@ class PornHubFileRunner extends AbstractRunner {
 
     private void checkProblems() throws ErrorDuringDownloadingException {
         final String contentAsString = getContentAsString();
-        if (contentAsString.contains("Page not found")) {
+        if (contentAsString.contains("Page not found")
+                || contentAsString.contains("Page Not Found")) {
             throw new URLNotAvailableAnymoreException("File not found"); //let to know user in FRD
         }
     }
