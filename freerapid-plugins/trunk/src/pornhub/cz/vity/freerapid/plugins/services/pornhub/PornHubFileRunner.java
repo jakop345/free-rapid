@@ -5,6 +5,7 @@ import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;
 import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
 import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
+import cz.vity.freerapid.plugins.webclient.DownloadState;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.HttpMethod;
@@ -12,7 +13,9 @@ import org.apache.commons.httpclient.methods.GetMethod;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+import java.net.URI;
 import java.net.URLDecoder;
+import java.util.LinkedList;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 
@@ -27,6 +30,7 @@ class PornHubFileRunner extends AbstractRunner {
     @Override
     public void runCheck() throws Exception { //this method validates file
         super.runCheck();
+        fixUrl();
         final GetMethod getMethod = getGetMethod(fileURL);//make first request
         if (makeRedirectedRequest(getMethod)) {
             checkProblems();
@@ -38,9 +42,26 @@ class PornHubFileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize(String content) throws Exception {
-        PlugUtils.checkName(httpFile, content, "<title>", " - Pornhub.com</title>");
-        httpFile.setFileName(httpFile.getFileName() + ".mp4");
+        if (fileURL.contains("/album/") || fileURL.contains("/photo/")) {
+            Matcher match = PlugUtils.matcher( "<h1[^<>]*?>(.+?)</h1>", content);
+            if (!match.find())
+                throw new PluginImplementationException("Album name not found");
+            if (fileURL.contains("/album/"))
+                httpFile.setFileName("Album >> " + match.group(1));
+            if (fileURL.contains("/photo/")){
+                final String fileId = PlugUtils.getStringBetween(content, "data-photo-id=\"", "\"");
+                httpFile.setFileName(match.group(1) + "__" + fileId + ".jpg");
+            }
+        } else {
+            PlugUtils.checkName(httpFile, content, "<title>", " - Pornhub.com</title>");
+            httpFile.setFileName(httpFile.getFileName() + ".mp4");
+        }
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
+    }
+
+    private void fixUrl() {
+        fileURL = fileURL.replaceFirst("://(\\w+?\\.)?pornhub\\.com", "://www.pornhub.com");
+        fileURL = fileURL.replaceFirst("/embed/", "/view_video.php?viewkey=");
     }
 
     private final String[] qualityList = {"quality_720p", "quality_480p", "quality_240p", "quality_180p", "video_url"};
@@ -57,21 +78,42 @@ class PornHubFileRunner extends AbstractRunner {
     @Override
     public void run() throws Exception {
         super.run();
+        fixUrl();
         logger.info("Starting download in TASK " + fileURL);
         final GetMethod method = getGetMethod(fileURL); //create GET request
         if (makeRedirectedRequest(method)) { //we make the main request
             final String content = getContentAsString();//check for response
             checkProblems();//check problems
             checkNameAndSize(content);//extract file name and size from the page
-
-            final String encURL = URLDecoder.decode(findBestQuality(content), "UTF-8").replace(" ", "+");
-            final String name = PlugUtils.getStringBetween(content, "\"video_title\":\"", "\"").replace('+', ' ');
-            logger.info("Encoded URL: " + encURL);
-            logger.info("Video title: " + name);
-            final HttpMethod httpMethod = getGetMethod(decodeAesUrl(encURL, name));
-            if (!tryDownloadAndSaveFile(httpMethod)) {
-                checkProblems();//if downloading failed
-                throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
+            if (fileURL.contains("/album/")) {
+                LinkedList<URI> list = new LinkedList<URI>();
+                final Matcher m = PlugUtils.matcher("<a href=\"(.+?)\">\\s+?<div class=\"album", getContentAsString());
+                while (m.find()) {
+                    list.add(new URI("http://www.pornhub.com" + m.group(1).trim()));
+                }
+                if (list.isEmpty()) throw new PluginImplementationException("No links found");
+                getPluginService().getPluginContext().getQueueSupport().addLinksToQueue(httpFile, list);
+                httpFile.setFileName("Link(s) Extracted !");
+                httpFile.setState(DownloadState.COMPLETED);
+                httpFile.getProperties().put("removeCompleted", true);
+            } else if (fileURL.contains("/photo/")) {
+                final Matcher match = PlugUtils.matcher("<img[^<>]*?src=\"(.+?)\"[^<>]*?></a>\\s*?<button[^<>]*?Zoom", content);
+                if (!match.find())
+                    throw new PluginImplementationException("original image not found");
+                if (!tryDownloadAndSaveFile(getGetMethod(match.group(1).trim()))) {
+                    checkProblems();//if downloading failed
+                    throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
+                }
+            } else {
+                final String encURL = URLDecoder.decode(findBestQuality(content), "UTF-8").replace(" ", "+");
+                final String name = PlugUtils.getStringBetween(content, "\"video_title\":\"", "\"").replace('+', ' ');
+                logger.info("Encoded URL: " + encURL);
+                logger.info("Video title: " + name);
+                final HttpMethod httpMethod = getGetMethod(decodeAesUrl(encURL, name));
+                if (!tryDownloadAndSaveFile(httpMethod)) {
+                    checkProblems();//if downloading failed
+                    throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
+                }
             }
         } else {
             checkProblems();

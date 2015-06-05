@@ -1,4 +1,4 @@
-package cz.vity.freerapid.plugins.services.rapidrar;
+package cz.vity.freerapid.plugins.services.vidxtreme;
 
 import cz.vity.freerapid.plugins.services.xfileplayer.XFilePlayerServiceImpl;
 import cz.vity.freerapid.plugins.webclient.interfaces.PluginRunner;
@@ -8,21 +8,21 @@ import cz.vity.freerapid.plugins.webclient.interfaces.PluginRunner;
  *
  * @author birchie
  */
-public class RapidRarServiceImpl extends XFilePlayerServiceImpl {
+public class VidXtremeServiceImpl extends XFilePlayerServiceImpl {
 
     @Override
     public String getServiceTitle() {
-        return "RapidRar";
+        return "VidXtreme";
     }
 
     @Override
     public String getName() {
-        return "rapidrar.com";
+        return "vidxtreme.to";
     }
 
     @Override
     protected PluginRunner getPluginRunnerInstance() {
-        return new RapidRarFileRunner();
+        return new VidXtremeFileRunner();
     }
 
 }

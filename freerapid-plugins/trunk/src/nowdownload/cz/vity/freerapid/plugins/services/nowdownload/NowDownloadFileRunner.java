@@ -90,7 +90,9 @@ class NowDownloadFileRunner extends AbstractRunner {
 
     private void checkProblems() throws ErrorDuringDownloadingException {
         final String contentAsString = getContentAsString();
-        if (contentAsString.contains("This file does not exist") || contentAsString.contains("The file is being transfered")) {
+        if (contentAsString.contains("This file does not exist") ||
+                contentAsString.contains("Closed user group system") ||
+                contentAsString.contains("The file is being transfered")) {
             throw new URLNotAvailableAnymoreException("File not found"); //let to know user in FRD
         }
     }

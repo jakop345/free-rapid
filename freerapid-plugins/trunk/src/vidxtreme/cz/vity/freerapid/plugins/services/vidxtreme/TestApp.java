@@ -1,4 +1,4 @@
-package cz.vity.freerapid.plugins.services.pornhub;
+package cz.vity.freerapid.plugins.services.vidxtreme;
 
 import cz.vity.freerapid.plugins.dev.PluginDevApplication;
 import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
@@ -16,15 +16,18 @@ public class TestApp extends PluginDevApplication {
         final HttpFile httpFile = getHttpFile(); //creates new test instance of HttpFile
         try {
             //we set file URL
-            httpFile.setNewURL(new URL("http://www.pornhub.com/view_video.php?viewkey=1728190603"));
-            //httpFile.setNewURL(new URL("http://www.pornhub.com/embed/1728190603"));
-            //httpFile.setNewURL(new URL("http://www.pornhub.com/album/449722"));
-            //httpFile.setNewURL(new URL("http://www.pornhub.com/photo/4797481"));
+            httpFile.setNewURL(new URL("http://vidxtreme.to/4qsgsap6gjox"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
-            //then we tries to download
-            final PornHubServiceImpl service = new PornHubServiceImpl(); //instance of service - of our plugin
+            final VidXtremeServiceImpl service = new VidXtremeServiceImpl(); //instance of service - of our plugin
+            /*
+            //we set premium account details
+            final PremiumAccount config = new PremiumAccount();
+            config.setUsername("****");
+            config.setPassword("****");
+            service.setConfig(config);
+            //*/
             //runcheck makes the validation
             testRun(service, httpFile, connectionSettings);//download file with service and its Runner
             //all output goes to the console
