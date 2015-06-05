@@ -1,6 +1,9 @@
 package cz.vity.freerapid.plugins.services.vshare_io;
 
-import cz.vity.freerapid.plugins.exceptions.*;
+import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
+import cz.vity.freerapid.plugins.exceptions.NotRecoverableDownloadException;
+import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
+import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.DownloadClientConsts;
 import cz.vity.freerapid.plugins.webclient.FileState;
@@ -34,13 +37,14 @@ class VShare_ioFileRunner extends AbstractRunner {
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
         Matcher match = PlugUtils.matcher("File name:</td>\\s*?<td>(.+?)</td>", content);
-        if (!match.find())
-            throw new PluginImplementationException("File name not found");
-        httpFile.setFileName(match.group(1).trim());
+        if (!match.find()) {
+            final String fileId = PlugUtils.getStringBetween(content, "v/", "/w");
+            httpFile.setFileName(fileId + ".flv");
+        } else
+            httpFile.setFileName(match.group(1).trim());
         match = PlugUtils.matcher("File size:</td>\\s*?<td>(.+?)</td>", content);
-        if (!match.find())
-            throw new PluginImplementationException("File size not found");
-        httpFile.setFileSize(PlugUtils.getFileSizeFromString(match.group(1).trim()));
+        if (match.find())
+            httpFile.setFileSize(PlugUtils.getFileSizeFromString(match.group(1).trim()));
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
 
@@ -67,7 +71,8 @@ class VShare_ioFileRunner extends AbstractRunner {
                     throw new ServiceConnectionProblemException();
                 }
                 httpMethod = getGetMethod(PlugUtils.getStringBetween(getContentAsString(), "url: '", "'"));
-                httpFile.setFileName(httpFile.getFileName() + ".flv");
+                if (!httpFile.getFileName().endsWith(".flv"))
+                    httpFile.setFileName(httpFile.getFileName() + ".flv");
             } else {
                 throw new NotRecoverableDownloadException("Invalid download option");
             }
@@ -85,7 +90,8 @@ class VShare_ioFileRunner extends AbstractRunner {
     private void checkProblems() throws ErrorDuringDownloadingException {
         final String contentAsString = getContentAsString();
         if (contentAsString.contains("File Not Found") ||
-                contentAsString.contains("Can't find the resource you are looking for")) {
+                contentAsString.contains("Can't find the resource you are looking for") ||
+                contentAsString.contains("404 | <a href=\"/\">Home</a>")) {
             throw new URLNotAvailableAnymoreException("File not found"); //let to know user in FRD
         }
     }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
 <plugin class="cz.vity.freerapid.plugins.services.vshare_io.VShare_ioServiceImpl"
-        id="vshare.io" vendor="birchie" version="1.0.1">
+        id="vshare.io" vendor="birchie" version="1.0.2">
     <attributes>
         <attribute id="urlRegex" value="https?://(www\.)?vshare\.io/d/.+"/>
         <attribute id="minver" value="0.855"/>
