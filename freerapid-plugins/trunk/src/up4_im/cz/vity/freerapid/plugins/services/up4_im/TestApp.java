@@ -1,4 +1,4 @@
-package cz.vity.freerapid.plugins.services.letwatch;
+package cz.vity.freerapid.plugins.services.up4_im;
 
 import cz.vity.freerapid.plugins.dev.PluginDevApplication;
 import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
@@ -16,12 +16,11 @@ public class TestApp extends PluginDevApplication {
         final HttpFile httpFile = getHttpFile(); //creates new test instance of HttpFile
         try {
             //we set file URL
-            httpFile.setNewURL(new URL("http://letwatch.us/k0lslieg012k"));
-            //httpFile.setNewURL(new URL("http://letwatch.to/embed-hyfx48tok6d6-595x430.html"));
+            httpFile.setNewURL(new URL("http://up4.im/8ldwnzsy0gf8"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
-            final LetWatchServiceImpl service = new LetWatchServiceImpl(); //instance of service - of our plugin
+            final Up4_imServiceImpl service = new Up4_imServiceImpl(); //instance of service - of our plugin
             /*
             //we set premium account details
             final PremiumAccount config = new PremiumAccount();

@@ -23,6 +23,10 @@ class LetWatchFileRunner extends XFilePlayerRunner {
     protected void correctURL() throws Exception {
         fileURL = fileURL.replaceFirst("letwatch\\.co\\.uk/", "letwatch.us/");
         fileURL = fileURL.replaceFirst("letwatch\\.us\\.com/", "letwatch.us/");
+        if (fileURL.contains("/embed")) {
+            String[] file = fileURL.split("/embed");
+            fileURL = file[0] + "/" + file[1].split("-")[1];
+        }
     }
 
     @Override
