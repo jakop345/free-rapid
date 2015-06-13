@@ -1,6 +1,7 @@
 package cz.vity.freerapid.plugins.services.depositfiles;
 
 import cz.vity.freerapid.plugins.exceptions.*;
+import cz.vity.freerapid.plugins.services.solvemediacaptcha.SolveMediaCaptcha;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
@@ -92,33 +93,51 @@ class DepositFilesRunner extends AbstractRunner {
             }
 
             while (PlugUtils.find("(?s)check_recaptcha\\s*\\(\\s*'" + fid + "'", getContentAsString())) {
-                logger.info("Captcha URL: " + reCaptchaUrl);
-                method = getGetMethod(reCaptchaUrl);
-                if (!makeRedirectedRequest(method))
-                    throw new ServiceConnectionProblemException();
+                if (reCaptchaUrl.equals("")) {
+                    String captchaKey = PlugUtils.getStringBetween(getContentAsString(), "ACPuzzleKey = '", "';");
+                    SolveMediaCaptcha solveMediaCaptcha = new SolveMediaCaptcha(captchaKey, client, getCaptchaSupport());
+                    solveMediaCaptcha.askForCaptcha();
+                    method = getMethodBuilder()
+                            .setAction("/get_file.php")
+                            .setReferer(fileURL)
+                            .setEncodePathAndQuery(true)
+                            .setParameter("fid", fid)
+                            .setParameter("challenge", solveMediaCaptcha.getChallenge())
+                            .setParameter("response", solveMediaCaptcha.getResponse())
+                            .setParameter("acpuzzle", "1")
+                            .toGetMethod();
+                    if (!makeRedirectedRequest(method))
+                        throw new ServiceConnectionProblemException();
 
-                matcher = getMatcherAgainstContent("(?s)challenge\\s*:\\s*'([\\w-]+)'.*?server\\s*:\\s*'([^']+)'");
-                if (!matcher.find())
-                    throw new PluginImplementationException("Error parsing ReCaptcha response");
-                String reCaptcha_challenge = matcher.group(1);
-                String captchaImg = matcher.group(2) + "image?c=" + reCaptcha_challenge;
-                logger.info("Captcha URL: " + captchaImg);
+                } else {
+                    logger.info("Captcha URL: " + reCaptchaUrl);
+                    method = getGetMethod(reCaptchaUrl);
+                    if (!makeRedirectedRequest(method))
+                        throw new ServiceConnectionProblemException();
 
-                String reCaptcha_response = getCaptchaSupport().getCaptcha(captchaImg);
-                if (reCaptcha_response == null)
-                    throw new CaptchaEntryInputMismatchException();
+                    matcher = getMatcherAgainstContent("(?s)challenge\\s*:\\s*'([\\w-]+)'.*?server\\s*:\\s*'([^']+)'");
+                    if (!matcher.find())
+                        throw new PluginImplementationException("Error parsing ReCaptcha response");
+                    String reCaptcha_challenge = matcher.group(1);
+                    String captchaImg = matcher.group(2) + "image?c=" + reCaptcha_challenge;
+                    logger.info("Captcha URL: " + captchaImg);
 
-                method = getMethodBuilder()
-                        .setAction("/get_file.php")
-                        .setReferer(fileURL)
-                        .setEncodePathAndQuery(true)
-                        .setParameter("fid", fid)
-                        .setParameter("challenge", reCaptcha_challenge)
-                        .setParameter("response", reCaptcha_response)
-                        .toGetMethod();
+                    String reCaptcha_response = getCaptchaSupport().getCaptcha(captchaImg);
+                    if (reCaptcha_response == null)
+                        throw new CaptchaEntryInputMismatchException();
 
-                if (!makeRedirectedRequest(method))
-                    throw new ServiceConnectionProblemException();
+                    method = getMethodBuilder()
+                            .setAction("/get_file.php")
+                            .setReferer(fileURL)
+                            .setEncodePathAndQuery(true)
+                            .setParameter("fid", fid)
+                            .setParameter("challenge", reCaptcha_challenge)
+                            .setParameter("response", reCaptcha_response)
+                            .toGetMethod();
+
+                    if (!makeRedirectedRequest(method))
+                        throw new ServiceConnectionProblemException();
+                }
             }
 
             matcher = getMatcherAgainstContent("\\('fastdownload'\\s*,\\s*'(.+?)'\\)");
