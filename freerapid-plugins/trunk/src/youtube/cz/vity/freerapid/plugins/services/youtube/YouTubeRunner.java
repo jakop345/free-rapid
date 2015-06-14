@@ -901,6 +901,8 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
                                     }
                                     bw = new BufferedWriter(new FileWriter((outputFile)));
                                     bw.write(Transcription2SrtUtil.convert(getContentAsString()));
+                                } catch (Exception e) {
+                                    LogUtils.processException(logger, e);
                                 } finally {
                                     if (bw != null) {
                                         try {

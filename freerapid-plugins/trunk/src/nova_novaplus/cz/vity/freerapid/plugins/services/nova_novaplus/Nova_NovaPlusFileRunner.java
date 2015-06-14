@@ -62,7 +62,7 @@ class Nova_NovaPlusFileRunner extends AbstractRtmpRunner {
         if (makeRedirectedRequest(method)) {
             checkProblems();
             checkNameAndSize(getContentAsString());
-            Matcher matcher = PlugUtils.matcher("src=\"(http://[^\"]+?config\\.php[^\"]+?)\"", getContentAsString());
+            Matcher matcher = PlugUtils.matcher("url:\\s*?\"(http://[^\"]+?config\\.php[^\"]+?)\"", getContentAsString());
             if (!matcher.find()) {
                 throw new PluginImplementationException("Config URL not found");
             }

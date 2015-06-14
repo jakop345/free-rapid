@@ -1,7 +1,6 @@
 package cz.vity.freerapid.plugins.services.uplea;
 
 import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
-import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;
 import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
 import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
@@ -11,7 +10,6 @@ import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
 
 /**
  * Class which contains main code
@@ -35,11 +33,9 @@ class UpleaFileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        final Matcher match = PlugUtils.matcher("download-filename.*?\">\\s*?<.+?>(.+?)</.+?>\\s*?<.*?>(.+?)</", content);
-        if (!match.find())
-            throw new PluginImplementationException("File name/size not found");
-        httpFile.setFileName(match.group(1).trim());
-        httpFile.setFileSize(PlugUtils.getFileSizeFromString(match.group(2).trim().replaceAll("o", "b")));
+        PlugUtils.checkName(httpFile, content, "\"gold-text\">", "</");
+        String strFileSize = PlugUtils.getStringBetween(content, "\"label label-info agmd\">", "</").replace("o", "b");
+        httpFile.setFileSize(PlugUtils.getFileSizeFromString(strFileSize));
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
 
@@ -60,7 +56,7 @@ class UpleaFileRunner extends AbstractRunner {
             }
             checkProblems();
             final HttpMethod dlMethod = getMethodBuilder().setReferer(fileURL)
-                    .setActionFromAHrefWhereATagContains(httpFile.getFileName()).toGetMethod();
+                    .setActionFromAHrefWhereATagContains("Your download link").toGetMethod();
             downloadTask.sleep(31);
             if (!tryDownloadAndSaveFile(dlMethod)) {
                 checkProblems();//if downloading failed

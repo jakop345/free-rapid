@@ -28,6 +28,7 @@ public class TestApp extends PluginDevApplication {
             //then we tries to download
             final iPrimaServiceImpl service = new iPrimaServiceImpl(); //instance of service - of our plugin
             iPrimaSettingsConfig config = new iPrimaSettingsConfig();
+            config.setProtocol(Protocol.HLS);
             config.setVideoQuality(VideoQuality.HD);
             config.setPort(Port._1935);
             service.setConfig(config);
