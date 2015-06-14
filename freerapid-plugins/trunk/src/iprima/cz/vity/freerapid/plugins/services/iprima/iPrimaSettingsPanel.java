@@ -19,23 +19,38 @@ class iPrimaSettingsPanel extends JPanel {
     }
 
     private void initPanel() {
-        final JLabel qualityLabel = new JLabel("Preferred quality level:");
-        final JComboBox<VideoQuality> qualityList = new JComboBox<VideoQuality>(VideoQuality.values());
+        final JLabel lblProtocol = new JLabel("Preferred protocol:");
+        final JComboBox<Protocol> cbbProtocol = new JComboBox<Protocol>(Protocol.values());
+        final JLabel lblQuality = new JLabel("Preferred quality level:");
+        final JComboBox<VideoQuality> cbbQuality = new JComboBox<VideoQuality>(VideoQuality.values());
         final JLabel lblPort = new JLabel("Preferred RTMP port:");
         final JComboBox cbbPort = new JComboBox<Port>(Port.values());
 
-        qualityLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        qualityList.setAlignmentX(Component.LEFT_ALIGNMENT);
+        lblProtocol.setAlignmentX(Component.LEFT_ALIGNMENT);
+        cbbProtocol.setAlignmentX(Component.LEFT_ALIGNMENT);
+        lblQuality.setAlignmentX(Component.LEFT_ALIGNMENT);
+        cbbQuality.setAlignmentX(Component.LEFT_ALIGNMENT);
         lblPort.setAlignmentX(Component.LEFT_ALIGNMENT);
         cbbPort.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        qualityList.setSelectedItem(config.getVideoQuality());
+        cbbProtocol.setSelectedItem(config.getProtocol());
+        cbbQuality.setSelectedItem(config.getVideoQuality());
         cbbPort.setSelectedItem(config.getPort());
 
-        qualityList.addActionListener(new ActionListener() {
+        cbbPort.setEnabled(config.getProtocol() == Protocol.RTMP);
+
+        cbbProtocol.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                config.setVideoQuality((VideoQuality) qualityList.getSelectedItem());
+                Protocol selectedProtocol = (Protocol) cbbProtocol.getSelectedItem();
+                config.setProtocol(selectedProtocol);
+                cbbPort.setEnabled(selectedProtocol == Protocol.RTMP);
+            }
+        });
+        cbbQuality.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                config.setVideoQuality((VideoQuality) cbbQuality.getSelectedItem());
             }
         });
         cbbPort.addActionListener(new ActionListener() {
@@ -46,8 +61,11 @@ class iPrimaSettingsPanel extends JPanel {
         });
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        add(qualityLabel);
-        add(qualityList);
+        add(lblProtocol);
+        add(cbbProtocol);
+        add(Box.createRigidArea(new Dimension(0, 5)));
+        add(lblQuality);
+        add(cbbQuality);
         add(Box.createRigidArea(new Dimension(0, 5)));
         add(lblPort);
         add(cbbPort);

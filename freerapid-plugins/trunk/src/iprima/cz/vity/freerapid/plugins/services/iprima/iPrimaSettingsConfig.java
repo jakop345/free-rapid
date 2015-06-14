@@ -6,8 +6,17 @@ package cz.vity.freerapid.plugins.services.iprima;
  */
 public class iPrimaSettingsConfig {
 
+    private Protocol protocol = Protocol.RTMP;
     private VideoQuality videoQuality = VideoQuality.HD;
     private Port port = Port._1935;
+
+    public Protocol getProtocol() {
+        return protocol;
+    }
+
+    public void setProtocol(Protocol protocol) {
+        this.protocol = protocol;
+    }
 
     public VideoQuality getVideoQuality() {
         return videoQuality;
@@ -28,8 +37,9 @@ public class iPrimaSettingsConfig {
     @Override
     public String toString() {
         return "iPrimaSettingsConfig{" +
-                "videoQuality=" + videoQuality +
-                ", port=" + port +
+                "protocol=" + protocol +
+                ", videoQuality=" + videoQuality +
+                (protocol == Protocol.RTMP ? ", port=" + port : "") +
                 '}';
     }
 }

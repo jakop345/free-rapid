@@ -4,23 +4,30 @@ import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
 import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;
 import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
 import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
-import cz.vity.freerapid.plugins.services.rtmp.AbstractRtmpRunner;
+import cz.vity.freerapid.plugins.services.applehls.AdjustableBitrateHlsDownloader;
+import cz.vity.freerapid.plugins.services.applehls.HlsDownloader;
+import cz.vity.freerapid.plugins.services.rtmp.RtmpDownloader;
 import cz.vity.freerapid.plugins.services.rtmp.RtmpSession;
+import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.util.URIUtil;
 
 import java.util.Random;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 /**
  * Class which contains main code
  *
  * @author JPEXS
  * @author ntoskrnl
+ * @author tong2shot
  */
-class iPrimaFileRunner extends AbstractRtmpRunner {
+class iPrimaFileRunner extends AbstractRunner {
     private final static Logger logger = Logger.getLogger(iPrimaFileRunner.class.getName());
+    private final static String DEFAULT_EXT = ".flv";
     private iPrimaSettingsConfig config;
 
     @Override
@@ -44,7 +51,7 @@ class iPrimaFileRunner extends AbstractRtmpRunner {
     private void checkNameAndSize() throws Exception {
         final String name = PlugUtils.getStringBetween(getContentAsString(), "<meta property=\"og:title\" content=\"", "\"")
                 .replace("| Prima PLAY", "").trim();
-        httpFile.setFileName(name + ".flv");
+        httpFile.setFileName(name + DEFAULT_EXT);
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
 
@@ -65,9 +72,10 @@ class iPrimaFileRunner extends AbstractRtmpRunner {
                     throw new ServiceConnectionProblemException("Error starting download");
                 }
             } else {
+                String mainPageContent = getContentAsString();
                 logger.info("Settings config: " + config);
                 final String playName = getPlayName();
-                final String geoZone = PlugUtils.getStringBetween(getContentAsString(), "\"zoneGEO\":", ",");
+                final String geoZone = PlugUtils.getStringBetween(mainPageContent, "\"zoneGEO\":", ",");
                 final Random rnd = new Random();
                 method = getMethodBuilder()
                         .setReferer(fileURL)
@@ -78,17 +86,28 @@ class iPrimaFileRunner extends AbstractRtmpRunner {
                     checkProblems();
                     throw new ServiceConnectionProblemException();
                 }
+                final String auth = PlugUtils.getStringBetween(getContentAsString(), "'?auth='+\"\"+'", "';", 2);
                 String app = "iprima_token";
                 if (!"0".equals(geoZone)) {
                     app += "_" + geoZone;
                 }
-                final String auth = PlugUtils.getStringBetween(getContentAsString(), "'?auth='+\"\"+'", "';", 2);
-                app += "?auth=" + auth;
-                final RtmpSession rtmpSession = new RtmpSession("bcastmw.livebox.cz", config.getPort().getPort(), app, playName);
-                rtmpSession.getConnectParams().put("pageUrl", fileURL);
-                rtmpSession.getConnectParams().put("swfUrl", "http://embed.livebox.cz/iprimaplay/flash/LiveboxPlayer.swf?nocache=" + System.currentTimeMillis());
-                rtmpSession.disablePauseWorkaround();
-                tryDownloadAndSaveFile(rtmpSession);
+
+                if (config.getProtocol() == Protocol.RTMP) {
+                    app += "?auth=" + auth;
+                    final RtmpSession rtmpSession = new RtmpSession("bcastmw.livebox.cz", config.getPort().getPort(), app, playName);
+                    rtmpSession.getConnectParams().put("pageUrl", fileURL);
+                    rtmpSession.getConnectParams().put("swfUrl", "http://embed.livebox.cz/iprimaplay/flash/LiveboxPlayer.swf?nocache=" + System.currentTimeMillis());
+                    rtmpSession.disablePauseWorkaround();
+                    RtmpDownloader downloader = new RtmpDownloader(client, downloadTask);
+                    downloader.tryDownloadAndSaveFile(rtmpSession);
+                } else {
+                    httpFile.setFileName(httpFile.getFileName().replaceFirst(Pattern.quote(DEFAULT_EXT) + "$", ".ts"));
+                    String iphId = PlugUtils.getStringBetween(mainPageContent, "\"iph_id\":\"", "\"");
+                    app += "/smil:" + iphId + "/playlist.m3u8?auth=" + auth;
+                    String playlistUrl = URIUtil.encodePathQuery("http://bcastmw.livebox.cz/" + app);
+                    HlsDownloader hlsDownloader = new AdjustableBitrateHlsDownloader(client, httpFile, downloadTask, config.getVideoQuality().getBitrate());
+                    hlsDownloader.tryDownloadAndSaveFile(playlistUrl);
+                }
             }
         } else {
             checkProblems();
