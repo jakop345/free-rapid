@@ -4,10 +4,10 @@ import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
 import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
 import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
+import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
-import java.net.URLDecoder;
 import java.util.logging.Logger;
 
 /**
@@ -25,9 +25,8 @@ class ImagebamFileRunner extends AbstractRunner {
         final GetMethod method = getGetMethod(fileURL);
         if (makeRedirectedRequest(method)) {
             checkProblems();
-            HttpMethod httpMethod = getMethodBuilder().setReferer(fileURL).setActionFromAHrefWhereATagContains("save image").toGetMethod();
-            String path = httpMethod.getPath();
-            String filename = URLDecoder.decode(path.substring(path.lastIndexOf("/") + 1), "UTF-8");
+            HttpMethod httpMethod = getMethodBuilder().setReferer(fileURL).setActionFromAHrefWhereATagContains("cloud-download").toGetMethod();
+            String filename = PlugUtils.suggestFilename(httpMethod.getURI().toString());
             if (!filename.contains(".")) filename += ".jpg";
             httpFile.setFileName(filename);
             setFileStreamContentTypes("text/plain");
@@ -49,7 +48,8 @@ class ImagebamFileRunner extends AbstractRunner {
         final String content = getContentAsString();
         if (content.contains("The requested image could not be located")
                 || content.contains("<h1>Not Found</h1>")
-                || content.contains("violated our terms of service")) {
+                || content.contains("violated our terms of service")
+                || content.contains(" image has been deleted")) {
             throw new URLNotAvailableAnymoreException("File not found");
         }
     }

@@ -9,6 +9,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.logging.Logger;
@@ -27,7 +29,17 @@ class TimedText2Srt {
         try {
             String encoding = DetectEncoding.detectEncoding(timedTextIs);
             logger.info("Timed text encoding: " + encoding);
-            Element body = (Element) DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource(new InputStreamReader(timedTextIs, encoding))).getElementsByTagName("body").item(0);
+
+            //Cleanup invalid XML chars
+            BufferedReader br = new BufferedReader(new InputStreamReader(timedTextIs, encoding));
+            String line;
+            StringBuilder sourceSb = new StringBuilder();
+            while ((line = br.readLine()) != null) {
+                sourceSb.append(line);
+            }
+            String sourceStr = sourceSb.toString().replaceAll("[^\\u0009\\u000A\\u000D\u0020-\\uD7FF\\uE000-\\uFFFD\\u10000-\\u10FFF]+", "");
+
+            Element body = (Element) DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource(new ByteArrayInputStream(sourceStr.getBytes(encoding)))).getElementsByTagName("body").item(0);
             NodeList pElements = body.getElementsByTagName("p");
             for (int i = 0, pElementsLength = pElements.getLength(); i < pElementsLength; i++) {
                 Element pElement = (Element) pElements.item(i);
