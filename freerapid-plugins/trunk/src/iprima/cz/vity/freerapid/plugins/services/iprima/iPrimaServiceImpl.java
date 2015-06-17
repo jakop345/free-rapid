@@ -3,6 +3,9 @@ package cz.vity.freerapid.plugins.services.iprima;
 import cz.vity.freerapid.plugins.webclient.AbstractFileShareService;
 import cz.vity.freerapid.plugins.webclient.interfaces.ConfigurationStorageSupport;
 import cz.vity.freerapid.plugins.webclient.interfaces.PluginRunner;
+import cz.vity.freerapid.utilities.LogUtils;
+
+import java.util.logging.Logger;
 
 /**
  * Class that provides basic info about plugin
@@ -11,7 +14,8 @@ import cz.vity.freerapid.plugins.webclient.interfaces.PluginRunner;
  */
 public class iPrimaServiceImpl extends AbstractFileShareService {
     private static final String CONFIG_FILE = "iPrimaSettings.xml";
-    private iPrimaSettingsConfig config;
+    private static final Logger logger = Logger.getLogger(iPrimaServiceImpl.class.getName());
+    private volatile iPrimaSettingsConfig config;
 
     @Override
     public String getName() {
@@ -37,7 +41,7 @@ public class iPrimaServiceImpl extends AbstractFileShareService {
         }
     }
 
-    iPrimaSettingsConfig getConfig() throws Exception {
+    public iPrimaSettingsConfig getConfig() throws Exception {
         synchronized (iPrimaServiceImpl.class) {
             final ConfigurationStorageSupport storage = getPluginContext().getConfigurationStorageSupport();
             if (config == null) {
@@ -47,6 +51,8 @@ public class iPrimaServiceImpl extends AbstractFileShareService {
                     try {
                         config = storage.loadConfigFromFile(CONFIG_FILE, iPrimaSettingsConfig.class);
                     } catch (Exception e) {
+                        LogUtils.processException(logger, e);
+                        logger.warning("Broken plugin config file detected. Using default settings.");
                         config = new iPrimaSettingsConfig();
                     }
                 }

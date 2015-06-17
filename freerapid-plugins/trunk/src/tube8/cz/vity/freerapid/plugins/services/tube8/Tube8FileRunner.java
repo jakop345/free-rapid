@@ -90,12 +90,15 @@ class Tube8FileRunner extends AbstractRunner {
     }
 
     private Tube8Video getSelectedVideo(String content, String title) throws Exception {
+        boolean encrypted = !content.contains("\"encrypted\":false");
         List<Tube8Video> videoList = new LinkedList<Tube8Video>();
         for (VideoQuality videoQuality : VideoQuality.values()) {
             logger.info("Searching video: " + videoQuality.toString());
             Matcher matcher = PlugUtils.matcher("\"" + videoQuality.getLabel() + "\":\"(.+?)\"", content);
             if (matcher.find()) {
-                Tube8Video tube8Video = new Tube8Video(videoQuality, new Crypto().decrypt(matcher.group(1), title));
+                String url = matcher.group(1);
+                url = (encrypted ? new Crypto().decrypt(url, title) : url.replace("\\/", "/"));
+                Tube8Video tube8Video = new Tube8Video(videoQuality, url);
                 videoList.add(tube8Video);
                 logger.info("Found video: " + tube8Video);
             }

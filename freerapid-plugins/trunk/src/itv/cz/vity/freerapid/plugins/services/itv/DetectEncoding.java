@@ -124,7 +124,7 @@ class DetectEncoding {
                 break;
         }
         if (encoding == null) {
-            encoding = System.getProperty("UTF-8");
+            encoding = "UTF-8";
         }
         if (readEncoding) {
             read = in.read(buffer, 4, buffer.length - 4);
@@ -132,7 +132,7 @@ class DetectEncoding {
             String s = new String(buffer, 4, read, cs);
             int pos = s.indexOf("encoding");
             if (pos == -1) {
-                encoding = System.getProperty("UTF-8");
+                encoding = "UTF-8";
             } else {
                 char delim;
                 int start = s.indexOf(delim = '\'', pos);
