@@ -207,7 +207,7 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
             }
 
             Container container = youTubeMedia.getContainer();
-            httpFile.setFileName(httpFile.getFileName().replaceFirst(Pattern.quote(DEFAULT_FILE_EXT) + "$", container.getFileExt()));
+            httpFile.setFileName(httpFile.getFileName().replaceFirst(Pattern.quote(DEFAULT_FILE_EXT) + "$", youTubeMedia.getFileExt()));
             logger.info("Config setting : " + config);
             logger.info("Downloading media : " + youTubeMedia);
             setClientParameter(DownloadClientConsts.DONT_USE_HEADER_FILENAME, true);
