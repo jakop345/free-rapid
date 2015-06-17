@@ -14,6 +14,7 @@ class YouTubeMedia {
     private final String url;
     private final String signature;
     private final boolean cipherSignature;
+    private final String fileExt;
 
     private static enum DashType {
         VIDEO, AUDIO, NONE
@@ -23,6 +24,7 @@ class YouTubeMedia {
         this.itag = itag;
         this.container = getContainer(itag);
         this.dashType = getDashType(itag);
+        this.fileExt = (dashType == DashType.NONE ? container.getFileExt() : (dashType == DashType.VIDEO ? ".m4v" : ".m4a"));
         this.videoQuality = (isDashAudio() ? -1 : getVideoResolution(itag));
         this.frameRate = (isDashAudio() ? -1 : getFrameRate(itag));
         this.audioEncoding = (isDashVideo() ? AudioEncoding.None : getAudioEncoding(itag));
@@ -267,6 +269,10 @@ class YouTubeMedia {
 
     public Container getContainer() {
         return container;
+    }
+
+    public String getFileExt() {
+        return fileExt;
     }
 
     public int getVideoQuality() {
