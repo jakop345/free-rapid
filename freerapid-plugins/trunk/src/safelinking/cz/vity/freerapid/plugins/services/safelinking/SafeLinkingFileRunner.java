@@ -10,6 +10,8 @@ import cz.vity.freerapid.plugins.webclient.MethodBuilder;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.StringRequestEntity;
 
 import java.net.URI;
 import java.net.URLEncoder;
@@ -64,71 +66,65 @@ class SafeLinkingFileRunner extends AbstractRunner {
         addCookie(new Cookie(".safelinking.net", "language", "en", "/", 86400, false));
         logger.info("Starting download in TASK " + fileURL);
 
-        final String HEADER_LINK_TYPE_1 = "<strong>Direct links</strong>";
-        final String HEADER_LINK_TYPE_2 = "<strong>Live links</strong>";
+        final String ProtectedAction = "/v1/protected";
+        final String CaptchaAction = "/v1/captcha";
+        final String SolveMediaCaptchaKey = "OZ987i6xTzNs9lw5.MA-2Vxbc-UxFrLu";   // constant during testing - was unable to locate src
         final int MAX_CAPTCHA_ATTEMPTS = 5;
 
         List<URI> list = new LinkedList<URI>();
 
         if (fileURL.contains("/d/")) {
             list.add(stepDirectLink(fileURL));
-        } else if (fileURL.contains("/p/")) {
+        } else {//if (fileURL.contains("/p/")) {
             if (!makeRedirectedRequest(getGetMethod(fileURL))) { //we make the main request
                 checkProblems();//check problems
                 throw new PluginImplementationException();
             }
+            final Matcher match = PlugUtils.matcher("/(\\w+?)/?$", fileURL);
+            if (!match.find()) throw new InvalidURLOrServiceProblemException("Unknown url format");
+            final String fileID = match.group(1);
+            PostMethod postMethod = (PostMethod) getMethodBuilder().setReferer(fileURL)
+                    .setAction(ProtectedAction)
+                    .setAjax().toPostMethod();
+            final String entity = "{\"hash\": \"" + fileID + "\"}";
+            postMethod.setRequestEntity(new StringRequestEntity(entity, "application/json", "UTF-8"));
+
             int count = 0;
-            MethodBuilder builder;
-            String content;
-            while (!getContentAsString().contains(HEADER_LINK_TYPE_1) &&
-                    !getContentAsString().contains(HEADER_LINK_TYPE_2) &&
-                    (count++ < MAX_CAPTCHA_ATTEMPTS)) {
-                builder = getMethodBuilder()
-                        .setActionFromFormWhereTagContains("Protected link", true)
-                        .setReferer(fileURL).setAction(fileURL);
-                content = getContentAsString();
-                // check 4 & complete captcha
-                if (content.contains("Captcha loading, please wait") ||
-                        content.contains("Prove you are human") ||
-                        content.contains("The CAPTCHA code you entered was wrong")) {
-                    stepCaptcha(builder);
+            String content = "";
+            while (true) {
+                if (count++ > MAX_CAPTCHA_ATTEMPTS) {
+                    throw new PluginImplementationException("Excessive incorrect captcha/password entries or Plugin error");
                 }
-                // check 4 & complete password
-                if (content.contains("Link password")) {
-                    final String password = getDialogSupport().askForPassword("SafeLinking");
-                    if (password == null) {
-                        throw new PluginImplementationException("This file is secured with a password");
+                if (makeRedirectedRequest(postMethod))
+                    content = getContentAsString();
+                checkProblems();
+
+                if (content.contains("\"links\"")) {
+                    String linksString = PlugUtils.getStringBetween(content, "\"links\":[", "]");
+                    final Matcher m = PlugUtils.matcher("\"url\":\"([^\"]+?)\"", linksString);
+                    while (m.find()) {
+                        list.add(encodeUri(m.group(1).trim()));
                     }
-                    builder.setParameter("link-password", password);
+                    break;
                 }
-                if (!makeRedirectedRequest(builder.toPostMethod())) { //we make the main request
-                    checkProblems();//check problems
-                    throw new ServiceConnectionProblemException("err 1");
+
+                String entityStr = "\"hash\":\"" + fileID + "\"";
+                if (content.contains("\"usePassword\":true")) {
+                    final String password = getDialogSupport().askForPassword("SafeLinking");
+                    if (password == null)
+                        throw new NotRecoverableDownloadException("This file is secured with a password");
+                    entityStr = "\"password\":\"" + password+ "\"," + entityStr;
                 }
+                if (content.contains("\"useCaptcha\":true")) {
+                    final SolveMediaCaptcha solveMediaCaptcha = new SolveMediaCaptcha(SolveMediaCaptchaKey, client, getCaptchaSupport(), true);
+                    solveMediaCaptcha.askForCaptcha();
+                    entityStr = "\"answer\":\"" + solveMediaCaptcha.getResponse() + "\",\"challengeId\":\"" + solveMediaCaptcha.getChallenge() + "\",\"type\":0," + entityStr;
+                }
+                postMethod = (PostMethod) getMethodBuilder().setReferer(fileURL)
+                        .setAction(CaptchaAction)
+                        .setAjax().toPostMethod();
+                postMethod.setRequestEntity(new StringRequestEntity("{"+ entityStr +"}", "application/json", "UTF-8"));
             }
-
-            if (getContentAsString().contains(HEADER_LINK_TYPE_1)) {
-                content = PlugUtils.getStringBetween(getContentAsString(), HEADER_LINK_TYPE_1, "</fieldset>");
-            } else if (getContentAsString().contains(HEADER_LINK_TYPE_2)) {
-                content = PlugUtils.getStringBetween(getContentAsString(), HEADER_LINK_TYPE_2, "</fieldset>");
-            } else if (count >= MAX_CAPTCHA_ATTEMPTS) {
-                throw new PluginImplementationException("Excessive Incorrect Captcha Entries");
-            } else {
-                throw new PluginImplementationException("Captcha Text Error : SafeLinking site changed : SafeLinking feature not supported yet");
-            }
-
-            final Matcher m = PlugUtils.matcher("<a href=\"([^\"]+)\" class=\"result-a\">", content);
-            while (m.find()) {
-                list.add(encodeUri(m.group(1).trim()));
-            }
-            if (getContentAsString().contains(HEADER_LINK_TYPE_1)) {
-                for (int ii = 0; ii < list.size(); ii++)
-                    list.set(ii, stepDirectLink(list.get(ii).toASCIIString()));
-            }
-
-        } else {
-            checkProblems();
-            throw new PluginImplementationException("Invalid link");
         }
         if (list.isEmpty()) throw new PluginImplementationException("No links found");
         getPluginService().getPluginContext().getQueueSupport().addLinksToQueue(httpFile, list);
@@ -139,7 +135,8 @@ class SafeLinkingFileRunner extends AbstractRunner {
 
     private void checkProblems() throws ErrorDuringDownloadingException {
         final String content = getContentAsString();
-        if (content.contains("404 - not found") || content.contains("404 Page/File not found") ||
+        if (content.contains("\"status\":404") || content.contains("\"messsage\":\"not found") ||
+                content.contains("404 - not found") ||content.contains("404 Page/File not found") ||
                 content.contains("This link does not exist")) {
             throw new URLNotAvailableAnymoreException("Link does not exist"); //let to know user in FRD
         }
