@@ -41,7 +41,7 @@ class UlozToRunner extends AbstractRunner {
     private void ageCheck(String content) throws Exception {
         if (content.contains("confirmContent")) { //eroticky obsah vyzaduje potvruemo
             final PostMethod confirmMethod = (PostMethod) getMethodBuilder()
-                    .setActionFromFormWhereTagContains("askAgeForm", true)
+                    .setActionFromFormWhereTagContains("frm-porn", true)
                     .setReferer(fileURL)
                     .removeParameter("disagree")
                     .toPostMethod();
@@ -49,7 +49,7 @@ class UlozToRunner extends AbstractRunner {
             if (getContentAsString().contains("confirmContent")) {
                 throw new PluginImplementationException("Cannot confirm age");
             }
-            fileURL = fileURL.replaceFirst("^http://uloz\\.to", "http://pornfile.uloz.to"); //porn redirected to pornfile, explicit because of POST
+            fileURL = fileURL.replaceFirst("^http://uloz\\.to", "http://pornfile.cz"); //porn redirected to pornfile, explicit because of POST
         }
     }
 
@@ -140,7 +140,7 @@ class UlozToRunner extends AbstractRunner {
     }
 
     private boolean isPornFile() {
-        return fileURL.contains("pornfile.uloz");
+        return fileURL.contains("pornfile.uloz") || fileURL.contains("pornfile.cz");
     }
 
     private void checkURL() {
@@ -149,7 +149,7 @@ class UlozToRunner extends AbstractRunner {
 
     @Override
     protected String getBaseURL() {
-        return !isPornFile() ? "http://uloz.to" : "http://pornfile.uloz.to";
+        return !isPornFile() ? "http://uloz.to" : "http://pornfile.cz";
     }
 
     private void checkNameAndSize(String content) throws Exception {
