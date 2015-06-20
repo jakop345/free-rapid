@@ -38,7 +38,8 @@ public class TestApp extends PluginDevApplication {
             //final SolveMediaCaptcha captcha = new SolveMediaCaptcha("a9P0IXFCBW4I3MBD6jhOqaI2-tG7KEKl", client, captchaSupport, false, "red"); //vidxden
             //final SolveMediaCaptcha captcha = new SolveMediaCaptcha("hfwE8LDc6hPLdz4l4YEntxhGqF.XDx7B", client, captchaSupport, true, "custom");  //safelinking
             //final SolveMediaCaptcha captcha = new SolveMediaCaptcha("iEXF7zf8za89u9WFCdGzF.noOv34.L8S", client, captchaSupport); //ryushare
-            final SolveMediaCaptcha captcha = new SolveMediaCaptcha("oy3wKTaFP368dkJiGUqOVjBR2rOOR7GR", client, captchaSupport);  //rapidgator
+            //final SolveMediaCaptcha captcha = new SolveMediaCaptcha("oy3wKTaFP368dkJiGUqOVjBR2rOOR7GR", client, captchaSupport); //rapidgator
+            final SolveMediaCaptcha captcha = new SolveMediaCaptcha("PmNHIzoabGnx1.a18HcKp2KaKlEKu38t", client, captchaSupport); //depositfiles
             captcha.askForCaptcha();
         } catch (final Exception e) {
             e.printStackTrace();
