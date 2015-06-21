@@ -60,12 +60,13 @@ class NowDownloadFileRunner extends AbstractRunner {
                         .setActionFromAHrefWhereATagContains("Download Now").toHttpMethod();
             } catch (Exception e) {  // .ch
                 final Matcher match = PlugUtils.matcher("eval\\((.+?)\\s*?</script>", content);
-                if (!match.find()) throw new PluginImplementationException("script not found");
-                String contents = evalScript(match.group(1), "Download your file");
+                String contents = getContentAsString();
+                if (match.find())
+                    contents = evalScript(match.group(1), "Download your file");
 
                 httpMethod = getMethodBuilder(contents).setReferer(fileURL)
                         .setActionFromAHrefWhereATagContains("Download your file").toHttpMethod();
-                final int wait = PlugUtils.getNumberBetween(contents, "var ll=", ";");
+                final int wait = PlugUtils.getNumberBetween(contents, "var t=", ";");
                 downloadTask.sleep(wait + 1);
                 if (!makeRedirectedRequest(httpMethod)) {
                     checkProblems();
