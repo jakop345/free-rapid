@@ -30,6 +30,8 @@ class DataFileFileRunner extends AbstractRunner {
         super.runCheck();
         final GetMethod getMethod = getGetMethod(fileURL);//make first request
         if (makeRedirectedRequest(getMethod)) {
+            if (getContentAsString().contains("eval(atob("))
+                skipSecurityPage();
             checkProblems();
             checkNameAndSize(getContentAsString());//ok let's extract file name and size from the page
         } else {
@@ -50,6 +52,8 @@ class DataFileFileRunner extends AbstractRunner {
         logger.info("Starting download in TASK " + fileURL);
         final GetMethod method = getGetMethod(fileURL); //create GET request
         if (makeRedirectedRequest(method)) { //we make the main request
+            if (getContentAsString().contains("eval(atob("))
+                skipSecurityPage();
             final String content = getContentAsString();//check for response
             checkProblems();//check problems
             checkNameAndSize(content);//extract file name and size from the page
@@ -136,6 +140,19 @@ class DataFileFileRunner extends AbstractRunner {
             }
         }
     }
+
+    private void skipSecurityPage() throws Exception {
+        Matcher match = PlugUtils.matcher("<script language=\"JavaScript\">.+?(function.+?)</script>", getContentAsString());
+        if (match.find()) {
+            final String newUrl = decodeRedirectUrl(match.group(1));
+            final String fullUrl = getMethodBuilder().setReferer(fileURL).setAction(newUrl).getEscapedURI();
+            if (!makeRedirectedRequest(getGetMethod(fullUrl))) {
+                checkProblems();
+                throw new ServiceConnectionProblemException();
+            }
+        }
+    }
+
 
     private String decodeRedirectUrl(String script) throws PluginImplementationException {
         try {
