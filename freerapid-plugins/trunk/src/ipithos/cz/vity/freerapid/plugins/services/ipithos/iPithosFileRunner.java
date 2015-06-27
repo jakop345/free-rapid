@@ -1,7 +1,7 @@
 package cz.vity.freerapid.plugins.services.ipithos;
 
 import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
-import cz.vity.freerapid.plugins.services.xfilesharing.XFileSharingRunner;
+import cz.vity.freerapid.plugins.services.xfileplayer.XFilePlayerRunner;
 import cz.vity.freerapid.plugins.services.xfilesharing.nameandsize.FileNameHandler;
 import cz.vity.freerapid.plugins.webclient.interfaces.HttpFile;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
  *
  * @author birchie
  */
-class iPithosFileRunner extends XFileSharingRunner {
+class iPithosFileRunner extends XFilePlayerRunner {
 
     @Override
     protected List<FileNameHandler> getFileNameHandlers() {
@@ -23,7 +23,7 @@ class iPithosFileRunner extends XFileSharingRunner {
         fileNameHandlers.add(new FileNameHandler() {
             @Override
             public void checkFileName(HttpFile httpFile, String content) throws ErrorDuringDownloadingException {
-                final Matcher match = PlugUtils.matcher("<h3.*>(.+?)</h3>", content);
+                final Matcher match = PlugUtils.matcher("<h3[^<>]*>(?:<[^<>]+>)*(.+?)<", content);
                 if (!match.find())throw new ErrorDuringDownloadingException();
                 httpFile.setFileName(match.group(1).trim());
             }

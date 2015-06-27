@@ -38,7 +38,7 @@ class xHamsterFileRunner extends AbstractRunner {
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
         PlugUtils.checkName(httpFile, content, "<title>", " - xHamster.com");
-        httpFile.setFileName(httpFile.getFileName() + ".flv");
+        httpFile.setFileName(httpFile.getFileName() + ".mp4");
         PlugUtils.checkFileSize(httpFile, content, "video (", ")");
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
@@ -52,8 +52,8 @@ class xHamsterFileRunner extends AbstractRunner {
         if (makeRedirectedRequest(method)) {
             checkProblems();
             checkNameAndSize(getContentAsString());
-            final String file = PlugUtils.getStringBetween(getContentAsString(), "&file=", "&");   //flv
-            //final String file = PlugUtils.getStringBetween(getContentAsString(), "file=\"", "\"");  //mp4
+            //final String file = PlugUtils.getStringBetween(getContentAsString(), "&file=", "&");   //flv
+            final String file = PlugUtils.getStringBetween(getContentAsString(), "file=\"", "\"");  //mp4
             final String videoURL;
             if (file.startsWith("http")) {
                 videoURL = URLDecoder.decode(file, "UTF-8");
