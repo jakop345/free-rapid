@@ -132,5 +132,8 @@ class IFolderFileRunner extends AbstractRunner {
         if (contentAsString.contains("\u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D") || contentAsString.contains("\u0443\u0434\u0430\u043B\u0435\u043D")) {
             throw new URLNotAvailableAnymoreException("File not found"); //let to know user in FRD
         }
+        if (contentAsString.contains("Данный файл временно не доступен")) {
+            throw new ServiceConnectionProblemException("This file is temporarily not available ");
+        }
     }
 }

@@ -18,6 +18,11 @@ import java.util.regex.Matcher;
 class LaFileFileRunner extends XFileSharingRunner {
 
     @Override
+    protected void correctURL() throws Exception {
+        fileURL = fileURL.replaceFirst("(www\\.)?lafile\\.com/", "www.florenfile.com/");
+    }
+
+    @Override
     protected List<FileSizeHandler> getFileSizeHandlers() {
         final List<FileSizeHandler> fileSizeHandlers = super.getFileSizeHandlers();
         fileSizeHandlers.add(0, new FileSizeHandler() {
@@ -25,7 +30,7 @@ class LaFileFileRunner extends XFileSharingRunner {
             public void checkFileSize(HttpFile httpFile, String content) throws ErrorDuringDownloadingException {
                 final Matcher match = PlugUtils.matcher("Size\\s*?:\\s*?<.+?>(\\d.+?)</", content);
                 if (!match.find())
-                    throw new PluginImplementationException("File name not found");
+                    throw new PluginImplementationException("File size not found");
                 httpFile.setFileSize(PlugUtils.getFileSizeFromString(match.group(1)));
             }
         });

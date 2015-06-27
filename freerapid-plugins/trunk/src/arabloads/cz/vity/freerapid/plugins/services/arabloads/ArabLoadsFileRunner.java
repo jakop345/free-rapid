@@ -3,6 +3,7 @@ package cz.vity.freerapid.plugins.services.arabloads;
 import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
 import cz.vity.freerapid.plugins.services.xfilesharing.XFileSharingRunner;
 import cz.vity.freerapid.plugins.services.xfilesharing.nameandsize.FileSizeHandler;
+import cz.vity.freerapid.plugins.services.xfilesharing.nameandsize.FileSizeHandlerNoSize;
 import cz.vity.freerapid.plugins.webclient.interfaces.HttpFile;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 
@@ -30,6 +31,7 @@ class ArabLoadsFileRunner extends XFileSharingRunner {
                 PlugUtils.checkFileSize(httpFile, content, "filesize=", "&");
             }
         });
+        fileSizeHandlers.add(new FileSizeHandlerNoSize());
         return fileSizeHandlers;
     }
 

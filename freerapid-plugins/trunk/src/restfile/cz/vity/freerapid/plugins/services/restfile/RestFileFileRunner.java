@@ -8,5 +8,9 @@ import cz.vity.freerapid.plugins.services.xfilesharing.XFileSharingRunner;
  * @author tong2shot
  */
 class RestFileFileRunner extends XFileSharingRunner {
+    @Override
+    protected void correctURL() throws Exception {
+        fileURL = fileURL.replaceFirst("restfile\\.com/", "restfilee.com/");
+    }
 
 }
