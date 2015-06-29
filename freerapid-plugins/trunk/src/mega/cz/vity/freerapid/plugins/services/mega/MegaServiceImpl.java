@@ -12,7 +12,7 @@ public class MegaServiceImpl extends AbstractFileShareService {
 
     @Override
     public String getName() {
-        return "mega.co.nz";
+        return "mega.nz";
     }
 
     @Override
