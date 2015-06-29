@@ -200,7 +200,7 @@ class MegaFileRunner extends AbstractRunner {
                 }
                 final String key = Base64.encodeBase64URLSafeString(cipher.doFinal(Base64.decodeBase64(keyParts[1])));
                 try {
-                    list.add(new URI("https://mega.co.nz/#N!" + nodeId + "!" + key));
+                    list.add(new URI("https://mega.nz/#N!" + nodeId + "!" + key));
                 } catch (final URISyntaxException e) {
                     LogUtils.processException(logger, e);
                 }
