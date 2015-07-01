@@ -151,12 +151,13 @@ class OneFichierFileRunner extends AbstractRunner {
     private void checkDownloadProblems() throws ErrorDuringDownloadingException {
         checkProblems();
         if (getContentAsString().contains("you must wait between downloads")) {
-            final String waitTime  = PlugUtils.getStringBetween(getContentAsString(), "You must wait ", "<");
-            int time = Integer.parseInt(waitTime.split(" ")[0]);
-            if (waitTime.split(" ")[1].equals("minutes"))
-                time = time * 60;
-            throw new YouHaveToWaitException("You must wait between downloads", time);
-        }
+            final Matcher waitMatch  = PlugUtils.matcher("You must wait (\\d+) (.+?)[<\\.]", getContentAsString());
+            if (waitMatch.find()) {
+                int time = Integer.parseInt(waitMatch.group(1));
+                if (waitMatch.group(2).contains("minute"))
+                    time = time * 60;
+                throw new YouHaveToWaitException("You must wait between downloads (" + waitMatch.group(1) + " " + waitMatch.group(2) + ")", time);
+        }   }
 
     }
 
