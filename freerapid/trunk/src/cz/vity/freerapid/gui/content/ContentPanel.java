@@ -1137,9 +1137,12 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
         if (selectedRows.length == 0)
             return null;  // nothing selected
         final String pluginID = manager.getSelectionToList(selectedRows).get(0).getPluginID();
-        if (!director.getPluginsManager().getPluginMetadata(pluginID).isOptionable())
-            return null;   // plugin has no options
-
+        try {
+            if (!director.getPluginsManager().getPluginMetadata(pluginID).isOptionable())
+                return null;   // plugin has no options
+        } catch (Exception x) {
+            return null;   // direct download
+        }
         JMenuItem pluginOptions = new JMenuItem(new PluginOptionsAction(pluginID));
         pluginOptions.setText(context.getResourceMap().getString("textPluginOptions", pluginID));
         if (director.getPluginsManager().getPluginMetadata(pluginID).hasFavicon())
