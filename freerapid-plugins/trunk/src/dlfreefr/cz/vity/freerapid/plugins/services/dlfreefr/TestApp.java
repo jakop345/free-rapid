@@ -17,10 +17,10 @@ public class TestApp extends PluginDevApplication {
         try {
             //we set file URL
             //httpFile.setNewURL(new URL("http://dl.free.fr/getfile.pl?file=/UgmGFywy"));
-            httpFile.setNewURL(new URL("http://dl.free.fr/r3Nv2pqeY"));
+            httpFile.setNewURL(new URL("http://dl.free.fr/qzOf6fH1n"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
-            connectionSettings.setProxy("213.251.169.115", 80); //eg we can use local proxy to sniff HTTP communication
+            //connectionSettings.setProxy("213.251.169.115", 80); //eg we can use local proxy to sniff HTTP communication
             //then we tries to download
             final DlFreeFrServiceImpl service = new DlFreeFrServiceImpl(); //instance of service - of our plugin
             //runcheck makes the validation
