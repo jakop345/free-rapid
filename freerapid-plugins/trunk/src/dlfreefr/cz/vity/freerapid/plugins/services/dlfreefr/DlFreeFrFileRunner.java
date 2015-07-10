@@ -11,7 +11,6 @@ import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
 import java.util.Locale;
-import java.util.Random;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 
@@ -54,50 +53,8 @@ class DlFreeFrFileRunner extends AbstractRunner {
             checkProblems();
             checkNameAndSize();
 
-            final String formSubmitContent = getContentAsString();
-            final String key = PlugUtils.getStringBetween(getContentAsString(), "\"key\":\"", "\"");
-            final String env = "prod";
-            final String lang = "fr";
-            setFileStreamContentTypes(new String[0], new String[]{"application/javascript"});
-
-            HttpMethod httpMethod;
-            int reqCounter = 0;
-            do {
-                if (reqCounter++ > 8) {
-                    throw new PluginImplementationException("Text validation not found");
-                }
-                final String callback = "Adyoulike.g._jsonp_" + new Random().nextInt(100000000);
-                //Adyoulike.g._jsonp_6968539184587093({"translations":{"fr":{"instructions_visual":"Recopiez « poulain » ci-dessous :"}},"site_under":false,"clickable":false,"pixels":{"VIDEO_050":[],"DISPLAY":[],"VIDEO_000":[],"VIDEO_100":[],"VIDEO_025":[],"VIDEO_075":[]},"medium_type":"image/adyoulike","iframes":{"big":"<script language=\"Javascript\"><!--\r\n  amgdgt_clkurl = \"[CLICK_URL_UNESC]\";\r\n  amgdgt_p=\"8231\";\r\n  amgdgt_pl=\"d3bbf68e\"; \r\n  amgdgt_t = \"i\";\r\n//-->\r\n</script><script type=\"text/javascript\" src=\"http://cdn.amgdgt.com/base/js/v1/amgdgt.js\"></script>\r\n<noscript><a href=\"[CLICK_URL_UNESC]http://ad.amgdgt.com/ads/?t=c&c=q6eXNI\" target=\"_blank\"><img src=\"http://ad.amgdgt.com/ads/?t=i&f=h&p=8231&pl=d3bbf68e&c=q6eXNI&rnd=[cache_buster]\" width=\"300\" height=\"250\" border=\"0\" /></a></noscript>\r\n"},"shares":{},"id":285,"token":"jRADmcjxtyer6pssEX1POTvHnB1~MjA1","formats":{"small":{"y":300,"x":0,"w":300,"h":60},"big":{"y":0,"x":0,"w":300,"h":250},"hover":{"y":440,"x":0,"w":300,"h":60}},"tid":"WeGeAKoDEmmuPDLjFgu56wO2V1H8pW5H"})
-                //Adyoulike.g._jsonp_9199199453999704({"translations":{"fr":{"instructions_visual":"Recopier le texte qui est entre guillemets"}},"site_under":true,"clickable":true,"pixels":{"VIDEO_050":[],"DISPLAY":[],"VIDEO_000":[],"VIDEO_100":[],"VIDEO_025":[],"VIDEO_075":[]},"medium_type":"video/youtube","iframes":{},"video_id":"Qh-uIJMegsw","shares":{},"id":288,"token":"KVUVWwPpkxdqqkJkPPQk8fxsJdz~MjA1","formats":{"small":{"y":300,"x":0,"w":300,"h":60},"big":{"y":0,"x":0,"w":300,"h":250},"hover":{"y":440,"x":0,"w":300,"h":60}},"tid":"WeGeAKoDEmmuPDLjFgu56wO2V1H8pW5H"})
-                httpMethod = getMethodBuilder()
-                        .setReferer(fileURL)
-                        .setAction("http://api-ayl.appspot.com/challenge")
-                        .setParameter("key", key)
-                        .setParameter("env", env)
-                        .setParameter("callback", callback)
-                        .setParameter("lang", lang)
-                        .toGetMethod();
-                if (!makeRedirectedRequest(httpMethod)) {
-                    checkProblems();
-                    throw new ServiceConnectionProblemException();
-                }
-            } while (!getContentAsString().contains(" » ci-dessous"));
-            checkProblems();
-
-            final String validationResponse = PlugUtils.getStringBetween(getContentAsString(), "\"Recopiez « ", " » ci-dessous");
-            final String tokenChallenge = PlugUtils.getStringBetween(getContentAsString(), "\"token\":\"", "\"");
-            final String tid = PlugUtils.getStringBetween(getContentAsString(), "\"tid\":\"", "\"");
-
-            httpMethod = getMethodBuilder(formSubmitContent)
-                    .setReferer(fileURL)
-                    .setActionFromFormWhereActionContains("getfile.pl", true)
-                    .setParameter("_ayl_captcha_engine", "adyoulike")
-                    .setParameter("_ayl.focus", "")
-                    .setParameter("_ayl_response", validationResponse)
-                    .setParameter("_ayl_utf8_ie_fix", "?")
-                    .setParameter("_ayl_env", env)
-                    .setParameter("_ayl_token_challenge", tokenChallenge)
-                    .setParameter("_ayl_tid", tid)
+            HttpMethod httpMethod = getMethodBuilder().setReferer(fileURL)
+                    .setActionFromFormWhereActionContains("getfile", true)
                     .toPostMethod();
 
             if (!tryDownloadAndSaveFile(httpMethod)) {

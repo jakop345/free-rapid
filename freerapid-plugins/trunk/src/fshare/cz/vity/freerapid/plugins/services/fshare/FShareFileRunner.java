@@ -39,8 +39,11 @@ class FShareFileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        PlugUtils.checkName(httpFile, content, "file\" title=\"", "\"");
-        final Matcher match = PlugUtils.matcher("class=\"capital\">(?:\\s|<[^>]+?>)+(.+?)<", content);
+        try { PlugUtils.checkName(httpFile, content, "file\" title=\"", "\"");
+        } catch (Exception x) {
+            PlugUtils.checkName(httpFile, content, "title\" content=\"", "\"");
+        }
+        final Matcher match = PlugUtils.matcher("class=\"(?:capital|fa fa-hdd-o)\">(?:\\s|<[^>]+?>)+(.+?)<", content);
         if (match.find())
             httpFile.setFileSize(PlugUtils.getFileSizeFromString(match.group(1).trim()));
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
@@ -65,15 +68,16 @@ class FShareFileRunner extends AbstractRunner {
             } else if (fileURL.contains("/file/")) {
                 checkNameAndSize(contentAsString);//extract file name and size from the page
                 fileURL = method.getURI().getURI();
-                HttpMethod getMethod = getMethodBuilder().setReferer(fileURL).setBaseURL(fileURL.split("/file/")[0])
-                        .setActionFromTextBetween(".post('", "'")
-                        .setParameter("speed", "slow")
-                        .setParameter("fs_csrf", PlugUtils.getStringBetween(contentAsString, "fs_csrf: '", "'"))
+                HttpMethod getMethod = getMethodBuilder().setReferer(fileURL)
+                        .setActionFromFormWhereActionContains("download", true)
+                        .setParameter("ajax", "download-form")
+                        .setParameter("undefined", "undefined")
                         .setAjax().toPostMethod();
                 if (!makeRedirectedRequest(getMethod)) {
                     checkProblems();
                     throw new ServiceConnectionProblemException();
                 }
+                checkProblems();
                 final int count = PlugUtils.getNumberBetween(getContentAsString(), "wait_time\":", "}");
                 final String url = PlugUtils.getStringBetween(getContentAsString(), "url\":\"", "\"").replaceAll("\\\\/", "/");
                 downloadTask.sleep(count + 1);
@@ -95,6 +99,8 @@ class FShareFileRunner extends AbstractRunner {
         }
         if (PlugUtils.matcher("<ul class=\"message-error\">\\s+?<li>.+?GUEST.+? \\d+? .+?</li>", content).find())
             throw new ErrorDuringDownloadingException("Too many downloads as a Guest");
+        if (PlugUtils.unescapeUnicode(content).contains("Lỗi hệ thống, quý khách vui lòng thử lại sau"))
+            throw new ErrorDuringDownloadingException("System error, please try again later");
     }
 
 }
