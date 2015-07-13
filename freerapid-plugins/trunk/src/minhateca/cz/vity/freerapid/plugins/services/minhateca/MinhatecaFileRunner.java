@@ -1,12 +1,10 @@
 package cz.vity.freerapid.plugins.services.minhateca;
 
-import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
-import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;
-import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
-import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
+import cz.vity.freerapid.plugins.exceptions.*;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.DownloadClientConsts;
 import cz.vity.freerapid.plugins.webclient.FileState;
+import cz.vity.freerapid.plugins.webclient.hoster.PremiumAccount;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -50,27 +48,31 @@ class MinhatecaFileRunner extends AbstractRunner {
         final GetMethod method = getGetMethod(fileURL); //create GET request
         if (makeRedirectedRequest(method)) { //we make the main request
             final String contentAsString = getContentAsString();//check for response
+            doLogin();
             checkProblems();//check problems
             checkNameAndSize(contentAsString);//extract file name and size from the page
-            Matcher match = PlugUtils.matcher("name=\"FileId\"[^<>]*?value=\"(.+?)\"", contentAsString);
+            final Matcher match = PlugUtils.matcher("name=\"FileId\"[^<>]*?value=\"(.+?)\"", contentAsString);
             if (!match.find())
                 throw new PluginImplementationException("'FileId' not found");
             final String fileID = match.group(1).trim();
-            match = PlugUtils.matcher("name=\"__RequestVerificationToken\"[^<>]*?value=\"(.+?)\"", contentAsString);
-            if (!match.find())
-                throw new PluginImplementationException("'RequestVerificationToken' not found");
-            final String rvToken = match.group(1).trim();
-            HttpMethod httpMethod = getMethodBuilder()
+            HttpMethod httpMethod = getMethodBuilder(contentAsString)
                     .setAction("http://minhateca.com.br/action/License/Download")
                     .setReferer(fileURL).setAjax()
                     .setParameter("fileId", fileID)
-                    .setParameter("__RequestVerificationToken", rvToken)
+                    .setParameter("__RequestVerificationToken", getReqVerToken(contentAsString))
                     .toPostMethod();
             if (!makeRedirectedRequest(httpMethod)) {
                 checkProblems();
                 throw new ServiceConnectionProblemException();
             }
             checkProblems();
+            if (getContentAsString().contains("title=\\\"Cadastrar\\\"")) {
+                final Matcher errMatch = PlugUtils.matcher("(?s)title=\"Cadastrar\">(.+?)</strong>", PlugUtils.unescapeUnicode(getContentAsString()));
+                String errMsg = "";
+                if (errMatch.find())
+                    errMsg = errMatch.group(1).replaceAll("<.+?>", "").replaceAll("\\s+", " ");
+                throw new ErrorDuringDownloadingException("Registration required. " + errMsg);
+            }
             final HttpMethod downloadMethod = getMethodBuilder()
                     .setReferer(fileURL)
                     .setAction(PlugUtils.unescapeUnicode(PlugUtils.getStringBetween(getContentAsString(), "Url\":\"", "\"")))
@@ -87,6 +89,13 @@ class MinhatecaFileRunner extends AbstractRunner {
         }
     }
 
+    private String getReqVerToken(final String content) throws PluginImplementationException{
+        final Matcher match = PlugUtils.matcher("name=\"__RequestVerificationToken\"[^<>]*?value=\"(.+?)\"", content);
+        if (!match.find())
+            throw new PluginImplementationException("'RequestVerificationToken' not found");
+        return match.group(1).trim();
+    }
+
     private void checkProblems() throws ErrorDuringDownloadingException {
         final String contentAsString = getContentAsString();
         if (contentAsString.contains("File Not Found")) {
@@ -96,6 +105,35 @@ class MinhatecaFileRunner extends AbstractRunner {
             throw new ServiceConnectionProblemException("Download is currently unavailable ");
         }
 
+    }
+
+    private boolean doLogin() throws Exception {
+        synchronized (MinhatecaFileRunner.class) {
+            MinhatecaServiceImpl service = (MinhatecaServiceImpl) getPluginService();
+            PremiumAccount pa = service.getConfig();
+            if (pa.isSet()) {
+                final HttpMethod method = getMethodBuilder().setAjax()
+                        .setAction("http://minhateca.com.br/action/login/login")
+                        .setParameter("FileId", "0")
+                        .setParameter("Login", pa.getUsername())
+                        .setParameter("Password", pa.getPassword())
+                        .setParameter("__RequestVerificationToken", getReqVerToken(getContentAsString()))
+                        .toPostMethod();
+                if (!makeRedirectedRequest(method)) {
+                    throw new ServiceConnectionProblemException("Error posting login info");
+                }
+                String content = PlugUtils.unescapeUnicode(getContentAsString());
+                if (content.contains("Connta com este nome n&#227;o existe") ||
+                        content.contains("Certifique se que indicou o nome correto") ||
+                        content.contains("A senha indicada n&#227;o &#233; a senha correcta")) {
+                    throw new BadLoginException("Invalid Minhateca account login information!");
+                }
+                logger.info("Logged in.!");
+                return true;
+            }
+            else logger.info("No account details.");
+        }
+        return false;
     }
 
 }

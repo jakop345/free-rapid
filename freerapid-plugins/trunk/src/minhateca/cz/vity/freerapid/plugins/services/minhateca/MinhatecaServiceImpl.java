@@ -1,6 +1,7 @@
 package cz.vity.freerapid.plugins.services.minhateca;
 
 import cz.vity.freerapid.plugins.webclient.AbstractFileShareService;
+import cz.vity.freerapid.plugins.webclient.hoster.PremiumAccount;
 import cz.vity.freerapid.plugins.webclient.interfaces.PluginRunner;
 
 /**
@@ -9,10 +10,12 @@ import cz.vity.freerapid.plugins.webclient.interfaces.PluginRunner;
  * @author birchie
  */
 public class MinhatecaServiceImpl extends AbstractFileShareService {
+    private static final String PLUGIN_CONFIG_FILE = "plugin_MinhatecaAccount.xml";
+    private volatile PremiumAccount config;
 
     @Override
     public String getName() {
-        return "minhateca.combr";
+        return "minhateca.com.br";
     }
 
     @Override
@@ -25,4 +28,26 @@ public class MinhatecaServiceImpl extends AbstractFileShareService {
         return new MinhatecaFileRunner();
     }
 
+    @Override
+    public void showOptions() throws Exception {
+        PremiumAccount pa = showConfigDialog();
+        if (pa != null) config = pa;
+    }
+
+    PremiumAccount showConfigDialog() throws Exception {
+        return showAccountDialog(getConfig(), "Minhateca", PLUGIN_CONFIG_FILE);
+    }
+
+    PremiumAccount getConfig() throws Exception {
+        synchronized (MinhatecaServiceImpl.class) {
+            if (config == null) {
+                config = getAccountConfigFromFile(PLUGIN_CONFIG_FILE);
+            }
+        }
+        return config;
+    }
+
+    void setConfig(final PremiumAccount config) {
+        this.config = config;
+    }
 }
