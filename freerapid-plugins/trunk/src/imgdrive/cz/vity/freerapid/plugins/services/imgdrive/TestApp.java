@@ -1,4 +1,4 @@
-package cz.vity.freerapid.plugins.services.minhateca;
+package cz.vity.freerapid.plugins.services.imgdrive;
 
 import cz.vity.freerapid.plugins.dev.PluginDevApplication;
 import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
@@ -16,20 +16,12 @@ public class TestApp extends PluginDevApplication {
         final HttpFile httpFile = getHttpFile(); //creates new test instance of HttpFile
         try {
             //we set file URL
-            httpFile.setNewURL(new URL("http://minhateca.com.br/anbient/Kiseijuu_22_Heaven-Shinzo-Anbient,392221110.mkv(video)"));
-            //httpFile.setNewURL(new URL("http://minhateca.com.br/anbient/Tokyo_Ghoul_2_03_PA-Anbient,219224910.mkv"));
+            httpFile.setNewURL(new URL("http://imgdrive.co/s5o1mg3zd63o/Joymii.com_15.06.04.Apolonia.Carolina.and.Alberto.Twice.The.Fun.XXX.IMAGESET-GAGBALL_preview.jpg.html"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
             //then we tries to download
-            final MinhatecaServiceImpl service = new MinhatecaServiceImpl(); //instance of service - of our plugin
-            /*
-            //we set premium account details
-            final PremiumAccount config = new PremiumAccount();
-            config.setUsername("****");
-            config.setPassword("****");
-            service.setConfig(config);
-            //*/
+            final ImgDriveServiceImpl service = new ImgDriveServiceImpl(); //instance of service - of our plugin
             //runcheck makes the validation
             testRun(service, httpFile, connectionSettings);//download file with service and its Runner
             //all output goes to the console

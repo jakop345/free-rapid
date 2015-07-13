@@ -7,11 +7,9 @@ import cz.vity.freerapid.plugins.services.xfilesharing.XFileSharingRunner;
 import cz.vity.freerapid.plugins.services.xfilesharing.nameandsize.FileSizeHandler;
 import cz.vity.freerapid.plugins.services.xfilesharing.nameandsize.FileSizeHandlerNoSize;
 import cz.vity.freerapid.plugins.webclient.MethodBuilder;
-import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.HttpMethod;
 
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -56,16 +54,20 @@ class UploadRocketFileRunner extends XFileSharingRunner {
 
     @Override
     protected void checkFileProblems() throws ErrorDuringDownloadingException {
-        String contentAsString = getContentAsString();
         try {
+            super.checkFileProblems();
+        } catch (ErrorDuringDownloadingException e) {
+            final String contentAsString = getContentAsString()
+                    .replaceAll("<font[^<>]+?visibility:hidden.+?</font>", "")
+                    .replaceAll("<font[^<>]+?font-size:0.+?</font>", "")
+                    .replaceAll("(?s)<td[^<>]+?color:\\s*transparent.+?</td>", "")
+                    .replaceAll("<h3[^<>]+?color:black.+?</h3>", "");
             if (contentAsString.contains("file was deleted by") ||
-                    contentAsString.contains("Reason for deletion")) {
+                    contentAsString.contains("The file was removed") ||
+                    contentAsString.contains("Reason for deletion") ||
+                    contentAsString.contains("fname\" value=\"\"")) {
                 throw new URLNotAvailableAnymoreException("File not found");
             }
-            super.checkFileProblems();
-        } catch (URLNotAvailableAnymoreException e) {
-            final Matcher match = PlugUtils.matcher("(visibility:hidden|font-size:0).+?>(File Not Found|Reason for deletion)", contentAsString);
-            if (!match.find())  throw e;
         }
     }
 }
