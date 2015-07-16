@@ -1,4 +1,4 @@
-package cz.vity.freerapid.plugins.services.salefiles;
+package cz.vity.freerapid.plugins.services.faststore;
 
 import cz.vity.freerapid.plugins.dev.PluginDevApplication;
 import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
@@ -16,11 +16,11 @@ public class TestApp extends PluginDevApplication {
         final HttpFile httpFile = getHttpFile(); //creates new test instance of HttpFile
         try {
             //we set file URL
-            httpFile.setNewURL(new URL("http://salefiles.com/0g3cjh56meap"));
+            httpFile.setNewURL(new URL("http://faststore.org/lnggcggg2f4f"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
-            final SaleFilesServiceImpl service = new SaleFilesServiceImpl(); //instance of service - of our plugin
+            final FastStoreServiceImpl service = new FastStoreServiceImpl(); //instance of service - of our plugin
             /*
             //we set premium account details
             final PremiumAccount config = new PremiumAccount();

@@ -1,4 +1,4 @@
-package cz.vity.freerapid.plugins.services.dropbox;
+package cz.vity.freerapid.plugins.services.firedrop;
 
 import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
 import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;
@@ -18,8 +18,8 @@ import java.util.regex.Matcher;
  *
  * @author birchie
  */
-class DropBoxFileRunner extends AbstractRunner {
-    private final static Logger logger = Logger.getLogger(DropBoxFileRunner.class.getName());
+class FireDropFileRunner extends AbstractRunner {
+    private final static Logger logger = Logger.getLogger(FireDropFileRunner.class.getName());
 
     @Override
     public void runCheck() throws Exception { //this method validates file
@@ -35,11 +35,11 @@ class DropBoxFileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        PlugUtils.checkName(httpFile, content, "<title>Dropbox - ", "<");
-        final Matcher match = PlugUtils.matcher("<div class=\"meta\">.+? ([0-9].+?)</div>", content);
+        final Matcher match = PlugUtils.matcher("<p style=[^<>]+?>(.+?)</p>\\s*<p>(.+?)</p>", content);
         if (!match.find())
-            throw new PluginImplementationException("File size not found");
-        httpFile.setFileSize(PlugUtils.getFileSizeFromString(match.group(1)));
+            throw new PluginImplementationException("File name and size not found");
+        httpFile.setFileName(match.group(1).trim());
+        httpFile.setFileSize(PlugUtils.getFileSizeFromString(match.group(2).trim()));
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
 
@@ -49,11 +49,13 @@ class DropBoxFileRunner extends AbstractRunner {
         logger.info("Starting download in TASK " + fileURL);
         final GetMethod method = getGetMethod(fileURL); //create GET request
         if (makeRedirectedRequest(method)) { //we make the main request
-            final String contentAsString = getContentAsString();//check for response
+            final String content = getContentAsString();//check for response
             checkProblems();//check problems
-            checkNameAndSize(contentAsString);//extract file name and size from the page
-            final HttpMethod httpMethod = getMethodBuilder().setReferer(fileURL).setActionFromAHrefWhereATagContains("Download").toHttpMethod();
-            setFileStreamContentTypes("text/plain");
+            checkNameAndSize(content);//extract file name and size from the page
+            final HttpMethod httpMethod = getMethodBuilder().setReferer(fileURL)
+                    .setActionFromAHrefWhereATagContains("Download File").toGetMethod();
+            int wait = 1 + PlugUtils.getNumberBetween(content, "var seconds = ", ";");
+            downloadTask.sleep(wait);
             if (!tryDownloadAndSaveFile(httpMethod)) {
                 checkProblems();//if downloading failed
                 throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
@@ -66,12 +68,10 @@ class DropBoxFileRunner extends AbstractRunner {
 
     private void checkProblems() throws ErrorDuringDownloadingException {
         final String contentAsString = getContentAsString();
-        if (contentAsString.contains("Invalid Link") ||
-                contentAsString.contains("The file you&rsquo;re looking for has been moved or deleted")) {
+        if (contentAsString.contains("Page not Found") ||
+                contentAsString.contains("page you are looking for doesn't exist")) {
             throw new URLNotAvailableAnymoreException("File not found"); //let to know user in FRD
         }
-        if (contentAsString.contains("links are generating too much traffic and have been temporarily disabled"))
-            throw new ServiceConnectionProblemException("This account's public links are generating too much traffic and have been temporarily disabled!");
     }
 
 }
