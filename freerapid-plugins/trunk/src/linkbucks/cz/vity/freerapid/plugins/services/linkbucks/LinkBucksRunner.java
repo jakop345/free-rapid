@@ -36,14 +36,14 @@ class LinkBucksRunner extends AbstractRunner {
             } else if (content.contains("frame id=\"content\"")) {
                 s = getMethodBuilder().setActionFromIFrameSrcWhereTagContains("id=\"content\"").getAction();
             }
-            if ((s.equals("") || s.equals("about:blank")) && (content.contains("linkbucksmedia.com/director/?t="))) {
-                final Matcher matchT = PlugUtils.matcher("linkbucksmedia.com/director/\\?t=(.+?)[\"']", content);
+            if ((s.equals("") || s.equals("about:blank")) && (content.contains("/director/?t="))) {
+                final Matcher matchT = PlugUtils.matcher("/director/\\?t=(.+?)[\"']", content);
                 if (!matchT.find())
                     throw new PluginImplementationException("linkbucks token not found");
                 final String token = matchT.group(1);
 
                 // valid authkey is from script function containing uncommented line "var f = window['init' + 'Lb' + 'js' + ''];" ("initLbjs" only, no trailing chars)
-                final String authKeyMatchStr = "A(?:'\\s?\\+\\s?')?u(?:'\\s?\\+\\s?')?t(?:'\\s?\\+\\s?')?h(?:'\\s?\\+\\s?')?K(?:'\\s?\\+\\s?')?e(?:'\\s?\\+\\s?')?y";
+                final String authKeyMatchStr = "A['\\s\\+]*u['\\s\\+]*t['\\s\\+]*h['\\s\\+]*K['\\s\\+]*e['\\s\\+]*y";
                 final String aKey1MatchStr = "\\s\\sparams\\['" + authKeyMatchStr + "'\\]\\s?=\\s?(\\d+?);";
                 final String aKey2MatchStr = "\\s\\sparams\\['" + authKeyMatchStr + "'\\]\\s?=\\s?params\\['" + authKeyMatchStr + "'\\]\\s?\\+\\s?(\\d+?);";
                 final String initLbjsMatchStr = "\\s\\s\\w[^/]+?js'\\s?\\+\\s?''\\];";
@@ -55,7 +55,7 @@ class LinkBucksRunner extends AbstractRunner {
                 final HttpMethod httpMethod = getMethodBuilder().setAjax()
                         .setAction("/intermission/loadTargetUrl")
                         .setParameter("t", token)
-                        .setParameter("ak", authKey)
+                        .setParameter("aK", authKey)
                         .setReferer(fileURL)
                         .toGetMethod();
                 final int wait = PlugUtils.getNumberBetween(content, "Countdown: ", ",");
