@@ -1,4 +1,4 @@
-package cz.vity.freerapid.plugins.services.tusfiles;
+package cz.vity.freerapid.plugins.services.dirtyasiantube;
 
 import cz.vity.freerapid.plugins.dev.PluginDevApplication;
 import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
@@ -16,20 +16,12 @@ public class TestApp extends PluginDevApplication {
         final HttpFile httpFile = getHttpFile(); //creates new test instance of HttpFile
         try {
             //we set file URL
-            //  httpFile.setNewURL(new URL("https://www.tusfiles.net/hq9ggbkbosc2/easysup.rar"));
-            httpFile.setNewURL(new URL("https://tusfiles.net/eqcddwfv01gn"));
-            //httpFile.setNewURL(new URL("https://www.tusfiles.net/go/gohk5ekgtexa/"));  // folder
+            httpFile.setNewURL(new URL("http://dirtyasiantube.com/content/a27229607f79616f721e191a4e2a/"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
-            final TusFilesServiceImpl service = new TusFilesServiceImpl(); //instance of service - of our plugin
-            /*
-            //we set premium account details
-            final PremiumAccount config = new PremiumAccount();
-            config.setUsername("****");
-            config.setPassword("****");
-            service.setConfig(config);
-            //*/
+            //then we tries to download
+            final DirtyAsianTubeServiceImpl service = new DirtyAsianTubeServiceImpl(); //instance of service - of our plugin
             //runcheck makes the validation
             testRun(service, httpFile, connectionSettings);//download file with service and its Runner
             //all output goes to the console

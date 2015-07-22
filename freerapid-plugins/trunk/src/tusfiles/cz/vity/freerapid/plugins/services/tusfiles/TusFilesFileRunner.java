@@ -6,6 +6,7 @@ import cz.vity.freerapid.plugins.services.xfilesharing.nameandsize.FileNameHandl
 import cz.vity.freerapid.plugins.services.xfilesharing.nameandsize.FileSizeHandler;
 import cz.vity.freerapid.plugins.webclient.DownloadState;
 import cz.vity.freerapid.plugins.webclient.hoster.PremiumAccount;
+import cz.vity.freerapid.plugins.webclient.interfaces.HttpFile;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpMethod;
@@ -31,14 +32,54 @@ class TusFilesFileRunner extends XFileSharingRunner {
     @Override
     protected List<FileNameHandler> getFileNameHandlers() {
         final List<FileNameHandler> fileNameHandlers = super.getFileNameHandlers();
-        fileNameHandlers.add(0, new TusFilesFileNameHandler());
+        fileNameHandlers.add(0, new FileNameHandler() {
+            @Override
+            public void checkFileName(HttpFile httpFile, String content) throws ErrorDuringDownloadingException {
+                if (content.contains(">All Link")) {
+                    httpFile.setFileName("Folder > ");
+                    return;
+                }
+                final Matcher match = PlugUtils.matcher("[\\]>]([\\w].+?) - (\\d[\\d\\.,]+?\\s*?\\w+?)[\\[<]/", content);
+                if (match.find())
+                    httpFile.setFileName(match.group(1));
+                else {
+                    try {
+                        httpFile.setFileName(PlugUtils.getStringBetween(content, ">Download", "</").trim().replaceAll("\\s", "."));
+                    } catch (Exception ee) {
+                        try {
+                            PlugUtils.checkName(httpFile, content, "globalFileName = '", "';");
+                        } catch (Exception e) {
+                            PlugUtils.checkName(httpFile, content, "?q=", "\"");
+                        }
+                    }
+                }
+            }
+        });
         return fileNameHandlers;
     }
 
     @Override
     protected List<FileSizeHandler> getFileSizeHandlers() {
         final List<FileSizeHandler> fileSizeHandlers = super.getFileSizeHandlers();
-        fileSizeHandlers.add(0, new TusFilesFileSizeHandler());
+        fileSizeHandlers.add(0, new FileSizeHandler() {
+            @Override
+            public void checkFileSize(HttpFile httpFile, String content) throws ErrorDuringDownloadingException {
+                if (content.contains(">All Link")) {
+                    httpFile.setFileSize(PlugUtils.getFileSizeFromString(PlugUtils.getStringBetween(content, "<small>(", "total)</small>")));
+                    return;
+                }
+                final Matcher match = PlugUtils.matcher(" - (\\d[\\d\\.,]+?\\s*?\\w+?)[\\[<]/", content);
+                if (match.find())
+                    httpFile.setFileSize(PlugUtils.getFileSizeFromString(match.group(1)));
+                else {
+                    final Matcher match2 = PlugUtils.matcher(">\\s*?Size\\s*?:\\s*?(.+?)\\s*?<", content);
+                    if (match2.find())
+                        httpFile.setFileSize(PlugUtils.getFileSizeFromString(match2.group(1)));
+                    else
+                        PlugUtils.checkFileSize(httpFile, content, "Size:", "| <");
+                }
+            }
+        });
         return fileSizeHandlers;
     }
 
@@ -55,7 +96,7 @@ class TusFilesFileRunner extends XFileSharingRunner {
                 }
                 if (getContentAsString().contains(">Next")) {
                     morePages = true;
-                    final HttpMethod nextMethod = getMethodBuilder().setReferer(fileURL).setActionFromAHrefWhereATagContains("Next").toGetMethod();
+                    final HttpMethod nextMethod = getMethodBuilder().setBaseURL("http://tusfiles.net").setActionFromAHrefWhereATagContains("Next").toGetMethod();
                     if (!makeRedirectedRequest(nextMethod)) {
                         checkFileProblems();
                         throw new ServiceConnectionProblemException();
