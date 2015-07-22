@@ -1,6 +1,7 @@
-package cz.vity.freerapid.plugins.services.openload;
+package cz.vity.freerapid.plugins.services.dirtyasiantube;
 
 import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
+import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;
 import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
 import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
@@ -10,19 +11,19 @@ import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
 
 /**
  * Class which contains main code
  *
  * @author birchie
  */
-class OpenLoadFileRunner extends AbstractRunner {
-    private final static Logger logger = Logger.getLogger(OpenLoadFileRunner.class.getName());
+class DirtyAsianTubeFileRunner extends AbstractRunner {
+    private final static Logger logger = Logger.getLogger(DirtyAsianTubeFileRunner.class.getName());
 
     @Override
     public void runCheck() throws Exception { //this method validates file
         super.runCheck();
-        fixUrl();
         final GetMethod getMethod = getGetMethod(fileURL);//make first request
         if (makeRedirectedRequest(getMethod)) {
             checkProblems();
@@ -33,28 +34,26 @@ class OpenLoadFileRunner extends AbstractRunner {
         }
     }
 
-    private void fixUrl() {
-        fileURL = fileURL.replaceFirst("/embed/", "/f/");
-    }
-
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        PlugUtils.checkName(httpFile, content, "filename\">", "<");
-        PlugUtils.checkFileSize(httpFile, content, "count\">", "<");
+        PlugUtils.checkName(httpFile, content, "<h1 class=\"catname\">", "<");
+        httpFile.setFileName(httpFile.getFileName() + ".flv");
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
 
     @Override
     public void run() throws Exception {
         super.run();
-        fixUrl();
         logger.info("Starting download in TASK " + fileURL);
         final GetMethod method = getGetMethod(fileURL); //create GET request
         if (makeRedirectedRequest(method)) { //we make the main request
             final String contentAsString = getContentAsString();//check for response
             checkProblems();//check problems
             checkNameAndSize(contentAsString);//extract file name and size from the page
+            final Matcher match = PlugUtils.matcher("video_url\\s*:\\s*'(.+?)'", contentAsString);
+            if (!match.find())
+                throw new PluginImplementationException("Video url not found");
             final HttpMethod httpMethod = getMethodBuilder().setReferer(fileURL)
-                    .setActionFromAHrefWhereATagContains("Download").toHttpMethod();
+                    .setAction(match.group(1)).toGetMethod();
             if (!tryDownloadAndSaveFile(httpMethod)) {
                 checkProblems();//if downloading failed
                 throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
@@ -67,7 +66,7 @@ class OpenLoadFileRunner extends AbstractRunner {
 
     private void checkProblems() throws ErrorDuringDownloadingException {
         final String contentAsString = getContentAsString();
-        if (contentAsString.contains("We can't find the file you are looking for")) {
+        if (contentAsString.contains("File Not Found") || contentAsString.trim().matches("404")) {
             throw new URLNotAvailableAnymoreException("File not found"); //let to know user in FRD
         }
     }
