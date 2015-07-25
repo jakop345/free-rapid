@@ -21,7 +21,7 @@ import java.util.regex.Matcher;
  * @author birchie
  */
 class UnRestrictFileRunner extends AbstractRunner {
-    private final static Logger logger = Logger.getLogger(cz.vity.freerapid.plugins.services.unrestrict.UnRestrictFileRunner.class.getName());
+    private final static Logger logger = Logger.getLogger(UnRestrictFileRunner.class.getName());
     final String UR_BASE_URL = "http://unrestrict.li";
     final String UR_LOGIN = "http://unrestrict.li/sign_in/";
     final String UR_GENERATE = "http://unrestrict.li/download/";
@@ -169,8 +169,8 @@ class UnRestrictFileRunner extends AbstractRunner {
     private static PremiumAccount pa0 = null;
 
     private void login() throws Exception {
-        synchronized (cz.vity.freerapid.plugins.services.unrestrict.UnRestrictFileRunner.class) {
-            cz.vity.freerapid.plugins.services.unrestrict.UnRestrictServiceImpl service = (cz.vity.freerapid.plugins.services.unrestrict.UnRestrictServiceImpl) getPluginService();
+        synchronized (UnRestrictFileRunner.class) {
+            UnRestrictServiceImpl service = (UnRestrictServiceImpl) getPluginService();
             final PremiumAccount pa = service.getConfig();
             if (pa.isSet()) {
                 if (pa != pa0) {
@@ -218,7 +218,7 @@ class UnRestrictFileRunner extends AbstractRunner {
             final Matcher m = getMatcherAgainstContent("challenge\\.(?:no)?script\\?k=(.+?)\"");
             if (!m.find()) throw new PluginImplementationException("Captcha key not found");
             final String captchaKey = m.group(1);
-            final SolveMediaCaptcha solveMediaCaptcha = new SolveMediaCaptcha(captchaKey, client, getCaptchaSupport(), true);
+            final SolveMediaCaptcha solveMediaCaptcha = new SolveMediaCaptcha(captchaKey, client, getCaptchaSupport(), downloadTask, true);
             solveMediaCaptcha.askForCaptcha();
             if (stdParams) {
                 solveMediaCaptcha.modifyResponseMethod(builder);

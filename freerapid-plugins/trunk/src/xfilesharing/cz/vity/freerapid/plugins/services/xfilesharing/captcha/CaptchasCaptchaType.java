@@ -4,6 +4,7 @@ import cz.vity.freerapid.plugins.exceptions.CaptchaEntryInputMismatchException;
 import cz.vity.freerapid.plugins.webclient.MethodBuilder;
 import cz.vity.freerapid.plugins.webclient.hoster.CaptchaSupport;
 import cz.vity.freerapid.plugins.webclient.interfaces.HttpDownloadClient;
+import cz.vity.freerapid.plugins.webclient.interfaces.HttpFileDownloadTask;
 
 import java.awt.image.BufferedImage;
 import java.util.logging.Logger;
@@ -23,7 +24,7 @@ public class CaptchasCaptchaType implements CaptchaType {
     }
 
     @Override
-    public void handleCaptcha(final MethodBuilder methodBuilder, final HttpDownloadClient client, final CaptchaSupport captchaSupport) throws Exception {
+    public void handleCaptcha(final MethodBuilder methodBuilder, final HttpDownloadClient client, final CaptchaSupport captchaSupport, final HttpFileDownloadTask downloadTask) throws Exception {
         final String captchaUrl = new MethodBuilder(client)
                 .setActionFromImgSrcWhereTagContains("/captchas/")
                 .getEscapedURI();

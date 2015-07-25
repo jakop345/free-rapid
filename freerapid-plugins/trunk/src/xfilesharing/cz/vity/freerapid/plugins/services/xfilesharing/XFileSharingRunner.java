@@ -91,12 +91,6 @@ public abstract class XFileSharingRunner extends AbstractRunner {
         if ((methodBuilder.getParameters().get("method_free") != null) && (!methodBuilder.getParameters().get("method_free").isEmpty())) {
             methodBuilder.removeParameter("method_premium");
         }
-        /*
-        if ((methodBuilder.getParameters().get("fname")!=null)) {
-            String fname = methodBuilder.getParameters().get("fname");
-            methodBuilder.setAndEncodeParameter("fname",fname);
-        }
-        */
         return methodBuilder;
     }
 
@@ -287,7 +281,7 @@ public abstract class XFileSharingRunner extends AbstractRunner {
         for (final CaptchaType captchaType : captchaTypes) {
             if (captchaType.canHandle(getContentAsString())) {
                 logger.info("Captcha type: " + captchaType.getClass().getSimpleName());
-                captchaType.handleCaptcha(methodBuilder, client, getCaptchaSupport());
+                captchaType.handleCaptcha(methodBuilder, client, getCaptchaSupport(), downloadTask);
                 return (captchaType instanceof ReCaptchaType);
             }
         }

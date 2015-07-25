@@ -8,6 +8,7 @@ import cz.vity.freerapid.plugins.services.xfilesharing.captcha.FourTokensCaptcha
 import cz.vity.freerapid.plugins.webclient.MethodBuilder;
 import cz.vity.freerapid.plugins.webclient.hoster.CaptchaSupport;
 import cz.vity.freerapid.plugins.webclient.interfaces.HttpDownloadClient;
+import cz.vity.freerapid.plugins.webclient.interfaces.HttpFileDownloadTask;
 
 import java.util.List;
 
@@ -31,8 +32,8 @@ class HulkFileFileRunner extends XFileSharingRunner {
         final List<CaptchaType> captchaTypes = super.getCaptchaTypes();
         captchaTypes.add(0, new FourTokensCaptchaType() {  //put it at the top
             @Override
-            public void handleCaptcha(MethodBuilder methodBuilder, HttpDownloadClient client, CaptchaSupport captchaSupport) throws Exception {
-                super.handleCaptcha(methodBuilder, client, captchaSupport);
+            public void handleCaptcha(MethodBuilder methodBuilder, HttpDownloadClient client, CaptchaSupport captchaSupport, HttpFileDownloadTask downloadTask) throws Exception {
+                super.handleCaptcha(methodBuilder, client, captchaSupport, downloadTask);
                 final String captcha = methodBuilder.getParameters().get("code");
                 if (captcha.length() > 4) { //captcha length = 8 OR 12
                     int div = captcha.length() / 4;
