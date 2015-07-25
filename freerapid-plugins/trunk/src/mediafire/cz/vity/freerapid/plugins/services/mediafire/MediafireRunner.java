@@ -326,7 +326,7 @@ class MediafireRunner extends AbstractRunner {
                     throw new PluginImplementationException("Captcha key not found");
                 }
                 final String captchaKey = matcher.group(1);
-                final SolveMediaCaptcha solveMediaCaptcha = new SolveMediaCaptcha(captchaKey, client, getCaptchaSupport());
+                final SolveMediaCaptcha solveMediaCaptcha = new SolveMediaCaptcha(captchaKey, client, getCaptchaSupport(), downloadTask);
                 solveMediaCaptcha.askForCaptcha();
                 builder = solveMediaCaptcha.modifyResponseMethod(builder);
             } else {  // ReCaptcha

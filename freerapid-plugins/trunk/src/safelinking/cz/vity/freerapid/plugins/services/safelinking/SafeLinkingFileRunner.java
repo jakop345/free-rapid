@@ -116,7 +116,7 @@ class SafeLinkingFileRunner extends AbstractRunner {
                     entityStr = "\"password\":\"" + password+ "\"," + entityStr;
                 }
                 if (content.contains("\"useCaptcha\":true")) {
-                    final SolveMediaCaptcha solveMediaCaptcha = new SolveMediaCaptcha(SolveMediaCaptchaKey, client, getCaptchaSupport(), true);
+                    final SolveMediaCaptcha solveMediaCaptcha = new SolveMediaCaptcha(SolveMediaCaptchaKey, client, getCaptchaSupport(), downloadTask, true);
                     solveMediaCaptcha.askForCaptcha();
                     entityStr = "\"answer\":\"" + solveMediaCaptcha.getResponse() + "\",\"challengeId\":\"" + solveMediaCaptcha.getChallenge() + "\",\"type\":0," + entityStr;
                 }
@@ -153,7 +153,7 @@ class SafeLinkingFileRunner extends AbstractRunner {
             final Matcher m = getMatcherAgainstContent("var solvemediaApiKey = '(.+?)';");
             if (!m.find()) throw new PluginImplementationException("Captcha key not found");
             final String captchaKey = m.group(1);
-            final SolveMediaCaptcha solveMediaCaptcha = new SolveMediaCaptcha(captchaKey, client, getCaptchaSupport(), true);
+            final SolveMediaCaptcha solveMediaCaptcha = new SolveMediaCaptcha(captchaKey, client, getCaptchaSupport(), downloadTask, true);
             solveMediaCaptcha.askForCaptcha();
             solveMediaCaptcha.modifyResponseMethod(method);
             method.setParameter("solvemedia_response", solveMediaCaptcha.getResponse());

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
 <plugin class="cz.vity.freerapid.plugins.services.depositfiles.DepositFilesShareServiceImpl"
-        id="depositfiles.com" vendor="Whole team" version="1.4.8">
+        id="depositfiles.com" vendor="Whole team" version="1.4.9">
     <attributes>
         <attribute id="urlRegex"
                    value="https?://(www\.)?(depositfiles\.(com|org)|dfiles\.(eu|ru))/(../)?(files|folders)/.+"/>
@@ -13,7 +13,7 @@
     </attributes>
     <requires>
         <import exported="false" match="greater-or-equal" optional="false" plugin-id="solvemediacaptcha"
-                plugin-version="1.0.4" reverse-lookup="false"/>
+                plugin-version="1.1.0" reverse-lookup="false"/>
     </requires>
     <runtime>
         <library id="depositfiles.com" path="/" type="code"/>

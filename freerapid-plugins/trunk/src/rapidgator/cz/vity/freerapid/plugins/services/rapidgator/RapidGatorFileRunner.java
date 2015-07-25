@@ -26,7 +26,7 @@ import java.util.regex.Matcher;
  */
 class RapidGatorFileRunner extends AbstractRunner {
     private final static Logger logger = Logger.getLogger(RapidGatorFileRunner.class.getName());
-    private final static long CAPTCHA_TIMEOUT = 25; // tried 30, but still caught captcha expired
+    private final static long CAPTCHA_TIMEOUT = 45;
 
     @Override
     public void runCheck() throws Exception {
@@ -193,7 +193,7 @@ class RapidGatorFileRunner extends AbstractRunner {
             if (!captchaKeyMatcher.find()) throw new PluginImplementationException("Captcha not found");
             final String captchaKey = captchaKeyMatcher.group(1);
             final long captchaStartTime = System.currentTimeMillis();
-            SolveMediaCaptcha solveMediaCaptcha = new SolveMediaCaptcha(captchaKey, client, getCaptchaSupport());
+            SolveMediaCaptcha solveMediaCaptcha = new SolveMediaCaptcha(captchaKey, client, getCaptchaSupport(), downloadTask);
             solveMediaCaptcha.askForCaptcha();
             if (((System.currentTimeMillis() - captchaStartTime) / 1000) > CAPTCHA_TIMEOUT)
                 throw new YouHaveToWaitException("Retry request to avoid captcha expired", 5);

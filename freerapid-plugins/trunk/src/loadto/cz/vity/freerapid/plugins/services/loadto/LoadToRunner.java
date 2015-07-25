@@ -91,7 +91,7 @@ class LoadToRunner extends AbstractRunner {
         final Matcher m = getMatcherAgainstContent("challenge\\.(?:no)?script\\?k=(.+?)\"");
         if (!m.find()) throw new PluginImplementationException("Captcha key not found");
         final String captchaKey = m.group(1);
-        final SolveMediaCaptcha solveMediaCaptcha = new SolveMediaCaptcha(captchaKey, client, getCaptchaSupport(), true);
+        final SolveMediaCaptcha solveMediaCaptcha = new SolveMediaCaptcha(captchaKey, client, getCaptchaSupport(), downloadTask, true);
         solveMediaCaptcha.askForCaptcha();
         solveMediaCaptcha.modifyResponseMethod(builder);
         return builder;

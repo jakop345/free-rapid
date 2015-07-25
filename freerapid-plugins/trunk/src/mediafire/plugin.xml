@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
-<plugin id="mediafire.com" version="3.2.4" vendor="Lukiz+ntoskrnl+birchie"
+<plugin id="mediafire.com" version="3.2.5" vendor="Lukiz+ntoskrnl+birchie"
         class="cz.vity.freerapid.plugins.services.mediafire.MediafireServiceImpl">
     <attributes>
         <attribute id="urlRegex" value="https?://(www\.)?mediafire\.com/((download\.php)?\?|download/|file/).+"/>
@@ -14,7 +14,7 @@
         <import exported="false" match="greater-or-equal" optional="false" plugin-id="recaptcha.com"
                 plugin-version="1.0" reverse-lookup="false"/>
         <import exported="false" match="greater-or-equal" optional="false" plugin-id="solvemediacaptcha"
-                plugin-version="1.0.4" reverse-lookup="false"/>
+                plugin-version="1.1.0" reverse-lookup="false"/>
     </requires>
     <runtime>
         <library id="mediafire.com" path="/" type="code"/>

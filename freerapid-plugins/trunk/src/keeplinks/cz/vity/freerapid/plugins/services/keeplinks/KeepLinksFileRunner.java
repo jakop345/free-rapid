@@ -176,7 +176,7 @@ class KeepLinksFileRunner extends AbstractRunner {
             final Matcher matcher = getMatcherAgainstContent("papi/challenge\\.noscript\\?k=(.*?)\"");
             if (!matcher.find()) throw new PluginImplementationException("Captcha key not found");
             final String captchaKey = matcher.group(1);
-            SolveMediaCaptcha solveMediaCaptcha = new SolveMediaCaptcha(captchaKey, client, getCaptchaSupport());
+            SolveMediaCaptcha solveMediaCaptcha = new SolveMediaCaptcha(captchaKey, client, getCaptchaSupport(), downloadTask);
             solveMediaCaptcha.askForCaptcha();
             solveMediaCaptcha.modifyResponseMethod(method);
         } else {

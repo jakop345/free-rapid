@@ -95,8 +95,8 @@ class DepositFilesRunner extends AbstractRunner {
             while (PlugUtils.find("(?s)check_recaptcha\\s*\\(\\s*'" + fid + "'", getContentAsString())) {
                 if (reCaptchaUrl.equals("")) {
                     String captchaKey = PlugUtils.getStringBetween(getContentAsString(), "ACPuzzleKey = '", "';");
-                    SolveMediaCaptcha solveMediaCaptcha = new SolveMediaCaptcha(captchaKey, client, getCaptchaSupport());
-                    askForCaptcha(solveMediaCaptcha);
+                    SolveMediaCaptcha solveMediaCaptcha = new SolveMediaCaptcha(captchaKey, client, getCaptchaSupport(), downloadTask);
+                    solveMediaCaptcha.askForCaptcha();
                     method = getMethodBuilder()
                             .setAction("/get_file.php")
                             .setReferer(fileURL)
@@ -230,13 +230,6 @@ class DepositFilesRunner extends AbstractRunner {
             throw new YouHaveToWaitException("All downloading slots for your country are busy", 60);
         if (content.contains("file does not exist"))
             throw new URLNotAvailableAnymoreException("Such file does not exist or it has been removed for infringement of copyrights");
-    }
-
-    private void askForCaptcha(SolveMediaCaptcha solveMediaCaptcha) throws Exception {
-        synchronized (DepositFilesRunner.class) {
-            downloadTask.sleep(5);
-            solveMediaCaptcha.askForCaptcha();
-        }
     }
 
     private boolean checkIsFolder() {
