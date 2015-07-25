@@ -59,23 +59,20 @@ class VeehdFileRunner extends AbstractRunner {
         if (makeRedirectedRequest(method)) {
             checkProblems();
             checkNameAndSize(getContentAsString());
-            final String ts = PlugUtils.getStringBetween(getContentAsString(), "var ts = \"", "\"");
-            final String sgn = PlugUtils.getStringBetween(getContentAsString(), "var sgn = \"", "\"");
+            final String xhr = "/xhr?h" + PlugUtils.getStringBetween(getContentAsString(), "/xhr?h", "\"");
             final String vpi = "/vpi" + PlugUtils.getStringBetween(getContentAsString(), "/vpi", "\"");
 
             HttpMethod httpMethod = getMethodBuilder()
                     .setReferer(fileURL)
-                    .setAction("http://veehd.com/xhrp")
-                    .setParameter("v", "c2")
-                    .setParameter("p", "1")
-                    .setParameter("ts", ts)
-                    .setParameter("sgn", sgn)
-                    .toPostMethod();
+                    .setAction("http://veehd.com" + xhr)
+                    .setAjax()
+                    .toGetMethod();
             if (!makeRedirectedRequest(httpMethod)) {
                 checkProblems();
                 throw new ServiceConnectionProblemException();
             }
             checkProblems();
+
             httpMethod = getMethodBuilder()
                     .setReferer(fileURL)
                     .setAction("http://veehd.com" + vpi)
@@ -85,6 +82,29 @@ class VeehdFileRunner extends AbstractRunner {
                 throw new ServiceConnectionProblemException();
             }
             checkProblems();
+
+            if (getContentAsString().contains("va-free.php")) {
+                httpMethod = getMethodBuilder()
+                        .setReferer(fileURL)
+                        .setActionFromIFrameSrcWhereTagContains("va-free.php")
+                        .toGetMethod();
+                if (!makeRedirectedRequest(httpMethod)) {
+                    checkProblems();
+                    throw new ServiceConnectionProblemException();
+                }
+                checkProblems();
+
+                httpMethod = getMethodBuilder()
+                        .setReferer(fileURL)
+                        .setAction("http://veehd.com" + vpi)
+                        .toGetMethod();
+                if (!makeRedirectedRequest(httpMethod)) {
+                    checkProblems();
+                    throw new ServiceConnectionProblemException();
+                }
+                checkProblems();
+            }
+
             final String videoUrl;
             if (getContentAsString().contains("param name=\"src\" value=\""))
                 videoUrl = PlugUtils.getStringBetween(getContentAsString(), "param name=\"src\" value=\"", "\"");

@@ -74,7 +74,6 @@ class iPrimaFileRunner extends AbstractRunner {
             } else {
                 String mainPageContent = getContentAsString();
                 logger.info("Settings config: " + config);
-                final String playName = getPlayName();
                 final String geoZone = PlugUtils.getStringBetween(mainPageContent, "\"zoneGEO\":", ",");
                 final Random rnd = new Random();
                 method = getMethodBuilder()
@@ -94,6 +93,7 @@ class iPrimaFileRunner extends AbstractRunner {
 
                 if (config.getProtocol() == Protocol.RTMP) {
                     app += "?auth=" + auth;
+                    final String playName = getPlayName(mainPageContent);
                     final RtmpSession rtmpSession = new RtmpSession("bcastmw.livebox.cz", config.getPort().getPort(), app, playName);
                     rtmpSession.getConnectParams().put("pageUrl", fileURL);
                     rtmpSession.getConnectParams().put("swfUrl", "http://embed.livebox.cz/iprimaplay/flash/LiveboxPlayer.swf?nocache=" + System.currentTimeMillis());
@@ -115,13 +115,13 @@ class iPrimaFileRunner extends AbstractRunner {
         }
     }
 
-    private String getPlayName() throws ErrorDuringDownloadingException {
+    private String getPlayName(String mainPageContent) throws ErrorDuringDownloadingException {
         String playName;
         VideoQuality selectedVideoQuality = config.getVideoQuality();
         switch (config.getVideoQuality()) {
             case HD:
                 try {
-                    playName = "hq/" + PlugUtils.getStringBetween(getContentAsString(), "\"hd_id\":\"", "\"");
+                    playName = "hq/" + PlugUtils.getStringBetween(mainPageContent, "\"hd_id\":\"", "\"");
                     break;
                 } catch (final PluginImplementationException e) {
                     selectedVideoQuality = VideoQuality.High;
@@ -129,10 +129,10 @@ class iPrimaFileRunner extends AbstractRunner {
                 }
                 //fallthrough
             case High:
-                playName = PlugUtils.getStringBetween(getContentAsString(), "\"hq_id\":\"", "\"");
+                playName = PlugUtils.getStringBetween(mainPageContent, "\"hq_id\":\"", "\"");
                 break;
             case Low:
-                playName = PlugUtils.getStringBetween(getContentAsString(), "\"lq_id\":\"", "\"");
+                playName = PlugUtils.getStringBetween(mainPageContent, "\"lq_id\":\"", "\"");
                 break;
             default:
                 throw new PluginImplementationException("Unknown video quality: " + config.getVideoQuality());

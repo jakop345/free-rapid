@@ -24,7 +24,7 @@ class iPrimaSettingsPanel extends JPanel {
         final JLabel lblQuality = new JLabel("Preferred quality level:");
         final JComboBox<VideoQuality> cbbQuality = new JComboBox<VideoQuality>(VideoQuality.values());
         final JLabel lblPort = new JLabel("Preferred RTMP port:");
-        final JComboBox cbbPort = new JComboBox<Port>(Port.values());
+        final JComboBox<Port> cbbPort = new JComboBox<Port>(Port.values());
 
         lblProtocol.setAlignmentX(Component.LEFT_ALIGNMENT);
         cbbProtocol.setAlignmentX(Component.LEFT_ALIGNMENT);
