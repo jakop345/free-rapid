@@ -37,7 +37,7 @@ class TimedText2Srt {
             while ((line = br.readLine()) != null) {
                 sourceSb.append(line);
             }
-            String sourceStr = sourceSb.toString().replaceAll("[^\\u0009\\u000A\\u000D\u0020-\\uD7FF\\uE000-\\uFFFD\\u10000-\\u10FFF]+", "");
+            String sourceStr = sourceSb.toString().replaceAll("[^\\u0009\\u000A\\u000D\\u0020-\\uD7FF\\uE000-\\uFFFD\\u10000-\\u10FFF]+", "");
 
             Element body = (Element) DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource(new ByteArrayInputStream(sourceStr.getBytes(encoding)))).getElementsByTagName("body").item(0);
             NodeList pElements = body.getElementsByTagName("p");
