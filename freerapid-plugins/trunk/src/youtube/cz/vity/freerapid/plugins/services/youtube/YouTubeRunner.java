@@ -3,18 +3,19 @@ package cz.vity.freerapid.plugins.services.youtube;
 import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
 import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;
 import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
-import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
 import cz.vity.freerapid.plugins.services.youtube.srt.Transcription2SrtUtil;
 import cz.vity.freerapid.plugins.video2audio.AbstractVideo2AudioRunner;
 import cz.vity.freerapid.plugins.webclient.DownloadClientConsts;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.utils.HttpUtils;
+import cz.vity.freerapid.plugins.webclient.utils.JsonMapper;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import cz.vity.freerapid.utilities.LogUtils;
 import jlibs.core.net.URLUtil;
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.HttpStatus;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -281,8 +282,9 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
     }
 
     private void checkFileProblems() throws Exception {
+        /* APIv2 has been discontinued
         logger.info("Checking file problems");
-        HttpMethod method = getGetMethod(String.format("https://gdata.youtube.com/feeds/api/videos/%s?v=2", getIdFromUrl()));
+        HttpMethod method = getGetMethod(String.format("https://gdata.youtube.com/feeds/api/videos/%s?v=2", fileURL));
         int httpCode = client.makeRequest(method, true);
         if ((httpCode == HttpStatus.SC_NOT_FOUND)
                 || (httpCode == HttpStatus.SC_FORBIDDEN)
@@ -290,13 +292,17 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
                 || getContentAsString().contains("ServiceForbiddenException")) {
             throw new URLNotAvailableAnymoreException("File not found");
         }
+        */
     }
 
     private void checkProblems() throws ErrorDuringDownloadingException {
+        //
+    }
+
+    private void checkEmbeddingProblems() throws ErrorDuringDownloadingException {
         String content = getContentAsString();
-        if (content.contains("It+is+restricted+from+playback+on+certain+sites")
-                || content.contains("This+video+contains+content+from+")) {
-            throw new PluginImplementationException("Error requesting embedded content, the video cannot be embedded");
+        if (content.contains("status=fail")) {
+            throw new PluginImplementationException("This video cannot be embedded. Failed to bypass age verification");
         }
     }
 
@@ -633,12 +639,63 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
         fileURL = method.getURI().toString();
     }
 
-    private String getIdFromUrl() throws ErrorDuringDownloadingException {
-        final Matcher matcher = PlugUtils.matcher("(?:[\\?&]v=|\\.be/)([^\\?&#]+)", fileURL);
+    private String getIdFromUrl(String url) throws ErrorDuringDownloadingException {
+        final Matcher matcher = PlugUtils.matcher("(?:[\\?&]v=|\\.be/)([^\\?&#]+)", url);
         if (!matcher.find()) {
             throw new PluginImplementationException("Error getting video id");
         }
         return matcher.group(1);
+    }
+
+    private List<URI> getUriListFromContent(String content) throws ErrorDuringDownloadingException, URISyntaxException, IOException {
+        List<URI> uriList = new LinkedList<URI>();
+        Matcher matcher = PlugUtils.matcher("<a href=\"/watch(\\?v=[^\"]+?)\"", content);
+        while (matcher.find()) {
+            String videoId = getIdFromUrl(matcher.group(1));
+            URI uri = new URI("https://www.youtube.com/watch?v=" + videoId);
+            if (!uriList.contains(uri)) {
+                uriList.add(uri);
+            }
+        }
+        parseContinuation(uriList);
+        return uriList;
+    }
+
+    private void parseContinuation(List<URI> uriList) throws IOException, ErrorDuringDownloadingException, URISyntaxException {
+        Matcher matcher = getMatcherAgainstContent("\"(/browse_ajax\\?action_continuation=[^\"]+?)\"");
+        if (matcher.find()) {
+            String continuationUrl = PlugUtils.replaceEntities(matcher.group(1));
+            ObjectMapper mapper = new JsonMapper().getObjectMapper();
+            do {
+                if (!makeRedirectedRequest(getGetMethod("https://www.youtube.com" + continuationUrl))) {
+                    checkProblems();
+                    throw new ServiceConnectionProblemException();
+                }
+                checkProblems();
+
+                JsonNode rootNode;
+                try {
+                    rootNode = mapper.readTree(getContentAsString());
+                } catch (IOException e) {
+                    throw new PluginImplementationException("Error parsing continuation content");
+                }
+                JsonNode contentHtmlNode = rootNode.get("content_html");
+                JsonNode loadMoreWidgetHtmlNode = rootNode.get("load_more_widget_html");
+                if (contentHtmlNode != null) {
+                    uriList.addAll(getUriListFromContent(contentHtmlNode.getTextValue()));
+                }
+                if (loadMoreWidgetHtmlNode != null) {
+                    matcher = PlugUtils.matcher("\"(/browse_ajax\\?action_continuation=[^\"]+?)\"", loadMoreWidgetHtmlNode.getTextValue());
+                    if (matcher.find()) {
+                        continuationUrl = PlugUtils.replaceEntities(matcher.group(1));
+                    } else {
+                        break;
+                    }
+                } else {
+                    break;
+                }
+            } while (true);
+        }
     }
 
     private LinkedList<URI> getURIList(String action, final String URIRegex) throws Exception {
@@ -703,10 +760,15 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
     }
 
     //user uploaded video
-    //reference : https://developers.google.com/youtube/2.0/developers_guide_protocol#User_Uploaded_Videos
     private void parseUserPage(final String user) throws Exception {
-        final String action = "http://gdata.youtube.com/feeds/api/users/" + user + "/uploads";
-        final List<URI> uriList = getVideoURIList(action);
+        String userVideosUrl = String.format("https://www.youtube.com/user/%s/videos", user);
+        if (!makeRedirectedRequest(getGetMethod(userVideosUrl))) {
+            checkProblems();
+            throw new ServiceConnectionProblemException();
+        }
+        checkProblems();
+
+        List<URI> uriList = getUriListFromContent(getContentAsString());
         // YouTube returns the videos in descending date order, which is a bit illogical.
         // If the user wants them that way, don't reverse.
         if (!config.isReversePlaylistOrder()) {
@@ -719,36 +781,10 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
         return fileURL.contains("/playlist?");
     }
 
-    private String getPlaylistIdFromUrl() throws PluginImplementationException {
-        final Matcher matcher = PlugUtils.matcher("list=(?:PL|UU|FL)?([^\\?&#/]+)", fileURL);
-        if (!matcher.find()) {
-            throw new PluginImplementationException("Error getting playlist id");
-        }
-        return matcher.group(1);
-    }
-
-    private String getUserFromContent() throws PluginImplementationException {
-        return PlugUtils.getStringBetween(getContentAsString(), "<a class=\"profile-thumb\" href=\"/user/", "\"");
-    }
-
-    //Favorite List and Playlist
-    //reference : https://developers.google.com/youtube/2.0/developers_guide_protocol#Favorite_Videos
-    //reference : https://developers.google.com/youtube/2.0/developers_guide_protocol#Retrieving_a_playlist
+    //Playlist
     private void parsePlaylist() throws Exception {
-        if (fileURL.contains("list=UU")) { //user uploaded video
-            final String user = getUserFromContent();
-            parseUserPage(user);
-        } else if (fileURL.contains("list=FL")) { //favorite list
-            final String user = getUserFromContent();
-            final String action = String.format("http://gdata.youtube.com/feeds/api/users/%s/favorites", user);
-            final List<URI> uriList = getVideoURIList(action);
-            queueLinks(uriList);
-        } else { //playlist
-            final String playlistId = getPlaylistIdFromUrl();
-            final String action = String.format("http://gdata.youtube.com/feeds/api/playlists/%s?v=2", playlistId);
-            final List<URI> uriList = getVideoURIList(action);
-            queueLinks(uriList);
-        }
+        List<URI> uriList = getUriListFromContent(getContentAsString());
+        queueLinks(uriList);
     }
 
     private boolean isCourseList() {
@@ -838,7 +874,7 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
 
     private void queueSubtitle(String mainpageContent) throws Exception {
         if (config.isDownloadSubtitles() && isVideo()) {
-            final String id = getIdFromUrl();
+            final String id = getIdFromUrl(fileURL);
             HttpMethod method = getGetMethod("http://www.youtube.com/api/timedtext?type=list&v=" + id);
             if (makeRedirectedRequest(method)) {
                 final List<URI> list = new LinkedList<URI>();
@@ -886,8 +922,8 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
                             } else {
                                 fileExtension = ".srt";
                             }
-                            method = client.getGetMethod(url);
-                            if (200 == client.makeRequest(method, true)) {
+                            method = getGetMethod(url);
+                            if (makeRedirectedRequest(method)) {
                                 String fnameNoExt = PlugUtils.unescapeHtml(URLDecoder.decode(HttpUtils.replaceInvalidCharsForFileSystem(
                                         httpFile.getFileName().replaceFirst("\\.[^\\.]{3,4}$", ""), "_"), "UTF-8"));
                                 String fnameOutput = fnameNoExt + fileExtension;
@@ -928,7 +964,7 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
                 || getContentAsString().contains("<script>window.location = \"http:\\/\\/www.youtube.com\\/verify_age")) {
             logger.info("Trying to bypass age verification");
             //Request embed format to bypass age verification
-            String videoId = getIdFromUrl();
+            String videoId = getIdFromUrl(fileURL);
             String embedSwfUrl = "https://www.youtube.com/v/" + videoId;
             logger.info("Requesting embed SWF: " + embedSwfUrl);
             InputStream is = client.makeRequestForFile(client.getGetMethod(embedSwfUrl));
@@ -956,10 +992,10 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
                     .toGetMethod();
             setTextContentTypes("application/x-www-form-urlencoded");
             if (!makeRedirectedRequest(method)) {
-                checkProblems();
+                checkEmbeddingProblems();
                 throw new ServiceConnectionProblemException();
             }
-            checkProblems(); //check whether the video can/cannot be embedded
+            checkEmbeddingProblems();
         } else if (getContentAsString().contains("I confirm that I am 18 years of age or older")) {
             if (!makeRedirectedRequest(getGetMethod(fileURL + "&has_verified=1"))) {
                 throw new ServiceConnectionProblemException();
