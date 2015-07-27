@@ -657,7 +657,6 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
                 uriList.add(uri);
             }
         }
-        parseContinuation(uriList);
         return uriList;
     }
 
@@ -698,46 +697,6 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
         }
     }
 
-    private LinkedList<URI> getURIList(String action, final String URIRegex) throws Exception {
-        final LinkedList<URI> uriList = new LinkedList<URI>();
-        setFileStreamContentTypes(new String[0], new String[]{"application/atom+xml"});
-        do {
-            final HttpMethod method = getMethodBuilder()
-                    .setReferer(null)
-                    .setAction(action)
-                    .toGetMethod();
-            if (!makeRedirectedRequest(method)) {
-                throw new ServiceConnectionProblemException();
-            }
-            Matcher matcher = getMatcherAgainstContent(URIRegex);
-            while (matcher.find()) {
-                try {
-                    final String link = PlugUtils.replaceEntities(matcher.group(1));
-                    final URI uri = new URI(link);
-                    if (!uriList.contains(uri)) {
-                        uriList.add(uri);
-                    }
-                } catch (final URISyntaxException e) {
-                    LogUtils.processException(logger, e);
-                }
-            }
-            matcher = getMatcherAgainstContent("<link rel='next'.*? href='(.+?)'");
-            if (!matcher.find()) {
-                break;
-            }
-            action = PlugUtils.replaceEntities(matcher.group(1));
-        } while (getContentAsString().contains("<link rel='next'"));
-        return uriList;
-    }
-
-    private LinkedList<URI> getVideoURIList(final String action) throws Exception {
-        return getURIList(action, "<media:player url='(.+?)(?:&.+?)?'");
-    }
-
-    private LinkedList<URI> getLectureCourseMaterialURIList(final String action) throws Exception {
-        return getURIList(action, "<yt:material.*? url='(.+?)'");
-    }
-
     private void queueLinks(final List<URI> uriList) throws PluginImplementationException {
         if (uriList.isEmpty()) {
             throw new PluginImplementationException("No video links found");
@@ -769,6 +728,7 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
         checkProblems();
 
         List<URI> uriList = getUriListFromContent(getContentAsString());
+        parseContinuation(uriList);
         // YouTube returns the videos in descending date order, which is a bit illogical.
         // If the user wants them that way, don't reverse.
         if (!config.isReversePlaylistOrder()) {
@@ -784,6 +744,7 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
     //Playlist
     private void parsePlaylist() throws Exception {
         List<URI> uriList = getUriListFromContent(getContentAsString());
+        parseContinuation(uriList);
         queueLinks(uriList);
     }
 
@@ -791,49 +752,17 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
         return fileURL.contains("/course?list=");
     }
 
-    private String getCourseIdFromUrl() throws PluginImplementationException {
-        final Matcher matcher = PlugUtils.matcher("list=(?:EC)?([^\\?&#/]+)", fileURL);
-        if (!matcher.find()) {
-            throw new PluginImplementationException("Error getting course id");
-        }
-        return matcher.group(1);
-    }
-
     //Course list contains video playlist, lecture materials, and course materials
-    //reference : https://developers.google.com/youtube/2.0/developers_guide_protocol#Courses
-    //reference : https://developers.google.com/youtube/2.0/developers_guide_protocol#Lectures
     private void parseCourseList() throws Exception {
         //Step #1 queue video playlist related to the course
-        final String courseId = getCourseIdFromUrl();
-        String action = String.format("http://gdata.youtube.com/feeds/api/playlists/%s?v=2", courseId);
-        List<URI> uriList = getVideoURIList(action);
-        if (uriList.isEmpty()) {
-            logger.info("No video links found");
-        } else {
-            getPluginService().getPluginContext().getQueueSupport().addLinksToQueue(httpFile, uriList);
-            logger.info(uriList.size() + " videos added");
-        }
+        List<URI> uriList = getUriListFromContent(getContentAsString());
+        parseContinuation(uriList);
+        queueLinks(uriList);
 
-        //Step #2 queue lecture materials
-        action = String.format("https://stage.gdata.youtube.com/feeds/api/edu/lectures?course=%s", courseId);
-        uriList = getLectureCourseMaterialURIList(action);
-        if (uriList.isEmpty()) {
-            logger.info("No lecture material links found");
-        } else {
-            getPluginService().getPluginContext().getQueueSupport().addLinksToQueue(httpFile, uriList);
-            logger.info(uriList.size() + " lecture materials added");
-        }
-
-        //Step #3 queue course materials
-        action = String.format("http://gdata.youtube.com/feeds/api/edu/courses/%s?v=2", courseId);
-        uriList = getLectureCourseMaterialURIList(action);
-        if (uriList.isEmpty()) {
-            logger.info("No course material links found");
-        } else {
-            getPluginService().getPluginContext().getQueueSupport().addLinksToQueue(httpFile, uriList);
-            logger.info(uriList.size() + " course materials added");
-        }
-        httpFile.getProperties().put("removeCompleted", true);
+        /*
+        Lecture materials and course materials - pending.
+        APIv2 has been deprecated.
+        */
     }
 
     private boolean isSubtitles() {
