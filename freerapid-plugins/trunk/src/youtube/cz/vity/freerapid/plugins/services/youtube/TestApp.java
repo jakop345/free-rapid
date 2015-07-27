@@ -34,7 +34,7 @@ public class TestApp extends PluginDevApplication {
             //httpFile.setNewURL(new URL("http://www.youtube.com/course?list=ECB24BC7956EE040CD"));
             //httpFile.setNewURL(new URL("http://www.youtube.com/course?list=ECD9DDFBDC338226CA"));
             //httpFile.setNewURL(new URL("http://www.youtube.com/user/HDstarcraft/videos?view=0"));
-            //httpFile.setNewURL(new URL("http://www.youtube.com/course?list=ECBD4C7FD29B0C6D0C")); //course list
+            httpFile.setNewURL(new URL("http://www.youtube.com/course?list=ECBD4C7FD29B0C6D0C")); //course list
             //httpFile.setNewURL(new URL("http://www.youtube.com/watch?v=sQ8T9b-uGVE&amp"));
             //httpFile.setNewURL(new URL("http://www.youtube.com/watch?v=BvEwiyHsCLI&amp"));
             //http://www.youtube.com/watch?v=BvEwiyHsCLI&amp //corrupt sorrensen park
@@ -65,7 +65,7 @@ public class TestApp extends PluginDevApplication {
             //httpFile.setNewURL(new URL("https://www.youtube.com/watch?v=pzVaesO6-8o")); //invalid duration for subtitle
             //httpFile.setNewURL(new URL("https://www.youtube.com/user/judofighter96"));
             //httpFile.setNewURL(new URL("https://www.youtube.com/user/nickelbacktv"));
-            httpFile.setNewURL(new URL("https://www.youtube.com/playlist?list=FLWYfHW4VtXNcycoPQcsBUCg"));
+            //httpFile.setNewURL(new URL("https://www.youtube.com/playlist?list=FLWYfHW4VtXNcycoPQcsBUCg"));
             //httpFile.setNewURL(new URL("https://www.youtube.com/watch?v=JMla5Ua6bHw")); //18+ embedding failed
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
