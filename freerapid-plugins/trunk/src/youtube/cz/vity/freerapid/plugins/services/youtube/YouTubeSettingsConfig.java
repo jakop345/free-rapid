@@ -14,7 +14,7 @@ public class YouTubeSettingsConfig {
     private AudioQuality extractAudioQuality = AudioQuality._192;
     private boolean reversePlaylistOrder = false;
     private boolean downloadSubtitles = false;
-    private boolean enableDash = false;
+    private boolean enableDash = true;
     private boolean enableInternalMultiplexer = true;
 
     public void setVideoQuality(VideoQuality videoQuality) {
