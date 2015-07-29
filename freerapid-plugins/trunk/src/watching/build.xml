@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<project name="UploadC.com" default="all" basedir=".">
-    <property name="application" value="uploadc"/>
+<project name="Watching.to" default="all" basedir=".">
+    <property name="application" value="watching"/>
 
     <property name="version" value="1.0"/>
     <property name="version.name" value="${application}"/>
 
-    <property name="mainjar.file" value="uploadc.jar"/>
+    <property name="mainjar.file" value="watching.jar"/>
 
     <!--<property name="mainjar-packed.file" value="${mainjar.file}.pack.gz"/>-->
 

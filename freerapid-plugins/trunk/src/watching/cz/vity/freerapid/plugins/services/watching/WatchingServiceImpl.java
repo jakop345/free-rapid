@@ -1,4 +1,4 @@
-package cz.vity.freerapid.plugins.services.uploadc;
+package cz.vity.freerapid.plugins.services.watching;
 
 import cz.vity.freerapid.plugins.services.xfileplayer.XFilePlayerServiceImpl;
 import cz.vity.freerapid.plugins.webclient.interfaces.PluginRunner;
@@ -8,21 +8,21 @@ import cz.vity.freerapid.plugins.webclient.interfaces.PluginRunner;
  *
  * @author birchie
  */
-public class UploadCServiceImpl extends XFilePlayerServiceImpl {
+public class WatchingServiceImpl extends XFilePlayerServiceImpl {
 
     @Override
     public String getServiceTitle() {
-        return "UploadCore";
+        return "Watching";
     }
 
     @Override
     public String getName() {
-        return "uploadc.com";
+        return "watching.to";
     }
 
     @Override
     protected PluginRunner getPluginRunnerInstance() {
-        return new UploadCFileRunner();
+        return new WatchingFileRunner();
     }
 
 }
