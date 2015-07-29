@@ -1,6 +1,6 @@
-package cz.vity.freerapid.plugins.services.uploadc;
+package cz.vity.freerapid.plugins.services.megacloudfiles;
 
-import cz.vity.freerapid.plugins.services.xfileplayer.XFilePlayerServiceImpl;
+import cz.vity.freerapid.plugins.services.xfilesharing.XFileSharingServiceImpl;
 import cz.vity.freerapid.plugins.webclient.interfaces.PluginRunner;
 
 /**
@@ -8,21 +8,21 @@ import cz.vity.freerapid.plugins.webclient.interfaces.PluginRunner;
  *
  * @author birchie
  */
-public class UploadCServiceImpl extends XFilePlayerServiceImpl {
+public class MegaCloudFilesServiceImpl extends XFileSharingServiceImpl {
 
     @Override
     public String getServiceTitle() {
-        return "UploadCore";
+        return "MegaCloudFiles";
     }
 
     @Override
     public String getName() {
-        return "uploadc.com";
+        return "megacloudfiles.com";
     }
 
     @Override
     protected PluginRunner getPluginRunnerInstance() {
-        return new UploadCFileRunner();
+        return new MegaCloudFilesFileRunner();
     }
 
 }

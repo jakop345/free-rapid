@@ -1,12 +1,12 @@
 package cz.vity.freerapid.plugins.services.uploadc;
 
 import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
-import cz.vity.freerapid.plugins.services.xfilesharing.XFileSharingRunner;
+import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
+import cz.vity.freerapid.plugins.services.xfileplayer.XFilePlayerRunner;
 import cz.vity.freerapid.plugins.services.xfilesharing.nameandsize.FileSizeHandler;
 import cz.vity.freerapid.plugins.webclient.interfaces.HttpFile;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
  *
  * @author birchie
  */
-class UploadCFileRunner extends XFileSharingRunner {
+class UploadCFileRunner extends XFilePlayerRunner {
 
     @Override
     protected List<FileSizeHandler> getFileSizeHandlers() {
@@ -35,9 +35,18 @@ class UploadCFileRunner extends XFileSharingRunner {
 
     @Override
     protected List<String> getDownloadLinkRegexes() {
-        final List<String> downloadLinkRegexes = new LinkedList<String>();
-        downloadLinkRegexes.add("'file','(http.+?" + Pattern.quote(httpFile.getFileName()) + ")'");
+        final List<String> downloadLinkRegexes = super.getDownloadLinkRegexes();
+        downloadLinkRegexes.add(0, "name\\s*=\\s*\"src\"\\s*value\\s*=\\s*\"(http.+?" + Pattern.quote(httpFile.getFileName()) + ")\"");
+        downloadLinkRegexes.add(0, "'file','(http.+?" + Pattern.quote(httpFile.getFileName()) + ")'");
         return downloadLinkRegexes;
     }
 
+    @Override
+    protected void checkFileProblems() throws ErrorDuringDownloadingException {
+        final String content = getContentAsString();
+        if (content.contains("404 Not Found")) {
+            throw new URLNotAvailableAnymoreException("File not found");
+        }
+        super.checkFileProblems();
+    }
 }

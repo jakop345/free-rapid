@@ -1,6 +1,7 @@
 package cz.vity.freerapid.plugins.services.videowood;
 
 import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
+import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;
 import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
 import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
@@ -10,6 +11,7 @@ import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
 
 /**
  * Class which contains main code
@@ -39,7 +41,10 @@ class VideoWoodFileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        PlugUtils.checkName(httpFile, content, "title: \"", "\",");
+        final Matcher match = PlugUtils.matcher("title\\s*:\\s*['\"](.+?)['\"]", content);
+        if (!match.find())
+            throw new PluginImplementationException("File name not found");
+        httpFile.setFileName(match.group(1).trim());
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
 
@@ -53,8 +58,14 @@ class VideoWoodFileRunner extends AbstractRunner {
             final String contentAsString = getContentAsString();//check for response
             checkProblems();//check problems
             checkNameAndSize(contentAsString);//extract file name and size from the page
+            final Matcher match = PlugUtils.matcher("file\\s*:\\s*['\"](.+?)['\"]", contentAsString);
+            if (!match.find())
+                throw new PluginImplementationException("Video not found");
             final HttpMethod httpMethod = getMethodBuilder().setReferer(fileURL)
-                    .setActionFromTextBetween("file: \"", "\",").toGetMethod();
+                    .setAction(match.group(1).trim()).toGetMethod();
+            final String ext = match.group(1).trim().substring(match.group(1).trim().lastIndexOf("."));
+            if (!httpFile.getFileName().matches(".+?" + ext))
+                httpFile.setFileName(httpFile.getFileName() + ext);
             if (!tryDownloadAndSaveFile(httpMethod)) {
                 checkProblems();//if downloading failed
                 throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
