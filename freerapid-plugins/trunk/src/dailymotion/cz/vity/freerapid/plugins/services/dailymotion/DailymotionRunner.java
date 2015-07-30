@@ -30,7 +30,7 @@ class DailymotionRunner extends AbstractRunner {
     private final static String DEFAULT_FILE_EXT = ".mp4";
     private DailymotionSettingsConfig config;
 
-    private static enum Container {FLV, MP4}
+    private enum Container {FLV, MP4}
 
     private void setConfig() throws Exception {
         DailymotionServiceImpl service = (DailymotionServiceImpl) getPluginService();
@@ -134,8 +134,8 @@ class DailymotionRunner extends AbstractRunner {
 
     private List<DailyMotionVideo> getDailyMotionVideosFromSequence(String sequence, Container container) {
         final List<DailyMotionVideo> dailyMotionVideos = new LinkedList<DailyMotionVideo>();
-        for (VideoQuality videoQuality : VideoQuality.getItems()) {
-            final String urlRegex = String.format("\"stream_h264_?(?:%s|%s)_url\":\"(.+?)\"", videoQuality.getQualityToken1(), videoQuality.getQualityToken2());
+        for (VideoQuality videoQuality : VideoQuality.values()) {
+            final String urlRegex = String.format("\"%d\":\\[\\{\"type\":\"video\\\\/mp4\",\"url\":\"([^\"]+)\"", videoQuality.getQuality());
             final Matcher matcher = PlugUtils.matcher(urlRegex, sequence);
             if (matcher.find()) {
                 final String url = matcher.group(1).replace("\\/", "/");

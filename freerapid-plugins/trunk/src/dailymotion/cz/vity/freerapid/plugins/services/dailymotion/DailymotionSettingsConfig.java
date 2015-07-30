@@ -4,7 +4,7 @@ package cz.vity.freerapid.plugins.services.dailymotion;
  * @author tong2shot
  */
 public class DailymotionSettingsConfig {
-    private VideoQuality videoQuality = VideoQuality._480;
+    private VideoQuality videoQuality = VideoQuality.Highest;
     private boolean subtitleDownload = false;
 
     public VideoQuality getVideoQuality() {
