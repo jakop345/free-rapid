@@ -49,8 +49,13 @@ class Nova_NovaPlusFileRunner extends AbstractRtmpRunner {
     }
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        PlugUtils.checkName(httpFile, content, "<h1>", "</h1>");
-        httpFile.setFileName(httpFile.getFileName() + ".flv");
+        String filename;
+        try {
+            filename = PlugUtils.getStringBetween(content, "<h1>", "</h1>", 2);
+        } catch (PluginImplementationException e) {
+            throw new PluginImplementationException("File name not found");
+        }
+        httpFile.setFileName(filename + ".flv");
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
 
