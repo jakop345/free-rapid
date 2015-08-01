@@ -102,7 +102,9 @@ class FlashXFileRunner extends AbstractRtmpRunner {
 
     private void checkProblems() throws ErrorDuringDownloadingException {
         final String content = getContentAsString();
-        if (content.contains("File Not Found")) {
+        if (content.contains("File Not Found")
+                || content.contains("File not found")
+                || content.contains("FILE NOT FOUND")) {
             throw new URLNotAvailableAnymoreException("File not found");
         }
     }

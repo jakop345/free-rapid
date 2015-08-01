@@ -91,7 +91,7 @@ class JhebergFileRunner extends AbstractRunner {
         if (link.contains("/redirect/")) {
             final GetMethod method = getGetMethod(link);
             if (makeRedirectedRequest(method)) {
-                final HttpMethod hMethod = getMethodBuilder().setReferer(fileURL)
+                final HttpMethod hMethod = getMethodBuilder().setReferer(fileURL).setBaseURL("http://www.jheberg.net")
                         .setActionFromTextBetween(".post('", "'")
                         .setParameter("slug", PlugUtils.getStringBetween(getContentAsString(), "slug': '", "'"))
                         .setParameter("hoster", PlugUtils.getStringBetween(getContentAsString(), "hoster': '", "'"))
