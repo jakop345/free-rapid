@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
-<plugin class="cz.vity.freerapid.plugins.services.majorgeeks.MajorGeeksServiceImpl"
-        id="majorgeeks.com" vendor="tong2shot" version="1.0.2">
+<plugin class="cz.vity.freerapid.plugins.services.vidgg.VidGgServiceImpl"
+        id="vidgg.to" vendor="birchie" version="1.0.0">
     <attributes>
-        <attribute id="urlRegex" value="https?://(www\.)?majorgeeks\.com/mg/.+"/>
+        <attribute id="urlRegex" value="https?://(www\.)?(vidgg\.to|vid\.gg)/video/.+"/>
         <attribute id="minver" value="0.855"/>
         <attribute id="maxver" value="0.899"/>
-        <attribute id="services" value="majorgeeks.com"/>
+        <attribute id="services" value="vidgg.to vid.gg"/>
         <attribute id="maxDownloads" value="1"/>
         <attribute id="faviconImage" value="resources/favicon.png"/>
     </attributes>
 
     <runtime>
-        <library id="majorgeeks.com" path="/" type="code"/>
+        <library id="vidgg.to" path="/" type="code"/>
     </runtime>
 </plugin>

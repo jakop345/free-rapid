@@ -40,12 +40,12 @@ class MajorGeeksFileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        Matcher matcher = PlugUtils.matcher("<h1>([^<>]+).*?</h1>\\s*<hr", content);
+        Matcher matcher = PlugUtils.matcher("<h1>\\s*(?:<[^<>]+?>)?(.+\\s*.*)\\s*</h1>\\s*<hr", content);
         if (!matcher.find()) {
             throw new PluginImplementationException("File name not found");
         }
-        String filename = matcher.group(1).trim();
-        matcher = PlugUtils.matcher("Size\\s*?:\\s*?</strong>[^\\n]*?\\n+?(.+?)(?:\\+)?<br", content);
+        String filename = matcher.group(1).replaceAll("<[^<>]*>", "").replaceAll("\\s+", " ").trim();
+        matcher = PlugUtils.matcher("fileSize\" content=\"(.+?)\"", content);
         if (!matcher.find()) {
             throw new PluginImplementationException("File size not found");
         }
