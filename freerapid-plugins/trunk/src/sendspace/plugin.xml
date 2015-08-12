@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
 <plugin class="cz.vity.freerapid.plugins.services.sendspace.SendspaceServiceImpl"
-        id="sendspace.com" vendor="Kajda+ntoskrnl" version="0.6.5">
+        id="sendspace.com" vendor="Kajda+ntoskrnl" version="0.6.6">
     <attributes>
         <attribute id="urlRegex" value="https?://(www\.)?sendspace\.com/file/.+"/>
         <attribute id="minver" value="0.855"/>

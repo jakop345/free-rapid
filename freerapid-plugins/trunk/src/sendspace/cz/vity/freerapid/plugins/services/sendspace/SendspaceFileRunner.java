@@ -58,7 +58,7 @@ class SendspaceFileRunner extends AbstractRunner {
             }
             method = getMethodBuilder()
                     .setReferer(fileURL)
-                    .setActionFromAHrefWhereATagContains("start download")
+                    .setActionFromAHrefWhereATagContains("Download")
                     .toGetMethod();
             if (!tryDownloadAndSaveFile(method)) {
                 checkAllProblems();
