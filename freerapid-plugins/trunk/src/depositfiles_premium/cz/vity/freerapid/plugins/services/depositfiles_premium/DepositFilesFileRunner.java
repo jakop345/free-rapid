@@ -109,7 +109,7 @@ class DepositFilesFileRunner extends AbstractRunner {
         }
         httpFile.setFileName(matcher.group(1));
 
-        matcher = getMatcherAgainstContent("File size: <b[^<>]*?>(.+?)</b>");
+        matcher = getMatcherAgainstContent("file_size\">.+?: <b[^<>]*?>(.+?)</b>");
         if (!matcher.find()) {
             throw new PluginImplementationException("File size not found");
         }

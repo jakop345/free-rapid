@@ -34,6 +34,7 @@ class VimeoFileRunner extends AbstractRunner {
     @Override
     public void runCheck() throws Exception {
         super.runCheck();
+        checkUrl();
         addCookie(new Cookie(".vimeo.com", "language", "en", "/", 86400, false));
         final HttpMethod method = getGetMethod(fileURL);
         if (makeRedirectedRequest(method)) {
@@ -44,6 +45,11 @@ class VimeoFileRunner extends AbstractRunner {
             checkProblems();
             throw new ServiceConnectionProblemException();
         }
+    }
+
+    private void checkUrl() {
+        fileURL = fileURL.replaceFirst("://player.vimeo", "://vimeo");
+        fileURL = fileURL.replaceFirst("/video/", "/");
     }
 
     private void checkNameAndSize() throws ErrorDuringDownloadingException {
@@ -71,6 +77,7 @@ class VimeoFileRunner extends AbstractRunner {
     @Override
     public void run() throws Exception {
         super.run();
+        checkUrl();
         logger.info("Starting download in TASK " + fileURL);
         addCookie(new Cookie(".vimeo.com", "language", "en", "/", 86400, false));
         HttpMethod method = getGetMethod(fileURL);
