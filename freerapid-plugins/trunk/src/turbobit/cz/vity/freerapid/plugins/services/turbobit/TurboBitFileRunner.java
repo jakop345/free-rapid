@@ -71,11 +71,6 @@ public class TurboBitFileRunner extends AbstractRunner {
             checkProblems();
             checkNameAndSize();
 
-            Matcher matcher = getMatcherAgainstContent("limit\\s*:\\s*(\\d+)");
-            if (matcher.find()) {
-                throw new YouHaveToWaitException("Download limit reached", Integer.parseInt(matcher.group(1)));
-            }
-
             while (getContentAsString().contains("/captcha/")) {
                 if (!makeRedirectedRequest(stepCaptcha(method.getURI().toString()))) {
                     checkProblems();
@@ -84,7 +79,7 @@ public class TurboBitFileRunner extends AbstractRunner {
                 checkProblems();
             }
 
-            matcher = getMatcherAgainstContent("Timeout/(.+?)\"");
+            Matcher matcher = getMatcherAgainstContent("Timeout/(.+?)\"");
             if (!matcher.find()) {
                 throw new PluginImplementationException("File ID not found");
             }
@@ -132,6 +127,10 @@ public class TurboBitFileRunner extends AbstractRunner {
     private void checkDownloadProblems() throws ErrorDuringDownloadingException {
         if (getContentAsString().contains("The file is not available now because of technical problems")) {
             throw new ServiceConnectionProblemException("The file is not available now because of technical problems");
+        }
+        Matcher matcher = getMatcherAgainstContent("limit\\s*:\\s*(\\d+)");
+        if (matcher.find()) {
+            throw new YouHaveToWaitException("Download limit reached", Integer.parseInt(matcher.group(1)));
         }
         if (getContentAsString().contains("From your IP range the limit of connections is reached")) {
             final int waitTime = PlugUtils.getNumberBetween(getContentAsString(), " id='timeout'>", "</");
