@@ -71,6 +71,13 @@ public class TurboBitFileRunner extends AbstractRunner {
             checkProblems();
             checkNameAndSize();
 
+            method = getGetMethod(fileURL);     //once more to avoid possible redirection to original url by previous request
+            if (!makeRedirectedRequest(method)) {
+                checkFileProblems();
+                throw new ServiceConnectionProblemException();
+            }
+            checkFileProblems();
+
             while (getContentAsString().contains("/captcha/")) {
                 if (!makeRedirectedRequest(stepCaptcha(method.getURI().toString()))) {
                     checkProblems();
