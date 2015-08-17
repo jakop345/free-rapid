@@ -73,10 +73,10 @@ public class TurboBitFileRunner extends AbstractRunner {
 
             method = getGetMethod(fileURL);     //once more to avoid possible redirection to original url by previous request
             if (!makeRedirectedRequest(method)) {
-                checkFileProblems();
+                checkProblems();
                 throw new ServiceConnectionProblemException();
             }
-            checkFileProblems();
+            checkProblems();
 
             while (getContentAsString().contains("/captcha/")) {
                 if (!makeRedirectedRequest(stepCaptcha(method.getURI().toString()))) {
@@ -139,7 +139,8 @@ public class TurboBitFileRunner extends AbstractRunner {
         if (matcher.find()) {
             throw new YouHaveToWaitException("Download limit reached", Integer.parseInt(matcher.group(1)));
         }
-        if (getContentAsString().contains("From your IP range the limit of connections is reached")) {
+        if (getContentAsString().contains("From your IP range the limit of connections is reached")
+                || getContentAsString().contains("You have reached the limit of connections")) {
             final int waitTime = PlugUtils.getNumberBetween(getContentAsString(), " id='timeout'>", "</");
             throw new YouHaveToWaitException("Download limit reached from your IP range", waitTime);
         }
