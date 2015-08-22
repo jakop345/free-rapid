@@ -68,7 +68,7 @@ class PornHubFileRunner extends AbstractRunner {
 
     private String findBestQuality(final String content) throws Exception {
         for (String quality : qualityList) {
-            final Matcher match = PlugUtils.matcher("\"" + quality + "\":\"(.+?)\",", content);
+            final Matcher match = PlugUtils.matcher("(?:\"|player_)" + quality + "\\s*?(?:\":|=)\\s*?[\"'](.+?)(?:\",|';)", content);
             if (match.find())
                 return match.group(1);
         }
@@ -105,11 +105,16 @@ class PornHubFileRunner extends AbstractRunner {
                     throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
                 }
             } else {
-                final String encURL = URLDecoder.decode(findBestQuality(content), "UTF-8").replace(" ", "+");
-                final String name = PlugUtils.getStringBetween(content, "\"video_title\":\"", "\"").replace('+', ' ');
-                logger.info("Encoded URL: " + encURL);
-                logger.info("Video title: " + name);
-                final HttpMethod httpMethod = getGetMethod(decodeAesUrl(encURL, name));
+                final HttpMethod httpMethod;
+                if (!content.contains("player_quality_")) {
+                    final String encURL = URLDecoder.decode(findBestQuality(content), "UTF-8").replace(" ", "+");
+                    final String name = PlugUtils.getStringBetween(content, "\"video_title\":\"", "\"").replace('+', ' ');
+                    logger.info("Encoded URL: " + encURL);
+                    logger.info("Video title: " + name);
+                    httpMethod = getGetMethod(decodeAesUrl(encURL, name));
+                } else {
+                    httpMethod = getGetMethod(findBestQuality(content));
+                }
                 if (!tryDownloadAndSaveFile(httpMethod)) {
                     checkProblems();//if downloading failed
                     throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
