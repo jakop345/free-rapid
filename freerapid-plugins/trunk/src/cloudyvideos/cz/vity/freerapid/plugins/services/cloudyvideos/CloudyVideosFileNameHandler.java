@@ -10,7 +10,7 @@ import java.util.regex.Matcher;
 public class CloudyVideosFileNameHandler implements FileNameHandler {
     @Override
     public void checkFileName(HttpFile httpFile, String content) throws ErrorDuringDownloadingException {
-        final Matcher match = PlugUtils.matcher("[\\]>]([^\\]>]+?) - [\\d\\.,]+?\\s*?\\w+?[\\[<]/", content);
+        final Matcher match = PlugUtils.matcher(">([^<>]+?) - [\\d\\.,]+?\\s*?\\w+?</", content);
         if (match.find())
             httpFile.setFileName(match.group(1).trim());
         else

@@ -17,6 +17,7 @@ public class TestApp extends PluginDevApplication {
         try {
             //we set file URL
             httpFile.setNewURL(new URL("https://openload.io/f/fthSKRPbwpU/big_buck_bunny_720p_50mb.mp4"));
+            httpFile.setNewURL(new URL("https://openload.co/f/Wv8n3K7_VkY/The.Originals.S02E21.BDRip.x264-DEMAND.mkv"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
