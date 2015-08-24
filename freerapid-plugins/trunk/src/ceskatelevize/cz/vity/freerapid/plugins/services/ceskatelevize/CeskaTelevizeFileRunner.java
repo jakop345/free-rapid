@@ -166,50 +166,38 @@ class CeskaTelevizeFileRunner extends AbstractRunner {
         HttpMethod httpMethod;
         String referer = fileURL;
         if (!getContentAsString().contains("getPlaylistUrl(")) {
-            Matcher matcher = Pattern.compile("(<i?frame(?:.*?)src\\s?=\\s?(?:\"|')(.+?)(?:\"|')(?:.*?)>)", Pattern.DOTALL | Pattern.CASE_INSENSITIVE | Pattern.MULTILINE).matcher(getContentAsString());
+            Matcher iframeMatcher = Pattern.compile("(<i?frame(.*?)>)", Pattern.DOTALL | Pattern.CASE_INSENSITIVE | Pattern.MULTILINE).matcher(getContentAsString());
+            Matcher srcMatcher = Pattern.compile("src\\s?=\\s?(?:\"|')(.+?)(?:\"|')", Pattern.DOTALL | Pattern.CASE_INSENSITIVE | Pattern.MULTILINE).matcher(getContentAsString());
             String action = null;
-            int start = 0;
             final String lower = "iFramePlayer".toLowerCase();
-            while (matcher.find(start)) {
-                final String content = matcher.group(1);
-                if (content.toLowerCase().contains(lower)) {
-                    final String iFrameUrl = PlugUtils.replaceEntities(matcher.group(2));
+            while (iframeMatcher.find()) {
+                srcMatcher.region(iframeMatcher.start(1), iframeMatcher.end(1));
+                final String content = iframeMatcher.group(1);
+                if (content.toLowerCase().contains(lower) && srcMatcher.find()) {
+                    final String iFrameUrl = PlugUtils.replaceEntities(srcMatcher.group(1));
                     if ((!isBonus(fileURL) && !iFrameUrl.contains("bonus=")) || (isBonus(fileURL) && iFrameUrl.contains("bonus="))) {
                         action = iFrameUrl;
                         break;
                     }
                 }
-                start = matcher.end();
             }
             if (action == null) {
-                matcher = PlugUtils.matcher("\\(q='([^']+)'", getContentAsString());
-                if (!matcher.find()) {
-                    throw new PluginImplementationException("Error getting playlist URL (1)");
-                }
-                String q = matcher.group(1);
-                matcher = PlugUtils.matcher("url:\\s*?\"([^\"]+)\"", getContentAsString());
-                if (!matcher.find()) {
-                    throw new PluginImplementationException("Error getting playlist URL (2)");
-                }
-                httpMethod = getMethodBuilder()
-                        .setAction(matcher.group(1))
-                        .setParameter("autoStart", "true")
-                        .setParameter("cmd", "getVideoPlayerUrl")
-                        .setParameter("q", q)
-                        .toPostMethod();
-                if (!makeRedirectedRequest(httpMethod)) {
-                    checkProblems();
-                    throw new ServiceConnectionProblemException("Error requesting video player URL");
-                }
-                JsonNode rootNode;
+                String urlContent;
                 try {
-                    rootNode = new JsonMapper().getObjectMapper().readTree(getContentAsString());
-                } catch (IOException e) {
-                    throw new PluginImplementationException("Error parsing video player JSON", e);
+                    urlContent = PlugUtils.getStringBetween(getContentAsString(), "og:url\" content=\"", "\"");
+                } catch (PluginImplementationException e) {
+                    throw new PluginImplementationException("Error getting playlist URL(1)");
                 }
-                action = rootNode.findPath("videoPlayerUrl").getTextValue();
-                if (action == null) {
-                    throw new PluginImplementationException("Error getting playlist URL (3)");
+                if (!makeRedirectedRequest(getGetMethod(urlContent))) {
+                    checkProblems();
+                    throw new ServiceConnectionProblemException();
+                }
+                checkProblems();
+
+                try {
+                    action = URLDecoder.decode(PlugUtils.replaceEntities(PlugUtils.getStringBetween(getContentAsString(), "data-url=\"", "\"")), "UTF-8");
+                } catch (PluginImplementationException e) {
+                    throw new PluginImplementationException("Error getting playlist URL(2)");
                 }
             }
 
@@ -290,7 +278,10 @@ class CeskaTelevizeFileRunner extends AbstractRunner {
 
     private void checkProblems() throws ErrorDuringDownloadingException {
         final String contentAsString = getContentAsString();
-        if (contentAsString.contains("Neexistuj") || contentAsString.contains("Stránka nenalezena")) {
+        if (contentAsString.contains("Neexistuj")
+                || contentAsString.contains("Stránka nenalezena")
+                || contentAsString.contains("Video není k dispozici")
+                || contentAsString.contains("Stránka nebyla nalezena")) {
             throw new URLNotAvailableAnymoreException("File not found"); //let to know user in FRD
         }
         if (contentAsString.contains("content is not available at")
