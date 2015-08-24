@@ -17,13 +17,13 @@ public class TestApp extends PluginDevApplication {
         try {
             //httpFile.setNewURL(new URL("http://www.ceskatelevize.cz/porady/1143638030-ct-live/20754215404-ct-live-vlasta-redl/video/"));
             //httpFile.setNewURL(new URL("http://www.ceskatelevize.cz/porady/1095875447-cestomanie/video/"));
-            httpFile.setNewURL(new URL("http://www.ceskatelevize.cz/porady/10588743864-denik-dity-p/213562260300003-piknik/video/281044"));
+            //httpFile.setNewURL(new URL("http://www.ceskatelevize.cz/porady/10588743864-denik-dity-p/213562260300003-piknik/video/281044"));
             //httpFile.setNewURL(new URL("http://www.ceskatelevize.cz/specialy/hydepark-civilizace/14.9.2013/"));
             //httpFile.setNewURL(new URL("http://www.ceskatelevize.cz/ivysilani/10084897100-kluci-v-akci/211562221900012/"));
             //httpFile.setNewURL(new URL("http://www.ceskatelevize.cz/ivysilani/10084897100-kluci-v-akci/211562221900012/obsah/155251-pastiera-napoletana/"));
             //httpFile.setNewURL(new URL("http://www.ceskatelevize.cz/ivysilani/1126672097-otazky-vaclava-moravce/213411030510609-otazky-vaclava-moravce-2-cast/"));
             //httpFile.setNewURL(new URL("http://www.ceskatelevize.cz/ivysilani/1126672097-otazky-vaclava-moravce/213411030510609-otazky-vaclava-moravce-2-cast/obsah/265416-pokracovani-debaty-z-1-hodiny-poradu/"));
-            //httpFile.setNewURL(new URL("http://www.ceskatelevize.cz/porady/1104873554-nadmerne-malickosti/video/"));
+            httpFile.setNewURL(new URL("http://www.ceskatelevize.cz/porady/1104873554-nadmerne-malickosti/video/"));
             //httpFile.setNewURL(new URL("http://www.ceskatelevize.cz/ivysilani/1183909575-tyden-v-regionech-ostrava/413231100212014-tyden-v-regionech/obsah/252368-majiteli-reznictvi-v-centru-ostravy-hrozi-az-milionova-pokuta/"));
             //httpFile.setNewURL(new URL("http://www.ceskatelevize.cz/porady/10306517828-mala-farma/313292320310028/video/"));
             //httpFile.setNewURL(new URL("http://www.ceskatelevize.cz/porady/10361564316-sanitka-2/210512120330009/"));
@@ -35,7 +35,8 @@ public class TestApp extends PluginDevApplication {
             //httpFile.setNewURL(new URL("http://www.ceskatelevize.cz/ivysilani/10213448544-evropska-liga-ve-fotbalu/214471291124205-fc-viktoria-plzen-olympique-lyon/?switchitemid=2-214+471+29112%2F4205"));
             //httpFile.setNewURL(new URL("http://www.ceskatelevize.cz/ivysilani/10213448544-evropska-liga-ve-fotbalu/214471291124205-fc-viktoria-plzen-olympique-lyon/?switchitemid=2-214+471+29112%2F4205&fname=Evropsk%C3%A1+liga+ve+fotbalu+-+FC+Viktoria+Plze%C5%88+-+Olympique+Lyon-3"));
             //httpFile.setNewURL(new URL("http://www.ceskatelevize.cz/porady/10639901181-trabantem-jizni-amerikou/213562260150012/bonus/16881"));
-            // httpFile.setNewURL(new URL("http://www.ceskatelevize.cz/zpravodajstvi-brno/zpravy/237520-vosy-se-premnozily-utoku-jejich-zihadel-pribyva/"));
+            //httpFile.setNewURL(new URL("http://www.ceskatelevize.cz/zpravodajstvi-brno/zpravy/237520-vosy-se-premnozily-utoku-jejich-zihadel-pribyva/"));
+            //httpFile.setNewURL(new URL("http://www.ceskatelevize.cz/porady/878516-willy-fog-na-ceste-za-dobrodruzstvim/298381420460002-cesta-na-island/"));
             final ConnectionSettings connectionSettings = new ConnectionSettings();
             //connectionSettings.setProxy("213.192.26.6", 8080); //eg we can use local proxy to sniff HTTP communication
             final CeskaTelevizeServiceImpl service = new CeskaTelevizeServiceImpl();
