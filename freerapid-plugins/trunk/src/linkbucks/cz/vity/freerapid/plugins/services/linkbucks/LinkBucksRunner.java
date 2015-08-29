@@ -36,8 +36,8 @@ class LinkBucksRunner extends AbstractRunner {
             } else if (content.contains("frame id=\"content\"")) {
                 s = getMethodBuilder().setActionFromIFrameSrcWhereTagContains("id=\"content\"").getAction();
             }
-            if ((s.equals("") || s.equals("about:blank")) && (content.contains("/director/?t="))) {
-                final Matcher matchT = PlugUtils.matcher("/director/\\?t=(.+?)[\"']", content);
+            if ((s.equals("") || s.equals("about:blank")) && (content.contains("Token"))) {
+                final Matcher matchT = PlugUtils.matcher("Token\\s*:\\s*[\"'](.+?)[\"']", content);
                 if (!matchT.find())
                     throw new PluginImplementationException("linkbucks token not found");
                 final String token = matchT.group(1);
@@ -65,7 +65,7 @@ class LinkBucksRunner extends AbstractRunner {
                     throw new ServiceConnectionProblemException();
                 }
                 s = PlugUtils.getStringBetween(getContentAsString(), "Url\":\"", "\"");
-            } else {
+            } else if (s.equals("") || s.equals("about:blank")) {
                 throw new PluginImplementationException("Redirect URL not found");
             }
             logger.info("New Link: " + s);

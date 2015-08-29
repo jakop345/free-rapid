@@ -53,7 +53,7 @@ class xHamsterFileRunner extends AbstractRunner {
             checkProblems();
             checkNameAndSize(getContentAsString());
             //final String file = PlugUtils.getStringBetween(getContentAsString(), "&file=", "&");   //flv
-            final String file = PlugUtils.getStringBetween(getContentAsString(), "file=\"", "\"");  //mp4
+            final String file = PlugUtils.getStringBetween(getContentAsString(), "file: '", "'");  //mp4
             final String videoURL;
             if (file.startsWith("http")) {
                 videoURL = URLDecoder.decode(file, "UTF-8");
@@ -90,7 +90,7 @@ class xHamsterFileRunner extends AbstractRunner {
     private void checkURL() {
         if (fileURL.startsWith("https"))
             fileURL = fileURL.replaceFirst("https", "http");
-        fileURL = fileURL.replaceFirst("//.*?xhamster\\.com", "//88.208.24.43");
+        fileURL = fileURL.replaceFirst("//88\\.208\\.24\\.43", "//xhamster.com");
     }
 
 }
