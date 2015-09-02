@@ -6,7 +6,7 @@ package cz.vity.freerapid.plugins.services.iprima;
  */
 public class iPrimaSettingsConfig {
 
-    private Protocol protocol = Protocol.RTMP;
+    private Protocol protocol = Protocol.HLS;
     private VideoQuality videoQuality = VideoQuality.HD;
     private Port port = Port._1935;
 

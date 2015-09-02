@@ -17,7 +17,7 @@ public class TestApp extends PluginDevApplication {
         try {
             // httpFile.setNewURL(new URL("http://depositfiles.com/de/files/7845416"));
             //httpFile.setNewURL(new URL("http://depositfiles.com/en/folders/K50LZLHAY"));
-            httpFile.setNewURL(new URL("http://depositfiles.com/files/fmv7emtwy"));
+            //httpFile.setNewURL(new URL("http://depositfiles.com/files/fmv7emtwy"));
             httpFile.setNewURL(new URL("http://depositfiles.com/files/j5bs97ghj"));
             final ConnectionSettings connectionSettings = new ConnectionSettings();
             // connectionSettings.setProxy("localhost", 8081);
