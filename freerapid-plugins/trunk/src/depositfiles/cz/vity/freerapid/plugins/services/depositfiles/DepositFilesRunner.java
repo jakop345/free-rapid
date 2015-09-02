@@ -94,7 +94,7 @@ class DepositFilesRunner extends AbstractRunner {
 
             while (PlugUtils.find("(?s)check_recaptcha\\s*\\(\\s*'" + fid + "'", getContentAsString())) {
                 if (reCaptchaUrl.equals("")) {
-                    String captchaKey = PlugUtils.getStringBetween(getContentAsString(), "ACPuzzleKey = '", "';");
+                    String captchaKey = PlugUtils.getStringBetween(getContentAsString(), "ACPuzzleKey = '", "'");
                     SolveMediaCaptcha solveMediaCaptcha = new SolveMediaCaptcha(captchaKey, client, getCaptchaSupport(), downloadTask);
                     solveMediaCaptcha.askForCaptcha();
                     method = getMethodBuilder()
