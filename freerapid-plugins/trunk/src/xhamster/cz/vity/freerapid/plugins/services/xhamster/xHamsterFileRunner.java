@@ -88,8 +88,8 @@ class xHamsterFileRunner extends AbstractRunner {
     }
 
     private void checkURL() {
-        if (fileURL.startsWith("https"))
-            fileURL = fileURL.replaceFirst("https", "http");
+        fileURL = fileURL.replaceFirst("https", "http");
+        fileURL = fileURL.replaceFirst("//\\w+\\.xhamster", "//xhamster");
         fileURL = fileURL.replaceFirst("//88\\.208\\.24\\.43", "//xhamster.com");
     }
 

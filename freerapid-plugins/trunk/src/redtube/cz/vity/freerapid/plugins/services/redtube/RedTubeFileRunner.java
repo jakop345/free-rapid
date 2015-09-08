@@ -61,7 +61,8 @@ class RedTubeFileRunner extends AbstractRunner {
 
     private void checkProblems() throws ErrorDuringDownloadingException {
         final String contentAsString = getContentAsString();
-        if (contentAsString.contains("Page Not Found") || contentAsString.contains("is no longer available")) {
+        if (contentAsString.contains("Page Not Found") || contentAsString.contains("is no longer available")
+                || contentAsString.contains("video has been removed")) {
             throw new URLNotAvailableAnymoreException("File not found"); //let to know user in FRD
         }
     }
