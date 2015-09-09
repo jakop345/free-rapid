@@ -8,6 +8,7 @@ import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.MethodBuilder;
 import cz.vity.freerapid.plugins.webclient.hoster.CaptchaSupport;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
+import cz.vity.freerapid.utilities.LogUtils;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -202,7 +203,7 @@ class UlozToRunner extends AbstractRunner {
         String salt;
         String hash;
         try {
-            captchaImg = PlugUtils.getStringBetween(getContentAsString(), "\"image\":\"", "\"").replace("\\/", "/");
+            captchaImg = PlugUtils.getStringBetween(getContentAsString(), "\"image\":\"", "\"").replace("\\/", "/").replaceFirst("^//", "http://");
         } catch (PluginImplementationException e) {
             throw new PluginImplementationException("Captcha image not found");
         }
@@ -242,6 +243,7 @@ class UlozToRunner extends AbstractRunner {
                 logger.info("Auto recog attempt : " + captchaCount);
                 logger.info("Captcha recognized : " + captchaTxt);
             } catch (Exception e) {
+                LogUtils.processException(logger, e);
                 final StringBuilder captchaTxtBuilder = new StringBuilder(4);
                 for (int i = 0; i < 4; i++) {
                     captchaTxtBuilder.append(Character.toChars(random.nextInt(26) + 97)); //throw random chars
