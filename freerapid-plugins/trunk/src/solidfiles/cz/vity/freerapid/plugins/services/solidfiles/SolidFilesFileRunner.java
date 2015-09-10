@@ -56,7 +56,7 @@ class SolidFilesFileRunner extends AbstractRunner {
             String name = httpFile.getFileName();
             if (name.contains(" "))
                 name = name.substring(name.lastIndexOf(" ") +1);
-            final Matcher match = PlugUtils.matcher("<a[^<>]+?href=\"(http.+?" + Pattern.quote(name) + ")\"", contentAsString);
+            final Matcher match = PlugUtils.matcher("<a[^<>]+?ddl[^<>]+?href=\"(http.+?" + Pattern.quote(name) + ")\"", contentAsString);
             if (!match.find()) {
                 throw new PluginImplementationException("Download link not found");
             }
