@@ -19,6 +19,7 @@ public class TestApp extends PluginDevApplication {
         try {
             //we set file URL
             //httpFile.setNewURL(new URL("http://uploaded.net/file/5wnd0ouw/Scryed_Alteration.part31.rar"));
+            //httpFile.setNewURL(new URL("http://ul.to/folder/aec6gu"));
             httpFile.setNewURL(new URL("http://ul.to/0clln81f"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection

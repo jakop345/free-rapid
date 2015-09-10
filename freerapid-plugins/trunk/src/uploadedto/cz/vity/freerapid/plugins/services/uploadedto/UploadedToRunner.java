@@ -54,6 +54,7 @@ class UploadedToRunner extends AbstractRunner {
                     list.add(new URI("http://uploaded.net/" + m.group(1).trim()));
                 }
                 if (list.isEmpty()) throw new PluginImplementationException("No links found");
+                logger.info("Links found : " + list.size());
                 getPluginService().getPluginContext().getQueueSupport().addLinksToQueue(httpFile, list);
                 httpFile.setFileName("Link(s) Extracted !");
                 httpFile.setState(DownloadState.COMPLETED);
@@ -94,7 +95,8 @@ class UploadedToRunner extends AbstractRunner {
     private void checkSizeAndName() throws ErrorDuringDownloadingException {
         if (fileURL.contains("/f/") || fileURL.contains("/folder/")) {
             httpFile.setFileName("Folder : " + PlugUtils.getStringBetween(getContentAsString(), "<title>", "</title>"));
-            httpFile.setFileSize(PlugUtils.getNumberBetween(getContentAsString(), ">(", ")<"));
+            try { httpFile.setFileSize(PlugUtils.getNumberBetween(getContentAsString(), ">(", ")<"));
+            } catch (Exception x) { /*no file count*/ }
         } else {
             final Matcher matcher = getMatcherAgainstContent("<title>(.+?) \\(([^\\(\\)]+?)\\) \\- uploaded\\.(?:to|net)</title>");
             if (!matcher.find()) {

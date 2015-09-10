@@ -1,4 +1,4 @@
-package cz.vity.freerapid.plugins.services.solidfiles;
+package cz.vity.freerapid.plugins.services.uploadex;
 
 import cz.vity.freerapid.plugins.dev.PluginDevApplication;
 import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
@@ -16,14 +16,11 @@ public class TestApp extends PluginDevApplication {
         final HttpFile httpFile = getHttpFile(); //creates new test instance of HttpFile
         try {
             //we set file URL
-            //httpFile.setNewURL(new URL("http://www.solidfiles.com/d/565cfda92d/Everything_Burns_-_Vincent_Zandri.epub"));
-            httpFile.setNewURL(new URL("http://www.solidfiles.com/d/ac6cbed4e7/"));
-            //httpFile.setNewURL(new URL("https://www.solidfiles.com/d/61d8b71dc7/"));
+            httpFile.setNewURL(new URL("https://uploadex.com/fh95zphtjs39"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
-            //then we tries to download
-            final SolidFilesServiceImpl service = new SolidFilesServiceImpl(); //instance of service - of our plugin
+            final UploadExServiceImpl service = new UploadExServiceImpl(); //instance of service - of our plugin
             /*
             //we set premium account details
             final PremiumAccount config = new PremiumAccount();
