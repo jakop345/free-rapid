@@ -10,6 +10,7 @@ import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
 import java.net.URI;
+import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -59,6 +60,14 @@ class DepositFilesRunner extends AbstractRunner {
             checkNameAndSize(getContentAsString());
             checkProblems();
 
+            fileURL = method.getURI().toString(); //dfiles.ru redirected to depositfiles.com
+
+            //depositfiles solvemediacaptcha key depends on the domains (depositfiles.com, dfiles.ru, etc),
+            //it's probably cookies related, so baseURL needs to be set correctly,
+            //or else users will get hard-to-read (but still readable) captcha.
+            URL url = new URL(method.getURI().toString());
+            String baseUrl = url.getProtocol() + "://" + url.getAuthority();
+
             method = getMethodBuilder().setReferer(fileURL).setAction(fileURL).setParameter("free_btn", "Regular downloading").toPostMethod();
             if (!makeRedirectedRequest(method)) {
                 throw new ServiceConnectionProblemException();
@@ -87,7 +96,7 @@ class DepositFilesRunner extends AbstractRunner {
             if (matcher.find())
                 reCaptchaUrl = "http://www.google.com/recaptcha/api/challenge?k=" + matcher.group(1) + "&ajax=1&cachestop=0." + System.currentTimeMillis();
 
-            method = getMethodBuilder().setReferer(fileURL).setAction(getFileUrl).toGetMethod();
+            method = getMethodBuilder().setReferer(fileURL).setBaseURL(baseUrl).setAction(getFileUrl).toGetMethod();
             if (!makeRedirectedRequest(method)) {
                 throw new ServiceConnectionProblemException();
             }
@@ -100,6 +109,7 @@ class DepositFilesRunner extends AbstractRunner {
                     method = getMethodBuilder()
                             .setAction("/get_file.php")
                             .setReferer(fileURL)
+                            .setBaseURL(baseUrl)
                             .setEncodePathAndQuery(true)
                             .setParameter("fid", fid)
                             .setParameter("challenge", solveMediaCaptcha.getChallenge())
@@ -129,6 +139,7 @@ class DepositFilesRunner extends AbstractRunner {
                     method = getMethodBuilder()
                             .setAction("/get_file.php")
                             .setReferer(fileURL)
+                            .setBaseURL(baseUrl)
                             .setEncodePathAndQuery(true)
                             .setParameter("fid", fid)
                             .setParameter("challenge", reCaptcha_challenge)
@@ -146,6 +157,7 @@ class DepositFilesRunner extends AbstractRunner {
                 method = getMethodBuilder()
                         .setAction("/get_file.php")
                         .setReferer(fileURL)
+                        .setBaseURL(baseUrl)
                         .setParameter("fd", matcher.group(1))
                         .toGetMethod();
                 if (!makeRedirectedRequest(method)) {
@@ -156,7 +168,7 @@ class DepositFilesRunner extends AbstractRunner {
                 if (!matcher.find()) {
                     throw new PluginImplementationException("Cannot find download URL (2)");
                 }
-                method = getMethodBuilder().setReferer(fileURL).setAction(matcher.group(1)).toGetMethod();
+                method = getMethodBuilder().setReferer(fileURL).setBaseURL(baseUrl).setAction(matcher.group(1)).toGetMethod();
                 downloadTask.sleep(31);
                 if (!makeRedirectedRequest(method)) {
                     throw new ServiceConnectionProblemException();
