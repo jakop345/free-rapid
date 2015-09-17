@@ -89,7 +89,7 @@ class Keep2ShareFileRunner extends AbstractRunner {
                     checkProblems();
                 } while (getContentAsString().contains("The verification code is incorrect"));
 
-                final Matcher match = PlugUtils.matcher("<div id=\"download-wait-timer\">\\s*?(.+?)\\s*?</div>", getContentAsString());
+                final Matcher match = PlugUtils.matcher("<div id=\"download-wait-timer\"[^<>]*?>\\s*?(.+?)\\s*?</div>", getContentAsString());
                 if (!match.find())
                     throw new PluginImplementationException("Wait time not found");
                 downloadTask.sleep(1 + Integer.parseInt(match.group(1).trim()));
