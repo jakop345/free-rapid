@@ -92,10 +92,11 @@ class UptoBoxFileRunner extends XFileSharingRunner {
         }
         method = getMethodBuilder()
                 .setReferer("https://login.uptobox.com/")
-                .setAction("https://login.uptobox.com/")
-                .setActionFromFormByName("FL", true)
+                .setActionFromFormByName("login-form", true)
+                .setAction("https://login.uptobox.com/logarithme")
                 .setParameter("login", pa.getUsername())
                 .setParameter("password", pa.getPassword())
+                .setParameter("op", "login")
                 .toPostMethod();
         if (!makeRedirectedRequest(method)) {
             throw new ServiceConnectionProblemException();
