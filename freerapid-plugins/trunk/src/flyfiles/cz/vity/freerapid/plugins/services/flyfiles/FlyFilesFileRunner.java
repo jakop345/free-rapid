@@ -3,6 +3,7 @@ package cz.vity.freerapid.plugins.services.flyfiles;
 import cz.vity.freerapid.plugins.exceptions.*;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.FileState;
+import cz.vity.freerapid.plugins.webclient.hoster.CaptchaSupport;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -49,16 +50,35 @@ class FlyFilesFileRunner extends AbstractRunner {
             final String contentAsString = getContentAsString();//check for response
             checkProblems();//check problems
             checkNameAndSize(contentAsString);
-            final String sess = PlugUtils.getStringBetween(contentAsString, "onclick=\"Download('", "')\"");
-            final HttpMethod httpMethod = getMethodBuilder()
-                    .setReferer(fileURL)
-                    .setAction("http://flyfiles.net/")
-                    .setParameter("getDownLink", sess)
-                    .toPostMethod();
-            if (!makeRedirectedRequest(httpMethod)) {
-                checkProblems();
-                throw new ServiceConnectionProblemException();
-            }
+
+            final int wait = PlugUtils.getNumberBetween(contentAsString, "timeWait = ", ";");
+            if (wait > 0)
+                throw new YouHaveToWaitException("Wait between downloads", wait+1);
+
+            boolean captchaLoop;
+            do {
+                captchaLoop = false;
+                final String captcha = doCaptcha(PlugUtils.getStringBetween(contentAsString, "Captcha: <img src=\"", "\""));
+                final String sess = PlugUtils.getStringBetween(contentAsString, "Download('", "'");
+                final HttpMethod httpMethod = getMethodBuilder()
+                        .setReferer(fileURL)
+                        .setAction("http://flyfiles.net/")
+                        .setParameter("getDownLink", sess)
+                        .setParameter("captcha_value", captcha)
+                        .toPostMethod();
+                if (!makeRedirectedRequest(httpMethod)) {
+                    checkProblems();
+                    throw new ServiceConnectionProblemException();
+                }
+                if (getContentAsString().contains("downlinkCaptcha|0")) {
+                    captchaLoop = true;
+                    if (!makeRedirectedRequest(method)) {
+                        checkProblems();
+                        throw new ServiceConnectionProblemException();
+                    }
+                    checkProblems();
+                }
+            } while(captchaLoop);
             final String downloadStr = getContentAsString().replace("#downlink|", "").trim();
             if (downloadStr.matches("#")) {
                 throw new YouHaveToWaitException("You need to wait between downloads", 300);
@@ -80,4 +100,12 @@ class FlyFilesFileRunner extends AbstractRunner {
         }
     }
 
+    private String doCaptcha(final String captchaUrl) throws Exception {
+        final String captcha;
+        final CaptchaSupport captchaSupport = getCaptchaSupport();
+        final String captchaSrc = getMethodBuilder().setAction(captchaUrl).setReferer(fileURL).getEscapedURI();
+        captcha = captchaSupport.getCaptcha(captchaSrc);
+        if (captcha == null) throw new CaptchaEntryInputMismatchException();
+        return captcha;
+    }
 }
