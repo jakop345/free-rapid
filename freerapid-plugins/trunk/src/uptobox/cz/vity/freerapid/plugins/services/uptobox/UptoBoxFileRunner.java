@@ -40,6 +40,9 @@ class UptoBoxFileRunner extends XFileSharingRunner {
         if (content.contains("the file you want is not available")) {
             throw new URLNotAvailableAnymoreException("File not found");
         }
+        if (content.contains("website is currently undergoing maintenance")) {
+            throw new ServiceConnectionProblemException("Website is undergoing maintenance");
+        }
         super.checkFileProblems();
     }
 

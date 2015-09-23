@@ -46,10 +46,15 @@ class TusFilesFileRunner extends XFileSharingRunner {
                     try {
                         httpFile.setFileName(PlugUtils.getStringBetween(content, ">Download", "</").trim().replaceAll("\\s", "."));
                     } catch (Exception ee) {
-                        try {
-                            PlugUtils.checkName(httpFile, content, "globalFileName = '", "';");
-                        } catch (Exception e) {
-                            PlugUtils.checkName(httpFile, content, "?q=", "\"");
+                        final Matcher match2 = PlugUtils.matcher("download\\s*<h1[^<>]*>(?:<[^<>]+?>)*(.+?)(?:<[^<>]+?>)*</h1>", content);
+                        if (match2.find())
+                            httpFile.setFileName(match2.group(1));
+                        else {
+                            try {
+                                PlugUtils.checkName(httpFile, content, "globalFileName = '", "';");
+                            } catch (Exception e) {
+                                PlugUtils.checkName(httpFile, content, "?q=", "\"");
+                            }
                         }
                     }
                 }
