@@ -91,8 +91,9 @@ public class TurboBitFileRunner extends AbstractRunner {
                 throw new PluginImplementationException("File ID not found");
             }
 
+            String ref = method.getURI().toString();
             method = getMethodBuilder()
-                    .setReferer(method.getURI().toString())
+                    .setReferer(ref)
                     .setAction("/download/getLinkTimeout/" + matcher.group(1))
                     .setBaseURL(method.getURI().toString().split("/download/")[0])
                     .toGetMethod();
@@ -110,7 +111,7 @@ public class TurboBitFileRunner extends AbstractRunner {
             }
 
             method = getMethodBuilder()
-                    .setReferer(method.getURI().toString())
+                    .setReferer(ref)
                     .setActionFromAHrefWhereATagContains("Download")
                     .toGetMethod();
             if (!tryDownloadAndSaveFile(method)) {

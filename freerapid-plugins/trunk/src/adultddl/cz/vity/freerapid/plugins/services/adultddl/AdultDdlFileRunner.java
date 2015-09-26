@@ -38,6 +38,11 @@ class AdultDdlFileRunner extends AbstractRunner {
                 throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
             }
         } else {
+            if (httpFile.getFileName() != null) {
+                if (httpFile.getFileName().contains("$$")) {
+                    method.setRequestHeader("Referer", httpFile.getFileName().split("\\$\\$")[1].trim());
+                }
+            }
             if (makeRedirectedRequest(method)) { //we make the main request
                 checkProblems();//check problems
                 if (fileURL.contains("secure.adultddl")) {
@@ -103,6 +108,7 @@ class AdultDdlFileRunner extends AbstractRunner {
                     FileInfo linkList = new FileInfo(new URL(getMethodBuilder(content).setReferer(fileURL).setActionFromIFrameSrcWhereTagContains("secure").getEscapedURI()));
                     linkList.setFileName("Extract links > ");
                     try { linkList.setFileName(linkList.getFileName() + PlugUtils.getStringBetween(content, "<title>", "- AdultDDL</title>").trim()); } catch (Exception e) { /**/ }
+                    linkList.setFileName(linkList.getFileName() +"\n$$"+fileURL);
                     logger.info(linkList.getFileName());
                     list.add(linkList);
                     if (list.isEmpty()) throw new PluginImplementationException("No links found");

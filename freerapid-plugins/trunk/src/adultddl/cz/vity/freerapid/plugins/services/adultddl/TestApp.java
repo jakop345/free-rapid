@@ -18,7 +18,8 @@ public class TestApp extends PluginDevApplication {
             //we set file URL
             httpFile.setNewURL(new URL("http://adultddl.ws/2014/09/09/ztod-com-12-06-29-crack-addict-8-scene-4-xxx-imageset-gush/"));
             //httpFile.setNewURL(new URL("http://img.adultddl.ws/images/T0B7.jpg"));
-            //httpFile.setNewURL(new URL("http://secure.adultddl.ws/?decrypt=201409091331105262"));
+            //httpFile.setNewURL(new URL("http://secure.adultddl.ws/?decrypt=201409091332033600"));   // needs line below for referer
+            //httpFile.setFileName(".........$$http://adultddl.ws/2014/09/09/ztod-com-12-06-29-crack-addict-8-scene-4-xxx-imageset-gush/");
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
