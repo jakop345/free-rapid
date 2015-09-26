@@ -20,7 +20,7 @@ public class TestApp extends PluginDevApplication {
             //    httpFile.setNewURL(new URL("http://turbobit.net/papr4dwbykf9.html"));
             //httpFile.setNewURL(new URL("http://new.turbobit.net/eu5bhkvpcy7j.html"));
             //httpFile.setNewURL(new URL("http://turo-bit.net/xfsd1eygf59l/diiig.rar.html"));
-            httpFile.setNewURL(new URL("http://dl.rapidlinks.org/znva9t0e8nrm.html"));
+            httpFile.setNewURL(new URL("http://turbobit.net/8e7sqv22luxa.html"));
 
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection

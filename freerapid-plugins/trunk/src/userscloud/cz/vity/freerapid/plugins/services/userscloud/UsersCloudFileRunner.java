@@ -48,7 +48,7 @@ class UsersCloudFileRunner extends XFileSharingRunner {
         fileSizeHandlers.add(new FileSizeHandler() {
             @Override
             public void checkFileSize(HttpFile httpFile, String content) throws ErrorDuringDownloadingException {
-                final Matcher match = PlugUtils.matcher("[\\]>][^\\[\\]<>]+? - (\\d[\\d.,]+?\\s\\w*?B(ytes)?)[\\[<]", content);
+                final Matcher match = PlugUtils.matcher(" - (\\d[\\d.,]+?\\s\\w*?B(ytes)?)[\\[<]", content);
                 if (!match.find())
                     throw  new PluginImplementationException("File size not found");
                 httpFile.setFileSize(PlugUtils.getFileSizeFromString(match.group(1).trim()));
