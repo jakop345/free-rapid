@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
  * Class which contains main code
  *
  * @author tong2shot
+ * @author birchie
  */
 class UptoBoxFileRunner extends XFileSharingRunner {
 

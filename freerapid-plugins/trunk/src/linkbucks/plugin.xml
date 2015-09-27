@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
 <plugin class="cz.vity.freerapid.plugins.services.linkbucks.LinkBucksServiceImpl"
-        id="linkbucks.com" vendor="Vity+ntoskrnl+birchie" version="1.2.4">
+        id="linkbucks.com" vendor="Vity+ntoskrnl+birchie" version="1.2.5">
     <attributes>
         <attribute id="urlRegex"
                    value="(https?://([0-9a-z]+?\.)?((linkbucks\.com)|(allanalpass\.com)|(any\.gs)|(baberepublic\.com)|(blahetc\.com)|(cash4files\.com)|(dyo\.gs)|(eafyfsuh\.net)|(filesonthe\.net)|(goneviral\.com)|(linkgalleries\.net)|(linkseer\.net)|(megaline\.co)|(miniurls\.co)|(picturesetc\.net)|(placepictures\.com)|(qqc\.co)|(qvvo\.com)|(realfiles\.net)|(seriousdeals\.net)|(seriousfiles\.com)|(seriousurls\.com)|(thatsprime\.com)|(theseblogs\.com)|(thesefiles\.com)|(theseforums\.com)|(thesegalleries\.com)|(thosegalleries\.com)|(tinybucks\.net)|(tinylinks\.co)|(tubeviral\.com)|(uberpicz\.com)|(ubervidz\.com)|(ubucks\.net)|(ugalleries\.net)|(ultrafiles\.net)|(urlbeat\.net)|(urlpulse\.net)|(viraldatabase\.com)|(whackyvidz\.com)|(youfap\.com)|(yyv\.co)|(zxxo\.net))(/|/.+)?)"/>

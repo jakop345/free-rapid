@@ -52,10 +52,21 @@ class LinkBucksRunner extends AbstractRunner {
                     throw new PluginImplementationException("linkbucks authkey not found");
                 final String authKey = "" + (Long.parseLong(matchKey.group(1)) + Long.parseLong(matchKey.group(2)));
 
-                final HttpMethod httpMethod = getMethodBuilder().setAjax()
+                HttpMethod httpMethod;
+                final Matcher matcher = getMatcherAgainstContent("AdUrl\\s*?:\\s*?'([^']+?)'");
+                if (matcher.find()) {
+                    httpMethod = getMethodBuilder()
+                            .setReferer(fileURL)
+                            .setAction(matcher.group(1))
+                            .toGetMethod();
+                    makeRedirectedRequest(httpMethod);
+                }
+
+                httpMethod = getMethodBuilder()
                         .setAction("/intermission/loadTargetUrl")
                         .setParameter("t", token)
                         .setParameter("aK", authKey)
+                        .setParameter("a_b", "false")
                         .setReferer(fileURL)
                         .toGetMethod();
                 final int wait = PlugUtils.getNumberBetween(content, "Countdown: ", ",");
