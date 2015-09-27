@@ -16,6 +16,7 @@ import org.apache.commons.httpclient.util.URIUtil;
 
 import java.util.Random;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -85,16 +86,22 @@ class iPrimaFileRunner extends AbstractRunner {
                     checkProblems();
                     throw new ServiceConnectionProblemException();
                 }
+
                 final String auth = PlugUtils.getStringBetween(getContentAsString(), "'?auth='+\"\"+'", "';", 2);
                 String app = "iprima_token";
                 if (!"0".equals(geoZone)) {
                     app += "_" + geoZone;
                 }
+                final Matcher matcher = getMatcherAgainstContent("://([^/:]+?\\.livebox\\.cz)(?:\\:\\d+?)?/iprima_token");
+                if (!matcher.find()) {
+                    throw new PluginImplementationException("Base URL not found");
+                }
+                String baseUrl = matcher.group(1);
 
                 if (config.getProtocol() == Protocol.RTMP) {
                     app += "?auth=" + auth;
                     final String playName = getPlayName(mainPageContent);
-                    final RtmpSession rtmpSession = new RtmpSession("bcastmw.livebox.cz", config.getPort().getPort(), app, playName);
+                    final RtmpSession rtmpSession = new RtmpSession(baseUrl, config.getPort().getPort(), app, playName);
                     rtmpSession.getConnectParams().put("pageUrl", fileURL);
                     rtmpSession.getConnectParams().put("swfUrl", "http://embed.livebox.cz/iprimaplay/flash/LiveboxPlayer.swf?nocache=" + System.currentTimeMillis());
                     rtmpSession.disablePauseWorkaround();
@@ -104,7 +111,7 @@ class iPrimaFileRunner extends AbstractRunner {
                     httpFile.setFileName(httpFile.getFileName().replaceFirst(Pattern.quote(DEFAULT_EXT) + "$", ".ts"));
                     String iphId = PlugUtils.getStringBetween(mainPageContent, "\"iph_id\":\"", "\"");
                     app += "/smil:" + iphId + "/playlist.m3u8?auth=" + auth;
-                    String playlistUrl = URIUtil.encodePathQuery("http://bcastmw.livebox.cz/" + app);
+                    String playlistUrl = URIUtil.encodePathQuery("http://" + baseUrl + "/" + app);
                     HlsDownloader hlsDownloader = new AdjustableBitrateHlsDownloader(client, httpFile, downloadTask, config.getVideoQuality().getBitrate());
                     hlsDownloader.tryDownloadAndSaveFile(playlistUrl);
                 }

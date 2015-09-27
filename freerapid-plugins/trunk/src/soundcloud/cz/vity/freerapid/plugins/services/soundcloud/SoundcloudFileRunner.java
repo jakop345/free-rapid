@@ -28,12 +28,13 @@ import java.util.regex.Matcher;
  */
 class SoundcloudFileRunner extends AbstractRunner {
     private final static Logger logger = Logger.getLogger(SoundcloudFileRunner.class.getName());
-    private final static String CLIENT_ID = "b45b1aa10f1ac2941910a7f0d10f8e28";
+    private final static String CLIENT_ID = "02gUJC0hH2ct1EGOcYXQIzRFU91c72Ea";
+    private final static String APP_VERSION = "f3cc0b3";
 
     @Override
     public void runCheck() throws Exception {
         super.runCheck();
-        checkNameAndSize(getTrackInfoNode(new JsonMapper().getObjectMapper()));
+        checkNameAndSize(getTrackInfoNode(new JsonMapper().getObjectMapper(), getMediaId()));
     }
 
     private void checkNameAndSize(JsonNode trackInfoNode) throws ErrorDuringDownloadingException {
@@ -41,7 +42,7 @@ class SoundcloudFileRunner extends AbstractRunner {
         if (title == null) {
             throw new PluginImplementationException("File name not found");
         }
-        httpFile.setFileName(title.trim() + (trackInfoNode.findPath("download_url").isMissingNode() ? ".flv" : ".mp3"));
+        httpFile.setFileName(title.trim() + ".flv");
 
         final int contentSize = trackInfoNode.findPath("original_content_size").getIntValue();
         httpFile.setFileSize(contentSize);
@@ -52,54 +53,43 @@ class SoundcloudFileRunner extends AbstractRunner {
     public void run() throws Exception {
         super.run();
         logger.info("Starting download in TASK " + fileURL);
+
+        String mediaId = getMediaId();
         ObjectMapper mapper = new JsonMapper().getObjectMapper();
-        JsonNode trackInfoNode = getTrackInfoNode(mapper);
+        JsonNode trackInfoNode = getTrackInfoNode(mapper, mediaId);
         checkNameAndSize(trackInfoNode);
 
-        HttpMethod method;
-        String url = trackInfoNode.findPath("download_url").getTextValue();
-        if (url != null) { //downloadable
+        HttpMethod method = getMethodBuilder()
+                .setReferer(fileURL)
+                .setAction(String.format("https://api.soundcloud.com/i1/tracks/%s/streams", mediaId))
+                .setParameter("client_id", CLIENT_ID)
+                .setParameter("app_version", APP_VERSION)
+                .toGetMethod();
+        if (!makeRedirectedRequest(method)) {
+            checkProblems();
+            throw new ServiceConnectionProblemException();
+        }
+        checkProblems();
+
+        JsonNode streamsNode;
+        try {
+            streamsNode = mapper.readTree(getContentAsString());
+        } catch (IOException e) {
+            throw new PluginImplementationException("Error parsing streams info", e);
+        }
+        String streamUrl = streamsNode.findPath("http_mp3_128_url").getTextValue();
+        if (streamUrl != null) {
+            httpFile.setFileName(httpFile.getFileName().replaceFirst("\\..{3,4}$", ".mp3"));
             method = getMethodBuilder()
                     .setReferer(fileURL)
-                    .setAction(url)
-                    .setParameter("client_id", CLIENT_ID)
+                    .setAction(streamUrl)
                     .toGetMethod();
             if (!tryDownloadAndSaveFile(method)) {
                 checkProblems();
                 throw new ServiceConnectionProblemException("Error starting download");
             }
-        } else { //stream
-
-            /*
-            url = trackInfoNode.findPath("stream_url").getTextValue();
-            if (url == null) {
-                throw new PluginImplementationException("Download URL not found");
-            }
-            url.replace("/tracks/", "/i1/tracks/").replace("/stream", "/streams")
-            */
-
-            String id = trackInfoNode.findPath("id").getValueAsText();
-            if (id == null) {
-                throw new PluginImplementationException("Media ID not found");
-            }
-            method = getMethodBuilder()
-                    .setReferer(fileURL)
-                    .setAction(String.format("https://api.soundcloud.com/i1/tracks/%s/streams", id))
-                    .setParameter("client_id", CLIENT_ID)
-                    .toGetMethod();
-            if (!makeRedirectedRequest(method)) {
-                checkProblems();
-                throw new ServiceConnectionProblemException();
-            }
-            checkProblems();
-
-            JsonNode streamsNode;
-            try {
-                streamsNode = mapper.readTree(getContentAsString());
-            } catch (IOException e) {
-                throw new PluginImplementationException("Error parsing streams info", e);
-            }
-            String streamUrl = streamsNode.findPath("rtmp_mp3_128_url").getTextValue();
+        } else {
+            streamUrl = streamsNode.findPath("rtmp_mp3_128_url").getTextValue();
             if (streamUrl == null) {
                 throw new PluginImplementationException("Stream URL not found");
             }
@@ -107,7 +97,6 @@ class SoundcloudFileRunner extends AbstractRunner {
             if (!matcher.find()) {
                 throw new PluginImplementationException("Invalid RTMP URL");
             }
-
             RtmpSession session = new RtmpSession(matcher.group(1), 1935, "", matcher.group(2));
             new RtmpDownloader(client, downloadTask).tryDownloadAndSaveFile(session);
         }
@@ -119,8 +108,29 @@ class SoundcloudFileRunner extends AbstractRunner {
         }
     }
 
-    private JsonNode getTrackInfoNode(ObjectMapper mapper) throws Exception {
-        HttpMethod method = getGetMethod("https://api.sndcdn.com/resolve?url=" + fileURL.replace(":", "%3A") + "&_status_format=json&client_id=" + CLIENT_ID);
+    private String getMediaId() throws IOException, ErrorDuringDownloadingException {
+        HttpMethod method = getGetMethod(fileURL);
+        if (!makeRedirectedRequest(method)) {
+            checkProblems();
+            throw new ServiceConnectionProblemException();
+        }
+        checkProblems();
+
+        Matcher matcher = getMatcherAgainstContent("\"urn\":\"soundcloud:tracks:(\\d+)");
+        if (!matcher.find()) {
+            throw new PluginImplementationException("Media ID not found");
+        }
+        return matcher.group(1);
+    }
+
+    private JsonNode getTrackInfoNode(ObjectMapper mapper, String mediaId) throws Exception {
+        HttpMethod method = getMethodBuilder()
+                .setReferer(fileURL)
+                .setAction("https://api-v2.soundcloud.com/tracks")
+                .setParameter("urns", "soundcloud%3Atracks%3A" + mediaId)
+                .setParameter("client_id", CLIENT_ID)
+                .setParameter("app_version", APP_VERSION)
+                .toGetMethod();
         if (!makeRedirectedRequest(method)) {
             checkProblems();
             throw new ServiceConnectionProblemException();
