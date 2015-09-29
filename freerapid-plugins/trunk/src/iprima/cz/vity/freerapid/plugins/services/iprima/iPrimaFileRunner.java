@@ -97,10 +97,13 @@ class iPrimaFileRunner extends AbstractRunner {
                     throw new PluginImplementationException("Base URL not found");
                 }
                 String baseUrl = matcher.group(1);
+                String playName = getPlayName(mainPageContent);
 
                 if (config.getProtocol() == Protocol.RTMP) {
                     app += "?auth=" + auth;
-                    final String playName = getPlayName(mainPageContent);
+                    if (playName.contains(".mp4") && !playName.startsWith("mp4:")) {
+                        playName = "mp4:" + playName;
+                    }
                     final RtmpSession rtmpSession = new RtmpSession(baseUrl, config.getPort().getPort(), app, playName);
                     rtmpSession.getConnectParams().put("pageUrl", fileURL);
                     rtmpSession.getConnectParams().put("swfUrl", "http://embed.livebox.cz/iprimaplay/flash/LiveboxPlayer.swf?nocache=" + System.currentTimeMillis());
@@ -109,8 +112,7 @@ class iPrimaFileRunner extends AbstractRunner {
                     downloader.tryDownloadAndSaveFile(rtmpSession);
                 } else {
                     httpFile.setFileName(httpFile.getFileName().replaceFirst(Pattern.quote(DEFAULT_EXT) + "$", ".ts"));
-                    String iphId = PlugUtils.getStringBetween(mainPageContent, "\"iph_id\":\"", "\"");
-                    app += "/smil:" + iphId + "/playlist.m3u8?auth=" + auth;
+                    app += "/_definst_/" + playName + "/playlist.m3u8?auth=" + auth;
                     String playlistUrl = URIUtil.encodePathQuery("http://" + baseUrl + "/" + app);
                     HlsDownloader hlsDownloader = new AdjustableBitrateHlsDownloader(client, httpFile, downloadTask, config.getVideoQuality().getBitrate());
                     hlsDownloader.tryDownloadAndSaveFile(playlistUrl);
@@ -145,9 +147,6 @@ class iPrimaFileRunner extends AbstractRunner {
                 throw new PluginImplementationException("Unknown video quality: " + config.getVideoQuality());
         }
         logger.info("Selected quality: " + selectedVideoQuality);
-        if (playName.contains(".mp4") && !playName.startsWith("mp4:")) {
-            playName = "mp4:" + playName;
-        }
         return playName;
     }
 
