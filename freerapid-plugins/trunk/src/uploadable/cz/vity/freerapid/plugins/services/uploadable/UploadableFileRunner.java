@@ -20,7 +20,7 @@ import java.util.regex.Matcher;
  */
 class UploadableFileRunner extends AbstractRunner {
     private final static Logger logger = Logger.getLogger(UploadableFileRunner.class.getName());
-    private final static String BaseURL = "http://www.uploadable.ch";
+    private final static String BaseURL = "https://www.uploadable.ch";
 
     @Override
     public void runCheck() throws Exception { //this method validates file
@@ -62,7 +62,8 @@ class UploadableFileRunner extends AbstractRunner {
     public void run() throws Exception {
         super.run();
         checkUrl();
-        logger.info("Starting download in TASK " + fileURL);GetMethod getMethod = getGetMethod(fileURL);//make first request
+        logger.info("Starting download in TASK " + fileURL);
+        GetMethod getMethod = getGetMethod(fileURL);//make first request
         login();
         int status = client.makeRequest(getMethod,  false);
         if (status/100 == 3) {
@@ -154,6 +155,8 @@ class UploadableFileRunner extends AbstractRunner {
         }
         if (getContentAsString().contains("fail\":\"parallelDownload"))
             throw new YouHaveToWaitException("1 download at a time", 300);
+        if (getContentAsString().contains("we ask you to update your password"))
+            throw new NotRecoverableDownloadException("Password update needed");
     }
 
     private int getWaitTime() throws Exception {
@@ -181,7 +184,7 @@ class UploadableFileRunner extends AbstractRunner {
         return reCaptcha.modifyResponseMethod(builder);
     }
 
-    final static String LOGIN_URL = "http://www.uploadable.ch/login.php";
+    final static String LOGIN_URL = BaseURL + "/login.php";
 
     private void login() throws Exception {
         synchronized (UploadableFileRunner.class) {
