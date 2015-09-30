@@ -130,6 +130,8 @@ public class TurboBitFileRunner extends AbstractRunner {
             throw new URLNotAvailableAnymoreException("File not found");
         if (getContentAsString().contains("Our service is currently unavailable in your country"))
             throw new NotRecoverableDownloadException("Service is unavailable in your country");
+        if (getContentAsString().contains("Limit reached for free download of this file"))
+            throw new NotRecoverableDownloadException("Limit reached for free download of this file");
     }
 
     private void checkDownloadProblems() throws ErrorDuringDownloadingException {
