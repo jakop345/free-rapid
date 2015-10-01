@@ -42,7 +42,7 @@ public class HlsDownloader {
 
     public void tryDownloadAndSaveFile(final String playlistUrl) throws Exception {
         HlsPlaylist hlsPlaylist = new HlsPlaylist(client, playlistUrl); //master playlist
-        HlsMedia media = getSelectedMedia(hlsPlaylist.getMedias());
+        HlsMedia media = getSelectedMedia(hlsPlaylist.getMediaList());
         logger.info("Downloading media: " + media);
         tryDownloadAndSaveFile(media.url, media.getBandwidth(), media.getQuality());
     }
@@ -74,7 +74,7 @@ public class HlsDownloader {
 
         client.getHTTPClient().getParams().setBooleanParameter(DownloadClientConsts.NO_CONTENT_LENGTH_AVAILABLE, true);
 
-        final SegmentRequester requester = getFragmentRequester(hlsPlaylist.getMedias());
+        final SegmentRequester requester = getFragmentRequester(hlsPlaylist.getMediaList());
         InputStream in = new HlsInputStream(requester);
         try {
             downloadTask.saveToFile(in);
