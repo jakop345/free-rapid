@@ -79,9 +79,10 @@ class MediafireRunner extends AbstractRunner {
             PlugUtils.checkName(httpFile, getContentAsString(), "<meta property=\"og:title\" content=\"", "\" />");
             final Matcher matcher = getMatcherAgainstContent("oFileSharePopup\\.ald\\('.+?','.+?','(\\d+?)'");
             if (!matcher.find()) {
-                throw new PluginImplementationException("File size not found");
+                PlugUtils.checkFileSize(httpFile, getContentAsString(), "File size: <span>", "</span");
+            } else {
+                httpFile.setFileSize(Long.parseLong(matcher.group(1)));
             }
-            httpFile.setFileSize(Long.parseLong(matcher.group(1)));
         }
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
@@ -304,6 +305,7 @@ class MediafireRunner extends AbstractRunner {
             return "http://www.mediafire.com/?" + fileId;
         }
 
+        @SuppressWarnings("NullableProblems")
         @Override
         public int compareTo(final FolderItem that) {
             return this.fileName.compareTo(that.fileName);
