@@ -10,7 +10,6 @@ import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
 
 /**
  * Class which contains main code
@@ -35,6 +34,7 @@ class SunPornoFileRunner extends AbstractRunner {
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
         PlugUtils.checkName(httpFile, content, "<title>", "</title>");
+        httpFile.setFileName(httpFile.getFileName() + ".flv");
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
 
@@ -47,21 +47,8 @@ class SunPornoFileRunner extends AbstractRunner {
             final String contentAsString = getContentAsString();//check for response
             checkProblems();//check problems
             checkNameAndSize(contentAsString);//extract file name and size from the page
-
-            HttpMethod httpMethod = getGetMethod(PlugUtils.getStringBetween(contentAsString, "<a href=\"", "\">Download movie"));
-            if (!makeRedirectedRequest(httpMethod)) {
-                checkProblems();
-                throw new ServiceConnectionProblemException("Error getting download link");
-            }
-            httpMethod = getGetMethod(PlugUtils.getStringBetween(getContentAsString(), "href=\"", "\"> Click here to download"));
-
-            Matcher match = PlugUtils.matcher("href=\".+(\\.\\w{3})\"> Click here to download", getContentAsString());
-            if (!match.find()) {
-                throw new ErrorDuringDownloadingException("Error getting file type");
-            }
-            httpFile.setFileName(httpFile.getFileName() + match.group(1));
-
-            //here is the download link extraction
+            final String dlUrl = PlugUtils.getStringBetween(contentAsString, "<a href=\"", "\">Download movie");
+            final HttpMethod httpMethod = getGetMethod(dlUrl.substring(0, dlUrl.indexOf("\"")));
             if (!tryDownloadAndSaveFile(httpMethod)) {
                 checkProblems();//if downloading failed
                 throw new ServiceConnectionProblemException("Error starting download");//some unknown problem

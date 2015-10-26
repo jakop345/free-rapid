@@ -1,6 +1,7 @@
 package cz.vity.freerapid.plugins.services.beeg;
 
 import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
+import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;
 import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
 import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
@@ -28,7 +29,7 @@ class BeegFileRunner extends AbstractRunner {
     @Override
     public void runCheck() throws Exception { //this method validates file
         super.runCheck();
-        final GetMethod getMethod = getGetMethod(fileURL);//make first request
+        final GetMethod getMethod = getGetMethod(getInfoUrl());//make first request
         if (makeRedirectedRequest(getMethod)) {
             checkProblems();
             checkNameAndSize(getContentAsString());//ok let's extract file name and size from the page
@@ -38,11 +39,15 @@ class BeegFileRunner extends AbstractRunner {
         }
     }
 
+    private String getInfoUrl() throws Exception {
+        Matcher match = PlugUtils.matcher("beeg\\.com/(\\d+)", fileURL);
+        if (!match.find()) throw new PluginImplementationException("Video ID not found");
+        return "http://beeg.com/api/v1/video/" + match.group(1);
+    }
+
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        PlugUtils.checkName(httpFile, content, "<meta name=\"description\" content=\"", "\" />");
-        Matcher match = PlugUtils.matcher("'file':\\s*'.+(\\.\\w{3})',", content);
-        if (match.find())
-            httpFile.setFileName(httpFile.getFileName() + match.group(1));
+        PlugUtils.checkName(httpFile, content, "\"title\":\"", "\"");
+        httpFile.setFileName(httpFile.getFileName() + ".mp4");
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
 
@@ -50,7 +55,7 @@ class BeegFileRunner extends AbstractRunner {
     public void run() throws Exception {
         super.run();
         logger.info("Starting download in TASK " + fileURL);
-        final GetMethod method = getGetMethod(fileURL); //create GET request
+        final GetMethod method = getGetMethod(getInfoUrl()); //create GET request
         if (makeRedirectedRequest(method)) { //we make the main request
             final String contentAsString = getContentAsString();//check for response
             checkProblems();//check problems
@@ -60,9 +65,12 @@ class BeegFileRunner extends AbstractRunner {
             final String quality = config.toString();
             logger.info("Preferred Quality : " + quality);
             String fileUrl;
-            final Matcher match = PlugUtils.matcher("'"+quality+"'\\s*?:\\s*?'(.+?"+quality+".+?)'", contentAsString);
-            if (match.find())
+            final Matcher match = PlugUtils.matcher("\""+quality+"\":\"(.+?)\"", contentAsString);
+            if (match.find()) {
                 fileUrl = match.group(1);
+                fileUrl = fileUrl.replaceFirst(".+?video.beeg.com", "http://video.beeg.com");
+                fileUrl = fileUrl.replace("{DATA_MARKERS}", "data=pc.US");
+            }
             else // default quality on page
                 fileUrl = PlugUtils.getStringBetween(contentAsString, "'file': '", "',");
 

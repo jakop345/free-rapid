@@ -1,6 +1,7 @@
 package cz.vity.freerapid.plugins.services.uptodo;
 
 import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
+import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;
 import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
 import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
@@ -10,6 +11,7 @@ import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
 
 /**
  * Class which contains main code
@@ -48,18 +50,11 @@ class UpToDoFileRunner extends AbstractRunner {
             checkNameAndSize(content);
             int wait = PlugUtils.getNumberBetween(getContentAsString(), "var seconds = ", ";");
             if (wait > 0) downloadTask.sleep(wait + 1);
+            Matcher match = PlugUtils.matcher("download-timer'\\).html\\(\"<a.+?href='(.+?)'", getContentAsString());
+            if (!match.find())
+                throw new PluginImplementationException("Download link not found");
             HttpMethod httpMethod = getMethodBuilder()
-                    .setActionFromTextBetween("<a class='btn btn-free' href='", "'>")
-                    .toGetMethod();
-            if (!makeRedirectedRequest(httpMethod)) {
-                checkProblems();
-                throw new ServiceConnectionProblemException();
-            }
-            checkProblems();
-            wait = PlugUtils.getNumberBetween(getContentAsString(), "var seconds = ", ";");
-            if (wait > 0) downloadTask.sleep(wait + 1);
-            httpMethod = getMethodBuilder()
-                    .setActionFromTextBetween("<a class='btn btn-default' href='", "'>")
+                    .setAction(match.group(1)).setReferer(fileURL)
                     .toGetMethod();
             if (!tryDownloadAndSaveFile(httpMethod)) {
                 checkProblems();//if downloading failed
