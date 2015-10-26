@@ -10,8 +10,12 @@ import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Class which contains main code
@@ -49,9 +53,14 @@ class VidziFileRunner extends AbstractRunner {
             final String contentAsString = getContentAsString();//check for response
             checkProblems();//check problems
             checkNameAndSize(contentAsString);//extract file name and size from the page
-            final Matcher match = PlugUtils.matcher("\\},\\{\\s*?file\\s*?\\:\\s*?\"(.+?)\"", contentAsString);
-            if (!match.find())
-                throw new PluginImplementationException("Video url not found");
+            final String regex = "\\},\\{\\s*?file\\s*?\\:\\s*?\"(.+?)\"";
+            Matcher match = PlugUtils.matcher(regex, contentAsString);
+            if (!match.find()) {
+                match = PlugUtils.matcher(regex, unPackJavaScript());
+                if (!match.find()) {
+                    throw new PluginImplementationException("Video url not found");
+                }
+            }
             final HttpMethod httpMethod = getMethodBuilder().setReferer(fileURL)
                     .setAction(match.group(1))
                     .toGetMethod();
@@ -73,4 +82,25 @@ class VidziFileRunner extends AbstractRunner {
         }
     }
 
+
+    protected String unPackJavaScript() throws ErrorDuringDownloadingException {
+        final Matcher jsMatcher = getMatcherAgainstContent("<script type='text/javascript'>\\s*?(" + Pattern.quote("eval(function(p,a,c,k,e,d)") + ".+?)\\s*?</script>");
+        String jsString = null;
+        while (jsMatcher.find()) {
+            jsString = jsMatcher.group(1).replaceFirst(Pattern.quote("eval(function(p,a,c,k,e,d)"), "function test(p,a,c,k,e,d)")
+                    .replaceFirst(Pattern.quote("return p}"), "return p};test").replaceFirst(Pattern.quote(".split('|')))"), ".split('|'));");
+            if (jsString.contains("jwplayer"))
+                break;
+        }
+        if (jsString == null) {
+            throw new PluginImplementationException("javascript not found");
+        }
+        final ScriptEngineManager manager = new ScriptEngineManager();
+        final ScriptEngine engine = manager.getEngineByName("javascript");
+        try {
+            return (String) engine.eval(jsString);
+        } catch (ScriptException e) {
+            throw new PluginImplementationException("JavaScript eval failed");
+        }
+    }
 }

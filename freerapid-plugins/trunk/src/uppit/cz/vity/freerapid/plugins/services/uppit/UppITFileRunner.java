@@ -1,12 +1,14 @@
 package cz.vity.freerapid.plugins.services.uppit;
 
 import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
+import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
 import cz.vity.freerapid.plugins.services.xfilesharing.XFileSharingRunner;
 import cz.vity.freerapid.plugins.services.xfilesharing.nameandsize.FileNameHandler;
 import cz.vity.freerapid.plugins.services.xfilesharing.nameandsize.FileSizeHandler;
 import cz.vity.freerapid.plugins.webclient.MethodBuilder;
 import cz.vity.freerapid.plugins.webclient.interfaces.HttpFile;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
+import org.apache.commons.httpclient.HttpMethod;
 
 import java.util.List;
 
@@ -26,6 +28,16 @@ class UppITFileRunner extends XFileSharingRunner {
             }
         });
         return fileNameHandlers;
+    }
+
+    @Override
+    protected void correctURL() throws Exception {
+        if (fileURL.contains("up.ht/")) {
+            HttpMethod httpMethod = getGetMethod(fileURL);
+            if (makeRedirectedRequest(httpMethod)) {
+                fileURL = httpMethod.getURI().getURI();
+            }
+        }
     }
 
     @Override
@@ -63,4 +75,11 @@ class UppITFileRunner extends XFileSharingRunner {
         return downloadLinkRegexes;
     }
 
+    @Override
+    protected void checkFileProblems(final String content) throws ErrorDuringDownloadingException {
+        if (content.contains("requested URL was not found")) {
+            throw new URLNotAvailableAnymoreException("File not found");
+        }
+        super.checkFileProblems(content);
+    }
 }
