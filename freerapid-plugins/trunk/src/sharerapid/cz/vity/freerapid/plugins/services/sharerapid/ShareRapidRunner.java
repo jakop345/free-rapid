@@ -9,6 +9,7 @@ import cz.vity.freerapid.plugins.webclient.DownloadState;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.hoster.PremiumAccount;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
+import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 
@@ -52,8 +53,14 @@ class ShareRapidRunner extends AbstractRunner {
             Login(serverURL);
 
             Matcher matcher = PlugUtils.matcher("(?:<h1>|<div class=\"download_button_group\">|<div style=\"margin: 30px 0 10px 30px;\">|<span style=\"padding: 12px 0px 0px 10px; display: block\">)\\s*?<a href=\"([^\"]+)\" title=\"[^\"]+\">.+?</a>", getContentAsString());
-            if (matcher.find()) {
-                String downURL = matcher.group(1);
+            Matcher matcher2 = PlugUtils.matcher("<a href=\"(.+?)\" class=\".*?download-button.*?\">.*?Stáhnout soubor.*?</a>", getContentAsString());
+            boolean match2 = matcher2.find();
+            if (matcher.find() || match2) {
+                String downURL;
+                if (match2)
+                    downURL = matcher2.group(1);
+                else
+                    downURL = matcher.group(1);
                 if (!downURL.contains("http://"))
                     downURL = serverURL + downURL;
                 for (int i = 0; i <= maxReconnect; i++) {
@@ -64,6 +71,7 @@ class ShareRapidRunner extends AbstractRunner {
                         return;
                     if (!getContentAsString().equals(""))
                         checkProblems();
+logger.info("###############"+getContentAsString()+"################");
                     downloadTask.sleep(timeToCheck);
 
                     /*
@@ -94,9 +102,13 @@ class ShareRapidRunner extends AbstractRunner {
         if (matcher.find())
             httpFile.setFileName(matcher.group(1).trim());
         else
-            PlugUtils.checkName(httpFile, content, "<h1>", "</h1>");
-
-        matcher = PlugUtils.matcher("<td class=\"i\">Velikost:</td>\\s*?<td class=\"h\"><strong>\\s*?([0-9].+?B)</strong></td>", content);
+        {   matcher = PlugUtils.matcher("<title>Soubor(.+?)\\(", content);
+            if (matcher.find())
+                httpFile.setFileName(matcher.group(1).trim());
+            else
+                PlugUtils.checkName(httpFile, content, "<h1>", "</h1>");
+        }
+        matcher = PlugUtils.matcher("Velikost:.+?([0-9].+?B)<", content);
         if (matcher.find()) {
             httpFile.setFileSize(PlugUtils.getFileSizeFromString(matcher.group(1).trim().replace("iB", "B")));
         }
@@ -114,6 +126,24 @@ class ShareRapidRunner extends AbstractRunner {
                 }
                 badConfig = false;
             }                   */
+                if (serverURL.contains("file-share.top")) {
+                    String postURL = serverURL + "//login";
+                    GetMethod getmethod = getGetMethod(postURL);
+                    if (!makeRequest(getmethod))
+                        throw new PluginImplementationException();
+                    HttpMethod httpMethod = getMethodBuilder()
+                            .setActionFromFormWhereTagContains("password", true)
+                            .setAction(postURL).setReferer(postURL)
+                            .setParameter("email", pa.getUsername())
+                            .setParameter("password", pa.getPassword())
+                            .toPostMethod();
+
+                    if (makeRedirectedRequest(httpMethod)) {
+                        if (!getContentAsString().contains("logout")) {
+                            throw new NotRecoverableDownloadException("Bad ShareRapid account login information!");
+                        }
+                    }
+                } else {
                 String postURL = serverURL + "/prihlaseni/";
 
                 GetMethod getmethod = getGetMethod(postURL);
@@ -131,6 +161,7 @@ class ShareRapidRunner extends AbstractRunner {
                         throw new NotRecoverableDownloadException("Bad ShareRapid account login information!");
                     }
                 }
+                }
                 GetMethod getMethod = getGetMethod(fileURL);
                 if (!makeRedirectedRequest(getMethod)) {
                     throw new PluginImplementationException();
@@ -147,6 +178,8 @@ class ShareRapidRunner extends AbstractRunner {
         //    throw new ErrorDuringDownloadingException("Stahování je přístupné pouze přihlášeným uživatelům");
         if (content.contains("Stahování zdarma je možné jen přes náš"))
             throw new NotRecoverableDownloadException("Stahování zdarma je možné jen přes náš download manager");
+        if (content.contains("Chcete-li stahovat, musíte se přihlásit"))
+            throw new NotRecoverableDownloadException("Chcete-li stahovat, musíte se přihlásit (To download, must be logged in)");
         if (content.contains("Soubor nelze stáhnout, aktuálně nemáte aktivní žádné předplacené služby."))
             throw new NotRecoverableDownloadException("Soubor nelze stáhnout, aktuálně nemáte aktivní žádné předplacené služby.");
 

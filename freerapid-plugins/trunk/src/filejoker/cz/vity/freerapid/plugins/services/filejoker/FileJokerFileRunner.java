@@ -1,13 +1,12 @@
 package cz.vity.freerapid.plugins.services.filejoker;
 
-import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
-import cz.vity.freerapid.plugins.exceptions.NotRecoverableDownloadException;
-import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;
-import cz.vity.freerapid.plugins.exceptions.YouHaveToWaitException;
+import cz.vity.freerapid.plugins.exceptions.*;
 import cz.vity.freerapid.plugins.services.xfilesharing.XFileSharingRunner;
 import cz.vity.freerapid.plugins.services.xfilesharing.nameandsize.FileNameHandler;
+import cz.vity.freerapid.plugins.webclient.hoster.PremiumAccount;
 import cz.vity.freerapid.plugins.webclient.interfaces.HttpFile;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
+import org.apache.commons.httpclient.HttpMethod;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -66,4 +65,26 @@ class FileJokerFileRunner extends XFileSharingRunner {
         }
     }
 
+    @Override
+    protected void doLogin(final PremiumAccount pa) throws Exception {
+        HttpMethod method = getMethodBuilder().setAjax()
+                .setReferer(getBaseURL())
+                .setAction(getBaseURL() + "/login")
+                .toGetMethod();
+        if (!makeRedirectedRequest(method)) {
+            throw new ServiceConnectionProblemException();
+        }
+        method = getMethodBuilder().setAjax()
+                .setReferer(getBaseURL() + "/login")
+                .setActionFromFormByName("FL", true)
+                .setParameter("email", pa.getUsername())
+                .setParameter("password", pa.getPassword())
+                .toPostMethod();
+        if (!makeRedirectedRequest(method)) {
+            throw new ServiceConnectionProblemException();
+        }
+        if (getContentAsString().contains("Incorrect Login or Password")) {
+            throw new BadLoginException("Invalid account login information");
+        }
+    }
 }
