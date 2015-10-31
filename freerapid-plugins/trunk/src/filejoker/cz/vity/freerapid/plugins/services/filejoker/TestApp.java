@@ -2,6 +2,7 @@ package cz.vity.freerapid.plugins.services.filejoker;
 
 import cz.vity.freerapid.plugins.dev.PluginDevApplication;
 import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
+import cz.vity.freerapid.plugins.webclient.hoster.PremiumAccount;
 import cz.vity.freerapid.plugins.webclient.interfaces.HttpFile;
 import org.jdesktop.application.Application;
 
@@ -16,17 +17,17 @@ public class TestApp extends PluginDevApplication {
         final HttpFile httpFile = getHttpFile(); //creates new test instance of HttpFile
         try {
             //we set file URL
-            httpFile.setNewURL(new URL("https://filejoker.net/b32mkb42zx1a"));
+            httpFile.setNewURL(new URL("https://filejoker.net/ohr9pxky8rpi/mqs.link_six.part01.rar"));
             //httpFile.setNewURL(new URL("https://filejoker.net/5odpnu113pdr/08.tgs128d.vob"));   // premium only
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
             final FileJokerServiceImpl service = new FileJokerServiceImpl(); //instance of service - of our plugin
-            /*
+            //*
             //we set premium account details
             final PremiumAccount config = new PremiumAccount();
-            config.setUsername("****");
-            config.setPassword("****");
+            config.setUsername("gailsymonns@yahoo.com");
+            config.setPassword("1qa2ws3ed");
             service.setConfig(config);
             //*/
             //runcheck makes the validation
