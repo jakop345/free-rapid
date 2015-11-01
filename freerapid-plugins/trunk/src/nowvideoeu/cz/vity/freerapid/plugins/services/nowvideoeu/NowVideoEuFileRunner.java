@@ -35,6 +35,14 @@ class NowVideoEuFileRunner extends AbstractRunner {
         final GetMethod getMethod = getGetMethod(fileURL);
         if (makeRedirectedRequest(getMethod)) {
             checkProblems();
+            if (!makeRedirectedRequest(getMethodBuilder()
+                    .setActionFromFormWhereTagContains("Continue to the video", true)
+                    .setAction(fileURL)
+                    .toPostMethod())) {
+                checkProblems();
+                throw new ServiceConnectionProblemException();
+            }
+            checkProblems();
             checkNameAndSize();
         } else {
             checkProblems();
@@ -60,6 +68,14 @@ class NowVideoEuFileRunner extends AbstractRunner {
         logger.info("Starting download in TASK " + fileURL);
         final GetMethod method = getGetMethod(fileURL);
         if (makeRedirectedRequest(method)) {
+            checkProblems();
+            if (!makeRedirectedRequest(getMethodBuilder()
+                    .setActionFromFormWhereTagContains("Continue to the video", true)
+                    .setAction(fileURL)
+                    .toPostMethod())) {
+                checkProblems();
+                throw new ServiceConnectionProblemException();
+            }
             checkProblems();
             checkNameAndSize();
 
