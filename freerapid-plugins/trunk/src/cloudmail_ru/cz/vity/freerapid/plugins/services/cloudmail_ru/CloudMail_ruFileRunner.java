@@ -5,9 +5,11 @@ import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;
 import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
 import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
+import cz.vity.freerapid.plugins.webclient.DownloadState;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.utils.JsonMapper;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
+import cz.vity.freerapid.utilities.LogUtils;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.codehaus.jackson.JsonNode;
@@ -36,7 +38,7 @@ class CloudMail_ruFileRunner extends AbstractRunner {
         if (makeRedirectedRequest(getMethod)) {
             fileURL = getMethod.getURI().toString(); // /weblink/ redirected to /public/
             checkProblems();
-            checkNameAndSize(getListNode(getContentAsString(), getFileId(fileURL)));
+            checkNameAndSize(getListNode(getRootNode(getContentAsString()), getFileId(fileURL)));
         } else {
             checkProblems();
             throw new ServiceConnectionProblemException();
@@ -69,16 +71,28 @@ class CloudMail_ruFileRunner extends AbstractRunner {
         if (makeRedirectedRequest(method)) {
             fileURL = method.getURI().toString(); // /weblink/ redirected to /public/
             checkProblems();
-            JsonNode listNode = getListNode(getContentAsString(), getFileId(fileURL));
+            String fileId = getFileId(fileURL);
+            JsonNode rootNode = getRootNode(getContentAsString());
+            JsonNode listNode = getListNode(rootNode, fileId);
             checkNameAndSize(listNode);
             if (isFolder(listNode)) {
                 parseFolder(listNode);
             } else {
-                String downloadUrl = listNode.findPath("url").findPath("get").getTextValue();
-                if (downloadUrl == null) {
+                String webLinkGetUrl = rootNode.findPath("dispatcher").findPath("weblink_get").findPath("url").getTextValue();
+                if (webLinkGetUrl == null) {
                     throw new PluginImplementationException("Error getting download URL");
                 }
-                method = getMethodBuilder().setReferer(fileURL).setAction(downloadUrl).toHttpMethod();
+                String downloadUrl;
+                try {
+                    downloadUrl = new URI(webLinkGetUrl).resolve(fileId).toString();
+                } catch (URISyntaxException e) {
+                    throw new PluginImplementationException("Error parsing download URL");
+                }
+                method = getMethodBuilder()
+                        .setReferer(fileURL)
+                        .setAction(downloadUrl)
+                        .setParameter("x-email", "undefined")
+                        .toHttpMethod();
                 if (!tryDownloadAndSaveFile(method)) {
                     checkProblems();
                     throw new ServiceConnectionProblemException("Error starting download");
@@ -97,6 +111,8 @@ class CloudMail_ruFileRunner extends AbstractRunner {
         }
     }
 
+    //API call is not used to get list node, because it will complicate folder parsing,
+    //and because browser doesn't call the API to get list node either.
     private void checkFileProblemsApi(String fileId) throws Exception {
         String apiUrl = "https://cloud.mail.ru/api/v1/folder/recursive?storage=public&id=" + URLEncoder.encode(fileId, "UTF-8")
                 + "&sort=%7B%22type%22%3A%22name%22%2C%22order%22%3A%22asc%22%7D&api=1&htmlencoded=false&build=hotfix-21-11.201408051855";
@@ -115,7 +131,7 @@ class CloudMail_ruFileRunner extends AbstractRunner {
         return fileId;
     }
 
-    private JsonNode getListNode(String content, String fileId) throws Exception {
+    private JsonNode getRootNode(String content) throws ErrorDuringDownloadingException {
         Matcher matcher = PlugUtils.matcher("(?s)cloudBuilder\\((.+?)\\);", content);
         if (!matcher.find()) {
             throw new PluginImplementationException("Error getting JSON content");
@@ -127,9 +143,12 @@ class CloudMail_ruFileRunner extends AbstractRunner {
         try {
             rootNode = mapper.readTree(jsonContent);
         } catch (Exception e) {
-            throw new PluginImplementationException("Error parsing JSON");
+            throw new PluginImplementationException("Error parsing JSON", e);
         }
+        return rootNode;
+    }
 
+    private JsonNode getListNode(JsonNode rootNode, String fileId) throws Exception {
         JsonNode foldersNodes = rootNode.findPath("folders");
         if (foldersNodes.isMissingNode()) {
             checkFileProblemsApi(fileId);
@@ -139,7 +158,7 @@ class CloudMail_ruFileRunner extends AbstractRunner {
         for (JsonNode foldersNode : foldersNodes) {
             JsonNode listNodes = foldersNode.findPath("list");
             for (JsonNode listNode : listNodes) {
-                if (listNode.get("id").getTextValue().equals(fileId)) {
+                if (listNode.findPath("id").getTextValue().equals(fileId)) {
                     selectedListNode = listNode;
                     break;
                 }
@@ -159,13 +178,18 @@ class CloudMail_ruFileRunner extends AbstractRunner {
         List<URI> list = new LinkedList<URI>();
         JsonNode itemsNode = listNode.findPath("items");
         for (JsonNode item : itemsNode) {
-            list.add(new URI("https://cloud.mail.ru/public/" + item.getTextValue()));
+            try {
+                list.add(new URI("https://cloud.mail.ru/public/" + item.getTextValue()));
+            } catch (Exception e) {
+                LogUtils.processException(logger, e);
+            }
         }
         if (list.isEmpty()) {
             throw new PluginImplementationException("No links found");
         }
         getPluginService().getPluginContext().getQueueSupport().addLinksToQueue(httpFile, list);
         logger.info(list.size() + " links added");
+        httpFile.setState(DownloadState.COMPLETED);
         httpFile.getProperties().put("removeCompleted", true);
     }
 }
