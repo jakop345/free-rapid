@@ -2,7 +2,6 @@ package cz.vity.freerapid.plugins.services.filejoker;
 
 import cz.vity.freerapid.plugins.dev.PluginDevApplication;
 import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
-import cz.vity.freerapid.plugins.webclient.hoster.PremiumAccount;
 import cz.vity.freerapid.plugins.webclient.interfaces.HttpFile;
 import org.jdesktop.application.Application;
 
@@ -23,11 +22,11 @@ public class TestApp extends PluginDevApplication {
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
             final FileJokerServiceImpl service = new FileJokerServiceImpl(); //instance of service - of our plugin
-            //*
+            /*
             //we set premium account details
             final PremiumAccount config = new PremiumAccount();
-            config.setUsername("gailsymonns@yahoo.com");
-            config.setPassword("1qa2ws3ed");
+            config.setUsername("****");
+            config.setPassword("****");
             service.setConfig(config);
             //*/
             //runcheck makes the validation

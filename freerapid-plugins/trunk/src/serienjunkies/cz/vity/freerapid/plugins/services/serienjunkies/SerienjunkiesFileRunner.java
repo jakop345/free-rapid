@@ -91,6 +91,9 @@ class SerienjunkiesFileRunner extends AbstractRunner {
         if (getContentAsString().contains("404 Not Found")) {
             throw new URLNotAvailableAnymoreException("File not found");
         }
+        if (getContentAsString().contains("website is not available in your country")) {
+            throw new NotRecoverableDownloadException("Serienjunkies is not available in your country");
+        }
     }
 
     @Override
