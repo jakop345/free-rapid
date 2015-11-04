@@ -165,7 +165,7 @@ class UlozToRunner extends AbstractRunner {
         String size;
         try {
             //tady nema byt id=, jinak to prestane fungovat
-            size = PlugUtils.getStringBetween(content, "<span class=\"fileSize\">", "</span>");
+            size = PlugUtils.getStringBetween(content, "<span id=\"fileSize\">", "</span>");
             if (size.contains("|")) {
                 size = size.substring(size.indexOf("|") + 1).trim();
             }
