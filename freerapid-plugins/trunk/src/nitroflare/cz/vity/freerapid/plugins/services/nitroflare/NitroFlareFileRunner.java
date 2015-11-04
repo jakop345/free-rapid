@@ -61,7 +61,7 @@ class NitroFlareFileRunner extends AbstractRunner {
         if (makeRedirectedRequest(method)) {
             checkProblems();
             checkNameAndSize(getContentAsString());
-            fileURL = method.getURI().toString(); //http://www.nitroflare redirected to http://nitrofla
+            fileURL = method.getURI().toString(); //http://www.nitroflare redirected to http://nitroflare
 
             String fileId = getFileId(fileURL);
             String freePageContent = null;
@@ -84,6 +84,12 @@ class NitroFlareFileRunner extends AbstractRunner {
             if ((freePageContent == null) || (i >= MAX_FREE_PAGE_ATTEMPT)) {
                 throw new PluginImplementationException("Error getting free page content");
             }
+            int waitTime = 180;
+            try {
+                PlugUtils.getNumberBetween(getContentAsString(), "data-timer=\"", "\"");
+            } catch (PluginImplementationException e) {
+                //
+            }
             fileURL = method.getURI().toString() + "/free"; //redirected to /free, explicit because of POST
             setCookie(fileId);
 
@@ -101,7 +107,7 @@ class NitroFlareFileRunner extends AbstractRunner {
             }
             checkProblems();
 
-            downloadTask.sleep(61); //waiting time var -> https://www.nitroflare.com/js/downloadFree.js?v=1.0.2
+            downloadTask.sleep(waitTime);
             do {
                 stepCaptcha(freePageContent);
             } while (getContentAsString().contains("The captcha wasn't entered correctly")
