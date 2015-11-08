@@ -40,7 +40,7 @@ public class SolveMediaCaptcha {
     private final static Logger logger = Logger.getLogger(SolveMediaCaptcha.class.getName());
     private final static String SOLVEMEDIA_CAPTCHA_URL = "http://api.solvemedia.com/papi/";
     private final static String SOLVEMEDIA_CAPTCHA_SECURE_URL = "https://api-secure.solvemedia.com/papi/";
-    private final static String C_FORMAT = "js,h5c,h5ct,svg,h5v,v/ogg,v/webm,h5a,a/ogg,ua/firefox,ua/firefox41,os/nt,os/nt6.1,%s,jslib/jquery,jslib/jqueryui";
+    private final static String C_FORMAT = "js,h5c,h5ct,svg,h5v,v/ogg,v/webm,h5a,a/ogg,ua/firefox,ua/firefox42,os/nt,os/nt6.1,%s,jslib/jquery,jslib/jqueryui";
 
     private final String publicKey;
     private final HttpDownloadClient client;
@@ -347,7 +347,7 @@ public class SolveMediaCaptcha {
                 .setBaseURL(baseUrl)
                 .setAction(action)
                 .toGetMethod();
-        method.setRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:41.0) Gecko/20100101 Firefox/41.0");
+        method.setRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:42.0) Gecko/20100101 Firefox/42.0");
         method.setRequestHeader("Accept", "*/*");
         method.setRequestHeader("Accept-Language", "en-US,en;q=0.5");
         method.setRequestHeader("Connection", "keep-alive");
