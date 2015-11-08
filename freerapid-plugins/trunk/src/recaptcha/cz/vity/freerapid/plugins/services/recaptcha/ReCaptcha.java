@@ -6,8 +6,10 @@ import cz.vity.freerapid.plugins.webclient.interfaces.HttpDownloadClient;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.HttpMethod;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 
 /**
@@ -26,6 +28,7 @@ import java.util.regex.Matcher;
  * @author JPEXS
  */
 public class ReCaptcha {
+    private final static Logger logger = Logger.getLogger(ReCaptcha.class.getName());
     private static final String RECAPTCHA_URL = "http://www.google.com/recaptcha/api";
 
     private String challenge;
@@ -44,11 +47,17 @@ public class ReCaptcha {
     public ReCaptcha(String publicKey, HttpDownloadClient c) throws Exception {
         this.publicKey = publicKey;
         this.client = c;
-        HttpMethod httpMethod = new MethodBuilder(client).setAction(RECAPTCHA_URL + "/challenge?k=" + publicKey).toGetMethod();
-        client.makeRequest(httpMethod, true);
-        Matcher matcher = PlugUtils.matcher("challenge\\s?:\\s?'(.+?)'", client.getContentAsString());
-        if (!matcher.find()) throw new PluginImplementationException("ReCaptcha challenge not found");
-        challenge = matcher.group(1);
+
+        try {
+            challenge = new ReCaptchaSlimerJs(publicKey, c).getChallenge();
+        } catch (IOException e) {
+            logger.warning(e.getMessage());
+            HttpMethod httpMethod = new MethodBuilder(client).setAction(RECAPTCHA_URL + "/challenge?k=" + publicKey).toGetMethod();
+            client.makeRequest(httpMethod, true);
+            Matcher matcher = PlugUtils.matcher("challenge\\s?:\\s?'(.+?)'", client.getContentAsString());
+            if (!matcher.find()) throw new PluginImplementationException("ReCaptcha challenge not found");
+            challenge = matcher.group(1);
+        }
     }
 
 
