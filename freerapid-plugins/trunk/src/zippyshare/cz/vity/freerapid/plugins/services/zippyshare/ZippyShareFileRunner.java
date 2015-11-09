@@ -67,7 +67,7 @@ class ZippyShareFileRunner extends AbstractRunner {
                 if (!matcher.find()) {
                     throw new PluginImplementationException("Script not found (2)");
                 }
-                final Matcher buttonId = getMatcherAgainstContent("(?s)<a\\b[^<>]*?\\bid=\"([\\w\\-]+?)\"[^<>]*?>.*?alt=\"Download\"");
+                final Matcher buttonId = getMatcherAgainstContent("(?s)<a\\b[^<>]*?\\bid=\"([\\w\\-]+?)\"[^<>]*?>.*?class=\"download\"");
                 if (!buttonId.find()) {
                     throw new PluginImplementationException("Download button ID not found");
                 }
