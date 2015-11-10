@@ -45,17 +45,19 @@ class MegaFileRunner extends AbstractRunner {
     private MegaApi api;
     private String id;
     private byte[] key;
+    private String folderId;
     private LinkType type = LinkType.P;
 
     private void init() throws Exception {
         if (id == null) {
-            Matcher matcher = PlugUtils.matcher("#(N)?(?:!|%21)([a-zA-Z\\d]{8})(?:!|%21)([a-zA-Z\\d\\-_]{43})$", fileURL);
+            Matcher matcher = PlugUtils.matcher("#(N)?(?:!|%21)([a-zA-Z\\d]{8})(?:!|%21)([a-zA-Z\\d\\-_]{43})(?:(?:!|%21)([a-zA-Z\\d]{8}))?$", fileURL);
             if (matcher.find()) {
                 if (matcher.group(1) != null) {
                     type = LinkType.N;
                 }
                 id = matcher.group(2);
                 api = new MegaApi(client, matcher.group(3));
+                folderId = matcher.group(4);
             } else {
                 matcher = PlugUtils.matcher("#F(?:!|%21)([a-zA-Z\\d]{8})(?:!|%21)([a-zA-Z\\d\\-_]{22})$", fileURL);
                 if (!matcher.find()) {
@@ -73,7 +75,7 @@ class MegaFileRunner extends AbstractRunner {
         super.runCheck();
         init();
         if (type != LinkType.FOLDER) {
-            final String content = api.request("[{\"a\":\"g\",\"" + type.parameter() + "\":\"" + id + "\",\"ssl\":\"1\"}]");
+            final String content = api.request("[{\"a\":\"g\",\"" + type.parameter() + "\":\"" + id + "\",\"ssl\":\"1\"}]", folderId);
             checkNameAndSize(content);
         }
     }
@@ -108,7 +110,7 @@ class MegaFileRunner extends AbstractRunner {
             httpFile.getProperties().put("removeCompleted", true);
             return;
         }
-        final String content = api.request("[{\"a\":\"g\",\"g\":1,\"ssl\":1,\"" + type.parameter() + "\":\"" + id + "\"}]");
+        final String content = api.request("[{\"a\":\"g\",\"g\":1,\"ssl\":1,\"" + type.parameter() + "\":\"" + id + "\"}]", folderId);
         checkNameAndSize(content);
         final Matcher matcher = PlugUtils.matcher("\"g\"\\s*:\\s*\"(.+?)\"", content);
         if (!matcher.find()) {
@@ -200,7 +202,7 @@ class MegaFileRunner extends AbstractRunner {
                 }
                 final String key = Base64.encodeBase64URLSafeString(cipher.doFinal(Base64.decodeBase64(keyParts[1])));
                 try {
-                    list.add(new URI("https://mega.nz/#N!" + nodeId + "!" + key));
+                    list.add(new URI("https://mega.nz/#N!" + nodeId + "!" + key + "!" + id));
                 } catch (final URISyntaxException e) {
                     LogUtils.processException(logger, e);
                 }
