@@ -53,8 +53,12 @@ class MegaApi {
         return result;
     }
 
-    public String request(final String content) throws Exception {
-        final HttpMethod method = new MethodBuilder(client).setAction("https://g.api.mega.co.nz/cs?id=" + seqno++).toPostMethod();
+    public String request(final String content, final String folderId) throws Exception {
+        String params = "";
+        if (folderId != null) {
+            params += "&n=" + folderId;
+        }
+        final HttpMethod method = new MethodBuilder(client).setAction("https://g.api.mega.co.nz/cs?id=" + seqno++ + params).toPostMethod();
         ((PostMethod) method).setRequestEntity(new StringRequestEntity(content, "text/plain", "UTF-8"));
         if (client.makeRequest(method, true) != HttpStatus.SC_OK) {
             throw new ServiceConnectionProblemException();
