@@ -24,6 +24,7 @@ public class TurboBitFileRunner extends AbstractRunner {
 
     private final static int CAPTCHA_MAX = 0;
     private int captchaCounter = 1;
+    private String fileID;
 
     @Override
     public void runCheck() throws Exception {
@@ -45,6 +46,7 @@ public class TurboBitFileRunner extends AbstractRunner {
             throw new PluginImplementationException("Error parsing download link");
         }
         addCookie(new Cookie("." + matcher.group(1), "user_lang", "en", "/", 86400, false));
+        fileID = matcher.group(2);
         return "http://" + matcher.group(1) + "/download/free/" + matcher.group(2);
     }
 
@@ -86,15 +88,10 @@ public class TurboBitFileRunner extends AbstractRunner {
                 checkProblems();
             }
 
-            Matcher matcher = getMatcherAgainstContent("Timeout/(.+?)\"");
-            if (!matcher.find()) {
-                throw new PluginImplementationException("File ID not found");
-            }
-
             String ref = method.getURI().toString();
             method = getMethodBuilder()
                     .setReferer(ref)
-                    .setAction("/download/getLinkTimeout/" + matcher.group(1))
+                    .setAction("/download/getLinkTimeout/" + fileID)
                     .setBaseURL(method.getURI().toString().split("/download/")[0])
                     .toGetMethod();
             method.addRequestHeader("X-Requested-With", "XMLHttpRequest");

@@ -4,8 +4,7 @@ import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
 import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;
 import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
 import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
-import cz.vity.freerapid.plugins.services.rtmp.AbstractRtmpRunner;
-import cz.vity.freerapid.plugins.services.rtmp.RtmpSession;
+import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.HttpMethod;
@@ -25,9 +24,14 @@ import java.util.regex.Pattern;
  * @author ntoskrnl
  * @author birchie
  */
-class FlashXFileRunner extends AbstractRtmpRunner {
+class FlashXFileRunner extends AbstractRunner {
     private final static Logger logger = Logger.getLogger(FlashXFileRunner.class.getName());
+    private SettingsConfig config;
 
+    private void setConfig() throws Exception {
+        FlashXServiceImpl service = (FlashXServiceImpl) getPluginService();
+        config = service.getConfig();
+    }
     @Override
     public void runCheck() throws Exception { //this method validates file
         super.runCheck();
@@ -57,6 +61,10 @@ class FlashXFileRunner extends AbstractRtmpRunner {
             final String contentAsString = getContentAsString();//check for response
             checkProblems();//check problems
             checkNameAndSize(contentAsString);//extract file name and size from the page
+            setConfig();
+            final String quality = config.toString();
+            logger.info("Preferred Quality : " + quality);
+
             final HttpMethod aMethod = getMethodBuilder().setReferer(fileURL)
                     .setActionFromFormWhereTagContains("download", true)
                     .setAction(fileURL).toPostMethod();
@@ -68,10 +76,7 @@ class FlashXFileRunner extends AbstractRtmpRunner {
                 throw new ServiceConnectionProblemException();
             }
             checkProblems();
-            final Matcher matchFSize = PlugUtils.matcher("Filesize</[^>]+?>\\s*?<[^>]+?title=\"(\\d+)", getContentAsString());
-            if (matchFSize.find()) {
-                httpFile.setFileSize(Long.parseLong(matchFSize.group(1).trim()));
-            }
+
             String jsText;
             if (getContentAsString().contains("eval(function(p,a,c,k,e,d)")) {
                 jsText = unPackJavaScript();
@@ -79,21 +84,15 @@ class FlashXFileRunner extends AbstractRtmpRunner {
             } else {
                 jsText = getContentAsString();
             }
-            final Matcher matchSmil = PlugUtils.matcher("file\\s*?:\\s*?\"(.+?smil)\"", jsText);
-            if (!matchSmil.find()) {
-                //      logger.warning(jsText);
-                throw new PluginImplementationException("SMIL file not found ");
+
+            final Matcher matcher = PlugUtils.matcher("file:\"([^\"]+?)\",label:\"" + quality, jsText);
+            if (!matcher.find())
+                throw new PluginImplementationException("Video for preferred quality not found");
+            HttpMethod httpMethod = getGetMethod(matcher.group(1).trim());
+            if (!tryDownloadAndSaveFile(httpMethod)) {
+                checkProblems();//if downloading failed
+                throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
             }
-            final String smilFile = matchSmil.group(1);
-            if (!makeRedirectedRequest(getGetMethod(smilFile))) {
-                checkProblems();
-                throw new ServiceConnectionProblemException();
-            }
-            logger.info("Text from .smil File: " + getContentAsString());
-            final String url = PlugUtils.getStringBetween(getContentAsString(), "base=\"", "\"");
-            final String file = PlugUtils.getStringBetween(getContentAsString(), "video src=\"", "\"");
-            final RtmpSession rtmpSession = new RtmpSession(url, file);
-            tryDownloadAndSaveFile(rtmpSession);
         } else {
             checkProblems();
             throw new ServiceConnectionProblemException();

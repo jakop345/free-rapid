@@ -22,6 +22,9 @@ public class TestApp extends PluginDevApplication {
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
             //then we tries to download
             final FlashXServiceImpl service = new FlashXServiceImpl(); //instance of service - of our plugin
+            SettingsConfig config = new SettingsConfig();
+            config.setVideoQuality(VideoQuality._240);
+            service.setConfig(config);
             //runcheck makes the validation
             testRun(service, httpFile, connectionSettings);//download file with service and its Runner
             //all output goes to the console
