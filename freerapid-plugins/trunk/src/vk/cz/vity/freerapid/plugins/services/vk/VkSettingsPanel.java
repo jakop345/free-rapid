@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
  * @author tong2shot
  */
 
-public class VkSettingsPanel extends JPanel {
+class VkSettingsPanel extends JPanel {
     private VkSettingsConfig config;
 
     public VkSettingsPanel(VkServiceImpl service) throws Exception {

@@ -87,7 +87,8 @@ class VkFileRunner extends AbstractRunner {
 
     private void checkProblems() throws ErrorDuringDownloadingException {
         final String contentAsString = getContentAsString();
-        if (contentAsString.contains("No videos found")) {
+        if (contentAsString.contains("No videos found")
+                || contentAsString.contains("404 Не Найдено")) {
             throw new URLNotAvailableAnymoreException("File not found");
         }
     }
@@ -108,6 +109,7 @@ class VkFileRunner extends AbstractRunner {
         //alternatives :
         //http://hdxit.ru/video/140538996_164236408/
         //http://mirhdtv.ru/video/-36880507_165363780/
+        //http://relax-video.com/video165654753
         String biqleUrl = String.format("http://biqle.ru/watch/%s_%s", userId, videoId);
         boolean biqleOK = false;
         for (int i = 0; i < 3; i++) {
@@ -115,6 +117,7 @@ class VkFileRunner extends AbstractRunner {
             GetMethod method = getGetMethod(biqleUrl);
             biqleOK = makeRedirectedRequest(method);
             if (!biqleOK) {
+                checkProblems();
                 logger.warning("Error getting embedded URL, retrying to request page..");
             } else {
                 break;
@@ -125,9 +128,15 @@ class VkFileRunner extends AbstractRunner {
         }
         matcher = getMatcherAgainstContent("src=\"(http://vk\\.com/video_ext\\.php.+?)\"");
         if (!matcher.find()) {
-            throw new PluginImplementationException("Cannot find embedded URL");
+            matcher = getMatcherAgainstContent("iframe=(http%3A%2F%2Fvk.com%2Fvideo_ext.php.+?)\"");
+            if (!matcher.find()) {
+                throw new PluginImplementationException("Cannot find embedded URL");
+            }
         }
         String embeddedUrl = matcher.group(1);
+        if (!embeddedUrl.startsWith("http://")) {
+            embeddedUrl = URLDecoder.decode(embeddedUrl, "UTF-8");
+        }
         logger.info("Embedded URL : " + embeddedUrl);
         return embeddedUrl;
     }
@@ -171,6 +180,7 @@ class VkFileRunner extends AbstractRunner {
             weight = (deltaQ < 0 ? Math.abs(deltaQ) + NEAREST_LOWER_PENALTY : deltaQ); //prefer nearest better if the same quality doesn't exist
         }
 
+        @SuppressWarnings("NullableProblems")
         @Override
         public int compareTo(final VkVideo that) {
             return Integer.valueOf(this.weight).compareTo(that.weight);
