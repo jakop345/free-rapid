@@ -7,7 +7,7 @@ import java.util.Collections;
  * @author tong2shot
  */
 
-public enum VideoQuality {
+enum VideoQuality {
     _240(240),
     _360(360),
     _480(480),
@@ -16,7 +16,7 @@ public enum VideoQuality {
     private final int quality;
     private final String name;
 
-    private VideoQuality(int quality) {
+    VideoQuality(int quality) {
         this.quality = quality;
         this.name = quality + "p";
     }
