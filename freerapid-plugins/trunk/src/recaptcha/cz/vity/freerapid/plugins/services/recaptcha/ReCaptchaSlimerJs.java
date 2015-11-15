@@ -94,12 +94,13 @@ public class ReCaptchaSlimerJs {
         bw.write(jsContent);
         bw.close();
 
-        logger.info("Temp recaptcha script file location: " + tempFile.getPath());
+        logger.info("Temp recaptcha script file location: " + tempFile.getCanonicalPath());
         //logger.info(jsContent);
 
         Scanner scanner = null;
+        String[] commands = {command, tempFile.getCanonicalPath()};
         try {
-            final Process process = Runtime.getRuntime().exec(command + " " + tempFile.getCanonicalPath());
+            final Process process = Runtime.getRuntime().exec(commands);
             scanner = new Scanner(process.getInputStream());
             StringBuilder builder = new StringBuilder();
             final String s;
@@ -115,7 +116,7 @@ public class ReCaptchaSlimerJs {
                 throw new IOException("SlimerJS process exited abnormally");
             Matcher matcher = PlugUtils.matcher("/recaptcha/api/image\\?c=(.+?)(?:&|\\[\\{)", s);
             if (!matcher.find())
-                throw new IOException("ReCaptcha (SlimmerJS) challenge not found");
+                throw new IOException("ReCaptcha (SlimerJS) challenge not found");
             return matcher.group(1);
         } catch (Exception e) {
             LogUtils.processException(logger, e);
