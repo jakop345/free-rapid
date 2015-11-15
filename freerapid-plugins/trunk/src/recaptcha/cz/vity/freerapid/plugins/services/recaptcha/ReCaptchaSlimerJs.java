@@ -98,9 +98,8 @@ public class ReCaptchaSlimerJs {
         //logger.info(jsContent);
 
         Scanner scanner = null;
-        String[] commands = {command, tempFile.getCanonicalPath()};
         try {
-            final Process process = Runtime.getRuntime().exec(commands);
+            final Process process = new ProcessBuilder(command, tempFile.getCanonicalPath()).start();
             scanner = new Scanner(process.getInputStream());
             StringBuilder builder = new StringBuilder();
             final String s;
