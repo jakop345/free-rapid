@@ -73,8 +73,8 @@ class DataFileFileRunner extends AbstractRunner {
                     }
                     checkProblems();
                 }
-                final int waitTime = 1 + PlugUtils.getNumberBetween(getContentAsString(), "counter.contdownTimer('", "'");
-                if (waitTime > 123) throw new YouHaveToWaitException("Wait between downloads", waitTime);
+                final int waitTime = 31;// + PlugUtils.getNumberBetween(getContentAsString(), "counter.contdownTimer('", "'");
+                //if (waitTime > 123) throw new YouHaveToWaitException("Wait between downloads", waitTime);
                 final long startTime = System.currentTimeMillis();
                 doCaptcha(builder);
                 final long endTime = System.currentTimeMillis();

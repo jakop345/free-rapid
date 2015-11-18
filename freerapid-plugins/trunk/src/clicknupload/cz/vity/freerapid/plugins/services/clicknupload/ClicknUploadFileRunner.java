@@ -19,6 +19,11 @@ import java.util.regex.Pattern;
 class ClicknUploadFileRunner extends XFileSharingRunner {
 
     @Override
+    protected void correctURL() throws Exception {
+        fileURL = fileURL.replaceFirst("clicknupload.com", "clicknupload.me");
+    }
+
+    @Override
     protected List<FileNameHandler> getFileNameHandlers() {
         final List<FileNameHandler> fileNameHandlers = super.getFileNameHandlers();
         fileNameHandlers.add(0, new FileNameHandler() {

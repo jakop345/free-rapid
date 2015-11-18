@@ -1,4 +1,4 @@
-package cz.vity.freerapid.plugins.services.expressleech;
+package cz.vity.freerapid.plugins.services.bitster;
 
 import cz.vity.freerapid.plugins.dev.PluginDevApplication;
 import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
@@ -16,20 +16,12 @@ public class TestApp extends PluginDevApplication {
         final HttpFile httpFile = getHttpFile(); //creates new test instance of HttpFile
         try {
             //we set file URL
-            //httpFile.setNewURL(new URL("http://expressleech.com/4h4s0fh1v9sz/Spartacus.S03E06.HDTV.XviD-TVSR.avi.html"));
-            //httpFile.setNewURL(new URL("http://expressleech.com/hv9b7oc5dm45.html"));            // pass = 123
-            httpFile.setNewURL(new URL("http://4upld.com/1Att6"));
+            httpFile.setNewURL(new URL("https://bitster.cz/file/b2843b496c/DVDFab_9-1-6-8CZ-rar"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
-            final ExpressLeechServiceImpl service = new ExpressLeechServiceImpl(); //instance of service - of our plugin
-            /*
-            //we set premium account details
-            final PremiumAccount config = new PremiumAccount();
-            config.setUsername("****");
-            config.setPassword("****");
-            service.setConfig(config);
-            */
+            //then we tries to download
+            final BitsterServiceImpl service = new BitsterServiceImpl(); //instance of service - of our plugin
             //runcheck makes the validation
             testRun(service, httpFile, connectionSettings);//download file with service and its Runner
             //all output goes to the console
