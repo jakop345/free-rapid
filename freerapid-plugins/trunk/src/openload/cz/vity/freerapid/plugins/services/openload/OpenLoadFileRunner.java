@@ -1,6 +1,7 @@
 package cz.vity.freerapid.plugins.services.openload;
 
 import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
+import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;
 import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
 import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
@@ -9,7 +10,11 @@ import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
 
 /**
  * Class which contains main code
@@ -38,8 +43,11 @@ class OpenLoadFileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        PlugUtils.checkName(httpFile, content, "filename\">", "<");
-        PlugUtils.checkFileSize(httpFile, content, "count\">", "<");
+        final Matcher match = PlugUtils.matcher("<h3[^<>]*title[^<>]*>(.+?)<", content);
+        if (!match.find())
+            PlugUtils.checkName(httpFile, content, "filename\">", "<");
+        httpFile.setFileName(match.group(1).trim());
+        PlugUtils.checkFileSize(httpFile, content, "File size:", "<");
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
 
@@ -53,8 +61,33 @@ class OpenLoadFileRunner extends AbstractRunner {
             final String contentAsString = getContentAsString();//check for response
             checkProblems();//check problems
             checkNameAndSize(contentAsString);//extract file name and size from the page
-            final HttpMethod httpMethod = getMethodBuilder().setReferer(fileURL)
-                    .setActionFromAHrefWhereATagContains("Download").toHttpMethod();
+
+            final String fid = PlugUtils.getStringBetween(contentAsString, "var fid= \"", "\"");
+            final int wait = PlugUtils.getNumberBetween(contentAsString, "secondsdl = ", ";");
+            if (wait > 0)
+                downloadTask.sleep(1 + wait);
+            String decodedText="";
+            int loop = 1;
+            do {
+                try {
+                    HttpMethod httpMethod = getMethodBuilder().setReferer(fileURL)
+                            .setAction("/getdllink/" + fid).setAjax().toPostMethod();
+                    if (!makeRedirectedRequest(httpMethod)) {
+                        checkProblems();
+                        throw new ServiceConnectionProblemException();
+                    }
+                    checkProblems();
+                    decodedText = DecodeSmileyScript(getContentAsString());
+                    loop = -1;
+
+                } catch (ScriptException e) {
+                    if (loop++ > 10) throw new PluginImplementationException("JavaScript eval failed");
+                }
+            } while (loop > 0);
+
+            logger.info(decodedText);
+            final String dlUrl = PlugUtils.getStringBetween(decodedText, "'href',\"", "\"").replace("\\", "");
+            HttpMethod httpMethod = getGetMethod(dlUrl);
             if (!tryDownloadAndSaveFile(httpMethod)) {
                 checkProblems();//if downloading failed
                 throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
@@ -71,5 +104,24 @@ class OpenLoadFileRunner extends AbstractRunner {
             throw new URLNotAvailableAnymoreException("File not found"); //let to know user in FRD
         }
     }
+
+
+    private String DecodeSmileyScript(final String encoded) throws Exception {
+        String decoded = "";
+        String findStart = "(\uFF9F\u0414\uFF9F) ['_'] ( (\uFF9F\u0414\uFF9F) ['_'] (";
+        String replaceStart = "( (\uFF9F\u0414\uFF9F) ['_'] (";
+        String findEnd = ") (\uFF9F\u0398\uFF9F)) ('_');";
+        String replaceEnd = ") ());";
+
+        if (!encoded.contains(findStart) || !encoded.contains(findEnd)) {
+            throw new PluginImplementationException("Unrecognised smiley script");
+        }
+        final String toDecode = encoded.trim().replace(findStart, replaceStart).replace(findEnd, replaceEnd);
+
+        final ScriptEngineManager manager = new ScriptEngineManager();
+        final ScriptEngine engine = manager.getEngineByName("javascript");
+        return (String) engine.eval(toDecode);
+    }
+
 
 }

@@ -1,4 +1,4 @@
-package cz.vity.freerapid.plugins.services.opensubtitles;
+package cz.vity.freerapid.plugins.services.bitster;
 
 import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
 import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;
@@ -18,8 +18,8 @@ import java.util.regex.Matcher;
  *
  * @author birchie
  */
-class OpenSubtitlesFileRunner extends AbstractRunner {
-    private final static Logger logger = Logger.getLogger(OpenSubtitlesFileRunner.class.getName());
+class BitsterFileRunner extends AbstractRunner {
+    private final static Logger logger = Logger.getLogger(BitsterFileRunner.class.getName());
 
     @Override
     public void runCheck() throws Exception { //this method validates file
@@ -35,10 +35,7 @@ class OpenSubtitlesFileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        PlugUtils.checkName(httpFile, content, "<title>Subtitles ", "</title>");
-        final Matcher match = PlugUtils.matcher("Subtitle filename\".*?>.+?\\((.+?)\\)\\s*?<", content.replaceAll("\\s+", " "));
-        if (!match.find()) throw new PluginImplementationException("File size not found");
-        httpFile.setFileSize(PlugUtils.getFileSizeFromString(match.group(1)));
+        PlugUtils.checkName(httpFile, content, ":title\" content=\"", " - Bitster");
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
 
@@ -51,17 +48,21 @@ class OpenSubtitlesFileRunner extends AbstractRunner {
             final String contentAsString = getContentAsString();//check for response
             checkProblems();//check problems
             checkNameAndSize(contentAsString);//extract file name and size from the page
-            final Matcher match = PlugUtils.matcher("directUrl=['\"](.+?subtitleserve.+?)['\"]", contentAsString);
-            if (!match.find()) throw new PluginImplementationException("Download link not found");
+            final Matcher match = PlugUtils.matcher("bitster\\.cz/file/([\\w\\d]+)", fileURL);
+            if (!match.find())
+                throw new PluginImplementationException("File id not found");
+
             HttpMethod httpMethod = getMethodBuilder().setReferer(fileURL)
-                    .setAction(match.group(1).trim())
+                    .setAction("/data/getfilefreedownloadurl").setAjax()
+                    .setParameter("id", match.group(1))
                     .toGetMethod();
             if (!makeRedirectedRequest(httpMethod)) {
+                checkProblems();
                 throw new ServiceConnectionProblemException();
             }
-            httpMethod = getMethodBuilder()
-                    .setActionFromAHrefWhereATagContains("Click here")
-                    .toGetMethod();
+            checkProblems();
+
+            httpMethod = getGetMethod(getContentAsString());
             if (!tryDownloadAndSaveFile(httpMethod)) {
                 checkProblems();//if downloading failed
                 throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
@@ -74,7 +75,7 @@ class OpenSubtitlesFileRunner extends AbstractRunner {
 
     private void checkProblems() throws ErrorDuringDownloadingException {
         final String contentAsString = getContentAsString();
-        if (contentAsString.contains("subtitles from the biggest open subtitles database</title>")) {
+        if (contentAsString.contains(":title\" content=\"Bitster.cz\"")) {
             throw new URLNotAvailableAnymoreException("File not found"); //let to know user in FRD
         }
     }

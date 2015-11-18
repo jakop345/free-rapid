@@ -9,6 +9,8 @@ import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
+import java.util.regex.Matcher;
+
 /**
  * Class which contains main code
  *
@@ -36,7 +38,7 @@ class ExpressLeechFileRunner extends AbstractRunner {
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
         PlugUtils.checkName(httpFile, content, "title>", " - 4upld");
-        PlugUtils.checkFileSize(httpFile, content, "\">(", ")<");
+        PlugUtils.checkFileSize(httpFile, content, "Size:</b> ", "<");
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
 
@@ -49,8 +51,11 @@ class ExpressLeechFileRunner extends AbstractRunner {
             final String content = getContentAsString();//check for response
             checkProblems();//check problems
             checkNameAndSize(content);
+            final Matcher match = PlugUtils.matcher("<a[^<>]*href='(.+?)'[^<>]*>Download Now", content);
+            if (!match.find())
+                throw new PluginImplementationException("link not found ");
             downloadTask.sleep(1 + PlugUtils.getNumberBetween(content, "var seconds = ", ";"));
-            HttpMethod httpMethod = getGetMethod(PlugUtils.getStringBetween(content, "class='btn-free' href='", "'>Download Now"));
+            HttpMethod httpMethod = getGetMethod(match.group(1));
             if (!makeRedirectedRequest(httpMethod)) {
                 checkProblems();
                 throw new ServiceConnectionProblemException();
