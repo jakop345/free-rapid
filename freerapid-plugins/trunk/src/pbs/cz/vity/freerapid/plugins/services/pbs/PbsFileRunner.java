@@ -84,6 +84,7 @@ class PbsFileRunner extends AbstractRtmpRunner {
                         checkProblems();
                         throw new ServiceConnectionProblemException("Error starting download");
                     }
+                    break;
                 }
                 case RTMP: {
                     final String[] rtmpData = location.getValue().split("mp4:");
@@ -93,10 +94,12 @@ class PbsFileRunner extends AbstractRtmpRunner {
                     final RtmpSession rtmpSession = new RtmpSession(rtmpData[0], "mp4:" + rtmpData[1]);
                     rtmpSession.getConnectParams().put("pageUrl", fileURL);
                     new RtmpDownloader(client, downloadTask).tryDownloadAndSaveFile(rtmpSession);
+                    break;
                 }
                 case HLS: {
                     httpFile.setFileName(HttpUtils.replaceInvalidCharsForFileSystem(httpFile.getFileName().replaceFirst("\\.[^\\.]{3,4}$", ".ts"), "_"));
                     new HlsDownloader(client, httpFile, downloadTask).tryDownloadAndSaveFile(location.getValue());
+                    break;
                 }
             }
 
