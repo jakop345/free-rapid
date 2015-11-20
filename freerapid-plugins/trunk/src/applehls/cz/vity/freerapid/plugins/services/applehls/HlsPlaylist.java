@@ -72,7 +72,13 @@ class HlsPlaylist {
                         quality = Integer.parseInt(matcher.group(2));
                     }
 
-                    line = scanner.nextLine();
+                    try {
+                        line = scanner.nextLine();
+                    } catch (Exception e) {
+                        continue;
+                    }
+                    if (line.startsWith("#"))
+                        continue;
                     mediaList.add(new HlsMedia(getUrl(playlistUrl, line), bandwidth, quality));
                 }
             } else { //segments playlist
