@@ -87,8 +87,8 @@ public class HlsDownloader {
         return Collections.max(mediaList);
     }
 
-    protected SegmentRequester getFragmentRequester(List<HlsMedia> medias) {
-        return new SegmentRequester(httpFile, client, medias);
+    protected SegmentRequester getFragmentRequester(List<HlsMedia> mediaList) {
+        return new SegmentRequester(httpFile, client, mediaList);
     }
 
 }

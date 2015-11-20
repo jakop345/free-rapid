@@ -18,14 +18,14 @@ public class SegmentRequester {
 
     protected final HttpFile httpFile;
     protected final HttpDownloadClient client;
-    protected final List<HlsMedia> medias;
+    protected final List<HlsMedia> mediaList;
     private int currentSegment;
     private long totalSegmentsSize;
 
-    public SegmentRequester(final HttpFile httpFile, final HttpDownloadClient client, final List<HlsMedia> medias) {
+    public SegmentRequester(final HttpFile httpFile, final HttpDownloadClient client, final List<HlsMedia> mediaList) {
         this.httpFile = httpFile;
         this.client = client;
-        this.medias = medias;
+        this.mediaList = mediaList;
         Long segmentLastPos = (Long) httpFile.getProperties().get(HlsConsts.SEGMENT_LAST_POST);
         this.totalSegmentsSize = (segmentLastPos == null ? 0 : segmentLastPos);
         Integer currentSegment = (Integer) httpFile.getProperties().get(HlsConsts.CURRENT_SEGMENT);
@@ -33,10 +33,10 @@ public class SegmentRequester {
     }
 
     public InputStream nextSegment() throws IOException {
-        if (currentSegment > medias.size()) {
+        if (currentSegment > mediaList.size()) {
             return null;
         }
-        final String url = medias.get(currentSegment - 1).getUrl();
+        final String url = mediaList.get(currentSegment - 1).getUrl();
         logger.info("Downloading: " + url);
         final HttpMethod method = client.getGetMethod(url);
         final InputStream in = client.makeRequestForFile(method);
@@ -47,7 +47,7 @@ public class SegmentRequester {
         if (header != null) {
             final long segmentSize = Long.parseLong(header.getValue());
             totalSegmentsSize += segmentSize;
-            httpFile.setFileSize((totalSegmentsSize / currentSegment) * medias.size());//estimate
+            httpFile.setFileSize((totalSegmentsSize / currentSegment) * mediaList.size());//estimate
         }
         httpFile.getProperties().put(HlsConsts.CURRENT_SEGMENT, currentSegment);
         currentSegment++;

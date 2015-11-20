@@ -22,6 +22,7 @@ import java.util.regex.Matcher;
  * Class which contains main code
  *
  * @author ntoskrnl
+ * @author tong2shot
  */
 class PhotoBucketFileRunner extends AbstractRunner {
     private final static Logger logger = Logger.getLogger(PhotoBucketFileRunner.class.getName());
@@ -42,10 +43,10 @@ class PhotoBucketFileRunner extends AbstractRunner {
     private void checkNameAndSize() throws ErrorDuringDownloadingException {
         final String contentAsString = getContentAsString();
         if (contentAsString.contains("Share this album")) {
-            httpFile.setFileName("Album: " + PlugUtils.getStringBetween(contentAsString, "<title>", "- Photobucket"));
+            httpFile.setFileName("Album: " + PlugUtils.getStringBetween(contentAsString, "<title>", "| Photobucket"));
 
         } else {
-            final Matcher name = getMatcherAgainstContent("\"name\":\"(.+?)\",");
+            final Matcher name = getMatcherAgainstContent(",\"name\":\"(.+?)\",");
             if (name.find()) {
                 final String filename = name.group(1);
                 logger.info("File name " + filename);
@@ -106,10 +107,13 @@ class PhotoBucketFileRunner extends AbstractRunner {
                     checkProblems();
                     throw new PluginImplementationException();
                 }
-                parseWebsite("<a href=\"(http://.+?)\" onclick=\"tr\\('album_thumb_click'\\);\">");
+                parseWebsite("linkUrl\":\"(.+?)\"");
 
             } else { //image
-                final HttpMethod httpMethod = getGetMethod(PlugUtils.getStringBetween(getContentAsString(), "downloadUrl\":\"", "\",").replaceAll("\\\\/", "/"));
+                final HttpMethod httpMethod = getMethodBuilder()
+                        .setReferer(fileURL)
+                        .setAction(PlugUtils.getStringBetween(getContentAsString(), "fullsizeUrl\":\"", "\",").replaceAll("\\\\/", "/"))
+                        .toGetMethod();
                 if (!tryDownloadAndSaveFile(httpMethod)) {
                     checkProblems();
                     throw new PluginImplementationException();
@@ -124,17 +128,16 @@ class PhotoBucketFileRunner extends AbstractRunner {
 
     private void parseWebsite(final String regexp) throws Exception {
         final Matcher matcher = getMatcherAgainstContent(regexp);
-        int start = 0;
         final List<URI> uriList = new LinkedList<URI>();
-        while (matcher.find(start)) {
-            final String link = PlugUtils.replaceEntities(matcher.group(1));
+        while (matcher.find()) {
+            final String link = PlugUtils.replaceEntities(matcher.group(1)).replace("\\/", "/");
             try {
                 uriList.add(new URI(link));
             } catch (URISyntaxException e) {
                 LogUtils.processException(logger, e);
             }
-            start = matcher.end();
         }
+        logger.info("Photos queued : " + uriList.size());
         getPluginService().getPluginContext().getQueueSupport().addLinksToQueue(httpFile, uriList);
     }
 

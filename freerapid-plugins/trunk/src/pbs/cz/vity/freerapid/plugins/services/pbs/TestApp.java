@@ -19,7 +19,8 @@ public class TestApp extends PluginDevApplication {
             //InputStream is = new BufferedInputStream(new FileInputStream("E:\\Stuff\\logtest.properties"));
             //LogManager.getLogManager().readConfiguration(is);
             //we set file URL
-            httpFile.setNewURL(new URL("http://video.pbs.org/video/2163057527/"));
+            httpFile.setNewURL(new URL("http://video.pbs.org/video/2163057527/")); //rtmp
+            //httpFile.setNewURL(new URL("http://video.pbs.org/video/2365607036/")); //hls
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
@@ -27,8 +28,9 @@ public class TestApp extends PluginDevApplication {
             final PbsServiceImpl service = new PbsServiceImpl(); //instance of service - of our plugin
             //runcheck makes the validation
             SettingsConfig config = new SettingsConfig();
-            config.setDownloadSubtitles(true);
+            config.setDownloadSubtitles(false);
             service.setConfig(config);
+            //setUseTempFiles(true);
             testRun(service, httpFile, connectionSettings);//download file with service and its Runner
             //all output goes to the console
         } catch (Exception e) {//catch possible exception
