@@ -19,15 +19,18 @@ public class TestApp extends PluginDevApplication {
             //InputStream is = new BufferedInputStream(new FileInputStream("C:\\Users\\Administrator\\Desktop\\logtest.properties"));
             //LogManager.getLogManager().readConfiguration(is);
             //we set file URL
-            httpFile.setNewURL(new URL("https://www.itv.com/itvplayer/downton-abbey/series-5/episode-1"));
+            //httpFile.setNewURL(new URL("https://www.itv.com/itvplayer/downton-abbey/series-5/episode-1"));
+            httpFile.setNewURL(new URL("http://www.itv.com/hub/the-jonathan-ross-show/2a1166a0102"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
-            //connectionSettings.setProxy("localhost", 9050, Proxy.Type.SOCKS); //eg we can use local proxy to sniff HTTP communication
+            //connectionSettings.setProxy("localhost", 9040, Proxy.Type.SOCKS); //eg we can use local proxy to sniff HTTP communication
             //then we tries to download
             final ItvServiceImpl service = new ItvServiceImpl(); //instance of service - of our plugin
             SettingsConfig config = new SettingsConfig();
-            config.setDownloadSubtitles(true);
+            config.setDownloadSubtitles(false);
+            config.setVideoQuality(VideoQuality._1500);
             service.setConfig(config);
+            //setUseTempFiles(true);
             //runcheck makes the validation
             testRun(service, httpFile, connectionSettings);//download file with service and its Runner
             //all output goes to the console
