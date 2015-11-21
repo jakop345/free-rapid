@@ -24,6 +24,7 @@ class BitsterFileRunner extends AbstractRunner {
     @Override
     public void runCheck() throws Exception { //this method validates file
         super.runCheck();
+        correctUrl();
         final GetMethod getMethod = getGetMethod(fileURL);//make first request
         if (makeRedirectedRequest(getMethod)) {
             checkProblems();
@@ -34,6 +35,10 @@ class BitsterFileRunner extends AbstractRunner {
         }
     }
 
+    private void correctUrl() {
+        fileURL = fileURL.replaceFirst("/#file/", "/file/");
+    }
+
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
         PlugUtils.checkName(httpFile, content, ":title\" content=\"", " - Bitster");
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
@@ -42,6 +47,7 @@ class BitsterFileRunner extends AbstractRunner {
     @Override
     public void run() throws Exception {
         super.run();
+        correctUrl();
         logger.info("Starting download in TASK " + fileURL);
         final GetMethod method = getGetMethod(fileURL); //create GET request
         if (makeRedirectedRequest(method)) { //we make the main request

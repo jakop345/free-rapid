@@ -18,7 +18,7 @@ import java.util.regex.Matcher;
 public class FourTokensCaptchaType implements CaptchaType {
 
     protected String getFourTokensCaptchaRegex() {
-        return "<span style='position:absolute;padding\\-left:(\\d+)px;padding\\-top:\\d+px;'>(.+?)</span>";
+        return "<span style='[^']*position:absolute;padding\\-left:(\\d+)px;padding\\-top:\\d+px;'>(.+?)</span>";
     }
 
     @Override
