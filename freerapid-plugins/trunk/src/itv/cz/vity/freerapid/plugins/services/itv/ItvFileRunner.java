@@ -16,6 +16,9 @@ import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -24,7 +27,7 @@ import java.util.regex.Matcher;
  * Class which contains main code
  *
  * @author ntoskrnl
- * @author tong2shot (subtitle)
+ * @author tong2shot
  */
 class ItvFileRunner extends AbstractRtmpRunner {
     private final static Logger logger = Logger.getLogger(ItvFileRunner.class.getName());
@@ -52,12 +55,15 @@ class ItvFileRunner extends AbstractRtmpRunner {
     }
 
     private void checkNameAndSize() throws Exception {
-        String name = PlugUtils.unescapeHtml(PlugUtils.getStringBetween(
-                getContentAsString(), "<h2 class=\"title episode-title\">", "</h2>"));
-        final Matcher series = getMatcherAgainstContent("Series (?:<[^<>]+?>)+?(\\d+)");
-        final Matcher episode = getMatcherAgainstContent("Episode (?:<[^<>]+?>)+?(\\d+)");
-        if (series.find() && episode.find()) {
-            name = String.format("%s - S%02dE%02d", name, Integer.parseInt(series.group(1)), Integer.parseInt(episode.group(1)));
+        Matcher matcher = getMatcherAgainstContent("<h1[^<>]*?>(.+?)</h1");
+        if (!matcher.find()) {
+            throw new PluginImplementationException("Programme title not found");
+        }
+        String name = matcher.group(1).trim();
+
+        matcher = getMatcherAgainstContent("\"episode-info__series\">Series (\\d+) [^<>]*?Episode (\\d+)");
+        if (matcher.find()) {
+            name = String.format("%s - S%02dE%02d", name, Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)));
         }
         httpFile.setFileName(name + ".flv");
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
@@ -71,7 +77,12 @@ class ItvFileRunner extends AbstractRtmpRunner {
         if (makeRedirectedRequest(method)) {
             checkProblems();
             checkNameAndSize();
-            final String productionId = PlugUtils.getStringBetween(getContentAsString(), "\"productionId\":\"", "\"").replace("\\/", "/");
+            String productionId;
+            try {
+                productionId = PlugUtils.getStringBetween(getContentAsString(), "\"productionId\":\"", "\"").replace("\\/", "/");
+            } catch (PluginImplementationException e) {
+                productionId = PlugUtils.getStringBetween(getContentAsString(), "data-video-id=\"", "\"").replace("\\/", "/");
+            }
             method = getMethodBuilder()
                     .setReferer(fileURL)
                     .setAction("http://mercury.itv.com/PlaylistService.svc?wsdl")
@@ -131,16 +142,25 @@ class ItvFileRunner extends AbstractRtmpRunner {
             throw new PluginImplementationException("URL not found in playlist");
         }
         final String url = PlugUtils.replaceEntities(matcher.group(1));
-        matcher = PlugUtils.matcher("(mp4:.+?\\.mp4)", video);
-        if (!matcher.find()) {
-            throw new PluginImplementationException("Play name not found in playlist");
+
+        List<ItvVideo> videoList = new ArrayList<ItvVideo>();
+        Matcher mediaFileMatcher = PlugUtils.matcher("(?s)<MediaFile[^<>]*?bitrate\\s*?=\\s*?\"(\\d+?)\"[^<>]*?>(.+?)</MediaFile>", video);
+        while (mediaFileMatcher.find()) {
+            matcher = PlugUtils.matcher("(mp4:.+?\\.mp4)", mediaFileMatcher.group(2));
+            if (matcher.find()) {
+                ItvVideo itvVideo = new ItvVideo(Integer.parseInt(mediaFileMatcher.group(1)) / 1000, matcher.group(1));
+                videoList.add(itvVideo);
+                logger.info("Found video: " + itvVideo);
+            }
         }
-        String play;
-        do {
-            //get the last item, which is the highest quality
-            play = matcher.group(1);
-        } while (matcher.find());
-        final RtmpSession rtmpSession = new RtmpSession(url, play);
+        if (videoList.isEmpty()) {
+            throw new PluginImplementationException("No available videos");
+        }
+        ItvVideo selectedVideo = Collections.min(videoList);
+        logger.info("Config settings : " + config);
+        logger.info("Selected video  : " + selectedVideo);
+
+        final RtmpSession rtmpSession = new RtmpSession(url, selectedVideo.play);
         rtmpSession.getConnectParams().put("pageUrl", fileURL);
         rtmpSession.getConnectParams().put("swfUrl", SWF_URL);
         helper.setSwfVerification(rtmpSession, client);
@@ -157,6 +177,40 @@ class ItvFileRunner extends AbstractRtmpRunner {
         c[18] = '-';
         c[23] = '-';
         return new String(c);
+    }
+
+    private class ItvVideo implements Comparable<ItvVideo> {
+        private final static int LOWER_QUALITY_PENALTY = 10;
+        private final int bitrate; //kbps
+        private final String play;
+        private int weight;
+
+        public ItvVideo(final int bitrate, final String play) {
+            this.bitrate = bitrate;
+            this.play = play;
+            this.weight = calcWeight();
+        }
+
+        private int calcWeight() {
+            VideoQuality configQuality = config.getVideoQuality();
+            int deltaQ = bitrate - configQuality.getBitrate();
+            return (deltaQ < 0 ? Math.abs(deltaQ) + LOWER_QUALITY_PENALTY : deltaQ);
+        }
+
+        @SuppressWarnings("NullableProblems")
+        @Override
+        public int compareTo(final ItvVideo that) {
+            return Integer.valueOf(this.weight).compareTo(that.weight);
+        }
+
+        @Override
+        public String toString() {
+            return "ItvVideo{" +
+                    "bitrate=" + bitrate +
+                    ", play='" + play + '\'' +
+                    ", weight=" + weight +
+                    '}';
+        }
     }
 
     private final static String PLAYLIST_REQUEST_BASE =
