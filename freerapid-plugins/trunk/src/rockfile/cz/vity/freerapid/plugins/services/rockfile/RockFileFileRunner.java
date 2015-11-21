@@ -41,4 +41,9 @@ class RockFileFileRunner extends XFileSharingRunner {
         downloadLinkRegexes.add("<a[^<>]+?href\\s*?=\\s*?[\"'](http.+?" + Pattern.quote(httpFile.getFileName()) + ")[\"']");
         return downloadLinkRegexes;
     }
+
+    @Override
+    protected int getWaitTime() throws Exception {
+        return 16;
+    }
 }

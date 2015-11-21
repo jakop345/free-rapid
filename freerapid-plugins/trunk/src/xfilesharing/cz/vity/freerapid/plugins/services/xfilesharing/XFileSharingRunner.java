@@ -74,6 +74,16 @@ public abstract class XFileSharingRunner extends AbstractRunner {
         return downloadLinkRegexes;
     }
 
+    protected List<String> getFalseProblemRegexes() {
+        final List<String> falseProblemRegexes = new LinkedList<String>();
+        falseProblemRegexes.add("<font[^<>]+?visibility:hidden.+?</font>");
+        falseProblemRegexes.add("<font[^<>]+?font-size:0.+?</font>");
+        falseProblemRegexes.add("<div[^<>]*display\\s*:\\s*none.+?</div>");
+        falseProblemRegexes.add("(?s)<div[^<>]*color\\s*:\\s*transparent.+?</div>");
+        falseProblemRegexes.add("(?s)<td[^<>]*color\\s*:\\s*transparent.+?</td>");
+        return falseProblemRegexes;
+    }
+
     protected MethodBuilder getXFSMethodBuilder() throws Exception {
         return getXFSMethodBuilder(getContentAsString());
     }
@@ -318,8 +328,19 @@ public abstract class XFileSharingRunner extends AbstractRunner {
                 .toGetMethod();
     }
 
+    protected String removeFalseProblemsByRegexes(final String content) {
+        String newContent = content;
+        for (final String falseProblemRegex : getFalseProblemRegexes()) {
+            newContent = newContent.replaceAll(falseProblemRegex, "");
+        }
+        return newContent;
+    }
+
     protected void checkFileProblems() throws ErrorDuringDownloadingException {
-        final String content = getContentAsString();
+        checkFileProblems(removeFalseProblemsByRegexes(getContentAsString()));
+    }
+
+    protected void checkFileProblems(final String content) throws ErrorDuringDownloadingException {
         if (content.contains("File Not Found")
                 || content.contains("file was removed")
                 || content.contains("file has been removed")) {
@@ -331,7 +352,10 @@ public abstract class XFileSharingRunner extends AbstractRunner {
     }
 
     protected void checkDownloadProblems() throws ErrorDuringDownloadingException {
-        final String content = getContentAsString();
+        checkDownloadProblems(removeFalseProblemsByRegexes(getContentAsString()));
+    }
+
+    protected void checkDownloadProblems(final String content) throws ErrorDuringDownloadingException {
         if (content.contains("till next download") || content.contains("You have to wait")) {
             final Matcher matcher = getMatcherAgainstContent("(?:(\\d+) hours?, )?(?:(\\d+) minutes?, )?(?:(\\d+) seconds?)");
             int waitHours = 0, waitMinutes = 0, waitSeconds = 0;

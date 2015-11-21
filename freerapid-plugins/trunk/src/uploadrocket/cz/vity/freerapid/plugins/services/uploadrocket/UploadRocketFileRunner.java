@@ -2,15 +2,16 @@ package cz.vity.freerapid.plugins.services.uploadrocket;
 
 import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
 import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
-import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
 import cz.vity.freerapid.plugins.services.xfilesharing.XFileSharingRunner;
+import cz.vity.freerapid.plugins.services.xfilesharing.nameandsize.FileNameHandler;
 import cz.vity.freerapid.plugins.services.xfilesharing.nameandsize.FileSizeHandler;
 import cz.vity.freerapid.plugins.services.xfilesharing.nameandsize.FileSizeHandlerNoSize;
 import cz.vity.freerapid.plugins.webclient.MethodBuilder;
+import cz.vity.freerapid.plugins.webclient.interfaces.HttpFile;
 import org.apache.commons.httpclient.HttpMethod;
 
+import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * Class which contains main code
@@ -18,6 +19,18 @@ import java.util.regex.Pattern;
  * @author birchie
  */
 class UploadRocketFileRunner extends XFileSharingRunner {
+
+    @Override
+    protected List<FileNameHandler> getFileNameHandlers() {
+        final List<FileNameHandler> fileNameHandlers = super.getFileNameHandlers();
+        fileNameHandlers.add(new FileNameHandler() {
+            @Override
+            public void checkFileName(HttpFile httpFile, String content) throws ErrorDuringDownloadingException {
+                // no file name displayed
+            }
+        });
+        return fileNameHandlers;
+    }
 
     @Override
     protected List<FileSizeHandler> getFileSizeHandlers() {
@@ -28,9 +41,16 @@ class UploadRocketFileRunner extends XFileSharingRunner {
 
     @Override
     protected List<String> getDownloadLinkRegexes() {
-        final List<String> downloadLinkRegexes = super.getDownloadLinkRegexes();
-        downloadLinkRegexes.add("var download_url\\s*=\\s*'(http.+?" + Pattern.quote(httpFile.getFileName()) + ")'");
+        final List<String> downloadLinkRegexes =  new LinkedList<String>();
+        downloadLinkRegexes.add("<a[^<>]*href=\"(.+?)\"[^<>]*>[^<>]*Download Link");
         return downloadLinkRegexes;
+    }
+
+    @Override
+    protected String getDownloadLinkFromRegexes() throws ErrorDuringDownloadingException {
+        final String link = super.getDownloadLinkFromRegexes();
+        httpFile.setFileName(link.substring(1 + link.lastIndexOf("/")));
+        return link;
     }
 
     @Override
@@ -53,21 +73,9 @@ class UploadRocketFileRunner extends XFileSharingRunner {
     }
 
     @Override
-    protected void checkFileProblems() throws ErrorDuringDownloadingException {
-        try {
-            super.checkFileProblems();
-        } catch (ErrorDuringDownloadingException e) {
-            final String contentAsString = getContentAsString()
-                    .replaceAll("<font[^<>]+?visibility:hidden.+?</font>", "")
-                    .replaceAll("<font[^<>]+?font-size:0.+?</font>", "")
-                    .replaceAll("(?s)<td[^<>]+?color:\\s*transparent.+?</td>", "")
-                    .replaceAll("<h3[^<>]+?color:black.+?</h3>", "");
-            if (contentAsString.contains("file was deleted by") ||
-                    contentAsString.contains("The file was removed") ||
-                    contentAsString.contains("Reason for deletion") ||
-                    contentAsString.contains("fname\" value=\"\"")) {
-                throw new URLNotAvailableAnymoreException("File not found");
-            }
-        }
+    protected List<String> getFalseProblemRegexes() {
+        final List<String> falseProblemRegexes = super.getFalseProblemRegexes();
+        falseProblemRegexes.add("<h3[^<>]+?color:black.+?</h3>");
+        return falseProblemRegexes;
     }
 }

@@ -1,12 +1,8 @@
 package cz.vity.freerapid.plugins.services.one80upload;
 
-import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
-import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
 import cz.vity.freerapid.plugins.services.xfilesharing.XFileSharingRunner;
-import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 
 import java.util.List;
-import java.util.regex.Matcher;
 
 /**
  * Class which contains main code
@@ -35,13 +31,4 @@ class one80UploadFileRunner extends XFileSharingRunner {
         return downloadLinkRegexes;
     }
 
-    @Override    protected void checkFileProblems() throws ErrorDuringDownloadingException {
-        final String content = getContentAsString();
-        try {
-            super.checkFileProblems();
-        } catch (URLNotAvailableAnymoreException e) {
-            final Matcher match = PlugUtils.matcher("style=\"color:\\s*?transparent;\"[^>]*?>\\s*?File Not Found", content);
-            if (!match.find())  throw e;
-        }
-    }
 }

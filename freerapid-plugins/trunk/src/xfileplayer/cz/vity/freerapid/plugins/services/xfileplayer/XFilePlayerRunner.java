@@ -106,10 +106,14 @@ public abstract class XFilePlayerRunner extends XFileSharingRunner {
             if (link == null)
                 throw new PluginImplementationException("Download link not found");
         }
+        verifyFileExtension(link);
+        return link;
+    }
+
+    protected void verifyFileExtension(final String link) {
         final String ext = link.substring(link.lastIndexOf("."));
         if (!httpFile.getFileName().matches(".+?" + ext))
             httpFile.setFileName(httpFile.getFileName() + ext);
-        return link;
     }
 
     protected String unPackJavaScript() throws ErrorDuringDownloadingException {
