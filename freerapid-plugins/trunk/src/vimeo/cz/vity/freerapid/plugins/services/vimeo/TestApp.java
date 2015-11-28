@@ -19,7 +19,7 @@ public class TestApp extends PluginDevApplication {
             //httpFile.setNewURL(new URL("http://vimeo.com/47839067")); //pass : testing
             //httpFile.setNewURL(new URL("http://vimeo.com/20042866"));
             //httpFile.setNewURL(new URL("http://vimeo.com/59023363")); //on-demand trailer
-            httpFile.setNewURL(new URL("http://vimeo.com/ondemand/6596/59023363")); //on-demand trailer
+            //httpFile.setNewURL(new URL("http://vimeo.com/ondemand/6596/59023363")); //on-demand trailer
             httpFile.setNewURL(new URL("https://player.vimeo.com/video/58611141"));
             //httpFile.setNewURL(new URL("http://vimeo.com/ondemand/6596/80025907?autoplay=1"));
             final ConnectionSettings connectionSettings = new ConnectionSettings();

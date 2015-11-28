@@ -36,22 +36,25 @@ public class VimeoServiceImpl extends AbstractFileShareService {
         }
     }
 
-    VimeoSettingsConfig getConfig() throws Exception {
+    public VimeoSettingsConfig getConfig() throws Exception {
         synchronized (VimeoServiceImpl.class) {
             final ConfigurationStorageSupport storage = getPluginContext().getConfigurationStorageSupport();
             if (config == null) {
                 if (!storage.configFileExists(CONFIG_FILE)) {
                     config = new VimeoSettingsConfig();
-                    config.setVideoQuality(VideoQuality.HD);
                 } else {
-                    config = storage.loadConfigFromFile(CONFIG_FILE, VimeoSettingsConfig.class);
+                    try {
+                        config = storage.loadConfigFromFile(CONFIG_FILE, VimeoSettingsConfig.class);
+                    } catch (Exception e) {
+                        config = new VimeoSettingsConfig();
+                    }
                 }
             }
             return config;
         }
     }
 
-    void setConfig(final VimeoSettingsConfig config) {
+    public void setConfig(final VimeoSettingsConfig config) {
         synchronized (VimeoServiceImpl.class) {
             this.config = config;
         }

@@ -4,7 +4,7 @@ package cz.vity.freerapid.plugins.services.vimeo;
  * @author tong2shot
  */
 public class VimeoSettingsConfig {
-    private VideoQuality videoQuality;
+    private VideoQuality videoQuality = VideoQuality.HD;
 
     public VideoQuality getVideoQuality() {
         return videoQuality;

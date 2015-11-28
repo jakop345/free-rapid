@@ -100,6 +100,10 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
                 parseUserPage(getUserFromUrl());
                 return;
             }
+            if (isChannelPage()) {
+                parseChannelPage(getChannelIdFromUrl());
+                return;
+            }
             if (isPlaylist()) {
                 parsePlaylist();
                 return;
@@ -488,6 +492,9 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
                 final int LOWER_QUALITY_PENALTY = 10;
                 int weight = Integer.MAX_VALUE;
                 for (YouTubeMedia ytMedia : ytMediaMap.values()) {
+                    if (ytMedia.isDashVideo() && ytMedia.getVideoEncoding() != VideoEncoding.H264) {
+                        continue;
+                    }
                     int deltaQ = ytMedia.getVideoQuality() - configVideoQuality.getQuality();
                     int tempWeight = (deltaQ < 0 ? Math.abs(deltaQ) + LOWER_QUALITY_PENALTY : deltaQ);
                     if (tempWeight < weight) {
@@ -502,9 +509,13 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
             final int selectedVideoQuality = ytMediaMap.get(selectedItag).getVideoQuality();
 
             //select frame rate
+            selectedItag = -1;
             final FrameRate configFrameRate = config.getFrameRate();
             int weight = Integer.MIN_VALUE;
             for (YouTubeMedia ytMedia : ytMediaMap.values()) {
+                if (ytMedia.isDashVideo() && ytMedia.getVideoEncoding() != VideoEncoding.H264) {
+                    continue;
+                }
                 if (ytMedia.getVideoQuality() == selectedVideoQuality) {
                     int tempWeight = 0;
                     int frameRate = ytMedia.getFrameRate();
@@ -521,13 +532,20 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
                     }
                 }
             }
+            if (selectedItag == -1) {
+                throw new PluginImplementationException("Unable to select YouTube media");
+            }
             final int selectedFrameRate = ytMediaMap.get(selectedItag).getFrameRate();
 
             //select container
             final Container configContainer = config.getContainer();
             if (configContainer != Container.Any) {
+                selectedItag = -1;
                 weight = Integer.MIN_VALUE;
                 for (YouTubeMedia ytMedia : ytMediaMap.values()) {
+                    if (ytMedia.isDashVideo() && ytMedia.getVideoEncoding() != VideoEncoding.H264) {
+                        continue;
+                    }
                     if ((ytMedia.getVideoQuality() == selectedVideoQuality) && (ytMedia.getFrameRate() == selectedFrameRate)) {
                         int tempWeight = 0;
                         Container container = ytMedia.getContainer();
@@ -551,6 +569,9 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
                         }
                     }
                 }
+                if (selectedItag == -1) {
+                    throw new PluginImplementationException("Unable to select YouTube media");
+                }
             }
         }
 
@@ -563,7 +584,7 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
         int weight = Integer.MIN_VALUE;
         int secondaryWeight = Integer.MIN_VALUE;
         for (YouTubeMedia ytMedia : afDashStreamMap.values()) {
-            if (!ytMedia.isDashAudio() || (ytMedia.getAudioEncoding() == AudioEncoding.Vorbis)) { //skip non DASH audio or Vorbis
+            if (!ytMedia.isDashAudio() || (ytMedia.getAudioEncoding() != AudioEncoding.AAC)) { //skip non DASH audio or non AAC
                 continue;
             }
             int tempWeight = Integer.MIN_VALUE;
@@ -676,7 +697,7 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
                 try {
                     rootNode = mapper.readTree(getContentAsString());
                 } catch (IOException e) {
-                    throw new PluginImplementationException("Error parsing continuation content");
+                    throw new PluginImplementationException("Error parsing continuation content", e);
                 }
                 JsonNode contentHtmlNode = rootNode.get("content_html");
                 JsonNode loadMoreWidgetHtmlNode = rootNode.get("load_more_widget_html");
@@ -737,15 +758,43 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
         queueLinks(uriList);
     }
 
+    private void parseAndQueueLinks() throws ErrorDuringDownloadingException, URISyntaxException, IOException {
+        List<URI> uriList = getUriListFromContent(getContentAsString());
+        parseContinuation(uriList);
+        queueLinks(uriList);
+    }
+
+    private boolean isChannelPage() {
+        return fileURL.contains("/channel/");
+    }
+
+    private String getChannelIdFromUrl() throws ErrorDuringDownloadingException {
+        final Matcher matcher = PlugUtils.matcher("/channel/([^\\?&#/]+)", fileURL);
+        if (!matcher.find()) {
+            throw new PluginImplementationException("Error getting channel id");
+        }
+        return matcher.group(1);
+    }
+
+    //user uploaded video
+    private void parseChannelPage(final String channelId) throws Exception {
+        String userVideosUrl = String.format("https://www.youtube.com/channel/%s/videos", channelId);
+        if (!makeRedirectedRequest(getGetMethod(userVideosUrl))) {
+            checkProblems();
+            throw new ServiceConnectionProblemException();
+        }
+        checkProblems();
+
+        parseAndQueueLinks();
+    }
+
     private boolean isPlaylist() {
         return fileURL.contains("/playlist?");
     }
 
     //Playlist
     private void parsePlaylist() throws Exception {
-        List<URI> uriList = getUriListFromContent(getContentAsString());
-        parseContinuation(uriList);
-        queueLinks(uriList);
+        parseAndQueueLinks();
     }
 
     private boolean isCourseList() {
@@ -755,9 +804,7 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
     //Course list contains video playlist, lecture materials, and course materials
     private void parseCourseList() throws Exception {
         //Step #1 queue video playlist related to the course
-        List<URI> uriList = getUriListFromContent(getContentAsString());
-        parseContinuation(uriList);
-        queueLinks(uriList);
+        parseAndQueueLinks();
 
         /*
         Lecture materials and course materials - pending.
