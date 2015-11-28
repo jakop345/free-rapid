@@ -3,18 +3,19 @@ package cz.vity.freerapid.plugins.services.vimeo;
 import cz.vity.freerapid.plugins.exceptions.*;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.FileState;
+import cz.vity.freerapid.plugins.webclient.utils.JsonMapper;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
+import cz.vity.freerapid.utilities.LogUtils;
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpMethod;
+import org.codehaus.jackson.JsonNode;
 
 import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Class which contains main code
@@ -128,20 +129,29 @@ class VimeoFileRunner extends AbstractRunner {
             throw new PluginImplementationException("Data config URL not found");
         }
 
-        Matcher matcher = getMatcherAgainstContent("\"(?:qualities|h264|vp6)\":\\{(.+?)\\},\"(?:codecs|hls)\"");
-        if (!matcher.find()) {
-            throw new PluginImplementationException("Error getting video streams");
+        JsonNode rootNode;
+        try {
+            rootNode = new JsonMapper().getObjectMapper().readTree(getContentAsString());
+        } catch (IOException e) {
+            throw new PluginImplementationException("Error parsing video config");
         }
-        String qualitiesContent = matcher.group(1);
-        matcher = PlugUtils.matcher("\"(.+?)\":\\{(.+?)}", qualitiesContent);
 
         final List<VimeoVideo> videoList = new LinkedList<VimeoVideo>();
-        while (matcher.find()) {
-            for (final VideoQuality videoQuality : VideoQuality.values()) {
-                if (videoQuality.name().toLowerCase(Locale.ENGLISH).equals(matcher.group(1))) {
-                    final JSON json = new JSON(matcher.group(2));
-                    final VimeoVideo video = new VimeoVideo(videoQuality, json.getStringVar("url"));
-                    videoList.add(video);
+        JsonNode progressiveNodes = rootNode.findPath("progressive");
+        if (progressiveNodes == null) {
+            throw new PluginImplementationException("'Progressive' node not found in video config");
+        }
+        for (JsonNode progressiveNode : progressiveNodes) {
+            String strQuality = progressiveNode.get("quality").getTextValue();
+            String url = progressiveNode.get("url").getTextValue();
+            if (strQuality != null && url != null) {
+                try {
+                    int quality = Integer.parseInt(strQuality.replace("p", "").trim());
+                    VimeoVideo vimeoVideo = new VimeoVideo(quality, url);
+                    videoList.add(vimeoVideo);
+                    logger.info("Found video: " + vimeoVideo);
+                } catch (NumberFormatException e) {
+                    LogUtils.processException(logger, e);
                 }
             }
         }
@@ -173,55 +183,25 @@ class VimeoFileRunner extends AbstractRunner {
         }
     }
 
-    private static class JSON {
-        private final String content;
-
-        public JSON(final String content) {
-            this.content = content;
-        }
-
-        public String getStringVar(final String name) throws ErrorDuringDownloadingException {
-            final Matcher matcher = PlugUtils.matcher("\"" + Pattern.quote(name) + "\"\\s*?:\\s*?\"(.*?)\"", content);
-            if (!matcher.find()) {
-                throw new PluginImplementationException("Parameter '" + name + "' not found");
-            }
-            return matcher.group(1);
-        }
-
-        public String getNumVar(final String name) throws ErrorDuringDownloadingException {
-            final Matcher matcher = PlugUtils.matcher("\"" + Pattern.quote(name) + "\"\\s*?:\\s*?(\\d+)", content);
-            if (!matcher.find()) {
-                throw new PluginImplementationException("Parameter '" + name + "' not found");
-            }
-            return matcher.group(1);
-        }
-    }
-
     private class VimeoVideo implements Comparable<VimeoVideo> {
         private final static int LOWER_QUALITY_PENALTY = 10;
-        private final VideoQuality videoQuality;
+        private final int quality;
         private final String url;
         private final int weight;
 
-        public VimeoVideo(final VideoQuality videoQuality, final String url) {
-            this.videoQuality = videoQuality;
+        public VimeoVideo(final int quality, final String url) {
+            this.quality = quality;
             this.url = url;
             this.weight = calcWeight();
-            logger.info("Found video: " + this);
         }
 
         private int calcWeight() {
             final VideoQuality configQuality = config.getVideoQuality();
-            //prefer nearest better if the same quality doesn't exist
-            return videoQuality.compareTo(configQuality) < 0
-                    ? Math.abs(videoQuality.ordinal() - configQuality.ordinal()) + LOWER_QUALITY_PENALTY
-                    : videoQuality.ordinal() - configQuality.ordinal();
+            final int deltaQ = quality - configQuality.getQuality();
+            return (deltaQ < 0 ? Math.abs(deltaQ) + LOWER_QUALITY_PENALTY : deltaQ);
         }
 
-        public String getQualityLabel() {
-            return videoQuality.name().toLowerCase(Locale.ENGLISH);
-        }
-
+        @SuppressWarnings("NullableProblems")
         @Override
         public int compareTo(final VimeoVideo that) {
             return Integer.valueOf(this.weight).compareTo(that.weight);
@@ -230,7 +210,7 @@ class VimeoFileRunner extends AbstractRunner {
         @Override
         public String toString() {
             return "VimeoVideo{" +
-                    "videoQuality=" + videoQuality +
+                    "quality=" + quality +
                     ", url='" + url + '\'' +
                     ", weight=" + weight +
                     '}';
