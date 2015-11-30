@@ -48,6 +48,9 @@ public class ReCaptcha {
         this.publicKey = publicKey;
         this.client = c;
 
+        if (!publicKey.matches("[0-9a-zA-Z_-]{40}")) {
+            throw new PluginImplementationException("Invalid recaptcha public key");
+        }
         try {
             challenge = new ReCaptchaSlimerJs(publicKey, c).getChallenge();
         } catch (IOException e) {

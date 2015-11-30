@@ -9,6 +9,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.logging.Logger;
@@ -20,12 +22,13 @@ import java.util.regex.Matcher;
 public class ReCaptchaSlimerJs {
     private final static Logger logger = Logger.getLogger(ReCaptchaSlimerJs.class.getName());
 
-    private final String publicKey;
-    private final HttpDownloadClient client;
     private final static String PATH_WINDOWS = "tools\\slimerjs\\slimerjs.bat";
     private final static String PATH_LINUX = "tools/slimerjs/slimerjs";
     private final static String PATH_APP_INI_WINDOWS = "tools\\slimerjs\\application.ini";
     private final static String PATH_APP_INI_LINUX = "tools/slimerjs/application.ini";
+
+    private final String publicKey;
+    private final HttpDownloadClient client;
 
 
     static {
@@ -73,7 +76,13 @@ public class ReCaptchaSlimerJs {
             throw new IOException("SlimerJS not found");
         }
 
-        String referer = (client.getReferer().isEmpty() ? "https://www.bing.com" : client.getReferer());
+        String referer = (client.getReferer() == null || client.getReferer().isEmpty() ? "https://www.bing.com" : client.getReferer());
+        try {
+            referer = new URI(referer).toString();
+        } catch (URISyntaxException e) {
+            referer = "https://www.bing.com";
+        }
+
         String jsContent =
                 "var page = require(\"webpage\").create();\n" +
                         "page.onResourceRequested = function(requestData, networkRequest) {\n" +

@@ -42,8 +42,7 @@ class GoogleDocsFileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        PlugUtils.checkName(httpFile, content, "\"filename\":\"", "\"");
-        PlugUtils.checkFileSize(httpFile, content, "\"fileSize\":\"", "\"");
+        PlugUtils.checkName(httpFile, content, "\"og:title\" content=\"", "\"");
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
 
@@ -62,13 +61,12 @@ class GoogleDocsFileRunner extends AbstractRunner {
         if (makeRedirectedRequest(method)) {
             checkProblems();
             checkNameAndSize(getContentAsString());
-            String downloadUrl;
-            try {
-                downloadUrl = PlugUtils.unescapeUnicode(PlugUtils.getStringBetween(getContentAsString(), "\"downloadUrl\":\"", "\""));
-            } catch (PluginImplementationException e) {
+            Matcher matcher = getMatcherAgainstContent("\"(https?://[^\"]+?download)\"");
+            if (!matcher.find()) {
                 throw new PluginImplementationException("Download URL not found");
             }
-            setClientParameter(DownloadClientConsts.IGNORE_ACCEPT_RANGES, true);
+            String downloadUrl = PlugUtils.unescapeUnicode(matcher.group(1));
+            setClientParameter(DownloadClientConsts.NO_CONTENT_LENGTH_AVAILABLE, true);
             httpFile.setResumeSupported(true);
             HttpMethod httpMethod = getMethodBuilder().setReferer(fileURL).setAction(downloadUrl).toGetMethod();
             if (!tryDownloadAndSaveFile(httpMethod)) {
@@ -81,7 +79,7 @@ class GoogleDocsFileRunner extends AbstractRunner {
 
                 String referer = httpMethod.getURI().toString();
                 URL url = new URL(referer);
-                Matcher matcher = getMatcherAgainstContent("<a id=\"uc-download-link\".*? href=\"(.+?)\"");
+                matcher = getMatcherAgainstContent("<a id=\"uc-download-link\".*? href=\"(.+?)\"");
                 if (!matcher.find()) {
                     throw new PluginImplementationException("Download link not found");
                 }

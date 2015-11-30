@@ -7,14 +7,14 @@ package cz.vity.freerapid.plugins.services.youtube;
  */
 public class YouTubeSettingsConfig {
     private DownloadMode downloadMode = DownloadMode.downloadVideo;
-    private VideoQuality videoQuality = VideoQuality._480;
+    private VideoQuality videoQuality = VideoQuality._720;
     private Container container = Container.mp4;
     private FrameRate frameRate = FrameRate._30;
     private AudioQuality convertAudioQuality = AudioQuality._192;
     private AudioQuality extractAudioQuality = AudioQuality._192;
     private boolean reversePlaylistOrder = false;
     private boolean downloadSubtitles = false;
-    private boolean enableDash = true;
+    private boolean enableDash = false;
     private boolean enableInternalMultiplexer = true;
 
     public void setVideoQuality(VideoQuality videoQuality) {

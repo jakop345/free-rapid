@@ -776,15 +776,14 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
         return matcher.group(1);
     }
 
-    //user uploaded video
+    //Channel
     private void parseChannelPage(final String channelId) throws Exception {
-        String userVideosUrl = String.format("https://www.youtube.com/channel/%s/videos", channelId);
-        if (!makeRedirectedRequest(getGetMethod(userVideosUrl))) {
+        String channelVideosUrl = String.format("https://www.youtube.com/channel/%s/videos", channelId);
+        if (!makeRedirectedRequest(getGetMethod(channelVideosUrl))) {
             checkProblems();
             throw new ServiceConnectionProblemException();
         }
         checkProblems();
-
         parseAndQueueLinks();
     }
 
