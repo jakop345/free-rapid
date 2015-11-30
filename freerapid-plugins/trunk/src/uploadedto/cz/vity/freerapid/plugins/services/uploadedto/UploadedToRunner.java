@@ -154,6 +154,7 @@ class UploadedToRunner extends AbstractRunner {
     }
 
     private HttpMethod stepCaptcha(final String fileId) throws Exception {
+        client.setReferer(fileURL);
         final ReCaptcha r = new ReCaptcha("6Lcqz78SAAAAAPgsTYF3UlGf2QFQCNuPMenuyHF3", client);
         final String captcha = getCaptchaSupport().getCaptcha(r.getImageURL());
         if (captcha == null) {

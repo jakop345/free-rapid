@@ -26,7 +26,6 @@ public class TestApp extends PluginDevApplication {
             ReCaptcha reCaptcha = new ReCaptcha("6Lenx_USAAAAAF5L1pmTWvWcH73dipAEzNnmNLgy", client);
             CaptchaSupport captchaSupport = new CaptchaSupport(client, new DevDialogSupport(null));
             captchaSupport.getCaptcha(reCaptcha.getImageURL());
-            System.out.println(reCaptcha.getChallenge());
         } catch (Exception e) {//catch possible exception
             e.printStackTrace(); //writes error output - stack trace to console
         }

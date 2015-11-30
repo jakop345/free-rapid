@@ -290,6 +290,7 @@ public abstract class XFileSharingRunner extends AbstractRunner {
     protected boolean stepCaptcha(final MethodBuilder methodBuilder) throws Exception {
         for (final CaptchaType captchaType : captchaTypes) {
             if (captchaType.canHandle(getContentAsString())) {
+                client.setReferer(fileURL);
                 logger.info("Captcha type: " + captchaType.getClass().getSimpleName());
                 captchaType.handleCaptcha(methodBuilder, client, getCaptchaSupport(), downloadTask);
                 return (captchaType instanceof ReCaptchaType);

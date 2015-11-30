@@ -6,6 +6,7 @@ import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.DownloadClientConsts;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
+import cz.vity.freerapid.utilities.LogUtils;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
@@ -86,9 +87,9 @@ class NitroFlareFileRunner extends AbstractRunner {
             }
             int waitTime = 180;
             try {
-                PlugUtils.getNumberBetween(getContentAsString(), "data-timer=\"", "\"");
+                waitTime = PlugUtils.getNumberBetween(getContentAsString(), "data-timer=\"", "\"");
             } catch (PluginImplementationException e) {
-                //
+                LogUtils.processException(logger, e);
             }
             fileURL = method.getURI().toString() + "/free"; //redirected to /free, explicit because of POST
             setCookie(fileId);
