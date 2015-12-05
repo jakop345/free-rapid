@@ -15,12 +15,12 @@ import java.util.regex.Matcher;
 /**
  * Class which contains main code
  *
- * @author birchie
+ * @author birchie, lamik99
  */
 class FastShare_PremiumFileRunner extends AbstractRunner {
     private final static Logger logger = Logger.getLogger(FastShare_PremiumFileRunner.class.getName());
-    private final static String LOGIN_PAGE = "http://www.fastshare.eu/login";
-    private final static String LOGIN_URL = "http://www.fastshare.eu/sql.php";
+    private final static String HOME_PAGE = "http://www.fastshare.cz";
+    private final static String LOGIN_URL = "http://www.fastshare.cz/sql.php";
 
     @Override
     public void runCheck() throws Exception {
@@ -102,7 +102,7 @@ class FastShare_PremiumFileRunner extends AbstractRunner {
                 }
             }
             final HttpMethod method = getMethodBuilder()
-                    .setAction(LOGIN_URL).setReferer(LOGIN_PAGE)
+                    .setAction(LOGIN_URL).setReferer(HOME_PAGE)
                     .setParameter("login", pa.getUsername())
                     .setParameter("heslo", pa.getPassword())
                     .toPostMethod();
@@ -110,8 +110,11 @@ class FastShare_PremiumFileRunner extends AbstractRunner {
             if (status / 100 == 3) {
                 if (method.getResponseHeader("Location").getValue().contains("login?error=1"))
                     throw new BadLoginException("Invalid FastShare account login information!");
-                if (!makeRedirectedRequest(getGetMethod(method.getResponseHeader("Location").getValue()))) {
-                    throw new ServiceConnectionProblemException("Error logging in");
+                String redirected = method.getResponseHeader("Location").getValue();
+                if (!redirected.startsWith("http"))
+                    redirected = HOME_PAGE + redirected;
+                if (!makeRedirectedRequest(getGetMethod(redirected))) {
+                        throw new ServiceConnectionProblemException("Error logging in");
                 }
                 return;
             } else if (status / 100 != 2) {
@@ -122,6 +125,4 @@ class FastShare_PremiumFileRunner extends AbstractRunner {
             }
         }
     }
-
-
 }
