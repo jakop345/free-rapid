@@ -108,7 +108,10 @@ class OneFichierFileRunner extends AbstractRunner {
                 httpFile.setState(DownloadState.COMPLETED);
                 httpFile.getProperties().put("removeCompleted", true);
             } else {
+                int loopCount = 0;
                 while (true) {
+                    if (loopCount++ > 10)
+                        throw new ServiceConnectionProblemException("Error accessing download link");
                     checkDownloadProblems();//check problems
                     try {
                         checkNameAndSize(getContentAsString());//extract file name and size from the page
