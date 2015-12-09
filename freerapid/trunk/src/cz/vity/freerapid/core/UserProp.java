@@ -391,6 +391,7 @@ final public class UserProp {
     public static final int MAX_SIMULTANEOUS_RUN_CHECK_DEFAULT = 5;
 
     public static final String CONTENT_TABLE_DATE_FORMAT = "contentTableDateFormat";
+    public static final String HISTORY_TABLE_DATE_FORMAT = "historyTableDateFormat";
 
     public static final String SKIP_DUPLICATE_FILES = "skipDuplicateFiles";
     public static final boolean SKIP_DUPLICATE_FILES_DEFAULT = false;
