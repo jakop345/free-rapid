@@ -264,10 +264,10 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
         }
         if (files.size() == 1) {
             final InformationDialog dialog = new InformationDialog(owner, director, files.get(0));
-            ((MainApp)director.getContext().getApplication()).show(dialog);
+            ((MainApp) director.getContext().getApplication()).show(dialog);
         } else {
             final MultipleSettingsDialog dialog = new MultipleSettingsDialog(owner, files);
-            ((MainApp)director.getContext().getApplication()).show(dialog);
+            ((MainApp) director.getContext().getApplication()).show(dialog);
         }
     }
 
@@ -475,7 +475,7 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
                                     FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
                                     new ColumnSpec(ColumnSpec.FILL, Sizes.DEFAULT, FormSpec.DEFAULT_GROW),
                                     FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-                                    new ColumnSpec(ColumnSpec.FILL, Sizes.DEFAULT, FormSpec.DEFAULT_GROW )
+                                    new ColumnSpec(ColumnSpec.FILL, Sizes.DEFAULT, FormSpec.DEFAULT_GROW)
                             },
                             RowSpec.decodeSpecs("default")), panel1);
 
@@ -994,10 +994,12 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
 
 
     private static class DateCellRenderer extends DefaultTableCellRenderer {
-        private String yesterday;
+        private final String yesterday;
+        private final String dateFormat;
 
         private DateCellRenderer(ResourceMap map) {
             this.yesterday = map.getString("yesterday");
+            this.dateFormat = AppPrefs.getProperty(UserProp.HISTORY_TABLE_DATE_FORMAT, "%1$tB %1$te");
         }
 
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -1029,7 +1031,7 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
                 return String.format("%tA", value);
             }
             //jinak
-            return String.format("%1$tB %1$te", value);
+            return String.format(dateFormat, value);
         }
     }
 

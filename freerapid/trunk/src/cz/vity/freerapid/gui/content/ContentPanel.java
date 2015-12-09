@@ -12,6 +12,7 @@ import cz.vity.freerapid.gui.dialogs.MultipleSettingsDialog;
 import cz.vity.freerapid.gui.managers.DataManager;
 import cz.vity.freerapid.gui.managers.ManagerDirector;
 import cz.vity.freerapid.gui.managers.MenuManager;
+import cz.vity.freerapid.gui.managers.exceptions.NotSupportedDownloadServiceException;
 import cz.vity.freerapid.model.DownloadFile;
 import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
 import cz.vity.freerapid.plugins.webclient.DownloadState;
@@ -1146,7 +1147,11 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
         JMenuItem pluginOptions = new JMenuItem(new PluginOptionsAction(pluginID));
         pluginOptions.setText(context.getResourceMap().getString("textPluginOptions", pluginID));
         if (director.getPluginsManager().getPluginMetadata(pluginID).hasFavicon())
-            pluginOptions.setIcon(director.getPluginsManager().getPluginInstance(pluginID).getFaviconImage());
+            try {
+                pluginOptions.setIcon(director.getPluginsManager().getPluginInstance(pluginID).getFaviconImage());
+            } catch (NotSupportedDownloadServiceException e) {
+                return null; //plugin wasn't properly initialized
+            }
         return pluginOptions;
     }
 
