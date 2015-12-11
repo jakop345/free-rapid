@@ -62,7 +62,10 @@ class OpenLoadFileRunner extends AbstractRunner {
             checkProblems();//check problems
             checkNameAndSize(contentAsString);//extract file name and size from the page
 
-            final String fid = PlugUtils.getStringBetween(contentAsString, "var fid= \"", "\"");
+            final Matcher match = PlugUtils.matcher("/f/([^/\\\"]+?)[/\\\"]", contentAsString);
+            if (!match.find())
+                throw new PluginImplementationException("File ID not found");
+            final String fid = match.group(1);
             final int wait = PlugUtils.getNumberBetween(contentAsString, "secondsdl = ", ";");
             if (wait > 0)
                 downloadTask.sleep(1 + wait);
