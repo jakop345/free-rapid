@@ -17,12 +17,13 @@ class YouPornSettingsPanel extends JPanel {
         initPanel();
     }
 
-    private static final String[] qualityStrings = {"Small", "Medium", "Large"};
-    private static final String[] qualDescStrings = {"MP4 - For iPhone/iPod", "MP4 - For Windows 7/8, Mac and iPad", "MPG - For Windows XP/Vista"};
-    private static final String[] qualTypeStrings = {".mp4", ".mp4", ".mpg"};
+    private static final String[] qualityStrings = {"Small", "Medium", "Large", "MAXIMUM"};
+    private static final String[] qualDescStrings = {"MP4 - For iPhone/iPod", "MP4 - For Windows 7/8, Mac and iPad", "MP4 HD - For Windows 7/8, Mac and iPad", "Largest Available"};
+    private static final String[] qualSizeStrings = {"240p", "480p", "720p", "1080p"};
+    private static final String[] qualTypeStrings = {".mp4", ".mp4", ".mp4", ".mp4"};
 
-    public String getQualityDescription(final int quality) {
-        return qualDescStrings[quality];
+    public String getQualitySelection(final int quality) {
+        return qualSizeStrings[quality];
     }
 
     public String getQualityType(final int quality) {
@@ -30,7 +31,6 @@ class YouPornSettingsPanel extends JPanel {
     }
 
     private void initPanel() {
-
         final JLabel qualityLabel = new JLabel("Preferred video quality:");
         final JComboBox qualityList = new JComboBox(qualityStrings);
         final JLabel qualDescLabel = new JLabel("");
@@ -44,7 +44,7 @@ class YouPornSettingsPanel extends JPanel {
         qualityList.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                qualDescLabel.setText(getQualityDescription(qualityList.getSelectedIndex()));
+                qualDescLabel.setText(qualDescStrings[qualityList.getSelectedIndex()]);
                 config.setVideoQuality(qualityList.getSelectedIndex());
             }
         });

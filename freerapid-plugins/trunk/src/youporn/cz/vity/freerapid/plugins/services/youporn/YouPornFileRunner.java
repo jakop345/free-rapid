@@ -10,6 +10,7 @@ import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
+import java.util.HashMap;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 
@@ -21,6 +22,8 @@ import java.util.regex.Matcher;
 class YouPornFileRunner extends AbstractRunner {
     private final static Logger logger = Logger.getLogger(YouPornFileRunner.class.getName());
     private YouPornServiceImpl service;
+    private HashMap<String, String> videoUrls = new HashMap<String, String>();
+    private String selectedQuality = "";
 
     @Override
     public void runCheck() throws Exception { //this method validates file
@@ -30,6 +33,7 @@ class YouPornFileRunner extends AbstractRunner {
         final GetMethod getMethod = getGetMethod(fileURL);//make first request
         if (makeRedirectedRequest(getMethod)) {
             checkProblems();
+            loadSelectedVideoQuality(getContentAsString());
             checkNameAndSize(getContentAsString());//ok let's extract file name and size from the page
         } else {
             checkProblems();
@@ -42,7 +46,7 @@ class YouPornFileRunner extends AbstractRunner {
         if (!matchN.find())
             throw new PluginImplementationException("File name not found");
         httpFile.setFileName(matchN.group(1).trim() + service.getVideoFormat());
-        final Matcher matchS = PlugUtils.matcher(service.getVideoDescription() + "\\s*?</a>\\s*?\\((.+?)\\)\\s*?</li>", content);
+        final Matcher matchS = PlugUtils.matcher("<a[^>]*" + selectedQuality + "[^>]*>.+?</a>\\s*(?:<[^>]*>)?\\((.+?)\\)\\s*<", content);
         if (!matchS.find())
             throw new PluginImplementationException("File size not found");
         httpFile.setFileSize(PlugUtils.getFileSizeFromString(matchS.group(1)));
@@ -59,11 +63,11 @@ class YouPornFileRunner extends AbstractRunner {
         if (makeRedirectedRequest(method)) { //we make the main request
             final String contentAsString = getContentAsString();//check for response
             checkProblems();//check problems
+            loadSelectedVideoQuality(contentAsString);
             checkNameAndSize(contentAsString);//extract file name and size from the page
-
             final HttpMethod httpMethod = getMethodBuilder()
                     .setReferer(fileURL)
-                    .setActionFromAHrefWhereATagContains(service.getVideoDescription())
+                    .setAction(videoUrls.get(selectedQuality))
                     .toHttpMethod();
             setClientParameter("dontUseHeaderFilename", true);
             if (!tryDownloadAndSaveFile(httpMethod)) {
@@ -83,4 +87,26 @@ class YouPornFileRunner extends AbstractRunner {
         }
     }
 
+    private void extractVideoURLs(final String content) throws Exception {
+        final Matcher match = PlugUtils.matcher("<a[^>]*href=['\"]([^'\">]*/(\\d+p)[^'\">]*)['\"][^>]*>", content);
+        while (match.find()) {
+            videoUrls.put(match.group(2), match.group(1));
+            logger.info("Found Video : " + match.group(2) + " >> " + match.group(1));
+        }
+        if (videoUrls.size() <= 0)
+            throw new PluginImplementationException("No videos found on this page");
+    }
+
+    private void loadSelectedVideoQuality(final String content) throws Exception {
+        extractVideoURLs(content);
+        selectedQuality = service.getVideoQuality();
+        logger.info("Default Quality Setting: " +selectedQuality);
+        int setting = service.getVideoSetting();
+        while (!videoUrls.containsKey(selectedQuality)) {
+            setting = setting - 1;
+            if (setting < 0) throw new PluginImplementationException("Unable to locate video");
+            selectedQuality = service.getVideoQuality(setting);
+        }
+        logger.info("Using Quality Setting: " +selectedQuality);
+    }
 }

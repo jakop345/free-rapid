@@ -52,8 +52,16 @@ public class YouPornServiceImpl extends AbstractFileShareService {
         }
     }
 
-    public String getVideoDescription() throws Exception {
-        return (new YouPornSettingsPanel(this).getQualityDescription(config.getVideoQuality()));
+    public String getVideoQuality() throws Exception {
+        return (new YouPornSettingsPanel(this).getQualitySelection(config.getVideoQuality()));
+    }
+
+    public String getVideoQuality(int setting) throws Exception {
+        return (new YouPornSettingsPanel(this).getQualitySelection(setting));
+    }
+
+    public int getVideoSetting() throws Exception {
+        return (config.getVideoQuality());
     }
 
     public String getVideoFormat() throws Exception {
