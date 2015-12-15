@@ -6,6 +6,7 @@ import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
 import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.FileState;
+import cz.vity.freerapid.plugins.webclient.MethodBuilder;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -58,17 +59,41 @@ class BitsterFileRunner extends AbstractRunner {
             if (!match.find())
                 throw new PluginImplementationException("File id not found");
 
-            HttpMethod httpMethod = getMethodBuilder().setReferer(fileURL)
-                    .setAction("/data/getfilefreedownloadurl").setAjax()
+            MethodBuilder builder = getMethodBuilder().setReferer(fileURL)
+                    .setAction("/data/getfiledownloadfree").setAjax()
                     .setParameter("id", match.group(1))
-                    .toGetMethod();
-            if (!makeRedirectedRequest(httpMethod)) {
+                    .setParameter("pw", "null")
+                    .setParameter("_", "" + System.currentTimeMillis());
+            if (!makeRedirectedRequest(builder.toGetMethod())) {
                 checkProblems();
                 throw new ServiceConnectionProblemException();
             }
             checkProblems();
 
-            httpMethod = getGetMethod(getContentAsString());
+            if (!getContentAsString().contains("\"url\":\"http")) {
+                HttpMethod httpMethod = getMethodBuilder().setReferer(fileURL)
+                        .setAction("/page/getmodal").setAjax()
+                        .setParameter("id", PlugUtils.getStringBetween(getContentAsString(), "url\":\"", "\"").replaceAll("#", ""))
+                        .setParameter("_", "" + System.currentTimeMillis())
+                        .toGetMethod();
+                if (!makeRedirectedRequest(httpMethod)) {
+                    checkProblems();
+                    throw new ServiceConnectionProblemException();
+                }
+                checkProblems();
+
+                if (!getContentAsString().contains("\"url\":\"http")) {
+                    builder = builder.setParameter("confirm", "true")
+                            .setParameter("_", "" + System.currentTimeMillis());
+                    if (!makeRedirectedRequest(builder.toGetMethod())) {
+                        checkProblems();
+                        throw new ServiceConnectionProblemException();
+                    }
+                    checkProblems();
+                }
+            }
+            checkProblems();
+            HttpMethod httpMethod = getGetMethod(PlugUtils.getStringBetween(getContentAsString(), "url\":\"", "\""));
             if (!tryDownloadAndSaveFile(httpMethod)) {
                 checkProblems();//if downloading failed
                 throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
@@ -80,9 +105,15 @@ class BitsterFileRunner extends AbstractRunner {
     }
 
     private void checkProblems() throws ErrorDuringDownloadingException {
-        final String contentAsString = getContentAsString();
-        if (contentAsString.contains(":title\" content=\"Bitster.cz\"")) {
+        final String content = getContentAsString();
+        if (content.contains(":title\" content=\"Bitster.cz\"")) {
             throw new URLNotAvailableAnymoreException("File not found"); //let to know user in FRD
+        }
+        if (content.contains("\"restrictionip\":\"true\"")) {
+            throw new ServiceConnectionProblemException("Your IP is already downloading");
+        }
+        if (content.contains("\"restrictionslots\":\"true\"")) {
+            throw new ServiceConnectionProblemException("No free download slots available at this time");
         }
     }
 
