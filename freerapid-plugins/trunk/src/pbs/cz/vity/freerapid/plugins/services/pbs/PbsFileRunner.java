@@ -2,9 +2,9 @@ package cz.vity.freerapid.plugins.services.pbs;
 
 import cz.vity.freerapid.plugins.exceptions.*;
 import cz.vity.freerapid.plugins.services.applehls.HlsDownloader;
-import cz.vity.freerapid.plugins.services.rtmp.AbstractRtmpRunner;
 import cz.vity.freerapid.plugins.services.rtmp.RtmpDownloader;
 import cz.vity.freerapid.plugins.services.rtmp.RtmpSession;
+import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.utils.HttpUtils;
 import cz.vity.freerapid.plugins.webclient.utils.JsonMapper;
@@ -24,7 +24,7 @@ import java.util.regex.Matcher;
  * @author ntoskrnl
  * @author tong2shot
  */
-class PbsFileRunner extends AbstractRtmpRunner {
+class PbsFileRunner extends AbstractRunner {
     private final static Logger logger = Logger.getLogger(PbsFileRunner.class.getName());
     private final static String DEFAULT_EXT = ".flv";
     private SettingsConfig config;
@@ -78,15 +78,14 @@ class PbsFileRunner extends AbstractRtmpRunner {
             }
 
             switch (pbsMedia.protocol) {
-                case HTTP: {
+                case HTTP:
                     httpFile.setFileName(HttpUtils.replaceInvalidCharsForFileSystem(httpFile.getFileName().replaceFirst("\\.[^\\.]{3,4}$", ".mp4"), "_"));
                     if (!tryDownloadAndSaveFile(getMethodBuilder().setReferer(pbsMedia.url).setAction(location.getValue()).toGetMethod())) {
                         checkProblems();
                         throw new ServiceConnectionProblemException("Error starting download");
                     }
                     break;
-                }
-                case RTMP: {
+                case RTMP:
                     final String[] rtmpData = location.getValue().split("mp4:");
                     if (rtmpData.length != 2) {
                         throw new PluginImplementationException("Error parsing RTMP URL");
@@ -95,12 +94,10 @@ class PbsFileRunner extends AbstractRtmpRunner {
                     rtmpSession.getConnectParams().put("pageUrl", fileURL);
                     new RtmpDownloader(client, downloadTask).tryDownloadAndSaveFile(rtmpSession);
                     break;
-                }
-                case HLS: {
+                case HLS:
                     httpFile.setFileName(HttpUtils.replaceInvalidCharsForFileSystem(httpFile.getFileName().replaceFirst("\\.[^\\.]{3,4}$", ".ts"), "_"));
                     new HlsDownloader(client, httpFile, downloadTask).tryDownloadAndSaveFile(location.getValue());
                     break;
-                }
             }
 
         } else {
@@ -122,7 +119,7 @@ class PbsFileRunner extends AbstractRtmpRunner {
     }
 
     private String getId() throws ErrorDuringDownloadingException {
-        final Matcher matcher = PlugUtils.matcher("http://video\\.pbs\\.org/video/(\\d+)", fileURL);
+        final Matcher matcher = PlugUtils.matcher("http://(?:video|www)\\.pbs\\.org/video/(\\d+)", fileURL);
         if (!matcher.find()) {
             throw new PluginImplementationException("Error parsing file URL");
         }
@@ -139,7 +136,7 @@ class PbsFileRunner extends AbstractRtmpRunner {
         try {
             rootNode = new JsonMapper().getObjectMapper().readTree(content);
         } catch (IOException e) {
-            throw new PluginImplementationException("Error parsing JSON root node");
+            throw new PluginImplementationException("Error parsing JSON root node", e);
         }
         return rootNode;
     }
@@ -181,8 +178,8 @@ class PbsFileRunner extends AbstractRtmpRunner {
     private static class PbsMedia {
         enum Protocol {HTTP, RTMP, HLS}
 
-        final String url;
-        final Protocol protocol;
+        private final String url;
+        private final Protocol protocol;
 
         public PbsMedia(String url, Protocol protocol) {
             this.url = url;

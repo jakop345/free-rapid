@@ -19,11 +19,12 @@ public class TestApp extends PluginDevApplication {
             //InputStream is = new BufferedInputStream(new FileInputStream("E:\\Stuff\\logtest.properties"));
             //LogManager.getLogManager().readConfiguration(is);
             //we set file URL
-            httpFile.setNewURL(new URL("http://video.pbs.org/video/2163057527/")); //rtmp
+            //httpFile.setNewURL(new URL("http://video.pbs.org/video/2163057527/")); //rtmp
             //httpFile.setNewURL(new URL("http://video.pbs.org/video/2365607036/")); //hls
+            httpFile.setNewURL(new URL("http://www.pbs.org/video/2365629405/"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
-            //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
+            //connectionSettings.setProxy("localhost", 9040, Proxy.Type.SOCKS); //eg we can use local proxy to sniff HTTP communication
             //then we tries to download
             final PbsServiceImpl service = new PbsServiceImpl(); //instance of service - of our plugin
             //runcheck makes the validation
