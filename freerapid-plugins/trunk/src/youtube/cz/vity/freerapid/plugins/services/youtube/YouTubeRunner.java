@@ -513,7 +513,7 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
             final FrameRate configFrameRate = config.getFrameRate();
             int weight = Integer.MIN_VALUE;
             for (YouTubeMedia ytMedia : ytMediaMap.values()) {
-                if (ytMedia.isDashVideo() && ytMedia.getVideoEncoding() != VideoEncoding.H264) {
+                if (config.isEnableInternalMultiplexer() && ytMedia.isDashVideo() && ytMedia.getVideoEncoding() != VideoEncoding.H264) {
                     continue;
                 }
                 if (ytMedia.getVideoQuality() == selectedVideoQuality) {
@@ -543,7 +543,7 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
                 selectedItag = -1;
                 weight = Integer.MIN_VALUE;
                 for (YouTubeMedia ytMedia : ytMediaMap.values()) {
-                    if (ytMedia.isDashVideo() && ytMedia.getVideoEncoding() != VideoEncoding.H264) {
+                    if (config.isEnableInternalMultiplexer() && ytMedia.isDashVideo() && ytMedia.getVideoEncoding() != VideoEncoding.H264) {
                         continue;
                     }
                     if ((ytMedia.getVideoQuality() == selectedVideoQuality) && (ytMedia.getFrameRate() == selectedFrameRate)) {
@@ -584,7 +584,7 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
         int weight = Integer.MIN_VALUE;
         int secondaryWeight = Integer.MIN_VALUE;
         for (YouTubeMedia ytMedia : afDashStreamMap.values()) {
-            if (!ytMedia.isDashAudio() || (ytMedia.getAudioEncoding() != AudioEncoding.AAC)) { //skip non DASH audio or non AAC
+            if (!ytMedia.isDashAudio() || (config.isEnableInternalMultiplexer() && ytMedia.getAudioEncoding() != AudioEncoding.AAC)) { //skip non DASH audio or non AAC
                 continue;
             }
             int tempWeight = Integer.MIN_VALUE;

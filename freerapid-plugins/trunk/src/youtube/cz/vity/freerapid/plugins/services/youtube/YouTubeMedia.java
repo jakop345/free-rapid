@@ -122,6 +122,7 @@ class YouTubeMedia {
             case 248:
             case 271:
             case 272:
+            case 278:
             case 302:
             case 303:
             case 308:
@@ -460,6 +461,7 @@ class YouTubeMedia {
                 "itag=" + itag +
                 ", container=" + container +
                 ", videoQuality=" + videoQuality +
+                ", videoEncoding=" + videoEncoding +
                 ", dashType=" + dashType +
                 ", frameRate=" + frameRate +
                 ", audioEncoding=" + audioEncoding +
