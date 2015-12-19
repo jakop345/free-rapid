@@ -6,6 +6,7 @@ import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
 import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
 import cz.vity.freerapid.plugins.services.applehls.AdjustableBitrateHlsDownloader;
 import cz.vity.freerapid.plugins.services.applehls.HlsDownloader;
+import cz.vity.freerapid.plugins.services.tor.TorProxyClient;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
@@ -86,11 +87,19 @@ class iPrimaFileRunner extends AbstractRunner {
                         .setParameter("_ts", String.valueOf(System.currentTimeMillis()))
                         .setParameter("productId", productId)
                         .toGetMethod();
-                if (!makeRedirectedRequest(method)) {
-                    checkProblems();
-                    throw new ServiceConnectionProblemException();
+                try {
+                    if (!makeRedirectedRequest(method)) {
+                        checkLocationProblems();
+                    }
+                    checkLocationProblems();
+                } catch (ErrorDuringDownloadingException e) {
+                    TorProxyClient torClient = TorProxyClient.forCountry("cz", client, getPluginService().getPluginContext().getConfigurationStorageSupport());
+                    if (!torClient.makeRequest(method)) {
+                        checkLocationProblems();
+                        throw new ServiceConnectionProblemException();
+                    }
+                    checkLocationProblems();
                 }
-                checkProblems();
 
                 IPrimaVideo selectedVideo = getSelectedVideo(getContentAsString());
                 logger.info("Settings config: " + config);
@@ -139,9 +148,17 @@ class iPrimaFileRunner extends AbstractRunner {
     }
 
     private void checkProblems() throws ErrorDuringDownloadingException {
-        if (getContentAsString().contains("Video bylo odstraněno")
-                || getContentAsString().contains("Požadovaná stránka nebyla nalezena")) {
+        String content = getContentAsString();
+        if (content.contains("Video bylo odstraněno")
+                || content.contains("Požadovaná stránka nebyla nalezena")) {
             throw new URLNotAvailableAnymoreException("File not found");
+        }
+    }
+
+    private void checkLocationProblems() throws ErrorDuringDownloadingException {
+        String content = getContentAsString();
+        if (content.contains("tento pořad nelze z licenčních důvodů přehrávat mimo Českou republiku")) {
+            throw new PluginImplementationException("This show can not be played outside the Czech Republic due to licensing reasons");
         }
     }
 

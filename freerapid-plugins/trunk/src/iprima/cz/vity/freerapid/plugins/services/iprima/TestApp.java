@@ -17,10 +17,11 @@ public class TestApp extends PluginDevApplication {
         try {
             //we set file URL
             //httpFile.setNewURL(new URL("http://play.iprima.cz/all/55946/all"));//stream.cz
-            httpFile.setNewURL(new URL("http://play.iprima.cz/vinari/vinari-ii-16"));
+            //httpFile.setNewURL(new URL("http://play.iprima.cz/vinari/vinari-ii-16")); //non-geo
+            httpFile.setNewURL(new URL("http://play.iprima.cz/hruza-v-oblacich-4")); //geo blocked.
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
-            //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
+            //connectionSettings.setProxy("localhost", 9040, Proxy.Type.SOCKS); //eg we can use local proxy to sniff HTTP communication
             //then we tries to download
             final iPrimaServiceImpl service = new iPrimaServiceImpl(); //instance of service - of our plugin
             iPrimaSettingsConfig config = new iPrimaSettingsConfig();
