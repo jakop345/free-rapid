@@ -123,7 +123,8 @@ public class TurboBitFileRunner extends AbstractRunner {
 
     private void checkFileProblems() throws ErrorDuringDownloadingException {
         if (getContentAsString().contains("File was not found")
-                || getContentAsString().contains("Probably it was deleted"))
+                || getContentAsString().contains("Probably it was deleted")
+                || getContentAsString().contains("It could possibly be deleted"))
             throw new URLNotAvailableAnymoreException("File not found");
         if (getContentAsString().contains("Our service is currently unavailable in your country"))
             throw new NotRecoverableDownloadException("Service is unavailable in your country");
@@ -138,6 +139,9 @@ public class TurboBitFileRunner extends AbstractRunner {
         Matcher matcher = getMatcherAgainstContent("limit\\s*:\\s*(\\d+)");
         if (matcher.find()) {
             throw new YouHaveToWaitException("Download limit reached", Integer.parseInt(matcher.group(1)));
+        }
+        if (getContentAsString().contains("The site is temporarily unavailable")) {
+            throw new ServiceConnectionProblemException("The site is temporarily unavailable");
         }
         if (getContentAsString().contains("From your IP range the limit of connections is reached")
                 || getContentAsString().contains("You have reached the limit of connections")) {

@@ -24,10 +24,12 @@ import java.util.regex.Matcher;
  */
 class DataFileFileRunner extends AbstractRunner {
     private final static Logger logger = Logger.getLogger(DataFileFileRunner.class.getName());
+    private String baseUrl = "http://www.datafile.com";
 
     @Override
     public void runCheck() throws Exception { //this method validates file
         super.runCheck();
+        correctUrl();
         final GetMethod getMethod = getGetMethod(fileURL);//make first request
         if (makeRedirectedRequest(getMethod)) {
             if (getContentAsString().contains("eval(atob("))
@@ -40,6 +42,12 @@ class DataFileFileRunner extends AbstractRunner {
         }
     }
 
+    private void correctUrl() {
+        fileURL = fileURL.replaceFirst("://(www\\.)?datafile", "://www.datafile");
+        if (fileURL.startsWith("https"))
+            baseUrl = baseUrl.replaceFirst("http:", "https:");
+    }
+
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
         PlugUtils.checkName(httpFile, content, "file-name\">", "</div>");
         PlugUtils.checkFileSize(httpFile, content, "Filesize: <span class=\"lime\">", "</span>");
@@ -49,6 +57,7 @@ class DataFileFileRunner extends AbstractRunner {
     @Override
     public void run() throws Exception {
         super.run();
+        correctUrl();
         logger.info("Starting download in TASK " + fileURL);
         final GetMethod method = getGetMethod(fileURL); //create GET request
         if (makeRedirectedRequest(method)) { //we make the main request
@@ -61,6 +70,7 @@ class DataFileFileRunner extends AbstractRunner {
             MethodBuilder builder = getMethodBuilder()
                     .setAjax()
                     .setAction("/files/ajax.html")
+                    .setBaseURL(baseUrl)
                     .setReferer(fileURL)
                     .setParameter("doaction", "validateCaptcha")
                     .setParameter("fileid", PlugUtils.getStringBetween(content, "getFileDownloadLink('", "'"));

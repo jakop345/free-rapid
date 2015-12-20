@@ -16,7 +16,7 @@ public class TestApp extends PluginDevApplication {
         final HttpFile httpFile = getHttpFile(); //creates new test instance of HttpFile
         try {
             //we set file URL
-            httpFile.setNewURL(new URL("http://3dau7q6d6f.1fichier.com"));
+            httpFile.setNewURL(new URL("https://fayr7wrmkh.1fichier.com/yify.info_-_the.hungr.games.catchng.fire.2013.rar"));
             //httpFile.setNewURL(new URL("http://jiqrn4nr9e.1fichier.com/%22")); //direct download
             //httpFile.setNewURL(new URL("https://1fichier.com/dir/vFx5uE46"));  // folder
             //the way we connect to the internet
