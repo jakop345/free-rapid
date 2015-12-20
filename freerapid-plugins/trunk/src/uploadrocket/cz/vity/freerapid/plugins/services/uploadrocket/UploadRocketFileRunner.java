@@ -2,6 +2,7 @@ package cz.vity.freerapid.plugins.services.uploadrocket;
 
 import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
 import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
+import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
 import cz.vity.freerapid.plugins.services.xfilesharing.XFileSharingRunner;
 import cz.vity.freerapid.plugins.services.xfilesharing.nameandsize.FileNameHandler;
 import cz.vity.freerapid.plugins.services.xfilesharing.nameandsize.FileSizeHandler;
@@ -72,10 +73,17 @@ class UploadRocketFileRunner extends XFileSharingRunner {
         return false;
     }
 
-    @Override
     protected List<String> getFalseProblemRegexes() {
         final List<String> falseProblemRegexes = super.getFalseProblemRegexes();
         falseProblemRegexes.add("<h3[^<>]+?color:black.+?</h3>");
         return falseProblemRegexes;
+    }
+
+    @Override
+    protected void checkDownloadProblems(final String content) throws ErrorDuringDownloadingException {
+        super.checkDownloadProblems(content);
+        if (content.contains("No such file")) {
+            throw new URLNotAvailableAnymoreException("File not found");
+        }
     }
 }

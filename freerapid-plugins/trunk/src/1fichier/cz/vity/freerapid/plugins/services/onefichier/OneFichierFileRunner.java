@@ -108,26 +108,19 @@ class OneFichierFileRunner extends AbstractRunner {
                 httpFile.setState(DownloadState.COMPLETED);
                 httpFile.getProperties().put("removeCompleted", true);
             } else {
-                int loopCount = 0;
-                while (true) {
-                    if (loopCount++ > 10)
-                        throw new ServiceConnectionProblemException("Error accessing download link");
-                    checkDownloadProblems();//check problems
-                    try {
-                        checkNameAndSize(getContentAsString());//extract file name and size from the page
-                    } catch (Exception e) {/**/}
-                    final HttpMethod hMethod = getMethodBuilder().setReferer(fileURL).setActionFromFormWhereTagContains("ownload", true).toPostMethod();
-                    final int status = client.makeRequest(hMethod, false);
-                    if (status / 100 == 3) {
-                        if (!tryDownloadAndSaveFile(getGetMethod(hMethod.getResponseHeader("Location").getValue()))) {
-                            checkDownloadProblems();//if downloading failed
-                            throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
-                        }
-                        return;
-                    } else if (status != 200) {
-                        checkDownloadProblems();
-                        throw new ServiceConnectionProblemException();
-                    }
+                checkDownloadProblems();//check problems
+                checkNameAndSize(getContentAsString());//extract file name and size from the page
+
+                HttpMethod hMethod = getMethodBuilder().setReferer(fileURL).setActionFromFormWhereTagContains("ownload", true).toPostMethod();
+                if (!makeRedirectedRequest(hMethod)) {
+                    checkProblems();
+                    throw new ServiceConnectionProblemException();
+                }
+                checkProblems();
+                hMethod = getMethodBuilder().setActionFromAHrefWhereATagContains("Click here to download").toGetMethod();
+                if (!tryDownloadAndSaveFile(hMethod)) {
+                    checkDownloadProblems();//if downloading failed
+                    throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
                 }
             }
         } else {
