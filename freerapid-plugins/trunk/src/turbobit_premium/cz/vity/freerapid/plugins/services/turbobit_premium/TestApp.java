@@ -24,8 +24,8 @@ public class TestApp extends PluginDevApplication {
             //then we tries to download
             final TurboBitServiceImpl service = new TurboBitServiceImpl(); //instance of service - of our plugin
             final PremiumAccount config = new PremiumAccount();
-            config.setUsername("jirinej@seznam.cz");
-            config.setPassword("films");
+            config.setUsername("****");
+            config.setPassword("****");
             service.setConfig(config);
             //runcheck makes the validation
             testRun(service, httpFile, connectionSettings);//download file with service and its Runner
