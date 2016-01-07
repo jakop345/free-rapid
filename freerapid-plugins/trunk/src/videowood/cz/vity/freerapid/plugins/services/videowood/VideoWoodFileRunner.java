@@ -10,8 +10,12 @@ import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Class which contains main code
@@ -41,9 +45,12 @@ class VideoWoodFileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        final Matcher match = PlugUtils.matcher("title\\s*:\\s*['\"](.+?)['\"]", content);
-        if (!match.find())
-            throw new PluginImplementationException("File name not found");
+        Matcher match = PlugUtils.matcher("title\\s*:\\s*['\"](.+?)['\"]", content);
+        if (!match.find()) {
+            match = PlugUtils.matcher("<span style=\"vertical-align: middle\">(.+?)</span>", content);
+            if (!match.find())
+                throw new PluginImplementationException("File name not found");
+        }
         httpFile.setFileName(match.group(1).trim());
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
@@ -58,12 +65,35 @@ class VideoWoodFileRunner extends AbstractRunner {
             final String contentAsString = getContentAsString();//check for response
             checkProblems();//check problems
             checkNameAndSize(contentAsString);//extract file name and size from the page
-            final Matcher match = PlugUtils.matcher("file\\s*:\\s*['\"](.+?)['\"]", contentAsString);
-            if (!match.find())
-                throw new PluginImplementationException("Video not found");
+            Matcher match = PlugUtils.matcher("file\\s*:\\s*['\"](.+?)['\"]", contentAsString);
+            String videoUrl;
+            if (match.find()) {
+                videoUrl = match.group(1).trim();
+            } else {
+                match = PlugUtils.matcher("(" + Pattern.quote("eval(function(p,a,c,k,e,d)") + ".+)", contentAsString);
+                if (!match.find()) {
+                    throw new PluginImplementationException("JS eval function not found");
+                }
+                String jsString = match.group(1).replaceFirst(Pattern.quote("eval(function(p,a,c,k,e,d)"), "function test(p,a,c,k,e,d)")
+                        .replaceFirst(Pattern.quote("return p}"), "return p};test").replaceFirst(Pattern.quote(".split('|')))"), ".split('|'));");
+                ScriptEngineManager manager = new ScriptEngineManager();
+                ScriptEngine engine = manager.getEngineByName("javascript");
+                String evaluated;
+                try {
+                    evaluated = (String) engine.eval(jsString);
+                } catch (ScriptException e) {
+                    throw new PluginImplementationException("JavaScript eval failed", e);
+                }
+                match = PlugUtils.matcher(",\"file\"\\s*:\\s*['\"](.+?)['\"]", evaluated);
+                if (!match.find()) {
+                    throw new PluginImplementationException("Video not found");
+                }
+                videoUrl = match.group(1).trim().replace("\\/", "/");
+            }
+
             final HttpMethod httpMethod = getMethodBuilder().setReferer(fileURL)
-                    .setAction(match.group(1).trim()).toGetMethod();
-            final String ext = match.group(1).trim().substring(match.group(1).trim().lastIndexOf("."));
+                    .setAction(videoUrl).toGetMethod();
+            final String ext = videoUrl.substring(videoUrl.trim().lastIndexOf("."));
             if (!httpFile.getFileName().matches(".+?" + ext))
                 httpFile.setFileName(httpFile.getFileName() + ext);
             if (!tryDownloadAndSaveFile(httpMethod)) {
