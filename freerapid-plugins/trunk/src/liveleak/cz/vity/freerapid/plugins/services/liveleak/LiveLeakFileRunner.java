@@ -11,8 +11,8 @@ import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -89,15 +89,19 @@ class LiveLeakFileRunner extends AbstractRunner {
     }
 
     private LiveLeakVideo getSelectedLiveLeakVideo(String content) throws Exception {
-        List<LiveLeakVideo> liveLeakVideos = new LinkedList<LiveLeakVideo>();
-        String videoUrl;
-        if (content.contains("hd_file_url")) {
-            videoUrl = URLDecoder.decode(PlugUtils.getStringBetween(content, "hd_file_url=", "&"), "UTF-8");
-            liveLeakVideos.add(new LiveLeakVideo(VideoQuality.HD, videoUrl));
-        }
-        if (content.contains("file_url")) {
-            videoUrl = URLDecoder.decode(PlugUtils.getStringBetween(content, "file_url=", "&"), "UTF-8");
-            liveLeakVideos.add(new LiveLeakVideo(VideoQuality.SD, videoUrl));
+        List<LiveLeakVideoPattern> liveLeakVideoPatterns = new ArrayList<LiveLeakVideoPattern>();
+        liveLeakVideoPatterns.add(new LiveLeakVideoPattern("hd_file_url=(.+?)&", VideoQuality.HD));
+        liveLeakVideoPatterns.add(new LiveLeakVideoPattern("file_url=(.+?)&", VideoQuality.SD));
+        liveLeakVideoPatterns.add(new LiveLeakVideoPattern("(?s)\\{\\s*?file:\\s*?\"([^\"]+?)\",\\s*?label:\\s*?\"720p HD\".+?\\}", VideoQuality.HD));
+        liveLeakVideoPatterns.add(new LiveLeakVideoPattern("(?s)\\{\\s*?file:\\s*?\"([^\"]+?)\",\\s*?label:\\s*?\"Mobile - SD\".+?\\}", VideoQuality.SD));
+
+        List<LiveLeakVideo> liveLeakVideos = new ArrayList<LiveLeakVideo>();
+        Matcher matcher;
+        for (LiveLeakVideoPattern liveLeakVideoPattern : liveLeakVideoPatterns) {
+            matcher = PlugUtils.matcher(liveLeakVideoPattern.pattern, content);
+            if (matcher.find()) {
+                liveLeakVideos.add(new LiveLeakVideo(liveLeakVideoPattern.videoQuality, URLDecoder.decode(matcher.group(1), "UTF-8")));
+            }
         }
         if (liveLeakVideos.isEmpty()) {
             throw new PluginImplementationException("No available videos");
@@ -105,8 +109,18 @@ class LiveLeakFileRunner extends AbstractRunner {
         return Collections.min(liveLeakVideos);
     }
 
+    private class LiveLeakVideoPattern {
+        private final String pattern;
+        private final VideoQuality videoQuality;
+
+        public LiveLeakVideoPattern(String pattern, VideoQuality videoQuality) {
+            this.pattern = pattern;
+            this.videoQuality = videoQuality;
+        }
+    }
+
     private class LiveLeakVideo implements Comparable<LiveLeakVideo> {
-        private final static int LOWER_PENALTY_PENALTY = 10;
+        private final static int LOWER_QUALITY_PENALTY = 10;
         private final VideoQuality videoQuality;
         private final String url;
         private final int weight;
@@ -121,9 +135,10 @@ class LiveLeakFileRunner extends AbstractRunner {
         private int calcWeight() {
             VideoQuality configQuality = config.getVideoQuality();
             int deltaQ = videoQuality.getQuality() - configQuality.getQuality();
-            return (deltaQ < 0 ? Math.abs(deltaQ) + LOWER_PENALTY_PENALTY : deltaQ);
+            return (deltaQ < 0 ? Math.abs(deltaQ) + LOWER_QUALITY_PENALTY : deltaQ);
         }
 
+        @SuppressWarnings("NullableProblems")
         @Override
         public int compareTo(LiveLeakVideo that) {
             return Integer.valueOf(this.weight).compareTo(that.weight);

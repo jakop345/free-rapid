@@ -1,9 +1,6 @@
 package cz.vity.freerapid.plugins.services.xhamster;
 
-import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
-import cz.vity.freerapid.plugins.exceptions.NotRecoverableDownloadException;
-import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
-import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
+import cz.vity.freerapid.plugins.exceptions.*;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.DownloadClientConsts;
 import cz.vity.freerapid.plugins.webclient.FileState;
@@ -13,6 +10,7 @@ import org.apache.commons.httpclient.methods.GetMethod;
 
 import java.net.URLDecoder;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
 
 /**
  * Class which contains main code
@@ -37,8 +35,11 @@ class xHamsterFileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        PlugUtils.checkName(httpFile, content, "<title>", "</title>");
-        httpFile.setFileName(httpFile.getFileName().replace("- xHamster", "").trim() + ".mp4");
+        Matcher matcher = PlugUtils.matcher("<title[^<>]*?>(.+?)</title>", content);
+        if (!matcher.find()) {
+            throw new PluginImplementationException("File name not found");
+        }
+        httpFile.setFileName(matcher.group(1).replace("- xHamster", "").trim() + ".mp4");
         PlugUtils.checkFileSize(httpFile, content, "video (", ")");
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
