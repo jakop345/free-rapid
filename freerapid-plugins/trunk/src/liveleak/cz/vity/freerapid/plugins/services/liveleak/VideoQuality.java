@@ -6,14 +6,16 @@ import java.util.Collections;
 /**
  * @author tong2shot
  */
-public enum VideoQuality {
-    SD(270),
-    HD(720);
+enum VideoQuality {
+    SD(270, "Standard Definition (SD)"),
+    HD(720, "High Definition (HD)");
 
     private final int quality;
+    private final String name;
 
-    private VideoQuality(int quality) {
+    VideoQuality(int quality, String name) {
         this.quality = quality;
+        this.name = name;
     }
 
     public int getQuality() {
@@ -22,12 +24,7 @@ public enum VideoQuality {
 
     @Override
     public String toString() {
-        switch (this) {
-            case SD:
-                return "Standard Definition (SD)";
-            default:
-                return "High Definition (HD)";
-        }
+        return name;
     }
 
     public static VideoQuality[] getItems() {

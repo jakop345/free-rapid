@@ -16,7 +16,8 @@ public class TestApp extends PluginDevApplication {
         final HttpFile httpFile = getHttpFile();
         try {
             //httpFile.setNewURL(new URL("http://www.liveleak.com/view?i=535_1383848670"));
-            httpFile.setNewURL(new URL("http://www.liveleak.com/view?i=780_1383826161"));
+            //httpFile.setNewURL(new URL("http://www.liveleak.com/view?i=780_1383826161"));
+            httpFile.setNewURL(new URL("http://www.liveleak.com/view?i=163_1449085602"));
             final ConnectionSettings connectionSettings = new ConnectionSettings();
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
             final LiveLeakServiceImpl service = new LiveLeakServiceImpl();
