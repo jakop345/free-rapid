@@ -124,6 +124,7 @@ public class TurboBitFileRunner extends AbstractRunner {
     private void checkFileProblems() throws ErrorDuringDownloadingException {
         if (getContentAsString().contains("File was not found")
                 || getContentAsString().contains("Probably it was deleted")
+                || getContentAsString().contains("File was deleted or not found")
                 || getContentAsString().contains("It could possibly be deleted"))
             throw new URLNotAvailableAnymoreException("File not found");
         if (getContentAsString().contains("Our service is currently unavailable in your country"))

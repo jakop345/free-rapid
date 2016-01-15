@@ -1,4 +1,4 @@
-package cz.vity.freerapid.plugins.services.opensubtitles;
+package cz.vity.freerapid.plugins.services.skymiga;
 
 import cz.vity.freerapid.plugins.dev.PluginDevApplication;
 import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
@@ -16,13 +16,18 @@ public class TestApp extends PluginDevApplication {
         final HttpFile httpFile = getHttpFile(); //creates new test instance of HttpFile
         try {
             //we set file URL
-            httpFile.setNewURL(new URL("http://www.opensubtitles.org/en/subtitles/5483255/frozen-en"));
-            //httpFile.setNewURL(new URL("http://www.opensubtitles.org/en/subtitles/3830632/ping-pongkingen-en"));
+            httpFile.setNewURL(new URL("http://skymiga.com/ajtc5icftio5"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
-            //then we tries to download
-            final OpenSubtitlesServiceImpl service = new OpenSubtitlesServiceImpl(); //instance of service - of our plugin
+            final SkyMigaServiceImpl service = new SkyMigaServiceImpl(); //instance of service - of our plugin
+            /*
+            //we set premium account details
+            final PremiumAccount config = new PremiumAccount();
+            config.setUsername("****");
+            config.setPassword("****");
+            service.setConfig(config);
+            //*/
             //runcheck makes the validation
             testRun(service, httpFile, connectionSettings);//download file with service and its Runner
             //all output goes to the console

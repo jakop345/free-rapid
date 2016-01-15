@@ -176,7 +176,7 @@ class SafeLinkingFileRunner extends AbstractRunner {
     }
 
     private URI encodeUri(final String sUri) throws Exception {
-        return new URI(URLEncoder.encode(sUri, "UTF-8").replaceAll("%3A", ":").replaceAll("%2F", "/"));
+        return new URI(URLEncoder.encode(sUri, "UTF-8").replaceAll("%3A", ":").replaceAll("%2F", "/").replaceAll("%23", "#").replaceAll("%21", "!"));
     }
 
 }

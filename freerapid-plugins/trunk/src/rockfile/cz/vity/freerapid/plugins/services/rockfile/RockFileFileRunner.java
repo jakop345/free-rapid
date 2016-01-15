@@ -7,6 +7,7 @@ import cz.vity.freerapid.plugins.webclient.interfaces.HttpFile;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -44,6 +45,10 @@ class RockFileFileRunner extends XFileSharingRunner {
 
     @Override
     protected int getWaitTime() throws Exception {
-        return 16;
+        final Matcher matcher = getMatcherAgainstContent("id=\"countdown_str\".*?<span[^<>]*id=\".*?\">.*?(\\d+).*?</span");
+        if (matcher.find()) {
+            return Integer.parseInt(matcher.group(1)) + 1;
+        }
+        return 0;
     }
 }
