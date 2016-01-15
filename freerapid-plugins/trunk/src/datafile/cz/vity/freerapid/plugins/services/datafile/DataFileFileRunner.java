@@ -137,7 +137,9 @@ class DataFileFileRunner extends AbstractRunner {
                 contentAsString.contains("You can not download more than one file at a time")) {
             throw new YouHaveToWaitException("You can not download more than one file at a time", 5*60);
         }
-
+        if (contentAsString.contains("/download/error.html?code=4")) {
+            throw new ServiceConnectionProblemException("Premium account needed to continue download");
+        }
         if (contentAsString.contains("\"JavaScript\">s=")) {
             final Matcher match = PlugUtils.matcher("<script language=\"JavaScript\">s=.+?eval\\(m\\);(.+?)</script>", contentAsString);
             if (match.find()) {

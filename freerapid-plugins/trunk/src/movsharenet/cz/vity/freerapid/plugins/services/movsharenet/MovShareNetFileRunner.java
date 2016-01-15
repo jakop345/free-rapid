@@ -35,23 +35,33 @@ class MovShareNetFileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        PlugUtils.checkName(httpFile, content, "Title:</strong>", "</");
+        PlugUtils.checkName(httpFile, content, "title\" content=\"Watch ", " online | WholeCloud");
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
 
     @Override
     public void run() throws Exception {
         super.run();
+        fileURL = fileURL.replaceFirst("movshare.net/", "wholecloud.net/");
         logger.info("Starting download in TASK " + fileURL);
         final GetMethod method = getGetMethod(fileURL);
         if (makeRedirectedRequest(method)) {
             checkProblems();
             checkNameAndSize(getContentAsString());
+            HttpMethod httpMethod = getMethodBuilder()
+                    .setActionFromFormWhereTagContains("Continue", true)
+                    .setAction(fileURL).setReferer(fileURL)
+                    .toPostMethod();
+            if (!makeRedirectedRequest(httpMethod)) {
+                checkProblems();
+                throw new ServiceConnectionProblemException();
+            }
+            checkProblems();
             final String fileId = PlugUtils.getStringBetween(getContentAsString(), "flashvars.file=\"", "\";");
             final String fileKey = PlugUtils.getStringBetween(getContentAsString(), "flashvars.filekey=\"", "\";");
-            HttpMethod httpMethod = getMethodBuilder()
+            httpMethod = getMethodBuilder()
                     .setReferer(fileURL)
-                    .setAction("http://www.movshare.net/api/player.api.php")
+                    .setAction("http://www.wholecloud.net/api/player.api.php")
                     .setParameter("cid3", "undefined")
                     .setParameter("user", "undefined")
                     .setParameter("cid2", "undefined")

@@ -35,9 +35,14 @@ class OpenSubtitlesFileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        PlugUtils.checkName(httpFile, content, "<title>Subtitles ", "</title>");
-        final Matcher match = PlugUtils.matcher("Subtitle filename\".*?>.+?\\((.+?)\\)\\s*?<", content.replaceAll("\\s+", " "));
-        if (!match.find()) throw new PluginImplementationException("File size not found");
+        Matcher match = PlugUtils.matcher("(?s)Subtitle filename\".*?>(.+?)\\(\\d", content);
+        if (match.find())
+            httpFile.setFileName(match.group(1).trim());
+        else
+            PlugUtils.checkName(httpFile, content, "<title>Subtitles ", "</title>");
+        match = PlugUtils.matcher("(?s)Subtitle filename\".*?>.+?\\((\\d.+?)\\)\\s*?<", content);
+        if (!match.find())
+            throw new PluginImplementationException("File size not found");
         httpFile.setFileSize(PlugUtils.getFileSizeFromString(match.group(1)));
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
@@ -59,9 +64,10 @@ class OpenSubtitlesFileRunner extends AbstractRunner {
             if (!makeRedirectedRequest(httpMethod)) {
                 throw new ServiceConnectionProblemException();
             }
-            httpMethod = getMethodBuilder()
-                    .setActionFromAHrefWhereATagContains("Click here")
-                    .toGetMethod();
+            final Matcher matcher = PlugUtils.matcher("http-equiv=\"refresh\"[^<>]*URL=(.+?)[ \"]", getContentAsString());
+            if (!matcher.find())
+                throw new PluginImplementationException("Download link not found");
+            httpMethod = getGetMethod(matcher.group(1).trim());
             if (!tryDownloadAndSaveFile(httpMethod)) {
                 checkProblems();//if downloading failed
                 throw new ServiceConnectionProblemException("Error starting download");//some unknown problem

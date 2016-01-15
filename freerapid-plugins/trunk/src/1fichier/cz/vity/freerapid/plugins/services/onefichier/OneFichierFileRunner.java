@@ -111,12 +111,18 @@ class OneFichierFileRunner extends AbstractRunner {
                 checkDownloadProblems();//check problems
                 checkNameAndSize(getContentAsString());//extract file name and size from the page
 
-                HttpMethod hMethod = getMethodBuilder().setReferer(fileURL).setActionFromFormWhereTagContains("ownload", true).toPostMethod();
-                if (!makeRedirectedRequest(hMethod)) {
+                HttpMethod hMethod;
+                int loopCount = 0;
+                while (!getContentAsString().contains("Click here to download")) {
+                    if (loopCount++ > 10)
+                        throw new ServiceConnectionProblemException("Error accessing download link");
+                    hMethod = getMethodBuilder().setReferer(fileURL).setActionFromFormWhereTagContains("ownload", true).toPostMethod();
+                    if (!makeRedirectedRequest(hMethod)) {
+                        checkProblems();
+                        throw new ServiceConnectionProblemException();
+                    }
                     checkProblems();
-                    throw new ServiceConnectionProblemException();
                 }
-                checkProblems();
                 hMethod = getMethodBuilder().setActionFromAHrefWhereATagContains("Click here to download").toGetMethod();
                 if (!tryDownloadAndSaveFile(hMethod)) {
                     checkDownloadProblems();//if downloading failed
