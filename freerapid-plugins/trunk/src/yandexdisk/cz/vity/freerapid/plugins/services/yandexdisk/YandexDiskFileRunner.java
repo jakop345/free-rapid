@@ -8,14 +8,13 @@ import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import jlibs.core.net.URLUtil;
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
-import java.io.IOException;
-import java.net.URL;
 import java.net.URLDecoder;
+import java.util.Random;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
 
 /**
  * Class which contains main code
@@ -32,8 +31,6 @@ class YandexDiskFileRunner extends AbstractRunner {
         if (makeRedirectedRequest(getMethod)) {
             checkProblems();
             fileURL = getMethod.getURI().toString();
-            requestPageInEn();
-            checkProblems();
             checkNameAndSize(getContentAsString());
         } else {
             checkProblems();
@@ -44,7 +41,13 @@ class YandexDiskFileRunner extends AbstractRunner {
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
         PlugUtils.checkName(httpFile, content, "\"og:title\" content=\"", "\"");
         httpFile.setFileName(PlugUtils.unescapeHtml(httpFile.getFileName()));
-        PlugUtils.checkFileSize(httpFile, content, "br/>Size:", "<br");
+        String filesize;
+        try {
+            filesize = PlugUtils.getStringBetween(content, "Размер:</span>", "<").replace("М", "M").replace("Б", "B");
+        } catch (PluginImplementationException e) {
+            throw new PluginImplementationException("File size not found");
+        }
+        httpFile.setFileSize(PlugUtils.getFileSizeFromString(filesize));
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
 
@@ -56,19 +59,20 @@ class YandexDiskFileRunner extends AbstractRunner {
         if (makeRedirectedRequest(method)) {
             checkProblems();
             fileURL = method.getURI().toString();
-            requestPageInEn();
             String mainPageContent = getContentAsString();
-            checkProblems();
             checkNameAndSize(mainPageContent);
 
-            URL url = new URL(fileURL);
+            String fileId = PlugUtils.getStringBetween(getContentAsString(), "\"id\":\"", "\"");
+            String sk = PlugUtils.getStringBetween(getContentAsString(), "\"sk\":\"", "\"");
+            String clientId = generateClientId();
             HttpMethod httpMethod = getMethodBuilder()
                     .setReferer(fileURL)
-                    .setAction("https://" + url.getAuthority() + "/handlers.jsx") //https is mandatory
-                    .setParameter("_ckey", getCkey(mainPageContent))
-                    .setParameter("_name", "getLinkFileDownload")
-                    .setParameter("hash", getHash(mainPageContent))
-                    .setParameter("tld", "com")
+                    .setAction("https://yadi.sk/models/?_m=do-get-resource-url") //https is mandatory
+                    .setParameter("idClient", clientId)
+                    .setParameter("version", "3.1.1")
+                    .setParameter("sk", sk)
+                    .setParameter("_model.0", "do-get-resource-url")
+                    .setParameter("id.0", fileId)
                     .setAjax()
                     .toPostMethod();
             httpMethod.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
@@ -80,7 +84,7 @@ class YandexDiskFileRunner extends AbstractRunner {
             final String downloadURL;
             String contentType = null;
             try {
-                downloadURL = PlugUtils.replaceEntities(PlugUtils.getStringBetween(getContentAsString(), "\"url\":\"", "\""));
+                downloadURL = PlugUtils.replaceEntities(PlugUtils.getStringBetween(getContentAsString(), "\"file\":\"", "\""));
             } catch (PluginImplementationException e) {
                 throw new PluginImplementationException("Error getting download URL");
             }
@@ -120,54 +124,9 @@ class YandexDiskFileRunner extends AbstractRunner {
         }
     }
 
-    private String getCkey(String content) throws Exception {
-        /*
-        URL url = new URL(fileURL);
-        HttpMethod method = getMethodBuilder()
-                .setReferer(fileURL)
-                .setAction("https://disk.yandex.com/public/auth.jsx")
-                .setParameter("locale", "en")
-                .setParameter("path", url.getPath())
-                .toPostMethod();
-        method.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
-        method.setRequestHeader("Origin", url.getProtocol() + "://" + url.getAuthority());
-        if (!makeRedirectedRequest(method)) {
-            checkProblems();
-            throw new ServiceConnectionProblemException();
-        }
-        checkProblems();
-        */
-        String ckey;
-        Matcher matcher = PlugUtils.matcher("\"ckey(?:_local)?\":\"([^\"]*?)\"", content);
-        if (!matcher.find() || (ckey = matcher.group(1).trim()).isEmpty()) {
-            throw new PluginImplementationException("Error getting ckey");
-        }
-        logger.info("ckey: " + ckey);
-        return ckey;
+    private String generateClientId() {
+        byte[] bytes = new byte[16];
+        new Random().nextBytes(bytes);
+        return new String(Hex.encodeHex(bytes));
     }
-
-    private String getHash(String content) throws Exception {
-        String hash;
-        final Matcher matcher = PlugUtils.matcher("\"hash\":\"([^\"]*?)\"", content);
-        if (!matcher.find() || (hash = matcher.group(1).trim()).isEmpty()) {
-            throw new PluginImplementationException("Error getting hash");
-        }
-        logger.info("Hash: " + hash);
-        return hash;
-    }
-
-    //They don't provide cookie mechanism to choose locale,
-    //so we have to request the page in en if redirected to non-en locale.
-    private void requestPageInEn() throws ErrorDuringDownloadingException, IOException {
-        if (PlugUtils.find("&locale=(?!en)", fileURL)) {
-            fileURL = fileURL.replaceFirst("&locale=[a-z]{2}", "&locale=en");
-            GetMethod getMethod = getGetMethod(fileURL);
-            if (!makeRedirectedRequest(getMethod)) {
-                checkProblems();
-                throw new ServiceConnectionProblemException();
-            }
-            fileURL = getMethod.getURI().toString();
-        }
-    }
-
 }

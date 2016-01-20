@@ -38,7 +38,7 @@ class CloudMail_ruFileRunner extends AbstractRunner {
         if (makeRedirectedRequest(getMethod)) {
             fileURL = getMethod.getURI().toString(); // /weblink/ redirected to /public/
             checkProblems();
-            checkNameAndSize(getListNode(getRootNode(getContentAsString()), getFileId(fileURL)));
+            checkNameAndSize(getListNode(getRootNode(getContentAsString(), new JsonMapper().getObjectMapper()), getFileId(fileURL)));
         } else {
             checkProblems();
             throw new ServiceConnectionProblemException();
@@ -72,13 +72,15 @@ class CloudMail_ruFileRunner extends AbstractRunner {
             fileURL = method.getURI().toString(); // /weblink/ redirected to /public/
             checkProblems();
             String fileId = getFileId(fileURL);
-            JsonNode rootNode = getRootNode(getContentAsString());
+            ObjectMapper mapper = new JsonMapper().getObjectMapper();
+            JsonNode rootNode = getRootNode(getContentAsString(), mapper);
             JsonNode listNode = getListNode(rootNode, fileId);
             checkNameAndSize(listNode);
             if (isFolder(listNode)) {
                 parseFolder(listNode);
             } else {
-                String webLinkGetUrl = rootNode.findPath("dispatcher").findPath("weblink_get").findPath("url").getTextValue();
+                JsonNode rootNode2 = getRootNode2(getContentAsString(), mapper);
+                String webLinkGetUrl = rootNode2.findPath("dispatcher").findPath("weblink_get").findPath("url").getTextValue();
                 if (webLinkGetUrl == null) {
                     throw new PluginImplementationException("Error getting download URL");
                 }
@@ -131,14 +133,13 @@ class CloudMail_ruFileRunner extends AbstractRunner {
         return fileId;
     }
 
-    private JsonNode getRootNode(String content) throws ErrorDuringDownloadingException {
-        Matcher matcher = PlugUtils.matcher("(?s)cloudBuilder\\((.+?)\\);", content);
+    private JsonNode getRootNode(String content, ObjectMapper mapper) throws ErrorDuringDownloadingException {
+        Matcher matcher = PlugUtils.matcher("(?s)cloudBuilder\\(.+?(\\{\\s*?\"tree\".+?),undefined.+?\\);", content);
         if (!matcher.find()) {
             throw new PluginImplementationException("Error getting JSON content");
         }
         String jsonContent = matcher.group(1);
 
-        ObjectMapper mapper = new JsonMapper().getObjectMapper();
         JsonNode rootNode;
         try {
             rootNode = mapper.readTree(jsonContent);
@@ -149,19 +150,22 @@ class CloudMail_ruFileRunner extends AbstractRunner {
     }
 
     private JsonNode getListNode(JsonNode rootNode, String fileId) throws Exception {
-        JsonNode foldersNodes = rootNode.findPath("folders");
-        if (foldersNodes.isMissingNode()) {
+        boolean isFolder = false;
+        try {
+            isFolder = rootNode.get("tree").findPath("list").findPath("id").getTextValue().equals(fileId);
+        } catch (Exception e) {
+            //
+        }
+        JsonNode listNodes = (isFolder ? rootNode.findPath("tree").findPath("list") : rootNode.findPath("folder").findPath("list"));
+        if (listNodes.isMissingNode()) {
             checkFileProblemsApi(fileId);
-            throw new PluginImplementationException("Error getting folders node");
+            throw new PluginImplementationException("Error getting list node");
         }
         JsonNode selectedListNode = null;
-        for (JsonNode foldersNode : foldersNodes) {
-            JsonNode listNodes = foldersNode.findPath("list");
-            for (JsonNode listNode : listNodes) {
-                if (listNode.findPath("id").getTextValue().equals(fileId)) {
-                    selectedListNode = listNode;
-                    break;
-                }
+        for (JsonNode listNode : listNodes) {
+            if (listNode.findPath("id").getTextValue().equals(fileId)) {
+                selectedListNode = listNode;
+                break;
             }
         }
         if (selectedListNode == null) {
@@ -191,5 +195,21 @@ class CloudMail_ruFileRunner extends AbstractRunner {
         logger.info(list.size() + " links added");
         httpFile.setState(DownloadState.COMPLETED);
         httpFile.getProperties().put("removeCompleted", true);
+    }
+
+    private JsonNode getRootNode2(String content, ObjectMapper mapper) throws ErrorDuringDownloadingException {
+        Matcher matcher = PlugUtils.matcher("(?s)window.+?(\\{\"storages\".+?\\}\\};)", content);
+        if (!matcher.find()) {
+            throw new PluginImplementationException("Error getting JSON content (2)");
+        }
+        String jsonContent = matcher.group(1);
+
+        JsonNode rootNode;
+        try {
+            rootNode = mapper.readTree(jsonContent);
+        } catch (Exception e) {
+            throw new PluginImplementationException("Error parsing JSON (2)", e);
+        }
+        return rootNode;
     }
 }
