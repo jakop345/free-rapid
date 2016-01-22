@@ -1,6 +1,6 @@
-package cz.vity.freerapid.plugins.services.youwatch;
+package cz.vity.freerapid.plugins.services.timeload;
 
-import cz.vity.freerapid.plugins.services.xfileplayer.XFilePlayerServiceImpl;
+import cz.vity.freerapid.plugins.services.xfilesharing.XFileSharingServiceImpl;
 import cz.vity.freerapid.plugins.webclient.interfaces.PluginRunner;
 
 /**
@@ -8,21 +8,21 @@ import cz.vity.freerapid.plugins.webclient.interfaces.PluginRunner;
  *
  * @author birchie
  */
-public class YouWatchServiceImpl extends XFilePlayerServiceImpl {
+public class TimeLoadServiceImpl extends XFileSharingServiceImpl {
 
     @Override
     public String getServiceTitle() {
-        return "YouWatch";
+        return "TimeLoad";
     }
 
     @Override
     public String getName() {
-        return "youwatch.org";
+        return "timeload.net";
     }
 
     @Override
     protected PluginRunner getPluginRunnerInstance() {
-        return new YouWatchFileRunner();
+        return new TimeLoadFileRunner();
     }
 
 }

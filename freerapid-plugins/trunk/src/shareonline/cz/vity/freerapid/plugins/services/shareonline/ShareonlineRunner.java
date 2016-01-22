@@ -124,6 +124,9 @@ class ShareonlineRunner extends AbstractRunner {
         if (getContentAsString().contains("The requested file is not available")) {
             throw new URLNotAvailableAnymoreException("File not found");
         }
+        if (getContentAsString().contains("file is too big for your download package")) {
+            throw new NotRecoverableDownloadException("The file is too big for your download package!");
+        }
         if (getContentAsString().contains("No free slots for free users")) {
             throw new ServiceConnectionProblemException("No free slots for free users");
         }
