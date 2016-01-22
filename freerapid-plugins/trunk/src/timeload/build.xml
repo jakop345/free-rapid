@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<project name="YouWatch.org" default="all" basedir=".">
-    <property name="application" value="youwatch"/>
+<project name="TimeLoad.net" default="all" basedir=".">
+    <property name="application" value="timeload"/>
 
     <property name="version" value="1.0"/>
     <property name="version.name" value="${application}"/>
 
-    <property name="mainjar.file" value="youwatch.jar"/>
+    <property name="mainjar.file" value="timeload.jar"/>
 
     <!--<property name="mainjar-packed.file" value="${mainjar.file}.pack.gz"/>-->
 
@@ -78,7 +78,6 @@
             <sourcepath location="../recaptcha"/>
             <sourcepath location="../solvemediacaptcha"/>
             <sourcepath location="../xfilesharing/"/>
-            <sourcepath location="../xfileplayer/"/>
             <sourcepath location="../devapp"/>
         </javac>
         <!-- zkopirovani resourcu -->
