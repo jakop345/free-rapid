@@ -1,0 +1,518 @@
+**************************************************************
+*   History of changes for FreeRapid Downloader              *
+*   Website: http://wordrider.net/freerapid/                 *
+*   Forum: http://wordrider.net/forum/index/9                *
+*   Email: info@wordrider.net                                *
+**************************************************************
+Thanks to all individuals who reported bugs.
+
+Legend :
+Added - indicates new functionality or features
+Changed - indicates a change in usage or behavior of FreeRapid Downloader
+Fixed - indicates a bug fix
+Internal - indicates an internal change - information for FRD developers - nothing important for users
+
+
+18th May 2014 - FreeRapid Downloader 0.9 Update 4
+  Fixed: Recent files combobox uses MRU [by Tong2Shot - thanks!]
+  Fixed : widen up main frame's status bar's info label a bit as it got truncated on some LaFs that use bold font.
+          [by Tong2Shot - thanks!]
+  Fixed : plugins API - improved replaceInvalidCharsForFileSystem [by Ntoskrnl]
+  Changed : French translation, Bahasa Indonesia translation
+  Changed: rotate proxy per host [by Serge Baranov - thanks!]
+  Added: plugins API
+           - Support for JSON parsing
+           - Suggest file name
+  Changed: upgraded internal ObjectDB database to version 2.5.5
+
+15th September 2013 - FreeRapid Downloader 0.9 Update 3
+  Added : Icons for file types .apk (Android APK), .srt & .sub (subtitles), mp4 (video)
+  Added : System icons are now shown for all file types, not just a few predefined types
+  Changed : Updated internal ObjectDB database, can resolve some exceptions
+  Changed : Updated translations
+
+24th February 2013 - FreeRapid Downloader 0.9 Update 2
+  Added : Option to open downloading file (User preferences dialog -> Misc->Advanced)
+  Added : UI - Select all/select none support in Update plugins dialog
+  Added : UI - Main table - new 'Date' column, older downloads have this column empty
+  Added : UI - Download history dialog - new 'Connection' and 'Avg. speed' columns,
+              older downloads have these columns empty
+  Changed : Updated internal ObjectDB database, can resolve some exceptions
+  Changed : Updated translations
+  Fixed : Several minor issues in connection library (HttpClient)
+  Fixed : frd.png should have transparent background
+
+24th November 2012 - FreeRapid Downloader 0.9 Update 1
+  Changed : Updated translations
+  Fixed : File list was emptied in case an older version was run after the initial import
+  Fixed : Miscellaneous smaller issues
+
+31st October 2012 - FreeRapid Downloader 0.9
+  Changed : minor translation updates
+
+23rd October 2012 - FreeRapid Downloader 0.9 Beta 2
+  Added : The Armenian translation was enabled
+  Changed : The Traditional Chinese translation had to be disabled as two files were found to be corrupted
+  Changed : Internal - All translations are now encoded in UTF-8 for consistency
+  Changed : File rename action is limited to files in COMPLETED state
+  Changed : start.bat was renamed to frd.bat
+  Fixed : Miscellaneous bugs and regressions
+
+10th October 2012 - FreeRapid Downloader 0.9 Beta 1
+  Added : After in-depth consideration, all non-updated translations were enabled, bringing the total number of
+          supported languages to 31. Missing strings will appear in English. Updates to translations are warmly welcome,
+          as usual.
+  Added : Several translations were updated - thanks to all translators!
+  Added : Downloaded files can be renamed within FRD
+  Added : Support for zooming captcha image (enable in preferences dialog)
+  Added : Progress bar while downloading plugin updates
+  Added : PGSLookAndFeel is bundled again (choose in preferences dialog)
+  Added : Plugin API
+           - A few new methods to MethodBuilder
+           - FileStreamRecognizer improvements
+           - Changed approach to unlimited cryptography
+  Changed : Removed global simultaneous downloads limit
+  Changed : Internal file list and download history storage backend changed to a much more robust database system.
+            This should provide performance improvements for large lists, and the list should not be lost anymore
+            in case of improper shutdown. Note that older versions of FRD will not be able to read the new format.
+  Changed : Plugins and log files are now stored in the configuration directory, which makes it possible
+            to run FRD from a read-only directory, such as Program Files on Windows Vista and later.
+  Changed : Internal - Updated various libraries to their latest versions
+  Fixed : All downloads would stop working after a direct download until restart of program
+  Fixed : Miscellaneous smaller issues
+
+13th November 2011 - FreeRapid Downloader 0.86 Update 1
+  Added : Support for Slovakian, Bulgarian and Hungarian languages - thanks to all translators!
+  Added : New internal property - -DpopWindowWithoutMainFrame in quiet mode, default value is false,
+          see startup.properties file for more details
+  Added : New internal property - -DcharEncodingForPropertiesFiles defines character encoding for properties files,
+          see startup.properties file for more details
+  Added : New internal property - -DopenIncompleteFiles - makes possible to open .part files from GUI while downloading
+  Added : New file start.bat in FRD directory to allow launch FRD without frd.exe
+  Changed : User preferences dialog opens faster
+  Thanks to all bug reporters:
+  Fixed : Updated JTattoo look and feel, which fixes a bug where the main window shows over the taskbar
+  Fixed : Updated Quaqua look and feel, which fixes certain regressions in 0.86 on Mac OS X
+  Fixed : Unable to deselect "Use proxy list" - regression in 0.86
+  Fixed : Unable to view dialog for settings of selected files - regression in 0.86
+  Fixed : NullpointerException fix for PasswordAuthentication
+  Fixed : Ugly Pause button on Mac version
+  Fixed : Rare case - couldn't detect plugins on start - regression in 0.86
+  Fixed : Backup file links.txt is not generated - regression in 0.86
+
+30th October 2011 - FreeRapid Downloader 0.86
+  Added : Support for Portuguese and Simplified Chinese languages - thanks to all translators!
+  Added : Quiet Mode - don't let captcha dialogs bother you anymore while watching videos!
+  Added : If the same file is downloaded from multiple sources, duplicates are automatically skipped
+  Added : Support for preventing standby while downloading
+  Added : Support for using system recycle bin for deleting files
+  Added : Support for new search engine - http://wuploadsearch.com
+  Changed : Speed up startup time
+  Changed : Internal - NirCmd is not used anymore for native Windows actions
+  Changed : Internal - Updated BetterSwingApplicationFramework to v1.9.3 snapshot
+  Changed : Internal - Updated jna, mina, and commons-codec libraries to their latest versions
+  Changed : Internal - Updated look and feel libraries
+  Fixed : Java 7 compatibility issues
+
+1st January 2011 - FreeRapid Downloader 0.85 Update 1
+  Added : Support for Polish, Bulgarian, Korean, Portuguese (Brasil), Finnish and Hebrew languages - thanks to all translators!
+  Added : Support for grouping FRD application in taskbar for Windows 7
+  Added : Experimental - you have to enable it manually in startup.properties file for now
+        - Support for deleting files to recycle bin
+        - Support for searching subtitles on opensubtitles.org (popmenu on selected files)
+  Added : Plugin API
+           - ScriptUtils class for easy JavaScript manipulation
+  Changed: Internal - enhanced ESET antivirus detection, which is blocking FRD to start
+  Changed: Internal - enhanced detection of not writable plugins directory
+  Changed: Internal - list of languages is represented in file languages.xml, languages.properties was removed
+  Fixed: Internal - plugin API - small problem in MethodBuilder when parsing name attribute
+  Fixed: Linux - cannot connect server problem - frd.sh was updated
+
+16th November 2010 - FreeRapid Downloader 0.85 build 555
+  Changed: UA translation is now available
+  Fixed: plugin updates glitch
+
+14th November 2010 - FreeRapid Downloader 0.85
+  Fixed : JDK 6 bug where the built-in WBMP reader tries to read ICO files and fails
+  Fixed : OpenSearchDescription files require namespace http://a9.com/-/spec/opensearch/1.1/
+  Note: support for other translations will come later as a separate download
+
+31st October 2010 - FreeRapid Downloader 0.85 Alpha 4
+  Added : Support for direct downloads (enable this feature in Preferences)
+  Added : Support for container files (DLC, CCF, RSDF, etc...)
+  Added : GUI - search text field in toolbar (supports OpenSearchDescription file format) - see
+          https://addons.mozilla.org/en-US/firefox/search-engines/ and http://www.opensearch.org/Home for more details                 
+  Added : A few new user options:
+            - Start downloads from decrypters and folders automatically
+            - Bring application to the top when clipboard monitoring detects links
+  Added : Plugin API
+           - Base URL is automatically parsed from fileURL during init
+           - Support for unlimited cryptography
+  Added : New LookAndFeel skins - Substance Office Black 2007 and Substance Mariner
+  Added : Downgrade of plugin is made automatically if necessary
+  Added : New internal property removeNotSupportedPlugins to remove not supported plugins automatically (default value is false)
+  Added : New internal property tableColumnsResize - behavior of resizing table columns, can be set in startup.properties file
+  Changed : Upgraded Substance L&F to version 6.1 Final
+  Changed : Upgraded Quaqua L&F to version 7.2.1
+  Changed : Upgraded SwingX library to version 1.6.2
+  Changed : Speed limiter settings pane split in two to make clear a difference between global and file-specific settings
+  Changed : Updated commons-codec library to v1.4
+            - Static methods in Base64 and Hex classes now take Strings as arguments too
+            - DigestUtils class for easier handling of MessageDigest
+  Changed : RTMP plugin - major update
+            - Upgraded MINA library to v2
+            - Support for proxies (SOCKS)
+  Changed : Options for plugin update methods were shuffled around a bit to make them more logical
+  Changed : New icon for global speed limit
+  Changed : Plugin priority changed around: higher number = higher priority
+  Changed : "Sort by Name" action is back
+  Fixed : Exception when starting an RTMP download with file pre-allocation enabled
+  Fixed : Problems with links containing '#' character
+  Fixed : NullPointerException while sorting Connection column 
+
+8th August 2010 - FreeRapid Downloader 0.85 Alpha 3
+  Added : Plugin API
+            - FileStreamRecognizer interface and accompanying methods for setting it
+            - Added support for <input type="image"> in setActionFromForm methods in MethodBuilder
+  Changed : It's not necessary to restart FRD after plugin updates anymore!
+  Changed : SwingApplication framework (SAF) was updated to BetterSwingApplication framework (BSAF), which fixes some bugs
+  Changed : "Confirm deleting files" dialog is truncated to 20 files to avoid overly tall dialog which overflows screen
+  Fixed : Lots of exceptions in log in case a plugin dependency is missing
+  Fixed : Proxy list not refreshing when changing the path to it in preferences dialog
+  Fixed : Fails to startup if global speed limiter value is above 255
+  Fixed : Empty temporary files are deleted if there isn't enough disk space for download
+
+18th July 2010 - FreeRapid Downloader 0.85 Alpha 2
+  Added : Enhanced clipboard monitoring support for URLs defined in reverse order eg.:
+           http://www.agaleradodownload.com/download/d/?0PPJOQ2X=d?/moc.daolpuagem.www//:ptth
+           http://www.zunay.com/d/?KKLZZ2OL=d?/moc.daolpuagem.www
+  Added : new items in menu Options/Global speed limit, Help/Check for plugin statuses
+  Added : plugin API
+            - DownloadClientConsts class with constants for DownloadClient parameters
+  Added :  New theme for JTattoo LookAndFeel - "Graphite"
+  Changed : Removed obsolete entries for sorting downloads from dropdown menu, as the table can now be sorted by clicking the headings
+  Changed : Show amount of downloaded data instead of "unknown" if file size is not known while downloading
+  Changed : Removed Kunstoff and PGS LookAndFeel (too old and not updated), upgraded Substance LaF to version 6.0
+  Changed : Default FRD Look And Feel is set to JTattoo AERO
+  Fixed : Wrong file is deleted when cancelling a download in some cases, see http://bugtracker.wordrider.net/task/1306
+  Fixed : Reinserting links when switching to premium plugin is not necessary anymore
+  Fixed : Regressions in FreeRapid Downloader 0.85 Alpha 1
+     - Look and Feel reverts to Quaqua on every startup
+     - Plugins - clipboard monitoring status is not properly set
+     - "ClassCastException" in links history dialog
+
+11th July 2010 - FreeRapid Downloader 0.85 Alpha 1
+  Added : New action in Remove menu: "Remove Completed Links and Deleted Files"
+  Added : New user option: "Slim lines in History dialog"
+  Added : Speed (bandwidth) Limiter
+  Added : Table column sorting is enabled in the main table by default
+  Added : New download state SKIPPED, which is used for files that already exist and were skipped by the user
+  Added : Menu item for refreshing proxy list
+  Added : New setting for handling plugin updates: "Update and restart automatically if no downloads in progress"
+  Added : Improved smart clipboard monitoring detection for URLs like
+            http://web.com/vb/redirector.php?url=http%3A%2F%2Frapidshare.com%2Ffiles%2F142676%2Fla.rar&a45456=asdsd
+  Added : plugin API version 0.85
+            - support for priorities of each plugin
+            - experimental support for RTMP protocol
+  Added : Highly improved plugin settings
+            - max concurrent (parallel) downloads option per plugin
+            - plugin can be disabled for clipboard monitoring                  
+  Added : Experimental support for downloading basic RTMP streams.
+            This was made possible by Flazr v0.6, which we took and modified slightly to fit our needs.
+            Big thanks to the developers of Flazr! Home page: http://www.flazr.com/
+  Changed : Faster matching of URLs against plugins
+  Changed : Less required restarts after plugin updates
+  Changed : Upgraded SwingX library version to this date (nightly build)
+  Fixed : Problem with downloading txt files + using description, see http://wordrider.net/forum/read.php?7,4681,4696
+  Fixed : Inconsistent behavior of "Close to tray" option
+  Fixed : file properties dialog (Information dialog) cannot be closed by OK button
+
+29th October 2009 - FreeRapid Downloader 0.83 Update 1
+  Added : Romanian language [thanks to de-a dura lex]
+  Added : Experimental: new -DtableSortable boolean internal property to enable sorting in the main table
+          (default value is false, only for testers, see documentation how to use internal properties) 
+  Changed : file links.txt in the configuration folder adds a description to every link
+  Fixed : invalid label in menu for russian and hungarian language
+  Fixed : visible status of toolbar and statusbar is not saved
+  Fixed : removed blinking of splash screen on WindowsXP
+  Fixed : Rapidshare.com FileInputStream is empty (problem when connection was interrupted)
+  Fixed : regression: enabled option hide downloaded files don't hide the most recently download file [reported by Mauser]
+
+18th October 2009 - FreeRapid Downloader 0.83
+  Changed : updated chinese translation
+  Changed : minor internal changes in plugins API  
+  Changed : updated plugins to their latest versions
+
+4th October 2009 - FreeRapid Downloader 0.83 Release Candidate 2
+  Changed : minor internal changes in plugins API 
+  Changed : optimizations: minimized size of SwingX library
+  Changed : updated plugins to their latest versions
+  Changed : new cancelOnEscape internal property to disable ESC keystroke for action Cancel
+
+20th September 2009 - FreeRapid Downloader 0.83 Release Candidate
+  Added : startup.properties file in FRD's directory - see comments in this file for more details
+  Added : registered new Substance 5.3 themes - Gemini, Magellan, Graphite Aqua 
+  Changed : minor GUI speed optimizations
+  Changed : upgraded Substance LaF to version 5.3
+  Changed : updated plugins to their latest versions
+  Fixed : Close To Tray bug  http://bugtracker.wordrider.net/task/1158 [thanks to kiwichick!]
+  Fixed : restore window size to maximized state does not work  
+
+5th September 2009 - FreeRapid Downloader 0.83 beta 4
+  Added : improvements and fixes to enable FRD using blind people - it's now compatible to Java Accessibility Bridge
+         See http://java.sun.com/javase/technologies/accessibility/accessbridge/ for more details
+         or here: http://a11y.netbeans.org/a11yDevGuide.html
+  Added : SOCKS proxy support [thanks to Benjamin!!] - all urls in proxy list file has to be prefixed with $SOCKS$ or SOCKS:
+          SOCKS5 authentication is experimental
+  Added : added shell script setupproxy.sh in tools/socks to help with automatic creating list of SOCKS proxies for FRD
+        [thanks to Benjamin!!]
+  Added : added backup links.txt file (located in configuration folder), which stores all links you ever added into FreeRapid
+  Fixed: problems with backup files
+
+30th August 2009 - FreeRapid Downloader 0.83 beta 3
+  Added : error message when launching FRD using GCJ
+  Changed : connection timeout set from 100 to 120
+  Changed : updated default plugins to their latest versions
+  Changed : internal - Windows - removed dependency on Windows registry
+  Changed : internal - upgraded SwingX components to the latest build
+  Fixed : selection disappears - when making selection from top to bottom while downloading
+  Fixed : cannot launch CANCELLED (but existing) files
+  Fixed : "checking... dialog" when updating plugins lies over dialog "checking finished" - finally fixed?!
+  Fixed : If you change preferences check for updates every 597 hours or more FRD cannot start [reported by Prthvi, thanks!]
+
+9th August 2009 - FreeRapid Downloader 0.83 beta 2 released
+  Changed : updated PT_BR translation thanks to Tiago 
+  Changed : support for speed limit from menu (additional support will come back with 0.84) 
+  Changed : upgraded GOCR to version 0.48
+  Changed : internal - upgraded SwingX components to version 1.0
+  Changed : updated default plugins to their latest versions
+  Changed : removed error message dialog for ERROR when there is not enough space on disk 
+  Fixed : regression - avg. speed disappeared from information dialog [thanks to user from forum]
+  Fixed : "checking... dialog" when updating plugins lies over dialog "checking finished"
+
+19th July 2009 - FreeRapid Downloader 0.83 beta released
+  Added : support for resuming files for hostings which support it (eg. HotFile, but not Rapidshare free!)
+  Added : quick search (incremental search) for searching in the main queue table and plugins table (ctrl+F)  
+  Added : MS Windows - windows key for popmenu emulates a click with right mouse button on content panel with links
+  Added : Apple MacOS - support for native Aqua Look&Feel
+  Added : support for GTK look and feel
+  Added : new frd.sh launching script [thanks to Petris!]
+  Changed : upgraded JTattoo library to the latest version
+  Changed : fatal exceptions are shown only once for reporting
+  Changed : Apple MacOS - screen menu bar used by default
+  Changed : Apple MacOS - menu.about.name - correct title - FreeRapid Downloader + version
+  Changed : upgraded Substance lookAndFeel to version 5.2 + new themes
+  Fixed : ClassCast exception in directory chooser
+  Fixed : handling invalid response header from server with empty file name
+  Fixed : main window couldn't be activated at some random special cases
+  Fixed : NullPointerException when server didn't respond anything at some random special cases
+  Fixed : downloading updates does not work on Windows 7
+  Fixed : New links dialog - paste from clipboard did not work properly at some cases
+
+15th April 2009 - FreeRapid Downloader 0.82 released
+  Added : many new plugins coming with 0.82 like Badongo.com, HotFile.com, WikiUpload.com, Paid4share.com, UGotFile.com
+          improved YouTube plugin, [thanks to all plugin developers] => 70 plugins for you!
+  Added : Turkish translation [thanks to Ugur Karaman]
+  Added : Bosnian translation [thanks to Nikola Katanic]
+  Added : Farsi translation [thanks to behnam jan ahmad]
+  Added : Greek translation [thanks to Spyros K.]
+  Added : Arabic translation [thanks to Salah adel]
+  Added : Dutch translation [thanks to mastermystery4ever]
+  Added : Croatian translation [thanks to �eljko Mitrovi�]
+  Added : Slovenian translation [thanks to Toma� Curk]
+  Added : internal - plugin API - support for using SSL in plugins
+  Added : French version of readme.txt [thanks to Jean-Fran�ois]
+  Added : Information (fileinfo) dialog - allow to create non existing folder like in NewLinks dialog
+  Added : czech user guide for Menu-Help (F1)
+  Added : based on locale country flag for english translation
+  Changed : support for viewing info about >GB long files 
+  Changed : internal - upgraded Substance L&F to version 5.1, upgraded SwingX components to version 0.96  
+  Changed : this file and readme.txt files were moved to 'doc' folder
+  Changed : improved clipboard monitoring for URLs violating with RFC
+  Changed : Estimated time of arrival (ETA) counted based on the average speed of last 20 seconds
+  Changed : readme.txt files moved to 'doc' folder
+  Changed : improved clipboard monitoring algorithm for URLs (to catch links with '...') 
+  Fixed : support for only X bytes long files (eg. 515B)
+  Fixed : UI - UserPreferences dialog - OK not enabled when changed How to update plugins combobox [reported by Alex]
+  Fixed : shutdown commands don't not work properly on FRD path with spaces
+  Fixed : many other minor things
+
+16th January 2009 - FreeRapid Downloader 0.81 released
+  Added : Russian translation [thanks to Vdm17!]
+  Added : Brazilian portuguese translation [thanks to Tiago Hillebrandt!]
+  Added : Turkish translation [thanks to ukrman!]
+  Added : Windows - open directory selects file if the file exists
+  Changed : UI - User preferences dialog - languages are sorted based on the current locale
+  Fixed : Linux - commands from syscmd.properties are not loaded properly [reported by Andre Grott]
+  Fixed : clipboard monitoring merged some URL into one at special cases [reported by Alex]
+  Fixed : RejectedException - problem solved?
+
+21st December 2008 - FreeRapid Downloader 0.8 released
+  Added : new plugin - usercash.com (crypter) [thanks to me! ;-)]
+  Added : new plugin - CobraShare.sk [thanks to me! ;-)]
+  Added : new plugin - flyshare.cz [thanks to me! ;-)]
+  Added : new plugin - Upnito.sk [thanks to me! ;-)]
+  Added : new plugin - SaveFile.com [thanks to Alex!]
+  Added : new plugin - KewlShare.com [thanks to Alex!]
+  Added : new plugin - EnterUpload.com [thanks to Alex!]
+  Added : new plugin - MediaFire.com [thanks to Lukiz!]
+  Added : new plugin - edisk.cz [thanks to Lukiz!]
+  ###Added : Russian translation [thanks to CasTeT!] next time ;-)
+  Added : Italian translation [thanks to Stefano!]
+  Added : Japanese translation [thanks to Tilt!]
+  Added : Danish translation [thanks to Topexso!]
+  Added : Ukrainan translation [thanks to Vdm17!]
+  Added : Indonesian translation [thanks to Alex!]
+  Added : Polish translation [thanks to Soft4UAdmin!]
+  Added : UI - added action to remove invalid/not existing links [requested by Alex]
+  Added : UI - ability to hide text under toolbar buttons [requested by Alex]
+  Added : --portable command line switch for application start [requested by Rusttaf]
+          - with this switch, configuration files will be stored in the 'config' folder,
+            all file paths will be saved relatively to FRD folder (if possible) - useful for USB FLASH drives
+  Added : support to validate links manually [requested by Alex]
+  Added : option to reset existence status when application starts                  
+  Added : support for plugins update + many UI settings for it
+  Added : detection of presence of ESET Smart Antivirus on Windows system to avoid startup problems
+  Added : UI - new tab sheet in User Preferences dialog for plugins
+          - ability to disable plugin for using/updating
+  Added : plugins - service server is indicated by icon
+  Added : support for checking file existence on the server (if it is supported by given plugin)
+          - it's indicated by new icons in the table:
+            green - link working/downloadable, red - file was deleted/removed, gray - unknown state
+          - this feature can be disabled in User Preferences dialog  
+  Added : UI - moving lines on right mouse dragged [requested by Tuiz] - http://bugtracker.wordrider.net/task/39?project=4
+  Added : UI - clipboard monitoring catches links like http://blabla.com/?url=http:%25%25service.com%25 (decoding URL)
+  Added : UI - About Dialog title shows build number
+  Added : plugins - RapidShare plugin - ability to choose download mirror [thanks to Lukiz!]
+  Changed : UI - MS Windows - open directory on completed files, file is selected when opened in explorer [requested by Alex]
+  Changed : UI - clipboard monitoring is ON by default
+  Changed : plugins are loaded on the fly (not during start) from the system temporary directory
+  Changed : plugins - major intern changes and fixes in most of plugins
+  Changed : plugins - completely reworked intern API for plugins - now it's easier and faster to implement any plugin
+  Changed : translations - updated all existing translations [thanks to all translators!]
+  Changed : MS Windows - newly application indentifies itself as frd.exe in Task manager (not java.exe)
+  Fixed : could not connect with enabled proxy in Internet Explorer
+  Fixed : UI - unable to set Raven Graphics Glass Look and Feel
+  Fixed : UI - clipboard monitoring didn't catch html links like <a href="http://service.com/asdasd/">Part1</a> [reported by Alex]
+
+10th November 2008 - FreeRapid Downloader 0.71 released
+  Added : Hungarian translation [thanks to Denisz Kosztyukovics!]
+  Added : German translation [thanks to Rabyte!]  
+  Added : Spanish translation [thanks to El Lalo!]
+  Added : plugins - support for HellShare.com [implemented by Lukiz, thanks!]
+          - this server is a bit tricky - the server is buggy :-)
+  Added : plugins - support for QuickShare.cz [implemented by Lukiz, thanks!]
+  Added : CAPTCHA recognition for Megaupload, Sexuploader [with Lukiz's help!] - 90% probability of successful recognition
+          for Linux systems you have to install GOCR application (http://jocr.sourceforge.net/)
+  Changed : plugins - minor changes and fixes in most of plugins
+  Changed : rotating of enabled connections (can help to avoid some problems with many proxies)
+  Changed : automatic disabling connection if there are Connect exceptions - if there are more available connections
+            then restart downloading (neccessary to set intern property disableConnectionOnException to value true)
+  Changed : autoreconnect time bottom limit set to 1
+  Changed : UI - open folder (Ctrl+Enter) on file which hasn�t been yet downloaded  [requested by Tuiz] 
+  Changed : UI - choose another file by right click [requested by Tuiz]
+  Fixed : problem with connecting when proxies had a same port [reported by Peter, thanks]
+  Fixed : MS Windows: FRD does not start minimized from Start Up shortcut  (=> added new switch -m to start FRD minimized)
+
+22nd October 2008 - FreeRapid Downloader 0.7 released
+  Added : plugins - support for shareator.com [implemented by Lukiz, thanks!]
+  Added : plugins - support for load.to [implemented by Lukiz, thanks!]
+  Added : plugins - support for uloz.to [implemented by Lukiz, thanks!]
+  Added : plugins - support for iskladka.cz/sk [implemented by Lukiz, thanks!]
+  Added : plugins - support for xtraupload.de [implemented by Lukiz, thanks!]
+  Added : both traditional and simplified chinese translation [thanks to Jodyp!]
+  Added : slovak translation [thanks to dDwarf!]
+  Added : confirm cancel if there are completed downloads [requested by Saymon]  
+  Added : autobackup files (filelist.xml, history.xml)  
+  Added : new download state WAIT! to show to user "you have to wait XX minutes"
+  Added : table scrolls to new position of selection [requested by Pavel]
+  Added : options to control confirmation dialogs 
+  Added : option to disable using history
+  Added : buttons to create desktop, start menu, quick launch, start up shortcuts;
+          Linux/MacOS users can configure syscmd.properties file
+  Added : autoshutdown options - standby, hibernate, reboot, shutdown, quit when all downloads complete; 
+          Linux/MacOS users can configure syscmd.properties file
+  Added : command line option to reset application properties (--reset)
+  Changed : plugins - Rapidshare - support for URLs starting with 'rs123.' [requested by Valor]
+  Changed : updating proxy list or proxy settings for default connection does not require a restart anymore  
+  Changed : force download passes max current number of connections (9 concurrent downloads is a limit)
+  Changed : remapped selection shortcuts - HOME-first row , END-last row, ctrl+HOME-first column, ctrl+END-last column
+            SHIFT + HOME - select to first row, SHIFT + END - select to last row
+  Changed : removed heap memory indicator
+  Changed : updated czech translation
+  Changed : plugin file names renamed - version info removed
+  Changed : new tray icons and splash screen [thanks to Axis!]
+  Fixed : NewLinks dialog - pressed key ENTER caused calling insert action twice  
+  Fixed : fixed renaming file with many dots in its name
+  Fixed : exception when target disk space has not enough space 
+  Fixed : shift+DELETE shortcut does not work in History dialog
+  Fixed : PAUSED state sometimes runs another download
+
+8th October 2008 - FreeRapid Downloader 0.65 released
+  Added : plugins - support for letibit.com [FS#25 - requested by Chris C., implemented by Lukiz] 
+  Added : plugins - support for egoshare.com, share-online.biz, easy-share.com [implemented by Lukiz]
+  Added : plugins - support for megarotic.com and sexuploader.com [FS#24 - requested by Anonymous, implemented by Lukiz]
+  Added : new keystroke to activate searching in Downloads History dialog - Ctrl+F key
+  Added : new keystroke for Resume action - SPACE key
+  Added : new alternative keystroke for Open file/Show Information dialog - ENTER key
+  Added : possibility to import (with clipboard monitoring) or paste links without 'http://' at the beginning         
+  Added : Sort by name function - available from Downloads menu - ctrl+S [requested by ATom]
+  Added : link to the Flash video on the web from Help menu
+  Added : option to remove files after completion (NEVER, IMMEDIATELY, AT STARTUP)
+  Added : option to minimize to tray on close
+  Added : option to disable using default connection (warning: only connections from proxy list will be used)
+  Added : possibility to set proxy settings for default connection 
+  Added : support to set application property from command line (mostly for debug or testing purposes)
+  Added : Czech translation [thanks to Lukiz&Kajda!] - more translations will come soon
+  Added : option to select language (translation) for application
+  Changed : improved searching for free available net port on localhost for creating only one instance of the application
+  Changed : average speed and duration time attributes on completed file are stored [requested by Chris C.]
+  Changed : small redesign of Appearance panel in User Preferences dialog
+  Changed : improved pre-allocation files (less file fragmentation)
+  Changed : minor changes in RapidShare, FileFactory, Megaupload, Uploaded.to plugins
+  Changed : plugin extension was renamed from .zip to .frp
+  Changed : default connection timeout is set to 100 seconds
+  Fixed : OK button is not active when pressing shift+DELETE [reported by Saymon]
+  Fixed : window size/position was not restored when application crashed
+  Fixed : description area was not enabled for selection copy after file completion
+  Fixed : removed czech labels from open proxy file dialog for English locales
+
+20th September 2008 - FreeRapid Downloader 0.61 released - bug fix release + 1 great option ;-)
+  Fixed : updated a few labels  
+  Fixed : clipboard monitoring doesn't work properly on Windows [thanks to ATom!]
+  Fixed : last selected dir not saved when files were started as paused [thanks to Savannah&Lukiz!]
+  Added : added option to pre-allocate file to prevent file fragmentation (Options->Preferences->Misc->Advanced)
+  Changed : a change of Look&Feel does not require restart to apply new settings, but application restart is recommended  
+  Changed : minor changes in megaupload, rapidshare and uploaded.to plugins
+  Changed : updated readme.txt
+  Changed : upgraded Substance L&F library to version 0.5 final
+
+15th September 2008 - FreeRapid Downloader 0.6 released
+  Fixed : remove selected does not select next line in the table (if filter was applied)
+  Fixed : partly downloaded files were not deleted at some special cases
+  Changed : SwingX library upgraded to version 0.94
+  Changed : property "Max downloads at a time" does not require a restart anymore
+  Changed : show/hide toolbar action has assigned new shortcut - F11
+  Changed : improved internal counting of actual speed
+  Changed : double click opens files if completed or opens download information dialog otherwise
+  Changed : reworked enabled status of action buttons (resume, cancel, pause) - at least one active -> enabled true
+  Added : option to set horizontal and/or vertical lines in table  
+  Added : option to repeat error downloads indefinitely (-1 value in UserPreferences dialog)
+  Added : new Misc panel in UserPreferences dialog      
+  Added : multiple settings dialog (if you select more than 1 file)  
+  Added : status info icon in the statusbar - clipboard monitoring (clickable)      
+  Added : animated tray icon in busy state (optionable) 
+  Added : clipboard monitoring (optionable)
+  Added : frame title information (optionable)
+  Added : ESC key cancels current download(s)
+  Added : new icons in help menu
+  Added : link to paypal.com to support this project
+  Added : automatic smart saving current queue and downloaded files history
+          (if application/OS crashes it preserves everything)
+  Added : support for depositfiles.com [thanks to Lukiz!]
+  Added : support for megaupload.com [thanks to Lukiz!]
+  Added : support for netload.in [thanks to Lukiz!]
+  Added : this file :-)
+
+9th September 2008 - FreeRapid Downloader 0.5 released
+  - initial release
