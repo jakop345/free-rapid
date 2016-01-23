@@ -8,6 +8,8 @@ import org.junit.Test;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocket;
 
 /**
  * JUnit test for unlimited cryptography
@@ -34,6 +36,14 @@ public class CipherTest {
         cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key, "AES"), new IvParameterSpec(iv));
         final byte[] decrypted = cipher.doFinal(input);
         Assert.assertEquals("Hello Vity!", new String(decrypted, "UTF-8"));
+    }
+
+    @Test
+    public void testUnlimitedTls() throws Exception {
+        final SSLContext context = SSLContext.getInstance("TLS");
+        context.init(null, null, null);
+        final SSLSocket socket = (SSLSocket) context.getSocketFactory().createSocket();
+        socket.setEnabledCipherSuites(new String[]{"TLS_RSA_WITH_AES_256_CBC_SHA"});
     }
 
 }
