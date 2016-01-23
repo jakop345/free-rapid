@@ -8,8 +8,9 @@ import cz.vity.freerapid.core.tasks.CheckPluginUpdateTask;
 import cz.vity.freerapid.core.tasks.DownloadNewPluginsTask;
 import cz.vity.freerapid.gui.dialogs.UpdateDialog;
 import cz.vity.freerapid.gui.dialogs.WrappedPluginData;
-import cz.vity.freerapid.model.DownloadFile;
-import cz.vity.freerapid.model.PluginMetaData;
+import cz.vity.freerapid.model.DownloadFileModel;
+import cz.vity.freerapid.model.bean.DownloadFile;
+import cz.vity.freerapid.model.bean.PluginMetaData;
 import cz.vity.freerapid.plugins.webclient.DownloadState;
 import cz.vity.freerapid.swing.Swinger;
 import cz.vity.freerapid.utilities.LogUtils;
@@ -194,7 +195,7 @@ public class UpdateManager {
     }
 
     public DownloadFile getDownloadFileInstance(final Plugin plugin) throws MalformedURLException {
-        final DownloadFile downloadFile = new DownloadFile();
+        final DownloadFile downloadFile = new DownloadFile(new DownloadFileModel());
         downloadFile.setFileUrl(new URL(plugin.getUrl()));
         downloadFile.setFileName(plugin.getFilename());
         downloadFile.setState(DownloadState.PAUSED);
@@ -280,7 +281,7 @@ public class UpdateManager {
                     plugin.setFilename("xxxx.frp");
                     plugin.setFilesize(0);
                     plugin.setPremium(String.valueOf(data.isPremium()));
-                    final DownloadFile httpFile = new DownloadFile();
+                    final DownloadFile httpFile = new DownloadFile(new DownloadFileModel());
                     httpFile.setState(DownloadState.QUEUED);
                     final WrappedPluginData pluginData = new WrappedPluginData(true, httpFile, plugin);
                     pluginData.setToBeDeleted(true);

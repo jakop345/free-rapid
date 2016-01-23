@@ -1,6 +1,6 @@
 package cz.vity.freerapid.gui.dialogs;
 
-import cz.vity.freerapid.model.DownloadFile;
+import cz.vity.freerapid.model.bean.DownloadFile;
 import cz.vity.freerapid.xmlimport.ver1.Plugin;
 
 /**

@@ -2,7 +2,7 @@ package cz.vity.freerapid.gui.content;
 
 
 import com.jgoodies.common.collect.ArrayListModel;
-import cz.vity.freerapid.model.DownloadFile;
+import cz.vity.freerapid.model.bean.DownloadFile;
 
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;

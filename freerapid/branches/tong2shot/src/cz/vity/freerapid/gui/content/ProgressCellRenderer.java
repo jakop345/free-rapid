@@ -1,6 +1,6 @@
 package cz.vity.freerapid.gui.content;
 
-import cz.vity.freerapid.model.DownloadFile;
+import cz.vity.freerapid.model.bean.DownloadFile;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;

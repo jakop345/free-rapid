@@ -1,6 +1,7 @@
 package cz.vity.freerapid.gui.managers;
 
-import cz.vity.freerapid.model.PluginMetaData;
+import cz.vity.freerapid.model.PluginMetaDataModel;
+import cz.vity.freerapid.model.bean.PluginMetaData;
 import cz.vity.freerapid.utilities.FileUtils;
 import cz.vity.freerapid.utilities.LogUtils;
 import org.jdesktop.application.ApplicationContext;
@@ -40,7 +41,7 @@ public class PluginMetaDataManager {
         Runnable runnable = new Runnable() {
             public void run() {
                 logger.info("Saving metadata info into database - start");
-                director.getDatabaseManager().saveCollection(files);
+                director.getDatabaseManager().saveCollection(PluginMetaData.toModels(files), PluginMetaDataModel.class);
                 logger.info("Saving metadata info into database - end");
             }
         };
@@ -93,7 +94,7 @@ public class PluginMetaDataManager {
             return result;
         } else {
             //load from database
-            return director.getDatabaseManager().loadAll(PluginMetaData.class);
+            return PluginMetaDataModel.toBeans(director.getDatabaseManager().loadAll(PluginMetaDataModel.class));
         }
     }
 

@@ -10,12 +10,12 @@ public class Consts {
     /**
      * Product name
      */
-    public static final String PRODUCT = "FreeRapid";
+    public static final String PRODUCT = "FreeRapid-BDB";
 
     /**
      * Version
      */
-    public static final String VERSION = "0.9u4";
+    public static final String VERSION = "0.10-bdb";
 
     /**
      * verze a jmeno programu

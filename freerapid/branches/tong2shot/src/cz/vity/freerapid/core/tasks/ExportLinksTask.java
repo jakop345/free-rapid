@@ -1,7 +1,7 @@
 package cz.vity.freerapid.core.tasks;
 
 import cz.vity.freerapid.core.MainApp;
-import cz.vity.freerapid.model.DownloadFile;
+import cz.vity.freerapid.model.bean.DownloadFile;
 import cz.vity.freerapid.plugimpl.StandardDialogSupportImpl;
 import cz.vity.freerapid.plugins.container.ContainerException;
 import cz.vity.freerapid.plugins.container.ContainerPlugin;
@@ -19,6 +19,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+
+;
 
 /**
  * @author ntoskrnl

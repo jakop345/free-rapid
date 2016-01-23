@@ -4,12 +4,9 @@ import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.util.URIUtil;
 
 import java.io.*;
-import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
-import java.security.Permission;
-import java.security.PermissionCollection;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -438,38 +435,24 @@ public final class Utils {
 
     private static void removeCryptographyRestrictions() {
         if (!isRestrictedCryptography()) {
-            logger.fine("Cryptography restrictions removal not needed");
             return;
         }
         try {
-            /*
-             * Do the following, but with reflection to bypass access checks:
-             *
-             * JceSecurity.isRestricted = false;
-             * JceSecurity.defaultPolicy.perms.clear();
-             * JceSecurity.defaultPolicy.add(CryptoAllPermission.INSTANCE);
-             */
-            final Class<?> jceSecurity = Class.forName("javax.crypto.JceSecurity");
-            final Class<?> cryptoPermissions = Class.forName("javax.crypto.CryptoPermissions");
-            final Class<?> cryptoAllPermission = Class.forName("javax.crypto.CryptoAllPermission");
-
-            final Field isRestrictedField = jceSecurity.getDeclaredField("isRestricted");
-            isRestrictedField.setAccessible(true);
-            isRestrictedField.set(null, false);
-
-            final Field defaultPolicyField = jceSecurity.getDeclaredField("defaultPolicy");
-            defaultPolicyField.setAccessible(true);
-            final PermissionCollection defaultPolicy = (PermissionCollection) defaultPolicyField.get(null);
-
-            final Field perms = cryptoPermissions.getDeclaredField("perms");
-            perms.setAccessible(true);
-            ((Map<?, ?>) perms.get(defaultPolicy)).clear();
-
-            final Field instance = cryptoAllPermission.getDeclaredField("INSTANCE");
-            instance.setAccessible(true);
-            defaultPolicy.add((Permission) instance.get(null));
-
-            logger.fine("Successfully removed cryptography restrictions");
+            java.lang.reflect.Field isRestricted;
+            try {
+                final Class<?> c = Class.forName("javax.crypto.JceSecurity");
+                isRestricted = c.getDeclaredField("isRestricted");
+            } catch (final ClassNotFoundException e) {
+                try {
+                    // Java 6 has obfuscated JCE classes
+                    final Class<?> c = Class.forName("javax.crypto.SunJCE_b");
+                    isRestricted = c.getDeclaredField("g");
+                } catch (final ClassNotFoundException e2) {
+                    throw e;
+                }
+            }
+            isRestricted.setAccessible(true);
+            isRestricted.set(null, false);
         } catch (final Throwable e) {
             logger.log(Level.WARNING, "Failed to remove cryptography restrictions", e);
         }

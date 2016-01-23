@@ -2,7 +2,7 @@ package cz.vity.freerapid.core.tasks;
 
 import cz.vity.freerapid.core.AppPrefs;
 import cz.vity.freerapid.core.UserProp;
-import cz.vity.freerapid.model.DownloadFile;
+import cz.vity.freerapid.model.bean.DownloadFile;
 import cz.vity.freerapid.plugins.webclient.DownloadState;
 
 import javax.swing.event.SwingPropertyChangeSupport;
@@ -155,7 +155,7 @@ public final class SpeedRegulator implements PropertyChangeListener {
      * Vraci true, pokud ma dotycny soubor dostatek tokenu (muze stahovat)
      *
      * @param file soubor, ktery stahuje
-     * @param o    kolik token soubor pri stahovani zada
+     * @param bytes    kolik token soubor pri stahovani zada
      * @return true ma dostatek tokenu, jinak false
      */
     public final boolean takeTokens(DownloadFile file, final int bytes) {

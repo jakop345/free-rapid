@@ -1,6 +1,7 @@
 package cz.vity.freerapid.plugins.webclient.utils;
 
-import cz.vity.freerapid.model.DownloadFile;
+import cz.vity.freerapid.model.DownloadFileModel;
+import cz.vity.freerapid.model.bean.DownloadFile;
 import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;
 import cz.vity.freerapid.plugins.webclient.MethodBuilderTest;
 import cz.vity.freerapid.plugins.webclient.interfaces.HttpFile;
@@ -173,7 +174,7 @@ public class PlugUtilsTest {
     @Test
     public void testCheckName() throws PluginImplementationException {
         final String content = "strong>File name:   filename <";
-        final HttpFile httpFile = new DownloadFile() {
+        final HttpFile httpFile = new DownloadFile(new DownloadFileModel()) {
             String fn;
 
             @Override
@@ -194,7 +195,7 @@ public class PlugUtilsTest {
     @Test
     public void testCheckSize() throws PluginImplementationException {
         final String content = "strong>File size:   5900 KB <";
-        final HttpFile httpFile = new DownloadFile();
+        final HttpFile httpFile = new DownloadFile(new DownloadFileModel());
         PlugUtils.checkFileSize(httpFile, content, "strong>File size:", "<");
         assertEquals(httpFile.getFileSize(), 5900 * 1024);
 

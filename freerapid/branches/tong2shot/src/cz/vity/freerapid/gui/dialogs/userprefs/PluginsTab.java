@@ -11,7 +11,7 @@ import cz.vity.freerapid.core.UserProp;
 import cz.vity.freerapid.gui.managers.ManagerDirector;
 import cz.vity.freerapid.gui.managers.MenuManager;
 import cz.vity.freerapid.gui.managers.PluginsManager;
-import cz.vity.freerapid.model.PluginMetaData;
+import cz.vity.freerapid.model.bean.PluginMetaData;
 import cz.vity.freerapid.plugins.webclient.interfaces.ShareDownloadService;
 import cz.vity.freerapid.swing.ComponentFactory;
 import cz.vity.freerapid.swing.SwingUtils;

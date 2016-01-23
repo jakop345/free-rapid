@@ -1,6 +1,6 @@
 package cz.vity.freerapid.gui.managers.exceptions;
 
-import cz.vity.freerapid.model.PluginMetaData;
+import cz.vity.freerapid.model.bean.PluginMetaData;
 
 /**
  * @author Ladislav Vitasek

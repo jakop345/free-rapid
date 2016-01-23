@@ -13,11 +13,12 @@ import cz.vity.freerapid.core.FileTypeIconProvider;
 import cz.vity.freerapid.core.MainApp;
 import cz.vity.freerapid.core.UserProp;
 import cz.vity.freerapid.gui.content.ContentPanel;
-import cz.vity.freerapid.gui.managers.FileHistoryItem;
 import cz.vity.freerapid.gui.managers.FileHistoryManager;
 import cz.vity.freerapid.gui.managers.ManagerDirector;
 import cz.vity.freerapid.gui.managers.MenuManager;
-import cz.vity.freerapid.model.DownloadFile;
+import cz.vity.freerapid.model.DownloadFileModel;
+import cz.vity.freerapid.model.bean.DownloadFile;
+import cz.vity.freerapid.model.bean.FileHistoryItem;
 import cz.vity.freerapid.plugins.webclient.DownloadState;
 import cz.vity.freerapid.swing.SwingUtils;
 import cz.vity.freerapid.swing.SwingXUtils;
@@ -247,7 +248,7 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
             return;
         final java.util.List<DownloadFile> files = new ArrayList<DownloadFile>();
         for (FileHistoryItem fileH : filesH) {
-            final DownloadFile down = new DownloadFile();
+            final DownloadFile down = new DownloadFile(new DownloadFileModel());
             down.setFileUrl(fileH.getUrl());
             down.setStoreFile(fileH.getOutputFile());
             down.setSaveToDirectory(new File(fileH.getOutputFile().getAbsolutePath()));
@@ -264,10 +265,10 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
         }
         if (files.size() == 1) {
             final InformationDialog dialog = new InformationDialog(owner, director, files.get(0));
-            ((MainApp) director.getContext().getApplication()).show(dialog);
+            ((MainApp)director.getContext().getApplication()).show(dialog);
         } else {
             final MultipleSettingsDialog dialog = new MultipleSettingsDialog(owner, files);
-            ((MainApp) director.getContext().getApplication()).show(dialog);
+            ((MainApp)director.getContext().getApplication()).show(dialog);
         }
     }
 
@@ -475,7 +476,7 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
                                     FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
                                     new ColumnSpec(ColumnSpec.FILL, Sizes.DEFAULT, FormSpec.DEFAULT_GROW),
                                     FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-                                    new ColumnSpec(ColumnSpec.FILL, Sizes.DEFAULT, FormSpec.DEFAULT_GROW)
+                                    new ColumnSpec(ColumnSpec.FILL, Sizes.DEFAULT, FormSpec.DEFAULT_GROW )
                             },
                             RowSpec.decodeSpecs("default")), panel1);
 
