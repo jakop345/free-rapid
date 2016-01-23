@@ -8,7 +8,7 @@ import cz.vity.freerapid.core.AppPrefs;
 import cz.vity.freerapid.core.UserProp;
 import cz.vity.freerapid.gui.FRDUtils;
 import cz.vity.freerapid.gui.content.ContentPanel;
-import cz.vity.freerapid.model.DownloadFile;
+import cz.vity.freerapid.model.bean.DownloadFile;
 import cz.vity.freerapid.plugins.webclient.DownloadState;
 import cz.vity.freerapid.swing.ComponentFactory;
 import cz.vity.freerapid.swing.Swinger;

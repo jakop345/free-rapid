@@ -2,7 +2,7 @@ package cz.vity.freerapid.gui.managers.features;
 
 import cz.vity.freerapid.gui.managers.DataManager;
 import cz.vity.freerapid.gui.managers.ManagerDirector;
-import cz.vity.freerapid.model.DownloadFile;
+import cz.vity.freerapid.model.bean.DownloadFile;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;

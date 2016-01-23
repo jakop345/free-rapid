@@ -1,6 +1,6 @@
 package cz.vity.freerapid.gui.content.comparators;
 
-import cz.vity.freerapid.model.DownloadFile;
+import cz.vity.freerapid.model.bean.DownloadFile;
 
 import java.util.Comparator;
 import java.util.Date;

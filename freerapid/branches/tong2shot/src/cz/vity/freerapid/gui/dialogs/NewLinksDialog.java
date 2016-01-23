@@ -10,8 +10,13 @@ import cz.vity.freerapid.core.UserProp;
 import cz.vity.freerapid.gui.FRDUtils;
 import cz.vity.freerapid.gui.actions.URLTransferHandler;
 import cz.vity.freerapid.gui.dialogs.filechooser.OpenSaveDialogFactory;
-import cz.vity.freerapid.gui.managers.*;
-import cz.vity.freerapid.model.DownloadFile;
+import cz.vity.freerapid.gui.managers.DataManager;
+import cz.vity.freerapid.gui.managers.FileHistoryManager;
+import cz.vity.freerapid.gui.managers.ManagerDirector;
+import cz.vity.freerapid.gui.managers.PluginsManager;
+import cz.vity.freerapid.model.DownloadFileModel;
+import cz.vity.freerapid.model.bean.DownloadFile;
+import cz.vity.freerapid.model.bean.FileHistoryItem;
 import cz.vity.freerapid.swing.ComponentFactory;
 import cz.vity.freerapid.swing.Swinger;
 import cz.vity.freerapid.swing.components.EditorPaneLinkDetector;
@@ -328,7 +333,7 @@ public class NewLinksDialog extends AppDialog implements ClipboardOwner {
         final String description = descriptionArea.getText();
         final List<DownloadFile> result = new ArrayList<DownloadFile>();
         for (final URL url : urlsArea.getURLs()) {
-            result.add(new DownloadFile(url, saveToDirectory, description));
+            result.add(new DownloadFile(new DownloadFileModel(url, saveToDirectory, description)));
         }
         return result;
     }

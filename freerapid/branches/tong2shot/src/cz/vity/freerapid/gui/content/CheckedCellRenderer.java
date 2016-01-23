@@ -1,6 +1,6 @@
 package cz.vity.freerapid.gui.content;
 
-import cz.vity.freerapid.model.DownloadFile;
+import cz.vity.freerapid.model.bean.DownloadFile;
 import org.jdesktop.application.ApplicationContext;
 import org.jdesktop.application.ResourceMap;
 

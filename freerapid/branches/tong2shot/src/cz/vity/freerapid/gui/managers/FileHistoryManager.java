@@ -2,7 +2,8 @@ package cz.vity.freerapid.gui.managers;
 
 
 import com.jgoodies.common.collect.ArrayListModel;
-import cz.vity.freerapid.model.DownloadFile;
+import cz.vity.freerapid.model.bean.DownloadFile;
+import cz.vity.freerapid.model.bean.FileHistoryItem;
 import cz.vity.freerapid.utilities.FileUtils;
 import cz.vity.freerapid.utilities.LogUtils;
 import org.jdesktop.application.AbstractBean;
@@ -67,11 +68,11 @@ public class FileHistoryManager extends AbstractBean {
         return list;
     }
 
-    public List<FileHistoryItem> getItems() {
+    public Collection<FileHistoryItem> getItems() {
         return loadFileHistoryList();
     }
 
-    private List<FileHistoryItem> loadFileHistoryList() {
+    private Collection<FileHistoryItem> loadFileHistoryList() {
         List<FileHistoryItem> result = null;
         final File srcFile = new File(context.getLocalStorage().getDirectory(), FILES_LIST_XML);
         final File targetImportedFile = new File(context.getLocalStorage().getDirectory(), FILES_LIST_XML + ".imported");
@@ -96,7 +97,7 @@ public class FileHistoryManager extends AbstractBean {
                 Runnable runnable = new Runnable() {
                     public void run() {
                         logger.info("Resaving file history into database from old format");
-                        director.getDatabaseManager().saveCollection(finalResult);
+                        director.getDatabaseManager().saveCollection(finalResult, FileHistoryItem.class);
                     }
                 };
                 director.getDatabaseManager().runOnTask(runnable);
@@ -120,7 +121,7 @@ public class FileHistoryManager extends AbstractBean {
         final FileHistoryItem item = new FileHistoryItem(file, savedAs);
         Runnable runnable = new Runnable() {
             public void run() {
-                director.getDatabaseManager().saveOrUpdate(item);
+                director.getDatabaseManager().saveOrUpdate(item, FileHistoryItem.class);
             }
         };
         director.getDatabaseManager().runOnTask(runnable);
@@ -140,7 +141,7 @@ public class FileHistoryManager extends AbstractBean {
     public void removeItems(final Collection<FileHistoryItem> items) {
         Runnable runnable = new Runnable() {
             public void run() {
-                director.getDatabaseManager().removeCollection(items);
+                director.getDatabaseManager().removeCollection(items, FileHistoryItem.class);
             }
         };
         director.getDatabaseManager().runOnTask(runnable, null);
@@ -149,7 +150,7 @@ public class FileHistoryManager extends AbstractBean {
     public void removeItems(final Collection<FileHistoryItem> items, Runnable succeeded) {
         Runnable runnable = new Runnable() {
             public void run() {
-                director.getDatabaseManager().removeCollection(items);
+                director.getDatabaseManager().removeCollection(items, FileHistoryItem.class);
             }
         };
         director.getDatabaseManager().runOnTask(runnable, succeeded);

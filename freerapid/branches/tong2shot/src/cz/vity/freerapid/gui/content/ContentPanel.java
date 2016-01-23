@@ -12,8 +12,7 @@ import cz.vity.freerapid.gui.dialogs.MultipleSettingsDialog;
 import cz.vity.freerapid.gui.managers.DataManager;
 import cz.vity.freerapid.gui.managers.ManagerDirector;
 import cz.vity.freerapid.gui.managers.MenuManager;
-import cz.vity.freerapid.gui.managers.exceptions.NotSupportedDownloadServiceException;
-import cz.vity.freerapid.model.DownloadFile;
+import cz.vity.freerapid.model.bean.DownloadFile;
 import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
 import cz.vity.freerapid.plugins.webclient.DownloadState;
 import cz.vity.freerapid.plugins.webclient.FileState;
@@ -34,7 +33,10 @@ import org.jdesktop.swingx.table.TableColumnExt;
 
 import javax.swing.*;
 import javax.swing.event.*;
-import javax.swing.table.*;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
@@ -1138,20 +1140,13 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
         if (selectedRows.length == 0)
             return null;  // nothing selected
         final String pluginID = manager.getSelectionToList(selectedRows).get(0).getPluginID();
-        try {
-            if (!director.getPluginsManager().getPluginMetadata(pluginID).isOptionable())
-                return null;   // plugin has no options
-        } catch (Exception x) {
-            return null;   // direct download
-        }
+        if (!director.getPluginsManager().getPluginMetadata(pluginID).isOptionable())
+            return null;   // plugin has no options
+
         JMenuItem pluginOptions = new JMenuItem(new PluginOptionsAction(pluginID));
         pluginOptions.setText(context.getResourceMap().getString("textPluginOptions", pluginID));
         if (director.getPluginsManager().getPluginMetadata(pluginID).hasFavicon())
-            try {
-                pluginOptions.setIcon(director.getPluginsManager().getPluginInstance(pluginID).getFaviconImage());
-            } catch (NotSupportedDownloadServiceException e) {
-                return null; //plugin wasn't properly initialized
-            }
+            pluginOptions.setIcon(director.getPluginsManager().getPluginInstance(pluginID).getFaviconImage());
         return pluginOptions;
     }
 

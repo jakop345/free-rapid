@@ -1,6 +1,6 @@
 package cz.vity.freerapid.core.tasks;
 
-import cz.vity.freerapid.model.DownloadFile;
+import cz.vity.freerapid.model.bean.DownloadFile;
 import cz.vity.freerapid.utilities.LogUtils;
 import cz.vity.freerapid.utilities.Utils;
 import org.jdesktop.application.ApplicationContext;

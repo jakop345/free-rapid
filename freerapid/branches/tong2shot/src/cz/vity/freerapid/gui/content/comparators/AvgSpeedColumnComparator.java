@@ -1,7 +1,7 @@
 package cz.vity.freerapid.gui.content.comparators;
 
 import cz.vity.freerapid.gui.actions.DownloadsActions;
-import cz.vity.freerapid.model.DownloadFile;
+import cz.vity.freerapid.model.bean.DownloadFile;
 import cz.vity.freerapid.plugins.webclient.DownloadState;
 
 import java.util.Comparator;

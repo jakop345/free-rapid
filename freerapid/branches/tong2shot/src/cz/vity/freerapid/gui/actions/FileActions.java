@@ -14,7 +14,7 @@ import cz.vity.freerapid.gui.managers.DataManager;
 import cz.vity.freerapid.gui.managers.ManagerDirector;
 import cz.vity.freerapid.gui.managers.PluginsManager;
 import cz.vity.freerapid.gui.managers.TaskServiceManager;
-import cz.vity.freerapid.model.DownloadFile;
+import cz.vity.freerapid.model.bean.DownloadFile;
 import cz.vity.freerapid.plugins.container.ContainerPlugin;
 import cz.vity.freerapid.swing.Swinger;
 import cz.vity.freerapid.utilities.LogUtils;

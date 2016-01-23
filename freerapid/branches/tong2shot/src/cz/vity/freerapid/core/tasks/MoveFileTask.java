@@ -3,7 +3,7 @@ package cz.vity.freerapid.core.tasks;
 import cz.vity.freerapid.core.AppPrefs;
 import cz.vity.freerapid.core.MainApp;
 import cz.vity.freerapid.core.UserProp;
-import cz.vity.freerapid.model.DownloadFile;
+import cz.vity.freerapid.model.bean.DownloadFile;
 import cz.vity.freerapid.plugins.exceptions.FileTransferFailedException;
 import cz.vity.freerapid.utilities.FileEncWriter;
 import cz.vity.freerapid.utilities.LogUtils;

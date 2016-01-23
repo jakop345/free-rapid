@@ -1,6 +1,6 @@
 package cz.vity.freerapid.core.tasks;
 
-import cz.vity.freerapid.model.DownloadFile;
+import cz.vity.freerapid.model.bean.DownloadFile;
 import cz.vity.freerapid.plugins.webclient.DownloadState;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.interfaces.HttpDownloadClient;

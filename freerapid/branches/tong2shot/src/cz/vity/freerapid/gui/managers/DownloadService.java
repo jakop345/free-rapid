@@ -1,7 +1,7 @@
 package cz.vity.freerapid.gui.managers;
 
-import cz.vity.freerapid.model.DownloadFile;
-import cz.vity.freerapid.model.PluginMetaData;
+import cz.vity.freerapid.model.bean.DownloadFile;
+import cz.vity.freerapid.model.bean.PluginMetaData;
 import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
 import cz.vity.freerapid.plugins.webclient.interfaces.HttpDownloadClient;
 import cz.vity.freerapid.plugins.webclient.interfaces.ShareDownloadService;

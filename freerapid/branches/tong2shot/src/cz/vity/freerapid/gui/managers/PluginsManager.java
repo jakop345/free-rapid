@@ -7,8 +7,9 @@ import cz.vity.freerapid.core.UserProp;
 import cz.vity.freerapid.gui.dialogs.WrappedPluginData;
 import cz.vity.freerapid.gui.managers.exceptions.NotSupportedDownloadServiceException;
 import cz.vity.freerapid.gui.managers.exceptions.PluginIsNotEnabledException;
-import cz.vity.freerapid.model.DownloadFile;
-import cz.vity.freerapid.model.PluginMetaData;
+import cz.vity.freerapid.model.PluginMetaDataModel;
+import cz.vity.freerapid.model.bean.DownloadFile;
+import cz.vity.freerapid.model.bean.PluginMetaData;
 import cz.vity.freerapid.plugimpl.StandardDialogSupportImpl;
 import cz.vity.freerapid.plugimpl.StandardPluginContextImpl;
 import cz.vity.freerapid.plugimpl.StandardStorageSupportImpl;
@@ -258,7 +259,7 @@ public class PluginsManager {
                     data.setPluginDescriptor(pluginDescriptor);
                     supportedPlugins.put(id, data);
                 } else {
-                    supportedPlugins.put(id, new PluginMetaData(pluginDescriptor));
+                    supportedPlugins.put(id, new PluginMetaData(new PluginMetaDataModel(pluginDescriptor)));
                 }
             }
 

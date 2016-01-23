@@ -12,7 +12,8 @@ import cz.vity.freerapid.gui.actions.URLTransferHandler;
 import cz.vity.freerapid.gui.managers.exceptions.NotSupportedDownloadServiceException;
 import cz.vity.freerapid.gui.managers.interfaces.FileStateChangeListener;
 import cz.vity.freerapid.gui.managers.interfaces.UrlListDataListener;
-import cz.vity.freerapid.model.DownloadFile;
+import cz.vity.freerapid.model.DownloadFileModel;
+import cz.vity.freerapid.model.bean.DownloadFile;
 import cz.vity.freerapid.plugins.container.FileInfo;
 import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
 import cz.vity.freerapid.plugins.webclient.DownloadState;
@@ -159,7 +160,6 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
 
                 public void propertyChange(PropertyChangeEvent evt) {
                     updateChangedFilesInDatabase();
-
                 }
             });
         }
@@ -372,7 +372,6 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
             }
         }
         processManager.queueUpdated();
-
     }
 
 
@@ -559,13 +558,13 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
 //                return;
             List<DownloadFile> toRemoveList = new LinkedList<DownloadFile>();
             for (DownloadFile file : downloadFiles) {
-                if (file.getState() == COMPLETED)
+                if (file.getState() == COMPLETED) {
+                    file.setState(DELETED);
                     toRemoveList.add(file);
+                    file.removePropertyChangeListener(this);
+                }
             }
             removeFromList(toRemoveList);
-            for (DownloadFile file : toRemoveList) {
-                file.setState(DELETED);
-            }
         }
     }
 
@@ -582,13 +581,12 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
             List<DownloadFile> toRemoveList = new LinkedList<DownloadFile>();
             for (DownloadFile file : downloadFiles) {
                 if (file.getState() == COMPLETED && (file.getOutputFile() == null || !file.getOutputFile().exists())) {
+                    file.setState(DELETED);
                     toRemoveList.add(file);
+                    file.removePropertyChangeListener(this);
                 }
             }
             removeFromList(toRemoveList);
-            for (DownloadFile file : toRemoveList) {
-                file.setState(DELETED);
-            }
         }
     }
 
@@ -777,7 +775,7 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
                 final URL url = uri.toURL();
                 if (dontAddNotSupported && !pluginsManager.isSupported(url))
                     continue;
-                final DownloadFile downloadFile = new DownloadFile(url, parentFile.getSaveToDirectory(), parentFile.getDescription());
+                final DownloadFile downloadFile = new DownloadFile(new DownloadFileModel(url, parentFile.getSaveToDirectory(), parentFile.getDescription()));
                 downloadFile.setPluginID("");
                 files.add(downloadFile);
             } catch (MalformedURLException e) {
@@ -852,7 +850,7 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
             if (dontAddNotSupported && !pluginsManager.isSupported(info.getFileUrl())) {
                 continue;
             }
-            final DownloadFile downloadFile = new DownloadFile(info, saveToDirectory);
+            final DownloadFile downloadFile = new DownloadFile(new DownloadFileModel(info, saveToDirectory));
             if (description != null) {
                 downloadFile.setDescription(description);
             }
