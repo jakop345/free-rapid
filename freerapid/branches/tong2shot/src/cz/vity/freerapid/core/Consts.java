@@ -10,7 +10,7 @@ public class Consts {
     /**
      * Product name
      */
-    public static final String PRODUCT = "FreeRapid-BDB";
+    public static final String PRODUCT = "FreeRapid";
 
     /**
      * Version

@@ -1137,6 +1137,7 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
     private JMenuItem getPluginOptions(int[] selectedRows) {
         if (selectedRows.length == 0)
             return null;  // nothing selected
+        final HttpFile httpFile = manager.getSelectionToList(selectedRows).get(0);
         final String pluginID = manager.getSelectionToList(selectedRows).get(0).getPluginID();
         try {
             if (!director.getPluginsManager().getPluginMetadata(pluginID).isOptionable())
@@ -1144,7 +1145,7 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
         } catch (Exception x) {
             return null;   // direct download
         }
-        JMenuItem pluginOptions = new JMenuItem(new PluginOptionsAction(pluginID));
+        JMenuItem pluginOptions = new JMenuItem(new PluginOptionsAction(httpFile));
         pluginOptions.setText(context.getResourceMap().getString("textPluginOptions", pluginID));
         if (director.getPluginsManager().getPluginMetadata(pluginID).hasFavicon())
             try {
@@ -1157,17 +1158,25 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
 
     private class PluginOptionsAction extends AbstractAction {
         private final String pluginID;
+        private final HttpFile httpFile;
 
-        public PluginOptionsAction(String pluginID) {
-            this.pluginID = pluginID;
+        public PluginOptionsAction(HttpFile httpFile) {
+            this.httpFile = httpFile;
+            this.pluginID = httpFile.getPluginID();
             this.putValue(NAME, pluginID);
         }
 
         public void actionPerformed(ActionEvent e) {
             try {
-                director.getPluginsManager().getPluginInstance(pluginID).showOptions();
+                director.getPluginsManager().getPluginInstance(pluginID).showLocalOptions(httpFile);
             } catch (Exception x) {
                 LogUtils.processException(logger, x);
+                try {
+                    //if the plugin API doesn't support 'showLocalOptions', use the global one (showOptions)
+                    director.getPluginsManager().getPluginInstance(pluginID).showOptions();
+                } catch (Exception e1) {
+                    LogUtils.processException(logger, e1);
+                }
             }
         }
     }

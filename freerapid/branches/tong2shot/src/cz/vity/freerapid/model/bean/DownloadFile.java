@@ -204,6 +204,26 @@ public class DownloadFile extends AbstractBean implements PropertyChangeListener
         firePropertyChange("listOrder", oldValue, model.getListOrder());
     }
 
+    @Override
+    public String getLocalPluginConfig() {
+        return model.getLocalPluginConfig();
+    }
+
+    @Override
+    public void setLocalPluginConfig(String localPluginConfig) {
+        final String oldValue = model.getLocalPluginConfig();
+        model.setLocalPluginConfig(localPluginConfig);
+        firePropertyChange("localPluginConfig", oldValue, model.getLocalPluginConfig());
+    }
+
+    public void setTokens(int tokens) {
+        model.setTokens(tokens);
+    }
+
+    public int getTokens() {
+        return model.getTokens();
+    }
+
     public FileInfo toFileInfo() {
         return model.toFileInfo();
     }

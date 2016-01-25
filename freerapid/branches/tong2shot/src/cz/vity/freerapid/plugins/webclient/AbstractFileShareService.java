@@ -10,6 +10,10 @@ import org.java.plugin.registry.PluginDescriptor;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.beans.XMLDecoder;
+import java.beans.XMLEncoder;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.logging.Logger;
@@ -125,6 +129,12 @@ public abstract class AbstractFileShareService extends Plugin implements ShareDo
     }
 
     @Override
+    public void showLocalOptions(HttpFile httpFile) throws Exception {
+        //if it's not implemented, use the global one (showOptions)
+        showOptions();
+    }
+
+    @Override
     public PluginContext getPluginContext() {
         return pluginContext;
     }
@@ -197,4 +207,70 @@ public abstract class AbstractFileShareService extends Plugin implements ShareDo
      * @return instance of PluginRunner
      */
     protected abstract PluginRunner getPluginRunnerInstance();
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <E> E loadConfigFromString(String content, Class<E> type) throws Exception {
+        XMLDecoder xmlDecoder = null;
+        try {
+            xmlDecoder = new XMLDecoder(new ByteArrayInputStream(content.getBytes()), null, null, type.getClassLoader());
+            return (E) xmlDecoder.readObject();
+        } catch (RuntimeException e) {
+            LogUtils.processException(logger, e);
+            throw new Exception(e);
+        } catch (Exception e) {
+            LogUtils.processException(logger, e);
+            throw e;
+        } finally {
+            if (xmlDecoder != null) {
+                try {
+                    xmlDecoder.close();
+                } catch (Exception e) {
+                    //ignore
+                }
+            }
+        }
+    }
+
+    @Override
+    public String storeConfigToString(Object object) throws Exception {
+        XMLEncoder xmlEncoder = null;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try {
+            xmlEncoder = new XMLEncoder(baos);
+            xmlEncoder.writeObject(object);
+        } catch (Exception e) {
+            LogUtils.processException(logger, e);
+            throw e;
+        } finally {
+            if (xmlEncoder != null) {
+                try {
+                    xmlEncoder.close();
+                } catch (Exception e) {
+                    LogUtils.processException(logger, e);
+                }
+            }
+        }
+        String result = new String(baos.toByteArray());
+        try {
+            baos.close();
+        } catch (IOException e) {
+            LogUtils.processException(logger, e);
+        }
+        return result;
+    }
+
+    /**
+     * Clone config using XMLEncoder and XMLDecoder
+     * @param config config to be cloned
+     * @param type
+     * @param <E>
+     * @return clone
+     * @throws Exception
+     */
+    @Override
+    public <E> E cloneConfig(E config, Class<E> type) throws Exception {
+        String configAsString = storeConfigToString(config);
+        return loadConfigFromString(configAsString, type);
+    }
 }
