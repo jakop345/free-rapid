@@ -57,6 +57,7 @@ public class DownloadFileModel implements Identifiable, HttpFile {
     @SecondaryKey(relate = Relationship.MANY_TO_ONE)
     private int listOrder;
     private Date dateInserted;
+    private String localPluginConfig; //String representation of XMLEncoder output of plugin config
 
 
     @NotPersistent
@@ -629,6 +630,16 @@ public class DownloadFileModel implements Identifiable, HttpFile {
 
     public void setListOrder(int listOrder) {
         this.listOrder = listOrder;
+    }
+
+    @Override
+    public String getLocalPluginConfig() {
+        return localPluginConfig;
+    }
+
+    @Override
+    public void setLocalPluginConfig(String localPluginConfig) {
+        this.localPluginConfig = localPluginConfig;
     }
 
     public static Collection<DownloadFile> toBeans(Collection<DownloadFileModel> models) {
