@@ -55,7 +55,7 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
     private static final String DATA_CHANGED_PROPERTY = "dataChanged";
 
     private final ArrayListModel<DownloadFile> downloadFiles = new ArrayListModel<DownloadFile>();
-    private final Set<DownloadFile> changedFiles = Collections.synchronizedSet(new LinkedHashSet<DownloadFile>());
+    private final Set<DownloadFile> changedFiles = Collections.synchronizedSet(new HashSet<DownloadFile>());
 
     private ProcessManager processManager;
     private final ManagerDirector director;
@@ -319,7 +319,8 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
                 }
                 if ("orderList".equals(s)) {
                     fireDataChanged();
-                } else if ("state".equals(s)) {
+                }
+                if ("state".equals(s)) {
                     fireFileStateChanged(downloadFile, (DownloadState) evt.getOldValue(), (DownloadState) evt.getNewValue());
                 }
             }
