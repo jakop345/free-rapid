@@ -113,6 +113,8 @@ class FileListMaintainer {
             srcFile.renameTo(targetImportedFile);
             return result;
         } else {
+            //TODO: convert objectdb
+            //TODO: versionize schemes
             //load from database
             return DownloadFileModel.toBeans(director.getDatabaseManager().loadAllOrderByListOrder());
         }
@@ -196,7 +198,10 @@ class FileListMaintainer {
             file.addPropertyChangeListener(dataManager);
             list.add(file);
         }
-        removeFromDatabase(toRemoveList);
+        if (toRemoveList.size() > 0) {
+            removeFromDatabase(toRemoveList);
+            saveToDatabase(list);
+        }
     }
 
     void saveToDatabase(Collection<DownloadFile> downloadFiles) {
