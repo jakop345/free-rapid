@@ -20,9 +20,9 @@ import cz.vity.freerapid.utilities.LogUtils;
 import org.jdesktop.application.TaskService;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.logging.Logger;
 
 /**
@@ -41,6 +41,7 @@ public class DatabaseManager {
 
     private final PrimaryIndex<Long, FileHistoryItem> fileHistoryById;
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public DatabaseManager(ManagerDirector director) {
         this.director = director;
         final File envHome = new File(director.getContext().getLocalStorage().getDirectory(), "bdb");
@@ -196,21 +197,16 @@ public class DatabaseManager {
     }
 
     public synchronized <T extends Identifiable> Collection<T> loadAll(Class<T> entityClass) {
-        Collection<T> results = new ArrayList<T>();
-        Transaction txn = myEnv.beginTransaction(null, null);
         PrimaryIndex<Long, T> primaryIndex = getPrimaryIndex(entityClass);
-        EntityCursor<T> entityCursor = primaryIndex.entities(txn, null);
+        Collection<T> results = new LinkedList<>();
+        EntityCursor<T> entityCursor = primaryIndex.entities();
         try {
             for (T anEntityCursor : entityCursor) {
                 results.add(anEntityCursor);
             }
             entityCursor.close();
-            txn.commit();
         } catch (Exception ex) {
             LogUtils.processException(logger, ex);
-            if (txn != null) {
-                txn.abort();
-            }
         }
         return results;
     }
@@ -222,20 +218,15 @@ public class DatabaseManager {
      * @return download file list
      */
     public synchronized Collection<DownloadFileModel> loadAllOrderByListOrder() {
-        Collection<DownloadFileModel> results = new ArrayList<DownloadFileModel>();
-        Transaction txn = myEnv.beginTransaction(null, null);
-        EntityCursor<DownloadFileModel> entityCursor = downloadFileByListOrder.entities(txn, null);
+        Collection<DownloadFileModel> results = new LinkedList<>();
+        EntityCursor<DownloadFileModel> entityCursor = downloadFileByListOrder.entities();
         try {
             for (DownloadFileModel anEntityCursor : entityCursor) {
                 results.add(anEntityCursor);
             }
             entityCursor.close();
-            txn.commit();
         } catch (Exception ex) {
             LogUtils.processException(logger, ex);
-            if (txn != null) {
-                txn.abort();
-            }
         }
         return results;
     }
