@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <project name="FreeRapid Downloader" default="all" basedir=".">
     <property name="application" value="FreeRapid"/>
-    <property name="version" value="0.9u4"/>
+    <property name="version" value="0.10-bdb"/>
     <property name="version.name" value="${application}-${version}"/>
     <property name="mainclass" value="cz.vity.freerapid.core.MainApp"/>
     <property name="mainjar.file" value="frd.jar"/>
@@ -177,14 +177,14 @@
 
     <target name="compile" depends="clean, init" description="compiling source codes">
         <mkdir dir="${classes.dir}"/>
-        <javac debug="true" srcdir="${src.dir}" destdir="${classes.dir}" classpathref="cp" source="1.6" target="1.6"
+        <javac debug="true" srcdir="${src.dir}" destdir="${classes.dir}" classpathref="cp" source="1.7" target="1.7"
                defaultexcludes="false" excludes="**/sandbox/**" includeantruntime="true" encoding="UTF-8">
 
         </javac>
 
         <mkdir dir="${build.tests}"/>
-        <javac srcdir="${src.tests}" destdir="${build.tests}" classpathref="test-cp" optimize="false" source="1.6"
-               target="1.6" includeantruntime="true" encoding="UTF-8">
+        <javac srcdir="${src.tests}" destdir="${build.tests}" classpathref="test-cp" optimize="false" source="1.7"
+               target="1.7" includeantruntime="true" encoding="UTF-8">
             <classpath location="${classes.dir}"/>
         </javac>
 
@@ -209,8 +209,8 @@
         <delete dir="${javadoc.dir}" quiet="true"/>
         <mkdir dir="${javadoc.dir}"/>
         <javadoc Author="true" Version="true" charset="utf-8" destdir="${javadoc.dir}" docencoding="utf-8"
-                 encoding="utf-8" link="http://java.sun.com/javase/6/docs/api/" packagenames="*" package="true"
-                 source="1.6">
+                 encoding="utf-8" link="https://docs.oracle.com/javase/7/docs/api/" packagenames="*" package="true"
+                 source="1.7">
             <sourcepath>
                 <pathelement location="${src.dir}"/>
             </sourcepath>

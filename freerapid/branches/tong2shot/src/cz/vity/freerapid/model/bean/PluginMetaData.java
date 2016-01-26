@@ -5,8 +5,8 @@ import cz.vity.freerapid.model.PluginMetaDataModel;
 import org.java.plugin.registry.PluginDescriptor;
 import org.jdesktop.application.AbstractBean;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.logging.Logger;
 
 /**
@@ -163,7 +163,7 @@ final public class PluginMetaData extends AbstractBean implements Comparable<Plu
     }
 
     public static Collection<PluginMetaDataModel> toModels(Collection<PluginMetaData> dataCollection) {
-        Collection<PluginMetaDataModel> results = new ArrayList<PluginMetaDataModel>();
+        Collection<PluginMetaDataModel> results = new LinkedList<>();
         for (PluginMetaData data : dataCollection) {
             results.add(data.getModel());
         }

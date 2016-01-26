@@ -14,10 +14,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -451,7 +448,7 @@ public class DownloadFile extends AbstractBean implements PropertyChangeListener
     }
 
     public static Collection<DownloadFileModel> toModels(Collection<DownloadFile> downloadFiles) {
-        Collection<DownloadFileModel> results = new ArrayList<DownloadFileModel>();
+        Collection<DownloadFileModel> results = new LinkedList<>();
         for (DownloadFile downloadFile : downloadFiles) {
             results.add(downloadFile.getModel());
         }

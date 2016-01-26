@@ -9,8 +9,8 @@ import cz.vity.freerapid.model.bean.PluginMetaData;
 import cz.vity.freerapid.utilities.DescriptorUtils;
 import org.java.plugin.registry.PluginDescriptor;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.Locale;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -93,7 +93,8 @@ final public class PluginMetaDataModel implements Identifiable, Comparable<Plugi
         if (maxAllowedDownloads > 1) {
             setMaxAllowedDownloads(Math.min(maxParallelDownloads, maxAllowedDownloads));
         } else {
-            if (maxAllowedDownloads == -1) setMaxAllowedDownloads(Math.max(1, Math.min(DescriptorUtils.getAttribute("defaultDownloads", maxParallelDownloads, descriptor), maxParallelDownloads)));
+            if (maxAllowedDownloads == -1)
+                setMaxAllowedDownloads(Math.max(1, Math.min(DescriptorUtils.getAttribute("defaultDownloads", maxParallelDownloads, descriptor), maxParallelDownloads)));
         }
 
         resumeSupported = DescriptorUtils.getAttribute("resumeSupported", true, descriptor);
@@ -263,7 +264,7 @@ final public class PluginMetaDataModel implements Identifiable, Comparable<Plugi
     }
 
     public static Collection<PluginMetaData> toBeans(Collection<PluginMetaDataModel> models) {
-        Collection<PluginMetaData> results = new ArrayList<PluginMetaData>();
+        Collection<PluginMetaData> results = new LinkedList<>();
         for (PluginMetaDataModel model : models) {
             results.add(new PluginMetaData(model));
         }

@@ -643,7 +643,7 @@ public class DownloadFileModel implements Identifiable, HttpFile {
     }
 
     public static Collection<DownloadFile> toBeans(Collection<DownloadFileModel> models) {
-        Collection<DownloadFile> results = new ArrayList<DownloadFile>();
+        Collection<DownloadFile> results = new LinkedList<>();
         for (DownloadFileModel downloadFile : models) {
             results.add(new DownloadFile(downloadFile));
         }
