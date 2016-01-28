@@ -34,7 +34,10 @@ import org.jdesktop.swingx.table.TableColumnExt;
 
 import javax.swing.*;
 import javax.swing.event.*;
-import javax.swing.table.*;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
@@ -53,8 +56,8 @@ import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 
 /**
- * @version 1.0
  * @author Vity
+ * @version 1.0
  */
 public class ContentPanel extends JPanel implements ListSelectionListener, ListDataListener, PropertyChangeListener, ClipboardOwner {
     private final static Logger logger = Logger.getLogger(ContentPanel.class.getName());
@@ -1093,10 +1096,11 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
 
     /**
      * Change file name physically on disk
-     * @param source editor
+     *
+     * @param source            editor
      * @param originalOuputFile original name before editing
-     * @param backupFileName original file name
-     * @param selectedRow index of selected row
+     * @param backupFileName    original file name
+     * @param selectedRow       index of selected row
      */
     private void renameFile(RenameFileNameEditor source, File originalOuputFile, String backupFileName, int selectedRow) {
         boolean succeeded;
@@ -1137,8 +1141,12 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
     private JMenuItem getPluginOptions(int[] selectedRows) {
         if (selectedRows.length == 0)
             return null;  // nothing selected
+
         final HttpFile httpFile = manager.getSelectionToList(selectedRows).get(0);
-        final String pluginID = manager.getSelectionToList(selectedRows).get(0).getPluginID();
+        if (httpFile.getState() == DownloadState.COMPLETED || httpFile.getState() == DownloadState.DELETED)
+            return null;
+
+        final String pluginID = httpFile.getPluginID();
         try {
             if (!director.getPluginsManager().getPluginMetadata(pluginID).isOptionable())
                 return null;   // plugin has no options
