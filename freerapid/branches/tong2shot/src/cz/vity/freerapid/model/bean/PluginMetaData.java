@@ -1,19 +1,18 @@
 package cz.vity.freerapid.model.bean;
 
 import com.sleepycat.persist.model.Entity;
+import cz.vity.freerapid.gui.managers.interfaces.ModelWrapper;
 import cz.vity.freerapid.model.PluginMetaDataModel;
 import org.java.plugin.registry.PluginDescriptor;
 import org.jdesktop.application.AbstractBean;
 
-import java.util.Collection;
-import java.util.LinkedList;
 import java.util.logging.Logger;
 
 /**
  * @author Ladislav Vitasek
  */
 @Entity
-final public class PluginMetaData extends AbstractBean implements Comparable<PluginMetaData> {
+final public class PluginMetaData extends AbstractBean implements Comparable<PluginMetaData>, ModelWrapper {
     private final static Logger logger = Logger.getLogger(PluginMetaData.class.getName());
 
     private PluginMetaDataModel model;
@@ -22,6 +21,7 @@ final public class PluginMetaData extends AbstractBean implements Comparable<Plu
         this.model = model;
     }
 
+    @Override
     public PluginMetaDataModel getModel() {
         return model;
     }
@@ -162,11 +162,4 @@ final public class PluginMetaData extends AbstractBean implements Comparable<Plu
         model.setPriority(value);
     }
 
-    public static Collection<PluginMetaDataModel> toModels(Collection<PluginMetaData> dataCollection) {
-        Collection<PluginMetaDataModel> results = new LinkedList<>();
-        for (PluginMetaData data : dataCollection) {
-            results.add(data.getModel());
-        }
-        return results;
-    }
 }

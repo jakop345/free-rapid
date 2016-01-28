@@ -41,7 +41,7 @@ public class PluginMetaDataManager {
         Runnable runnable = new Runnable() {
             public void run() {
                 logger.info("Saving metadata info into database - start");
-                director.getDatabaseManager().saveCollection(PluginMetaData.toModels(files), PluginMetaDataModel.class);
+                director.getDatabaseManager().saveCollection(files, PluginMetaDataModel.class);
                 logger.info("Saving metadata info into database - end");
             }
         };
@@ -52,6 +52,7 @@ public class PluginMetaDataManager {
         return Collections.unmodifiableCollection(loadData());
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     private Collection<PluginMetaData> loadData() {
         Set<PluginMetaData> result = null;
         final File srcFile = new File(context.getLocalStorage().getDirectory(), FILES_LIST_XML);
@@ -94,7 +95,8 @@ public class PluginMetaDataManager {
             return result;
         } else {
             //load from database
-            return PluginMetaDataModel.toBeans(director.getDatabaseManager().loadAll(PluginMetaDataModel.class));
+            //TODO: convert objectdb
+            return director.getDatabaseManager().loadAll(PluginMetaDataModel.class);
         }
     }
 

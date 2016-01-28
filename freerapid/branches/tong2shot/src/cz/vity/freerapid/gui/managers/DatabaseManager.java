@@ -9,9 +9,11 @@ import com.sleepycat.persist.model.AnnotationModel;
 import com.sleepycat.persist.model.EntityModel;
 import cz.vity.freerapid.core.tasks.CoreTask;
 import cz.vity.freerapid.gui.managers.interfaces.Identifiable;
+import cz.vity.freerapid.gui.managers.interfaces.ModelWrapper;
 import cz.vity.freerapid.model.DownloadFileModel;
+import cz.vity.freerapid.model.FileHistoryItemModel;
 import cz.vity.freerapid.model.PluginMetaDataModel;
-import cz.vity.freerapid.model.bean.FileHistoryItem;
+import cz.vity.freerapid.model.bean.DownloadFile;
 import cz.vity.freerapid.model.proxy.FileProxy;
 import cz.vity.freerapid.model.proxy.HashTableProxy;
 import cz.vity.freerapid.model.proxy.URLProxy;
@@ -39,7 +41,7 @@ public class DatabaseManager {
 
     private final PrimaryIndex<Long, PluginMetaDataModel> pluginMetaDataById;
 
-    private final PrimaryIndex<Long, FileHistoryItem> fileHistoryById;
+    private final PrimaryIndex<Long, FileHistoryItemModel> fileHistoryById;
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public DatabaseManager(ManagerDirector director) {
@@ -70,7 +72,7 @@ public class DatabaseManager {
         downloadFileById = store.getPrimaryIndex(Long.class, DownloadFileModel.class);
         downloadFileByListOrder = store.getSecondaryIndex(downloadFileById, String.class, "listOrder");
         pluginMetaDataById = store.getPrimaryIndex(Long.class, PluginMetaDataModel.class);
-        fileHistoryById = store.getPrimaryIndex(Long.class, FileHistoryItem.class);
+        fileHistoryById = store.getPrimaryIndex(Long.class, FileHistoryItemModel.class);
 
 
         logger.info("Database path " + envHome);
@@ -106,6 +108,7 @@ public class DatabaseManager {
         if (myEnv != null) {
             try {
                 // Finally, close the store and environment.
+                myEnv.cleanLog();
                 myEnv.close();
             } catch (DatabaseException dbe) {
                 LogUtils.processException(logger, dbe);
@@ -124,12 +127,13 @@ public class DatabaseManager {
         return (PrimaryIndex<Long, T>) fileHistoryById;
     }
 
-    public synchronized <T extends Identifiable> void saveCollection(Collection<T> entityCollection, Class<T> entityClass) {
+    @SuppressWarnings("unchecked")
+    public synchronized <T extends Identifiable, B extends ModelWrapper> void saveCollection(Collection<B> beanCollection, Class<T> entityClass) {
         Transaction txn = myEnv.beginTransaction(null, null);
         PrimaryIndex<Long, T> primaryIndex = getPrimaryIndex(entityClass);
         try {
-            for (T o : entityCollection) {
-                primaryIndex.put(txn, o);
+            for (B o : beanCollection) {
+                primaryIndex.put(txn, (T) o.getModel());
             }
             txn.commit();
         } catch (Exception ex) {
@@ -140,15 +144,15 @@ public class DatabaseManager {
         }
     }
 
-    public synchronized <T extends Identifiable> void removeCollection(Collection<T> entityCollection, Class<T> entityClass) {
+    public synchronized <T extends Identifiable, B extends ModelWrapper> void removeCollection(Collection<B> beanCollection, Class<T> entityClass) {
         Transaction txn = myEnv.beginTransaction(null, null);
         PrimaryIndex<Long, T> primaryIndex = getPrimaryIndex(entityClass);
         try {
-            for (T o : entityCollection) {
-                if (o.getIdentificator() == null) {
+            for (B o : beanCollection) {
+                if (o.getModel().getIdentificator() == null) {
                     continue;
                 }
-                primaryIndex.delete(txn, (Long) o.getIdentificator());
+                primaryIndex.delete(txn, (Long) o.getModel().getIdentificator());
             }
             txn.commit();
         } catch (Exception ex) {
@@ -182,11 +186,12 @@ public class DatabaseManager {
         return affectedResult;
     }
 
-    public synchronized <T extends Identifiable> void saveOrUpdate(T entity, Class<T> entityClass) {
+    @SuppressWarnings("unchecked")
+    public synchronized <T extends Identifiable, B extends ModelWrapper> void saveOrUpdate(B bean, Class<T> entityClass) {
         Transaction txn = myEnv.beginTransaction(null, null);
         PrimaryIndex<Long, T> primaryIndex = getPrimaryIndex(entityClass);
         try {
-            primaryIndex.put(txn, entity);
+            primaryIndex.put(txn, (T) bean.getModel());
             txn.commit();
         } catch (Exception ex) {
             LogUtils.processException(logger, ex);
@@ -196,13 +201,14 @@ public class DatabaseManager {
         }
     }
 
-    public synchronized <T extends Identifiable> Collection<T> loadAll(Class<T> entityClass) {
+    @SuppressWarnings("unchecked")
+    public synchronized <T extends Identifiable, B extends ModelWrapper> Collection<B> loadAll(Class<T> entityClass) {
         PrimaryIndex<Long, T> primaryIndex = getPrimaryIndex(entityClass);
-        Collection<T> results = new LinkedList<>();
+        Collection<B> results = new LinkedList<>();
         EntityCursor<T> entityCursor = primaryIndex.entities();
         try {
             for (T anEntityCursor : entityCursor) {
-                results.add(anEntityCursor);
+                results.add((B) anEntityCursor.build());
             }
             entityCursor.close();
         } catch (Exception ex) {
@@ -217,12 +223,12 @@ public class DatabaseManager {
      *
      * @return download file list
      */
-    public synchronized Collection<DownloadFileModel> loadAllOrderByListOrder() {
-        Collection<DownloadFileModel> results = new LinkedList<>();
+    public synchronized Collection<DownloadFile> loadAllOrderByListOrder() {
+        Collection<DownloadFile> results = new LinkedList<>();
         EntityCursor<DownloadFileModel> entityCursor = downloadFileByListOrder.entities();
         try {
             for (DownloadFileModel anEntityCursor : entityCursor) {
-                results.add(anEntityCursor);
+                results.add((DownloadFile) anEntityCursor.build());
             }
             entityCursor.close();
         } catch (Exception ex) {

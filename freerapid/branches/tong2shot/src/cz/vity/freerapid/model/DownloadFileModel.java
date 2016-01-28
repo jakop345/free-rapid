@@ -6,6 +6,7 @@ import cz.vity.freerapid.core.FileTypeIconProvider;
 import cz.vity.freerapid.core.UserProp;
 import cz.vity.freerapid.core.tasks.DownloadTask;
 import cz.vity.freerapid.gui.managers.interfaces.Identifiable;
+import cz.vity.freerapid.gui.managers.interfaces.ModelWrapper;
 import cz.vity.freerapid.model.bean.DownloadFile;
 import cz.vity.freerapid.plugins.container.FileInfo;
 import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
@@ -15,7 +16,9 @@ import cz.vity.freerapid.plugins.webclient.interfaces.HttpFile;
 
 import java.io.File;
 import java.net.URL;
-import java.util.*;
+import java.util.Date;
+import java.util.Hashtable;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -624,6 +627,11 @@ public class DownloadFileModel implements Identifiable, HttpFile {
         return dbId;
     }
 
+    @Override
+    public ModelWrapper build() {
+        return new DownloadFile(this);
+    }
+
     public int getListOrder() {
         return listOrder;
     }
@@ -642,11 +650,4 @@ public class DownloadFileModel implements Identifiable, HttpFile {
         this.localPluginConfig = localPluginConfig;
     }
 
-    public static Collection<DownloadFile> toBeans(Collection<DownloadFileModel> models) {
-        Collection<DownloadFile> results = new LinkedList<>();
-        for (DownloadFileModel downloadFile : models) {
-            results.add(new DownloadFile(downloadFile));
-        }
-        return results;
-    }
 }

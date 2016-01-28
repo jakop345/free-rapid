@@ -1,9 +1,11 @@
-package cz.vity.freerapid.model.bean;
+package cz.vity.freerapid.model;
 
 
 import com.sleepycat.persist.model.Entity;
 import com.sleepycat.persist.model.PrimaryKey;
 import cz.vity.freerapid.gui.managers.interfaces.Identifiable;
+import cz.vity.freerapid.gui.managers.interfaces.ModelWrapper;
+import cz.vity.freerapid.model.bean.DownloadFile;
 
 import java.io.File;
 import java.net.URL;
@@ -14,7 +16,7 @@ import java.net.URL;
  * @author Vity
  */
 @Entity
-final public class FileHistoryItem implements Identifiable {
+final public class FileHistoryItemModel implements Identifiable, ModelWrapper {
 
     @PrimaryKey(sequence = "ID")
     private Long dbId;
@@ -34,11 +36,11 @@ final public class FileHistoryItem implements Identifiable {
     private String connection;
 
 
-    public FileHistoryItem() {
+    public FileHistoryItemModel() {
 
     }
 
-    public FileHistoryItem(DownloadFile file, File savedTo) {
+    public FileHistoryItemModel(DownloadFile file, File savedTo) {
         this.url = file.getFileUrl();
         this.finishedTime = System.currentTimeMillis();
         this.outputFile = savedTo;
@@ -49,6 +51,16 @@ final public class FileHistoryItem implements Identifiable {
         averageSpeed = file.getAverageSpeed();
         this.shareDownloadServiceID = file.getPluginID();
         connection = file.getConnectionSettings().toString();
+    }
+
+    @Override
+    public ModelWrapper build() {
+        return this;
+    }
+
+    @Override
+    public Identifiable getModel() {
+        return this;
     }
 
     public URL getUrl() {

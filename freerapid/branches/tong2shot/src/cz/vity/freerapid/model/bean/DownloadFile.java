@@ -2,6 +2,7 @@ package cz.vity.freerapid.model.bean;
 
 import com.sleepycat.persist.model.Entity;
 import cz.vity.freerapid.core.tasks.DownloadTask;
+import cz.vity.freerapid.gui.managers.interfaces.ModelWrapper;
 import cz.vity.freerapid.model.DownloadFileModel;
 import cz.vity.freerapid.plugins.container.FileInfo;
 import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
@@ -14,7 +15,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.net.URL;
-import java.util.*;
+import java.util.Date;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -25,7 +27,7 @@ import java.util.logging.Logger;
  */
 
 @Entity
-public class DownloadFile extends AbstractBean implements PropertyChangeListener, HttpFile {
+public class DownloadFile extends AbstractBean implements PropertyChangeListener, HttpFile, ModelWrapper {
     private final static Logger logger = Logger.getLogger(DownloadFile.class.getName());
 
     private DownloadFileModel model;
@@ -34,6 +36,7 @@ public class DownloadFile extends AbstractBean implements PropertyChangeListener
         this.model = model;
     }
 
+    @Override
     public DownloadFileModel getModel() {
         return model;
     }
@@ -447,11 +450,4 @@ public class DownloadFile extends AbstractBean implements PropertyChangeListener
         return model.toString();
     }
 
-    public static Collection<DownloadFileModel> toModels(Collection<DownloadFile> downloadFiles) {
-        Collection<DownloadFileModel> results = new LinkedList<>();
-        for (DownloadFile downloadFile : downloadFiles) {
-            results.add(downloadFile.getModel());
-        }
-        return results;
-    }
 }

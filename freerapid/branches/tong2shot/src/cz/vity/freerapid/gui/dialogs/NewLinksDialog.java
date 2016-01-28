@@ -15,8 +15,8 @@ import cz.vity.freerapid.gui.managers.FileHistoryManager;
 import cz.vity.freerapid.gui.managers.ManagerDirector;
 import cz.vity.freerapid.gui.managers.PluginsManager;
 import cz.vity.freerapid.model.DownloadFileModel;
+import cz.vity.freerapid.model.FileHistoryItemModel;
 import cz.vity.freerapid.model.bean.DownloadFile;
-import cz.vity.freerapid.model.bean.FileHistoryItem;
 import cz.vity.freerapid.swing.ComponentFactory;
 import cz.vity.freerapid.swing.Swinger;
 import cz.vity.freerapid.swing.components.EditorPaneLinkDetector;
@@ -293,7 +293,7 @@ public class NewLinksDialog extends AppDialog implements ClipboardOwner {
         //check if links to be added already exist in the download history
         if (AppPrefs.getProperty(UserProp.ENABLE_NEW_LINK_CHECK_DOWNLOAD_HISTORY, UserProp.ENABLE_NEW_LINK_CHECK_DOWNLOAD_HISTORY_DEFAULT)) {
             final List<URL> alreadyDownloadedList = new ArrayList<URL>();
-            for (final FileHistoryItem file : historyManager.getItems()) {
+            for (final FileHistoryItemModel file : historyManager.getItems()) {
                 alreadyDownloadedList.add(file.getUrl());
             }
             final List<URL> downloadedList = getCommonElements(alreadyDownloadedList, urlList);

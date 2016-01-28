@@ -2,8 +2,8 @@ package cz.vity.freerapid.gui.managers;
 
 
 import com.jgoodies.common.collect.ArrayListModel;
+import cz.vity.freerapid.model.FileHistoryItemModel;
 import cz.vity.freerapid.model.bean.DownloadFile;
-import cz.vity.freerapid.model.bean.FileHistoryItem;
 import cz.vity.freerapid.utilities.FileUtils;
 import cz.vity.freerapid.utilities.LogUtils;
 import org.jdesktop.application.AbstractBean;
@@ -44,8 +44,8 @@ public class FileHistoryManager extends AbstractBean {
     }
 
     @SuppressWarnings({"unchecked"})
-    private List<FileHistoryItem> loadList(final File srcFile) throws IOException {
-        final List<FileHistoryItem> list = new LinkedList<FileHistoryItem>();
+    private List<FileHistoryItemModel> loadList(final File srcFile) throws IOException {
+        final List<FileHistoryItemModel> list = new LinkedList<FileHistoryItemModel>();
         final LocalStorage localStorage = context.getLocalStorage();
         if (!srcFile.exists()) { //extract from old file, we ignore existence of backup file in case the main file does not exist
             final File backupFile = FileUtils.getBackupFile(srcFile);
@@ -63,17 +63,17 @@ public class FileHistoryManager extends AbstractBean {
         final Object o = localStorage.load(FILES_LIST_XML);
 
         if (o instanceof ArrayListModel) {
-            return (List<FileHistoryItem>) o;
+            return (List<FileHistoryItemModel>) o;
         }
         return list;
     }
 
-    public Collection<FileHistoryItem> getItems() {
+    public Collection<FileHistoryItemModel> getItems() {
         return loadFileHistoryList();
     }
 
-    private Collection<FileHistoryItem> loadFileHistoryList() {
-        List<FileHistoryItem> result = null;
+    private Collection<FileHistoryItemModel> loadFileHistoryList() {
+        List<FileHistoryItemModel> result = null;
         final File srcFile = new File(context.getLocalStorage().getDirectory(), FILES_LIST_XML);
         final File targetImportedFile = new File(context.getLocalStorage().getDirectory(), FILES_LIST_XML + ".imported");
         if (srcFile.exists() && !targetImportedFile.exists()) { //extract from old file
@@ -93,15 +93,15 @@ public class FileHistoryManager extends AbstractBean {
             }
             if (result != null) {
                 //re-save into database
-                final List<FileHistoryItem> finalResult = result;
+                final List<FileHistoryItemModel> finalResult = result;
                 Runnable runnable = new Runnable() {
                     public void run() {
                         logger.info("Resaving file history into database from old format");
-                        director.getDatabaseManager().saveCollection(finalResult, FileHistoryItem.class);
+                        director.getDatabaseManager().saveCollection(finalResult, FileHistoryItemModel.class);
                     }
                 };
                 director.getDatabaseManager().runOnTask(runnable);
-            } else result = new ArrayList<FileHistoryItem>();
+            } else result = new ArrayList<FileHistoryItemModel>();
             //rename old file history file into another one, so we won't import it again next time
             //noinspection ResultOfMethodCallIgnored
             final File backupFile = FileUtils.getBackupFile(srcFile);
@@ -113,15 +113,15 @@ public class FileHistoryManager extends AbstractBean {
             return result;
         } else {
             //load from database
-            return director.getDatabaseManager().loadAll(FileHistoryItem.class);
+            return director.getDatabaseManager().loadAll(FileHistoryItemModel.class);
         }
     }
 
     public void addHistoryItem(final DownloadFile file, final File savedAs) {
-        final FileHistoryItem item = new FileHistoryItem(file, savedAs);
+        final FileHistoryItemModel item = new FileHistoryItemModel(file, savedAs);
         Runnable runnable = new Runnable() {
             public void run() {
-                director.getDatabaseManager().saveOrUpdate(item, FileHistoryItem.class);
+                director.getDatabaseManager().saveOrUpdate(item, FileHistoryItemModel.class);
             }
         };
         director.getDatabaseManager().runOnTask(runnable);
@@ -131,33 +131,33 @@ public class FileHistoryManager extends AbstractBean {
     public void clearHistory(Runnable succeeded) {
         Runnable runnable = new Runnable() {
             public void run() {
-                director.getDatabaseManager().removeAll(FileHistoryItem.class);
+                director.getDatabaseManager().removeAll(FileHistoryItemModel.class);
             }
         };
         director.getDatabaseManager().runOnTask(runnable, succeeded);
     }
 
 
-    public void removeItems(final Collection<FileHistoryItem> items) {
+    public void removeItems(final Collection<FileHistoryItemModel> items) {
         Runnable runnable = new Runnable() {
             public void run() {
-                director.getDatabaseManager().removeCollection(items, FileHistoryItem.class);
+                director.getDatabaseManager().removeCollection(items, FileHistoryItemModel.class);
             }
         };
         director.getDatabaseManager().runOnTask(runnable, null);
     }
 
-    public void removeItems(final Collection<FileHistoryItem> items, Runnable succeeded) {
+    public void removeItems(final Collection<FileHistoryItemModel> items, Runnable succeeded) {
         Runnable runnable = new Runnable() {
             public void run() {
-                director.getDatabaseManager().removeCollection(items, FileHistoryItem.class);
+                director.getDatabaseManager().removeCollection(items, FileHistoryItemModel.class);
             }
         };
         director.getDatabaseManager().runOnTask(runnable, succeeded);
     }
 
 
-    private void fireDataAdded(FileHistoryItem dataAdded) {
+    private void fireDataAdded(FileHistoryItemModel dataAdded) {
         firePropertyChange("dataAdded", null, dataAdded);
     }
 

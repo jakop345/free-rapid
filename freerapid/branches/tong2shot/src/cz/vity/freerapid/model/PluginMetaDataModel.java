@@ -5,12 +5,11 @@ import com.sleepycat.persist.model.NotPersistent;
 import com.sleepycat.persist.model.PrimaryKey;
 import cz.vity.freerapid.core.Consts;
 import cz.vity.freerapid.gui.managers.interfaces.Identifiable;
+import cz.vity.freerapid.gui.managers.interfaces.ModelWrapper;
 import cz.vity.freerapid.model.bean.PluginMetaData;
 import cz.vity.freerapid.utilities.DescriptorUtils;
 import org.java.plugin.registry.PluginDescriptor;
 
-import java.util.Collection;
-import java.util.LinkedList;
 import java.util.Locale;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -129,6 +128,11 @@ final public class PluginMetaDataModel implements Identifiable, Comparable<Plugi
 
     public Long getIdentificator() {
         return dbId;
+    }
+
+    @Override
+    public ModelWrapper build() {
+        return new PluginMetaData(this);
     }
 
     public String getId() {
@@ -262,14 +266,5 @@ final public class PluginMetaDataModel implements Identifiable, Comparable<Plugi
     public void setClipboardMonitored(boolean clipboardMonitored) {
         this.clipboardMonitored = clipboardMonitored;
     }
-
-    public static Collection<PluginMetaData> toBeans(Collection<PluginMetaDataModel> models) {
-        Collection<PluginMetaData> results = new LinkedList<>();
-        for (PluginMetaDataModel model : models) {
-            results.add(new PluginMetaData(model));
-        }
-        return results;
-    }
-
 
 }

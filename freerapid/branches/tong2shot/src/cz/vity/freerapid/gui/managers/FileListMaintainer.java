@@ -116,7 +116,7 @@ class FileListMaintainer {
             //TODO: convert objectdb
             //TODO: versionize schemes
             //load from database
-            return DownloadFileModel.toBeans(director.getDatabaseManager().loadAllOrderByListOrder());
+            return director.getDatabaseManager().loadAllOrderByListOrder();
         }
     }
 
@@ -207,14 +207,14 @@ class FileListMaintainer {
     void saveToDatabase(Collection<DownloadFile> downloadFiles) {
         synchronized (saveFileLock) {
             logger.info("=====Saving updated/added files into the database (" + downloadFiles.size() + ") =====");
-            director.getDatabaseManager().saveCollection(DownloadFile.toModels(downloadFiles), DownloadFileModel.class);
+            director.getDatabaseManager().saveCollection(downloadFiles, DownloadFileModel.class);
         }
     }
 
     private void removeFromDatabase(Collection<DownloadFile> downloadFiles) {
         synchronized (removeFileLock) {
             logger.info("=====Removing deleted files from the database (" + downloadFiles.size() + ") =====");
-            director.getDatabaseManager().removeCollection(DownloadFile.toModels(downloadFiles), DownloadFileModel.class);
+            director.getDatabaseManager().removeCollection(downloadFiles, DownloadFileModel.class);
         }
     }
 
