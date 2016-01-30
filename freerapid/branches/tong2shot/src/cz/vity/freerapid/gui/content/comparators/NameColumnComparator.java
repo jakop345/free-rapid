@@ -15,7 +15,7 @@ public final class NameColumnComparator implements Comparator<DownloadFile> {
     }
 
     static String getValue(DownloadFile downloadFile) {
-        final String fn = downloadFile.getFileName();
+        final String fn = (downloadFile.getFileNameRenameTo()!=null ? downloadFile.getFileNameRenameTo() :  downloadFile.getFileName());
 
         if (fn != null && !fn.isEmpty()) {
             return fn;

@@ -935,9 +935,11 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
 
     public boolean isSameDownloading(DownloadFile file) {
         synchronized (lock) {
+            String fileName = (file.getFileNameRenameTo() != null ? file.getFileNameRenameTo() : file.getFileName());
             final List<DownloadFile> list = getDownloadFilesInStates(DownloadsActions.processStates);
             for (DownloadFile downloadFile : list) {
-                if (!downloadFile.equals(file) && downloadFile.getFileName().equals(file.getFileName()) && downloadFile.getSaveToDirectory().equals(file.getSaveToDirectory()) && downloadFile.getFileSize() >= 0) {
+                String downloadFileName = (downloadFile.getFileNameRenameTo()!=null ? downloadFile.getFileNameRenameTo() : downloadFile.getFileName());
+                if (!downloadFile.equals(file) && downloadFileName.equals(fileName) && downloadFile.getSaveToDirectory().equals(file.getSaveToDirectory()) && downloadFile.getFileSize() >= 0) {
                     return true;
                 }
             }
@@ -960,7 +962,9 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
             final DownloadFile[] sorted = files.toArray(new DownloadFile[files.size()]);
             Arrays.sort(sorted, new Comparator<DownloadFile>() {
                 public int compare(DownloadFile o1, DownloadFile o2) {
-                    return o1.getFileName().compareToIgnoreCase(o2.getFileName());
+                    String o1FileName = (o1.getFileNameRenameTo()!= null ? o1.getFileNameRenameTo() : o1.getFileName());
+                    String o2Filename = (o2.getFileNameRenameTo()!=null ? o2.getFileNameRenameTo() : o2.getFileName());
+                    return o1FileName.compareToIgnoreCase(o2Filename);
                 }
             });
 //            boolean sameIndexes = true;

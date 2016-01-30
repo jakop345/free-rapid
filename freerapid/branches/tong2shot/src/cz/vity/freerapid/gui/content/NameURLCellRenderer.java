@@ -28,7 +28,7 @@ final class NameURLCellRenderer extends DefaultTableCellRenderer {
         }
         final DownloadFile downloadFile = (DownloadFile) value;
 
-        final String fn = downloadFile.getFileName();
+        final String fn = (downloadFile.getFileNameRenameTo() != null ? downloadFile.getFileNameRenameTo() : downloadFile.getFileName());
         final String url = downloadFile.getFileUrl().toString();
         if (fn != null && !fn.isEmpty()) {
             value = fn;

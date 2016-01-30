@@ -12,6 +12,7 @@ import java.awt.*;
 
 /**
  * Provides mapping between DownloadFile and filename to allow edit the column
+ *
  * @author Vity
  */
 public class RenameFileNameEditor extends DefaultCellEditor {
@@ -38,7 +39,7 @@ public class RenameFileNameEditor extends DefaultCellEditor {
 
             public void setValue(Object value) {
                 downloadFile = (DownloadFile) value;
-                final String fileName = downloadFile.getFileName();
+                final String fileName = (downloadFile.getFileNameRenameTo() != null ? downloadFile.getFileNameRenameTo() : downloadFile.getFileName());
                 iconLabel.setIcon(fileTypeIconProvider.getIconImageByFileType(downloadFile.getFileType(), false));
                 field.setText((fileName != null) ? fileName : "");
                 Swinger.inputFocus(field);
@@ -57,10 +58,11 @@ public class RenameFileNameEditor extends DefaultCellEditor {
             public Object getCellEditorValue() {
                 String text = field.getText();
                 if (text.isEmpty()) {
+                    downloadFile.setFileNameRenameTo(null);
                     return downloadFile;
                 }
                 text = HttpUtils.replaceInvalidCharsForFileSystem(text, "_");//we have to remove invalid characters
-                downloadFile.setFileName(text);
+                downloadFile.setFileNameRenameTo(text);
                 return downloadFile;
             }
         };
