@@ -61,6 +61,7 @@ public class DownloadFileModel implements Identifiable, HttpFile {
     private int listOrder;
     private Date dateInserted;
     private String localPluginConfig; //String representation of XMLEncoder output of plugin config
+    private String fileNameRenameTo;
 
 
     @NotPersistent
@@ -323,7 +324,7 @@ public class DownloadFileModel implements Identifiable, HttpFile {
      * @return Value for property 'outputFile'.
      */
     public File getOutputFile() {
-        return new File(this.getSaveToDirectory(), fileName);
+        return new File(this.getSaveToDirectory(), (fileNameRenameTo != null ? fileNameRenameTo : fileName));
     }
 
     /**
@@ -650,4 +651,12 @@ public class DownloadFileModel implements Identifiable, HttpFile {
         this.localPluginConfig = localPluginConfig;
     }
 
+    public String getFileNameRenameTo() {
+        return fileNameRenameTo;
+    }
+
+    public void setFileNameRenameTo(String fileNameRenameTo) {
+        this.fileNameRenameTo = fileNameRenameTo;
+        this.setFileType(FileTypeIconProvider.identifyFileType(this.fileNameRenameTo));
+    }
 }

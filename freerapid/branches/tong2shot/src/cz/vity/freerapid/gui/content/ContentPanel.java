@@ -987,7 +987,7 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
                     logger.warning("Download File is null");
                     return null;
                 }
-                final String fn = downloadFile.getFileName();
+                final String fn = (downloadFile.getFileNameRenameTo() != null ? downloadFile.getFileNameRenameTo() : downloadFile.getFileName());
                 final String url = downloadFile.getFileUrl().toString();
                 final String value;
                 if (fn != null && !fn.isEmpty()) {
@@ -1044,7 +1044,7 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
         action.actionPerformed(new ActionEvent(table, 0, "paste"));
     }
 
-    @org.jdesktop.application.Action(enabledProperty = COMPLETED_OK_ACTION_ENABLED_PROPERTY)
+    @org.jdesktop.application.Action(enabledProperty = SELECTED_ACTION_ENABLED_PROPERTY)
     public void renameAction() {
         final int[] selectedRows = table.getSelectedRows();
         if (selectedRows.length == 0) {
@@ -1054,10 +1054,11 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
         final int selectedRow = selectedRows[0];
         final int selectedColumn = table.convertColumnIndexToView(COLUMN_NAME);
         final DownloadFile valueAt = (DownloadFile) table.getValueAt(selectedRow, selectedColumn);
-        if (valueAt.getFileName() == null) {
+        if (valueAt.getFileNameRenameTo() == null && valueAt.getFileName() == null) {
             return;
         }
-        final String backup = valueAt.getFileName();
+        final String backup = (valueAt.getFileNameRenameTo() != null ? valueAt.getFileNameRenameTo() : valueAt.getFileName());
+        final boolean isRenameToNull = (valueAt.getFileNameRenameTo() == null);
         final File originalOuputFile = valueAt.getOutputFile();
         final boolean wasExisting = originalOuputFile.exists();
         final boolean result = table.editCellAt(selectedRow, selectedColumn);//takes UI rows, not model
@@ -1079,7 +1080,7 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
                         SwingUtilities.invokeLater(new Runnable() {
                             @Override
                             public void run() {
-                                renameFile(source, originalOuputFile, backup, selectedRow);
+                                renameFile(source, originalOuputFile, backup, selectedRow, isRenameToNull);
                             }
                         });
                     } else
@@ -1101,8 +1102,9 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
      * @param originalOuputFile original name before editing
      * @param backupFileName    original file name
      * @param selectedRow       index of selected row
+     * @param isRenameToNull    fileNameRenameTo status is null before editing
      */
-    private void renameFile(RenameFileNameEditor source, File originalOuputFile, String backupFileName, int selectedRow) {
+    private void renameFile(RenameFileNameEditor source, File originalOuputFile, String backupFileName, int selectedRow, boolean isRenameToNull) {
         boolean succeeded;
         final DownloadFile resultDownloadFile = (DownloadFile) source.getCellEditorValue();
         final File out = resultDownloadFile.getOutputFile();
@@ -1121,7 +1123,12 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
             succeeded = originalOuputFile.renameTo(out);
         }
         if (!succeeded) {
-            resultDownloadFile.setFileName(backupFileName);
+            if (!isRenameToNull) {
+                resultDownloadFile.setFileNameRenameTo(backupFileName);
+            } else {
+                resultDownloadFile.setFileName(backupFileName);
+            }
+
             table.setValueAt(resultDownloadFile, selectedRow, table.convertColumnIndexToView(COLUMN_NAME));
         } else {
             scrollToVisible(true);

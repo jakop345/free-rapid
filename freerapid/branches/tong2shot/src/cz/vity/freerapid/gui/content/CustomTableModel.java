@@ -31,7 +31,8 @@ final class CustomTableModel extends AbstractTableModel implements ListDataListe
     public boolean isCellEditable(int rowIndex, int columnIndex) {
         if (ContentPanel.COLUMN_NAME == columnIndex) {
             final DownloadFile o = (DownloadFile) getValueAt(rowIndex, columnIndex);
-            return o.getFileName() != null && !o.getFileName().isEmpty();
+            String oName = (o.getFileNameRenameTo() != null ? o.getFileNameRenameTo() : o.getFileName());
+            return oName != null && !oName.isEmpty();
         }
         return false;
     }

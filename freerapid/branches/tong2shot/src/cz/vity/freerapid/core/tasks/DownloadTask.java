@@ -172,10 +172,16 @@ public class DownloadTask extends CoreTask<Void, Long> implements HttpFileDownlo
                 return;
             }
         } else if (fileAlreadyExists == UserProp.RENAME) {
-            downloadFile.setFileName(getNewUniqueFileName(downloadFile.getOutputFile()));
+            String unique = getNewUniqueFileName(downloadFile.getOutputFile());
+            if (downloadFile.getFileNameRenameTo() != null) {
+                downloadFile.setFileNameRenameTo(unique);
+            } else {
+                downloadFile.setFileName(unique);
+            }
+
         }
 
-        final String fileName = downloadFile.getFileName();
+        final String fileName = (downloadFile.getFileNameRenameTo() != null ? downloadFile.getFileNameRenameTo() : downloadFile.getFileName());
         File outputFile = downloadFile.getOutputFile();
 
         final SpeedRegulator speedRegulator = ((MainApp) this.getApplication()).getManagerDirector().getSpeedRegulator();

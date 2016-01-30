@@ -216,6 +216,16 @@ public class DownloadFile extends AbstractBean implements PropertyChangeListener
         firePropertyChange("localPluginConfig", oldValue, model.getLocalPluginConfig());
     }
 
+    public void setFileNameRenameTo(String fileNameRenameTo) {
+        final String oldValue = model.getFileNameRenameTo();
+        model.setFileNameRenameTo(fileNameRenameTo);
+        firePropertyChange("fileNameRenameTo", oldValue, model.getFileNameRenameTo());
+    }
+
+    public String getFileNameRenameTo() {
+        return model.getFileNameRenameTo();
+    }
+
     public void setTokens(int tokens) {
         model.setTokens(tokens);
     }
