@@ -75,4 +75,13 @@ public interface MaintainQueueSupport {
      */
     public boolean addLinkToQueueFromContainerUsingPriority(HttpFile parentFile, List<FileInfo> infoList) throws Exception;
 
+    /**
+     * Add links to the queue next to parentFile
+     *
+     * @param parentFile parent file where description is copied from, also as reference for 'NextTo'
+     * @param uriList    list of links which should be added to the queue
+     * @return true on success, false otherwise
+     */
+    public boolean addLinksToQueueNextTo(HttpFile parentFile, List<URI> uriList);
+
 }
