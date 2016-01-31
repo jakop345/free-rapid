@@ -218,8 +218,10 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
         }
         if (startFromTop) {
             this.downloadFiles.addAll(files);
+            fileListMaintainer.saveToDatabaseOnBackground(files);
         } else {
             this.downloadFiles.addAll(0, files); //reverse collection first?
+            fileListMaintainer.saveToDatabaseOnBackground(files);
             reOrderListProperty();
         }
     }
@@ -491,7 +493,6 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
 
     public void intervalAdded(ListDataEvent e) {
         //to do make on the thread
-        this.fileListMaintainer.saveToDatabaseOnBackground(getItems(e));
         contentsChanged(e);
         fireDataChanged();
     }
@@ -650,6 +651,10 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
     }
 
     public void moveUp(int[] indexes) {
+        moveUp(indexes, true);
+    }
+
+    public void moveUp(int[] indexes, boolean reOrderList) {
         synchronized (lock) {
             if (indexes.length > 1)
                 Arrays.sort(indexes);
@@ -663,7 +668,9 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
                 }
                 indexes[i] = newIndex;
             }
-            reOrderListProperty();
+            if (reOrderList) {
+                reOrderListProperty();
+            }
         }
     }
 
@@ -676,6 +683,10 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
     }
 
     public void moveDown(int[] indexes) {
+        moveDown(indexes, true);
+    }
+
+    public void moveDown(int[] indexes, boolean reOrderList) {
         synchronized (lock) {
             final int length = indexes.length;
             if (length > 1)
@@ -690,7 +701,9 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
                     downloadFiles.add(newIndex, downloadFile);
                 }
             }
-            reOrderListProperty();
+            if (reOrderList) {
+                reOrderListProperty();
+            }
         }
     }
 
@@ -789,6 +802,71 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
             public void run() {
                 try {
                     addToList(files);
+                    if (startDownload) {
+                        addToQueue(files);
+                    }
+                    result[0] = true;
+                } catch (Exception e) {
+                    result[0] = false;
+                }
+            }
+        };
+        if (!SwingUtilities.isEventDispatchThread()) {
+            try {
+                SwingUtilities.invokeAndWait(runnable);
+            } catch (InterruptedException e) {
+                return false;
+            } catch (InvocationTargetException e) {
+                return false;
+            }
+        } else {
+            runnable.run();
+        }
+        return result[0];
+    }
+
+    @Override
+    public boolean addLinksToQueueNextTo(final HttpFile parentFile, List<URI> uriList) {
+        final List<DownloadFile> files = new LinkedList<DownloadFile>();
+        final boolean dontAddNotSupported = AppPrefs.getProperty(UserProp.DONT_ADD_NOTSUPPORTED_FROMCRYPTER, UserProp.DONT_ADD_NOTSUPPORTED_FROMCRYPTER_DEFAULT);
+        final boolean startDownload = AppPrefs.getProperty(UserProp.AUTO_START_DOWNLOADS_FROM_DECRYPTER, UserProp.AUTO_START_DOWNLOADS_FROM_DECRYPTER_DEFAULT);
+        final boolean startFromTop = AppPrefs.getProperty(UserProp.START_FROM_TOP, UserProp.START_FROM_TOP_DEFAULT);
+        for (URI uri : uriList) {
+            try {
+                final URL url = uri.toURL();
+                if (dontAddNotSupported && !pluginsManager.isSupported(url))
+                    continue;
+                final DownloadFile downloadFile = new DownloadFile(new DownloadFileModel(url, parentFile.getSaveToDirectory(), parentFile.getDescription()));
+                downloadFile.setPluginID("");
+                files.add(downloadFile);
+            } catch (MalformedURLException e) {
+                logger.warning("File with URI " + uri.toString() + " cannot be added to queue");
+            }
+        }
+        final boolean[] result = new boolean[1];
+        final Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    addToList(files);
+                    synchronized (lock) {
+                        int distance = Math.abs(files.get(0).getListOrder() - ((DownloadFile) parentFile).getListOrder()) - 1;
+                        int[] indexes = new int[files.size()];
+                        int i = 0;
+                        for (DownloadFile file : files) {
+                            indexes[i++] = file.getListOrder();
+                        }
+                        if (startFromTop) {
+                            for (int j = 1; j <= distance; j++) {
+                                moveUp(indexes, false);
+                            }
+                        } else {
+                            for (int j = 1; j <= distance; j++) {
+                                moveDown(indexes, false);
+                            }
+                        }
+                        reOrderListProperty();
+                    }
                     if (startDownload) {
                         addToQueue(files);
                     }
@@ -938,7 +1016,7 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
             String fileName = (file.getFileNameRenameTo() != null ? file.getFileNameRenameTo() : file.getFileName());
             final List<DownloadFile> list = getDownloadFilesInStates(DownloadsActions.processStates);
             for (DownloadFile downloadFile : list) {
-                String downloadFileName = (downloadFile.getFileNameRenameTo()!=null ? downloadFile.getFileNameRenameTo() : downloadFile.getFileName());
+                String downloadFileName = (downloadFile.getFileNameRenameTo() != null ? downloadFile.getFileNameRenameTo() : downloadFile.getFileName());
                 if (!downloadFile.equals(file) && downloadFileName.equals(fileName) && downloadFile.getSaveToDirectory().equals(file.getSaveToDirectory()) && downloadFile.getFileSize() >= 0) {
                     return true;
                 }
@@ -962,8 +1040,8 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
             final DownloadFile[] sorted = files.toArray(new DownloadFile[files.size()]);
             Arrays.sort(sorted, new Comparator<DownloadFile>() {
                 public int compare(DownloadFile o1, DownloadFile o2) {
-                    String o1FileName = (o1.getFileNameRenameTo()!= null ? o1.getFileNameRenameTo() : o1.getFileName());
-                    String o2Filename = (o2.getFileNameRenameTo()!=null ? o2.getFileNameRenameTo() : o2.getFileName());
+                    String o1FileName = (o1.getFileNameRenameTo() != null ? o1.getFileNameRenameTo() : o1.getFileName());
+                    String o2Filename = (o2.getFileNameRenameTo() != null ? o2.getFileNameRenameTo() : o2.getFileName());
                     return o1FileName.compareToIgnoreCase(o2Filename);
                 }
             });
@@ -988,6 +1066,7 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
                 downloadFiles.remove(indexes[i]);//it does not generate event to database
             }
             downloadFiles.addAll(placeIndex, Arrays.asList(sorted));
+            reOrderListProperty();
             return placeIndex;
         }
     }
