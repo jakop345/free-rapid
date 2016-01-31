@@ -16,6 +16,7 @@ import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
 import cz.vity.freerapid.plugins.webclient.DownloadState;
 import cz.vity.freerapid.swing.ComponentFactory;
 import cz.vity.freerapid.swing.Swinger;
+import cz.vity.freerapid.swing.components.EditorPaneLinkDetector;
 import cz.vity.freerapid.swing.models.RecentsFilesComboModel;
 import cz.vity.freerapid.utilities.FileUtils;
 import cz.vity.freerapid.utilities.LogUtils;
@@ -30,6 +31,7 @@ import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.net.URL;
 import java.text.NumberFormat;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
@@ -113,7 +115,7 @@ public class InformationDialog extends AppFrame implements PropertyChangeListene
         fieldSize.setBackground(this.getBackground());
 
         fieldSize.setEditable(false);
-        fieldFrom.setEditable(false);
+        fieldFrom.setEditable(true);
 
         descriptionArea.setFont(descriptionArea.getFont().deriveFont(11.0F));
 
@@ -127,6 +129,15 @@ public class InformationDialog extends AppFrame implements PropertyChangeListene
         AppPrefs.storeProperty(UserProp.LAST_COMBO_PATH, comboPath.getSelectedItem().toString());
         final File outputDir = new File(comboPath.getEditor().getItem().toString());
         file.setSaveToDirectory(outputDir);
+        try {
+            final URL newURL = new URL(fieldFrom.getText());
+            file.setPluginID(director.getPluginsManager().getServiceIDForURL(newURL));
+            file.setFileUrl(newURL);
+        } catch (Exception e) {
+            Swinger.showErrorMessage(this.getResourceMap(), "Invalid URL");
+            Swinger.inputFocus(fieldFrom);
+            return;
+        }
         setResult(RESULT_OK);
         if (model != null)
             model.triggerCommit();
@@ -194,7 +205,7 @@ public class InformationDialog extends AppFrame implements PropertyChangeListene
         iconLabel = new JLabel();
         pathLabel = new JLabel();
         JLabel labelFrom = new JLabel();
-        fieldFrom = new JTextField();
+        fieldFrom = ComponentFactory.getURLsEditorPane();
         JLabel labelSize = new JLabel();
         fieldSize = new JTextField();
         JLabel labelDescription = new JLabel();
@@ -455,6 +466,8 @@ public class InformationDialog extends AppFrame implements PropertyChangeListene
         descriptionArea.setEditable(enabled);
         comboPath.setEditable(enabled);
         comboPath.setEnabled(enabled);
+        fieldFrom.setEnabled(enabled);
+        fieldFrom.setEditable(enabled);
     }
 
     private void updateDownloaded() {
@@ -554,7 +567,8 @@ public class InformationDialog extends AppFrame implements PropertyChangeListene
     }
 
     private void updateFrom() {
-        fieldFrom.setText(file.getFileUrl().toExternalForm());
+        final URL newURL = file.getFileUrl();
+        fieldFrom.setText(newURL.toExternalForm());
     }
 
     private void updateConnection() {
@@ -564,7 +578,7 @@ public class InformationDialog extends AppFrame implements PropertyChangeListene
 
     private JLabel iconLabel;
     private JLabel pathLabel;
-    private JTextField fieldFrom;
+    private EditorPaneLinkDetector fieldFrom;
     private JTextField fieldSize;
     private JTextArea descriptionArea;
     private JComboBox comboPath;

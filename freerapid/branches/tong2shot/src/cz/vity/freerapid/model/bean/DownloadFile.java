@@ -222,6 +222,12 @@ public class DownloadFile extends AbstractBean implements PropertyChangeListener
         firePropertyChange("fileNameRenameTo", oldValue, model.getFileNameRenameTo());
     }
 
+    public void setFileUrl(URL fileUrl) {
+        final URL oldValue = model.getFileUrl();
+        model.setFileUrl(fileUrl);
+        firePropertyChange("fileUrl", oldValue, model.getFileUrl());
+    }
+
     public String getFileNameRenameTo() {
         return model.getFileNameRenameTo();
     }
@@ -338,10 +344,6 @@ public class DownloadFile extends AbstractBean implements PropertyChangeListener
 
     public String getErrorMessage() {
         return model.getErrorMessage();
-    }
-
-    public void setFileUrl(URL fileUrl) {
-        model.setFileUrl(fileUrl);
     }
 
     public boolean hasSpeedLimit() {
