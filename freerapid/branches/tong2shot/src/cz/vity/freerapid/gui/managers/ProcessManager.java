@@ -167,8 +167,19 @@ public class ProcessManager extends Thread {
                 continue;
             final DownloadService downloadService = getDownloadService(service);
 
+            Boolean forceValidateObject;
+            boolean forceValidate = false;
+            try {
+                forceValidateObject = (Boolean) file.getProperties().get("forceValidate");
+                if (forceValidateObject != null) {
+                    file.getProperties().remove("forceValidate");
+                    forceValidate = forceValidateObject;
+                }
+            } catch (Exception e) {
+                //
+            }
             final List<ConnectionSettings> connectionSettingses = clientManager.getRotatedEnabledConnections(file.getFileUrl().getHost());
-            if (testFiles && file.getFileState() == FileState.NOT_CHECKED && service.supportsRunCheck() && !connectionSettingses.isEmpty()) {
+            if ((forceValidate || testFiles) && file.getFileState() == FileState.NOT_CHECKED && service.supportsRunCheck() && !connectionSettingses.isEmpty()) {
                 //pokud to podporuje plugin a  soucasne nebyl jeste ocheckovan a soucasne je k dispozici vubec nejake spojeni
                 //a soucasne je to zapnuto v nastavenich
                 queueDownload(file, connectionSettingses.get(0), downloadService, service, true);
@@ -247,6 +258,7 @@ public class ProcessManager extends Thread {
                     logger.info("Force validate check file " + file);
                     forceValidateCheck.add(file);
                     file.setState(QUEUED);
+                    file.getProperties().put("forceValidate", true);
                 }
             }
         }
