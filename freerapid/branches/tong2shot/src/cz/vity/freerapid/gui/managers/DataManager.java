@@ -1071,6 +1071,22 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
         }
     }
 
+    public void setLocalPluginConfig(List<DownloadFile> downloadFileList) {
+        synchronized (lock) {
+            DownloadFile firstItem = downloadFileList.get(0);
+            if (firstItem.getLocalPluginConfig() == null) {
+                return;
+            }
+            String pluginId = firstItem.getPluginID();
+            String localPluginConfig = firstItem.getLocalPluginConfig();
+            for (DownloadFile file : downloadFileList) {
+                if (file.getPluginID().equals(pluginId)) {
+                    file.setLocalPluginConfig(localPluginConfig);
+                }
+            }
+        }
+    }
+
     private final class URLByPriority implements Comparable<URLByPriority> {
         private int priority;
         private URL url;

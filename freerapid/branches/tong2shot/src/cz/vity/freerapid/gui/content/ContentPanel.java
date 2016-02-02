@@ -1149,7 +1149,8 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
         if (selectedRows.length == 0)
             return null;  // nothing selected
 
-        final HttpFile httpFile = manager.getSelectionToList(selectedRows).get(0);
+        final List<DownloadFile> downloadFileList = manager.getSelectionToList(selectedRows);
+        final DownloadFile httpFile = downloadFileList.get(0);
         if (httpFile.getState() == DownloadState.COMPLETED || httpFile.getState() == DownloadState.DELETED)
             return null;
 
@@ -1160,7 +1161,7 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
         } catch (Exception x) {
             return null;   // direct download
         }
-        JMenuItem pluginOptions = new JMenuItem(new PluginOptionsAction(httpFile));
+        JMenuItem pluginOptions = new JMenuItem(new PluginOptionsAction(downloadFileList));
         pluginOptions.setText(context.getResourceMap().getString("textPluginOptions", pluginID));
         if (director.getPluginsManager().getPluginMetadata(pluginID).hasFavicon())
             try {
@@ -1173,10 +1174,12 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
 
     private class PluginOptionsAction extends AbstractAction {
         private final String pluginID;
-        private final HttpFile httpFile;
+        private final List<DownloadFile> downloadFileList;
+        private final DownloadFile httpFile;
 
-        public PluginOptionsAction(HttpFile httpFile) {
-            this.httpFile = httpFile;
+        public PluginOptionsAction(List<DownloadFile> downloadFileList) {
+            this.downloadFileList = downloadFileList;
+            this.httpFile = downloadFileList.get(0);
             this.pluginID = httpFile.getPluginID();
             this.putValue(NAME, pluginID);
         }
@@ -1193,6 +1196,7 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
                     LogUtils.processException(logger, e1);
                 }
             }
+            manager.setLocalPluginConfig(downloadFileList);
         }
     }
 
