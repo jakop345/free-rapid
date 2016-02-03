@@ -11,6 +11,7 @@ public class FileInfo {
     private String fileName;
     private long fileSize = -1;
     private String description;
+    private String saveToDirectory;
 
     public FileInfo(final URL fileUrl) {
         if (fileUrl == null) {
@@ -45,5 +46,13 @@ public class FileInfo {
 
     public void setDescription(final String description) {
         this.description = description;
+    }
+
+    public String getSaveToDirectory() {
+        return saveToDirectory;
+    }
+
+    public void setSaveToDirectory(String saveToDirectory) {
+        this.saveToDirectory = saveToDirectory;
     }
 }
