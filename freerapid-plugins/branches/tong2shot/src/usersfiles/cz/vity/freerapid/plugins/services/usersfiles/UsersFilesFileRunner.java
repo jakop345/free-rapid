@@ -1,0 +1,56 @@
+package cz.vity.freerapid.plugins.services.usersfiles;
+
+import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
+import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;
+import cz.vity.freerapid.plugins.services.xfilesharing.XFileSharingRunner;
+import cz.vity.freerapid.plugins.services.xfilesharing.nameandsize.FileNameHandler;
+import cz.vity.freerapid.plugins.services.xfilesharing.nameandsize.FileSizeHandler;
+import cz.vity.freerapid.plugins.webclient.MethodBuilder;
+import cz.vity.freerapid.plugins.webclient.interfaces.HttpFile;
+import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
+
+import java.util.List;
+import java.util.regex.Matcher;
+
+/**
+ * Class which contains main code
+ *
+ * @author birchie
+ */
+class UsersFilesFileRunner extends XFileSharingRunner {
+
+    @Override
+    protected List<FileNameHandler> getFileNameHandlers() {
+        final List<FileNameHandler> fileNameHandlers = super.getFileNameHandlers();
+        fileNameHandlers.add(new FileNameHandler() {
+            @Override
+            public void checkFileName(HttpFile httpFile, String content) throws ErrorDuringDownloadingException {
+                final Matcher match = PlugUtils.matcher("<h4[^<>]*file[^<>]*>(?:\\s*<.+?>)*(.+?)</", content);
+                if (!match.find())
+                    throw  new PluginImplementationException("File name not found");
+                httpFile.setFileName(match.group(1).trim());
+            }
+        });
+        return fileNameHandlers;
+    }
+
+    @Override
+    protected List<FileSizeHandler> getFileSizeHandlers() {
+        final List<FileSizeHandler> fileSizeHandlers = super.getFileSizeHandlers();
+        fileSizeHandlers.add(new FileSizeHandler() {
+            @Override
+            public void checkFileSize(HttpFile httpFile, String content) throws ErrorDuringDownloadingException {
+                final Matcher match = PlugUtils.matcher(">(\\d[\\d.,]+?\\s\\w*?B(ytes)?)<", content);
+                if (!match.find())
+                    throw  new PluginImplementationException("File size not found");
+                httpFile.setFileSize(PlugUtils.getFileSizeFromString(match.group(1).trim()));
+            }
+        });
+        return fileSizeHandlers;
+    }
+
+    @Override
+    protected MethodBuilder getXFSMethodBuilder() throws Exception {
+        return getXFSMethodBuilder(getContentAsString() + "</Form>");
+    }
+}

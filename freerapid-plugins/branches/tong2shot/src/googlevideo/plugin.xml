@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
+<plugin class="cz.vity.freerapid.plugins.services.googlevideo.GoogleVideoServiceImpl" id="googlevideo.com" vendor="Vity" version="1.0.4">
+    <attributes>
+        <attribute id="urlRegex" value="http://(www\.)?video.google\.com/videoplay.+"/>
+        <attribute id="minver" value="0.85"/>
+        <attribute id="maxver" value="0.899"/>
+        <attribute id="services" value="googlevideo.com"/>
+        <!-- max count of parallel downloads, has to be set in ServiceImpl too -->
+        <attribute id="maxDownloads" value="10"/>
+        <attribute id="faviconImage" value="resources/favicon.png"/>
+    </attributes>
+
+    <runtime>
+        <library id="googlevideo.com" path="/" type="code"/>
+    </runtime>
+</plugin>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
+<plugin class="cz.vity.freerapid.plugins.services.multishare_premium.MultiShareServiceImpl" id="multishare.cz_premium" vendor="JPEXS" version="1.0.4">
+    <attributes>
+        <attribute id="urlRegex" value="http://(www\.)?multishare\.cz/stahnout/.+"/>
+        <attribute id="minver" value="0.85"/>
+        <attribute id="maxver" value="0.899"/>
+        <attribute id="services" value="multishare.cz"/>
+        <attribute id="maxDownloads" value="9"/>
+        <!-- ID pluginu, pro ktere je to premium -->
+        <attribute id="premium" value="true"/>
+        <attribute id="hasOptions" value="true"/>
+        <attribute id="faviconImage" value="resources/favicon.png"/>
+    </attributes>
+
+    <runtime>
+        <library id="multishare.cz" path="/" type="code"/>
+    </runtime>
+</plugin>

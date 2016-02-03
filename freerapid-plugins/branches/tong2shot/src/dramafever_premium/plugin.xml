@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
+<plugin class="cz.vity.freerapid.plugins.services.dramafever_premium.DramaFeverServiceImpl"
+        id="dramafever.com_premium" vendor="tong2shot" version="1.0.0">
+    <attributes>
+        <attribute id="urlRegex" value="https?://(www\.)?dramafever\.com/.+"/>
+        <attribute id="minver" value="0.855"/>
+        <attribute id="maxver" value="0.899"/>
+        <attribute id="services" value="dramafever.com"/>
+        <attribute id="maxDownloads" value="100"/>
+        <attribute id="premium" value="true"/>
+        <attribute id="hasOptions" value="true"/>
+        <attribute id="faviconImage" value="resources/favicon.png"/>
+    </attributes>
+    <requires>
+        <import exported="false" match="greater-or-equal" optional="false" plugin-id="adobehds" plugin-version="1.0.7"
+                reverse-lookup="false"/>
+        <import exported="false" match="greater-or-equal" optional="false" plugin-id="tor" plugin-version="1.0.0"
+                reverse-lookup="false"/>
+    </requires>
+    <runtime>
+        <library id="dramafever.com_premium" path="/" type="code"/>
+    </runtime>
+</plugin>

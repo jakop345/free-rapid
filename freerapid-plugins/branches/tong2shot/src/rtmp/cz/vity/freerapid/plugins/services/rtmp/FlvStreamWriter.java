@@ -1,0 +1,166 @@
+package cz.vity.freerapid.plugins.services.rtmp;
+
+import org.apache.mina.core.buffer.IoBuffer;
+
+import java.io.InputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+import java.nio.channels.Channels;
+import java.nio.channels.WritableByteChannel;
+import java.util.logging.Logger;
+
+/**
+ * @author Peter Thomas
+ * @author ntoskrnl
+ */
+class FlvStreamWriter implements OutputWriter {
+
+    private static final Logger logger = Logger.getLogger(FlvStreamWriter.class.getName());
+
+    private final RtmpSession session;
+    private final WriterStatus status;
+    private final WritableByteChannel channel;
+    private final PipedInputStream in;
+    private final PipedOutputStream out;
+    private final IoBuffer buffer;
+
+    private boolean headerWritten = false;
+    private int lastAudioTime = -1;
+    private int lastVideoTime = -1;
+    private long pos;
+
+    public FlvStreamWriter(int seekTime, RtmpSession session, boolean headerWritten, long pos) {
+        logger.info("Stream writer init..");
+        logger.info("Seek time: " + seekTime);
+        logger.info("Header written: " + headerWritten);
+        logger.info("Start logical pos in disk: " + pos);
+        this.session = session;
+        this.headerWritten = headerWritten;
+        this.pos = pos;
+        this.status = new WriterStatus(seekTime, session);
+        try {
+            out = new PipedOutputStream();
+            channel = Channels.newChannel(out);
+            in = new PipedInputStream(out, 2048);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        buffer = IoBuffer.allocate(2048);
+        buffer.setAutoExpand(true);
+    }
+
+    public WriterStatus getStatus() {
+        return status;
+    }
+
+    public InputStream getStream() {
+        return in;
+    }
+
+    public synchronized void close() {
+        try {
+            channel.close();
+            out.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        status.logFinalVideoDuration();
+    }
+
+    private void writeHeader() {
+        IoBuffer buffer = IoBuffer.allocate(13);
+        buffer.put((byte) 0x46); // F
+        buffer.put((byte) 0x4C); // L
+        buffer.put((byte) 0x56); // V
+        buffer.put((byte) 0x01); // version
+        buffer.put((byte) 0x05); // flags: audio + video
+        buffer.putInt(0x09); // header size = 9
+        buffer.putInt(0); // previous tag size, here = 0
+        buffer.flip();
+        write(buffer);
+    }
+
+    public synchronized void write(Packet packet) {
+        Header header = packet.getHeader();
+        int time = status.getChannelAbsoluteTime(header);
+        write(header.getPacketType(), packet.getData(), time);
+    }
+
+    public synchronized void writeFlvData(IoBuffer data) {
+        while (data.hasRemaining()) {
+            Packet.Type packetType = Packet.Type.parseByte(data.get());
+            int size = Utils.readInt24(data);
+            int timestamp = Utils.readInt24(data);
+            timestamp |= (data.get() & 0xff) << 24;
+            status.updateChannelTime(timestamp);
+            Utils.readInt24(data); // stream id
+            byte[] bytes = new byte[size];
+            data.get(bytes);
+            IoBuffer temp = IoBuffer.wrap(bytes);
+            write(packetType, temp, timestamp);
+            data.getInt(); // FLV tag size (size + 11)
+        }
+    }
+
+    public synchronized void write(Packet.Type packetType, IoBuffer data, final int time) {
+        if (session.getPauseMode() == PauseMode.RESUMING) {
+            if (time <= session.getPauseTimestamp()) {
+                logger.info("Skipping packet");
+                return;
+            } else {
+                session.setPauseMode(PauseMode.PLAYING);
+            }
+        }
+        if (packetType == Packet.Type.AUDIO_DATA) {
+            if (time < lastAudioTime) { // "<=" does not work, multiple packets with the same timestamp are valid
+                logger.info(String.format("Skipping duplicate audio data packet: time=%d, lastaudiotime=%d", time, lastAudioTime));
+                return;
+            }
+            lastAudioTime = time;
+        }
+        if (packetType == Packet.Type.VIDEO_DATA) {
+            if (time < lastVideoTime) { // "<=" does not work, multiple packets with the same timestamp are valid
+                logger.info(String.format("Skipping duplicate video data packet: time=%d, lastvideotime=%d", time, lastVideoTime));
+                return;
+            }
+            lastVideoTime = time;
+        }
+        logger.fine(String.format("writing FLV tag %s %s %s", packetType, time, data));
+        buffer.clear();
+        buffer.put(packetType.byteValue());
+        final int size = data.limit();
+        Utils.writeInt24(buffer, size);
+        Utils.writeInt24(buffer, time & 0xffffff);
+        buffer.put((byte) (time >>> 24));
+        Utils.writeInt24(buffer, 0); // stream id
+        buffer.flip();
+        write(buffer);
+        write(data);
+        //==========
+        buffer.clear();
+        buffer.putInt(size + 11); // previous tag size
+        buffer.flip();
+        write(buffer);
+    }
+
+    private void write(IoBuffer buffer) {
+        if (!headerWritten) {
+            headerWritten = true;
+            logger.info("First data packet received, writing FLV header");
+            writeHeader();
+            session.getHttpFile().getProperties().put(RtmpConsts.FLV_HEADER_WRITTEN, true);
+        }
+        try {
+            pos += buffer.buf().remaining();
+            channel.write(buffer.buf());
+            session.setPos(pos);
+        } catch (Exception e) {
+            if ("Pipe closed".equals(e.getMessage())) {
+                logger.info("Pipe closed, skipping packet");
+            } else {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+}
