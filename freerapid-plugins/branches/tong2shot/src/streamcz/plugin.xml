@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
+<plugin class="cz.vity.freerapid.plugins.services.streamcz.StreamCzServiceImpl"
+        id="stream.cz" vendor="Lukiz+ntoskrnl+tong2shot" version="2.2.4">
+    <attributes>
+        <attribute id="urlRegex" value="https?://(www\.)?stream\.cz/.+"/>
+        <attribute id="minver" value="0.855"/>
+        <attribute id="maxver" value="0.899"/>
+        <attribute id="services" value="stream.cz"/>
+        <attribute id="maxDownloads" value="10"/>
+        <attribute id="hasOptions" value="true"/>
+        <attribute id="faviconImage" value="resources/favicon.png"/>
+    </attributes>
+
+    <runtime>
+        <library id="stream.cz" path="/" type="code"/>
+    </runtime>
+</plugin>

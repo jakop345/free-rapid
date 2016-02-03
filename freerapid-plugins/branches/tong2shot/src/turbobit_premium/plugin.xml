@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
+<plugin class="cz.vity.freerapid.plugins.services.turbobit_premium.TurboBitServiceImpl"
+        id="turbobit.net_premium" vendor="ntoskrnl+birchie" version="1.0.3">
+    <attributes>
+        <attribute id="urlRegex" value="http://(www\.)?turbobit\.net/.+"/>
+        <attribute id="minver" value="0.855"/>
+        <attribute id="maxver" value="0.899"/>
+        <attribute id="services" value="turbobit.net"/>
+        <attribute id="maxDownloads" value="100"/>
+        <attribute id="premium" value="true"/>
+        <attribute id="hasOptions" value="true"/>
+        <attribute id="faviconImage" value="resources/favicon.png"/>
+    </attributes>
+    <requires>
+        <import exported="false" match="greater-or-equal" optional="false" plugin-id="recaptcha.com"
+                plugin-version="1.0" reverse-lookup="false"/>
+    </requires>
+    <runtime>
+        <library id="turbobit.net_premium" path="/" type="code"/>
+    </runtime>
+</plugin>

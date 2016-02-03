@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
+<plugin class="cz.vity.freerapid.plugins.services.yahoo_screen.Yahoo_ScreenServiceImpl"
+        id="screen.yahoo.com" vendor="tong2shot" version="1.0.1">
+    <attributes>
+        <attribute id="urlRegex" value="https?://(www\.)?screen\.yahoo\.com/.+"/>
+        <attribute id="minver" value="0.855"/>
+        <attribute id="maxver" value="0.899"/>
+        <attribute id="services" value="screen.yahoo.com"/>
+        <attribute id="maxDownloads" value="10"/>
+        <attribute id="hasOptions" value="true"/>
+        <attribute id="faviconImage" value="resources/favicon.png"/>
+    </attributes>
+    <requires>
+        <import exported="false" match="greater-or-equal" optional="false" plugin-id="applehls" plugin-version="1.0.5"
+                reverse-lookup="false"/>
+    </requires>
+    <runtime>
+        <library id="screen.yahoo.com" path="/" type="code"/>
+    </runtime>
+</plugin>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
+<plugin class="cz.vity.freerapid.plugins.services.itv.ItvServiceImpl"
+        id="itv.com" vendor="ntoskrnl+tong2shot" version="1.3.0">
+    <attributes>
+        <attribute id="urlRegex" value="https?://(www\.)?itv\.com/(itvplayer|hub)/.+"/>
+        <attribute id="minver" value="0.855"/>
+        <attribute id="maxver" value="0.899"/>
+        <attribute id="services" value="itv.com"/>
+        <attribute id="maxDownloads" value="10"/>
+        <attribute id="hasOptions" value="true"/>
+        <attribute id="faviconImage" value="resources/favicon.png"/>
+    </attributes>
+    <requires>
+        <import exported="false" match="greater-or-equal" optional="false" plugin-id="rtmp" plugin-version="2.2.13"
+                reverse-lookup="false"/>
+        <import exported="false" match="greater-or-equal" optional="false" plugin-id="tor" plugin-version="1.0.0"
+                reverse-lookup="false"/>
+    </requires>
+    <runtime>
+        <library id="itv.com" path="/" type="code"/>
+    </runtime>
+</plugin>

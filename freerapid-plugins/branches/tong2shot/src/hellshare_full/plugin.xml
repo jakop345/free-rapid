@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
+<plugin class="cz.vity.freerapid.plugins.services.hellshare_full.HellshareServiceImpl" id="hellshare.com_full"
+        vendor="Smisek+Jpexs" version="1.0.12">
+    <attributes>
+        <attribute id="urlRegex"
+                   value="http://(www\.)?hellshare\.com/.+|http://download\.hellshare\.[a-z]{2,3}/.+/|http://(download\.[a-z]+\.)?hellshare\.com/.+|http://download\.hellshare\.hu/.+|http://download\.hellshare\.sk/.+"/>
+        <attribute id="minver" value="0.851"/>
+        <attribute id="maxver" value="0.899"/>
+        <attribute id="services" value="hellshare.com"/>
+        <attribute id="maxDownloads" value="100"/>
+        <!-- ID pluginu, pro ktere je to premium -->
+        <attribute id="premium" value="true"/>
+        <attribute id="hasOptions" value="true"/>
+        <attribute id="faviconImage" value="resources/favicon.png"/>
+    </attributes>
+
+    <runtime>
+        <library id="hellshare.com" path="/" type="code"/>
+    </runtime>
+</plugin>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
+<plugin class="cz.vity.freerapid.plugins.services.egoshare.EgoshareShareServiceImpl" id="egoshare.com" vendor="Lukiz" version="2.0.4">
+    <attributes>
+        <attribute id="urlRegex" value="http://(www\.)?egoshare\.com/.+"/>
+        <attribute id="minver" value="0.85"/>
+        <attribute id="maxver" value="0.899"/>
+        <attribute id="services" value="egoshare.com"/>
+        <attribute id="faviconImage" value="resources/favicon.png"/>
+    </attributes>
+
+    <runtime>
+        <library id="egoshare.com" path="/" type="code"/>
+    </runtime>
+</plugin>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
+<plugin class="cz.vity.freerapid.plugins.services.serienjunkies.SerienjunkiesServiceImpl"
+        id="serienjunkies.org" vendor="benpicco+ntoskrnl" version="1.1.3">
+    <attributes>
+        <attribute id="urlRegex" value="http://download\.serienjunkies\.org/.+"/>
+        <attribute id="minver" value="0.855"/>
+        <attribute id="maxver" value="0.899"/>
+        <attribute id="services" value="serienjunkies.org"/>
+        <attribute id="maxDownloads" value="100"/>
+        <attribute id="faviconImage" value="resources/favicon.png"/>
+        <attribute id="removeCompleted" value="true"/>
+    </attributes>
+
+    <runtime>
+        <library id="serienjunkies.org" path="/" type="code"/>
+    </runtime>
+</plugin>
