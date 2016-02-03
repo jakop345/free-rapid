@@ -106,6 +106,7 @@ public class DownloadFileModel implements Identifiable, HttpFile {
         info.setFileName(fileName);
         info.setFileSize(fileSize);
         info.setDescription(description);
+        info.setSaveToDirectory(saveToDirectory.toString());
         return info;
     }
 

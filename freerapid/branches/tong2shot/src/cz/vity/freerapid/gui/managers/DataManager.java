@@ -929,7 +929,12 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
             if (dontAddNotSupported && !pluginsManager.isSupported(info.getFileUrl())) {
                 continue;
             }
-            final DownloadFile downloadFile = new DownloadFile(new DownloadFileModel(info, saveToDirectory));
+            final DownloadFile downloadFile;
+            if (info.getSaveToDirectory() == null || info.getSaveToDirectory().isEmpty()) {
+                downloadFile = new DownloadFile(new DownloadFileModel(info, saveToDirectory));
+            } else {
+                downloadFile = new DownloadFile(new DownloadFileModel(info, new File(info.getSaveToDirectory())));
+            }
             if (description != null) {
                 downloadFile.setDescription(description);
             }
