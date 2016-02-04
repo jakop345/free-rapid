@@ -1005,7 +1005,11 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             if (value == null)
                 value = table.getValueAt(row, column);
+            Calendar valueDate = Calendar.getInstance();
+            valueDate.setTimeInMillis((Long) value);
+            Long time = valueDate.getTime().getTime();
             value = millisToString((Long) value);
+            setToolTipText(String.format(dateFormat + " %tH:%tM", time, time));
             this.setHorizontalAlignment(CENTER);
             return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         }
