@@ -163,6 +163,8 @@ public class ConnectionsTab extends UserPreferencesTab {
             property = FRDUtils.getAbsRelPath(property).getPath();
         }
         AppPrefs.storeProperty(UserProp.PROXY_LIST_PATH, property);
+        AppPrefs.storeProperty(UserProp.USE_PROXY_LIST, checkUseProxyList.isSelected());
+        AppPrefs.storeProperty(UserProp.USE_DEFAULT_CONNECTION, checkUseDefaultConnection.isSelected());
 
         if (updateDefaultConnection || updateProxyConnectionList) {
             managerDirector.getClientManager().updateConnectionSettings();
