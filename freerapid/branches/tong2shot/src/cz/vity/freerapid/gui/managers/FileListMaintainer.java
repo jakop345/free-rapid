@@ -172,7 +172,7 @@ class FileListMaintainer {
                 continue;
             }
             final FilePropertyChangeListener filePropertyChangeListener = new FilePropertyChangeListener(changedFiles, file);
-            file.addPropertyChangeListener(filePropertyChangeListener);
+            file.addPropertyChangeListener("listOrder", filePropertyChangeListener);
             if (state != DownloadState.COMPLETED) {
 //                if (state != DownloadState.PAUSED)
 //                    file.setDownloaded(0);
@@ -206,8 +206,8 @@ class FileListMaintainer {
         }
         if (toRemoveList.size() > 0) {
             removeFromDatabase(toRemoveList);
-            saveToDatabase(changedFiles);
         }
+        saveToDatabase(changedFiles);
     }
 
     void saveToDatabase(Collection<DownloadFile> downloadFiles) {
