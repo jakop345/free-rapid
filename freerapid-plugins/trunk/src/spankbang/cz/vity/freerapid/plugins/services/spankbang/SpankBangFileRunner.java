@@ -48,7 +48,7 @@ class SpankBangFileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        Matcher matcher = PlugUtils.matcher("<h1>(?:<[^<>]+?/>)?(.+?)</h1>", content);
+        Matcher matcher = PlugUtils.matcher("<h1[^<>]*?>(.+?)<", content);
         if (!matcher.find()) {
             throw new PluginImplementationException("File name not found");
         }
