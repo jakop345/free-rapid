@@ -15,6 +15,8 @@ import org.jdesktop.application.ApplicationContext;
 import org.jdesktop.application.LocalStorage;
 import org.jdesktop.application.TaskService;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
@@ -156,8 +158,9 @@ class FileListMaintainer {
 
 
         int listOrder = 0;
-        List<DownloadFile> toRemoveList = new LinkedList<DownloadFile>();
-        for (DownloadFile file : listFromDb) {
+        final List<DownloadFile> toRemoveList = new LinkedList<DownloadFile>();
+        final List<DownloadFile> changedFiles = new LinkedList<DownloadFile>();
+        for (final DownloadFile file : listFromDb) {
             final DownloadState state = file.getState();
             if (state == DownloadState.DELETED) {
                 toRemoveList.add(file);
@@ -168,6 +171,8 @@ class FileListMaintainer {
                 file.setState(DELETED);
                 continue;
             }
+            final FilePropertyChangeListener filePropertyChangeListener = new FilePropertyChangeListener(changedFiles, file);
+            file.addPropertyChangeListener(filePropertyChangeListener);
             if (state != DownloadState.COMPLETED) {
 //                if (state != DownloadState.PAUSED)
 //                    file.setDownloaded(0);
@@ -195,12 +200,13 @@ class FileListMaintainer {
             file.resetSpeed();
             file.setTimeToQueued(-1);
             file.setListOrder(listOrder++);
+            file.removePropertyChangeListener(filePropertyChangeListener);
             file.addPropertyChangeListener(dataManager);
             list.add(file);
         }
         if (toRemoveList.size() > 0) {
             removeFromDatabase(toRemoveList);
-            saveToDatabase(list);
+            saveToDatabase(changedFiles);
         }
     }
 
@@ -244,6 +250,21 @@ class FileListMaintainer {
             service.awaitTermination(6L, TimeUnit.SECONDS);//saving has X seconds to finish, then exit
         } catch (InterruptedException e) {
             LogUtils.processException(logger, e);
+        }
+    }
+
+    private class FilePropertyChangeListener implements PropertyChangeListener {
+        final List<DownloadFile> changedFiles;
+        final DownloadFile file;
+
+        public FilePropertyChangeListener(final List<DownloadFile> changedFiles, final DownloadFile file) {
+            this.changedFiles = changedFiles;
+            this.file = file;
+        }
+
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            this.changedFiles.add(file);
         }
     }
 }
