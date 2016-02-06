@@ -311,7 +311,13 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
             public void run() {
                 // logger.info("Firing contents changed");
                 final DownloadFile downloadFile = (DownloadFile) evt.getSource();
-                downloadFiles.fireContentsChanged(getIndex(downloadFile));
+                //Excluding 'listOrder' greatly improves items movement operations performance,
+                //especially in worst case scenario on huge number of items.
+                //If in the future it's actually needed to track 'listOrder',
+                //create separate listener for this special purpose.
+                if (!"listOrder".equals(s)) {
+                    downloadFiles.fireContentsChanged(getIndex(downloadFile));
+                }
                 if (downloadFile.getState() != DELETED) {
                     //deleted file cannot be re-added
                     changedFiles.add(downloadFile);//mark as dirty - on EDT thread
@@ -320,10 +326,9 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
                     firePropertyChange(s, evt.getOldValue(), evt.getNewValue());
                     fireDataChanged();
                 }
-                if ("orderList".equals(s)) {
+                if ("listOrder".equals(s)) {
                     fireDataChanged();
-                }
-                if ("state".equals(s)) {
+                } else if ("state".equals(s)) {
                     fireFileStateChanged(downloadFile, (DownloadState) evt.getOldValue(), (DownloadState) evt.getNewValue());
                 }
             }
