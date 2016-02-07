@@ -243,7 +243,7 @@ class FileListMaintainer {
         final TaskService service = director.getTaskServiceManager().getTaskService(TaskServiceManager.DATABASE_SERVICE);
         service.shutdown();
         try {
-            service.awaitTermination(6L, TimeUnit.SECONDS);//saving has X seconds to finish, then exit
+            service.awaitTermination(60L, TimeUnit.SECONDS);//saving has X seconds to finish, then exit
         } catch (InterruptedException e) {
             LogUtils.processException(logger, e);
         }
