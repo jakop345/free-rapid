@@ -129,7 +129,7 @@ public class ProcessManager extends Thread {
                 //pokud to podporuje plugin a  soucasne nebyl jeste ocheckovan a soucasne je k dispozici vubec nejake spojeni
                 queueDownload(file, connectionSettingses.get(0), downloadService, service, true);
             }
-            if (!canCreateAnotherConnection(false))
+            if (!canCreateAnotherConnection(true))
                 break;
         }
         forceValidateCheck.clear();
