@@ -206,7 +206,9 @@ class FileListMaintainer {
         if (toRemoveList.size() > 0) {
             removeFromDatabase(toRemoveList);
         }
-        saveToDatabase(changedFiles);
+        if (changedFiles.size() > 0) {
+            saveToDatabase(changedFiles);
+        }
     }
 
     void saveToDatabase(Collection<DownloadFile> downloadFiles) {
