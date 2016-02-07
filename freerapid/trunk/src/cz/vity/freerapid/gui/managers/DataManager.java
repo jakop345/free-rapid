@@ -54,7 +54,7 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
     private static final String DATA_CHANGED_PROPERTY = "dataChanged";
 
     private final ArrayListModel<DownloadFile> downloadFiles = new ArrayListModel<DownloadFile>();
-    private final Set<DownloadFile> changedFiles = Collections.synchronizedSet(new LinkedHashSet<DownloadFile>());
+    private final Set<DownloadFile> changedFiles = Collections.synchronizedSet(new HashSet<DownloadFile>());
 
     private ProcessManager processManager;
     private final ManagerDirector director;
@@ -218,8 +218,10 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
         }
         if (startFromTop) {
             this.downloadFiles.addAll(files);
+            fileListMaintainer.saveToDatabaseOnBackground(files);
         } else {
             this.downloadFiles.addAll(0, files); //reverse collection first?
+            fileListMaintainer.saveToDatabaseOnBackground(files);
             reOrderListProperty();
         }
     }
@@ -491,7 +493,6 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
 
     public void intervalAdded(ListDataEvent e) {
         //to do make on the thread
-        this.fileListMaintainer.saveToDatabaseOnBackground(getItems(e));
         contentsChanged(e);
         fireDataChanged();
     }
@@ -559,15 +560,16 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
 //                return;
             List<DownloadFile> toRemoveList = new LinkedList<DownloadFile>();
             for (DownloadFile file : downloadFiles) {
-                if (file.getState() == COMPLETED)
+                if (file.getState() == COMPLETED) {
+                    file.setState(DELETED);
                     toRemoveList.add(file);
+                    file.removePropertyChangeListener(this);
+                }
             }
             removeFromList(toRemoveList);
-            for (DownloadFile file : toRemoveList) {
-                file.setState(DELETED);
-            }
         }
     }
+
 
     private void removeFromList(List<DownloadFile> toRemoveList) {
         downloadFiles.removeAll(toRemoveList);
@@ -582,15 +584,15 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
             List<DownloadFile> toRemoveList = new LinkedList<DownloadFile>();
             for (DownloadFile file : downloadFiles) {
                 if (file.getState() == COMPLETED && (file.getOutputFile() == null || !file.getOutputFile().exists())) {
+                    file.setState(DELETED);
                     toRemoveList.add(file);
+                    file.removePropertyChangeListener(this);
                 }
             }
             removeFromList(toRemoveList);
-            for (DownloadFile file : toRemoveList) {
-                file.setState(DELETED);
-            }
         }
     }
+
 
     public Object getLock() {
         return lock;
@@ -651,6 +653,10 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
     }
 
     public void moveUp(int[] indexes) {
+        moveUp(indexes, true);
+    }
+
+    public void moveUp(int[] indexes, boolean reOrderList) {
         synchronized (lock) {
             if (indexes.length > 1)
                 Arrays.sort(indexes);
@@ -664,7 +670,9 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
                 }
                 indexes[i] = newIndex;
             }
-            reOrderListProperty();
+            if (reOrderList) {
+                reOrderListProperty();
+            }
         }
     }
 
@@ -677,6 +685,10 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
     }
 
     public void moveDown(int[] indexes) {
+        moveDown(indexes, true);
+    }
+
+    public void moveDown(int[] indexes, boolean reOrderList) {
         synchronized (lock) {
             final int length = indexes.length;
             if (length > 1)
@@ -691,7 +703,9 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
                     downloadFiles.add(newIndex, downloadFile);
                 }
             }
-            reOrderListProperty();
+            if (reOrderList) {
+                reOrderListProperty();
+            }
         }
     }
 
@@ -811,6 +825,76 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
             runnable.run();
         }
         return result[0];
+    }
+
+    @Override
+    public boolean addLinksToQueueNextTo(final HttpFile parentFile, List<URI> uriList, final boolean autoStart) {
+        final List<DownloadFile> files = new LinkedList<DownloadFile>();
+        final boolean dontAddNotSupported = AppPrefs.getProperty(UserProp.DONT_ADD_NOTSUPPORTED_FROMCRYPTER, UserProp.DONT_ADD_NOTSUPPORTED_FROMCRYPTER_DEFAULT);
+        final boolean startFromTop = AppPrefs.getProperty(UserProp.START_FROM_TOP, UserProp.START_FROM_TOP_DEFAULT);
+        for (URI uri : uriList) {
+            try {
+                final URL url = uri.toURL();
+                if (dontAddNotSupported && !pluginsManager.isSupported(url))
+                    continue;
+                final DownloadFile downloadFile = new DownloadFile(url, parentFile.getSaveToDirectory(), parentFile.getDescription());
+                downloadFile.setPluginID("");
+                files.add(downloadFile);
+            } catch (MalformedURLException e) {
+                logger.warning("File with URI " + uri.toString() + " cannot be added to queue");
+            }
+        }
+        final boolean[] result = new boolean[1];
+        final Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    addToList(files);
+                    synchronized (lock) {
+                        int distance = Math.abs(files.get(0).getListOrder() - ((DownloadFile) parentFile).getListOrder()) - 1;
+                        int[] indexes = new int[files.size()];
+                        int i = 0;
+                        for (DownloadFile file : files) {
+                            indexes[i++] = file.getListOrder();
+                        }
+                        if (startFromTop) {
+                            for (int j = 1; j <= distance; j++) {
+                                moveUp(indexes, false);
+                            }
+                        } else {
+                            for (int j = 1; j <= distance; j++) {
+                                moveDown(indexes, false);
+                            }
+                        }
+                        reOrderListProperty();
+                    }
+                    if (autoStart) {
+                        addToQueue(files);
+                    }
+                    result[0] = true;
+                } catch (Exception e) {
+                    result[0] = false;
+                }
+            }
+        };
+        if (!SwingUtilities.isEventDispatchThread()) {
+            try {
+                SwingUtilities.invokeAndWait(runnable);
+            } catch (InterruptedException e) {
+                return false;
+            } catch (InvocationTargetException e) {
+                return false;
+            }
+        } else {
+            runnable.run();
+        }
+        return result[0];
+    }
+
+    @Override
+    public boolean addLinksToQueueNextTo(HttpFile parentFile, List<URI> uriList) {
+        final boolean startDownload = AppPrefs.getProperty(UserProp.AUTO_START_DOWNLOADS_FROM_DECRYPTER, UserProp.AUTO_START_DOWNLOADS_FROM_DECRYPTER_DEFAULT);
+        return addLinksToQueueNextTo(parentFile, uriList, startDownload);
     }
 
     @Override
@@ -985,6 +1069,7 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
                 downloadFiles.remove(indexes[i]);//it does not generate event to database
             }
             downloadFiles.addAll(placeIndex, Arrays.asList(sorted));
+            reOrderListProperty();
             return placeIndex;
         }
     }
