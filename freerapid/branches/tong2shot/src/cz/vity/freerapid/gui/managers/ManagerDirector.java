@@ -168,6 +168,8 @@ public class ManagerDirector {
             //ignore
         }
         inputDataManager.initProcessManagerQueue(); //loads file list from file, fills main table
+        inputDataManager.getDownloadFiles().addListDataListener(getStatusBarManager());
+        getStatusBarManager().updateInfoStatus();
         this.systemManager.initManager();
 
         linkStoreManager = new LinkStoreManager(ManagerDirector.this, context);
