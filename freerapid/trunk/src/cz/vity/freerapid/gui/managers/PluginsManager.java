@@ -409,7 +409,7 @@ public class PluginsManager {
                 PluginMetaData pluginMetaData = datas[i];
                 if (pluginMetaData.isSupported(s)) {
                     addToCache(pluginMetaData);
-                    logger.info("Cache hit");
+                    logger.fine("Cache hit");
                     if (pluginMetaData.isEnabled()) {
                         return !monitoring || pluginMetaData.isClipboardMonitored();
                     }
@@ -475,7 +475,7 @@ public class PluginsManager {
                 PluginMetaData plugin = plugins[i];
                 if (plugin.isSupported(s)) {
                     addToCache(plugin);
-                    logger.info("Cache hit");
+                    logger.fine("Cache hit");
                     if (plugin.isEnabled()) {
                         return plugin.getId();
                     }
