@@ -33,6 +33,7 @@ class FileListMaintainer {
     private final ManagerDirector director;
     private final DataManager dataManager;
     private final Object saveFileLock = new Object();
+    private final Object removeFileLock = new Object();
     private final static Logger logger = Logger.getLogger(FileListMaintainer.class.getName());
     private static final String FILES_LIST_XML = "filesList.xml";
 
@@ -44,6 +45,11 @@ class FileListMaintainer {
     }
 
 
+    /**
+     * Load download file list from DB order by 'listOrder'
+     *
+     * @return download file list
+     */
     private List<DownloadFile> loadFileHistoryList() {
         List<DownloadFile> result = null;
         final File srcFile = new File(context.getLocalStorage().getDirectory(), FILES_LIST_XML);
@@ -131,18 +137,31 @@ class FileListMaintainer {
     }
 
 
-    private void initDownloadFiles(Collection<DownloadFile> list, Collection<DownloadFile> o) {
+    /**
+     * Modifiy list from DB based on user preferences,
+     * then save it to new list.
+     *
+     * @param list       (out)         modified list
+     * @param listFromDb (in)    list of files from DB order by 'listOrder'
+     */
+    private void initDownloadFiles(Collection<DownloadFile> list, Collection<DownloadFile> listFromDb) {
         final boolean downloadOnStart = AppPrefs.getProperty(UserProp.DOWNLOAD_ON_APPLICATION_START, UserProp.DOWNLOAD_ON_APPLICATION_START_DEFAULT);
         final boolean removeCompleted = AppPrefs.getProperty(UserProp.REMOVE_COMPLETED_DOWNLOADS, UserProp.REMOVE_COMPLETED_DOWNLOADS_DEFAULT) == UserProp.REMOVE_COMPLETED_DOWNLOADS_AT_STARTUP;
         final boolean recheckOnStart = AppPrefs.getProperty(UserProp.RECHECK_FILES_ON_START, UserProp.RECHECK_FILES_ON_START_DEFAULT);
 
 
         int listOrder = 0;
-        for (DownloadFile file : o) {
+        final List<DownloadFile> toRemoveList = new LinkedList<DownloadFile>();
+        final List<DownloadFile> changedFiles = new LinkedList<DownloadFile>();
+        for (final DownloadFile file : listFromDb) {
             final DownloadState state = file.getState();
-            if (state == DownloadState.DELETED)
+            if (state == DownloadState.DELETED) {
+                toRemoveList.add(file);
                 continue;
+            }
             if (state == DownloadState.COMPLETED && removeCompleted) {
+                toRemoveList.add(file);
+                file.setState(DownloadState.DELETED);
                 continue;
             }
             if (state != DownloadState.COMPLETED) {
@@ -171,9 +190,19 @@ class FileListMaintainer {
                 file.setDownloaded(file.getRealDownload());
             file.resetSpeed();
             file.setTimeToQueued(-1);
-            file.setListOrder(listOrder++);
+            if (file.getListOrder() != listOrder) {
+                changedFiles.add(file);
+            }
+            file.setListOrder(listOrder);
             file.addPropertyChangeListener(dataManager);
             list.add(file);
+            listOrder++;
+        }
+        if (toRemoveList.size() > 0) {
+            removeFromDatabase(toRemoveList);
+        }
+        if (changedFiles.size() > 0) {
+            saveToDatabase(changedFiles);
         }
     }
 
@@ -184,11 +213,17 @@ class FileListMaintainer {
         }
     }
 
+    private void removeFromDatabase(Collection<DownloadFile> downloadFiles) {
+        synchronized (removeFileLock) {
+            logger.info("=====Removing deleted files from the database (" + downloadFiles.size() + ") =====");
+            director.getDatabaseManager().removeCollection(downloadFiles);
+        }
+    }
+
     void removeFromDatabaseOnBackground(final Collection<DownloadFile> downloadFiles) {
         final Runnable runnable = new Runnable() {
             public void run() {
-                logger.info("=====Removing deleted files from the database (" + downloadFiles.size() + ") =====");
-                director.getDatabaseManager().removeCollection(downloadFiles);
+                removeFromDatabase(downloadFiles);
             }
         };
         director.getDatabaseManager().runOnTask(runnable);
