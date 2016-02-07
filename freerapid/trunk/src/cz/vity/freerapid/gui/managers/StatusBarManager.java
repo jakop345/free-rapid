@@ -158,8 +158,6 @@ public class StatusBarManager implements PropertyChangeListener, ListDataListene
 
             context.getTaskMonitor().addPropertyChangeListener(this);
 
-            dataManager.getDownloadFiles().addListDataListener(this);
-
             dataManager.getProcessManager().addPropertyChangeListener("downloading", this);
 
             director.getSpeedRegulator().addPropertyChangeListener("speed", this);
@@ -338,7 +336,7 @@ public class StatusBarManager implements PropertyChangeListener, ListDataListene
     }
 
 
-    private void updateInfoStatus() {
+    public void updateInfoStatus() {
         final int completed = dataManager.getCompleted();
         final int size = dataManager.getDownloadFiles().size();
         final long speed = director.getSpeedRegulator().getSpeed();
