@@ -860,19 +860,14 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
                 try {
                     addToList(files);
                     synchronized (lock) {
-                        int distance = Math.abs(files.get(0).getListOrder() - ((DownloadFile) parentFile).getListOrder()) - 1;
-                        int[] indexes = new int[files.size()];
-                        int i = 0;
-                        for (DownloadFile file : files) {
-                            indexes[i++] = file.getListOrder();
-                        }
+                        int parentIndex = ((DownloadFile) parentFile).getListOrder();
                         if (startFromTop) {
-                            for (int j = 1; j <= distance; j++) {
-                                moveUp(indexes, false);
+                            for (int i = 0; i < files.size(); i++) {
+                                downloadFiles.add(parentIndex + i + 1, downloadFiles.remove(files.get(i).getListOrder()));
                             }
                         } else {
-                            for (int j = 1; j <= distance; j++) {
-                                moveDown(indexes, false);
+                            for (int i = 0; i < files.size(); i++) {
+                                downloadFiles.add(Math.max(0, parentIndex - i - 1), downloadFiles.remove(files.get(i).getListOrder()));
                             }
                         }
                         reOrderListProperty();
