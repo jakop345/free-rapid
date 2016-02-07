@@ -19,6 +19,7 @@ import cz.vity.freerapid.plugins.webclient.DownloadState;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.interfaces.HttpFile;
 import cz.vity.freerapid.plugins.webclient.interfaces.MaintainQueueSupport;
+import cz.vity.freerapid.plugins.webclient.interfaces.ShareDownloadService;
 import cz.vity.freerapid.swing.Swinger;
 import cz.vity.freerapid.utilities.FileUtils;
 import cz.vity.freerapid.utilities.Utils;
@@ -753,7 +754,10 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
         final List<DownloadFile> files = new LinkedList<DownloadFile>();
         synchronized (lock) {
             for (DownloadFile file : selectionToList(indexes)) {
-                if (DownloadsActions.recheckExistingStates.contains(file.getState())) {
+                final ShareDownloadService service = pluginsManager.getService(file);
+                if (service == null)
+                    continue;
+                if (DownloadsActions.recheckExistingStates.contains(file.getState()) && service.supportsRunCheck()) {
                     file.getProperties().put("previousState", file.getState());
                     file.setFileState(NOT_CHECKED);
                     file.setState(QUEUED);
