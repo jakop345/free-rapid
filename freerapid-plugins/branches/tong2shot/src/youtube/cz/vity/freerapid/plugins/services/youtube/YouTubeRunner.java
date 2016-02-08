@@ -328,7 +328,7 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
 
     private void setConfig() throws Exception {
         final YouTubeServiceImpl service = (YouTubeServiceImpl) getPluginService();
-        config = service.getConfig();
+        config = service.getLocalConfig(httpFile);
     }
 
     private Map<Integer, YouTubeMedia> getFmtStreamMap(String content) {
