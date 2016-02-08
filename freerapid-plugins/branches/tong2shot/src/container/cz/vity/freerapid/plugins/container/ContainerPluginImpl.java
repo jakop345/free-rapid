@@ -29,6 +29,7 @@ public final class ContainerPluginImpl extends ContainerPlugin {
         SUPPORTED_FILES.put(Dlc.getSupportedFiles(), Dlc.class);
         SUPPORTED_FILES.put(Jdc.getSupportedFiles(), Jdc.class);
         SUPPORTED_FILES.put(Rsdf.getSupportedFiles(), Rsdf.class);
+        SUPPORTED_FILES.put(Acdc.getSupportedFiles(), Acdc.class);
         SUPPORTED_FILES_LIST = new ArrayList<String[]>(SUPPORTED_FILES.keySet());
     }
 
