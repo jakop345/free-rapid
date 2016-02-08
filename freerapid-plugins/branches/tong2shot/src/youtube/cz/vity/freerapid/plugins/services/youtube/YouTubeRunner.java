@@ -621,7 +621,7 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
         } catch (final URISyntaxException e) {
             LogUtils.processException(logger, e);
         }
-        getPluginService().getPluginContext().getQueueSupport().addLinksToQueue(httpFile, uriList);
+        getPluginService().getPluginContext().getQueueSupport().addLinksToQueueNextTo(httpFile, uriList, true);
     }
 
     private boolean isDashAudio() {
