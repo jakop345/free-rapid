@@ -659,10 +659,6 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
     }
 
     public void moveUp(int[] indexes) {
-        moveUp(indexes, true);
-    }
-
-    public void moveUp(int[] indexes, boolean reOrderList) {
         synchronized (lock) {
             if (indexes.length > 1)
                 Arrays.sort(indexes);
@@ -676,9 +672,7 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
                 }
                 indexes[i] = newIndex;
             }
-            if (reOrderList) {
                 reOrderListProperty();
-            }
         }
     }
 
@@ -691,10 +685,6 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
     }
 
     public void moveDown(int[] indexes) {
-        moveDown(indexes, true);
-    }
-
-    public void moveDown(int[] indexes, boolean reOrderList) {
         synchronized (lock) {
             final int length = indexes.length;
             if (length > 1)
@@ -709,9 +699,7 @@ public class DataManager extends AbstractBean implements PropertyChangeListener,
                     downloadFiles.add(newIndex, downloadFile);
                 }
             }
-            if (reOrderList) {
-                reOrderListProperty();
-            }
+            reOrderListProperty();
         }
     }
 
