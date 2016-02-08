@@ -30,7 +30,7 @@ public abstract class XFileSharingServiceImpl extends AbstractFileShareService {
     }
 
     public PremiumAccount showConfigDialog() throws Exception {
-        return showAccountDialog(getConfig(), getServiceTitle(), configFile);
+        return showAccountDialog(getConfig(), getServiceTitle(), configFile, true);
     }
 
     public PremiumAccount getConfig() throws Exception {
