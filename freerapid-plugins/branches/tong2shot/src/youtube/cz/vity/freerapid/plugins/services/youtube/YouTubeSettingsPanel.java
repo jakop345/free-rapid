@@ -1,5 +1,7 @@
 package cz.vity.freerapid.plugins.services.youtube;
 
+import cz.vity.freerapid.plugins.webclient.interfaces.HttpFile;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -21,6 +23,18 @@ class YouTubeSettingsPanel extends JPanel {
         super();
         config = service.getConfig();
         initPanel();
+    }
+
+    public YouTubeSettingsPanel(YouTubeServiceImpl service, HttpFile httpFile) throws Exception {
+        super();
+        config = service.getLocalConfig(httpFile);
+        initPanel();
+    }
+
+    public YouTubeSettingsConfig getConfig() {
+        synchronized (YouTubeSettingsPanel.class) {
+            return config;
+        }
     }
 
     private void initPanel() {
