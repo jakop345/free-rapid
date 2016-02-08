@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="XFilePlayer New Plugin" default="all" basedir=".">
+
+    <!-- input data directories -->
+    <property name="src.dir" value="src"/>
+    <property name="etc.dir" value="etc"/>
+    <property name="dist.dir" value="dist"/>
+    <property name="doc.dir" value="doc"/>
+    <property name="lib.dir" value="lib"/>
+    <property name="dev.dir" value="dev"/>
+    <property name="antTasks.dir" value="${dev.dir}/anttasks"/>
+    <property name="plugins.dir" value="plugins"/>
+
+    <property name="lib-src.dir" value="lib-src"/>
+    <property name="plugins-src.dir" value="plugins-src"/>
+
+    <target name="newplugin" description="Creates new plugin">
+        <taskdef resource="ise/antelope/tasks/antlib.xml" classpath="${antTasks.dir}/AntelopeTasks_3.5.1.jar"/>
+        <input message="Insert plugin service name (capitalized form like RapidShare.com)&#xA;But don't write RapidShare.com otherwise it will be removed from plugins ;-)."
+               addproperty="input"/>
+        <!--<input message="Insert plugin author's name" addproperty="author" />-->
+        <property name="author" value="tong2shot"/>
+        <property name="indexDot" value="0"/>
+        <property name="withDot" value=""/>
+        <property name="fullWithoutDot" value=""/>
+        <property name="shortsmall" value=""/>
+        <property name="fullower" value=""/>
+        <property name="afterDot" value=""/>
+
+        <stringutil string="${input}" property="indexDot">
+            <lastindexof string="."/>
+        </stringutil>
+        <stringutil string="${input}" property="fullWithoutDot">
+            <substring beginindex="0" endindex="${indexDot}"/>
+        </stringutil>
+        <stringutil string="${fullWithoutDot}" property="shortsmall">
+            <lowercase/>
+        </stringutil>
+        <stringutil string="${input}" property="withDot">
+            <substring beginindex="${indexDot}"/>
+        </stringutil>
+        <stringutil string="${withDot}" property="afterDot">
+            <substring beginindex="1"/>
+        </stringutil>
+        <stringutil string="${input}" property="fullower">
+            <lowercase/>
+        </stringutil>
+
+        <property name="newplugin.dir" value="${src.dir}/${shortsmall}"/>
+        <property name="newplugin.java.dir" value="${newplugin.dir}/cz/vity/freerapid/plugins/services/${shortsmall}"/>
+
+        <mkdir dir="${newplugin.java.dir}"/>
+        <mkdir dir="${src.dir}/${shortsmall}/resources"/>
+
+
+        <copy todir="${newplugin.dir}">
+            <fileset dir="${dev.dir}/xfileplayerplugin" includes="**/**"/>
+            <filterchain>
+                <replacetokens begintoken="#" endtoken="#">
+                    <token key="author" value="${author}"/>
+                    <token key="shortsmall" value="${shortsmall}"/>
+                    <token key="fulllower" value="${fullower}"/>
+                    <token key="fullWithoutDot" value="${fullWithoutDot}"/>
+                    <token key="afterDot" value="${afterDot}"/>
+                    <token key="full" value="${input}"/>
+                </replacetokens>
+            </filterchain>
+        </copy>
+        <move file="${newplugin.dir}/FileRunner.java" tofile="${newplugin.dir}/${fullWithoutDot}FileRunner.java"/>
+        <move file="${newplugin.dir}/ServiceImpl.java" tofile="${newplugin.dir}/${fullWithoutDot}ServiceImpl.java"/>
+
+        <move todir="${newplugin.java.dir}">
+            <fileset dir="${newplugin.dir}" includes="**/?*.java"/>
+        </move>
+
+    </target>
+
+</project>
