@@ -69,4 +69,19 @@ public class DevQueueSupport implements MaintainQueueSupport {
         return true;
     }
 
+    @Override
+    public boolean addLinksToQueueNextTo(HttpFile parentFile, List<URI> uriList, boolean autoStart) {
+        StringBuilder builder = new StringBuilder().append("The following files will be added into the queue,\n");
+        builder.append("next to " + parentFile.getFileUrl() + " :");
+        for (URI uri : uriList) {
+            builder.append(uri).append('\n');
+        }
+        logger.info(builder.toString());
+        return true;
+    }
+
+    @Override
+    public boolean addLinksToQueueNextTo(HttpFile parentFile, List<URI> uriList) {
+        return addLinksToQueueNextTo(parentFile, uriList, true);
+    }
 }
