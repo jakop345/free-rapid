@@ -69,6 +69,7 @@ public class DownloadFile extends AbstractBean implements Identifiable, Property
     private int listOrder;
     private Date dateInserted;
     private String localPluginConfig; //String representation of XMLEncoder output of plugin config
+    private String fileNameRenameTo;
 
 
     @Transient
@@ -362,7 +363,7 @@ public class DownloadFile extends AbstractBean implements Identifiable, Property
      * @return Value for property 'outputFile'.
      */
     public File getOutputFile() {
-        return new File(this.getSaveToDirectory(), fileName);
+        return new File(this.getSaveToDirectory(), (fileNameRenameTo != null ? fileNameRenameTo : fileName));
     }
 
     /**
@@ -695,5 +696,16 @@ public class DownloadFile extends AbstractBean implements Identifiable, Property
         final String oldValue = this.localPluginConfig;
         this.localPluginConfig = localPluginConfig;
         firePropertyChange("localPluginConfig", oldValue, this.localPluginConfig);
+    }
+
+    public String getFileNameRenameTo() {
+        return this.fileNameRenameTo;
+    }
+
+    public void setFileNameRenameTo(String fileNameRenameTo) {
+        final String oldValue = this.fileNameRenameTo;
+        this.fileNameRenameTo = fileNameRenameTo;
+        this.setFileType(FileTypeIconProvider.identifyFileType(this.fileNameRenameTo));
+        firePropertyChange("fileNameRenameTo", oldValue, this.fileNameRenameTo);
     }
 }
