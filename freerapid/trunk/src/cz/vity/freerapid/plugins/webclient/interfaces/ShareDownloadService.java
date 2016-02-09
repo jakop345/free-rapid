@@ -78,6 +78,14 @@ public interface ShareDownloadService {
     void showOptions() throws Exception;
 
     /**
+     * Method called from download file's plugin option, which is local,
+     * to show configurable dialog to user
+     * @param httpFile associated download file
+     * @throws Exception
+     */
+    void showLocalOptions(HttpFile httpFile) throws Exception;
+
+    /**
      * Returns instance of plugin context to allow access UI or Locale storage
      *
      * @return instance of plugin context
@@ -90,4 +98,34 @@ public interface ShareDownloadService {
      * @param pluginContext instance of plugin context
      */
     void setPluginContext(PluginContext pluginContext);
+
+    /**
+     * Method to load configuration data from string into Object.
+     * Internal implementation uses XMLEncoder.
+     *
+     * @param content config content
+     * @param type    class of the stored object
+     * @return returns new instance, null if
+     * @throws Exception throwed when reading went wrong
+     */
+    <E> E loadConfigFromString(final String content, Class<E> type) throws Exception;
+
+    /**
+     * Method to store plugin's configuration data from Object into string.
+     * Internal implementation uses XMLEncoder.
+     *
+     * @return config data as string
+     * @throws Exception throwed when reading went wrong
+     */
+    String storeConfigToString(final Object object) throws Exception;
+
+    /**
+     * Clone config
+     *
+     * @param config config to be cloned
+     * @param type   class of the stored object
+     * @return config clone
+     * @throws Exception
+     */
+    <E> E cloneConfig(E config, Class<E> type) throws Exception;
 }

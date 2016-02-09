@@ -34,7 +34,10 @@ import org.jdesktop.swingx.table.TableColumnExt;
 
 import javax.swing.*;
 import javax.swing.event.*;
-import javax.swing.table.*;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
@@ -53,8 +56,8 @@ import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 
 /**
- * @version 1.0
  * @author Vity
+ * @version 1.0
  */
 public class ContentPanel extends JPanel implements ListSelectionListener, ListDataListener, PropertyChangeListener, ClipboardOwner {
     private final static Logger logger = Logger.getLogger(ContentPanel.class.getName());
@@ -1093,10 +1096,11 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
 
     /**
      * Change file name physically on disk
-     * @param source editor
+     *
+     * @param source            editor
      * @param originalOuputFile original name before editing
-     * @param backupFileName original file name
-     * @param selectedRow index of selected row
+     * @param backupFileName    original file name
+     * @param selectedRow       index of selected row
      */
     private void renameFile(RenameFileNameEditor source, File originalOuputFile, String backupFileName, int selectedRow) {
         boolean succeeded;
@@ -1137,6 +1141,12 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
     private JMenuItem getPluginOptions(int[] selectedRows) {
         if (selectedRows.length == 0)
             return null;  // nothing selected
+
+        final List<DownloadFile> downloadFileList = manager.getSelectionToList(selectedRows);
+        final DownloadFile httpFile = downloadFileList.get(0);
+        if (httpFile.getState() == DownloadState.COMPLETED || httpFile.getState() == DownloadState.DELETED)
+            return null;
+
         final String pluginID = manager.getSelectionToList(selectedRows).get(0).getPluginID();
         try {
             if (!director.getPluginsManager().getPluginMetadata(pluginID).isOptionable())
@@ -1144,7 +1154,7 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
         } catch (Exception x) {
             return null;   // direct download
         }
-        JMenuItem pluginOptions = new JMenuItem(new PluginOptionsAction(pluginID));
+        JMenuItem pluginOptions = new JMenuItem(new PluginOptionsAction(downloadFileList));
         pluginOptions.setText(context.getResourceMap().getString("textPluginOptions", pluginID));
         if (director.getPluginsManager().getPluginMetadata(pluginID).hasFavicon())
             try {
@@ -1157,17 +1167,40 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
 
     private class PluginOptionsAction extends AbstractAction {
         private final String pluginID;
+        private final List<DownloadFile> downloadFileList;
+        private final DownloadFile downloadFile;
 
-        public PluginOptionsAction(String pluginID) {
-            this.pluginID = pluginID;
+        public PluginOptionsAction(List<DownloadFile> downloadFileList) {
+            this.downloadFileList = downloadFileList;
+            this.downloadFile = downloadFileList.get(0);
+            this.pluginID = downloadFile.getPluginID();
             this.putValue(NAME, pluginID);
         }
 
         public void actionPerformed(ActionEvent e) {
             try {
-                director.getPluginsManager().getPluginInstance(pluginID).showOptions();
+                director.getPluginsManager().getPluginInstance(pluginID).showLocalOptions(downloadFile);
             } catch (Exception x) {
                 LogUtils.processException(logger, x);
+                try {
+                    //if the plugin API doesn't support 'showLocalOptions', use the global one (showOptions)
+                    director.getPluginsManager().getPluginInstance(pluginID).showOptions();
+                } catch (Exception e1) {
+                    LogUtils.processException(logger, e1);
+                }
+            }
+            setLocalPluginConfig();
+        }
+
+        private void setLocalPluginConfig() {
+            if (downloadFile.getLocalPluginConfig() == null) {
+                return;
+            }
+            String localPluginConfig = downloadFile.getLocalPluginConfig();
+            for (DownloadFile file : downloadFileList) {
+                if (file.getPluginID().equals(pluginID)) {
+                    file.setLocalPluginConfig(localPluginConfig);
+                }
             }
         }
     }
