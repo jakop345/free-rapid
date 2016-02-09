@@ -29,6 +29,10 @@ import java.util.logging.Logger;
  * Hashcode a Equals nepretizeny na url (muze byt vic souboru s touto url, neni unikatni),
  * pocita se s tim v ProcessManageru pri force download.
  *
+ * Reference:
+ * Database Schema Evolution
+ * http://www.objectdb.com/java/jpa/entity/schema
+ *
  * @author Vity
  */
 
@@ -64,6 +68,7 @@ public class DownloadFile extends AbstractBean implements Identifiable, Property
     private volatile boolean resumeSupported = true;
     private int listOrder;
     private Date dateInserted;
+    private String localPluginConfig; //String representation of XMLEncoder output of plugin config
 
 
     @Transient
@@ -680,5 +685,15 @@ public class DownloadFile extends AbstractBean implements Identifiable, Property
         final int oldValue = this.listOrder;
         this.listOrder = listOrder;
         firePropertyChange("listOrder", oldValue, this.listOrder);
+    }
+
+    public String getLocalPluginConfig() {
+        return this.localPluginConfig;
+    }
+
+    public void setLocalPluginConfig(String localPluginConfig) {
+        final String oldValue = this.localPluginConfig;
+        this.localPluginConfig = localPluginConfig;
+        firePropertyChange("localPluginConfig", oldValue, this.localPluginConfig);
     }
 }
