@@ -114,7 +114,6 @@ class FileListMaintainer {
             return result;
         } else {
             //TODO: convert objectdb
-            //TODO: versionize schemes
             //load from database
             return director.getDatabaseManager().loadAllOrderByListOrder();
         }
