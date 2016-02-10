@@ -112,6 +112,7 @@ public class FileHistoryManager extends AbstractBean {
             srcFile.renameTo(targetImportedFile);
             return result;
         } else {
+            //TODO: convert objectdb
             //load from database
             return director.getDatabaseManager().loadAll(FileHistoryItemModel.class);
         }

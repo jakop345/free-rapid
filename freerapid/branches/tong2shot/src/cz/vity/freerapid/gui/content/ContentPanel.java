@@ -182,6 +182,10 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
         return Swinger.getSelectedRows(table);
     }
 
+    public void addListSelectionListener(ListSelectionListener listSelectionListener) {
+        table.getSelectionModel().addListSelectionListener(listSelectionListener);
+    }
+
     @org.jdesktop.application.Action(enabledProperty = SELECTED_ACTION_ENABLED_PROPERTY)
     public void sortbyNameAction() {
         final ListSelectionModel selectionModel = table.getSelectionModel();
@@ -1196,7 +1200,20 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
                     LogUtils.processException(logger, e1);
                 }
             }
-            manager.setLocalPluginConfig(downloadFileList);
+            setLocalPluginConfig();
+        }
+
+        private void setLocalPluginConfig() {
+            if (httpFile.getLocalPluginConfig() == null) {
+                return;
+            }
+            String pluginId = httpFile.getPluginID();
+            String localPluginConfig = httpFile.getLocalPluginConfig();
+            for (DownloadFile file : downloadFileList) {
+                if (file.getPluginID().equals(pluginId)) {
+                    file.setLocalPluginConfig(localPluginConfig);
+                }
+            }
         }
     }
 

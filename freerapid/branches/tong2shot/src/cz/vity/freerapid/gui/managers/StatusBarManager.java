@@ -2,6 +2,8 @@ package cz.vity.freerapid.gui.managers;
 
 import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.adapter.BoundedRangeAdapter;
+import com.jgoodies.binding.adapter.SpinnerAdapterFactory;
+import com.jgoodies.binding.beans.BeanAdapter;
 import com.jgoodies.binding.beans.PropertyConnector;
 import com.jgoodies.binding.value.ConverterFactory;
 import com.jgoodies.binding.value.ValueModel;
@@ -12,6 +14,9 @@ import cz.vity.freerapid.core.MainApp;
 import cz.vity.freerapid.core.UserProp;
 import cz.vity.freerapid.core.tasks.DownloadTask;
 import cz.vity.freerapid.gui.content.ContentPanel;
+import cz.vity.freerapid.model.bean.DownloadFile;
+import cz.vity.freerapid.model.bean.PluginMetaData;
+import cz.vity.freerapid.plugins.webclient.DownloadState;
 import cz.vity.freerapid.swing.Swinger;
 import cz.vity.freerapid.swing.TrayIconSupport;
 import cz.vity.freerapid.swing.binding.BindUtils;
@@ -23,8 +28,7 @@ import org.jdesktop.swingx.JXCollapsiblePane;
 import org.jdesktop.swingx.JXStatusBar;
 
 import javax.swing.*;
-import javax.swing.event.ListDataEvent;
-import javax.swing.event.ListDataListener;
+import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -39,7 +43,7 @@ import java.util.prefs.PreferenceChangeListener;
  *
  * @author Vity
  */
-public class StatusBarManager implements PropertyChangeListener, ListDataListener {
+public class StatusBarManager implements PropertyChangeListener, ListDataListener, ListSelectionListener {
     private JXStatusBar statusbar;
     private JLabel infoLabel;
     private final ManagerDirector director;
@@ -58,7 +62,9 @@ public class StatusBarManager implements PropertyChangeListener, ListDataListene
 
     private Task activeTask = null;
     private JSlider slider;
-    private static final int BAR_HEIGHT = 18;
+    private static final int BAR_HEIGHT = 22;
+    private JSpinner spinnerMaxConcurrentDownloads;
+    private JSpinner spinnerPluginMaxDownloads;
 
     /**
      * Konstruktor
@@ -130,12 +136,29 @@ public class StatusBarManager implements PropertyChangeListener, ListDataListene
             infoLabel = new JLabel();
             progress = new JProgressBar();
 
+            spinnerMaxConcurrentDownloads = new JSpinner();
+            ValueModel maxConcurrentDownloadsAdapter = BindUtils.getReadOnlyPrefsValueModel(UserProp.MAX_DOWNLOADS_AT_A_TIME, UserProp.MAX_DOWNLOADS_AT_A_TIME_DEFAULT);
+            bind(spinnerMaxConcurrentDownloads, UserProp.MAX_DOWNLOADS_AT_A_TIME_DEFAULT, 1, 1000000, 1, maxConcurrentDownloadsAdapter);
+            spinnerMaxConcurrentDownloads.setToolTipText("Max concurrent downloads at a time"); //TODO: internationalize
+
+            spinnerPluginMaxDownloads = new JSpinner();
+            spinnerPluginMaxDownloads.setToolTipText("Plugin's max allowed downloads");
+
             //  progress.setStringPainted(false);
             //indicator = new MemoryIndicator();
             //indicator.setPreferredSize(new Dimension(100, BAR_HEIGHT));
             infoLabel.setPreferredSize(new Dimension(420, BAR_HEIGHT));
             clipboardMonitoring.setPreferredSize(new Dimension(17, BAR_HEIGHT));
             quietMode.setPreferredSize(new Dimension(17, BAR_HEIGHT));
+            spinnerMaxConcurrentDownloads.setPreferredSize(new Dimension(56, BAR_HEIGHT));
+            spinnerPluginMaxDownloads.setPreferredSize(new Dimension(56, BAR_HEIGHT));
+            spinnerPluginMaxDownloads.setEnabled(false);
+            spinnerPluginMaxDownloads.addChangeListener(new ChangeListener() {
+                @Override
+                public void stateChanged(ChangeEvent e) {
+                    director.getPluginsManager().updatePluginSettings();
+                }
+            });
             progress.setPreferredSize(new Dimension(progress.getPreferredSize().width + 35, BAR_HEIGHT));
             progress.setVisible(false);
             director.getMenuManager().getMenuBar().addPropertyChangeListener("selectedText", this);
@@ -151,6 +174,8 @@ public class StatusBarManager implements PropertyChangeListener, ListDataListene
 
             statusbar.add(clipboardMonitoring, JXStatusBar.Constraint.ResizeBehavior.FIXED);
             statusbar.add(quietMode, JXStatusBar.Constraint.ResizeBehavior.FIXED);
+            statusbar.add(spinnerMaxConcurrentDownloads, JXStatusBar.Constraint.ResizeBehavior.FIXED);
+            statusbar.add(spinnerPluginMaxDownloads, JXStatusBar.Constraint.ResizeBehavior.FIXED);
             statusbar.add(speedBarPanel, JXStatusBar.Constraint.ResizeBehavior.FIXED);
             statusbar.add(progress, JXStatusBar.Constraint.ResizeBehavior.FIXED);
 
@@ -164,6 +189,8 @@ public class StatusBarManager implements PropertyChangeListener, ListDataListene
 
             dataManager.addPropertyChangeListener("completed", this);
             dataManager.addPropertyChangeListener("state", this);
+
+            director.getContentManager().getContentPanel().addListSelectionListener(this);
 
             AppPrefs.getPreferences().addPreferenceChangeListener(new PreferenceChangeListener() {
                 public void preferenceChange(final PreferenceChangeEvent evt) {
@@ -270,6 +297,8 @@ public class StatusBarManager implements PropertyChangeListener, ListDataListene
                 Swinger.inputFocus(slider);
         } else if (UserProp.GLOBAL_SPEED_SLIDER_MAX.equals(key) || UserProp.GLOBAL_SPEED_SLIDER_MAX.equals(key) || UserProp.GLOBAL_SPEED_SLIDER_STEP.equals(key)) {
             bindSpeedSlider(slider);
+        } else if (UserProp.MAX_DOWNLOADS_AT_A_TIME.equals(key)) {
+            spinnerMaxConcurrentDownloads.setValue(AppPrefs.getProperty(UserProp.MAX_DOWNLOADS_AT_A_TIME, UserProp.MAX_DOWNLOADS_AT_A_TIME_DEFAULT));
         }
     }
 
@@ -394,6 +423,49 @@ public class StatusBarManager implements PropertyChangeListener, ListDataListene
         slider.setMinimum(minimum);
         slider.setMaximum(maximum);
         slider.setMinorTickSpacing(step);
+    }
+
+    @Override
+    public void valueChanged(final ListSelectionEvent e) {
+        if (e.getValueIsAdjusting())
+            return;
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                final int index = director.getContentManager().getContentPanel().getSelectedRows()[0];
+                spinnerPluginMaxDownloads.setEnabled(false);
+                if (index != -1) {
+                    final DownloadFile httpFile = dataManager.getDownloadFiles().get(index);
+                    if (httpFile.getState() == DownloadState.COMPLETED || httpFile.getState() == DownloadState.DELETED)
+                        return;
+                    final String pluginID = httpFile.getPluginID();
+                    final PluginMetaData pluginMetaData;
+                    try {
+                        pluginMetaData = director.getPluginsManager().getPluginMetadata(pluginID);
+                    } catch (Exception ex) {
+                        return; //direct download
+                    }
+
+                    final int max = pluginMetaData.getMaxParallelDownloads();
+                    final BeanAdapter<PluginMetaData> beanModel = new BeanAdapter<PluginMetaData>(pluginMetaData, true);
+                    bind(spinnerPluginMaxDownloads, 1, 1, max, 1, beanModel.getValueModel("maxAllowedDownloads"));
+                    spinnerPluginMaxDownloads.setEnabled(max > 1);
+                }
+            }
+        });
+    }
+
+    private void bind(JSpinner spinner, int defaultValue, int minValue, int maxValue, int step, final ValueModel valueModel) {
+        spinner.setModel(SpinnerAdapterFactory.createNumberAdapter(
+                valueModel,
+                defaultValue,
+                minValue,
+                maxValue,
+                step));
+        final JComponent editor = spinner.getEditor();
+        if (editor instanceof JFormattedTextField) {
+            final JFormattedTextField field = (JFormattedTextField) editor;
+            field.setFocusLostBehavior(JFormattedTextField.COMMIT);
+        }
     }
 
 //    private ValueModel bind(final JCheckBox checkBox, final String key, final Object defaultValue) {
