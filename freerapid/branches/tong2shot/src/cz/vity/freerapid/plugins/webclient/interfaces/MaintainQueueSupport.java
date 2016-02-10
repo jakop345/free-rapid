@@ -80,6 +80,17 @@ public interface MaintainQueueSupport {
      *
      * @param parentFile parent file where description is copied from, also as reference for 'NextTo'
      * @param uriList    list of links which should be added to the queue
+     * @param autoStart  true on auto start, false on paused
+     * @return true on success, false otherwise
+     */
+    public boolean addLinksToQueueNextTo(HttpFile parentFile, List<URI> uriList, boolean autoStart);
+
+    /**
+     * Add links to the queue next to parentFile,
+     * whether the links are auto started or paused, depends on user preference (AUTO_START_DOWNLOADS_FROM_DECRYPTER)
+     *
+     * @param parentFile parent file where description is copied from, also as reference for 'NextTo'
+     * @param uriList    list of links which should be added to the queue
      * @return true on success, false otherwise
      */
     public boolean addLinksToQueueNextTo(HttpFile parentFile, List<URI> uriList);
