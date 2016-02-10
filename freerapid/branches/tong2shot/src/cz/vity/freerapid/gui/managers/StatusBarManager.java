@@ -427,14 +427,18 @@ public class StatusBarManager implements PropertyChangeListener, ListDataListene
 
     @Override
     public void valueChanged(final ListSelectionEvent e) {
+        spinnerPluginMaxDownloads.setEnabled(false);
         if (e.getValueIsAdjusting())
             return;
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                final int index = director.getContentManager().getContentPanel().getSelectedRows()[0];
-                spinnerPluginMaxDownloads.setEnabled(false);
-                if (index != -1) {
-                    final DownloadFile httpFile = dataManager.getDownloadFiles().get(index);
+                final int index[] = director.getContentManager().getContentPanel().getSelectedRows();
+                if (index.length == 0) {
+                    return;
+                }
+                final java.util.List<DownloadFile> files = dataManager.getSelectionToList(index);
+                if (!files.isEmpty()) {
+                    final DownloadFile httpFile = files.get(0);
                     if (httpFile.getState() == DownloadState.COMPLETED || httpFile.getState() == DownloadState.DELETED)
                         return;
                     final String pluginID = httpFile.getPluginID();
