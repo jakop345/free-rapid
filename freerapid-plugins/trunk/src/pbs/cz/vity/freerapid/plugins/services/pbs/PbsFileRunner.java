@@ -7,14 +7,11 @@ import cz.vity.freerapid.plugins.services.rtmp.RtmpSession;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.utils.HttpUtils;
-import cz.vity.freerapid.plugins.webclient.utils.JsonMapper;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import cz.vity.freerapid.utilities.LogUtils;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpMethod;
-import org.codehaus.jackson.JsonNode;
 
-import java.io.IOException;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 
@@ -39,19 +36,16 @@ class PbsFileRunner extends AbstractRunner {
         super.runCheck();
         if (makeRedirectedRequest(getVideoInfoMethod())) {
             checkProblems();
-            checkNameAndSize(getRootNode(getContentAsString()));
+            checkNameAndSize(getContentAsString());
         } else {
             checkProblems();
             throw new ServiceConnectionProblemException();
         }
     }
 
-    private void checkNameAndSize(JsonNode rootNode) throws ErrorDuringDownloadingException {
-        final JsonNode titleNode = rootNode.get("title");
-        if (titleNode == null) {
-            throw new PluginImplementationException("Video title not found");
-        }
-        httpFile.setFileName(titleNode.getTextValue().replace(": ", " - ") + DEFAULT_EXT);
+    private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
+        PlugUtils.checkName(httpFile, content, "class=\"embed-title\">", "</");
+        httpFile.setFileName(PlugUtils.unescapeHtml(httpFile.getFileName()).replace(": ", " - ") + DEFAULT_EXT);
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
 
@@ -61,14 +55,14 @@ class PbsFileRunner extends AbstractRunner {
         logger.info("Starting download in TASK " + fileURL);
         if (makeRedirectedRequest(getVideoInfoMethod())) {
             checkProblems();
-            JsonNode rootNode = getRootNode(getContentAsString());
-            checkNameAndSize(rootNode);
+            checkNameAndSize(getContentAsString());
+            String videoData = getVideoData(getContentAsString());
             setConfig();
             if (config.isDownloadSubtitles()) {
-                downloadSubtitle(rootNode);
+                downloadSubtitle(videoData);
             }
 
-            final PbsMedia pbsMedia = getMedia(rootNode);
+            final PbsMedia pbsMedia = getMedia(videoData);
             final HttpMethod method = getGetMethod(pbsMedia.url);
             makeRequest(method);
             checkProblems();
@@ -127,11 +121,19 @@ class PbsFileRunner extends AbstractRunner {
     }
 
     private HttpMethod getVideoInfoMethod() throws ErrorDuringDownloadingException {
-        final String url = "http://player.pbs.org/videoInfo/" + getId() + "/";
+        final String url = "http://player.pbs.org/portalplayer/" + getId() + "/";
         return getGetMethod(url);
     }
 
+    /*
+    //They sent invalid JSON data, thus cannot be parsed using JSON parser
+
     private JsonNode getRootNode(String content) throws ErrorDuringDownloadingException {
+        Matcher matcher = PlugUtils.matcher("(?sm)PBS.videoData\\s*?=\\s*?(\\{.+?\\});", content);
+        if (!matcher.find()) {
+            throw new PluginImplementationException("Video data not found");
+        }
+        String videoData = matcher.group(1).replace("'","\"");
         JsonNode rootNode;
         try {
             rootNode = new JsonMapper().getObjectMapper().readTree(content);
@@ -174,6 +176,48 @@ class PbsFileRunner extends AbstractRunner {
             }
         }
     }
+    */
+
+    private String getVideoData(String content) throws PluginImplementationException {
+        Matcher matcher = PlugUtils.matcher("(?sm)PBS.videoData\\s*?=\\s*?(\\{.+?\\});", content);
+        if (!matcher.find()) {
+            throw new PluginImplementationException("Video data not found");
+        }
+        return matcher.group(1).replace("'", "\"");
+    }
+
+    private PbsMedia getMedia(String videoData) throws ErrorDuringDownloadingException {
+        Matcher recommendedEncodingMatcher = PlugUtils.matcher("(?s)\"recommended_encoding\"(.+?)\\},", videoData);
+        Matcher urlMatcher = PlugUtils.matcher("\"url\"\\s*?:\\s*?\"([^\"]+?)\"", videoData);
+        Matcher eeidMatcher = PlugUtils.matcher("\"eeid\"\\s*?:\\s*?\"([^\"]+?)\"", videoData);
+        if (!recommendedEncodingMatcher.find()) {
+            throw new PluginImplementationException("Error parsing media (1)");
+        }
+
+        urlMatcher.region(recommendedEncodingMatcher.start(1), recommendedEncodingMatcher.end(1));
+        eeidMatcher.region(recommendedEncodingMatcher.start(1), recommendedEncodingMatcher.end(1));
+        if (!urlMatcher.find() || !eeidMatcher.find()) {
+            throw new PluginImplementationException("Error parsing media (2)");
+        }
+
+        String url = urlMatcher.group(1).trim();
+        String eeid = eeidMatcher.group(1).trim();
+        return new PbsMedia(url, eeid.contains("hls") ? PbsMedia.Protocol.HLS : PbsMedia.Protocol.RTMP);
+    }
+
+    private void downloadSubtitle(String videoData) {
+        Matcher closedCaptionMatcher = PlugUtils.matcher("\"closed_captions_url\"\\s*?:\\s*?\"([^\"]+?)\"", videoData);
+        if (!closedCaptionMatcher.find()) {
+            logger.warning("No subtitles found");
+        } else {
+            SubtitleDownloader sbDownloader = new SubtitleDownloader();
+            try {
+                sbDownloader.downloadSubtitle(client, httpFile, closedCaptionMatcher.group(1).trim());
+            } catch (Exception e) {
+                LogUtils.processException(logger, e);
+            }
+        }
+    }
 
     private static class PbsMedia {
         enum Protocol {HTTP, RTMP, HLS}
@@ -184,6 +228,14 @@ class PbsFileRunner extends AbstractRunner {
         public PbsMedia(String url, Protocol protocol) {
             this.url = url;
             this.protocol = protocol;
+        }
+
+        @Override
+        public String toString() {
+            return "PbsMedia{" +
+                    "url='" + url + '\'' +
+                    ", protocol=" + protocol +
+                    '}';
         }
     }
 
