@@ -22,6 +22,7 @@ public class TestApp extends PluginDevApplication {
             //httpFile.setNewURL(new URL("http://video.pbs.org/video/2163057527/")); //rtmp
             //httpFile.setNewURL(new URL("http://video.pbs.org/video/2365607036/")); //hls
             httpFile.setNewURL(new URL("http://www.pbs.org/video/2365664483/"));
+            //httpFile.setNewURL(new URL("http://www.pbs.org/video/2365661643/"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 9040, Proxy.Type.SOCKS); //eg we can use local proxy to sniff HTTP communication
