@@ -872,14 +872,18 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
         }
 
         if (!filterText.isEmpty()) {
-            final RowFilter<Object, Object> textFilter = RowFilter.regexFilter("(?i)" + Pattern.quote(filterText));
+            final java.util.List<RowFilter<Object, Object>> textFilters = new ArrayList<RowFilter<Object, Object>>();
+            String[] texts = filterText.split(" ");
+            for (String text : texts) {
+                textFilters.add(RowFilter.regexFilter("(?i)" + Pattern.quote(text)));
+            }
             if (rowFilter != null) {
-                final java.util.List<RowFilter<Object, Object>> list = new ArrayList<RowFilter<Object, Object>>(2);
+                final java.util.List<RowFilter<Object, Object>> list = new ArrayList<RowFilter<Object, Object>>(1 + textFilters.size());
                 list.add(rowFilter);
-                list.add(textFilter);
+                list.addAll(textFilters);
                 rowFilter = RowFilter.andFilter(list);
             } else {
-                rowFilter = textFilter;
+                rowFilter = RowFilter.andFilter(textFilters);
             }
         }
         ((DefaultRowSorter) table.getRowSorter()).setRowFilter(rowFilter);
