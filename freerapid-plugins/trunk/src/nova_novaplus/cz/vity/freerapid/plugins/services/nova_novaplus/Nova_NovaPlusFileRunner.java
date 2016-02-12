@@ -16,7 +16,6 @@ import org.apache.commons.httpclient.methods.GetMethod;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -127,13 +126,13 @@ class Nova_NovaPlusFileRunner extends AbstractRunner {
         String timeStr = getTimeString();
         String mediaId;
         String resolverContent;
-        String serviceUrl;
+        //String serviceUrl;
         String appId;
         String secret;
         try {
             mediaId = PlugUtils.getStringBetween(configDecrypted, "\"mediaId\":", ",");
             resolverContent = PlugUtils.getStringBetween(configDecrypted, "\"nacevi-resolver\":{", "},");
-            serviceUrl = PlugUtils.getStringBetween(resolverContent, "\"serviceUrl\":\"", "\"").replace("\\/", "/");
+            //serviceUrl = PlugUtils.getStringBetween(resolverContent, "\"serviceUrl\":\"", "\"").replace("\\/", "/");
             appId = PlugUtils.getStringBetween(resolverContent, "\"appId\":\"", "\"");
             secret = PlugUtils.getStringBetween(resolverContent, "\"secret\":\"", "\"");
         } catch (PluginImplementationException e) {
@@ -143,8 +142,8 @@ class Nova_NovaPlusFileRunner extends AbstractRunner {
         String hashString = appId + "|" + mediaId + "|" + timeStr + "|" + secret;
         String base64FromBA = Base64.encodeBase64String(DigestUtils.md5(hashString));
         HttpMethod method = getMethodBuilder()
-                .setAction(serviceUrl)
-                        //.setAction("http://voyo.nova.cz/lbin/cdn-cra-r.php")
+                //.setAction(serviceUrl)
+                .setAction("http://voyo.nova.cz/lbin/cdn-cra-r.php")
                 .setParameter("c", appId + "|" + mediaId)
                 .setParameter("h", "0")
                 .setParameter("t", timeStr)
@@ -204,7 +203,7 @@ class Nova_NovaPlusFileRunner extends AbstractRunner {
             logger.warning(configDecrypted);
             throw new PluginImplementationException("Error parsing media config content", e);
         }
-        List<Nova_NovaPlusVideo> videoList = new LinkedList<Nova_NovaPlusVideo>();
+        List<Nova_NovaPlusVideo> videoList = new ArrayList<Nova_NovaPlusVideo>();
         for (VideoQuality videoQuality : VideoQuality.getItems()) {
             String qualityLabel = videoQuality.getLabel();
             if (bitratesString.contains(qualityLabel)) {

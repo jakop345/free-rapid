@@ -36,16 +36,21 @@ class PbsFileRunner extends AbstractRunner {
         super.runCheck();
         if (makeRedirectedRequest(getVideoInfoMethod())) {
             checkProblems();
-            checkNameAndSize(getContentAsString());
+            checkNameAndSize(getVideoData(getContentAsString()));
         } else {
             checkProblems();
             throw new ServiceConnectionProblemException();
         }
     }
 
-    private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        PlugUtils.checkName(httpFile, content, "class=\"embed-title\">", "</");
-        httpFile.setFileName(PlugUtils.unescapeHtml(httpFile.getFileName()).replace(": ", " - ") + DEFAULT_EXT);
+    private void checkNameAndSize(String videoData) throws ErrorDuringDownloadingException {
+        String title;
+        try {
+            title = PlugUtils.getStringBetween(videoData, "\"title\": \"", "\"", 2);
+        } catch (PluginImplementationException e) {
+            throw new PluginImplementationException("File name not found");
+        }
+        httpFile.setFileName(PlugUtils.unescapeUnicode(PlugUtils.unescapeHtml(title.trim())).replace(": ", " - ") + DEFAULT_EXT);
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
 
@@ -55,8 +60,8 @@ class PbsFileRunner extends AbstractRunner {
         logger.info("Starting download in TASK " + fileURL);
         if (makeRedirectedRequest(getVideoInfoMethod())) {
             checkProblems();
-            checkNameAndSize(getContentAsString());
             String videoData = getVideoData(getContentAsString());
+            checkNameAndSize(videoData);
             setConfig();
             if (config.isDownloadSubtitles()) {
                 downloadSubtitle(videoData);
