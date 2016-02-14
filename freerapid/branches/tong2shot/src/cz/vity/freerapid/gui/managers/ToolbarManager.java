@@ -9,6 +9,8 @@ import cz.vity.freerapid.gui.SearchField;
 import cz.vity.freerapid.gui.actions.DownloadsActions;
 import cz.vity.freerapid.gui.dialogs.CompoundUndoManager;
 import cz.vity.freerapid.gui.managers.search.SearchItem;
+import cz.vity.freerapid.model.LocalConnectionSettingsType;
+import cz.vity.freerapid.model.bean.DownloadFile;
 import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
 import cz.vity.freerapid.swing.SwingUtils;
 import cz.vity.freerapid.swing.Swinger;
@@ -23,6 +25,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Set;
 import java.util.prefs.PreferenceChangeEvent;
@@ -122,7 +125,23 @@ public class ToolbarManager implements PropertyChangeListener {
         forceDownloadButton.setEnabled(forceEnabled);
         if (forceEnabled) {
             forceDownloadButtonMenu.removeAll();
-            final java.util.List<ConnectionSettings> connectionSettingses = directorManager.getClientManager().getAvailableConnections();
+            final int[] selectedRows = directorManager.getContentManager().getContentPanel().getSelectedRows();
+            final java.util.List<DownloadFile> files = directorManager.getDataManager().getSelectionToList(selectedRows);
+            final java.util.List<ConnectionSettings> connectionSettingses = new ArrayList<ConnectionSettings>();
+            connectionSettingses.addAll(directorManager.getClientManager().getAvailableConnections());
+            for (DownloadFile file : files) {
+                if (file.getLocalConnectionSettingsType() == LocalConnectionSettingsType.DIRECT) {
+                    ConnectionSettings direct = new ConnectionSettings();
+                    if (!connectionSettingses.contains(direct)) {
+                        connectionSettingses.add(direct);
+                    }
+                } else if (file.getLocalConnectionSettingsType() == LocalConnectionSettingsType.LOCAL_PROXY) {
+                    ConnectionSettings proxy = directorManager.getClientManager().getProxyConnection(file.getLocalProxy(), false);
+                    if (!connectionSettingses.contains(proxy)) {
+                        connectionSettingses.add(proxy);
+                    }
+                }
+            }
             boolean anyEnabled = false;
             for (ConnectionSettings settings : connectionSettingses) {
                 final ForceDownloadOptionAction action = new ForceDownloadOptionAction(settings);

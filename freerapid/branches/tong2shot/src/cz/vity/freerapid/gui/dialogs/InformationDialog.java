@@ -87,6 +87,7 @@ public class InformationDialog extends AppFrame implements PropertyChangeListene
         setAction(okButton, "okBtnAction");
         setAction(cancelButton, "cancelBtnAction");
         setAction(btnSelectPath, "btnSelectPathAction");
+        setAction(btnConnectionSettings, "btnConnectionSettingsAction");
         updateInit();
     }
 
@@ -198,6 +199,12 @@ public class InformationDialog extends AppFrame implements PropertyChangeListene
         }
     }
 
+    @org.jdesktop.application.Action
+    public void btnConnectionSettingsAction() throws Exception {
+        LocalConnectionSettingsDialog dialog = new LocalConnectionSettingsDialog(this, director, file);
+        getApp().show(dialog);
+    }
+
     @SuppressWarnings({"deprecation"})
     private void initComponents() {
         JPanel dialogPane = new JPanel();
@@ -228,6 +235,7 @@ public class InformationDialog extends AppFrame implements PropertyChangeListene
         JPanel connectionPanel = new JPanel();
         JLabel connectionLabel = new JLabel();
         connectionField = new JTextField();
+        btnConnectionSettings = new JButton();
         JXButtonPanel buttonBar = new JXButtonPanel();
         okButton = new JButton();
         cancelButton = new JButton();
@@ -335,19 +343,23 @@ public class InformationDialog extends AppFrame implements PropertyChangeListene
 
                     //---- connectionToLabel ----
                     connectionLabel.setName("connectionLabel");
-                    saveToLabel.setLabelFor(connectionField);
+                    connectionLabel.setLabelFor(connectionField);
+                    btnConnectionSettings.setName("btnConnectionSettings");
 
                     PanelBuilder connectionPanelBuilder = new PanelBuilder(new FormLayout(
                             new ColumnSpec[]{
                                     FormSpecs.DEFAULT_COLSPEC,
                                     FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-                                    new ColumnSpec(ColumnSpec.FILL, Sizes.DEFAULT, FormSpec.DEFAULT_GROW)
+                                    new ColumnSpec(ColumnSpec.FILL, Sizes.DEFAULT, FormSpec.DEFAULT_GROW),
+                                    FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+                                    FormSpecs.DEFAULT_COLSPEC
                             },
                             RowSpec.decodeSpecs("default")),
                             connectionPanel);
 
                     connectionPanelBuilder.add(connectionLabel, cc.xy(1, 1));
                     connectionPanelBuilder.add(connectionField, cc.xy(3, 1));
+                    connectionPanelBuilder.add(btnConnectionSettings, cc.xy(5, 1));
                 }
 
                 //---- avgSpeedLabel ----
@@ -591,6 +603,7 @@ public class InformationDialog extends AppFrame implements PropertyChangeListene
     private JButton cancelButton;
     private JLabel estTimeLabel;
     private JTextField connectionField;
+    private JButton btnConnectionSettings;
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {

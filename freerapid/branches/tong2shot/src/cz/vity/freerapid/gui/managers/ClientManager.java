@@ -150,58 +150,66 @@ public class ClientManager {
         return null;
     }
 
-    private void readProxyList(File f) {
+    public ConnectionSettings getProxyConnection(String strProxy, boolean autodetectSOCKS) {
         Proxy.Type proxyType;
 
         final Pattern patternWhole = Pattern.compile("((\\w*)(:(.*?))?@)?(.*?):(\\d{2,5})");
         final Pattern socksPattern = Pattern.compile(SOCKS_PREFIX_REGEXP, Pattern.CASE_INSENSITIVE);
+
+        if (strProxy.isEmpty())
+            return null;
+        final Matcher matcherSocks = socksPattern.matcher(strProxy);
+        if (matcherSocks.find()) {
+            proxyType = Proxy.Type.SOCKS;
+            strProxy = strProxy.substring(matcherSocks.group(1).length());
+        } else
+            proxyType = Proxy.Type.HTTP;
+
+        final Matcher matcher = patternWhole.matcher(strProxy);
+        if (matcher.matches()) {
+            int i = strProxy.lastIndexOf('@');
+            final String s2;
+            final ConnectionSettings settings = new ConnectionSettings();
+            if (i >= 0) {
+                String s1 = strProxy.substring(0, i);
+                s2 = strProxy.substring(i + 1);
+                i = s1.indexOf(':');
+                final String[] hostPort = s2.split(":");
+                final Integer port = Integer.valueOf(hostPort[1]);
+                if (port > 65535)
+                    return null;
+                if (autodetectSOCKS && port >= 1080 && port <= 1090)
+                    proxyType = Proxy.Type.SOCKS;
+                if (i > 0)
+                    settings.setProxy(hostPort[0], port, proxyType, s1.substring(0, i), s1.substring(i + 1));
+                else
+                    settings.setProxy(hostPort[0], port, proxyType, s1, null);
+            } else {
+                s2 = strProxy;
+                final String[] hostPort = s2.split(":");
+                final Integer port = Integer.valueOf(hostPort[1]);
+                if (port > 65535)
+                    return null;
+                if (autodetectSOCKS && port >= 1080 && port <= 1090)
+                    proxyType = Proxy.Type.SOCKS;
+                settings.setProxy(hostPort[0], port, proxyType);
+            }
+            logger.info("Reading proxy definition " + settings.toString());
+            return settings;
+        } else {
+            logger.warning("String " + strProxy + " does not match to proxy definition pattern - [username[:password@]]host:port");
+            return null;
+        }
+    }
+
+    private void readProxyList(File f) {
         final String[] strings = Utils.loadFile(f).split("(\\s)");
         final boolean autodetectSOCKS = AppPrefs.getProperty(UserProp.AUTODETECT_SOCKSPROXY, UserProp.AUTODETECT_SOCKSPROXY_DEFAULT);
         for (String s : strings) {
-            if (s.isEmpty())
-                continue;
-            final Matcher matcherSocks = socksPattern.matcher(s);
-            if (matcherSocks.find()) {
-                proxyType = Proxy.Type.SOCKS;
-                s = s.substring(matcherSocks.group(1).length());
-            } else
-                proxyType = Proxy.Type.HTTP;
-
-            final Matcher matcher = patternWhole.matcher(s);
-            if (matcher.matches()) {
-                int i = s.lastIndexOf('@');
-                final String s2;
-                final ConnectionSettings settings = new ConnectionSettings();
-                if (i >= 0) {
-                    String s1 = s.substring(0, i);
-                    s2 = s.substring(i + 1);
-                    i = s1.indexOf(':');
-                    final String[] hostPort = s2.split(":");
-                    final Integer port = Integer.valueOf(hostPort[1]);
-                    if (port > 65535)
-                        continue;
-                    if (autodetectSOCKS && port >= 1080 && port <= 1090)
-                        proxyType = Proxy.Type.SOCKS;
-                    if (i > 0)
-                        settings.setProxy(hostPort[0], port, proxyType, s1.substring(0, i), s1.substring(i + 1));
-                    else
-                        settings.setProxy(hostPort[0], port, proxyType, s1, null);
-                } else {
-                    s2 = s;
-                    final String[] hostPort = s2.split(":");
-                    final Integer port = Integer.valueOf(hostPort[1]);
-                    if (port > 65535)
-                        continue;
-                    if (autodetectSOCKS && port >= 1080 && port <= 1090)
-                        proxyType = Proxy.Type.SOCKS;
-                    settings.setProxy(hostPort[0], port, proxyType);
-                }
+            final ConnectionSettings settings = getProxyConnection(s, autodetectSOCKS);
+            if (settings != null)
                 availableConnections.add(settings);
-                logger.info("Reading proxy definition " + settings.toString());
-            } else
-                logger.warning("String " + s + " does not match to proxy definition pattern - [username[:password@]]host:port");
         }
-
     }
 
     public List<ConnectionSettings> getAvailableConnections() {

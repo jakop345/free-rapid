@@ -28,7 +28,7 @@ import java.util.logging.Logger;
  * @author Vity
  */
 
-@Entity
+@Entity(version = 1)
 public class DownloadFileModel implements Identifiable, HttpFile {
     private final static Logger logger = Logger.getLogger(DownloadFileModel.class.getName());
 
@@ -62,6 +62,8 @@ public class DownloadFileModel implements Identifiable, HttpFile {
     private Date dateInserted;
     private String localPluginConfig; //String representation of XMLEncoder output of plugin config
     private String fileNameRenameTo;
+    private LocalConnectionSettingsType localConnectionSettingsType = LocalConnectionSettingsType.APPLICATION;
+    private String localProxy;
 
 
     @NotPersistent
@@ -659,5 +661,21 @@ public class DownloadFileModel implements Identifiable, HttpFile {
     public void setFileNameRenameTo(String fileNameRenameTo) {
         this.fileNameRenameTo = fileNameRenameTo;
         this.setFileType(FileTypeIconProvider.identifyFileType(this.fileNameRenameTo));
+    }
+
+    public LocalConnectionSettingsType getLocalConnectionSettingsType() {
+        return localConnectionSettingsType;
+    }
+
+    public void setLocalConnectionSettingsType(LocalConnectionSettingsType localConnectionSettingsType) {
+        this.localConnectionSettingsType = localConnectionSettingsType;
+    }
+
+    public String getLocalProxy() {
+        return localProxy;
+    }
+
+    public void setLocalProxy(String localProxy) {
+        this.localProxy = localProxy;
     }
 }

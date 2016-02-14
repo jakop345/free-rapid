@@ -4,6 +4,7 @@ import com.sleepycat.persist.model.Entity;
 import cz.vity.freerapid.core.tasks.DownloadTask;
 import cz.vity.freerapid.gui.managers.interfaces.ModelWrapper;
 import cz.vity.freerapid.model.DownloadFileModel;
+import cz.vity.freerapid.model.LocalConnectionSettingsType;
 import cz.vity.freerapid.plugins.container.FileInfo;
 import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
 import cz.vity.freerapid.plugins.webclient.DownloadState;
@@ -205,11 +206,6 @@ public class DownloadFile extends AbstractBean implements PropertyChangeListener
     }
 
     @Override
-    public String getLocalPluginConfig() {
-        return model.getLocalPluginConfig();
-    }
-
-    @Override
     public void setLocalPluginConfig(String localPluginConfig) {
         final String oldValue = model.getLocalPluginConfig();
         model.setLocalPluginConfig(localPluginConfig);
@@ -226,6 +222,18 @@ public class DownloadFile extends AbstractBean implements PropertyChangeListener
         final URL oldValue = model.getFileUrl();
         model.setFileUrl(fileUrl);
         firePropertyChange("fileUrl", oldValue, model.getFileUrl());
+    }
+
+    public void setLocalProxy(String localProxy) {
+        final String oldValue = model.getLocalProxy();
+        model.setLocalProxy(localProxy);
+        firePropertyChange("localProxy", oldValue, model.getLocalProxy());
+    }
+
+    public void setLocalConnectionSettingsType(LocalConnectionSettingsType connectionSettingsType) {
+        final LocalConnectionSettingsType oldValue = model.getLocalConnectionSettingsType();
+        model.setLocalConnectionSettingsType(connectionSettingsType);
+        firePropertyChange("localConnectionSettingsType", oldValue, model.getLocalConnectionSettingsType());
     }
 
     public String getFileNameRenameTo() {
@@ -460,6 +468,19 @@ public class DownloadFile extends AbstractBean implements PropertyChangeListener
     @Override
     public String toString() {
         return model.toString();
+    }
+
+    @Override
+    public String getLocalPluginConfig() {
+        return model.getLocalPluginConfig();
+    }
+
+    public String getLocalProxy() {
+        return model.getLocalProxy();
+    }
+
+    public LocalConnectionSettingsType getLocalConnectionSettingsType() {
+        return model.getLocalConnectionSettingsType();
     }
 
 }
