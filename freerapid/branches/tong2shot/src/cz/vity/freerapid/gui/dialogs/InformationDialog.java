@@ -472,9 +472,11 @@ public class InformationDialog extends AppFrame implements PropertyChangeListene
         final DownloadState state = file.getState();
         final Action okAction = getActionMap().get("okBtnAction");
         final Action selectAction = getActionMap().get("btnSelectPathAction");
+        final Action connectionSettingsAction = getActionMap().get("btnConnectionSettingsAction");
         final boolean enabled = state != DownloadState.COMPLETED && state != DownloadState.DELETED;
         okAction.setEnabled(enabled);
         selectAction.setEnabled(enabled);
+        connectionSettingsAction.setEnabled(enabled);
         descriptionArea.setEditable(enabled);
         comboPath.setEditable(enabled);
         comboPath.setEnabled(enabled);
