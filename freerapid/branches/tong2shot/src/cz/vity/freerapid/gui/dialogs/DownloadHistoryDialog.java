@@ -28,16 +28,14 @@ import cz.vity.freerapid.utilities.*;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.swinghelper.buttonpanel.JXButtonPanel;
+import org.jdesktop.swingx.JXStatusBar;
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.table.TableColumnExt;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.ListDataEvent;
-import javax.swing.event.ListDataListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.event.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
@@ -71,6 +69,8 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
     private static final int COLUMN_URL = 4;
     private static final int COLUMN_CONNECTION = 5;
     private static final int COLUMN_AVG_SPEED = 6;
+
+    private static final int BAR_HEIGHT = 18;
 
     private static final String SELECTED_ACTION_ENABLED_PROPERTY = "selectedEnabled";
     private boolean selectedEnabled;
@@ -150,6 +150,17 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
         table.setColumnSelectionAllowed(false);
 
         table.getSelectionModel().addListSelectionListener(this);
+        table.getModel().addTableModelListener(new TableModelListener() {
+            @Override
+            public void tableChanged(TableModelEvent e) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        updateInfoStatus();
+                    }
+                });
+            }
+        });
 
         table.createDefaultColumnsFromModel();
         Swinger.updateColumn(table, "Date", COLUMN_DATE, -1, 40, new DateCellRenderer(getResourceMap()));
@@ -437,12 +448,20 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
         JLabel labelFilter = new JLabel();
         fieldFilter = new JTextField();
         fileCount = new JLabel();
+        fileCount.setPreferredSize(new Dimension(120, BAR_HEIGHT));
+        totalDownloads = new JLabel();
+        totalDownloads.setPreferredSize(new Dimension(100, BAR_HEIGHT));
         JScrollPane scrollPane2 = new JScrollPane();
         table = new JXTable();
         JXButtonPanel buttonBar = new JXButtonPanel();
         clearHistoryBtn = new JButton();
         okButton = new JButton();
         CellConstraints cc = new CellConstraints();
+
+        JXStatusBar statusBar = new JXStatusBar();
+        statusBar.add(fileCount, JXStatusBar.Constraint.ResizeBehavior.FIXED);
+        statusBar.add(totalDownloads, JXStatusBar.Constraint.ResizeBehavior.FIXED);
+
 
         //======== this ========
         Container contentPane = getContentPane();
@@ -484,7 +503,6 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
                     panel1Builder.add(combobox, cc.xy(3, 1));
                     panel1Builder.add(labelFilter, cc.xy(5, 1));
                     panel1Builder.add(fieldFilter, cc.xy(7, 1));
-                    panel1Builder.add(fileCount, cc.xy(9, 1, CellConstraints.RIGHT, CellConstraints.DEFAULT));
                 }
 
                 //======== scrollPane2 ========
@@ -531,6 +549,7 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
             dialogPane.add(buttonBar, BorderLayout.SOUTH);
         }
         contentPane.add(dialogPane, BorderLayout.CENTER);
+        contentPane.add(statusBar, BorderLayout.SOUTH);
     }
 
     public void lostOwnership(Clipboard clipboard, Transferable contents) {
@@ -650,7 +669,7 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
                 }
             }
         });
-        displayFileCount();
+        updateInfoStatus();
     }
 
 
@@ -854,22 +873,31 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
         }
 
         if (!filterText.isEmpty()) {
-            final RowFilter<Object, Object> textFilter = RowFilter.regexFilter("(?i)" + Pattern.quote(filterText));
+            final java.util.List<RowFilter<Object, Object>> textFilters = new ArrayList<RowFilter<Object, Object>>();
+            String[] texts = filterText.split(" ");
+            for (String text : texts) {
+                textFilters.add(RowFilter.regexFilter("(?i)" + Pattern.quote(text)));
+            }
             if (rowFilter != null) {
-                final java.util.List<RowFilter<Object, Object>> list = new ArrayList<RowFilter<Object, Object>>(2);
+                final java.util.List<RowFilter<Object, Object>> list = new ArrayList<RowFilter<Object, Object>>(1 + textFilters.size());
                 list.add(rowFilter);
-                list.add(textFilter);
+                list.addAll(textFilters);
                 rowFilter = RowFilter.andFilter(list);
             } else {
-                rowFilter = textFilter;
+                rowFilter = RowFilter.andFilter(textFilters);
             }
         }
         ((DefaultRowSorter) table.getRowSorter()).setRowFilter(rowFilter);
-        displayFileCount();
+        updateInfoStatus();
     }
 
-    private void displayFileCount() {
+    private void updateInfoStatus() {
         fileCount.setText(table.getRowCount() + " " + getResourceMap().getString("textDownloads"));
+        long totalDownloads = 0;
+        for (int i = 0; i < table.getRowCount(); i++) {
+            totalDownloads += getItems().get(table.convertRowIndexToModel(i)).getFileSize();
+        }
+        this.totalDownloads.setText(ContentPanel.bytesToAnother(totalDownloads));
     }
 
 //    /**
@@ -1149,6 +1177,7 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
     private JComboBox combobox;
     private JTextField fieldFilter;
     private JLabel fileCount;
+    private JLabel totalDownloads;
     private JXTable table;
     private JButton clearHistoryBtn;
     private JButton okButton;
