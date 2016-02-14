@@ -13,6 +13,7 @@ import cz.vity.freerapid.gui.managers.DataManager;
 import cz.vity.freerapid.gui.managers.ManagerDirector;
 import cz.vity.freerapid.gui.managers.MenuManager;
 import cz.vity.freerapid.gui.managers.exceptions.NotSupportedDownloadServiceException;
+import cz.vity.freerapid.model.LocalConnectionSettingsType;
 import cz.vity.freerapid.model.bean.DownloadFile;
 import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
 import cz.vity.freerapid.plugins.webclient.DownloadState;
@@ -1316,7 +1317,21 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
 
         boolean forceEnabled = isSelectedEnabled() && this.manager.hasDownloadFilesStates(selectedRows, DownloadsActions.forceEnabledStates);
         forceMenu.setEnabled(forceEnabled);
-        final List<ConnectionSettings> connectionSettingses = director.getClientManager().getAvailableConnections();
+        final List<ConnectionSettings> connectionSettingses = new ArrayList<ConnectionSettings>();
+        connectionSettingses.addAll(director.getClientManager().getAvailableConnections());
+        for (DownloadFile file : files) {
+            if (file.getLocalConnectionSettingsType() == LocalConnectionSettingsType.DIRECT) {
+                ConnectionSettings direct = new ConnectionSettings();
+                if (!connectionSettingses.contains(direct)) {
+                    connectionSettingses.add(direct);
+                }
+            } else if (file.getLocalConnectionSettingsType() == LocalConnectionSettingsType.LOCAL_PROXY) {
+                ConnectionSettings proxy = director.getClientManager().getProxyConnection(file.getLocalProxy(), false);
+                if (!connectionSettingses.contains(proxy)) {
+                    connectionSettingses.add(proxy);
+                }
+            }
+        }
         boolean anyEnabled = false;
         for (ConnectionSettings settings : connectionSettingses) {
             final ForceDownloadAction action = new ForceDownloadAction(settings);
