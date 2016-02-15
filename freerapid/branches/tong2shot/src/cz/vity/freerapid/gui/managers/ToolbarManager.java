@@ -100,7 +100,7 @@ public class ToolbarManager implements PropertyChangeListener {
 
     private void initForceDownloadButton() {
         final ForceDownloadButtonAction forceButtonAction = new ForceDownloadButtonAction(
-                context.getResourceMap().getString("forceDownloadMenu.text"), 
+                context.getResourceMap().getString("forceDownloadMenu.text"),
                 context.getResourceMap().getIcon("forceDownloadMenu_largeIcon"));
         forceDownloadButton.setAction(forceButtonAction);
         setButtonProperties(forceDownloadButton, forceButtonAction);
@@ -111,7 +111,7 @@ public class ToolbarManager implements PropertyChangeListener {
                 forceDownloadButton.setEnabled(getForceEnabled());
                 if (!forceDownloadButton.isEnabled()) forceDownloadButtonMenu.setVisible(false);
             }
-        } );
+        });
         forceDownloadButton.setEnabled(false);
     }
 
@@ -137,7 +137,7 @@ public class ToolbarManager implements PropertyChangeListener {
                     }
                 } else if (file.getLocalConnectionSettingsType() == LocalConnectionSettingsType.LOCAL_PROXY) {
                     ConnectionSettings proxy = directorManager.getClientManager().getProxyConnection(file.getLocalProxy(), false);
-                    if (!connectionSettingses.contains(proxy)) {
+                    if (proxy != null && !connectionSettingses.contains(proxy)) {
                         connectionSettingses.add(proxy);
                     }
                 }
@@ -164,7 +164,7 @@ public class ToolbarManager implements PropertyChangeListener {
         public void actionPerformed(ActionEvent e) {
             updateForceDownloadButtonMenu();
             if (forceDownloadButton.isEnabled())
-                forceDownloadButtonMenu.show((JComponent) e.getSource(), forceDownloadButtonMenu.getX(), forceDownloadButtonMenu.getY() + (int)(forceDownloadButton.getPreferredSize().getHeight()*2/3));
+                forceDownloadButtonMenu.show((JComponent) e.getSource(), forceDownloadButtonMenu.getX(), forceDownloadButtonMenu.getY() + (int) (forceDownloadButton.getPreferredSize().getHeight() * 2 / 3));
         }
     }
 
@@ -225,8 +225,8 @@ public class ToolbarManager implements PropertyChangeListener {
                 initForceDownloadButton();
                 toolbar.add(forceDownloadButton);
             } else {
-                if (toolbarButtons.containsKey(""+button))
-                    toolbar.add(getButton(toolbarButtons.get(""+button).getAction()));
+                if (toolbarButtons.containsKey("" + button))
+                    toolbar.add(getButton(toolbarButtons.get("" + button).getAction()));
             }
         }
     }
@@ -444,11 +444,13 @@ public class ToolbarManager implements PropertyChangeListener {
     public Set<String> getToolbarButtonList() {
         return toolbarButtons.keySet();
     }
+
     public String getToolbarButtonName(String key) {
         if (toolbarButtons.containsKey(key))
             return toolbarButtons.get(key).getName();
         return key;
     }
+
     public Icon getToolbarButtonSmallIcon(String key) {
         if (toolbarButtons.containsKey(key))
             return toolbarButtons.get(key).getSmallIcon();
@@ -467,6 +469,7 @@ public class ToolbarManager implements PropertyChangeListener {
         void setName(String name) {
             this.name = name;
         }
+
         void setSmallIcon(String smallIconProperty) {
             this.smallIcon = context.getResourceMap().getIcon(smallIconProperty);
         }
@@ -476,6 +479,7 @@ public class ToolbarManager implements PropertyChangeListener {
                 return Swinger.getAction(actionProperty);
             return null;
         }
+
         String getName() {
             if (!name.isEmpty())
                 return name;
@@ -483,6 +487,7 @@ public class ToolbarManager implements PropertyChangeListener {
                 return (String) Swinger.getAction(actionProperty).getValue(Action.NAME);
             return "";
         }
+
         Icon getSmallIcon() {
             if (smallIcon != null)
                 return smallIcon;
