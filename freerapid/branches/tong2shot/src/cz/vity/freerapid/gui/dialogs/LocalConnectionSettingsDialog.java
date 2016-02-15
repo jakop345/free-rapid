@@ -5,7 +5,6 @@ import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.*;
-import cz.vity.freerapid.gui.managers.ManagerDirector;
 import cz.vity.freerapid.model.LocalConnectionSettingsType;
 import cz.vity.freerapid.model.bean.DownloadFile;
 import cz.vity.freerapid.swing.Swinger;
@@ -26,17 +25,15 @@ public class LocalConnectionSettingsDialog extends AppFrame {
 
     private final static Logger logger = Logger.getLogger(LocalConnectionSettingsDialog.class.getName());
 
-    private final static String PROXY_REGEX_PATTERN = "^(?i)(\\$SOCKS\\$|SOCKS\\:)((\\w*)(:(.*?))?@)?(.*?):(\\d{2,5})";
+    private final static String PROXY_REGEX_PATTERN = "(?i)^(\\$SOCKS\\$|SOCKS\\:)((\\w*)(:(.*?))?@)?(.*?):(\\d{2,5})";
 
-    private final ManagerDirector director;
     private final DownloadFile file;
     private PresentationModel<DownloadFile> model;
 
-    public LocalConnectionSettingsDialog(Frame owner, ManagerDirector director, DownloadFile file) {
+    public LocalConnectionSettingsDialog(Frame owner, DownloadFile file) {
         super(owner);
-        this.director = director;
         this.file = file;
-        this.setName("localConnectionSettingsDialog");
+        this.setName("LocalConnectionSettingsDialog");
         try {
             initComponents();
             build();
@@ -117,8 +114,6 @@ public class LocalConnectionSettingsDialog extends AppFrame {
         boolean isLocalProxy = rbLocalProxy.isSelected();
         fldLocalProxy.setEnabled(isLocalProxy);
         fldLocalProxy.setEditable(isLocalProxy);
-
-        //fldLocalProxy.setDocument(new LimitedPlainDocument(PROXY_REGEX_PATTERN));
     }
 
 

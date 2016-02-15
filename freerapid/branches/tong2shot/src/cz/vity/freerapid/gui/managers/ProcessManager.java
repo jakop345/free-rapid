@@ -131,7 +131,13 @@ public class ProcessManager extends Thread {
                 connectionSettingses.add(new ConnectionSettings());
             } else if (file.getLocalConnectionSettingsType() == LocalConnectionSettingsType.LOCAL_PROXY) {
                 connectionSettingses = new ArrayList<ConnectionSettings>();
-                connectionSettingses.add(clientManager.getProxyConnection(file.getLocalProxy(), false));
+                ConnectionSettings proxyConnection = clientManager.getProxyConnection(file.getLocalProxy(), false);
+                if (proxyConnection == null) { //unlikely, but just in case
+                    logger.warning("Invalid local proxy connection settings. Using application's connections settings as fallback");
+                    connectionSettingses.addAll(clientManager.getRotatedEnabledConnections(file.getFileUrl().getHost()));
+                } else {
+                    connectionSettingses.add(proxyConnection);
+                }
             } else {
                 connectionSettingses = clientManager.getRotatedEnabledConnections(file.getFileUrl().getHost());
             }
@@ -184,7 +190,13 @@ public class ProcessManager extends Thread {
                 connectionSettingses.add(new ConnectionSettings());
             } else if (file.getLocalConnectionSettingsType() == LocalConnectionSettingsType.LOCAL_PROXY) {
                 connectionSettingses = new ArrayList<ConnectionSettings>();
-                connectionSettingses.add(clientManager.getProxyConnection(file.getLocalProxy(), false));
+                ConnectionSettings proxyConnection = clientManager.getProxyConnection(file.getLocalProxy(), false);
+                if (proxyConnection == null) { //unlikely, but just in case
+                    logger.warning("Invalid local proxy connection settings. Using application's connections settings as fallback");
+                    connectionSettingses.addAll(clientManager.getRotatedEnabledConnections(file.getFileUrl().getHost()));
+                } else {
+                    connectionSettingses.add(proxyConnection);
+                }
             } else {
                 connectionSettingses = clientManager.getRotatedEnabledConnections(file.getFileUrl().getHost());
             }

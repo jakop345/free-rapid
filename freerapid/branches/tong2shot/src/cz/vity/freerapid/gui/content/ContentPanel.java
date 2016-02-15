@@ -1327,7 +1327,7 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
                 }
             } else if (file.getLocalConnectionSettingsType() == LocalConnectionSettingsType.LOCAL_PROXY) {
                 ConnectionSettings proxy = director.getClientManager().getProxyConnection(file.getLocalProxy(), false);
-                if (!connectionSettingses.contains(proxy)) {
+                if (proxy != null && !connectionSettingses.contains(proxy)) {
                     connectionSettingses.add(proxy);
                 }
             }
