@@ -21,18 +21,17 @@ import java.util.logging.Logger;
 /**
  * @author tong2shot
  */
-public class LocalConnectionSettingsDialog extends AppFrame {
+public class LocalConnectionSettingsDialog extends AppDialog {
 
     private final static Logger logger = Logger.getLogger(LocalConnectionSettingsDialog.class.getName());
 
     private final static String PROXY_REGEX_PATTERN = "(?i)^(\\$SOCKS\\$|SOCKS\\:)((\\w*)(:(.*?))?@)?(.*?):(\\d{2,5})";
 
-    private final DownloadFile file;
     private PresentationModel<DownloadFile> model;
 
-    public LocalConnectionSettingsDialog(Frame owner, DownloadFile file) {
-        super(owner);
-        this.file = file;
+    public LocalConnectionSettingsDialog(Frame owner, PresentationModel<DownloadFile> model) {
+        super(owner, false);
+        this.model = model;
         this.setName("LocalConnectionSettingsDialog");
         try {
             initComponents();
@@ -56,8 +55,6 @@ public class LocalConnectionSettingsDialog extends AppFrame {
     @org.jdesktop.application.Action
     public void cancelBtnAction() {
         setResult(RESULT_CANCEL);
-        if (model != null)
-            model.triggerFlush();
         doClose();
     }
 
@@ -66,17 +63,12 @@ public class LocalConnectionSettingsDialog extends AppFrame {
         if (!validateChanges())
             return;
         setResult(RESULT_OK);
-        if (model != null)
-            model.triggerCommit();
         doClose();
     }
 
     @Override
     public void doClose() {
         super.doClose();
-        if (model != null) {
-            model.setBean(null);
-        }
     }
 
     private void build() {
@@ -88,7 +80,6 @@ public class LocalConnectionSettingsDialog extends AppFrame {
     }
 
     private void buildModels() {
-        model = new PresentationModel<DownloadFile>(file);
         Bindings.bind(rbApplication, model.getBufferedModel("localConnectionSettingsType"), LocalConnectionSettingsType.APPLICATION);
         Bindings.bind(rbDirect, model.getBufferedModel("localConnectionSettingsType"), LocalConnectionSettingsType.DIRECT);
         Bindings.bind(rbLocalProxy, model.getBufferedModel("localConnectionSettingsType"), LocalConnectionSettingsType.LOCAL_PROXY);

@@ -201,7 +201,7 @@ public class InformationDialog extends AppFrame implements PropertyChangeListene
 
     @org.jdesktop.application.Action
     public void btnConnectionSettingsAction() throws Exception {
-        LocalConnectionSettingsDialog dialog = new LocalConnectionSettingsDialog(this, file);
+        LocalConnectionSettingsDialog dialog = new LocalConnectionSettingsDialog(this, model);
         getApp().show(dialog);
     }
 
