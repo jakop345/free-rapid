@@ -29,9 +29,14 @@ public class LocalConnectionSettingsDialog extends AppDialog {
 
     private PresentationModel<DownloadFile> model;
 
+    private final LocalConnectionSettingsType localConnectionSettingsTypeInit;
+    private final String localProxyInit;
+
     public LocalConnectionSettingsDialog(Frame owner, PresentationModel<DownloadFile> model) {
         super(owner, false);
         this.model = model;
+        this.localConnectionSettingsTypeInit = (LocalConnectionSettingsType) model.getBufferedModel("localConnectionSettingsType").getValue();
+        this.localProxyInit = (String) model.getBufferedModel("localProxy").getValue();
         this.setName("LocalConnectionSettingsDialog");
         try {
             initComponents();
@@ -54,6 +59,8 @@ public class LocalConnectionSettingsDialog extends AppDialog {
 
     @org.jdesktop.application.Action
     public void cancelBtnAction() {
+        model.getBufferedModel("localConnectionSettingsType").setValue(localConnectionSettingsTypeInit);
+        model.getBufferedModel("localProxy").setValue(localProxyInit);
         setResult(RESULT_CANCEL);
         doClose();
     }
