@@ -65,6 +65,7 @@ public class DatabaseManager {
         storeConfig.setAllowCreate(true);
         myEnvConfig.setTransactional(true);
         storeConfig.setTransactional(true);
+        myEnvConfig.setConfigParam(EnvironmentConfig.STATS_COLLECT, "false");
 
         myEnv = new Environment(envHome, myEnvConfig);
         store = new EntityStore(myEnv, "EntityStore", storeConfig);
