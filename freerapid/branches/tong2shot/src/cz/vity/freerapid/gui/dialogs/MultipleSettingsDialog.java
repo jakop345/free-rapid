@@ -1,5 +1,6 @@
 package cz.vity.freerapid.gui.dialogs;
 
+import com.jgoodies.binding.PresentationModel;
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.*;
@@ -8,7 +9,9 @@ import cz.vity.freerapid.core.AppPrefs;
 import cz.vity.freerapid.core.UserProp;
 import cz.vity.freerapid.gui.FRDUtils;
 import cz.vity.freerapid.gui.content.ContentPanel;
+import cz.vity.freerapid.model.LocalConnectionSettingsType;
 import cz.vity.freerapid.model.bean.DownloadFile;
+import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
 import cz.vity.freerapid.plugins.webclient.DownloadState;
 import cz.vity.freerapid.swing.ComponentFactory;
 import cz.vity.freerapid.swing.Swinger;
@@ -35,6 +38,7 @@ public class MultipleSettingsDialog extends AppFrame implements PropertyChangeLi
 
     private final java.util.List<DownloadFile> files;
     private final DownloadFile file;
+    private PresentationModel<DownloadFile> model;
     private JLabel titleLabel;
 
 
@@ -84,12 +88,13 @@ public class MultipleSettingsDialog extends AppFrame implements PropertyChangeLi
         setAction(cancelButton, "cancelBtnAction");
 
         setAction(btnSelectPath, "btnSelectPathAction");
+        setAction(btnConnectionSettings, "btnConnectionSettingsAction");
 
         updateInit();
     }
 
     private void buildModels() {
-
+        model = new PresentationModel<DownloadFile>(file);
         for (DownloadFile downloadFile : files) {
             downloadFile.addPropertyChangeListener(this);
         }
@@ -120,6 +125,7 @@ public class MultipleSettingsDialog extends AppFrame implements PropertyChangeLi
             builder.append(downloadFile.getFileName()).append("<br>");
         }
         titleLabel.setToolTipText(getResourceMap().getString("html", builder.toString()));
+        connectionField.setEditable(false);
     }
 
     @org.jdesktop.application.Action
@@ -129,12 +135,16 @@ public class MultipleSettingsDialog extends AppFrame implements PropertyChangeLi
         AppPrefs.storeProperty(UserProp.LAST_COMBO_PATH, comboPath.getSelectedItem().toString());
         final File outputDir = new File(comboPath.getEditor().getItem().toString());
         final File dir = FRDUtils.getAbsRelPath(outputDir);
+        final LocalConnectionSettingsType localConnectionSettingsType = (LocalConnectionSettingsType) model.getBufferedModel("localConnectionSettingsType").getValue();
+        final String localProxy = (String) model.getBufferedModel("localProxy").getValue();
         file.setSaveToDirectory(dir);
 
         final String desc = descriptionArea.getText();
         for (DownloadFile downloadFile : files) {
             downloadFile.setSaveToDirectory(dir);
             downloadFile.setDescription(desc);
+            downloadFile.setLocalConnectionSettingsType(localConnectionSettingsType);
+            downloadFile.setLocalProxy(localProxy);
         }
         setResult(RESULT_OK);
 
@@ -148,7 +158,9 @@ public class MultipleSettingsDialog extends AppFrame implements PropertyChangeLi
         }
 
         super.doClose();
-
+        if (model != null) {
+            model.setBean(null);
+        }
         if (getModalResult() == RESULT_OK) {
             comboPath.addItem(comboPath.getSelectedItem());
             ((RecentsFilesComboModel) comboPath.getModel()).setAsMRU(comboPath.getSelectedItem());
@@ -175,6 +187,11 @@ public class MultipleSettingsDialog extends AppFrame implements PropertyChangeLi
         }
     }
 
+    @org.jdesktop.application.Action
+    public void btnConnectionSettingsAction() throws Exception {
+        LocalConnectionSettingsDialog dialog = new LocalConnectionSettingsDialog(this, model);
+        getApp().show(dialog);
+    }
 
     @SuppressWarnings({"deprecation"})
     private void initComponents() {
@@ -194,6 +211,10 @@ public class MultipleSettingsDialog extends AppFrame implements PropertyChangeLi
         JLabel saveToLabel = new JLabel();
         comboPath = new JComboBox();
         btnSelectPath = new JButton();
+        JPanel connectionPanel = new JPanel();
+        JLabel connectionLabel = new JLabel();
+        connectionField = new JTextField();
+        btnConnectionSettings = new JButton();
         JXButtonPanel buttonBar = new JXButtonPanel();
         okButton = new JButton();
         cancelButton = new JButton();
@@ -262,6 +283,30 @@ public class MultipleSettingsDialog extends AppFrame implements PropertyChangeLi
                     optionsPanelBuilder.add(btnSelectPath, cc.xy(5, 1));
                 }
 
+                //======== connectionPanel ========
+                {
+
+                    //---- connectionToLabel ----
+                    connectionLabel.setName("connectionLabel");
+                    connectionLabel.setLabelFor(connectionField);
+                    btnConnectionSettings.setName("btnConnectionSettings");
+
+                    PanelBuilder connectionPanelBuilder = new PanelBuilder(new FormLayout(
+                            new ColumnSpec[]{
+                                    FormSpecs.DEFAULT_COLSPEC,
+                                    FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+                                    new ColumnSpec(ColumnSpec.FILL, Sizes.DEFAULT, FormSpec.DEFAULT_GROW),
+                                    FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+                                    FormSpecs.DEFAULT_COLSPEC
+                            },
+                            RowSpec.decodeSpecs("default")),
+                            connectionPanel);
+
+                    connectionPanelBuilder.add(connectionLabel, cc.xy(1, 1));
+                    connectionPanelBuilder.add(connectionField, cc.xy(3, 1));
+                    connectionPanelBuilder.add(btnConnectionSettings, cc.xy(5, 1));
+                }
+
                 PanelBuilder contentPanelBuilder = new PanelBuilder(new FormLayout(
                         new ColumnSpec[]{
                                 new ColumnSpec(Sizes.dluX(49)),
@@ -283,6 +328,8 @@ public class MultipleSettingsDialog extends AppFrame implements PropertyChangeLi
                                 FormSpecs.LINE_GAP_ROWSPEC,
                                 new RowSpec(RowSpec.FILL, Sizes.bounded(Sizes.PREFERRED, Sizes.dluY(40), Sizes.dluY(50)), FormSpec.DEFAULT_GROW),
                                 FormSpecs.LINE_GAP_ROWSPEC,
+                                FormSpecs.DEFAULT_ROWSPEC,
+                                FormSpecs.LINE_GAP_ROWSPEC,
                                 FormSpecs.DEFAULT_ROWSPEC
                         }), contentPanel);
 
@@ -293,6 +340,7 @@ public class MultipleSettingsDialog extends AppFrame implements PropertyChangeLi
                 contentPanelBuilder.add(labelDescription, cc.xy(1, 7));
                 contentPanelBuilder.add(scrollPane1, cc.xywh(1, 9, 7, 1));
                 contentPanelBuilder.add(optionsPanel, cc.xywh(1, 11, 7, 1));
+                contentPanelBuilder.add(connectionPanel, cc.xywh(1, 13, 7, 1));
             }
             dialogPane.add(contentPanel, BorderLayout.CENTER);
 
@@ -333,6 +381,7 @@ public class MultipleSettingsDialog extends AppFrame implements PropertyChangeLi
 
     private void updateState() {
         updateEnabled();
+        updateConnection();
     }
 
     private void updateEnabled() {
@@ -346,8 +395,10 @@ public class MultipleSettingsDialog extends AppFrame implements PropertyChangeLi
         }
         final Action okAction = getActionMap().get("okBtnAction");
         final Action selectAction = getActionMap().get("btnSelectPathAction");
+        final Action connectionSettingsAction = getActionMap().get("btnConnectionSettingsAction");
         okAction.setEnabled(enabled);
         selectAction.setEnabled(enabled);
+        connectionSettingsAction.setEnabled(enabled);
         descriptionArea.setEditable(enabled);
         //descriptionArea.setEnabled(enabled);
         comboPath.setEditable(enabled);
@@ -372,15 +423,21 @@ public class MultipleSettingsDialog extends AppFrame implements PropertyChangeLi
         } else {
             value = getResourceMap().getString("unknown");
         }
-        String fileCount = "["+ NumberFormat.getIntegerInstance().format(files.size()) + " " + getResourceMap().getString("textFiles") + "] ";
+        String fileCount = "[" + NumberFormat.getIntegerInstance().format(files.size()) + " " + getResourceMap().getString("textFiles") + "] ";
         fieldSize.setText(fileCount + value);
     }
 
+    private void updateConnection() {
+        final ConnectionSettings cs = file.getConnectionSettings();
+        connectionField.setText(cs == null ? "" : cs.toString());
+    }
 
     private JTextField fieldSize;
     private JTextArea descriptionArea;
     private JComboBox comboPath;
     private JButton btnSelectPath;
+    private JTextField connectionField;
+    private JButton btnConnectionSettings;
     private JButton okButton;
     private JButton cancelButton;
 
@@ -390,6 +447,8 @@ public class MultipleSettingsDialog extends AppFrame implements PropertyChangeLi
             updateState();
         } else if ("fileSize".equals(evt.getPropertyName())) {
             updateSize();
+        } else if ("connectionSettings".equals(evt.getPropertyName())) {
+            updateConnection();
         }
     }
 }
