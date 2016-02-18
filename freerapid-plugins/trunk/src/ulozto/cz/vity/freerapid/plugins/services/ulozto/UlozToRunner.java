@@ -162,17 +162,18 @@ class UlozToRunner extends AbstractRunner {
             throw new URLNotAvailableAnymoreException("Pozadovany soubor nebyl nalezen");
         }
         PlugUtils.checkName(httpFile, content, "<title>", !isPornFile() ? " | Ulo" : " | PORNfile");
-        String size;
-        try {
-            //tady nema byt id=, jinak to prestane fungovat
-            size = PlugUtils.getStringBetween(content, "<span id=\"fileSize\">", "</span>");
+
+        Matcher matcher = PlugUtils.matcher("(?s)<span id=\"fileSize\">([^<>]+?)</span>", content);
+        if (matcher.find()) {
+            String size = matcher.group(1);
             if (size.contains("|")) {
-                size = size.substring(size.indexOf("|") + 1).trim();
+                size = size.substring(0, size.indexOf("|")).trim();
             }
-            httpFile.setFileSize(PlugUtils.getFileSizeFromString(size));
-        } catch (PluginImplementationException ex) {
-            //u online videi neni velikost
-            //throw new PluginImplementationException("File size not found");
+            try {
+                httpFile.setFileSize(PlugUtils.getFileSizeFromString(size));
+            } catch (PluginImplementationException e) {
+                //
+            }
         }
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
@@ -232,7 +233,7 @@ class UlozToRunner extends AbstractRunner {
         String captchaTxt;
         //captchaCount = 9; //for test purpose
         if (captchaCount++ < 8) {
-            logger.info("captcha url: " + captchaSnd);
+            logger.info("captcha url: " + captchaImg);
             final SoundReader captchaReader = new SoundReader(); //load fingerprint from file to test, don't forget to change it back
             final HttpMethod methodSound = getMethodBuilder()
                     .setReferer(fileURL)
