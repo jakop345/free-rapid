@@ -9,6 +9,7 @@ import cz.vity.freerapid.core.tasks.RunCheckTask;
 import cz.vity.freerapid.gui.actions.DownloadsActions;
 import cz.vity.freerapid.gui.managers.exceptions.NotSupportedDownloadServiceException;
 import cz.vity.freerapid.model.DownloadFile;
+import cz.vity.freerapid.model.LocalConnectionSettingsType;
 import cz.vity.freerapid.model.PluginMetaData;
 import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
 import cz.vity.freerapid.plugins.webclient.DownloadClient;
@@ -124,7 +125,23 @@ public class ProcessManager extends Thread {
                 continue;
             final DownloadService downloadService = getDownloadService(service);
 
-            final List<ConnectionSettings> connectionSettingses = clientManager.getRotatedEnabledConnections(file.getFileUrl().getHost());
+            final List<ConnectionSettings> connectionSettingses;
+            if (file.getLocalConnectionSettingsType() == LocalConnectionSettingsType.DIRECT) {
+                connectionSettingses = new ArrayList<ConnectionSettings>();
+                connectionSettingses.add(new ConnectionSettings());
+            } else if (file.getLocalConnectionSettingsType() == LocalConnectionSettingsType.LOCAL_PROXY) {
+                connectionSettingses = new ArrayList<ConnectionSettings>();
+                ConnectionSettings proxyConnection = clientManager.getProxyConnection(file.getLocalProxy(), false);
+                if (proxyConnection == null) { //unlikely, but just in case
+                    logger.warning("Invalid local proxy connection settings. Using application's connections settings as fallback");
+                    connectionSettingses.addAll(clientManager.getRotatedEnabledConnections(file.getFileUrl().getHost()));
+                } else {
+                    connectionSettingses.add(proxyConnection);
+                }
+            } else {
+                connectionSettingses = clientManager.getRotatedEnabledConnections(file.getFileUrl().getHost());
+            }
+
             if (file.getFileState() == FileState.NOT_CHECKED && service.supportsRunCheck() && !connectionSettingses.isEmpty()) {
                 //pokud to podporuje plugin a  soucasne nebyl jeste ocheckovan a soucasne je k dispozici vubec nejake spojeni
                 queueDownload(file, connectionSettingses.get(0), downloadService, service, true);
@@ -167,7 +184,22 @@ public class ProcessManager extends Thread {
                 continue;
             final DownloadService downloadService = getDownloadService(service);
 
-            final List<ConnectionSettings> connectionSettingses = clientManager.getRotatedEnabledConnections(file.getFileUrl().getHost());
+            final List<ConnectionSettings> connectionSettingses;
+            if (file.getLocalConnectionSettingsType() == LocalConnectionSettingsType.DIRECT) {
+                connectionSettingses = new ArrayList<ConnectionSettings>();
+                connectionSettingses.add(new ConnectionSettings());
+            } else if (file.getLocalConnectionSettingsType() == LocalConnectionSettingsType.LOCAL_PROXY) {
+                connectionSettingses = new ArrayList<ConnectionSettings>();
+                ConnectionSettings proxyConnection = clientManager.getProxyConnection(file.getLocalProxy(), false);
+                if (proxyConnection == null) { //unlikely, but just in case
+                    logger.warning("Invalid local proxy connection settings. Using application's connections settings as fallback");
+                    connectionSettingses.addAll(clientManager.getRotatedEnabledConnections(file.getFileUrl().getHost()));
+                } else {
+                    connectionSettingses.add(proxyConnection);
+                }
+            } else {
+                connectionSettingses = clientManager.getRotatedEnabledConnections(file.getFileUrl().getHost());
+            }
             if (testFiles && file.getFileState() == FileState.NOT_CHECKED && service.supportsRunCheck() && !connectionSettingses.isEmpty()) {
                 //pokud to podporuje plugin a  soucasne nebyl jeste ocheckovan a soucasne je k dispozici vubec nejake spojeni
                 //a soucasne je to zapnuto v nastavenich
@@ -386,11 +418,17 @@ public class ProcessManager extends Thread {
                 DownloadTaskError error = task.getServiceError();
                 final ConnectionSettings settings = client.getSettings();
                 if (error == DownloadTaskError.NO_ROUTE_TO_HOST) {
-                    clientManager.setConnectionEnabled(settings, false);
-                    //final int problematic = service.getProblematicConnectionsCount();
-                    if (clientManager.getEnabledConnections().size() > 0) {
+                    if (file.getLocalConnectionSettingsType() == LocalConnectionSettingsType.DIRECT) {
                         file.setState(QUEUED);
-                    } else error = DownloadTaskError.NOT_RECOVERABLE_DOWNLOAD_ERROR;
+                    } else if (file.getLocalConnectionSettingsType() == LocalConnectionSettingsType.LOCAL_PROXY) {
+                        error = DownloadTaskError.NOT_RECOVERABLE_DOWNLOAD_ERROR;
+                    } else {
+                        clientManager.setConnectionEnabled(settings, false);
+                        //final int problematic = service.getProblematicConnectionsCount();
+                        if (clientManager.getEnabledConnections().size() > 0) {
+                            file.setState(QUEUED);
+                        } else error = DownloadTaskError.NOT_RECOVERABLE_DOWNLOAD_ERROR;
+                    }
                 }
                 final DownloadState state = file.getState();
                 int errorAttemptsCount = file.getErrorAttemptsCount();

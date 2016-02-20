@@ -9,6 +9,8 @@ import cz.vity.freerapid.gui.SearchField;
 import cz.vity.freerapid.gui.actions.DownloadsActions;
 import cz.vity.freerapid.gui.dialogs.CompoundUndoManager;
 import cz.vity.freerapid.gui.managers.search.SearchItem;
+import cz.vity.freerapid.model.DownloadFile;
+import cz.vity.freerapid.model.LocalConnectionSettingsType;
 import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
 import cz.vity.freerapid.swing.SwingUtils;
 import cz.vity.freerapid.swing.Swinger;
@@ -23,6 +25,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Set;
 import java.util.prefs.PreferenceChangeEvent;
@@ -97,7 +100,7 @@ public class ToolbarManager implements PropertyChangeListener {
 
     private void initForceDownloadButton() {
         final ForceDownloadButtonAction forceButtonAction = new ForceDownloadButtonAction(
-                context.getResourceMap().getString("forceDownloadMenu.text"), 
+                context.getResourceMap().getString("forceDownloadMenu.text"),
                 context.getResourceMap().getIcon("forceDownloadMenu_largeIcon"));
         forceDownloadButton.setAction(forceButtonAction);
         setButtonProperties(forceDownloadButton, forceButtonAction);
@@ -108,7 +111,7 @@ public class ToolbarManager implements PropertyChangeListener {
                 forceDownloadButton.setEnabled(getForceEnabled());
                 if (!forceDownloadButton.isEnabled()) forceDownloadButtonMenu.setVisible(false);
             }
-        } );
+        });
         forceDownloadButton.setEnabled(false);
     }
 
@@ -122,7 +125,23 @@ public class ToolbarManager implements PropertyChangeListener {
         forceDownloadButton.setEnabled(forceEnabled);
         if (forceEnabled) {
             forceDownloadButtonMenu.removeAll();
-            final java.util.List<ConnectionSettings> connectionSettingses = directorManager.getClientManager().getAvailableConnections();
+            final int[] selectedRows = directorManager.getContentManager().getContentPanel().getSelectedRows();
+            final java.util.List<DownloadFile> files = directorManager.getDataManager().getSelectionToList(selectedRows);
+            final java.util.List<ConnectionSettings> connectionSettingses = new ArrayList<ConnectionSettings>();
+            connectionSettingses.addAll(directorManager.getClientManager().getAvailableConnections());
+            for (DownloadFile file : files) {
+                if (file.getLocalConnectionSettingsType() == LocalConnectionSettingsType.DIRECT) {
+                    ConnectionSettings direct = new ConnectionSettings();
+                    if (!connectionSettingses.contains(direct)) {
+                        connectionSettingses.add(direct);
+                    }
+                } else if (file.getLocalConnectionSettingsType() == LocalConnectionSettingsType.LOCAL_PROXY) {
+                    ConnectionSettings proxy = directorManager.getClientManager().getProxyConnection(file.getLocalProxy(), false);
+                    if (proxy != null && !connectionSettingses.contains(proxy)) {
+                        connectionSettingses.add(proxy);
+                    }
+                }
+            }
             boolean anyEnabled = false;
             for (ConnectionSettings settings : connectionSettingses) {
                 final ForceDownloadOptionAction action = new ForceDownloadOptionAction(settings);
@@ -145,7 +164,7 @@ public class ToolbarManager implements PropertyChangeListener {
         public void actionPerformed(ActionEvent e) {
             updateForceDownloadButtonMenu();
             if (forceDownloadButton.isEnabled())
-                forceDownloadButtonMenu.show((JComponent) e.getSource(), forceDownloadButtonMenu.getX(), forceDownloadButtonMenu.getY() + (int)(forceDownloadButton.getPreferredSize().getHeight()*2/3));
+                forceDownloadButtonMenu.show((JComponent) e.getSource(), forceDownloadButtonMenu.getX(), forceDownloadButtonMenu.getY() + (int) (forceDownloadButton.getPreferredSize().getHeight() * 2 / 3));
         }
     }
 
@@ -206,8 +225,8 @@ public class ToolbarManager implements PropertyChangeListener {
                 initForceDownloadButton();
                 toolbar.add(forceDownloadButton);
             } else {
-                if (toolbarButtons.containsKey(""+button))
-                    toolbar.add(getButton(toolbarButtons.get(""+button).getAction()));
+                if (toolbarButtons.containsKey("" + button))
+                    toolbar.add(getButton(toolbarButtons.get("" + button).getAction()));
             }
         }
     }
@@ -425,11 +444,13 @@ public class ToolbarManager implements PropertyChangeListener {
     public Set<String> getToolbarButtonList() {
         return toolbarButtons.keySet();
     }
+
     public String getToolbarButtonName(String key) {
         if (toolbarButtons.containsKey(key))
             return toolbarButtons.get(key).getName();
         return key;
     }
+
     public Icon getToolbarButtonSmallIcon(String key) {
         if (toolbarButtons.containsKey(key))
             return toolbarButtons.get(key).getSmallIcon();
@@ -448,6 +469,7 @@ public class ToolbarManager implements PropertyChangeListener {
         void setName(String name) {
             this.name = name;
         }
+
         void setSmallIcon(String smallIconProperty) {
             this.smallIcon = context.getResourceMap().getIcon(smallIconProperty);
         }
@@ -457,6 +479,7 @@ public class ToolbarManager implements PropertyChangeListener {
                 return Swinger.getAction(actionProperty);
             return null;
         }
+
         String getName() {
             if (!name.isEmpty())
                 return name;
@@ -464,6 +487,7 @@ public class ToolbarManager implements PropertyChangeListener {
                 return (String) Swinger.getAction(actionProperty).getValue(Action.NAME);
             return "";
         }
+
         Icon getSmallIcon() {
             if (smallIcon != null)
                 return smallIcon;
