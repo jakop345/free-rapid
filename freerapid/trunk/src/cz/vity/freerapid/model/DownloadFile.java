@@ -70,6 +70,8 @@ public class DownloadFile extends AbstractBean implements Identifiable, Property
     private Date dateInserted;
     private String localPluginConfig; //String representation of XMLEncoder output of plugin config
     private String fileNameRenameTo;
+    private LocalConnectionSettingsType localConnectionSettingsType = LocalConnectionSettingsType.APPLICATION;
+    private String localProxy;
 
 
     @Transient
@@ -688,10 +690,12 @@ public class DownloadFile extends AbstractBean implements Identifiable, Property
         firePropertyChange("listOrder", oldValue, this.listOrder);
     }
 
+    @Override
     public String getLocalPluginConfig() {
         return this.localPluginConfig;
     }
 
+    @Override
     public void setLocalPluginConfig(String localPluginConfig) {
         final String oldValue = this.localPluginConfig;
         this.localPluginConfig = localPluginConfig;
@@ -707,5 +711,25 @@ public class DownloadFile extends AbstractBean implements Identifiable, Property
         this.fileNameRenameTo = fileNameRenameTo;
         this.setFileType(FileTypeIconProvider.identifyFileType(this.fileNameRenameTo));
         firePropertyChange("fileNameRenameTo", oldValue, this.fileNameRenameTo);
+    }
+
+    public String getLocalProxy() {
+        return this.localProxy;
+    }
+
+    public void setLocalProxy(String localProxy) {
+        final String oldValue = this.localProxy;
+        this.localProxy = localProxy;
+        firePropertyChange("localProxy", oldValue, this.localProxy);
+    }
+
+    public LocalConnectionSettingsType getLocalConnectionSettingsType() {
+        return this.localConnectionSettingsType;
+    }
+
+    public void setLocalConnectionSettingsType(LocalConnectionSettingsType connectionSettingsType) {
+        final LocalConnectionSettingsType oldValue = this.localConnectionSettingsType;
+        this.localConnectionSettingsType = connectionSettingsType;
+        firePropertyChange("localConnectionSettingsType", oldValue, this.localConnectionSettingsType);
     }
 }
