@@ -45,7 +45,11 @@ class YandexDiskFileRunner extends AbstractRunner {
         try {
             filesize = PlugUtils.getStringBetween(content, "Размер:</span>", "<").replace("М", "M").replace("Б", "B");
         } catch (PluginImplementationException e) {
-            throw new PluginImplementationException("File size not found");
+            try {
+                filesize = PlugUtils.getStringBetween(content, "Size:</span>", "<").replace("М", "M").replace("Б", "B");
+            } catch (PluginImplementationException e1) {
+                throw new PluginImplementationException("File size not found");
+            }
         }
         httpFile.setFileSize(PlugUtils.getFileSizeFromString(filesize));
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
@@ -67,7 +71,7 @@ class YandexDiskFileRunner extends AbstractRunner {
             String clientId = generateClientId();
             HttpMethod httpMethod = getMethodBuilder()
                     .setReferer(fileURL)
-                    .setAction("https://yadi.sk/models/?_m=do-get-resource-url") //https is mandatory
+                    .setAction("https://yadi.sk/models/?_m=do-get-resource-url")
                     .setParameter("idClient", clientId)
                     .setParameter("version", "3.1.1")
                     .setParameter("sk", sk)
