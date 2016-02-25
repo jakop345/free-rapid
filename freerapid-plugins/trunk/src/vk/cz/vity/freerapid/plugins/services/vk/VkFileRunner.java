@@ -11,6 +11,7 @@ import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -105,38 +106,21 @@ class VkFileRunner extends AbstractRunner {
         }
         String userId = matcher.group(1);
         String videoId = matcher.group(2);
-        //sometimes requires login, redirect to biqle as workaround.
-        //alternatives :
-        //http://hdxit.ru/video/140538996_164236408/
-        //http://mirhdtv.ru/video/-36880507_165363780/
-        //http://relax-video.com/video165654753
-        String biqleUrl = String.format("http://biqle.ru/watch/%s_%s", userId, videoId);
-        boolean biqleOK = false;
-        for (int i = 0; i < 3; i++) {
-            // sometimes receives 404, re-request the page
-            GetMethod method = getGetMethod(biqleUrl);
-            biqleOK = makeRedirectedRequest(method);
-            if (!biqleOK) {
-                checkProblems();
-                logger.warning("Error getting embedded URL, retrying to request page..");
-            } else {
-                break;
-            }
+        String protocol = new URL(fileURL).getProtocol();
+
+        if (!makeRedirectedRequest(getGetMethod(fileURL))) {
+            checkProblems();
+            throw new ServiceConnectionProblemException();
         }
-        if (!biqleOK) {
-            throw new ServiceConnectionProblemException("Error getting embedded URL");
+        checkProblems();
+
+        String hash;
+        try {
+            hash = PlugUtils.getStringBetween(getContentAsString(), "\\\"hash2\\\":\\\"", "\\\"");
+        } catch (PluginImplementationException e) {
+            throw new PluginImplementationException("Error getting hash");
         }
-        matcher = getMatcherAgainstContent("src=\"(http://vk\\.com/video_ext\\.php.+?)\"");
-        if (!matcher.find()) {
-            matcher = getMatcherAgainstContent("iframe=(http%3A%2F%2Fvk.com%2Fvideo_ext.php.+?)\"");
-            if (!matcher.find()) {
-                throw new PluginImplementationException("Cannot find embedded URL");
-            }
-        }
-        String embeddedUrl = matcher.group(1);
-        if (!embeddedUrl.startsWith("http://")) {
-            embeddedUrl = URLDecoder.decode(embeddedUrl, "UTF-8");
-        }
+        String embeddedUrl = String.format("%s://vk.com/video_ext.php?oid=%s&id=%s&hash=%s", protocol, userId, videoId, hash);
         logger.info("Embedded URL : " + embeddedUrl);
         return embeddedUrl;
     }

@@ -35,6 +35,7 @@ class FlashXFileRunner extends AbstractRunner {
     @Override
     public void runCheck() throws Exception { //this method validates file
         super.runCheck();
+        checkURL();
         final GetMethod getMethod = getGetMethod(fileURL);//make first request
         if (makeRedirectedRequest(getMethod)) {
             checkProblems();
@@ -56,6 +57,7 @@ class FlashXFileRunner extends AbstractRunner {
     public void run() throws Exception {
         super.run();
         logger.info("Starting download in TASK " + fileURL);
+        checkURL();
         final GetMethod method = getGetMethod(fileURL); //create GET request
         if (makeRedirectedRequest(method)) { //we make the main request
             final String contentAsString = getContentAsString();//check for response
@@ -106,6 +108,10 @@ class FlashXFileRunner extends AbstractRunner {
                 || content.contains("FILE NOT FOUND")) {
             throw new URLNotAvailableAnymoreException("File not found");
         }
+    }
+
+    private void checkURL() {
+        fileURL = fileURL.replaceFirst("flashx\\.tv", "flashx.pw");
     }
 
     protected String unPackJavaScript() throws ErrorDuringDownloadingException {

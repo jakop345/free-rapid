@@ -12,12 +12,12 @@ enum VideoQuality {
     private final int quality;
     private final String name;
 
-    private VideoQuality(int quality) {
+    VideoQuality(int quality) {
         this.quality = quality;
         this.name = quality + "p";
     }
 
-    private VideoQuality(int quality, String name) {
+    VideoQuality(int quality, String name) {
         this.quality = quality;
         this.name = name;
     }
