@@ -10,9 +10,7 @@ import com.sleepycat.persist.model.EntityModel;
 import cz.vity.freerapid.core.tasks.CoreTask;
 import cz.vity.freerapid.gui.managers.interfaces.Identifiable;
 import cz.vity.freerapid.gui.managers.interfaces.ModelWrapper;
-import cz.vity.freerapid.model.DownloadFileModel;
-import cz.vity.freerapid.model.FileHistoryItemModel;
-import cz.vity.freerapid.model.PluginMetaDataModel;
+import cz.vity.freerapid.model.*;
 import cz.vity.freerapid.model.bean.DownloadFile;
 import cz.vity.freerapid.model.proxy.FileProxy;
 import cz.vity.freerapid.model.proxy.HashTableProxy;
@@ -38,10 +36,10 @@ public class DatabaseManager {
 
     private final PrimaryIndex<Long, DownloadFileModel> downloadFileById;
     private final SecondaryIndex<String, Long, DownloadFileModel> downloadFileByListOrder;
-
     private final PrimaryIndex<Long, PluginMetaDataModel> pluginMetaDataById;
-
     private final PrimaryIndex<Long, FileHistoryItemModel> fileHistoryById;
+    private final PrimaryIndex<Long, ProxySetModel> proxySetById;
+    private final PrimaryIndex<Long, ProxyForPluginModel> proxyForPluginById;
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public DatabaseManager(ManagerDirector director) {
@@ -74,7 +72,8 @@ public class DatabaseManager {
         downloadFileByListOrder = store.getSecondaryIndex(downloadFileById, String.class, "listOrder");
         pluginMetaDataById = store.getPrimaryIndex(Long.class, PluginMetaDataModel.class);
         fileHistoryById = store.getPrimaryIndex(Long.class, FileHistoryItemModel.class);
-
+        proxySetById = store.getPrimaryIndex(Long.class, ProxySetModel.class);
+        proxyForPluginById = store.getPrimaryIndex(Long.class, ProxyForPluginModel.class);
 
         logger.info("Database path " + envHome);
         //hook to shutdown database on JVM close
@@ -118,14 +117,20 @@ public class DatabaseManager {
     }
 
     @SuppressWarnings("unchecked")
-    private <T extends Identifiable> PrimaryIndex<Long, T> getPrimaryIndex(Class<T> entityClass) {
+    public <T extends Identifiable> PrimaryIndex<Long, T> getPrimaryIndex(Class<T> entityClass) {
         if (entityClass == DownloadFileModel.class) {
             return (PrimaryIndex<Long, T>) downloadFileById;
         }
         if (entityClass == PluginMetaDataModel.class) {
             return (PrimaryIndex<Long, T>) pluginMetaDataById;
         }
-        return (PrimaryIndex<Long, T>) fileHistoryById;
+        if (entityClass == FileHistoryItemModel.class) {
+            return (PrimaryIndex<Long, T>) fileHistoryById;
+        }
+        if (entityClass == ProxySetModel.class) {
+            return (PrimaryIndex<Long, T>) proxySetById;
+        }
+        return (PrimaryIndex<Long, T>) proxyForPluginById;
     }
 
     @SuppressWarnings("unchecked")
@@ -217,7 +222,6 @@ public class DatabaseManager {
         }
         return results;
     }
-
 
     /**
      * Load download file list from DB ordered by 'listOrder'
