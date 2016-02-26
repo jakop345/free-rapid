@@ -17,6 +17,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author tong2shot
@@ -25,18 +27,14 @@ public class LocalConnectionSettingsDialog extends AppDialog {
 
     private final static Logger logger = Logger.getLogger(LocalConnectionSettingsDialog.class.getName());
 
-    private final static String PROXY_REGEX_PATTERN = "(?i)^(\\$SOCKS\\$|SOCKS\\:)((\\w*)(:(.*?))?@)?(.*?):(\\d{2,5})";
+    private final static Pattern PROXY_REGEX_PATTERN = Pattern.compile("((\\w*)(:(.*?))?@)?(.*?):(\\d{2,5})");
+    private final static Pattern SOCKS_REGEX_PATTERN = Pattern.compile("(?i)^(\\$SOCKS\\$|SOCKS\\:)");
 
     private PresentationModel<DownloadFile> model;
-
-    private final LocalConnectionSettingsType localConnectionSettingsTypeInit;
-    private final String localProxyInit;
 
     public LocalConnectionSettingsDialog(Frame owner, PresentationModel<DownloadFile> model) {
         super(owner, false);
         this.model = model;
-        this.localConnectionSettingsTypeInit = (LocalConnectionSettingsType) model.getBufferedModel("localConnectionSettingsType").getValue();
-        this.localProxyInit = (String) model.getBufferedModel("localProxy").getValue();
         this.setName("LocalConnectionSettingsDialog");
         try {
             initComponents();
@@ -59,8 +57,8 @@ public class LocalConnectionSettingsDialog extends AppDialog {
 
     @org.jdesktop.application.Action
     public void cancelBtnAction() {
-        model.getBufferedModel("localConnectionSettingsType").setValue(localConnectionSettingsTypeInit);
-        model.getBufferedModel("localProxy").setValue(localProxyInit);
+        model.getBufferedModel("localConnectionSettingsType").setValue(model.getBean().getLocalConnectionSettingsType());
+        model.getBufferedModel("localProxy").setValue(model.getBean().getLocalProxy());
         setResult(RESULT_CANCEL);
         doClose();
     }
@@ -116,13 +114,22 @@ public class LocalConnectionSettingsDialog extends AppDialog {
 
 
     private boolean validateChanges() {
-        if (rbLocalProxy.isSelected() && !fldLocalProxy.getText().matches(PROXY_REGEX_PATTERN)) {
+        if (rbLocalProxy.isSelected() && !validateProxy(fldLocalProxy.getText())) {
             Swinger.showErrorMessage(this.getResourceMap(), "invalidProxyMessage");
             Swinger.inputFocus(fldLocalProxy);
             fldLocalProxy.selectAll();
             return false;
         }
         return true;
+    }
+
+    private boolean validateProxy(String strProxy) {
+        final Matcher matcherSocks = SOCKS_REGEX_PATTERN.matcher(strProxy);
+        if (matcherSocks.find()) {
+            strProxy = strProxy.substring(matcherSocks.group(1).length());
+        }
+        final Matcher matcher = PROXY_REGEX_PATTERN.matcher(strProxy);
+        return matcher.matches();
     }
 
     @SuppressWarnings({"deprecation"})
