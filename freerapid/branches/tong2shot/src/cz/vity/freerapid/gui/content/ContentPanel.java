@@ -9,9 +9,7 @@ import cz.vity.freerapid.gui.actions.URLTransferHandler;
 import cz.vity.freerapid.gui.content.comparators.*;
 import cz.vity.freerapid.gui.dialogs.InformationDialog;
 import cz.vity.freerapid.gui.dialogs.MultipleSettingsDialog;
-import cz.vity.freerapid.gui.managers.DataManager;
-import cz.vity.freerapid.gui.managers.ManagerDirector;
-import cz.vity.freerapid.gui.managers.MenuManager;
+import cz.vity.freerapid.gui.managers.*;
 import cz.vity.freerapid.gui.managers.exceptions.NotSupportedDownloadServiceException;
 import cz.vity.freerapid.model.LocalConnectionSettingsType;
 import cz.vity.freerapid.model.bean.DownloadFile;
@@ -80,6 +78,8 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
     private final ManagerDirector director;
 
     private final DataManager manager;
+    private final ClientManager clientManager;
+    private final ProxyForPluginManager proxyForPluginManager;
 
     private boolean cancelActionEnabled = false;
 
@@ -123,6 +123,8 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
         this.context = context;
         this.director = director;
         this.manager = director.getDataManager();
+        this.clientManager = director.getClientManager();
+        this.proxyForPluginManager = director.getProxyForPluginManager();
         this.setName("contentPanel");
 
         readStates();
@@ -1180,18 +1182,18 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
     private class PluginOptionsAction extends AbstractAction {
         private final String pluginID;
         private final List<DownloadFile> downloadFileList;
-        private final DownloadFile httpFile;
+        private final DownloadFile downloadFile;
 
         public PluginOptionsAction(List<DownloadFile> downloadFileList) {
             this.downloadFileList = downloadFileList;
-            this.httpFile = downloadFileList.get(0);
-            this.pluginID = httpFile.getPluginID();
+            this.downloadFile = downloadFileList.get(0);
+            this.pluginID = downloadFile.getPluginID();
             this.putValue(NAME, pluginID);
         }
 
         public void actionPerformed(ActionEvent e) {
             try {
-                director.getPluginsManager().getPluginInstance(pluginID).showLocalOptions(httpFile);
+                director.getPluginsManager().getPluginInstance(pluginID).showLocalOptions(downloadFile);
             } catch (Exception x) {
                 LogUtils.processException(logger, x);
                 try {
@@ -1205,13 +1207,12 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
         }
 
         private void setLocalPluginConfig() {
-            if (httpFile.getLocalPluginConfig() == null) {
+            if (downloadFile.getLocalPluginConfig() == null) {
                 return;
             }
-            String pluginId = httpFile.getPluginID();
-            String localPluginConfig = httpFile.getLocalPluginConfig();
+            String localPluginConfig = downloadFile.getLocalPluginConfig();
             for (DownloadFile file : downloadFileList) {
-                if (file.getPluginID().equals(pluginId)) {
+                if (file.getPluginID().equals(pluginID)) {
                     file.setLocalPluginConfig(localPluginConfig);
                 }
             }
@@ -1319,6 +1320,7 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
         forceMenu.setEnabled(forceEnabled);
         final List<ConnectionSettings> connectionSettingses = new ArrayList<ConnectionSettings>();
         connectionSettingses.addAll(director.getClientManager().getAvailableConnections());
+        boolean useProxyForPlugin = AppPrefs.getProperty(UserProp.USE_PROXY_FOR_PLUGIN, UserProp.USE_PROXY_FOR_PLUGIN_DEFAULT);
         for (DownloadFile file : files) {
             if (file.getLocalConnectionSettingsType() == LocalConnectionSettingsType.DIRECT) {
                 ConnectionSettings direct = new ConnectionSettings();
@@ -1329,6 +1331,15 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
                 ConnectionSettings proxy = director.getClientManager().getProxyConnection(file.getLocalProxy(), false);
                 if (proxy != null && !connectionSettingses.contains(proxy)) {
                     connectionSettingses.add(proxy);
+                }
+            }
+            if (useProxyForPlugin) {
+                List<String> proxies = proxyForPluginManager.getProxies(file.getPluginID());
+                if (proxies != null && proxies.size() > 0) { //proxy for plugin
+                    ConnectionSettings proxyForPluginConnection = clientManager.getProxyForPluginRotatedConnection(file.getPluginID(), proxies);
+                    if (!connectionSettingses.contains(proxyForPluginConnection)) {
+                        connectionSettingses.add(proxyForPluginConnection);
+                    }
                 }
             }
         }

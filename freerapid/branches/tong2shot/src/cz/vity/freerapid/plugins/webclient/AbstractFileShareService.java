@@ -208,6 +208,15 @@ public abstract class AbstractFileShareService extends Plugin implements ShareDo
      */
     protected abstract PluginRunner getPluginRunnerInstance();
 
+    /**
+     * Method to load configuration data from string into Object.
+     * Internal implementation uses XMLEncoder.
+     *
+     * @param content config content
+     * @param type    class of the stored object
+     * @return returns new instance, null if
+     * @throws Exception throwed when reading went wrong
+     */
     @Override
     @SuppressWarnings("unchecked")
     public <E> E loadConfigFromString(String content, Class<E> type) throws Exception {
@@ -232,6 +241,13 @@ public abstract class AbstractFileShareService extends Plugin implements ShareDo
         }
     }
 
+    /**
+     * Method to store plugin's configuration data from Object into string.
+     * Internal implementation uses XMLEncoder.
+     *
+     * @return config data as string
+     * @throws Exception throwed when reading went wrong
+     */
     @Override
     public String storeConfigToString(Object object) throws Exception {
         XMLEncoder xmlEncoder = null;
@@ -262,10 +278,10 @@ public abstract class AbstractFileShareService extends Plugin implements ShareDo
 
     /**
      * Clone config using XMLEncoder and XMLDecoder
+     *
      * @param config config to be cloned
-     * @param type
-     * @param <E>
-     * @return clone
+     * @param type   class of the stored object
+     * @return config clone
      * @throws Exception
      */
     @Override

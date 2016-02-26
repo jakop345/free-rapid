@@ -61,6 +61,7 @@ public class ProcessManager extends Thread {
     private final TaskService downloadTaskService;
     private final TaskService runCheckTaskService;
     private ClientManager clientManager;
+    private final ProxyForPluginManager proxyForPluginManager;
 
 
     public ProcessManager(ManagerDirector director, ApplicationContext context) {
@@ -73,6 +74,7 @@ public class ProcessManager extends Thread {
         downloadTaskService = director.getTaskServiceManager().getTaskService(TaskServiceManager.DOWNLOAD_SERVICE);
         runCheckTaskService = director.getTaskServiceManager().getTaskService(TaskServiceManager.RUN_CHECK_SERVICE);
         clientManager = director.getClientManager();
+        proxyForPluginManager = director.getProxyForPluginManager();
 
         AppPrefs.getPreferences().addPreferenceChangeListener(new PreferenceChangeListener() {
             public void preferenceChange(PreferenceChangeEvent evt) {
@@ -125,23 +127,7 @@ public class ProcessManager extends Thread {
                 continue;
             final DownloadService downloadService = getDownloadService(service);
 
-            final List<ConnectionSettings> connectionSettingses;
-            if (file.getLocalConnectionSettingsType() == LocalConnectionSettingsType.DIRECT) {
-                connectionSettingses = new ArrayList<ConnectionSettings>();
-                connectionSettingses.add(new ConnectionSettings());
-            } else if (file.getLocalConnectionSettingsType() == LocalConnectionSettingsType.LOCAL_PROXY) {
-                connectionSettingses = new ArrayList<ConnectionSettings>();
-                ConnectionSettings proxyConnection = clientManager.getProxyConnection(file.getLocalProxy(), false);
-                if (proxyConnection == null) { //unlikely, but just in case
-                    logger.warning("Invalid local proxy connection settings. Using application's connections settings as fallback");
-                    connectionSettingses.addAll(clientManager.getRotatedEnabledConnections(file.getFileUrl().getHost()));
-                } else {
-                    connectionSettingses.add(proxyConnection);
-                }
-            } else {
-                connectionSettingses = clientManager.getRotatedEnabledConnections(file.getFileUrl().getHost());
-            }
-
+            final List<ConnectionSettings> connectionSettingses = getConnectionSettingses(file);
             if (file.getFileState() == FileState.NOT_CHECKED && service.supportsRunCheck() && !connectionSettingses.isEmpty()) {
                 //pokud to podporuje plugin a  soucasne nebyl jeste ocheckovan a soucasne je k dispozici vubec nejake spojeni
                 queueDownload(file, connectionSettingses.get(0), downloadService, service, true);
@@ -184,22 +170,7 @@ public class ProcessManager extends Thread {
                 continue;
             final DownloadService downloadService = getDownloadService(service);
 
-            final List<ConnectionSettings> connectionSettingses;
-            if (file.getLocalConnectionSettingsType() == LocalConnectionSettingsType.DIRECT) {
-                connectionSettingses = new ArrayList<ConnectionSettings>();
-                connectionSettingses.add(new ConnectionSettings());
-            } else if (file.getLocalConnectionSettingsType() == LocalConnectionSettingsType.LOCAL_PROXY) {
-                connectionSettingses = new ArrayList<ConnectionSettings>();
-                ConnectionSettings proxyConnection = clientManager.getProxyConnection(file.getLocalProxy(), false);
-                if (proxyConnection == null) { //unlikely, but just in case
-                    logger.warning("Invalid local proxy connection settings. Using application's connections settings as fallback");
-                    connectionSettingses.addAll(clientManager.getRotatedEnabledConnections(file.getFileUrl().getHost()));
-                } else {
-                    connectionSettingses.add(proxyConnection);
-                }
-            } else {
-                connectionSettingses = clientManager.getRotatedEnabledConnections(file.getFileUrl().getHost());
-            }
+            final List<ConnectionSettings> connectionSettingses = getConnectionSettingses(file);
             if (testFiles && file.getFileState() == FileState.NOT_CHECKED && service.supportsRunCheck() && !connectionSettingses.isEmpty()) {
                 //pokud to podporuje plugin a  soucasne nebyl jeste ocheckovan a soucasne je k dispozici vubec nejake spojeni
                 //a soucasne je to zapnuto v nastavenich
@@ -220,6 +191,29 @@ public class ProcessManager extends Thread {
                 return true;
         }
         return false;
+    }
+
+    private List<ConnectionSettings> getConnectionSettingses(DownloadFile file) {
+        final List<ConnectionSettings> connectionSettingses = new ArrayList<ConnectionSettings>();
+        final boolean useProxyForPlugin = AppPrefs.getProperty(UserProp.USE_PROXY_FOR_PLUGIN, UserProp.USE_PROXY_FOR_PLUGIN_DEFAULT);
+        final List<String> proxies = proxyForPluginManager.getProxies(file.getPluginID());
+
+        if (file.getLocalConnectionSettingsType() == LocalConnectionSettingsType.DIRECT) {
+            connectionSettingses.add(new ConnectionSettings());
+        } else if (file.getLocalConnectionSettingsType() == LocalConnectionSettingsType.LOCAL_PROXY) {
+            ConnectionSettings proxyConnection = clientManager.getProxyConnection(file.getLocalProxy(), false);
+            if (proxyConnection == null) { //unlikely, but just in case
+                logger.warning("Invalid local proxy connection settings. Using application's connections settings as fallback");
+                connectionSettingses.addAll(clientManager.getRotatedEnabledConnections(file.getFileUrl().getHost()));
+            } else {
+                connectionSettingses.add(proxyConnection);
+            }
+        } else if (useProxyForPlugin && proxies != null && proxies.size() > 0) { //proxy for plugin
+            connectionSettingses.add(clientManager.getProxyForPluginRotatedConnection(file.getPluginID(), proxies));
+        } else {
+            connectionSettingses.addAll(clientManager.getRotatedEnabledConnections(file.getFileUrl().getHost()));
+        }
+        return connectionSettingses;
     }
 
     private boolean executeForceDownload() {
@@ -418,10 +412,14 @@ public class ProcessManager extends Thread {
                 DownloadTaskError error = task.getServiceError();
                 final ConnectionSettings settings = client.getSettings();
                 if (error == DownloadTaskError.NO_ROUTE_TO_HOST) {
+                    boolean useProxyForPlugin = AppPrefs.getProperty(UserProp.USE_PROXY_FOR_PLUGIN, UserProp.USE_PROXY_FOR_PLUGIN_DEFAULT);
+                    List<String> proxies = proxyForPluginManager.getProxies(file.getPluginID());
                     if (file.getLocalConnectionSettingsType() == LocalConnectionSettingsType.DIRECT) {
                         file.setState(QUEUED);
                     } else if (file.getLocalConnectionSettingsType() == LocalConnectionSettingsType.LOCAL_PROXY) {
                         error = DownloadTaskError.NOT_RECOVERABLE_DOWNLOAD_ERROR;
+                    } else if (useProxyForPlugin && proxies != null && proxies.size() > 0) {
+                        file.setState(QUEUED);
                     } else {
                         clientManager.setConnectionEnabled(settings, false);
                         //final int problematic = service.getProblematicConnectionsCount();
