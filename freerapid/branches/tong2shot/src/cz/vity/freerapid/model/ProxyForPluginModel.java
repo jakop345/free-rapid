@@ -8,7 +8,7 @@ import cz.vity.freerapid.model.bean.ProxyForPlugin;
 /**
  * @author tong2shot
  */
-@Entity
+@Entity(version = 1)
 public class ProxyForPluginModel implements Identifiable {
     @PrimaryKey(sequence = "ID")
     private Long dbId;
@@ -19,6 +19,8 @@ public class ProxyForPluginModel implements Identifiable {
             relatedEntity = ProxySetModel.class,
             onRelatedEntityDelete = DeleteAction.CASCADE)
     private Long proxySetId;
+
+    private boolean enabled = true;
 
     @NotPersistent
     private String pluginServices;
@@ -64,6 +66,14 @@ public class ProxyForPluginModel implements Identifiable {
 
     public void setProxySetName(String proxySetName) {
         this.proxySetName = proxySetName;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     @Override

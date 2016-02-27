@@ -6,25 +6,18 @@ import cz.vity.freerapid.model.bean.PluginMetaData;
 import cz.vity.freerapid.model.bean.ProxyForPlugin;
 import cz.vity.freerapid.model.bean.ProxySet;
 import org.jdesktop.application.AbstractBean;
-import org.jdesktop.application.ApplicationContext;
 
 import java.util.*;
-import java.util.logging.Logger;
 
 /**
  * @author tong2shot
  */
 public class ProxyForPluginManager extends AbstractBean {
-    private final static Logger logger = Logger.getLogger(PluginsManager.class.getName());
-
     private final Object lock = new Object();
 
-    private final ApplicationContext context;
     private final ManagerDirector director;
 
-
-    public ProxyForPluginManager(ApplicationContext context, ManagerDirector director) {
-        this.context = context;
+    public ProxyForPluginManager(ManagerDirector director) {
         this.director = director;
         init();
     }
@@ -70,7 +63,9 @@ public class ProxyForPluginManager extends AbstractBean {
         ProxySet proxySet = null;
         for (ProxyForPlugin proxyForPlugin : proxyForPlugins) {
             if (proxyForPlugin.getPluginId().equals(pluginId)) {
-                proxySet = director.getProxySetManager().getProxySetFromId(proxyForPlugin.getProxySetId());
+                if (proxyForPlugin.isEnabled()) {
+                    proxySet = director.getProxySetManager().getProxySetFromId(proxyForPlugin.getProxySetId());
+                }
                 break;
             }
         }

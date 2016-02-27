@@ -214,7 +214,7 @@ public class ProxySetDialog extends AppDialog implements PropertyChangeListener,
 
                     PanelBuilder actionButtonPanelBuilder = new PanelBuilder(new FormLayout(
                             new ColumnSpec[]{
-                                    FormSpecs.DEFAULT_COLSPEC,
+                                    ColumnSpec.decode("max(pref;42dlu)"),
                                     FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
                                     FormSpecs.DEFAULT_COLSPEC,
                                     FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
@@ -223,6 +223,7 @@ public class ProxySetDialog extends AppDialog implements PropertyChangeListener,
                                     FormSpecs.DEFAULT_COLSPEC,
                             },
                             RowSpec.decodeSpecs("default")), actionButtonPanel);
+                    ((FormLayout) actionButtonPanel.getLayout()).setColumnGroups(new int[][]{{1, 3, 5}});
 
                     actionButtonPanelBuilder.add(btnAdd, cc.xy(1, 1));
                     actionButtonPanelBuilder.add(btnEdit, cc.xy(3, 1));

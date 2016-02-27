@@ -3,25 +3,16 @@ package cz.vity.freerapid.gui.managers;
 import cz.vity.freerapid.model.ProxySetModel;
 import cz.vity.freerapid.model.bean.ProxySet;
 import org.jdesktop.application.AbstractBean;
-import org.jdesktop.application.ApplicationContext;
 
 import java.util.Collection;
-import java.util.logging.Logger;
 
 /**
  * @author tong2shot
  */
 public class ProxySetManager extends AbstractBean {
-    private final static Logger logger = Logger.getLogger(PluginsManager.class.getName());
-
-    private final Object lock = new Object();
-
-    private final ApplicationContext context;
     private final ManagerDirector director;
 
-
-    public ProxySetManager(ApplicationContext context, ManagerDirector director) {
-        this.context = context;
+    public ProxySetManager(ManagerDirector director) {
         this.director = director;
         init();
     }

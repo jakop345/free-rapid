@@ -61,6 +61,16 @@ public class ProxyForPlugin extends AbstractBean implements ModelWrapper {
         firePropertyChange("proxySetName", oldValue, model.getProxySetName());
     }
 
+    public boolean isEnabled() {
+        return model.isEnabled();
+    }
+
+    public void setEnabled(boolean enabled) {
+        boolean oldValue = model.isEnabled();
+        model.setEnabled(enabled);
+        firePropertyChange("enabled", oldValue, model.isEnabled());
+    }
+
     @Override
     public String toString() {
         return model.toString();
