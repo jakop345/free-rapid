@@ -9,10 +9,15 @@ import cz.vity.freerapid.gui.managers.ProxyForPluginManager;
 import cz.vity.freerapid.model.bean.ProxyForPlugin;
 import cz.vity.freerapid.swing.SwingUtils;
 import cz.vity.freerapid.swing.Swinger;
+import cz.vity.freerapid.swing.components.FindTableAction;
 import cz.vity.freerapid.utilities.LogUtils;
 import org.jdesktop.application.Action;
 import org.jdesktop.swinghelper.buttonpanel.JXButtonPanel;
 import org.jdesktop.swingx.JXTable;
+import org.jdesktop.swingx.decorator.ColorHighlighter;
+import org.jdesktop.swingx.decorator.ComponentAdapter;
+import org.jdesktop.swingx.decorator.HighlightPredicate;
+import org.jdesktop.swingx.decorator.HighlighterFactory;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -23,6 +28,7 @@ import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -40,9 +46,11 @@ public class ProxyForPluginDialog extends AppDialog implements PropertyChangeLis
 
     private static final String DATA_ADDED_PROPERTY = "dataAdded";
     private static final String DATA_MODIFIED_PROPERTY = "dataModified";
-    private static final int COLUMN_PLUGIN = 0;
-    private static final int COLUMN_SERVICES = 1;
-    private static final int COLUMN_PROXY_SET = 2;
+    private static final int COLUMN_ACTIVE = 0;
+    private static final int COLUMN_PLUGIN = 1;
+    private static final int COLUMN_SERVICES = 2;
+    private static final int COLUMN_PROXY_SET = 3;
+    private static final int MIN_FIRST_COLUMN_WIDTH = 26;
 
     private static final String SELECTED_ACTION_ENABLED_PROPERTY = "selectedEnabled";
     private boolean selectedEnabled;
@@ -113,9 +121,9 @@ public class ProxyForPluginDialog extends AppDialog implements PropertyChangeLis
 
     private void initTable() {
         table.setName("table");
-        table.setModel(new CustomTableModel(new ArrayListModel<ProxyForPlugin>(manager.getItems()), getList("columns", 3)));
+        table.setModel(new CustomTableModel(new ArrayListModel<ProxyForPlugin>(manager.getItems()), getList("columns", 4)));
         table.setAutoCreateColumnsFromModel(false);
-        table.setEditable(false);
+        table.setEditable(true);
         table.setHorizontalScrollEnabled(true);
         table.setColumnControlVisible(true);
         table.setSortable(true);
@@ -138,11 +146,33 @@ public class ProxyForPluginDialog extends AppDialog implements PropertyChangeLis
             }
         });
 
+        Component comp = table.getTableHeader().getDefaultRenderer().getTableCellRendererComponent(
+                table, getList("columns", 4)[COLUMN_ACTIVE], false, false, 0, 0);
+        final int width = Math.max(comp.getPreferredSize().width + 2 * table.getColumnMargin(), MIN_FIRST_COLUMN_WIDTH);
+        TableColumn tableColumn = Swinger.updateColumn(table, "Active", COLUMN_ACTIVE, width, width, null);
+        tableColumn.setWidth(width);
+        tableColumn.setMaxWidth(width);
+
+        ColorHighlighter highlighter = new ColorHighlighter(new HighlightPredicate() {
+            @Override
+            public boolean isHighlighted(Component renderer, ComponentAdapter adapter) {
+                return Boolean.FALSE.equals(adapter.getValue(COLUMN_ACTIVE));
+            }
+        }, HighlighterFactory.GENERIC_GRAY, Color.BLACK);
+        table.addHighlighter(highlighter);
+
         table.setSortOrder(COLUMN_PLUGIN, SortOrder.ASCENDING);
 
         final InputMap tableInputMap = table.getInputMap();
         tableInputMap.put(SwingUtils.getShiftKeyStroke(KeyEvent.VK_HOME), "selectFirstRowExtendSelection");
         tableInputMap.put(SwingUtils.getShiftKeyStroke(KeyEvent.VK_END), "selectLastRowExtendSelection");
+
+        new FindTableAction(Swinger.getResourceMap(), COLUMN_PLUGIN) {
+            @Override
+            protected Object getObject(int index, int column) {
+                return table.getModel().getValueAt(index, column);
+            }
+        }.install(table);
 
         table.getParent().setPreferredSize(new Dimension(600, 200));
     }
@@ -157,7 +187,7 @@ public class ProxyForPluginDialog extends AppDialog implements PropertyChangeLis
                 }
                 int col = table.getSortedColumnIndex();
                 SortOrder order = table.getSortOrder(col);
-                table.setModel(new CustomTableModel(new ArrayListModel<ProxyForPlugin>(manager.getItems()), getList("columns", 3)));
+                table.setModel(new CustomTableModel(new ArrayListModel<ProxyForPlugin>(manager.getItems()), getList("columns", 4)));
                 table.setSortOrder(col, order);
             }
         });
@@ -252,15 +282,16 @@ public class ProxyForPluginDialog extends AppDialog implements PropertyChangeLis
 
                     PanelBuilder actionButtonPanelBuilder = new PanelBuilder(new FormLayout(
                             new ColumnSpec[]{
-                                    FormSpecs.DEFAULT_COLSPEC,
+                                    ColumnSpec.decode("max(pref;42dlu)"),
                                     FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
                                     FormSpecs.DEFAULT_COLSPEC,
                                     FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
                                     FormSpecs.DEFAULT_COLSPEC,
                                     new ColumnSpec(ColumnSpec.FILL, Sizes.DEFAULT, FormSpec.DEFAULT_GROW),
-                                    FormSpecs.DEFAULT_COLSPEC,
+                                    ColumnSpec.decode("max(pref;42dlu)"),
                             },
                             RowSpec.decodeSpecs("default")), actionButtonPanel);
+                    ((FormLayout) actionButtonPanel.getLayout()).setColumnGroups(new int[][]{{1, 3, 5}});
 
                     actionButtonPanelBuilder.add(btnAdd, cc.xy(1, 1));
                     actionButtonPanelBuilder.add(btnEdit, cc.xy(3, 1));
@@ -388,7 +419,7 @@ public class ProxyForPluginDialog extends AppDialog implements PropertyChangeLis
         updateActions();
     }
 
-    private static class CustomTableModel extends AbstractTableModel implements ListDataListener {
+    private class CustomTableModel extends AbstractTableModel implements ListDataListener {
         private final ArrayListModel<ProxyForPlugin> model;
         private final String[] columns;
 
@@ -406,7 +437,7 @@ public class ProxyForPluginDialog extends AppDialog implements PropertyChangeLis
 
         @Override
         public boolean isCellEditable(int rowIndex, int columnIndex) {
-            return false;
+            return COLUMN_ACTIVE == columnIndex;
         }
 
         @Override
@@ -418,9 +449,19 @@ public class ProxyForPluginDialog extends AppDialog implements PropertyChangeLis
             return this.columns.length;
         }
 
+        @Override
+        public Class<?> getColumnClass(int columnIndex) {
+            if (columnIndex == COLUMN_ACTIVE) {
+                return Boolean.class;
+            }
+            return Object.class;
+        }
+
         public Object getValueAt(int rowIndex, int columnIndex) {
             final ProxyForPlugin proxyForPlugin = model.get(rowIndex);
             switch (columnIndex) {
+                case COLUMN_ACTIVE:
+                    return proxyForPlugin.isEnabled();
                 case COLUMN_PLUGIN:
                     return proxyForPlugin.getPluginId();
                 case COLUMN_SERVICES:
@@ -433,6 +474,16 @@ public class ProxyForPluginDialog extends AppDialog implements PropertyChangeLis
                     assert false;
             }
             return proxyForPlugin;
+        }
+
+        @Override
+        public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+            final ProxyForPlugin data = model.get(rowIndex);
+            if (columnIndex == COLUMN_ACTIVE) {
+                data.setEnabled((Boolean) aValue);
+                manager.updateProxyForPluginItem(data);
+            }
+            this.fireTableCellUpdated(rowIndex, columnIndex);
         }
 
         public void intervalAdded(ListDataEvent e) {

@@ -171,8 +171,10 @@ public class ProxySetManipDialog extends AppDialog {
         JScrollPane scrollPane1 = new JScrollPane();
         fldName = new JTextField();
         proxyEditorPane = ComponentFactory.getProxiesEditorPane();
+        JLabel lblProxyDesc = new JLabel();
         lblName.setName("lblName");
         lblProxies.setName("lblProxies");
+        lblProxyDesc.setName("lblProxyDesc");
         lblName.setLabelFor(fldName);
         lblProxies.setLabelFor(proxyEditorPane);
 
@@ -210,12 +212,15 @@ public class ProxySetManipDialog extends AppDialog {
                                 FormSpecs.UNRELATED_GAP_ROWSPEC,
                                 FormSpecs.DEFAULT_ROWSPEC,
                                 FormSpecs.LINE_GAP_ROWSPEC,
-                                new RowSpec(RowSpec.FILL, Sizes.bounded(Sizes.PREFERRED, Sizes.dluY(40), Sizes.dluY(55)), FormSpec.DEFAULT_GROW)
+                                new RowSpec(RowSpec.FILL, Sizes.bounded(Sizes.PREFERRED, Sizes.dluY(55), Sizes.dluY(75)), FormSpec.DEFAULT_GROW),
+                                FormSpecs.LINE_GAP_ROWSPEC,
+                                FormSpecs.DEFAULT_ROWSPEC,
                         }), contentPanel);
                 contentPanelBuilder.add(lblName, cc.xy(1, 1));
                 contentPanelBuilder.add(fldName, cc.xy(3, 1));
                 contentPanelBuilder.add(lblProxies, cc.xy(1, 3));
                 contentPanelBuilder.add(scrollPane1, cc.xyw(1, 5, 3));
+                contentPanelBuilder.add(lblProxyDesc, cc.xyw(1, 7, 3));
 
             }
             dialogPane.add(contentPanel, BorderLayout.CENTER);

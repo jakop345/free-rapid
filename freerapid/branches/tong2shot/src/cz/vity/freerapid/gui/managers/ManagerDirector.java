@@ -118,8 +118,8 @@ public class ManagerDirector {
 
         taskServiceManager = new TaskServiceManager(context);
         this.clientManager = new ClientManager(this);
-        this.proxySetManager = new ProxySetManager(context, this);
-        this.proxyForPluginManager = new ProxyForPluginManager(context, this);
+        this.proxySetManager = new ProxySetManager(this);
+        this.proxyForPluginManager = new ProxyForPluginManager(this);
 
 
         this.databaseManager = new DatabaseManager(this);

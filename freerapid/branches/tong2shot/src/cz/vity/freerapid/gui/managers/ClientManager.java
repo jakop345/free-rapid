@@ -260,7 +260,7 @@ public class ClientManager {
 
     public ConnectionSettings getProxyForPluginRotatedConnection(String id, List<String> proxies) {
         synchronized (proxyPerPluginConnectionSettingsLock) {
-            if (proxies == null || proxies.size() == 0) { //unlikely, but just in case
+            if (proxies == null || proxies.isEmpty()) {
                 return getRotatedEnabledConnections(id).get(0); //as fallback
             }
             for (int i = 0; i < proxies.size(); i++) {
