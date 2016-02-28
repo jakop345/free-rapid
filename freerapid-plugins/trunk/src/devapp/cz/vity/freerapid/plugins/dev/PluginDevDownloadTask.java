@@ -116,7 +116,7 @@ class PluginDevDownloadTask implements HttpFileDownloadTask {
             } finally {
                 logger.info("Closing stream");
                 try {
-                    inputStream.close();
+                    //inputStream.close(); //org.apache.commons.httpclient.ContentLengthInputStream.close() doesn't close the input stream.
                 } catch (Exception e) {
                     LogUtils.processException(logger, e);
                 }
