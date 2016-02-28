@@ -429,6 +429,9 @@ public class DownloadClient implements HttpDownloadClient {
             } else {
                 asString = "Text content type expected, but binary stream was found";
                 logger.warning(asString);
+                method.abort();
+                method.releaseConnection();
+                return statuscode;
             }
         }
 
