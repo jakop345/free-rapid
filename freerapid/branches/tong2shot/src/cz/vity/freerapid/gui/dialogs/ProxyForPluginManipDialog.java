@@ -26,6 +26,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
+import java.util.Vector;
 import java.util.logging.Logger;
 
 /**
@@ -102,9 +103,7 @@ public class ProxyForPluginManipDialog extends AppDialog implements ListSelectio
     private void buildGUI() {
         initTable();
         LinkedList<ProxySet> items = (LinkedList<ProxySet>) director.getProxySetManager().getItems();
-        ProxySet[] proxySets = new ProxySet[items.size()];
-        proxySets = items.toArray(proxySets);
-        cbbProxySet.setModel(new DefaultComboBoxModel<ProxySet>(proxySets));
+        cbbProxySet.setModel(new DefaultComboBoxModel<ProxySet>(new Vector<ProxySet>(items)));
         cbbProxySet.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -120,6 +119,7 @@ public class ProxyForPluginManipDialog extends AppDialog implements ListSelectio
                 PluginMetaData plugin = tableItems.get(i);
                 if (pluginName.equals(plugin.getId())) {
                     selectedIndex = pluginTable.convertRowIndexToView(i);
+                    break;
                 }
             }
             pluginTable.getSelectionModel().setSelectionInterval(selectedIndex, selectedIndex);
@@ -132,6 +132,7 @@ public class ProxyForPluginManipDialog extends AppDialog implements ListSelectio
                 ProxySet proxySet = comboBoxModel.getElementAt(i);
                 if (proxySetName.equals(proxySet.getName())) {
                     selectedIndex = i;
+                    break;
                 }
             }
             cbbProxySet.setSelectedIndex(selectedIndex);

@@ -258,6 +258,20 @@ public class ClientManager {
         }
     }
 
+    public List<ConnectionSettings> getProxyForPluginConnections(String pluginId) {
+        List<String> proxies = managerDirector.getProxyForPluginManager().getProxies(pluginId);
+        List<ConnectionSettings> result = new ArrayList<ConnectionSettings>();
+        if (proxies != null && proxies.size() > 0) {
+            for (String proxy : proxies) {
+                ConnectionSettings connectionSettings = getProxyConnection(proxy, false);
+                if (connectionSettings != null) {
+                    result.add(connectionSettings);
+                }
+            }
+        }
+        return Collections.unmodifiableList(result);
+    }
+
     public ConnectionSettings getProxyForPluginRotatedConnection(String id, List<String> proxies) {
         synchronized (proxyPerPluginConnectionSettingsLock) {
             if (proxies == null || proxies.isEmpty()) {

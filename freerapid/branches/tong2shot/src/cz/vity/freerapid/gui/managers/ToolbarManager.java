@@ -65,7 +65,6 @@ public class ToolbarManager implements PropertyChangeListener {
     private final ManagerDirector directorManager;
     private final ApplicationContext context;
     private final ClientManager clientManager;
-    private final ProxyForPluginManager proxyForPluginManager;
 
     /**
      * Konstruktor - naplni toolbar buttony
@@ -75,7 +74,6 @@ public class ToolbarManager implements PropertyChangeListener {
         this.directorManager = directorManager;
         this.context = context;
         this.clientManager = directorManager.getClientManager();
-        this.proxyForPluginManager = directorManager.getProxyForPluginManager();
         toolbarPanel.setBorder(BorderFactory.createEmptyBorder(0, 4, 0, 0));
         final Action action = context.getActionMap().get("showToolbar");
 
@@ -147,11 +145,10 @@ public class ToolbarManager implements PropertyChangeListener {
                     }
                 }
                 if (useProxyForPlugin) {
-                    java.util.List<String> proxies = proxyForPluginManager.getProxies(file.getPluginID());
-                    if (proxies != null && proxies.size() > 0) { //proxy for plugin
-                        ConnectionSettings proxyForPluginConnection = clientManager.getProxyForPluginRotatedConnection(file.getPluginID(), proxies);
-                        if (!connectionSettingses.contains(proxyForPluginConnection)) {
-                            connectionSettingses.add(proxyForPluginConnection);
+                    java.util.List<ConnectionSettings> proxyForPluginConnections = clientManager.getProxyForPluginConnections(file.getPluginID());
+                    for (ConnectionSettings connectionSettings : proxyForPluginConnections) {
+                        if (!connectionSettingses.contains(connectionSettings)) {
+                            connectionSettingses.add(connectionSettings);
                         }
                     }
                 }

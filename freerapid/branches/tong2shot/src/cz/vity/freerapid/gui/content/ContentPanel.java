@@ -9,7 +9,10 @@ import cz.vity.freerapid.gui.actions.URLTransferHandler;
 import cz.vity.freerapid.gui.content.comparators.*;
 import cz.vity.freerapid.gui.dialogs.InformationDialog;
 import cz.vity.freerapid.gui.dialogs.MultipleSettingsDialog;
-import cz.vity.freerapid.gui.managers.*;
+import cz.vity.freerapid.gui.managers.ClientManager;
+import cz.vity.freerapid.gui.managers.DataManager;
+import cz.vity.freerapid.gui.managers.ManagerDirector;
+import cz.vity.freerapid.gui.managers.MenuManager;
 import cz.vity.freerapid.gui.managers.exceptions.NotSupportedDownloadServiceException;
 import cz.vity.freerapid.model.LocalConnectionSettingsType;
 import cz.vity.freerapid.model.bean.DownloadFile;
@@ -79,7 +82,6 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
 
     private final DataManager manager;
     private final ClientManager clientManager;
-    private final ProxyForPluginManager proxyForPluginManager;
 
     private boolean cancelActionEnabled = false;
 
@@ -124,7 +126,6 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
         this.director = director;
         this.manager = director.getDataManager();
         this.clientManager = director.getClientManager();
-        this.proxyForPluginManager = director.getProxyForPluginManager();
         this.setName("contentPanel");
 
         readStates();
@@ -1334,11 +1335,10 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
                 }
             }
             if (useProxyForPlugin) {
-                List<String> proxies = proxyForPluginManager.getProxies(file.getPluginID());
-                if (proxies != null && proxies.size() > 0) { //proxy for plugin
-                    ConnectionSettings proxyForPluginConnection = clientManager.getProxyForPluginRotatedConnection(file.getPluginID(), proxies);
-                    if (!connectionSettingses.contains(proxyForPluginConnection)) {
-                        connectionSettingses.add(proxyForPluginConnection);
+                List<ConnectionSettings> proxyForPluginConnections = clientManager.getProxyForPluginConnections(file.getPluginID());
+                for (ConnectionSettings connectionSettings : proxyForPluginConnections) {
+                    if (!connectionSettingses.contains(connectionSettings)) {
+                        connectionSettingses.add(connectionSettings);
                     }
                 }
             }
