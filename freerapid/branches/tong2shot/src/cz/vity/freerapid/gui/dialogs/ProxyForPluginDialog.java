@@ -80,6 +80,8 @@ public class ProxyForPluginDialog extends AppDialog implements PropertyChangeLis
     @Override
     public void doClose() {
         manager.removePropertyChangeListener(DATA_ADDED_PROPERTY, this);
+        director.getProxySetManager().removePropertyChangeListener(DATA_MODIFIED_PROPERTY, this);
+        table.getSelectionModel().removeListSelectionListener(this);
         CustomTableModel tableModel = (CustomTableModel) table.getModel();
         tableModel.model.removeListDataListener(tableModel);
         super.doClose();
@@ -99,12 +101,7 @@ public class ProxyForPluginDialog extends AppDialog implements PropertyChangeLis
         updateActions();
 
         manager.addPropertyChangeListener(DATA_ADDED_PROPERTY, this);
-        director.getProxySetManager().addPropertyChangeListener(DATA_MODIFIED_PROPERTY, new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                reloadModel();
-            }
-        });
+        director.getProxySetManager().addPropertyChangeListener(DATA_MODIFIED_PROPERTY, this);
 
         pack();
         setResizable(true);
@@ -204,7 +201,7 @@ public class ProxyForPluginDialog extends AppDialog implements PropertyChangeLis
         final int[] indexes = getSelectedRows();
         if (indexes.length > 0) {
             int index = indexes[0];
-            final ProxyForPlugin ProxyForPlugin = (ProxyForPlugin) table.getValueAt(table.convertRowIndexToModel(index), -1);
+            final ProxyForPlugin ProxyForPlugin = (ProxyForPlugin) table.getModel().getValueAt(index, -1);
             final ProxyForPluginManipDialog dialog = new ProxyForPluginManipDialog(this, director, ProxyForPluginManipDialog.ManipType.EDIT, ProxyForPlugin);
             getApp().show(dialog);
             if (dialog.getModalResult() == RESULT_OK) {

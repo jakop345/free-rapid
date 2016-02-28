@@ -145,7 +145,7 @@ public class ProxySetDialog extends AppDialog implements PropertyChangeListener,
         final int[] indexes = getSelectedRows();
         if (indexes.length > 0) {
             int index = indexes[0];
-            final ProxySet proxySet = (ProxySet) table.getValueAt(table.convertRowIndexToModel(index), -1);
+            final ProxySet proxySet = (ProxySet) table.getModel().getValueAt(index, -1);
             final ProxySetManipDialog dialog = new ProxySetManipDialog(this, director, ProxySetManipDialog.ManipType.EDIT, proxySet);
             getApp().show(dialog);
             if (dialog.getModalResult() == RESULT_OK) {
