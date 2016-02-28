@@ -18,7 +18,7 @@ import java.util.regex.Matcher;
  */
 class UploadableFileRunner extends AbstractRunner {
     private final static Logger logger = Logger.getLogger(UploadableFileRunner.class.getName());
-    private final static String BaseURL = "https://www.uploadable.ch";
+    private final static String BaseURL = "https://www.bigfile.to";
 
     @Override
     public void runCheck() throws Exception { //this method validates file
@@ -53,7 +53,7 @@ class UploadableFileRunner extends AbstractRunner {
     }
 
     private void checkUrl() {
-        fileURL = fileURL.replaceFirst("http://(www\\.)?uploadable\\.ch", BaseURL);
+        fileURL = fileURL.replaceFirst("https?://(www\\.)?uploadable\\.ch", BaseURL);
     }
 
     @Override
