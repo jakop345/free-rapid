@@ -10,6 +10,7 @@ import cz.vity.freerapid.core.MainApp;
 import cz.vity.freerapid.core.UserProp;
 import cz.vity.freerapid.gui.FRDUtils;
 import cz.vity.freerapid.gui.dialogs.ConnectDialog;
+import cz.vity.freerapid.gui.dialogs.ProxyForPluginDialog;
 import cz.vity.freerapid.gui.dialogs.filechooser.OpenSaveDialogFactory;
 import cz.vity.freerapid.gui.managers.ManagerDirector;
 import cz.vity.freerapid.swing.Swinger;
@@ -67,6 +68,9 @@ public class ConnectionsTab extends UserPreferencesTab {
 
         final ValueModel useDefault = bind(checkUseDefaultConnection, UserProp.USE_DEFAULT_CONNECTION, UserProp.USE_DEFAULT_CONNECTION_DEFAULT);
         PropertyConnector.connectAndUpdate(useDefault, actionMap.get("btnSelectConnectionProxy"), "enabled");
+
+        final ValueModel useProxyForPlugin = bind(checkUseProxyForPlugin, UserProp.USE_PROXY_FOR_PLUGIN, UserProp.USE_PROXY_FOR_PLUGIN_DEFAULT);
+        PropertyConnector.connectAndUpdate(useProxyForPlugin, actionMap.get("btnProxyForPluginConfigure"), "enabled");
 
         bind(spinnerMaxConcurrentDownloads, UserProp.MAX_DOWNLOADS_AT_A_TIME, UserProp.MAX_DOWNLOADS_AT_A_TIME_DEFAULT, 1, 1000000, 1);
         bind(spinnerErrorAttemptsCount, UserProp.ERROR_ATTEMPTS_COUNT, UserProp.ERROR_ATTEMPTS_COUNT_DEFAULT, -1, 999, 1);
@@ -130,6 +134,7 @@ public class ConnectionsTab extends UserPreferencesTab {
 
         setAction(btnSelectConnectionProxy, "btnSelectConnectionProxy");
         setAction(btnProxyListPathSelect, "btnSelectProxyListAction");
+        setAction(btnProxyForPluginConfigure, "btnProxyForPluginConfigure");
     }
 
     @Action
@@ -149,6 +154,13 @@ public class ConnectionsTab extends UserPreferencesTab {
             fieldProxyListPath.setText(files[0].getAbsolutePath());
             Swinger.inputFocus(fieldProxyListPath);
         }
+    }
+
+    @Action
+    public void btnProxyForPluginConfigure() {
+        final ProxyForPluginDialog proxyForPluginDialog = new ProxyForPluginDialog(dialog, managerDirector);
+        MainApp.getInstance(MainApp.class).show(proxyForPluginDialog);
+        dialog.getModel().setBuffering(true);
     }
 
     @Override
@@ -180,6 +192,7 @@ public class ConnectionsTab extends UserPreferencesTab {
     public void build(final CellConstraints cc) {
         JPanel panelConnections1 = new JPanel();
         JPanel panelProxySettings = new JPanel();
+        JPanel panelProxyForPlugin = new JPanel();
         JPanel panelErrorHandling = new JPanel();
         JPanel panelGlobalSpeedLimiter = new JPanel();
         JPanel panelFileSpeedLimiter = new JPanel();
@@ -200,6 +213,11 @@ public class ConnectionsTab extends UserPreferencesTab {
         btnProxyListPathSelect.setName("btnProxyListPathSelect");
         JLabel labelTextFileFormat = new JLabel();
         labelTextFileFormat.setName("labelTextFileFormat");
+
+        checkUseProxyForPlugin = new JCheckBox();
+        checkUseProxyForPlugin.setName("checkUseProxyForPlugin");
+        btnProxyForPluginConfigure = new JButton();
+        btnProxyForPluginConfigure.setName("btnProxyForPluginConfigure");
 
         JLabel labelErrorAttemptsCount = new JLabel();
         labelErrorAttemptsCount.setName("labelErrorAttemptsCount");
@@ -301,6 +319,27 @@ public class ConnectionsTab extends UserPreferencesTab {
             panelProxySettingsBuilder.add(fieldProxyListPath, cc.xy(5, 1));
             panelProxySettingsBuilder.add(btnProxyListPathSelect, cc.xy(7, 1));
             panelProxySettingsBuilder.add(labelTextFileFormat, cc.xy(5, 2));
+        }
+
+        //======== panelProxyForPlugin ========
+        {
+            panelProxyForPlugin.setBorder(new TitledBorder(null, resourceMap.getString("panelProxyForPlugin.border"), TitledBorder.LEADING, TitledBorder.TOP));
+
+            PanelBuilder panelProxyForPluginBuilder = new PanelBuilder(new FormLayout(
+                    new ColumnSpec[]{
+                            new ColumnSpec(ColumnSpec.LEFT, Sizes.dluX(0), FormSpec.NO_GROW),
+                            FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+                            FormSpecs.DEFAULT_COLSPEC,
+                            FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+                            FormSpecs.DEFAULT_COLSPEC,
+                    },
+                    new RowSpec[]{
+                            FormSpecs.DEFAULT_ROWSPEC,
+                            FormSpecs.NARROW_LINE_GAP_ROWSPEC
+                    }), panelProxyForPlugin);
+
+            panelProxyForPluginBuilder.add(checkUseProxyForPlugin, cc.xy(3, 1));
+            panelProxyForPluginBuilder.add(btnProxyForPluginConfigure, cc.xy(5, 1));
         }
 
         //======== panelErrorHandling ========
@@ -410,15 +449,18 @@ public class ConnectionsTab extends UserPreferencesTab {
                         FormSpecs.LINE_GAP_ROWSPEC,
                         FormSpecs.DEFAULT_ROWSPEC,
                         FormSpecs.LINE_GAP_ROWSPEC,
+                        FormSpecs.DEFAULT_ROWSPEC,
+                        FormSpecs.LINE_GAP_ROWSPEC,
                         FormSpecs.DEFAULT_ROWSPEC
                 }), this);
 
         thisBuilder.add(panelConnections1, cc.xyw(1, 1, 3));
         thisBuilder.add(panelProxySettings, cc.xyw(1, 3, 3));
-        thisBuilder.add(panelErrorHandling, cc.xyw(1, 5, 3));
-        thisBuilder.add(panelGlobalSpeedLimiter, cc.xyw(1, 7, 1));
-        thisBuilder.add(panelFileSpeedLimiter, cc.xyw(3, 7, 1));
-        thisBuilder.add(labelRequiresRestart, cc.xyw(1, 9, 3));
+        thisBuilder.add(panelProxyForPlugin, cc.xyw(1, 5, 3));
+        thisBuilder.add(panelErrorHandling, cc.xyw(1, 7, 3));
+        thisBuilder.add(panelGlobalSpeedLimiter, cc.xyw(1, 9, 1));
+        thisBuilder.add(panelFileSpeedLimiter, cc.xyw(3, 9, 1));
+        thisBuilder.add(labelRequiresRestart, cc.xyw(1, 11, 3));
     }
 
     private JSpinner spinnerMaxConcurrentDownloads;
@@ -427,6 +469,8 @@ public class ConnectionsTab extends UserPreferencesTab {
     private JCheckBox checkUseProxyList;
     private JTextField fieldProxyListPath;
     private JButton btnProxyListPathSelect;
+    private JCheckBox checkUseProxyForPlugin;
+    private JButton btnProxyForPluginConfigure;
     private JSpinner spinnerErrorAttemptsCount;
     private JSpinner spinnerAutoReconnectTime;
     private JSpinner spinnerGlobalSpeedSliderMin;

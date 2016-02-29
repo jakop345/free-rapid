@@ -74,6 +74,8 @@ public class ManagerDirector {
     private SystemManager systemManager;
     private CountDownLatch countDownLatch = new CountDownLatch(1); //only one purpose barrier simulation
     private DatabaseManager databaseManager;
+    private ProxySetManager proxySetManager;
+    private ProxyForPluginManager proxyForPluginManager;
 
     static {
         // Fix for JDK 6 bug ICO vs WBMP
@@ -116,6 +118,8 @@ public class ManagerDirector {
 
         taskServiceManager = new TaskServiceManager(context);
         this.clientManager = new ClientManager(this);
+        this.proxySetManager = new ProxySetManager(this);
+        this.proxyForPluginManager = new ProxyForPluginManager(this);
 
 
         this.databaseManager = new DatabaseManager(this);
@@ -168,9 +172,9 @@ public class ManagerDirector {
             //ignore
         }
         inputDataManager.initProcessManagerQueue(); //loads file list from file, fills main table
-        this.systemManager.initManager();
         inputDataManager.getDownloadFiles().addListDataListener(getStatusBarManager());
         getStatusBarManager().updateInfoStatus();
+        this.systemManager.initManager();
 
         linkStoreManager = new LinkStoreManager(ManagerDirector.this, context);
         searchManager.loadSearchData();
@@ -270,4 +274,11 @@ public class ManagerDirector {
         return systemManager;
     }
 
+    public ProxySetManager getProxySetManager() {
+        return proxySetManager;
+    }
+
+    public ProxyForPluginManager getProxyForPluginManager() {
+        return proxyForPluginManager;
+    }
 }

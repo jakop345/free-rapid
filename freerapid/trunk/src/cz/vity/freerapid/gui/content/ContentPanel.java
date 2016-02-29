@@ -9,6 +9,7 @@ import cz.vity.freerapid.gui.actions.URLTransferHandler;
 import cz.vity.freerapid.gui.content.comparators.*;
 import cz.vity.freerapid.gui.dialogs.InformationDialog;
 import cz.vity.freerapid.gui.dialogs.MultipleSettingsDialog;
+import cz.vity.freerapid.gui.managers.ClientManager;
 import cz.vity.freerapid.gui.managers.DataManager;
 import cz.vity.freerapid.gui.managers.ManagerDirector;
 import cz.vity.freerapid.gui.managers.MenuManager;
@@ -80,6 +81,7 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
     private final ManagerDirector director;
 
     private final DataManager manager;
+    private final ClientManager clientManager;
 
     private boolean cancelActionEnabled = false;
 
@@ -123,6 +125,7 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
         this.context = context;
         this.director = director;
         this.manager = director.getDataManager();
+        this.clientManager = director.getClientManager();
         this.setName("contentPanel");
 
         readStates();
@@ -1313,6 +1316,7 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
         forceMenu.setEnabled(forceEnabled);
         final List<ConnectionSettings> connectionSettingses = new ArrayList<ConnectionSettings>();
         connectionSettingses.addAll(director.getClientManager().getAvailableConnections());
+        boolean useProxyForPlugin = AppPrefs.getProperty(UserProp.USE_PROXY_FOR_PLUGIN, UserProp.USE_PROXY_FOR_PLUGIN_DEFAULT);
         for (DownloadFile file : files) {
             if (file.getLocalConnectionSettingsType() == LocalConnectionSettingsType.DIRECT) {
                 ConnectionSettings direct = new ConnectionSettings();
@@ -1323,6 +1327,14 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
                 ConnectionSettings proxy = director.getClientManager().getProxyConnection(file.getLocalProxy(), false);
                 if (proxy != null && !connectionSettingses.contains(proxy)) {
                     connectionSettingses.add(proxy);
+                }
+            }
+            if (useProxyForPlugin) {
+                List<ConnectionSettings> proxyForPluginConnections = clientManager.getProxyForPluginConnections(file.getPluginID());
+                for (ConnectionSettings connectionSettings : proxyForPluginConnections) {
+                    if (!connectionSettingses.contains(connectionSettings)) {
+                        connectionSettingses.add(connectionSettings);
+                    }
                 }
             }
         }

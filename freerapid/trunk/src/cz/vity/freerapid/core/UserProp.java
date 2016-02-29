@@ -399,6 +399,9 @@ final public class UserProp {
     public static final String PLUGIN_WITH_PRIORITY_PRECEDENCE = "pluginWithPriorityPrecedence";
     public static final boolean PLUGIN_WITH_PRIORITY_PRECEDENCE_DEFAULT = false;
 
+    public static final String USE_PROXY_FOR_PLUGIN = "useProxyForPlugin";
+    public static final boolean USE_PROXY_FOR_PLUGIN_DEFAULT = false;
+
 }
 
 
