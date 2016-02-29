@@ -12,10 +12,7 @@ import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.interfaces.HttpFile;
 import org.jdesktop.application.AbstractBean;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -62,6 +59,7 @@ public class DownloadFile extends AbstractBean implements Identifiable, Property
     private volatile String shareDownloadServiceID;
     private volatile String serviceName = null;
     private volatile FileState fileState = FileState.NOT_CHECKED;
+    @ElementCollection(fetch = FetchType.EAGER)
     private volatile Map<String, Object> properties = new Hashtable<String, Object>();
     private int speedLimit = -1;
     private volatile long realDownload;
@@ -563,12 +561,7 @@ public class DownloadFile extends AbstractBean implements Identifiable, Property
     }
 
     public Map<String, Object> getProperties() {
-        assert properties != null;
-        if (properties == null) {
-            //sometimes ObjectDB strips it off , dunno why , which causes following NPE
-            properties = new Hashtable<String, Object>();
-        }
-        return this.properties;
+        return properties;
     }
 
     /**
