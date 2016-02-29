@@ -127,6 +127,8 @@ public class ProxySetDialog extends AppDialog implements PropertyChangeListener,
             }
         });
 
+        table.setSortOrder(COLUMN_NAME, SortOrder.ASCENDING);
+
         final InputMap tableInputMap = table.getInputMap();
         tableInputMap.put(SwingUtils.getShiftKeyStroke(KeyEvent.VK_HOME), "selectFirstRowExtendSelection");
         tableInputMap.put(SwingUtils.getShiftKeyStroke(KeyEvent.VK_END), "selectLastRowExtendSelection");
