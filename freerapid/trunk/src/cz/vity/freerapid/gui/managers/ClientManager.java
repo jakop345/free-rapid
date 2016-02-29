@@ -38,6 +38,9 @@ public class ClientManager {
     private final ManagerDirector managerDirector;
     private final Map<String, Integer> rotate = new HashMap<String, Integer>();
 
+    private final Object proxyPerPluginConnectionSettingsLock = new Object();
+    private final Map<String, Integer> proxyPerPluginRotate = new HashMap<String, Integer>();
+
     public ClientManager(ManagerDirector managerDirector) {
         this.managerDirector = managerDirector;
         defaultConnectionSettings.setDefault(true);
@@ -251,6 +254,50 @@ public class ClientManager {
             return r;
         } else {
             rotate.put(id, 0);
+            return 0;
+        }
+    }
+
+    public List<ConnectionSettings> getProxyForPluginConnections(String pluginId) {
+        List<String> proxies = managerDirector.getProxyForPluginManager().getProxies(pluginId);
+        List<ConnectionSettings> result = new ArrayList<ConnectionSettings>();
+        if (proxies != null && proxies.size() > 0) {
+            for (String proxy : proxies) {
+                ConnectionSettings connectionSettings = getProxyConnection(proxy, false);
+                if (connectionSettings != null) {
+                    result.add(connectionSettings);
+                }
+            }
+        }
+        return Collections.unmodifiableList(result);
+    }
+
+    public ConnectionSettings getProxyForPluginRotatedConnection(String id, List<String> proxies) {
+        synchronized (proxyPerPluginConnectionSettingsLock) {
+            if (proxies == null || proxies.isEmpty()) {
+                return getRotatedEnabledConnections(id).get(0); //as fallback
+            }
+            for (int i = 0; i < proxies.size(); i++) {
+                Collections.rotate(proxies, getProxyForPluginNextRotation(id));
+                ConnectionSettings proxy = getProxyConnection(proxies.get(0), false);
+                if (proxy != null) {
+                    return proxy;
+                }
+            }
+            logger.warning("Invalid 'proxy for plugin' connection settings. Using application's connections settings as fallback");
+            return getRotatedEnabledConnections(id).get(0); //as fallback
+        }
+    }
+
+    private int getProxyForPluginNextRotation(String id) {
+        if (proxyPerPluginRotate.containsKey(id)) {
+            int r = proxyPerPluginRotate.get(id);
+            r++;
+            proxyPerPluginRotate.put(id, r);
+            logger.info("Proxy for plugin rotate for '" + id + "' is: " + r);
+            return r;
+        } else {
+            proxyPerPluginRotate.put(id, 0);
             return 0;
         }
     }

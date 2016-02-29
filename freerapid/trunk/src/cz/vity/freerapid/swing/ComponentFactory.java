@@ -2,6 +2,7 @@ package cz.vity.freerapid.swing;
 
 import com.jgoodies.forms.layout.ColumnSpec;
 import cz.vity.freerapid.swing.components.EditorPaneLinkDetector;
+import cz.vity.freerapid.swing.components.EditorPaneProxyDetector;
 import cz.vity.freerapid.swing.components.PopdownButton;
 import cz.vity.freerapid.swing.models.NaiiveComboModel;
 import cz.vity.freerapid.swing.renderers.ComboBoxRenderer;
@@ -121,6 +122,10 @@ public class ComponentFactory {
 
     public static EditorPaneLinkDetector getURLsEditorPane() {
         return new EditorPaneLinkDetector();
+    }
+
+    public static EditorPaneProxyDetector getProxiesEditorPane() {
+        return new EditorPaneProxyDetector();
     }
 
     public static PopdownButton getPopdownButton() {

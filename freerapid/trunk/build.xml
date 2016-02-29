@@ -295,6 +295,8 @@
             <arg line="cz.vity.freerapid.gui.managers.FileHistoryItem"/>
             <arg line="cz.vity.freerapid.model.DownloadFile"/>
             <arg line="cz.vity.freerapid.model.PluginMetaData"/>
+            <arg line="cz.vity.freerapid.model.ProxyForPlugin"/>
+            <arg line="cz.vity.freerapid.model.ProxySet"/>
         </java>
     </target>
 

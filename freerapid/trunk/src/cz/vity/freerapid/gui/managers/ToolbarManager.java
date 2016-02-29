@@ -64,6 +64,7 @@ public class ToolbarManager implements PropertyChangeListener {
     private SearchField searchField;
     private final ManagerDirector directorManager;
     private final ApplicationContext context;
+    private final ClientManager clientManager;
 
     /**
      * Konstruktor - naplni toolbar buttony
@@ -72,6 +73,7 @@ public class ToolbarManager implements PropertyChangeListener {
     public ToolbarManager(ManagerDirector directorManager, ApplicationContext context) {
         this.directorManager = directorManager;
         this.context = context;
+        this.clientManager = directorManager.getClientManager();
         toolbarPanel.setBorder(BorderFactory.createEmptyBorder(0, 4, 0, 0));
         final Action action = context.getActionMap().get("showToolbar");
 
@@ -129,6 +131,7 @@ public class ToolbarManager implements PropertyChangeListener {
             final java.util.List<DownloadFile> files = directorManager.getDataManager().getSelectionToList(selectedRows);
             final java.util.List<ConnectionSettings> connectionSettingses = new ArrayList<ConnectionSettings>();
             connectionSettingses.addAll(directorManager.getClientManager().getAvailableConnections());
+            boolean useProxyForPlugin = AppPrefs.getProperty(UserProp.USE_PROXY_FOR_PLUGIN, UserProp.USE_PROXY_FOR_PLUGIN_DEFAULT);
             for (DownloadFile file : files) {
                 if (file.getLocalConnectionSettingsType() == LocalConnectionSettingsType.DIRECT) {
                     ConnectionSettings direct = new ConnectionSettings();
@@ -139,6 +142,14 @@ public class ToolbarManager implements PropertyChangeListener {
                     ConnectionSettings proxy = directorManager.getClientManager().getProxyConnection(file.getLocalProxy(), false);
                     if (proxy != null && !connectionSettingses.contains(proxy)) {
                         connectionSettingses.add(proxy);
+                    }
+                }
+                if (useProxyForPlugin) {
+                    java.util.List<ConnectionSettings> proxyForPluginConnections = clientManager.getProxyForPluginConnections(file.getPluginID());
+                    for (ConnectionSettings connectionSettings : proxyForPluginConnections) {
+                        if (!connectionSettingses.contains(connectionSettings)) {
+                            connectionSettingses.add(connectionSettings);
+                        }
                     }
                 }
             }
