@@ -24,7 +24,9 @@ import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.Vector;
 import java.util.logging.Logger;
 
@@ -101,7 +103,13 @@ public class ProxyForPluginManipDialog extends AppDialog implements ListSelectio
 
     private void buildGUI() {
         initTable();
-        Collection<ProxySet> items = director.getProxySetManager().getItems();
+        java.util.List<ProxySet> items = new LinkedList<ProxySet>(director.getProxySetManager().getItems());
+        Collections.sort(items, new Comparator<ProxySet>() {
+            @Override
+            public int compare(ProxySet o1, ProxySet o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+        });
         cbbProxySet.setModel(new DefaultComboBoxModel<ProxySet>(new Vector<ProxySet>(items)));
         cbbProxySet.addActionListener(new ActionListener() {
             @Override
