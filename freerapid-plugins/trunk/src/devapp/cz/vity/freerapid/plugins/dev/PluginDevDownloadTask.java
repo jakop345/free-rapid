@@ -1,5 +1,7 @@
 package cz.vity.freerapid.plugins.dev;
 
+import cz.vity.freerapid.plugins.services.adobehds.HdsInputStream;
+import cz.vity.freerapid.plugins.services.applehls.HlsInputStream;
 import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
 import cz.vity.freerapid.plugins.webclient.DownloadClient;
 import cz.vity.freerapid.plugins.webclient.DownloadState;
@@ -11,6 +13,7 @@ import cz.vity.freerapid.utilities.LogUtils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.PipedInputStream;
 import java.util.logging.Logger;
 
 /**
@@ -116,7 +119,12 @@ class PluginDevDownloadTask implements HttpFileDownloadTask {
             } finally {
                 logger.info("Closing stream");
                 try {
-                    //inputStream.close(); //org.apache.commons.httpclient.ContentLengthInputStream.close() doesn't close the input stream.
+                    //workaround, because org.apache.commons.httpclient.AutoCloseInputStream is package protected
+                    if ((inputStream instanceof PipedInputStream) || //RTMP
+                            (inputStream instanceof HdsInputStream) ||
+                            (inputStream instanceof HlsInputStream)) {
+                        inputStream.close();
+                    }
                 } catch (Exception e) {
                     LogUtils.processException(logger, e);
                 }

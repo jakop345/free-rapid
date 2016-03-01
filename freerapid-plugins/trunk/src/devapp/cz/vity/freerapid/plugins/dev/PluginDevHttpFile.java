@@ -76,6 +76,8 @@ class PluginDevHttpFile implements HttpFile {
     private String serviceID;
     private boolean resumeSupported;
 
+    private String localPluginConfig;
+
     /**
      * {@inheritDoc}
      */
@@ -335,5 +337,15 @@ class PluginDevHttpFile implements HttpFile {
 
     public void setStoreFile(File storeFile) {
         logger.info("Store file emulation:" + storeFile);
+    }
+
+    @Override
+    public String getLocalPluginConfig() {
+        return localPluginConfig;
+    }
+
+    @Override
+    public void setLocalPluginConfig(String localPluginConfig) {
+        this.localPluginConfig = localPluginConfig;
     }
 }
