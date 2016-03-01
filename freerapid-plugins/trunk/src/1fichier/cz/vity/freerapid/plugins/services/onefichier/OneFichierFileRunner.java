@@ -141,7 +141,7 @@ class OneFichierFileRunner extends AbstractRunner {
                 contentAsString.contains("The requested file has been deleted")) {
             throw new URLNotAvailableAnymoreException("File not found"); //let to know user in FRD
         }
-        if (contentAsString.contains("you can download only one file at a timeg")) {
+        if (contentAsString.contains("you can download only one file at a time")) {
             int delay = 15;
             try {
                 delay = PlugUtils.getNumberBetween(contentAsString, "wait up to", "minute");

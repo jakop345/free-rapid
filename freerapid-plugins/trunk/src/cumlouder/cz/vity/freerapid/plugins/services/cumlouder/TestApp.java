@@ -1,4 +1,4 @@
-package cz.vity.freerapid.plugins.services.lepan;
+package cz.vity.freerapid.plugins.services.cumlouder;
 
 import cz.vity.freerapid.plugins.dev.PluginDevApplication;
 import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
@@ -16,15 +16,13 @@ public class TestApp extends PluginDevApplication {
         final HttpFile httpFile = getHttpFile(); //creates new test instance of HttpFile
         try {
             //we set file URL
-            httpFile.setNewURL(new URL("http://www.lepan.cc/down-806552.html"));
-            httpFile.setNewURL(new URL("http://www.sx566.com/down-806552.html"));
-            httpFile.setNewURL(new URL("http://www.lepan.cc/down-683705.html"));
-            httpFile.setNewURL(new URL("http://www.sx566.com/file-986543.html"));
+            httpFile.setNewURL(new URL("http://www.cumlouder.com/porn-video/apolonia-and-her-devotees/"));
+            httpFile.setNewURL(new URL("http://it.cumlouder.com/video/apolonia-e-le-sue-devote/"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
             //then we tries to download
-            final LepanServiceImpl service = new LepanServiceImpl(); //instance of service - of our plugin
+            final CumLouderServiceImpl service = new CumLouderServiceImpl(); //instance of service - of our plugin
             //runcheck makes the validation
             testRun(service, httpFile, connectionSettings);//download file with service and its Runner
             //all output goes to the console
