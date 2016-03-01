@@ -17,6 +17,7 @@ public class TestApp extends PluginDevApplication {
         try {
             //we set file URL
             httpFile.setNewURL(new URL("http://www.extmatrix.com/files/VPGJAFRF/WAN-113.part5.rar.html"));
+            //httpFile.setNewURL(new URL("http://www.extmatrix.com/files/VSIAVRVD/SOE-845@javfree.me.part02.rar.html"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication

@@ -43,7 +43,7 @@ public class YouPornServiceImpl extends AbstractFileShareService {
             if (config == null) {
                 if (!storage.configFileExists(CONFIG_FILE)) {
                     config = new YouPornSettingsConfig();
-                    config.setVideoQuality(1);  // Medium
+                    config.setVideoQuality(1);  // Medium   480p
                 } else {
                     config = storage.loadConfigFromFile(CONFIG_FILE, YouPornSettingsConfig.class);
                 }

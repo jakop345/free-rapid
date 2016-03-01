@@ -97,9 +97,12 @@ class ExtMatrixFileRunner extends AbstractRunner {
                 content.contains("The file you have requested does not exist")) {
             throw new URLNotAvailableAnymoreException("File not found"); //let to know user in FRD
         }
-        final Matcher matcher = PlugUtils.matcher("Max \\d+ files per \\d+ hours for free users", content);
+        Matcher matcher = PlugUtils.matcher("Max \\d+ files per \\d+ hours for free users", content);
         if (matcher.find())
             throw new YouHaveToWaitException(matcher.group(0), 600);
+        matcher = PlugUtils.matcher("The file[^<>]+?you have requested require a premium account", content);
+        if (matcher.find())
+            throw new NotRecoverableDownloadException("This file requires a premium account");
     }
 
     private HttpMethod stepReCaptcha(MethodBuilder methodBuilder) throws Exception {

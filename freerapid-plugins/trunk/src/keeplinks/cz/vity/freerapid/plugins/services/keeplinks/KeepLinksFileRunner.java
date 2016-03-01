@@ -57,9 +57,9 @@ class KeepLinksFileRunner extends AbstractRunner {
 
         List<URI> list = new LinkedList<URI>();
 
-        if (fileURL.contains("/d/")) {
+        if (fileURL.contains("/d")) {
             list.add(stepDirectLink(fileURL));
-        } else if (fileURL.contains("/p/")) {
+        } else if (fileURL.contains("/p")) {
             if (!makeRedirectedRequest(getGetMethod(fileURL))) { //we make the main request
                 checkProblems();//check problems
                 throw new PluginImplementationException();
@@ -102,12 +102,13 @@ class KeepLinksFileRunner extends AbstractRunner {
 
             final Matcher m = PlugUtils.matcher("<a href=\"([^\"]+)\"[^>]+?class=\"selecttext (live|direct)", getContentAsString());
             while (m.find()) {
-                list.add(encodeUri(m.group(1).trim()));
+                if (!m.group(1).trim().equals("http://www.keeplinks.eu/d/"))
+                    list.add(encodeUri(m.group(1).trim()));
             }
-            if (getContentAsString().contains(HEADER_LINK_TYPE_1)) {
-                for (int ii = 0; ii < list.size(); ii++)
-                    list.set(ii, stepDirectLink(list.get(ii).toASCIIString()));
-            }
+            //if (getContentAsString().contains(HEADER_LINK_TYPE_1)) {
+            //    for (int ii = 0; ii < list.size(); ii++)
+            //        list.set(ii, stepDirectLink(list.get(ii).toASCIIString()));
+            //}
 
         } else {
             checkProblems();
