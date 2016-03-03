@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
 <plugin class="cz.vity.freerapid.plugins.services.turbobit.TurboBitServiceImpl"
-        id="turbobit.net" vendor="Whole team" version="1.5.14">
+        id="turbobit.net" vendor="Whole team" version="1.6.0">
     <attributes>
         <attribute id="urlRegex" value="http://((www|new)\.)?((turbobit|turo-bit)\.net|dl\.rapidlinks\.org)/.+"/>
         <attribute id="minver" value="0.855"/>
@@ -12,7 +12,7 @@
     </attributes>
     <requires>
         <import exported="false" match="greater-or-equal" optional="false" plugin-id="recaptcha.com"
-                plugin-version="1.0" reverse-lookup="false"/>
+                plugin-version="1.2.0" reverse-lookup="false"/>
     </requires>
     <runtime>
         <library id="turbobit.net" path="/" type="code">
