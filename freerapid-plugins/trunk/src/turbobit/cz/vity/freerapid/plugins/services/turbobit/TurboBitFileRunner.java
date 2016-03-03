@@ -1,11 +1,9 @@
 package cz.vity.freerapid.plugins.services.turbobit;
 
 import cz.vity.freerapid.plugins.exceptions.*;
-import cz.vity.freerapid.plugins.services.recaptcha.ReCaptcha;
-import cz.vity.freerapid.plugins.services.turbobit.captcha.CaptchaReader;
+import cz.vity.freerapid.plugins.services.recaptcha.ReCaptchaNoCaptcha;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.FileState;
-import cz.vity.freerapid.plugins.webclient.hoster.CaptchaSupport;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpMethod;
@@ -80,7 +78,7 @@ public class TurboBitFileRunner extends AbstractRunner {
             }
             checkProblems();
 
-            while (getContentAsString().contains("/captcha/")) {
+            while (getContentAsString().contains("class=\"g-recaptcha\"")) {
                 if (!makeRedirectedRequest(stepCaptcha(method.getURI().toString()))) {
                     checkProblems();
                     throw new ServiceConnectionProblemException();
@@ -157,58 +155,19 @@ public class TurboBitFileRunner extends AbstractRunner {
     }
 
     private HttpMethod stepCaptcha(final String action) throws Exception {
-        if (getContentAsString().contains("recaptcha")) {
-            logger.info("Handling ReCaptcha");
+        final Matcher m = getMatcherAgainstContent("data-sitekey=\"([^\"]+)\"");
+        if (!m.find()) throw new PluginImplementationException("ReCaptcha key not found");
+        final String reCaptchaKey = m.group(1);
 
-            final Matcher m = getMatcherAgainstContent("api.recaptcha.net/noscript\\?k=([^\"]+)\"");
-            if (!m.find()) throw new PluginImplementationException("ReCaptcha key not found");
-            final String reCaptchaKey = m.group(1);
+        final String content = getContentAsString();
+        final ReCaptchaNoCaptcha r = new ReCaptchaNoCaptcha(reCaptchaKey, action);
 
-            final String content = getContentAsString();
-            final ReCaptcha r = new ReCaptcha(reCaptchaKey, client);
-            final CaptchaSupport captchaSupport = getCaptchaSupport();
-
-            final String captchaURL = r.getImageURL();
-            logger.info("Captcha URL " + captchaURL);
-
-            final String captcha = captchaSupport.getCaptcha(captchaURL);
-            if (captcha == null) throw new CaptchaEntryInputMismatchException();
-            r.setRecognized(captcha);
-
-            return r.modifyResponseMethod(
-                    getMethodBuilder(content)
-                            .setReferer(action)
-                            .setActionFromFormByIndex(3, true)
-                            .setAction(action)
-            ).toPostMethod();
-        } else {
-            logger.info("Handling regular captcha");
-
-            final CaptchaSupport captchaSupport = getCaptchaSupport();
-            final String captchaSrc = getMethodBuilder().setActionFromImgSrcWhereTagContains("captcha").getEscapedURI();
-            logger.info("Captcha URL " + captchaSrc);
-
-            final String captcha;
-            if (captchaCounter <= CAPTCHA_MAX) {
-                captcha = CaptchaReader.recognize(captchaSupport.getCaptchaImage(captchaSrc));
-                if (captcha == null) {
-                    logger.info("Could not separate captcha letters, attempt " + captchaCounter + " of " + CAPTCHA_MAX);
-                }
-                logger.info("OCR recognized " + captcha + ", attempt " + captchaCounter + " of " + CAPTCHA_MAX);
-                captchaCounter++;
-            } else {
-                captcha = captchaSupport.getCaptcha(captchaSrc);
-                if (captcha == null) throw new CaptchaEntryInputMismatchException();
-                logger.info("Manual captcha " + captcha);
-            }
-
-            return getMethodBuilder()
-                    .setReferer(action)
-                    .setActionFromFormWhereTagContains("captcha", true)
-                    .setAction(action)
-                    .setParameter("captcha_response", captcha)
-                    .toPostMethod();
-        }
+        return r.modifyResponseMethod(
+                getMethodBuilder(content)
+                        .setReferer(action)
+                        .setActionFromFormWhereTagContains("data-sitekey", true)
+                        .setAction(action)
+        ).toPostMethod();
     }
 
 }
