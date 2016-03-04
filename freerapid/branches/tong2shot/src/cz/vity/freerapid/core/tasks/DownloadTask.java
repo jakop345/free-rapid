@@ -178,7 +178,6 @@ public class DownloadTask extends CoreTask<Void, Long> implements HttpFileDownlo
             } else {
                 downloadFile.setFileName(unique);
             }
-
         }
 
         final String fileName = (downloadFile.getFileNameRenameTo() != null ? downloadFile.getFileNameRenameTo() : downloadFile.getFileName());

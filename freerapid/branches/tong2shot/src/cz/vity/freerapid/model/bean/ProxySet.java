@@ -4,7 +4,7 @@ import cz.vity.freerapid.gui.managers.interfaces.ModelWrapper;
 import cz.vity.freerapid.model.ProxySetModel;
 import org.jdesktop.application.AbstractBean;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * @author tong2shot
@@ -32,12 +32,12 @@ public class ProxySet extends AbstractBean implements ModelWrapper {
         firePropertyChange("name", oldValue, model.getName());
     }
 
-    public Set<String> getProxies() {
+    public List<String> getProxies() {
         return model.getProxies();
     }
 
-    public void setProxies(Set<String> proxies) {
-        Set<String> oldValue = model.getProxies();
+    public void setProxies(List<String> proxies) {
+        List<String> oldValue = model.getProxies();
         model.setProxies(proxies);
         firePropertyChange("proxies", oldValue, model.getProxies());
     }

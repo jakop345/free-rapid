@@ -19,7 +19,7 @@ import org.jdesktop.swinghelper.buttonpanel.JXButtonPanel;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.util.Set;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -89,7 +89,7 @@ public class ProxySetManipDialog extends AppDialog {
         if (manipType == ManipType.EDIT) {
             model = new PresentationModel<ProxySet>(proxySet);
             Bindings.bind(fldName, model.getBufferedModel("name"));
-            proxyEditorPane.setProxies((Set) model.getBufferedModel("proxies").getValue());
+            proxyEditorPane.setProxies((List) model.getBufferedModel("proxies").getValue());
         }
     }
 
@@ -111,7 +111,7 @@ public class ProxySetManipDialog extends AppDialog {
             return;
         setResult(RESULT_OK);
         final String name = fldName.getText().trim();
-        final Set<String> proxies = proxyEditorPane.getProxies();
+        final List<String> proxies = proxyEditorPane.getProxies();
         if (manipType == ManipType.ADD) {
             manager.addProxySetItem(new ProxySet(new ProxySetModel(name, proxies)));
         } else {
@@ -148,11 +148,11 @@ public class ProxySetManipDialog extends AppDialog {
             Swinger.inputFocus(fldName);
             return false;
         }
-        final Set<String> proxies = proxyEditorPane.getProxies();
+        final List<String> proxies = proxyEditorPane.getProxies();
         return !isValidateListEmpty(proxies);
     }
 
-    private boolean isValidateListEmpty(final Set<String> proxies) {
+    private boolean isValidateListEmpty(final List<String> proxies) {
         if (proxies.isEmpty()) {
             Swinger.showErrorMessage(getResourceMap(), "noProxyMessage");
             Swinger.inputFocus(proxyEditorPane);

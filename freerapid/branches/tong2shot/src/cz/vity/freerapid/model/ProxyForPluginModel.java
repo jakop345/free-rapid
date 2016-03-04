@@ -8,7 +8,7 @@ import cz.vity.freerapid.model.bean.ProxyForPlugin;
 /**
  * @author tong2shot
  */
-@Entity(version = 1)
+@Entity
 public class ProxyForPluginModel implements Identifiable {
     @PrimaryKey(sequence = "ID")
     private Long dbId;

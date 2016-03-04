@@ -28,7 +28,7 @@ import java.util.logging.Logger;
  * @author Vity
  */
 
-@Entity(version = 1)
+@Entity
 public class DownloadFileModel implements Identifiable, HttpFile {
     private final static Logger logger = Logger.getLogger(DownloadFileModel.class.getName());
 

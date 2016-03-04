@@ -1136,7 +1136,6 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
             } else {
                 resultDownloadFile.setFileName(backupFileName);
             }
-
             table.setValueAt(resultDownloadFile, selectedRow, table.convertColumnIndexToView(COLUMN_NAME));
         } else {
             scrollToVisible(true);

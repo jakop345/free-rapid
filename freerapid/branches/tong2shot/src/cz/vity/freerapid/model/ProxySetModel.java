@@ -6,8 +6,8 @@ import cz.vity.freerapid.gui.managers.interfaces.Identifiable;
 import cz.vity.freerapid.gui.managers.interfaces.ModelWrapper;
 import cz.vity.freerapid.model.bean.ProxySet;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author tong2shot
@@ -19,13 +19,13 @@ public class ProxySetModel implements Identifiable {
     private Long dbId;
 
     private String name;
-    private Set<String> proxies = new HashSet<String>();
+    private List<String> proxies = new ArrayList<String>();
 
     private ProxySetModel() {
         //
     }
 
-    public ProxySetModel(String name, Set<String> proxies) {
+    public ProxySetModel(String name, List<String> proxies) {
         this.name = name;
         this.proxies = proxies;
     }
@@ -38,11 +38,11 @@ public class ProxySetModel implements Identifiable {
         this.name = name;
     }
 
-    public Set<String> getProxies() {
+    public List<String> getProxies() {
         return proxies;
     }
 
-    public void setProxies(Set<String> proxies) {
+    public void setProxies(List<String> proxies) {
         this.proxies = proxies;
     }
 

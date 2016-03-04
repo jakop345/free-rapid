@@ -100,19 +100,20 @@ public interface ShareDownloadService {
     void setPluginContext(PluginContext pluginContext);
 
     /**
-     * Method loads configuration data from string into Object.
-     * Intern implementation uses XMLEncoder.
+     * Method to load configuration data from string into Object.
+     * Internal implementation uses XMLEncoder.
      *
      * @param content config content
-     * @param type     class of the stored object
+     * @param type    class of the stored object
      * @return returns new instance, null if
      * @throws Exception throwed when reading went wrong
      */
     <E> E loadConfigFromString(final String content, Class<E> type) throws Exception;
 
     /**
-     * Method store plugin's configuration data from Object into string.
-     * Intern implementation uses XMLEncoder.
+     * Method to store plugin's configuration data from Object into string.
+     * Internal implementation uses XMLEncoder.
+     *
      * @return config data as string
      * @throws Exception throwed when reading went wrong
      */
@@ -120,10 +121,10 @@ public interface ShareDownloadService {
 
     /**
      * Clone config
+     *
      * @param config config to be cloned
-     * @param type
-     * @param <E>
-     * @return clone
+     * @param type   class of the stored object
+     * @return config clone
      * @throws Exception
      */
     <E> E cloneConfig(E config, Class<E> type) throws Exception;
