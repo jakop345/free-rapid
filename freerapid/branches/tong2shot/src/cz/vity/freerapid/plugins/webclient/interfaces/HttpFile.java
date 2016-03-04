@@ -179,13 +179,11 @@ public interface HttpFile {
     boolean isResumeSupported();
 
     /**
-     *
-     * @return
+     * @return local plugin config
      */
     String getLocalPluginConfig();
 
     /**
-     *
      * @param localPluginConfig String representation of XMLEncoder output of plugin config
      */
     void setLocalPluginConfig(String localPluginConfig);

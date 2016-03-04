@@ -26,8 +26,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-import static cz.vity.freerapid.plugins.webclient.DownloadState.DELETED;
-
 /**
  * @author Ladislav Vitasek
  */
@@ -165,7 +163,7 @@ class FileListMaintainer {
             }
             if (state == DownloadState.COMPLETED && removeCompleted) {
                 toRemoveList.add(file);
-                file.setState(DELETED);
+                file.setState(DownloadState.DELETED);
                 continue;
             }
             if (state != DownloadState.COMPLETED) {

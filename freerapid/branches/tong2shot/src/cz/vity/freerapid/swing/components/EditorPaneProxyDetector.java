@@ -10,13 +10,14 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * @author Vity
  * @author tong2shot
  */
 public class EditorPaneProxyDetector extends JEditorPane {
@@ -88,7 +89,7 @@ public class EditorPaneProxyDetector extends JEditorPane {
     }
 
 
-    public void setProxies(Set<String> list) {
+    public void setProxies(List<String> list) {
         if (list.isEmpty())
             return;
         final Document document = this.getDocument();
@@ -121,7 +122,7 @@ public class EditorPaneProxyDetector extends JEditorPane {
     public void setProxies(String s) {
         final Pattern pattern = REGEXP_URL;
         final Matcher matcher = pattern.matcher(s);
-        final Set<String> list = new HashSet<String>();
+        final List<String> list = new ArrayList<String>();
         while (validateProxy(s)) {
             final String e = matcher.group();
             if (!EXAMPLE.equals(e))
@@ -130,10 +131,10 @@ public class EditorPaneProxyDetector extends JEditorPane {
         setProxies(list);
     }
 
-    public java.util.Set<String> getProxies() {
+    public List<String> getProxies() {
         final String s = this.getText();
         final String[] proxies = s.split("\n|\t|(?:  )");
-        final Set<String> proxySet = new HashSet<String>(proxies.length);
+        final List<String> proxySet = new ArrayList<String>(proxies.length);
         for (String proxy : proxies) {
             if (!proxy.trim().isEmpty()) {
                 if (validateProxy(proxy)) {
@@ -159,7 +160,6 @@ public class EditorPaneProxyDetector extends JEditorPane {
 
         private MutableAttributeSet normal;
         private MutableAttributeSet keyword;
-        private final Pattern PROXY_PATTERN = REGEXP_URL;
         private static final String DELIMITERS = "\n\t";
 
 
