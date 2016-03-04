@@ -19,7 +19,6 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Logger;
 
 /**
@@ -89,7 +88,7 @@ public class ProxySetManipDialog extends AppDialog {
         if (manipType == ManipType.EDIT) {
             model = new PresentationModel<ProxySet>(proxySet);
             Bindings.bind(fldName, model.getBufferedModel("name"));
-            proxyEditorPane.setProxies((Set) model.getBufferedModel("proxies").getValue());
+            proxyEditorPane.setProxies((List) model.getBufferedModel("proxies").getValue());
         }
     }
 
