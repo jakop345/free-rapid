@@ -1,4 +1,4 @@
-package cz.vity.freerapid.plugins.services.fileloby;
+package cz.vity.freerapid.plugins.services.cloudlocker;
 
 import cz.vity.freerapid.plugins.exceptions.*;
 import cz.vity.freerapid.plugins.services.recaptcha.ReCaptchaNoCaptcha;
@@ -17,15 +17,15 @@ import java.util.regex.Matcher;
  *
  * @author birchie
  */
-class FileLobyFileRunner extends AbstractRunner {
-    private final static Logger logger = Logger.getLogger(FileLobyFileRunner.class.getName());
+class CloudLockerFileRunner extends AbstractRunner {
+    private final static Logger logger = Logger.getLogger(CloudLockerFileRunner.class.getName());
 
     @Override
     public void runCheck() throws Exception { //this method validates file
         super.runCheck();
         final GetMethod getMethod = getGetMethod(fileURL);//make first request
         if (makeRedirectedRequest(getMethod)) {
-            checkProblems();
+            checkProblems(getMethod);
             checkNameAndSize(getContentAsString());//ok let's extract file name and size from the page
         } else {
             checkProblems(getMethod);
@@ -34,14 +34,11 @@ class FileLobyFileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        Matcher match = PlugUtils.matcher("<div[^<>]*class=\"heading[^<>]*>(.+?)</div>", content);
+        final Matcher match = PlugUtils.matcher("<strong>\\s*(.+?)\\s*\\((\\d.+?)\\)<br/>\\s*</strong>", content);
         if (!match.find())
-            throw new PluginImplementationException("File name not found");
+            throw new PluginImplementationException("File name/size not found");
         httpFile.setFileName(match.group(1).trim());
-        match = PlugUtils.matcher("\\s*?\\((\\d.+?)\\)<", content);
-        if (!match.find())
-            throw new PluginImplementationException("File size not found");
-        httpFile.setFileSize(PlugUtils.getFileSizeFromString(match.group(1)));
+        httpFile.setFileSize(PlugUtils.getFileSizeFromString(match.group(2).trim()));
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
 
@@ -53,41 +50,36 @@ class FileLobyFileRunner extends AbstractRunner {
         if (makeRedirectedRequest(method)) { //we make the main request
             final String contentAsString = getContentAsString();//check for response
             checkProblems(method);//check problems
-            checkNameAndSize(contentAsString);
-            final HttpMethod nextMethod = getMethodBuilder().setReferer(fileURL)
-                    .setActionFromTextBetween("download-timer').html(\"<a class='btn btn-free' href='", "'")
-                    .toGetMethod();
-            final int wait = PlugUtils.getNumberBetween(contentAsString, "var seconds =", ";");
-            downloadTask.sleep(wait + 1);
-            if (!makeRedirectedRequest(nextMethod)) {
-                checkProblems();
+            checkNameAndSize(contentAsString);//extract file name and size from the page
+            int wait = 1 + PlugUtils.getNumberBetween(contentAsString, "var seconds = ", ";");
+            HttpMethod httpMethod = getMethodBuilder().setReferer(fileURL).setActionFromAHrefWhereATagContains("download now").toGetMethod();
+            downloadTask.sleep(wait);
+            if (!makeRedirectedRequest(httpMethod)) {
+                checkProblems(httpMethod);
                 throw new ServiceConnectionProblemException();
             }
-            checkProblems();
-            final HttpMethod captchaMethod = stepCaptcha(getMethodBuilder()
-                    .setActionFromFormWhereTagContains(httpFile.getFileName(), true)
-                    .setReferer(fileURL)
+            checkProblems(httpMethod);
+            httpMethod = stepCaptcha(getMethodBuilder().setReferer(fileURL)
+                    .setActionFromFormWhereTagContains("g-recaptcha", true)
                     , fileURL).toPostMethod();
-            if (!tryDownloadAndSaveFile(captchaMethod)) {
-                checkProblems();//if downloading failed
+            if (!tryDownloadAndSaveFile(httpMethod)) {
+                checkProblems(httpMethod);//if downloading failed
                 throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
             }
         } else {
-            checkProblems();
+            checkProblems(method);
             throw new ServiceConnectionProblemException();
         }
     }
 
     private void checkProblems(HttpMethod method) throws ErrorDuringDownloadingException {
-        if ((method.getStatusCode() == 404) || (method.getStatusText().equals("Not Found")))
-            throw new URLNotAvailableAnymoreException("File not found");
-        checkProblems();
-    }
-
-    private void checkProblems() throws ErrorDuringDownloadingException {
-        final String contentAsString = getContentAsString();
-        if (contentAsString.contains("File Not Found")) {
+        final String content = getContentAsString();
+        if ((method.getStatusCode() == 404) || content.contains("File Not Found")) {
             throw new URLNotAvailableAnymoreException("File not found"); //let to know user in FRD
+        }
+        Matcher match = PlugUtils.matcher("You must wait (\\d.+?) between downloads", content);
+        if (match.find()) {
+            throw new YouHaveToWaitException("Wait between downloads", 20*60);
         }
     }
 
