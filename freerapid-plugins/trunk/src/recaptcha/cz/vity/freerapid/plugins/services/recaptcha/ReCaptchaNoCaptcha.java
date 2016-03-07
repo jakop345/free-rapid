@@ -20,9 +20,6 @@ import java.util.logging.Logger;
 public class ReCaptchaNoCaptcha {
     private final static Logger logger = Logger.getLogger(ReCaptchaNoCaptcha.class.getName());
 
-    private final static String PATH_WINDOWS = "tools\\slimerjs\\slimerjs.bat";
-    private final static String PATH_LINUX = "tools/slimerjs/slimerjs";
-
     private final String response;
     private final String publicKey;
     private final String referer;
@@ -51,9 +48,9 @@ public class ReCaptchaNoCaptcha {
 
         final String command;
         if (Utils.isWindows()) {
-            command = Utils.addFileSeparator(Utils.getAppPath()) + PATH_WINDOWS;
+            command = Utils.addFileSeparator(Utils.getAppPath()) + ReCaptchaSlimerJs.PATH_WINDOWS;
         } else {
-            command = Utils.addFileSeparator(Utils.getAppPath()) + PATH_LINUX;
+            command = Utils.addFileSeparator(Utils.getAppPath()) + ReCaptchaSlimerJs.PATH_LINUX;
         }
 
         if (!new File(command).exists()) {
@@ -88,7 +85,11 @@ public class ReCaptchaNoCaptcha {
 
         Scanner scanner = null;
         try {
-            final Process process = new ProcessBuilder(command, tempFile.getCanonicalPath()).start();
+            final ProcessBuilder processBuilder = new ProcessBuilder(command, tempFile.getCanonicalPath());
+            if (Utils.isWindows()) { //windows batch (processor) bug workaround
+                processBuilder.environment().put("SLIMERJSLAUNCHER", Utils.addFileSeparator(Utils.getAppPath()) + ReCaptchaSlimerJs.PATH_XULRUNNER_WINDOWS);
+            }
+            final Process process = processBuilder.start();
             scanner = new Scanner(process.getInputStream());
             StringBuilder builder = new StringBuilder();
             final String s;
