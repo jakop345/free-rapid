@@ -14,6 +14,7 @@ import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.HttpMethod;
 
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -47,6 +48,15 @@ class NovaFileFileRunner extends XFileSharingRunner {
         final List<String> downloadPageMarkers = super.getDownloadPageMarkers();
         downloadPageMarkers.add("This download link will be ");
         return downloadPageMarkers;
+    }
+
+    @Override
+    protected int getWaitTime() throws Exception {
+        final Matcher matcher = getMatcherAgainstContent("id=\"count\"[^>]*>(\\d+)<");
+        if (matcher.find()) {
+            return Integer.parseInt(matcher.group(1)) + 1;
+        }
+        return 0;
     }
 
     @Override
