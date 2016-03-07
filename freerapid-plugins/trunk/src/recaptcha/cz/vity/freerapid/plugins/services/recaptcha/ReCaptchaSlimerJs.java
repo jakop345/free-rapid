@@ -22,8 +22,9 @@ import java.util.regex.Matcher;
 public class ReCaptchaSlimerJs {
     private final static Logger logger = Logger.getLogger(ReCaptchaSlimerJs.class.getName());
 
-    private final static String PATH_WINDOWS = "tools\\slimerjs\\slimerjs.bat";
-    private final static String PATH_LINUX = "tools/slimerjs/slimerjs";
+    public final static String PATH_WINDOWS = "tools\\slimerjs\\slimerjs.bat";
+    public final static String PATH_LINUX = "tools/slimerjs/slimerjs";
+    public final static String PATH_XULRUNNER_WINDOWS = "tools\\slimerjs\\xulrunner\\xulrunner.exe";
     private final static String PATH_APP_INI_WINDOWS = "tools\\slimerjs\\application.ini";
     private final static String PATH_APP_INI_LINUX = "tools/slimerjs/application.ini";
 
@@ -108,7 +109,11 @@ public class ReCaptchaSlimerJs {
 
         Scanner scanner = null;
         try {
-            final Process process = new ProcessBuilder(command, tempFile.getCanonicalPath()).start();
+            final ProcessBuilder processBuilder = new ProcessBuilder(command, tempFile.getCanonicalPath());
+            if (Utils.isWindows()) { //windows batch (processor) bug workaround
+                processBuilder.environment().put("SLIMERJSLAUNCHER", Utils.addFileSeparator(Utils.getAppPath()) + PATH_XULRUNNER_WINDOWS);
+            }
+            final Process process = processBuilder.start();
             scanner = new Scanner(process.getInputStream());
             StringBuilder builder = new StringBuilder();
             final String s;
