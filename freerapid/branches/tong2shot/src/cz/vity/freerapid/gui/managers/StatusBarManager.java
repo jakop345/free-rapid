@@ -28,7 +28,10 @@ import org.jdesktop.swingx.JXCollapsiblePane;
 import org.jdesktop.swingx.JXStatusBar;
 
 import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -43,7 +46,7 @@ import java.util.prefs.PreferenceChangeListener;
  *
  * @author Vity
  */
-public class StatusBarManager implements PropertyChangeListener, ListDataListener, ListSelectionListener {
+public class StatusBarManager implements PropertyChangeListener, ListDataListener {
     private JXStatusBar statusbar;
     private JLabel infoLabel;
     private final ManagerDirector director;
@@ -165,6 +168,7 @@ public class StatusBarManager implements PropertyChangeListener, ListDataListene
             lblSetMaxDownloads.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
+                    setPluginMaxDownloads();
                     Rectangle rect = lblSetMaxDownloads.getVisibleRect();
                     popupMenu.show(lblSetMaxDownloads, rect.x, rect.y - popupMenu.getPreferredSize().height - 5);
                     Swinger.inputFocus(spinnerMaxConcurrentDownloads);
@@ -190,8 +194,6 @@ public class StatusBarManager implements PropertyChangeListener, ListDataListene
 
             dataManager.addPropertyChangeListener("completed", this);
             dataManager.addPropertyChangeListener("state", this);
-
-            director.getContentManager().getContentPanel().addListSelectionListener(this);
 
             AppPrefs.getPreferences().addPreferenceChangeListener(new PreferenceChangeListener() {
                 public void preferenceChange(final PreferenceChangeEvent evt) {
@@ -327,6 +329,36 @@ public class StatusBarManager implements PropertyChangeListener, ListDataListene
         maxDownloadsPanelBuilder.add(spinnerMaxConcurrentDownloads, cc.xy(3, 1));
         maxDownloadsPanelBuilder.add(lblPluginMaxDownloads, cc.xy(1, 3));
         maxDownloadsPanelBuilder.add(spinnerPluginMaxDownloads, cc.xy(3, 3));
+    }
+
+    private void setPluginMaxDownloads() {
+        spinnerPluginMaxDownloads.setEnabled(false);
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                final int index[] = director.getContentManager().getContentPanel().getSelectedRows();
+                if (index.length == 0) {
+                    return;
+                }
+                final java.util.List<DownloadFile> files = dataManager.getSelectionToList(index);
+                if (!files.isEmpty()) {
+                    final DownloadFile httpFile = files.get(0);
+                    if (httpFile.getState() == DownloadState.COMPLETED || httpFile.getState() == DownloadState.DELETED)
+                        return;
+                    final String pluginID = httpFile.getPluginID();
+                    final PluginMetaData pluginMetaData;
+                    try {
+                        pluginMetaData = director.getPluginsManager().getPluginMetadata(pluginID);
+                    } catch (Exception ex) {
+                        return; //direct download
+                    }
+
+                    final int max = pluginMetaData.getMaxParallelDownloads();
+                    final BeanAdapter<PluginMetaData> beanModel = new BeanAdapter<PluginMetaData>(pluginMetaData, true);
+                    bind(spinnerPluginMaxDownloads, 1, 1, max, 1, beanModel.getValueModel("maxAllowedDownloads"));
+                    spinnerPluginMaxDownloads.setEnabled(max > 1);
+                }
+            }
+        });
     }
 
     private void checkPropertyChange(PreferenceChangeEvent evt) {
@@ -471,39 +503,6 @@ public class StatusBarManager implements PropertyChangeListener, ListDataListene
         slider.setMinimum(minimum);
         slider.setMaximum(maximum);
         slider.setMinorTickSpacing(step);
-    }
-
-    @Override
-    public void valueChanged(final ListSelectionEvent e) {
-        spinnerPluginMaxDownloads.setEnabled(false);
-        if (e.getValueIsAdjusting())
-            return;
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                final int index[] = director.getContentManager().getContentPanel().getSelectedRows();
-                if (index.length == 0) {
-                    return;
-                }
-                final java.util.List<DownloadFile> files = dataManager.getSelectionToList(index);
-                if (!files.isEmpty()) {
-                    final DownloadFile httpFile = files.get(0);
-                    if (httpFile.getState() == DownloadState.COMPLETED || httpFile.getState() == DownloadState.DELETED)
-                        return;
-                    final String pluginID = httpFile.getPluginID();
-                    final PluginMetaData pluginMetaData;
-                    try {
-                        pluginMetaData = director.getPluginsManager().getPluginMetadata(pluginID);
-                    } catch (Exception ex) {
-                        return; //direct download
-                    }
-
-                    final int max = pluginMetaData.getMaxParallelDownloads();
-                    final BeanAdapter<PluginMetaData> beanModel = new BeanAdapter<PluginMetaData>(pluginMetaData, true);
-                    bind(spinnerPluginMaxDownloads, 1, 1, max, 1, beanModel.getValueModel("maxAllowedDownloads"));
-                    spinnerPluginMaxDownloads.setEnabled(max > 1);
-                }
-            }
-        });
     }
 
     private void bind(JSpinner spinner, int defaultValue, int minValue, int maxValue, int step, final ValueModel valueModel) {

@@ -186,10 +186,6 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
         return Swinger.getSelectedRows(table);
     }
 
-    public void addListSelectionListener(ListSelectionListener listSelectionListener) {
-        table.getSelectionModel().addListSelectionListener(listSelectionListener);
-    }
-
     @org.jdesktop.application.Action(enabledProperty = SELECTED_ACTION_ENABLED_PROPERTY)
     public void sortbyNameAction() {
         final ListSelectionModel selectionModel = table.getSelectionModel();
