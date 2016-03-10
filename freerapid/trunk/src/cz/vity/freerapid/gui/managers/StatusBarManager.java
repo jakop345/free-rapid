@@ -2,6 +2,8 @@ package cz.vity.freerapid.gui.managers;
 
 import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.adapter.BoundedRangeAdapter;
+import com.jgoodies.binding.adapter.SpinnerAdapterFactory;
+import com.jgoodies.binding.beans.BeanAdapter;
 import com.jgoodies.binding.beans.PropertyConnector;
 import com.jgoodies.binding.value.ConverterFactory;
 import com.jgoodies.binding.value.ValueModel;
@@ -12,6 +14,9 @@ import cz.vity.freerapid.core.MainApp;
 import cz.vity.freerapid.core.UserProp;
 import cz.vity.freerapid.core.tasks.DownloadTask;
 import cz.vity.freerapid.gui.content.ContentPanel;
+import cz.vity.freerapid.model.DownloadFile;
+import cz.vity.freerapid.model.PluginMetaData;
+import cz.vity.freerapid.plugins.webclient.DownloadState;
 import cz.vity.freerapid.swing.Swinger;
 import cz.vity.freerapid.swing.TrayIconSupport;
 import cz.vity.freerapid.swing.binding.BindUtils;
@@ -23,6 +28,8 @@ import org.jdesktop.swingx.JXCollapsiblePane;
 import org.jdesktop.swingx.JXStatusBar;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import java.awt.*;
@@ -59,6 +66,10 @@ public class StatusBarManager implements PropertyChangeListener, ListDataListene
     private Task activeTask = null;
     private JSlider slider;
     private static final int BAR_HEIGHT = 18;
+
+    private JPopupMenu popupMenu;
+    private JSpinner spinnerMaxConcurrentDownloads;
+    private JSpinner spinnerPluginMaxDownloads;
 
     /**
      * Konstruktor
@@ -125,7 +136,6 @@ public class StatusBarManager implements PropertyChangeListener, ListDataListene
             quietMode.setName("labelQuietMode");
             resourceMap.injectComponent(quietMode);
 
-
             statusbar.setName("statusbarPanel");
             infoLabel = new JLabel();
             progress = new JProgressBar();
@@ -136,6 +146,7 @@ public class StatusBarManager implements PropertyChangeListener, ListDataListene
             infoLabel.setPreferredSize(new Dimension(420, BAR_HEIGHT));
             clipboardMonitoring.setPreferredSize(new Dimension(17, BAR_HEIGHT));
             quietMode.setPreferredSize(new Dimension(17, BAR_HEIGHT));
+
             progress.setPreferredSize(new Dimension(progress.getPreferredSize().width + 35, BAR_HEIGHT));
             progress.setVisible(false);
             director.getMenuManager().getMenuBar().addPropertyChangeListener("selectedText", this);
@@ -146,11 +157,30 @@ public class StatusBarManager implements PropertyChangeListener, ListDataListene
 
             initSpeedBar(speedBarPanel, resourceMap);
 
+            final JLabel lblSetMaxDownloads = new JLabel();
+            final JPanel maxDownloadsPanel = new JPanel();
+            initMaxDownloadsPanel(maxDownloadsPanel, resourceMap);
+            popupMenu = new JPopupMenu();
+            popupMenu.setBorder(BorderFactory.createLineBorder(UIManager.getDefaults().getColor("InternalFrame.borderShadow")));
+            popupMenu.add(maxDownloadsPanel);
+            lblSetMaxDownloads.setName("labelSetMaxDownloads");
+            resourceMap.injectComponent(lblSetMaxDownloads);
+            lblSetMaxDownloads.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    setPluginMaxDownloads();
+                    Rectangle rect = lblSetMaxDownloads.getVisibleRect();
+                    popupMenu.show(lblSetMaxDownloads, rect.x, rect.y - popupMenu.getPreferredSize().height - 5);
+                    Swinger.inputFocus(spinnerMaxConcurrentDownloads);
+                }
+            });
+
             PropertyConnector.connectAndUpdate(BindUtils.getPrefsValueModel(UserProp.CLIPBOARD_MONITORING, UserProp.CLIPBOARD_MONITORING_DEFAULT), clipboardMonitoring, "enabled");
             PropertyConnector.connectAndUpdate(BindUtils.getPrefsValueModel(UserProp.QUIET_MODE_ENABLED, UserProp.QUIET_MODE_ENABLED_DEFAULT), quietMode, "enabled");
 
             statusbar.add(clipboardMonitoring, JXStatusBar.Constraint.ResizeBehavior.FIXED);
             statusbar.add(quietMode, JXStatusBar.Constraint.ResizeBehavior.FIXED);
+            statusbar.add(lblSetMaxDownloads, JXStatusBar.Constraint.ResizeBehavior.FIXED);
             statusbar.add(speedBarPanel, JXStatusBar.Constraint.ResizeBehavior.FIXED);
             statusbar.add(progress, JXStatusBar.Constraint.ResizeBehavior.FIXED);
 
@@ -254,6 +284,83 @@ public class StatusBarManager implements PropertyChangeListener, ListDataListene
 
     }
 
+    private void initMaxDownloadsPanel(JPanel maxDownloadsPanel, ResourceMap resourceMap) {
+        maxDownloadsPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        spinnerMaxConcurrentDownloads = new JSpinner();
+        ValueModel maxConcurrentDownloadsAdapter = BindUtils.getReadOnlyPrefsValueModel(UserProp.MAX_DOWNLOADS_AT_A_TIME, UserProp.MAX_DOWNLOADS_AT_A_TIME_DEFAULT);
+        bind(spinnerMaxConcurrentDownloads, UserProp.MAX_DOWNLOADS_AT_A_TIME_DEFAULT, 1, 1000000, 1, maxConcurrentDownloadsAdapter);
+        spinnerMaxConcurrentDownloads.setName("spinnerMaxConcurrentDownloads");
+
+        spinnerPluginMaxDownloads = new JSpinner();
+        spinnerPluginMaxDownloads.setName("spinnerPluginMaxDownloads");
+
+        spinnerPluginMaxDownloads.setEnabled(false);
+        spinnerPluginMaxDownloads.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                director.getPluginsManager().updatePluginSettings();
+            }
+        });
+
+        JLabel lblMaxConcurrentDownloads = new JLabel();
+        lblMaxConcurrentDownloads.setName("labelMaxConcurrentDownloads");
+        resourceMap.injectComponent(lblMaxConcurrentDownloads);
+        lblMaxConcurrentDownloads.setLabelFor(spinnerMaxConcurrentDownloads);
+
+        JLabel lblPluginMaxDownloads = new JLabel();
+        lblPluginMaxDownloads.setName("labelPluginMaxDownloads");
+        resourceMap.injectComponent(lblPluginMaxDownloads);
+        lblPluginMaxDownloads.setLabelFor(spinnerPluginMaxDownloads);
+
+        CellConstraints cc = new CellConstraints();
+
+        PanelBuilder maxDownloadsPanelBuilder = new PanelBuilder(new FormLayout(
+                new ColumnSpec[]{
+                        FormSpecs.DEFAULT_COLSPEC,
+                        FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+                        new ColumnSpec(ColumnSpec.FILL, Sizes.bounded(Sizes.PREFERRED, Sizes.dluX(56), Sizes.dluX(65)), FormSpec.DEFAULT_GROW)
+                },
+                new RowSpec[]{
+                        FormSpecs.DEFAULT_ROWSPEC,
+                        FormSpecs.LINE_GAP_ROWSPEC,
+                        FormSpecs.DEFAULT_ROWSPEC,
+                }), maxDownloadsPanel);
+        maxDownloadsPanelBuilder.add(lblMaxConcurrentDownloads, cc.xy(1, 1));
+        maxDownloadsPanelBuilder.add(spinnerMaxConcurrentDownloads, cc.xy(3, 1));
+        maxDownloadsPanelBuilder.add(lblPluginMaxDownloads, cc.xy(1, 3));
+        maxDownloadsPanelBuilder.add(spinnerPluginMaxDownloads, cc.xy(3, 3));
+    }
+
+    private void setPluginMaxDownloads() {
+        spinnerPluginMaxDownloads.setEnabled(false);
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                final int index[] = director.getContentManager().getContentPanel().getSelectedRows();
+                if (index.length == 0) {
+                    return;
+                }
+                final java.util.List<DownloadFile> files = dataManager.getSelectionToList(index);
+                if (!files.isEmpty()) {
+                    final DownloadFile httpFile = files.get(0);
+                    if (httpFile.getState() == DownloadState.COMPLETED || httpFile.getState() == DownloadState.DELETED)
+                        return;
+                    final String pluginID = httpFile.getPluginID();
+                    final PluginMetaData pluginMetaData;
+                    try {
+                        pluginMetaData = director.getPluginsManager().getPluginMetadata(pluginID);
+                    } catch (Exception ex) {
+                        return; //direct download
+                    }
+
+                    final int max = pluginMetaData.getMaxParallelDownloads();
+                    final BeanAdapter<PluginMetaData> beanModel = new BeanAdapter<PluginMetaData>(pluginMetaData, true);
+                    bind(spinnerPluginMaxDownloads, 1, 1, max, 1, beanModel.getValueModel("maxAllowedDownloads"));
+                    spinnerPluginMaxDownloads.setEnabled(max > 1);
+                }
+            }
+        });
+    }
+
     private void checkPropertyChange(PreferenceChangeEvent evt) {
         final String key = evt.getKey();
         if (UserProp.SHOWINFO_IN_TITLE.equals(key)) {
@@ -270,6 +377,8 @@ public class StatusBarManager implements PropertyChangeListener, ListDataListene
                 Swinger.inputFocus(slider);
         } else if (UserProp.GLOBAL_SPEED_SLIDER_MAX.equals(key) || UserProp.GLOBAL_SPEED_SLIDER_MAX.equals(key) || UserProp.GLOBAL_SPEED_SLIDER_STEP.equals(key)) {
             bindSpeedSlider(slider);
+        } else if (UserProp.MAX_DOWNLOADS_AT_A_TIME.equals(key)) {
+            spinnerMaxConcurrentDownloads.setValue(AppPrefs.getProperty(UserProp.MAX_DOWNLOADS_AT_A_TIME, UserProp.MAX_DOWNLOADS_AT_A_TIME_DEFAULT));
         }
     }
 
@@ -394,6 +503,20 @@ public class StatusBarManager implements PropertyChangeListener, ListDataListene
         slider.setMinimum(minimum);
         slider.setMaximum(maximum);
         slider.setMinorTickSpacing(step);
+    }
+
+    private void bind(JSpinner spinner, int defaultValue, int minValue, int maxValue, int step, final ValueModel valueModel) {
+        spinner.setModel(SpinnerAdapterFactory.createNumberAdapter(
+                valueModel,
+                defaultValue,
+                minValue,
+                maxValue,
+                step));
+        final JComponent editor = spinner.getEditor();
+        if (editor instanceof JFormattedTextField) {
+            final JFormattedTextField field = (JFormattedTextField) editor;
+            field.setFocusLostBehavior(JFormattedTextField.COMMIT);
+        }
     }
 
 //    private ValueModel bind(final JCheckBox checkBox, final String key, final Object defaultValue) {

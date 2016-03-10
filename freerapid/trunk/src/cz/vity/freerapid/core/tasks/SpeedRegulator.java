@@ -155,7 +155,7 @@ public final class SpeedRegulator implements PropertyChangeListener {
      * Vraci true, pokud ma dotycny soubor dostatek tokenu (muze stahovat)
      *
      * @param file soubor, ktery stahuje
-     * @param o    kolik token soubor pri stahovani zada
+     * @param bytes    kolik token soubor pri stahovani zada
      * @return true ma dostatek tokenu, jinak false
      */
     public final boolean takeTokens(DownloadFile file, final int bytes) {
