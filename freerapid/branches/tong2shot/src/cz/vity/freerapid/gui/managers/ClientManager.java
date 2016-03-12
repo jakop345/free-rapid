@@ -4,11 +4,12 @@ import cz.vity.freerapid.core.AppPrefs;
 import cz.vity.freerapid.core.FWProp;
 import cz.vity.freerapid.core.UserProp;
 import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
-import cz.vity.freerapid.plugins.webclient.ssl.EasySSLProtocolSocketFactory;
+import cz.vity.freerapid.plugins.webclient.ssl.SSLProtocolSocketFactory;
 import cz.vity.freerapid.utilities.LogUtils;
 import cz.vity.freerapid.utilities.Utils;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
+import org.jdesktop.application.ApplicationContext;
 
 import java.io.File;
 import java.net.Authenticator;
@@ -36,6 +37,7 @@ public class ClientManager {
 
     private final Object connectionSettingsLock = new Object();
     private final ManagerDirector managerDirector;
+    private final ApplicationContext context;
     private final Map<String, Integer> rotate = new HashMap<String, Integer>();
 
     private final Object proxyPerPluginConnectionSettingsLock = new Object();
@@ -43,6 +45,7 @@ public class ClientManager {
 
     public ClientManager(ManagerDirector managerDirector) {
         this.managerDirector = managerDirector;
+        this.context = managerDirector.getContext();
         defaultConnectionSettings.setDefault(true);
         final boolean useSystemProxies = AppPrefs.getProperty(UserProp.USE_SYSTEM_PROXIES, UserProp.USE_SYSTEM_PROXIES_DEFAULT);
         if (!useSystemProxies)
@@ -55,7 +58,7 @@ public class ClientManager {
 
     private void initSSL() {
         try {
-            ProtocolSocketFactory sf = new EasySSLProtocolSocketFactory();
+            ProtocolSocketFactory sf = new SSLProtocolSocketFactory(context);
             Protocol p = new Protocol("https", sf, 443);
             Protocol.registerProtocol("https", p);
         } catch (Exception e) {
