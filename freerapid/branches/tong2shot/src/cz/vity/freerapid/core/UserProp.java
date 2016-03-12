@@ -402,6 +402,8 @@ final public class UserProp {
     public static final String USE_PROXY_FOR_PLUGIN = "useProxyForPlugin";
     public static final boolean USE_PROXY_FOR_PLUGIN_DEFAULT = false;
 
+    public static final String CA_CERT_URL = "caCertUrl";
+
 }
 
 
