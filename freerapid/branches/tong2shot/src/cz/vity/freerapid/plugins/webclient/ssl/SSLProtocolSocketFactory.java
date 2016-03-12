@@ -6,7 +6,6 @@ import cz.vity.freerapid.utilities.LogUtils;
 import cz.vity.freerapid.utilities.Utils;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.ConnectTimeoutException;
-import org.apache.commons.httpclient.HttpClientError;
 import org.apache.commons.httpclient.params.HttpConnectionParams;
 import org.apache.commons.httpclient.protocol.SecureProtocolSocketFactory;
 import org.jdesktop.application.ApplicationContext;
@@ -54,7 +53,7 @@ public class SSLProtocolSocketFactory implements SecureProtocolSocketFactory {
         try {
             //Mozilla CA certs
             //https://curl.haxx.se/docs/caextract.html
-            String location = AppPrefs.getProperty(UserProp.CA_CERT_URL, "https://curl.haxx.se/ca/cacert.pem");
+            String location = AppPrefs.getProperty(UserProp.CA_CERT_URL, "https://curl.haxx.se/ca/cacert.pem"); //https is a must
             File cachedPemFile = new File(applicationContext.getLocalStorage().getDirectory(), "pemfile_cached");
             boolean remote = true;
             if (cachedPemFile.exists()
@@ -64,15 +63,17 @@ public class SSLProtocolSocketFactory implements SecureProtocolSocketFactory {
             }
             String pemBlocks;
             if (remote) {
-                HttpURLConnection remotePemFile = (HttpURLConnection) (new URL(location)).openConnection();
+                SSLContext contextInit;
+                HttpsURLConnection remotePemFile = (HttpsURLConnection) (new URL(location)).openConnection();
                 remotePemFile.setRequestMethod("GET");
                 try {
                     remotePemFile.connect();
+                    contextInit = SSLContext.getDefault();
                 } catch (Exception e) {
                     LogUtils.processException(logger, e);
                     try {
                         File caCertInit = new File(Utils.getAppPath(), "cacert.pem");
-                        SSLContext contextInit = (caCertInit.exists()
+                        contextInit = (caCertInit.exists()
                                 ? getSSLContextFromString(Utils.loadFile((cachedPemFile.exists() && (cachedPemFile.lastModified() > caCertInit.lastModified())
                                 ? new File(location) : caCertInit), "utf-8"))
                                 : new EasySSLProtocolSocketFactory().createEasySSLContext());
@@ -81,18 +82,20 @@ public class SSLProtocolSocketFactory implements SecureProtocolSocketFactory {
                             logger.warning("Trying to create fallback SSL context..");
                             contextInit = new EasySSLProtocolSocketFactory().createEasySSLContext();
                         }
-                        ((HttpsURLConnection) remotePemFile).setSSLSocketFactory(contextInit.getSocketFactory());
+                        remotePemFile.setSSLSocketFactory(contextInit.getSocketFactory());
                         remotePemFile.connect();
                     } catch (Exception e1) {
-                        logger.info("Easy SSL");
                         LogUtils.processException(logger, e1);
-                        ((HttpsURLConnection) remotePemFile).setSSLSocketFactory(new EasySSLProtocolSocketFactory().createEasySSLContext().getSocketFactory());
+                        contextInit = new EasySSLProtocolSocketFactory().createEasySSLContext();
+                        remotePemFile.setSSLSocketFactory(contextInit.getSocketFactory());
                         remotePemFile.connect();
                     }
                 }
                 pemBlocks = inputStreamToString(remotePemFile.getInputStream(), getCharset(remotePemFile));
                 if (pemBlocks == null) {
-                    throw new HttpClientError("Failed to create SSL context: CA certs content is null");
+                    logger.warning("Failed to create SSL context: CA certs content is null");
+                    logger.warning("Trying to create fallback SSL context..");
+                    return (contextInit != null ? contextInit : new EasySSLProtocolSocketFactory().createEasySSLContext());
                 }
                 cachedPemFile.delete();
                 Files.write(Paths.get(cachedPemFile.getAbsolutePath()), pemBlocks.getBytes("utf-8"));
