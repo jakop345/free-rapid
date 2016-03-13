@@ -41,6 +41,13 @@ class FileJokerFileRunner extends XFileSharingRunner {
     }
 
     @Override
+    protected List<String> getDownloadLinkRegexes() {
+        final List<String> downloadLinkRegexes = super.getDownloadLinkRegexes();
+        downloadLinkRegexes.add("<a href\\s?=\\s?(?:\"|')(http[^\"']+)(?:\"|')[^<>]*?>Download File</a>");
+        return downloadLinkRegexes;
+    }
+
+    @Override
     protected void checkDownloadProblems() throws ErrorDuringDownloadingException {
         super.checkDownloadProblems();
         final String content = getContentAsString();
