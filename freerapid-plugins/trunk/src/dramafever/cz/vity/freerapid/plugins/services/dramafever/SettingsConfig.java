@@ -6,6 +6,7 @@ package cz.vity.freerapid.plugins.services.dramafever;
 public class SettingsConfig {
     private VideoQuality videoQuality = VideoQuality.Highest;
     private boolean downloadSubtitle = true;
+    private boolean enableTor = true;
 
     public VideoQuality getVideoQuality() {
         return videoQuality;
@@ -23,11 +24,20 @@ public class SettingsConfig {
         this.downloadSubtitle = downloadSubtitle;
     }
 
+    public boolean isEnableTor() {
+        return enableTor;
+    }
+
+    public void setEnableTor(boolean enableTor) {
+        this.enableTor = enableTor;
+    }
+
     @Override
     public String toString() {
         return "SettingsConfig{" +
                 "videoQuality=" + videoQuality +
                 ", downloadSubtitle=" + downloadSubtitle +
+                ", enableTor=" + enableTor +
                 '}';
     }
 }

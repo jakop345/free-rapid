@@ -1,4 +1,4 @@
-package cz.vity.freerapid.plugins.services.dramafever;
+package cz.vity.freerapid.plugins.services.uptostream;
 
 import cz.vity.freerapid.plugins.dev.PluginDevApplication;
 import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
@@ -15,18 +15,13 @@ public class TestApp extends PluginDevApplication {
     protected void startup() {
         final HttpFile httpFile = getHttpFile();
         try {
-            //httpFile.setNewURL(new URL("http://www.dramafever.com/drama/728/1/Personal_Taste/"));
-            //httpFile.setNewURL(new URL("http://imgdf-a.akamaihd.net/st/sub/PersonalTaste_01_new.srt")); //subtitle
-            //httpFile.setNewURL(new URL("http://www.dramafever.com/drama/19/1/Jewel_in_the_Palace/")); //Hulu
-            //httpFile.setNewURL(new URL("http://www.dramafever.com/drama/3915/1/The_Relation_of_Face%2C_Mind_and_Love/"));
-            //httpFile.setNewURL(new URL("http://www.dramafever.com/es/drama/4451/5/Star_in_My_Heart_-_Doblado_al_Espa%C3%B1ol/"));
-            httpFile.setNewURL(new URL("https://www.dramafever.com/drama/4505/1/Yae's_Sakura/"));
+            //httpFile.setNewURL(new URL("http://uptostream.com/7cdc4xg4jwgr"));
+            httpFile.setNewURL(new URL("http://uptostream.com/uqz8q6vmp798"));
             final ConnectionSettings connectionSettings = new ConnectionSettings();
-            //connectionSettings.setProxy("localhost", 9060, Proxy.Type.SOCKS); //eg we can use local proxy to sniff HTTP communication
-            final DramaFeverServiceImpl service = new DramaFeverServiceImpl();
+            //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
+            final UpToStreamServiceImpl service = new UpToStreamServiceImpl();
             SettingsConfig config = new SettingsConfig();
-            config.setVideoQuality(VideoQuality._1000);
-            //config.setDownloadSubtitle(false);
+            //config.setVideoQuality(VideoQuality._360);
             service.setConfig(config);
             testRun(service, httpFile, connectionSettings);
         } catch (Exception e) {

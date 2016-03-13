@@ -67,20 +67,28 @@ class DramaFeverFileRunner extends AbstractRunner {
             checkNameAndSize(getContentAsString());
             String seriesId = getSeriesId(fileURL);
             String episodeNumber = getEpisodeNumber(fileURL);
+            setConfig();
 
             method = getMethodBuilder()
                     .setReferer(fileURL)
                     .setAction("http://www.dramafever.com/amp/episode/feed.json")
                     .setParameter("guid", seriesId + "." + episodeNumber)
                     .toGetMethod();
-            TorProxyClient torClient = TorProxyClient.forCountry("us", client, getPluginService().getPluginContext().getConfigurationStorageSupport());
-            if (!torClient.makeRequest(method)) {
-                checkProblems();
-                throw new ServiceConnectionProblemException();
+            if (config.isEnableTor()) {
+                //internally, US & proxy users don't use Tor
+                final TorProxyClient torClient = TorProxyClient.forCountry("us", client, getPluginService().getPluginContext().getConfigurationStorageSupport());
+                if (!torClient.makeRequest(method)) {
+                    checkProblems();
+                    throw new ServiceConnectionProblemException();
+                }
+            } else {
+                if (!makeRedirectedRequest(method)) {
+                    checkProblems();
+                    throw new ServiceConnectionProblemException();
+                }
             }
             checkProblems();
 
-            setConfig();
             JsonMapper mapper = new JsonMapper();
             ObjectMapper om = mapper.getObjectMapper();
             JsonNode rootNode = om.readTree(getContentAsString());

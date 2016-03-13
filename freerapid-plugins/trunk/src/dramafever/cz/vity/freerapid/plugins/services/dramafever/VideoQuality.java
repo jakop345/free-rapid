@@ -6,7 +6,7 @@ import java.util.Collections;
 /**
  * @author tong2shot
  */
-public enum VideoQuality {
+enum VideoQuality {
     Lowest(1),
     _200(200),
     _400(400),
@@ -19,7 +19,7 @@ public enum VideoQuality {
 
     private final int bitrate;
 
-    private VideoQuality(int bitrate) {
+    VideoQuality(int bitrate) {
         this.bitrate = bitrate;
     }
 

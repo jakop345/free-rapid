@@ -16,7 +16,8 @@ public class TestApp extends PluginDevApplication {
         final HttpFile httpFile = getHttpFile(); //creates new test instance of HttpFile
         try {
             //we set file URL
-            httpFile.setNewURL(new URL("https://filejoker.net/ohr9pxky8rpi/mqs.link_six.part01.rar"));
+            //httpFile.setNewURL(new URL("https://filejoker.net/ohr9pxky8rpi/mqs.link_six.part01.rar"));
+            httpFile.setNewURL(new URL("https://filejoker.net/mpw5iml3kvlz"));
             //httpFile.setNewURL(new URL("https://filejoker.net/5odpnu113pdr/08.tgs128d.vob"));   // premium only
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
