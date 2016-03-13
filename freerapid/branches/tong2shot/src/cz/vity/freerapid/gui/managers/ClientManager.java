@@ -58,7 +58,8 @@ public class ClientManager {
 
     private void initSSL() {
         try {
-            ProtocolSocketFactory sf = new SSLProtocolSocketFactory(context);
+            boolean verifyHostname = AppPrefs.getProperty(UserProp.SSL_VERIFY_HOSTNAME, UserProp.SSL_VERIFY_HOSTNAME_DEFAULT);
+            ProtocolSocketFactory sf = new SSLProtocolSocketFactory(context, verifyHostname);
             Protocol p = new Protocol("https", sf, 443);
             Protocol.registerProtocol("https", p);
         } catch (Exception e) {
