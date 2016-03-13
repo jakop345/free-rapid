@@ -403,6 +403,8 @@ final public class UserProp {
     public static final boolean USE_PROXY_FOR_PLUGIN_DEFAULT = false;
 
     public static final String CA_CERT_URL = "caCertUrl";
+    public static final String SSL_VERIFY_HOSTNAME = "sslVerifyHostName";
+    public static final boolean SSL_VERIFY_HOSTNAME_DEFAULT = false;
 
 }
 

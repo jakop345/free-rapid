@@ -12,6 +12,7 @@ import org.jdesktop.application.ApplicationContext;
 
 import javax.net.SocketFactory;
 import javax.net.ssl.*;
+import javax.security.cert.X509Certificate;
 import java.io.*;
 import java.net.*;
 import java.nio.charset.Charset;
@@ -20,6 +21,7 @@ import java.nio.file.Paths;
 import java.security.*;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,14 +40,16 @@ public class SSLProtocolSocketFactory implements SecureProtocolSocketFactory {
             "charset\\s*=\\s*([^;]+)", Pattern.CASE_INSENSITIVE);
 
     private final ApplicationContext applicationContext;
+    private final boolean verifyHostname;
     private SSLContext sslcontext = null;
 
     /**
      * Constructor for SSLProtocolSocketFactory.
      */
-    public SSLProtocolSocketFactory(final ApplicationContext applicationContext) {
+    public SSLProtocolSocketFactory(final ApplicationContext applicationContext, final boolean verifyHostname) {
         super();
         this.applicationContext = applicationContext;
+        this.verifyHostname = verifyHostname;
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
@@ -157,12 +161,14 @@ public class SSLProtocolSocketFactory implements SecureProtocolSocketFactory {
             int clientPort)
             throws IOException {
 
-        return getSSLContext().getSocketFactory().createSocket(
+        SSLSocket sslSocket = (SSLSocket) getSSLContext().getSocketFactory().createSocket(
                 host,
                 port,
                 clientHost,
                 clientPort
         );
+        verifyHostname(sslSocket);
+        return sslSocket;
     }
 
     /**
@@ -197,14 +203,18 @@ public class SSLProtocolSocketFactory implements SecureProtocolSocketFactory {
         int timeout = params.getConnectionTimeout();
         SocketFactory socketfactory = getSSLContext().getSocketFactory();
         if (timeout == 0) {
-            return socketfactory.createSocket(host, port, localAddress, localPort);
+            SSLSocket sslSocket = (SSLSocket) socketfactory.createSocket(host, port, localAddress, localPort);
+            verifyHostname(sslSocket);
+            return sslSocket;
         } else {
             Socket socket = socketfactory.createSocket();
             SocketAddress localaddr = new InetSocketAddress(localAddress, localPort);
             SocketAddress remoteaddr = new InetSocketAddress(host, port);
             socket.bind(localaddr);
             socket.connect(remoteaddr, timeout);
-            return socket;
+            SSLSocket sslSocket = (SSLSocket) socket;
+            verifyHostname(sslSocket);
+            return sslSocket;
         }
     }
 
@@ -213,10 +223,12 @@ public class SSLProtocolSocketFactory implements SecureProtocolSocketFactory {
      */
     public Socket createSocket(String host, int port)
             throws IOException {
-        return getSSLContext().getSocketFactory().createSocket(
+        SSLSocket sslSocket = (SSLSocket) getSSLContext().getSocketFactory().createSocket(
                 host,
                 port
         );
+        verifyHostname(sslSocket);
+        return sslSocket;
     }
 
     /**
@@ -228,12 +240,95 @@ public class SSLProtocolSocketFactory implements SecureProtocolSocketFactory {
             int port,
             boolean autoClose)
             throws IOException {
-        return getSSLContext().getSocketFactory().createSocket(
+        SSLSocket sslSocket = (SSLSocket) getSSLContext().getSocketFactory().createSocket(
                 socket,
                 host,
                 port,
                 autoClose
         );
+        verifyHostname(sslSocket);
+        return sslSocket;
+    }
+
+    /**
+     * Describe <code>verifyHostname</code> method here.
+     *
+     * @param socket a <code>SSLSocket</code> value
+     * @throws SSLPeerUnverifiedException If there are problems obtaining
+     *                                    the server certificates from the SSL session, or the server host name
+     *                                    does not match with the "Common Name" in the server certificates
+     *                                    SubjectDN.
+     * @throws UnknownHostException       If we are not able to resolve
+     *                                    the SSL sessions returned server host name.
+     */
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    private void verifyHostname(SSLSocket socket)
+            throws SSLPeerUnverifiedException, UnknownHostException {
+        if (!verifyHostname)
+            return;
+
+        SSLSession session = socket.getSession();
+        String hostname = session.getPeerHost();
+        try {
+            InetAddress.getByName(hostname);
+        } catch (UnknownHostException uhe) {
+            throw new UnknownHostException("Could not resolve SSL sessions "
+                    + "server hostname: " + hostname);
+        }
+
+        X509Certificate[] certs = session.getPeerCertificateChain();
+        if (certs == null || certs.length == 0)
+            throw new SSLPeerUnverifiedException("No server certificates found!");
+
+        //get the servers DN in its string representation
+        String dn = certs[0].getSubjectDN().getName();
+
+        //might be useful to print out all certificates we receive from the
+        //server, in case one has to debug a problem with the installed certs.
+        if (logger.isLoggable(Level.FINE)) {
+            logger.fine("Server certificate chain:");
+            for (int i = 0; i < certs.length; i++) {
+                logger.fine("X509Certificate[" + i + "]=" + certs[i]);
+            }
+        }
+        //get the common name from the first cert
+        String cn = getCN(dn);
+        if (hostname.equalsIgnoreCase(cn)) {
+            if (logger.isLoggable(Level.FINE)) {
+                logger.fine("Target hostname valid: " + cn);
+            }
+        } else {
+            throw new SSLPeerUnverifiedException(
+                    "HTTPS hostname invalid: expected '" + hostname + "', received '" + cn + "'");
+        }
+    }
+
+
+    /**
+     * Parses a X.500 distinguished name for the value of the
+     * "Common Name" field.
+     * This is done a bit sloppy right now and should probably be done a bit
+     * more according to <code>RFC 2253</code>.
+     *
+     * @param dn a X.500 distinguished name.
+     * @return the value of the "Common Name" field.
+     */
+    private String getCN(String dn) {
+        int i;
+        i = dn.indexOf("CN=");
+        if (i == -1) {
+            return null;
+        }
+        //get the remaining DN without CN=
+        dn = dn.substring(i + 3);
+        // System.out.println("dn=" + dn);
+        char[] dncs = dn.toCharArray();
+        for (i = 0; i < dncs.length; i++) {
+            if (dncs[i] == ',' && i > 0 && dncs[i - 1] != '\\') {
+                break;
+            }
+        }
+        return dn.substring(0, i);
     }
 
     public boolean equals(Object obj) {
