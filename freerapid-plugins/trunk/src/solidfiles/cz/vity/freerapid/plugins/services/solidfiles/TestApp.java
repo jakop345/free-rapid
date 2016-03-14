@@ -17,7 +17,7 @@ public class TestApp extends PluginDevApplication {
         try {
             //we set file URL
             //httpFile.setNewURL(new URL("http://www.solidfiles.com/d/565cfda92d/Everything_Burns_-_Vincent_Zandri.epub"));
-            httpFile.setNewURL(new URL("http://www.solidfiles.com/d/ac6cbed4e7/"));
+            httpFile.setNewURL(new URL("http://www.solidfiles.com/d/edf513d15b/"));
             //httpFile.setNewURL(new URL("https://www.solidfiles.com/d/61d8b71dc7/"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
