@@ -34,10 +34,10 @@ class SolidFilesFileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        final Matcher matchN = PlugUtils.matcher("<h[12] title=\"(.+?)\"", content);
+        final Matcher matchN = PlugUtils.matcher("<h1[^<>]*>([^<>]+?)<", content);
         if (!matchN.find()) throw new PluginImplementationException("File name not found");
         httpFile.setFileName(matchN.group(1));
-        final Matcher match = PlugUtils.matcher("(?:class=\"meta\">|File size</dt>\\s*?<dd>)(.+?)(?:, <|</dd>)", content);
+        final Matcher match = PlugUtils.matcher("(?:\"size\":(\\d+?),|<p class=meta>(\\d.+?) - )", content);
         if (!match.find()) throw new PluginImplementationException("File size not found");
         httpFile.setFileSize(PlugUtils.getFileSizeFromString(match.group(1)));
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
@@ -54,9 +54,10 @@ class SolidFilesFileRunner extends AbstractRunner {
             checkProblems();//check problems
             checkNameAndSize(contentAsString);
             String name = httpFile.getFileName();
+            name = getMethodBuilder().setAction(name).getEscapedURI().replace(getBaseURL(), "");
             if (name.contains(" "))
                 name = name.substring(name.lastIndexOf(" ") +1);
-            final Matcher match = PlugUtils.matcher("<a[^<>]+?ddl[^<>]+?href=\"(http.+?" + Pattern.quote(name) + ")\"", contentAsString);
+            final Matcher match = PlugUtils.matcher("<a[^<>]*href=[\"']?(http.+?" + Pattern.quote(name) + ")[ \"][^<>]*>\\s*Download", contentAsString);
             if (!match.find()) {
                 throw new PluginImplementationException("Download link not found");
             }
@@ -73,7 +74,9 @@ class SolidFilesFileRunner extends AbstractRunner {
 
     private void checkProblems() throws ErrorDuringDownloadingException {
         final String contentAsString = getContentAsString();
-        if (contentAsString.contains("We couldn't find the file you requested")) {
+        if (contentAsString.contains("We couldn't find the file you requested") ||
+                contentAsString.contains("The page you were looking for appears to no longer be there") ||
+                contentAsString.contains("<h1>404</h1>")) {
             throw new URLNotAvailableAnymoreException("File not found"); //let to know user in FRD
         }
     }

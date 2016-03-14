@@ -72,9 +72,10 @@ class CloudLockerFileRunner extends AbstractRunner {
         }
     }
 
-    private void checkProblems(HttpMethod method) throws ErrorDuringDownloadingException {
+    private void checkProblems(HttpMethod method) throws Exception {
         final String content = getContentAsString();
-        if ((method.getStatusCode() == 404) || content.contains("File Not Found")) {
+        if ((method.getStatusCode() == 404) || method.getURI().getURI().contains("File has been removed") ||
+                content.contains("File Not Found")) {
             throw new URLNotAvailableAnymoreException("File not found"); //let to know user in FRD
         }
         Matcher match = PlugUtils.matcher("You must wait (\\d.+?) between downloads", content);
