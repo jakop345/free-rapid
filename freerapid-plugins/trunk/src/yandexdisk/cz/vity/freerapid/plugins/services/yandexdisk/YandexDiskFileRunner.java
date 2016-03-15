@@ -5,6 +5,7 @@ import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;
 import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
 import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
+import cz.vity.freerapid.plugins.webclient.DownloadClientConsts;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import jlibs.core.net.URLUtil;
@@ -43,14 +44,15 @@ class YandexDiskFileRunner extends AbstractRunner {
         httpFile.setFileName(PlugUtils.unescapeHtml(httpFile.getFileName()));
         String filesize;
         try {
-            filesize = PlugUtils.getStringBetween(content, "Размер:</span>", "<").replace("М", "M").replace("Б", "B");
+            filesize = PlugUtils.getStringBetween(content, "Размер:</span>", "<");
         } catch (PluginImplementationException e) {
             try {
-                filesize = PlugUtils.getStringBetween(content, "Size:</span>", "<").replace("М", "M").replace("Б", "B");
+                filesize = PlugUtils.getStringBetween(content, "Size:</span>", "<");
             } catch (PluginImplementationException e1) {
                 throw new PluginImplementationException("File size not found");
             }
         }
+        filesize = filesize.replace("М", "M").replace("Б", "B").replaceFirst("<[^<>]+>", "");
         httpFile.setFileSize(PlugUtils.getFileSizeFromString(filesize));
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
@@ -107,6 +109,7 @@ class YandexDiskFileRunner extends AbstractRunner {
                     .setReferer(fileURL)
                     .setAction(downloadURL)
                     .toGetMethod();
+            setClientParameter(DownloadClientConsts.DONT_USE_HEADER_FILENAME, true);
             if (!tryDownloadAndSaveFile(httpMethod)) {
                 checkProblems();
                 throw new ServiceConnectionProblemException("Error starting download");
