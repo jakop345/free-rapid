@@ -46,6 +46,7 @@ class UpToStreamFileRunner extends AbstractRunner {
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
         PlugUtils.checkName(httpFile, content, "\"titleVid\">", "<");
+        httpFile.setFileName(httpFile.getFileName().replaceFirst("\\..{2,4}$", ".mp4"));
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
 
