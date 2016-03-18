@@ -4,6 +4,7 @@ import cz.vity.freerapid.plugins.exceptions.*;
 import cz.vity.freerapid.plugins.services.recaptcha.ReCaptchaNoCaptcha;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.FileState;
+import cz.vity.freerapid.plugins.webclient.hoster.CaptchaSupport;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpMethod;
@@ -19,9 +20,6 @@ import java.util.regex.Matcher;
  */
 public class TurboBitFileRunner extends AbstractRunner {
     private final static Logger logger = Logger.getLogger(TurboBitFileRunner.class.getName());
-
-    private final static int CAPTCHA_MAX = 0;
-    private int captchaCounter = 1;
     private String fileID;
 
     @Override
@@ -39,7 +37,7 @@ public class TurboBitFileRunner extends AbstractRunner {
     }
 
     private String checkFileURL(final String fileURL) throws ErrorDuringDownloadingException {
-        final Matcher matcher = PlugUtils.matcher("^http://(?:(?:www|new)\\.)?(turbobit\\.net|dl\\.rapidlinks\\.org|hitfile\\.net|files\\.uz-translations\\.uz)/(?:download/free/)?(\\w+)", fileURL.replaceFirst("turo-bit.net/", "turbobit.net/"));
+        final Matcher matcher = PlugUtils.matcher("^http://(?:(?:www|new)\\.)?(turbobit\\.net|dl\\.rapidlinks\\.org|hitfile\\.net|sibit\\.net|files\\.uz-translations\\.uz)/(?:download/free/)?(\\w+)", fileURL.replaceFirst("turo-bit.net/", "turbobit.net/"));
         if (!matcher.find()) {
             throw new PluginImplementationException("Error parsing download link");
         }
@@ -78,7 +76,7 @@ public class TurboBitFileRunner extends AbstractRunner {
             }
             checkProblems();
 
-            while (getContentAsString().contains("class=\"g-recaptcha\"")) {
+            while (getContentAsString().contains("class=\"g-recaptcha\"") || getContentAsString().contains("/captcha/")) {
                 if (!makeRedirectedRequest(stepCaptcha(method.getURI().toString()))) {
                     checkProblems();
                     throw new ServiceConnectionProblemException();
@@ -119,7 +117,7 @@ public class TurboBitFileRunner extends AbstractRunner {
         }
     }
 
-    private void checkFileProblems() throws ErrorDuringDownloadingException {
+    protected void checkFileProblems() throws ErrorDuringDownloadingException {
         if (getContentAsString().contains("File was not found")
                 || getContentAsString().contains("Probably it was deleted")
                 || getContentAsString().contains("File was deleted or not found")
@@ -155,19 +153,37 @@ public class TurboBitFileRunner extends AbstractRunner {
     }
 
     private HttpMethod stepCaptcha(final String action) throws Exception {
-        final Matcher m = getMatcherAgainstContent("data-sitekey=\"([^\"]+)\"");
-        if (!m.find()) throw new PluginImplementationException("ReCaptcha key not found");
-        final String reCaptchaKey = m.group(1);
+        if (getContentAsString().contains("recaptcha")) {
+            logger.info("Handling ReCaptcha");
+            final Matcher m = getMatcherAgainstContent("data-sitekey=\"([^\"]+)\"");
+            if (!m.find()) throw new PluginImplementationException("ReCaptcha key not found");
+            final String reCaptchaKey = m.group(1);
 
-        final String content = getContentAsString();
-        final ReCaptchaNoCaptcha r = new ReCaptchaNoCaptcha(reCaptchaKey, action);
+            final String content = getContentAsString();
+            final ReCaptchaNoCaptcha r = new ReCaptchaNoCaptcha(reCaptchaKey, action);
 
-        return r.modifyResponseMethod(
-                getMethodBuilder(content)
-                        .setReferer(action)
-                        .setActionFromFormWhereTagContains("data-sitekey", true)
-                        .setAction(action)
-        ).toPostMethod();
+            return r.modifyResponseMethod(
+                    getMethodBuilder(content)
+                            .setReferer(action)
+                            .setActionFromFormWhereTagContains("data-sitekey", true)
+                            .setAction(action)
+            ).toPostMethod();
+        } else {
+            logger.info("Handling regular captcha");
+            final CaptchaSupport captchaSupport = getCaptchaSupport();
+            final String captchaSrc = getMethodBuilder().setActionFromImgSrcWhereTagContains("captcha").getEscapedURI();
+
+            final String captcha;
+            captcha = captchaSupport.getCaptcha(captchaSrc);
+            if (captcha == null) throw new CaptchaEntryInputMismatchException();
+
+            return getMethodBuilder()
+                    .setReferer(action)
+                    .setActionFromFormWhereTagContains("captcha", true)
+                    .setAction(action)
+                    .setParameter("captcha_response", captcha)
+                    .toPostMethod();
+        }
     }
 
 }

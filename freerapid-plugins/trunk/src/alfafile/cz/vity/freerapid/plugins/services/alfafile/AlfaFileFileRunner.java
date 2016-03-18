@@ -63,10 +63,9 @@ class AlfaFileFileRunner extends AbstractRunner {
             httpMethod = getMethodBuilder().setReferer(fileURL).setAction(redirect).toGetMethod();
             final int wait = PlugUtils.getNumberBetween(getContentAsString(), "\"timer\":\"", "\"");
             downloadTask.sleep(wait + 1);
-            int loops = 0;
             if (!makeRedirectedRequest(httpMethod)) {
                 checkProblems();
-                    throw new ServiceConnectionProblemException();
+                throw new ServiceConnectionProblemException();
             }
             checkProblems();
             UpdateCookie(httpMethod);
@@ -117,6 +116,9 @@ class AlfaFileFileRunner extends AbstractRunner {
         final String content = getContentAsString();
         if (content.contains("File Not Found")) {
             throw new URLNotAvailableAnymoreException("File not found"); //let to know user in FRD
+        }
+        if (content.contains("file can be downloaded by premium users only")) {
+            throw new NotRecoverableDownloadException("Premium access needed");
         }
 
         Matcher match = PlugUtils.matcher("Delay between downloads must be not less than (.+?) minute", content);
