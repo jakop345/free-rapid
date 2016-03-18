@@ -1,4 +1,4 @@
-package cz.vity.freerapid.plugins.services.hitfile;
+package cz.vity.freerapid.plugins.services.sibit;
 
 import cz.vity.freerapid.plugins.exceptions.*;
 import cz.vity.freerapid.plugins.services.turbobit.TurboBitFileRunner;
@@ -12,31 +12,20 @@ import java.util.regex.Matcher;
  *
  * @author birchie
  */
-class HitFileFileRunner extends TurboBitFileRunner {
+class SiBitFileRunner extends TurboBitFileRunner {
 
     @Override
     protected void checkNameAndSize() throws ErrorDuringDownloadingException {
-        Matcher matcher = getMatcherAgainstContent("download.+?(?:</?span.+?>)+(.+?)</span>");
+        Matcher matcher = getMatcherAgainstContent("Download file:\\s*<span[^<>]+?>(.+?)</span>");
         if (!matcher.find()) {
             throw new PluginImplementationException("File name not found");
         }
         httpFile.setFileName(matcher.group(1));
-        matcher = getMatcherAgainstContent("file-size.+?\\((.+?)\\)");
+        matcher = getMatcherAgainstContent("\\((\\d.+?)\\)");
         if (!matcher.find()) {
             throw new PluginImplementationException("File size not found");
         }
         httpFile.setFileSize(PlugUtils.getFileSizeFromString(matcher.group(1).replaceAll("б", "B")));
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
-    }
-
-    @Override
-    protected void checkFileProblems() throws ErrorDuringDownloadingException {
-        try {
-            super.checkFileProblems();
-        } catch (NotRecoverableDownloadException x) {
-            if (!x.getMessage().contains("Limit reached for free download of this file"))
-                throw x;
-        }
-
     }
 }
