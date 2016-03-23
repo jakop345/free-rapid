@@ -53,8 +53,10 @@ class DlFreeFrFileRunner extends AbstractRunner {
             checkProblems();
             checkNameAndSize();
 
+            final String file = PlugUtils.getStringBetween(getContentAsString(), "name=\"file\" value=\"", "\"");
             HttpMethod httpMethod = getMethodBuilder().setReferer(fileURL)
                     .setActionFromFormWhereActionContains("getfile", true)
+                    .setParameter("file", file)
                     .toPostMethod();
 
             if (!tryDownloadAndSaveFile(httpMethod)) {
@@ -68,14 +70,14 @@ class DlFreeFrFileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize() throws ErrorDuringDownloadingException {
-        final Matcher name = getMatcherAgainstContent("Fichier:</td>\\s*?<td.*?>(.+?)</td>");
+        final Matcher name = getMatcherAgainstContent("Fichier:?</[^<>]+>([^<>]+?)<");
         if (!name.find()) throw new PluginImplementationException("File name not found");
-        httpFile.setFileName(name.group(1));
+        httpFile.setFileName(name.group(1).trim());
 
         //they use 'o' instead of 'b' in French
-        final Matcher size = getMatcherAgainstContent("Taille:</td>\\s*?<td.*?>(.+?)o");
+        final Matcher size = getMatcherAgainstContent("Taille:?</[^<>]+>(.+?)o");
         if (!size.find()) throw new PluginImplementationException("File size not found");
-        httpFile.setFileSize(PlugUtils.getFileSizeFromString(size.group(1) + "b"));
+        httpFile.setFileSize(PlugUtils.getFileSizeFromString(size.group(1).trim() + "b"));
 
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
