@@ -57,7 +57,7 @@ class SolidFilesFileRunner extends AbstractRunner {
             name = getMethodBuilder().setAction(name).getEscapedURI().replace(getBaseURL(), "");
             if (name.contains(" "))
                 name = name.substring(name.lastIndexOf(" ") +1);
-            final Matcher match = PlugUtils.matcher("<a[^<>]*href=[\"']?(http.+?" + Pattern.quote(name) + ")[ \"][^<>]*>\\s*Download", contentAsString);
+            final Matcher match = PlugUtils.matcher("<a[^<>]*href=[\"']?(http[^\"']+?" + Pattern.quote(name) + ")[ \"'][^<>]*>\\s*Download", contentAsString);
             if (!match.find()) {
                 throw new PluginImplementationException("Download link not found");
             }
