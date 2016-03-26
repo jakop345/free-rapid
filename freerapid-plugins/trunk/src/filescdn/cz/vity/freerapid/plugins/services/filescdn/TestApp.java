@@ -1,4 +1,4 @@
-package cz.vity.freerapid.plugins.services.videoweed;
+package cz.vity.freerapid.plugins.services.filescdn;
 
 import cz.vity.freerapid.plugins.dev.PluginDevApplication;
 import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
@@ -8,7 +8,7 @@ import org.jdesktop.application.Application;
 import java.net.URL;
 
 /**
- * @author TommyTom
+ * @author birchie
  */
 public class TestApp extends PluginDevApplication {
     @Override
@@ -16,16 +16,18 @@ public class TestApp extends PluginDevApplication {
         final HttpFile httpFile = getHttpFile(); //creates new test instance of HttpFile
         try {
             //we set file URL
-            //httpFile.setNewURL(new URL("http://www.videoweed.es/file/80gte9xwjtfqy"));
-            //httpFile.setNewURL(new URL("http://www.videoweed.es/file/976ab06891509"));
-            httpFile.setNewURL(new URL("http://embed.videoweed.es/embed.php?v=976ab06891509&width=720&height=480"));
-            httpFile.setNewURL(new URL("http://www.videoweed.es/file/a6a88a615aba7"));
-            httpFile.setNewURL(new URL("http://www.bitvid.sx/file/a6a88a615aba7"));
+            httpFile.setNewURL(new URL("https://filescdn.com/ppzwjycauby9"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
-            //then we tries to download
-            final VideoWeedServiceImpl service = new VideoWeedServiceImpl(); //instance of service - of our plugin
+            final FilesCdnServiceImpl service = new FilesCdnServiceImpl(); //instance of service - of our plugin
+            /*
+            //we set premium account details
+            final PremiumAccount config = new PremiumAccount();
+            config.setUsername("****");
+            config.setPassword("****");
+            service.setConfig(config);
+            //*/
             //runcheck makes the validation
             testRun(service, httpFile, connectionSettings);//download file with service and its Runner
             //all output goes to the console

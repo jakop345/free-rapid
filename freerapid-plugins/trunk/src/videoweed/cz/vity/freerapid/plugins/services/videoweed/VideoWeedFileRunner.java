@@ -26,6 +26,7 @@ class VideoWeedFileRunner extends AbstractRunner {
         if (fileURL.contains("embed.php?v=")) {
             fileURL = fileURL.replaceFirst("http://embed\\.videoweed\\.(es|com)/embed\\.php\\?v=([a-z0-9]+).*", "http://www.videoweed.$1/file/$2");
         }
+        fileURL = fileURL.replaceFirst("videoweed\\.(es|com)", "bitvid.sx");
     }
 
     @Override
@@ -43,7 +44,7 @@ class VideoWeedFileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize() throws ErrorDuringDownloadingException {
-        String name = PlugUtils.getStringBetween(getContentAsString(), "<h1 class=\"text_shadow\">", "</h1>");
+        String name = PlugUtils.getStringBetween(getContentAsString(), "name=\"title\" content=\"", "\"");
         final int index = name.lastIndexOf('.');
         if (index > 0) {
             name = name.substring(0, index) + ".flv";
@@ -63,6 +64,15 @@ class VideoWeedFileRunner extends AbstractRunner {
         if (makeRedirectedRequest(method)) {
             checkProblems();
             checkNameAndSize();
+
+            final HttpMethod httpMethod1 = getMethodBuilder().setReferer(fileURL)
+                    .setActionFromFormWhereTagContains("Continue", true).setAction(fileURL)
+                    .toPostMethod();
+            if (!makeRedirectedRequest(httpMethod1)) {
+                checkProblems();
+                throw new ServiceConnectionProblemException();
+            }
+
             String content = getContentAsString();
             if (!content.contains(".filekey=\"")) {
                 content = findParameterContent();
