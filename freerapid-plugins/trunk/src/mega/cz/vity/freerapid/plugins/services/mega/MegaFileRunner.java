@@ -49,6 +49,8 @@ class MegaFileRunner extends AbstractRunner {
     private LinkType type = LinkType.P;
 
     private void init() throws Exception {
+        if (fileURL.contains("%21"))  fileURL = fileURL.replace("%21", "!");
+        if (fileURL.contains("%23"))  fileURL = fileURL.replace("%23", "#");
         if (id == null) {
             Matcher matcher = PlugUtils.matcher("#(N)?(?:!|%21)([a-zA-Z\\d]{8})(?:!|%21)([a-zA-Z\\d\\-_]{43})(?:(?:!|%21)([a-zA-Z\\d]{8}))?$", fileURL);
             if (matcher.find()) {

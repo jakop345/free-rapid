@@ -17,7 +17,7 @@ public class TestApp extends PluginDevApplication {
         try {
             //we set file URL
             httpFile.setNewURL(new URL("https://mega.co.nz/#!oswTzRzC!Yk7R2QwDTJrAe7T0c4d3OigsRZk2V7ip-57KcD0Mx7U"));
-            httpFile.setNewURL(new URL("https://mega.co.nz/#%21ap4E1RDI%21-UA3HeIG_2odhIoJH1ZGbCscB3DQAGXB1n8281ZQIFg"));
+            httpFile.setNewURL(new URL("https://mega.nz/%23%21OFhU2ApT%21I7SEUKkx95RzePavdNh9SE42ahqyjtOVOTKfPdKEdr4"));
             //httpFile.setNewURL(new URL("https://mega.co.nz/#N!dIhiDbiJ!e1xjNjyua5nlOJiEbxBBM3sDkr12kWVhi04aFGTl7f0"));
             //httpFile.setNewURL(new URL("https://mega.co.nz/#F!scRgGChR!PzcvIBCITggtpI8mA37x3g"));
             //the way we connect to the internet

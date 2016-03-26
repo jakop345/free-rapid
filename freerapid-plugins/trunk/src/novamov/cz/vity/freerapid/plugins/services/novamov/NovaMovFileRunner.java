@@ -10,7 +10,6 @@ import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
 import java.net.URI;
-import java.net.URL;
 import java.net.URLDecoder;
 import java.util.logging.Logger;
 
@@ -25,9 +24,7 @@ class NovaMovFileRunner extends AbstractRunner {
     @Override
     public void runCheck() throws Exception {
         super.runCheck();
-        if (fileURL.matches("http://(?:www\\.)?novaup\\.com/.+")) {
-            httpFile.setNewURL(new URL(fileURL.replaceFirst("novaup\\.com", "novamov.com")));
-        }
+        checkUrl();
         final GetMethod getMethod = getGetMethod(fileURL);
         if (makeRedirectedRequest(getMethod)) {
             checkProblems();
@@ -39,18 +36,32 @@ class NovaMovFileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize() throws ErrorDuringDownloadingException {
-        PlugUtils.checkName(httpFile, getContentAsString(), "<h3>", "</h3>");
+        PlugUtils.checkName(httpFile, getContentAsString(), "Watch ", " online | ");
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
+    }
+
+    private void checkUrl() {
+        fileURL = fileURL.replaceFirst("novaup\\.com", "novamov.com");
+        fileURL = fileURL.replaceFirst("novamov\\.com", "auroravid.to");
     }
 
     @Override
     public void run() throws Exception {
         super.run();
+        checkUrl();
         logger.info("Starting download in TASK " + fileURL);
         final GetMethod method = getGetMethod(fileURL);
         if (makeRedirectedRequest(method)) {
             checkProblems();
             checkNameAndSize();
+            final HttpMethod httpMethod1 = getMethodBuilder().setReferer(fileURL)
+                   .setActionFromFormWhereTagContains("Continue", true).setAction(fileURL)
+                    .toPostMethod();
+            if (!makeRedirectedRequest(httpMethod1)) {
+                checkProblems();
+                throw new ServiceConnectionProblemException();
+            }
+            checkProblems();
             final String fileId = PlugUtils.getStringBetween(getContentAsString(), "flashvars.file=\"", "\";");
             final String fileKey = PlugUtils.getStringBetween(getContentAsString(), "flashvars.filekey=\"", "\";");
             HttpMethod httpMethod = getMethodBuilder()

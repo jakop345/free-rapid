@@ -90,7 +90,7 @@ class SolidFilesFileRunner extends AbstractRunner {
                     throw new ServiceConnectionProblemException("Login page unavailable");
                 }
                 final HttpMethod method = getMethodBuilder()
-                        .setActionFromFormWhereActionContains("login", true)
+                        .setActionFromFormWhereTagContains("pass", true)
                         .setParameter("username", pa.getUsername())
                         .setParameter("password", pa.getPassword())
                         .toPostMethod();

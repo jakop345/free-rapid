@@ -1,15 +1,19 @@
-package cz.vity.freerapid.plugins.services.datafilehost;
+package cz.vity.freerapid.plugins.services.multiup;
 
 import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
 import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;
 import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
 import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
+import cz.vity.freerapid.plugins.webclient.DownloadState;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
+import java.net.URI;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 
@@ -18,8 +22,8 @@ import java.util.regex.Matcher;
  *
  * @author birchie
  */
-class DataFileHostFileRunner extends AbstractRunner {
-    private final static Logger logger = Logger.getLogger(DataFileHostFileRunner.class.getName());
+class MultiUpFileRunner extends AbstractRunner {
+    private final static Logger logger = Logger.getLogger(MultiUpFileRunner.class.getName());
 
     @Override
     public void runCheck() throws Exception { //this method validates file
@@ -35,8 +39,10 @@ class DataFileHostFileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        PlugUtils.checkName(httpFile, content.replace("\n", " "), "File:", "<br>");
-        PlugUtils.checkFileSize(httpFile, content, "Size:", "<br>");
+        PlugUtils.checkName(httpFile, content, "Filename : ", "<");
+        httpFile.setFileName("Extract Link(s): " + httpFile.getFileName());
+        final String size = PlugUtils.getStringBetween(content, "Size : ", "<").replaceAll("iB", "B").trim();
+        httpFile.setFileSize(PlugUtils.getFileSizeFromString(size));
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
 
@@ -49,18 +55,25 @@ class DataFileHostFileRunner extends AbstractRunner {
             final String contentAsString = getContentAsString();//check for response
             checkProblems();//check problems
             checkNameAndSize(contentAsString);//extract file name and size from the page
-            final Matcher match = PlugUtils.matcher("innerHTML=['\"]<a[^<>]*href=['\"]([^'\"]+?)['\"]>", contentAsString);
-            do {
-                if (!match.find())
-                    throw new PluginImplementationException("Download link not found");
-            } while (match.group(1).contains("handle"));
-            final HttpMethod httpMethod = getMethodBuilder()
-                    .setReferer(fileURL).setAction(match.group(1))
-                    .toHttpMethod();
-            if (!tryDownloadAndSaveFile(httpMethod)) {
-                checkProblems();//if downloading failed
-                throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
+
+            final HttpMethod httpMethod = getMethodBuilder().setReferer(fileURL)
+                    .setActionFromAHrefWhereATagContains("<h5>DOWNLOAD").toGetMethod();
+            if (!makeRedirectedRequest(httpMethod)) {
+                checkProblems();
+                throw new ServiceConnectionProblemException();
             }
+            checkProblems();
+            final List<URI> list = new LinkedList<URI>();
+            final Matcher matcher = getMatcherAgainstContent("href=\"(.+?)\"\\s*target=\"_blank\"\\s*title");
+            while (matcher.find()) {
+                list.add(new URI((matcher.group(1).trim())));
+            }
+            // add urls to queue
+            if (list.isEmpty()) throw new PluginImplementationException("No links found");
+            getPluginService().getPluginContext().getQueueSupport().addLinksToQueue(httpFile, list);
+            httpFile.setFileName("Link(s) Extracted !");
+            httpFile.setState(DownloadState.COMPLETED);
+            httpFile.getProperties().put("removeCompleted", true);
         } else {
             checkProblems();
             throw new ServiceConnectionProblemException();
@@ -68,9 +81,8 @@ class DataFileHostFileRunner extends AbstractRunner {
     }
 
     private void checkProblems() throws ErrorDuringDownloadingException {
-        final String content = getContentAsString();
-        final Matcher match = PlugUtils.matcher("The file you requested \\(.+?\\) does not exist", content);
-        if (match.find()) {
+        final String contentAsString = getContentAsString();
+        if (contentAsString.contains("File not found")) {
             throw new URLNotAvailableAnymoreException("File not found"); //let to know user in FRD
         }
     }

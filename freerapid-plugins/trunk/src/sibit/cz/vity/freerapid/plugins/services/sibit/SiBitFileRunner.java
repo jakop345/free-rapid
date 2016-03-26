@@ -16,7 +16,7 @@ class SiBitFileRunner extends TurboBitFileRunner {
 
     @Override
     protected void checkNameAndSize() throws ErrorDuringDownloadingException {
-        Matcher matcher = getMatcherAgainstContent("Download file:\\s*<span[^<>]+?>(.+?)</span>");
+        Matcher matcher = getMatcherAgainstContent("Download file:\\s*(?:<br>\\s*)?<span[^<>]+?>(.+?)</span>");
         if (!matcher.find()) {
             throw new PluginImplementationException("File name not found");
         }
