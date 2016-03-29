@@ -492,7 +492,7 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
                 final int LOWER_QUALITY_PENALTY = 10;
                 int weight = Integer.MAX_VALUE;
                 for (YouTubeMedia ytMedia : ytMediaMap.values()) {
-                    if (ytMedia.isDashVideo() && ytMedia.getVideoEncoding() != VideoEncoding.H264) {
+                    if (config.isEnableInternalMultiplexer() && ytMedia.isDashVideo() && ytMedia.getVideoEncoding() != VideoEncoding.H264) {
                         continue;
                     }
                     int deltaQ = ytMedia.getVideoQuality() - configVideoQuality.getQuality();
@@ -868,62 +868,65 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
                     getPluginService().getPluginContext().getQueueSupport().addLinksToQueue(httpFile, list);
                 } else {
                     String captionTracks = null;
-                    try {
-                        captionTracks = PlugUtils.getStringBetween(mainpageContent, "\"caption_tracks\":\"", "\"");
-                    } catch (PluginImplementationException e) {
-                        //
+                    matcher = getMatcherAgainstContent("\"caption_tracks\":\"(.*?)\"");
+                    if (matcher.find() && !matcher.group(1).trim().isEmpty()) {
+                        captionTracks = matcher.group(1);
                     }
                     //it's probably possible that caption tracks contain more than one language,
                     //at this moment only one language is supported, can't find sample for multilanguage
                     if (captionTracks != null) {
-                        String captionTracksComponents[] = PlugUtils.unescapeUnicode(captionTracks).split("&");
-                        String url = null;
-                        String lang = null;
-                        for (String captionTracksComponent : captionTracksComponents) {
-                            String[] captionTracksComponentParts = captionTracksComponent.split("=");
-                            String key = captionTracksComponentParts[0];
-                            String value = captionTracksComponentParts[1];
-                            if (key.equals("lc")) {
-                                lang = value;
-                            } else if (key.equals("u")) {
-                                url = URLDecoder.decode(value, "UTF-8");
+                        try {
+                            String captionTracksComponents[] = PlugUtils.unescapeUnicode(captionTracks).split("&");
+                            String url = null;
+                            String lang = null;
+                            for (String captionTracksComponent : captionTracksComponents) {
+                                String[] captionTracksComponentParts = captionTracksComponent.split("=");
+                                String key = captionTracksComponentParts[0];
+                                String value = captionTracksComponentParts[1];
+                                if (key.equals("lc")) {
+                                    lang = value;
+                                } else if (key.equals("u")) {
+                                    url = URLDecoder.decode(value, "UTF-8");
+                                }
                             }
-                        }
-                        if (url != null) {
-                            //silent download, because it contains "expire" and "signature" params
-                            String fileExtension;
-                            if (lang != null) {
-                                fileExtension = "." + lang + ".srt";
-                            } else {
-                                fileExtension = ".srt";
-                            }
-                            method = getGetMethod(url);
-                            if (makeRedirectedRequest(method)) {
-                                String fnameNoExt = PlugUtils.unescapeHtml(URLDecoder.decode(HttpUtils.replaceInvalidCharsForFileSystem(
-                                        httpFile.getFileName().replaceFirst("\\.[^\\.]{3,4}$", ""), "_"), "UTF-8"));
-                                String fnameOutput = fnameNoExt + fileExtension;
-                                File outputFile = new File(httpFile.getSaveToDirectory(), fnameOutput);
-                                BufferedWriter bw = null;
-                                int outputFileCounter = 2;
-                                try {
-                                    while (outputFile.exists()) {
-                                        fnameOutput = fnameNoExt + "-" + outputFileCounter++ + fileExtension;
-                                        outputFile = new File(httpFile.getSaveToDirectory(), fnameOutput);
-                                    }
-                                    bw = new BufferedWriter(new FileWriter((outputFile)));
-                                    bw.write(Transcription2SrtUtil.convert(getContentAsString()));
-                                } catch (Exception e) {
-                                    LogUtils.processException(logger, e);
-                                } finally {
-                                    if (bw != null) {
-                                        try {
-                                            bw.close();
-                                        } catch (IOException e) {
-                                            LogUtils.processException(logger, e);
+                            if (url != null) {
+                                //silent download, because it contains "expire" and "signature" params
+                                String fileExtension;
+                                if (lang != null) {
+                                    fileExtension = "." + lang + ".srt";
+                                } else {
+                                    fileExtension = ".srt";
+                                }
+                                method = getGetMethod(url);
+                                if (makeRedirectedRequest(method)) {
+                                    String fnameNoExt = PlugUtils.unescapeHtml(URLDecoder.decode(HttpUtils.replaceInvalidCharsForFileSystem(
+                                            httpFile.getFileName().replaceFirst("\\.[^\\.]{3,4}$", ""), "_"), "UTF-8"));
+                                    String fnameOutput = fnameNoExt + fileExtension;
+                                    File outputFile = new File(httpFile.getSaveToDirectory(), fnameOutput);
+                                    BufferedWriter bw = null;
+                                    int outputFileCounter = 2;
+                                    try {
+                                        while (outputFile.exists()) {
+                                            fnameOutput = fnameNoExt + "-" + outputFileCounter++ + fileExtension;
+                                            outputFile = new File(httpFile.getSaveToDirectory(), fnameOutput);
+                                        }
+                                        bw = new BufferedWriter(new FileWriter((outputFile)));
+                                        bw.write(Transcription2SrtUtil.convert(getContentAsString()));
+                                    } catch (Exception e) {
+                                        LogUtils.processException(logger, e);
+                                    } finally {
+                                        if (bw != null) {
+                                            try {
+                                                bw.close();
+                                            } catch (IOException e) {
+                                                LogUtils.processException(logger, e);
+                                            }
                                         }
                                     }
                                 }
                             }
+                        } catch (Exception e) {
+                            LogUtils.processException(logger, e);
                         }
                     }
                 }
