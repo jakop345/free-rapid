@@ -684,17 +684,4 @@ class YouTubeSigDecipher {
         }
     }
 
-    /*
-    public static void main(String[] args) throws Exception {
-        //watch_as3-vfldOoVEA~.swf
-        //watch_as3-vflJvFBCS.swf
-        //watch_as3-vflNr3l6D.swf
-        //watch_as3-vflU4Jt6h.swf
-        //watch_as3-vflW5qQCZ.swf
-        //watch_as3-vflmeWTlC.swf
-        System.out.println(new YouTubeSigDecipher(new FileInputStream(new File("/media/DATA/kerja/javaProj/FRD/frd/youtube/watch_as3-vflU4Jt6h.swf")))
-                .decipher("BB5A7F095FE6874253FF152F0145151A6791478EE4.0691ADBB55103ABA1088D2B98BF6B4A3A1444EDCDC"));
-    }
-    */
-
 }
