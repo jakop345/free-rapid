@@ -113,9 +113,8 @@ class UlozToRunner extends AbstractRunner {
             } else {
                 checkNameAndSize(getContentAsString());
                 captchaCount = 0;
-                HttpMethod method = null;
-                while (getContentAsString().contains("captchaContainer") || getContentAsString().contains("?captcha=no")) {
-                    //client.getHTTPClient().getParams().setIntParameter(HttpClientParams.MAX_REDIRECTS, 8);
+                HttpMethod method;
+                do {
                     method = stepCaptcha();
                     downloadTask.sleep(new Random().nextInt(4) + new Random().nextInt(3));
                     makeRequest(method);
@@ -128,6 +127,7 @@ class UlozToRunner extends AbstractRunner {
                     }
                     checkProblems();
                 }
+                while (getContentAsString().contains("captchaContainer") || getContentAsString().contains("?captcha=no"));
                 setFileStreamContentTypes("text/plain", "text/texmacs");
                 if (!tryDownloadAndSaveFile(method)) {
                     checkProblems();
@@ -165,17 +165,25 @@ class UlozToRunner extends AbstractRunner {
 
         Matcher matcher = PlugUtils.matcher("(?s)<span id=\"fileSize\">([^<>]+?)</span>", content);
         if (matcher.find()) {
-            String size = matcher.group(1);
-            if (size.contains("|")) {
-                size = size.substring(0, size.indexOf("|")).trim();
-            }
-            try {
-                httpFile.setFileSize(PlugUtils.getFileSizeFromString(size));
-            } catch (PluginImplementationException e) {
-                //
+            setFileSize(matcher.group(1));
+        } else {
+            matcher = PlugUtils.matcher("(?s)<span>Velikost</span>([^<>]+?)</", content);
+            if (matcher.find()) {
+                setFileSize(matcher.group(1));
             }
         }
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
+    }
+
+    private void setFileSize(String size) {
+        if (size.contains("|")) {
+            size = size.substring(0, size.indexOf("|")).trim();
+        }
+        try {
+            httpFile.setFileSize(PlugUtils.getFileSizeFromString(size));
+        } catch (PluginImplementationException e) {
+            //
+        }
     }
 
     private HttpMethod stepCaptcha() throws Exception {
@@ -187,80 +195,82 @@ class UlozToRunner extends AbstractRunner {
                 .setReferer(fileURL)
                 .setActionFromFormWhereTagContains("freeDownloadForm", true);
 
-        HttpMethod method = getMethodBuilder()
-                .setReferer(fileURL)
-                .setAjax()
-                .setAction("/reloadXapca.php?rnd=" + System.currentTimeMillis())
-                .toGetMethod();
-        if (!makeRedirectedRequest(method)) {
-            checkProblems();
-            throw new PluginImplementationException("Error requesting captcha");
-        }
-        checkProblems();
-
-        Matcher matcher;
-        String captchaImg;
-        String timestamp;
-        String salt;
-        String hash;
-        try {
-            captchaImg = PlugUtils.getStringBetween(getContentAsString(), "\"image\":\"", "\"").replace("\\/", "/").replaceFirst("^//", "http://");
-        } catch (PluginImplementationException e) {
-            throw new PluginImplementationException("Captcha image not found");
-        }
-        matcher = getMatcherAgainstContent("\"timestamp\":(\\d+)");
-        if (!matcher.find()) {
-            throw new PluginImplementationException("Timestamp not found");
-        }
-        timestamp = matcher.group(1);
-        try {
-            hash = PlugUtils.getStringBetween(getContentAsString(), "\"hash\":\"", "\"");
-        } catch (PluginImplementationException e) {
-            throw new PluginImplementationException("Hash not found");
-        }
-        matcher = getMatcherAgainstContent("\"salt\":(\\d+)");
-        if (!matcher.find()) {
-            throw new PluginImplementationException("Salt not found");
-        }
-        salt = matcher.group(1);
-
-        sendForm.setParameter("timestamp", timestamp)
-                .setParameter("hash", hash)
-                .setParameter("salt", salt);
-
-        final String captchaSnd = captchaImg.replace("image.gif", "sound.wav");
-        final CaptchaSupport captchaSupport = getCaptchaSupport();
-        String captchaTxt;
-        //captchaCount = 9; //for test purpose
-        if (captchaCount++ < 8) {
-            logger.info("captcha url: " + captchaImg);
-            final SoundReader captchaReader = new SoundReader(); //load fingerprint from file to test, don't forget to change it back
-            final HttpMethod methodSound = getMethodBuilder()
+        if (getContentAsString().contains("reloadXapca.php")) {
+            HttpMethod method = getMethodBuilder()
                     .setReferer(fileURL)
-                    .setAction(captchaSnd)
+                    .setAjax()
+                    .setAction("/reloadXapca.php?rnd=" + System.currentTimeMillis())
                     .toGetMethod();
-            try {
-                captchaTxt = captchaReader.parse(client.makeRequestForFile(methodSound));
-                logger.info("Auto recog attempt : " + captchaCount);
-                logger.info("Captcha recognized : " + captchaTxt);
-            } catch (Exception e) {
-                LogUtils.processException(logger, e);
-                final StringBuilder captchaTxtBuilder = new StringBuilder(4);
-                for (int i = 0; i < 4; i++) {
-                    captchaTxtBuilder.append(Character.toChars(random.nextInt(26) + 97)); //throw random chars
-                }
-                captchaTxt = captchaTxtBuilder.toString();
-                logger.info("Generated random captcha : " + captchaTxt);
-            } finally {
-                methodSound.releaseConnection();
+            if (!makeRedirectedRequest(method)) {
+                checkProblems();
+                throw new PluginImplementationException("Error requesting captcha");
             }
-        } else {
-            captchaTxt = captchaSupport.getCaptcha(captchaImg);
+            checkProblems();
+
+            Matcher matcher;
+            String captchaImg;
+            String timestamp;
+            String salt;
+            String hash;
+            try {
+                captchaImg = PlugUtils.getStringBetween(getContentAsString(), "\"image\":\"", "\"").replace("\\/", "/").replaceFirst("^//", "http://");
+            } catch (PluginImplementationException e) {
+                throw new PluginImplementationException("Captcha image not found");
+            }
+            matcher = getMatcherAgainstContent("\"timestamp\":(\\d+)");
+            if (!matcher.find()) {
+                throw new PluginImplementationException("Timestamp not found");
+            }
+            timestamp = matcher.group(1);
+            try {
+                hash = PlugUtils.getStringBetween(getContentAsString(), "\"hash\":\"", "\"");
+            } catch (PluginImplementationException e) {
+                throw new PluginImplementationException("Hash not found");
+            }
+            matcher = getMatcherAgainstContent("\"salt\":(\\d+)");
+            if (!matcher.find()) {
+                throw new PluginImplementationException("Salt not found");
+            }
+            salt = matcher.group(1);
+
+            sendForm.setParameter("timestamp", timestamp)
+                    .setParameter("hash", hash)
+                    .setParameter("salt", salt);
+
+            final String captchaSnd = captchaImg.replace("image.gif", "sound.wav");
+            final CaptchaSupport captchaSupport = getCaptchaSupport();
+            String captchaTxt;
+            //captchaCount = 9; //for test purpose
+            if (captchaCount++ < 8) {
+                logger.info("captcha url: " + captchaImg);
+                final SoundReader captchaReader = new SoundReader(); //load fingerprint from file to test, don't forget to change it back
+                final HttpMethod methodSound = getMethodBuilder()
+                        .setReferer(fileURL)
+                        .setAction(captchaSnd)
+                        .toGetMethod();
+                try {
+                    captchaTxt = captchaReader.parse(client.makeRequestForFile(methodSound));
+                    logger.info("Auto recog attempt : " + captchaCount);
+                    logger.info("Captcha recognized : " + captchaTxt);
+                } catch (Exception e) {
+                    LogUtils.processException(logger, e);
+                    final StringBuilder captchaTxtBuilder = new StringBuilder(4);
+                    for (int i = 0; i < 4; i++) {
+                        captchaTxtBuilder.append(Character.toChars(random.nextInt(26) + 97)); //throw random chars
+                    }
+                    captchaTxt = captchaTxtBuilder.toString();
+                    logger.info("Generated random captcha : " + captchaTxt);
+                } finally {
+                    methodSound.releaseConnection();
+                }
+            } else {
+                captchaTxt = captchaSupport.getCaptcha(captchaImg);
+            }
+            if (captchaTxt == null) {
+                throw new CaptchaEntryInputMismatchException();
+            }
+            sendForm.setParameter("captcha_value", captchaTxt);
         }
-        if (captchaTxt == null) {
-            throw new CaptchaEntryInputMismatchException();
-        }
-        sendForm.setParameter("captcha_value", captchaTxt);
         return sendForm.toPostMethod();
     }
 
