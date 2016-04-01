@@ -11,6 +11,7 @@ import org.apache.commons.httpclient.HttpMethod;
 import org.codehaus.jackson.JsonNode;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -114,17 +115,23 @@ class VimeoFileRunner extends AbstractRunner {
     }
 
     private VimeoVideo getSelectedVideo() throws ErrorDuringDownloadingException, IOException {
-        if (getContentAsString().contains("data-config-url=\"")) {
+        if (getContentAsString().contains("\"config_url\":\"")) {
+            String configUrl;
+            try {
+                configUrl = URLDecoder.decode(PlugUtils.replaceEntities(PlugUtils.getStringBetween(getContentAsString(), "\"config_url\":\"", "\"")), "UTF-8")
+                        .replace("\\/", "/");
+            } catch (Exception e) {
+                throw new PluginImplementationException("Error getting config URL");
+            }
             HttpMethod method = getMethodBuilder()
                     .setReferer(fileURL)
-                    .setAction(PlugUtils.replaceEntities(PlugUtils.getStringBetween(getContentAsString(), "data-config-url=\"", "\"")))
+                    .setAction(configUrl)
                     .toGetMethod();
             if (!makeRedirectedRequest(method)) {
                 checkProblems();
                 throw new ServiceConnectionProblemException();
             }
             checkProblems();
-
         } else {
             throw new PluginImplementationException("Data config URL not found");
         }
