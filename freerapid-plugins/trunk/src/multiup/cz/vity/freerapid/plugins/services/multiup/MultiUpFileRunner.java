@@ -56,13 +56,30 @@ class MultiUpFileRunner extends AbstractRunner {
             checkProblems();//check problems
             checkNameAndSize(contentAsString);//extract file name and size from the page
 
-            final HttpMethod httpMethod = getMethodBuilder().setReferer(fileURL)
-                    .setActionFromAHrefWhereATagContains("<h5>DOWNLOAD").toGetMethod();
-            if (!makeRedirectedRequest(httpMethod)) {
+            if (getContentAsString().contains("File is protected by a password")) {
+                while (getContentAsString().contains("File is protected by a password")) {
+                    final String password = getDialogSupport().askForPassword("MultiUp.org");
+                    if (password == null) {
+                        throw new PluginImplementationException("This link is protected with a password");
+                    }
+                    final HttpMethod passMethod = getMethodBuilder().setReferer(fileURL)
+                            .setActionFromFormWhereTagContains("password", true)
+                            .setParameter("password", password).toPostMethod();
+                    if (!makeRedirectedRequest(passMethod)) {
+                        checkProblems();//check problems
+                        throw new ServiceConnectionProblemException();
+                    }
+                    checkProblems();
+                }
+            } else {
+                final HttpMethod httpMethod = getMethodBuilder().setReferer(fileURL)
+                        .setActionFromAHrefWhereATagContains("<h5>DOWNLOAD").toGetMethod();
+                if (!makeRedirectedRequest(httpMethod)) {
+                    checkProblems();
+                    throw new ServiceConnectionProblemException();
+                }
                 checkProblems();
-                throw new ServiceConnectionProblemException();
             }
-            checkProblems();
             final List<URI> list = new LinkedList<URI>();
             final Matcher matcher = getMatcherAgainstContent("href=\"(.+?)\"\\s*target=\"_blank\"\\s*title");
             while (matcher.find()) {
