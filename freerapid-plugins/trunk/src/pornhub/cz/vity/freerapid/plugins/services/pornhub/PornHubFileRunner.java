@@ -8,14 +8,16 @@ import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.DownloadState;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
-import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import java.net.URI;
 import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 
@@ -26,6 +28,12 @@ import java.util.regex.Matcher;
  */
 class PornHubFileRunner extends AbstractRunner {
     private final static Logger logger = Logger.getLogger(PornHubFileRunner.class.getName());
+    private SettingsConfig config;
+
+    private void setConfig() throws Exception {
+        final PornHubServiceImpl service = (PornHubServiceImpl) getPluginService();
+        config = service.getConfig();
+    }
 
     @Override
     public void runCheck() throws Exception { //this method validates file
@@ -43,12 +51,12 @@ class PornHubFileRunner extends AbstractRunner {
 
     private void checkNameAndSize(String content) throws Exception {
         if (fileURL.contains("/album/") || fileURL.contains("/photo/")) {
-            Matcher match = PlugUtils.matcher( "<h1[^<>]*?>(.+?)</h1>", content);
+            Matcher match = PlugUtils.matcher("<h1[^<>]*?>(.+?)</h1>", content);
             if (!match.find())
                 throw new PluginImplementationException("Album name not found");
             if (fileURL.contains("/album/"))
                 httpFile.setFileName("Album >> " + match.group(1));
-            if (fileURL.contains("/photo/")){
+            if (fileURL.contains("/photo/")) {
                 final String fileId = PlugUtils.getStringBetween(content, "data-photo-id=\"", "\"");
                 httpFile.setFileName(match.group(1) + "__" + fileId + ".jpg");
             }
@@ -62,17 +70,6 @@ class PornHubFileRunner extends AbstractRunner {
     private void fixUrl() {
         fileURL = fileURL.replaceFirst("://(\\w+?\\.)?pornhub\\.com", "://www.pornhub.com");
         fileURL = fileURL.replaceFirst("/embed/", "/view_video.php?viewkey=");
-    }
-
-    private final String[] qualityList = {"quality_720p", "quality_480p", "quality_240p", "quality_180p", "video_url"};
-
-    private String findBestQuality(final String content) throws Exception {
-        for (String quality : qualityList) {
-            final Matcher match = PlugUtils.matcher("(?:\"|player_)" + quality + "\\s*?(?:\":|=)\\s*?[\"'](.+?)(?:\",|';)", content);
-            if (match.find())
-                return match.group(1);
-        }
-        throw new PluginImplementationException("Video quality not found");
     }
 
     @Override
@@ -105,17 +102,23 @@ class PornHubFileRunner extends AbstractRunner {
                     throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
                 }
             } else {
-                final HttpMethod httpMethod;
+                setConfig();
+                final List<PornHubVideo> videos = getVideoList(content);
                 if (!content.contains("player_quality_")) {
-                    final String encURL = URLDecoder.decode(findBestQuality(content), "UTF-8").replace(" ", "+");
                     final String name = PlugUtils.getStringBetween(content, "\"video_title\":\"", "\"").replace('+', ' ');
-                    logger.info("Encoded URL: " + encURL);
-                    logger.info("Video title: " + name);
-                    httpMethod = getGetMethod(decodeAesUrl(encURL, name));
-                } else {
-                    httpMethod = getGetMethod(findBestQuality(content));
+                    for (PornHubVideo video : videos) {
+                        String encURL = URLDecoder.decode(video.url, "UTF-8").replace(" ", "+");
+                        video.setUrl(decodeAesUrl(encURL, name));
+                    }
                 }
-                if (!tryDownloadAndSaveFile(httpMethod)) {
+
+                for (PornHubVideo video : videos) {
+                    logger.info("Found video: " + video);
+                }
+                final PornHubVideo selectedVideo = Collections.min(videos);
+                logger.info("Config settings :" + config);
+                logger.info("Downloading video : " + selectedVideo);
+                if (!tryDownloadAndSaveFile(getGetMethod(selectedVideo.url))) {
                     checkProblems();//if downloading failed
                     throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
                 }
@@ -145,6 +148,80 @@ class PornHubFileRunner extends AbstractRunner {
             return engine.eval(aes_js + function).toString();
         } catch (Exception e) {
             throw new PluginImplementationException("JS evaluation error " + e.getLocalizedMessage());
+        }
+    }
+
+    private List<PornHubVideo> getVideoList(final String content) throws Exception {
+        final List<PornHubVideoPattern> videoPatterns = new ArrayList<PornHubVideoPattern>();
+        videoPatterns.add(new PornHubVideoPattern("\"quality_720p\"\\s*?:\\s*?\"(.+?)\"", VideoQuality._720));
+        videoPatterns.add(new PornHubVideoPattern("\"quality_480p\"\\s*?:\\s*?\"(.+?)\"", VideoQuality._480));
+        videoPatterns.add(new PornHubVideoPattern("\"quality_240p\"\\s*?:\\s*?\"(.+?)\"", VideoQuality._240));
+        videoPatterns.add(new PornHubVideoPattern("\"quality_180p\"\\s*?:\\s*?\"(.+?)\"", VideoQuality._180));
+        videoPatterns.add(new PornHubVideoPattern("\"video_url\"\\s*?:\\s*?\"(.+?)\"", VideoQuality._180));
+        videoPatterns.add(new PornHubVideoPattern("player_quality_720p\\s*?=\\s*?'(.+?)'", VideoQuality._720));
+        videoPatterns.add(new PornHubVideoPattern("player_quality_480p\\s*?=\\s*?'(.+?)'", VideoQuality._480));
+        videoPatterns.add(new PornHubVideoPattern("player_quality_240p\\s*?=\\s*?'(.+?)'", VideoQuality._240));
+
+        final List<PornHubVideo> videos = new ArrayList<PornHubVideo>();
+        Matcher matcher;
+        for (PornHubVideoPattern videoPattern : videoPatterns) {
+            matcher = PlugUtils.matcher(videoPattern.pattern, content);
+            if (matcher.find()) {
+                PornHubVideo video = new PornHubVideo(videoPattern.videoQuality, matcher.group(1));
+                videos.add(video);
+            }
+        }
+        if (videos.isEmpty()) {
+            throw new PluginImplementationException("No available videos");
+        }
+        return videos;
+    }
+
+    private class PornHubVideoPattern {
+        private final String pattern;
+        private final VideoQuality videoQuality;
+
+        public PornHubVideoPattern(String pattern, VideoQuality videoQuality) {
+            this.pattern = pattern;
+            this.videoQuality = videoQuality;
+        }
+    }
+
+    private class PornHubVideo implements Comparable<PornHubVideo> {
+        private final static int LOWER_QUALITY_PENALTY = 10;
+        private final VideoQuality quality;
+        private String url;
+        private final int weight;
+
+        public PornHubVideo(final VideoQuality quality, final String url) {
+            this.quality = quality;
+            this.url = url;
+            this.weight = calcWeight();
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        private int calcWeight() {
+            VideoQuality configQuality = config.getVideoQuality();
+            int deltaQ = quality.getQuality() - configQuality.getQuality();
+            return (deltaQ < 0 ? Math.abs(deltaQ) + LOWER_QUALITY_PENALTY : deltaQ);
+        }
+
+        @SuppressWarnings("NullableProblems")
+        @Override
+        public int compareTo(final PornHubVideo that) {
+            return Integer.valueOf(this.weight).compareTo(that.weight);
+        }
+
+        @Override
+        public String toString() {
+            return "PornHubVideo{" +
+                    "quality=" + quality +
+                    ", url='" + url + '\'' +
+                    ", weight=" + weight +
+                    '}';
         }
     }
 

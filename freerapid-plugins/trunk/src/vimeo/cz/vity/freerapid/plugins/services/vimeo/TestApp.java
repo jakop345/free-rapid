@@ -22,13 +22,14 @@ public class TestApp extends PluginDevApplication {
             //httpFile.setNewURL(new URL("http://vimeo.com/ondemand/6596/59023363")); //on-demand trailer
             //httpFile.setNewURL(new URL("https://player.vimeo.com/video/58611141"));
             //httpFile.setNewURL(new URL("http://vimeo.com/ondemand/6596/80025907?autoplay=1"));
-            httpFile.setNewURL(new URL("https://vimeo.com/160776966"));
+            //httpFile.setNewURL(new URL("https://vimeo.com/160776966"));
+            httpFile.setNewURL(new URL("https://vimeo.com/54004198"));
             final ConnectionSettings connectionSettings = new ConnectionSettings();
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
             final VimeoServiceImpl service = new VimeoServiceImpl();
 
             VimeoSettingsConfig config = new VimeoSettingsConfig();
-            config.setVideoQuality(VideoQuality.HD);
+            config.setVideoQuality(VideoQuality.HD1080);
             service.setConfig(config);
 
             testRun(service, httpFile, connectionSettings);
