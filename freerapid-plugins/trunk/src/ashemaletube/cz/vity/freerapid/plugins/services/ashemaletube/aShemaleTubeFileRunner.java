@@ -34,8 +34,12 @@ class aShemaleTubeFileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        final String name = PlugUtils.getStringBetween(content, "<title>", "</title>");
-        Matcher match = PlugUtils.matcher("'file':.+(\\.\\w{3})\",", content);
+        Matcher match = PlugUtils.matcher("<h1.*>(.+?)</h1>", content);
+        if (!match.find()) {
+            throw new ErrorDuringDownloadingException("Error getting file name");
+        }
+        final String name = match.group(1).trim();
+        match = PlugUtils.matcher("(?:<source[^<>]*src\\s*=|['\"]?file['\"]?\\s*:).+(\\.\\w{3})\",? ", content);
         if (!match.find()) {
             throw new ErrorDuringDownloadingException("Error getting file type");
         }
@@ -53,7 +57,11 @@ class aShemaleTubeFileRunner extends AbstractRunner {
             checkProblems();//check problems
             checkNameAndSize(contentAsString);//extract file name and size from the page
 
-            final HttpMethod httpMethod = getGetMethod(PlugUtils.getStringBetween(contentAsString, "'file': \"", "\","));
+            Matcher match = PlugUtils.matcher("(?:<source[^<>]*src\\s*=|['\"]?file['\"]?\\s*:)\\s*\"(.+?)\",? ", contentAsString);
+            if (!match.find()) {
+                throw new ErrorDuringDownloadingException("Error getting file link");
+            }
+            final HttpMethod httpMethod = getGetMethod(match.group(1).trim());
 
             //here is the download link extraction
             if (!tryDownloadAndSaveFile(httpMethod)) {
@@ -69,6 +77,7 @@ class aShemaleTubeFileRunner extends AbstractRunner {
     private void checkProblems() throws ErrorDuringDownloadingException {
         final String contentAsString = getContentAsString();
         if (contentAsString.contains("Video was not found") ||
+                contentAsString.contains("This video has been deleted") ||
                 contentAsString.contains("Video Not Found")) {
             throw new URLNotAvailableAnymoreException("File not found"); //let to know user in FRD
         }

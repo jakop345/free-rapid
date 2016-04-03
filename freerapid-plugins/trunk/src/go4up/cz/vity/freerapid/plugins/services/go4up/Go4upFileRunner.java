@@ -37,7 +37,7 @@ class Go4upFileRunner extends AbstractRunner {
             if (getContentAsString().contains("<title>Download"))
                 sFileName = " For: " + PlugUtils.getStringBetween(getContentAsString(), "<title>Download ", "<");
             httpFile.setFileName("Extract Link(s)" + sFileName);
-            PlugUtils.checkFileSize(httpFile, getContentAsString(), " (", ")<");
+            PlugUtils.checkFileSize(httpFile, getContentAsString(), " (", ")</");
             httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
         } else {
             checkProblems();

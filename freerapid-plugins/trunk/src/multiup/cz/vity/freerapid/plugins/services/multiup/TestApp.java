@@ -17,6 +17,7 @@ public class TestApp extends PluginDevApplication {
         try {
             //we set file URL
             httpFile.setNewURL(new URL("http://www.multiup.org/download/51f746e1637cb431ecc72c7357e57f35/Pny.2008.720p.TuMovie.NeT.rar"));
+            //httpFile.setNewURL(new URL("http://www.multiup.org/download/acf44b0e4b2588b05cbc07380d8b29d2/SAw.720p.YourSerie.CoM.mp4"));  //pass=069bc
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
