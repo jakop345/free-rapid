@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
 <plugin class="cz.vity.freerapid.plugins.services.pornhub.PornHubServiceImpl"
-        id="pornhub.com" vendor="birchie" version="1.0.3">
+        id="pornhub.com" vendor="birchie+tong2shot" version="1.1.0">
     <attributes>
         <attribute id="urlRegex" value="https?://((www|de|fr|es|it|pt|pl|ru|jp)\.)?pornhub\.com/(album/|photo/|embed/|view_video\.php\?viewkey=).+"/>
         <attribute id="minver" value="0.855"/>
         <attribute id="maxver" value="0.899"/>
         <attribute id="services" value="pornhub.com"/>
         <attribute id="maxDownloads" value="10"/>
+        <attribute id="hasOptions" value="true"/>
         <attribute id="faviconImage" value="resources/favicon.png"/>
     </attributes>
 

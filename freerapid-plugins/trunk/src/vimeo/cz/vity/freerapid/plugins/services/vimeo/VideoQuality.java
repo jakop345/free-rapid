@@ -9,7 +9,8 @@ import java.util.Collections;
 enum VideoQuality {
     Mobile(270),
     SD(360),
-    HD(720);
+    HD(720),
+    HD1080(1080);
 
     private final int quality;
 
@@ -19,6 +20,11 @@ enum VideoQuality {
 
     public int getQuality() {
         return quality;
+    }
+
+    @Override
+    public String toString() {
+        return name() + " (" + quality + "p)";
     }
 
     public static VideoQuality[] getItems() {

@@ -146,7 +146,7 @@ class VimeoFileRunner extends AbstractRunner {
         final List<VimeoVideo> videoList = new LinkedList<VimeoVideo>();
         JsonNode progressiveNodes = rootNode.findPath("progressive");
         if (progressiveNodes == null) {
-            throw new PluginImplementationException("'Progressive' node not found in video config");
+            throw new PluginImplementationException("Error parsing video config (2)");
         }
         for (JsonNode progressiveNode : progressiveNodes) {
             String strQuality = progressiveNode.get("quality").getTextValue();
