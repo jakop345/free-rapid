@@ -10,12 +10,21 @@ enum VideoQuality {
     Mobile(270),
     SD(360),
     HD(720),
-    HD1080(1080);
+    HD1080(1080),
+    Original(10000, "Original");
+
 
     private final int quality;
+    private final String name;
 
     VideoQuality(int quality) {
         this.quality = quality;
+        this.name = name() + " (" + quality + "p)";
+    }
+
+    VideoQuality(int quality, String name) {
+        this.quality = quality;
+        this.name = name;
     }
 
     public int getQuality() {
@@ -24,7 +33,7 @@ enum VideoQuality {
 
     @Override
     public String toString() {
-        return name() + " (" + quality + "p)";
+        return name;
     }
 
     public static VideoQuality[] getItems() {
