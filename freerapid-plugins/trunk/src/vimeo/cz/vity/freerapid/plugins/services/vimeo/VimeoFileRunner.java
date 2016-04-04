@@ -2,6 +2,7 @@ package cz.vity.freerapid.plugins.services.vimeo;
 
 import cz.vity.freerapid.plugins.exceptions.*;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
+import cz.vity.freerapid.plugins.webclient.DownloadClientConsts;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.utils.JsonMapper;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
@@ -9,12 +10,13 @@ import cz.vity.freerapid.utilities.LogUtils;
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpMethod;
 import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
-import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 
@@ -26,6 +28,7 @@ import java.util.regex.Matcher;
  */
 class VimeoFileRunner extends AbstractRunner {
     private final static Logger logger = Logger.getLogger(VimeoFileRunner.class.getName());
+    private final static String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101 Firefox/45.0";
     private VimeoSettingsConfig config;
 
     private void setConfig() throws Exception {
@@ -36,6 +39,7 @@ class VimeoFileRunner extends AbstractRunner {
     @Override
     public void runCheck() throws Exception {
         super.runCheck();
+        setClientParameter(DownloadClientConsts.USER_AGENT, USER_AGENT);
         checkUrl();
         addCookie(new Cookie(".vimeo.com", "language", "en", "/", 86400, false));
         final HttpMethod method = getGetMethod(fileURL);
@@ -79,6 +83,7 @@ class VimeoFileRunner extends AbstractRunner {
     @Override
     public void run() throws Exception {
         super.run();
+        setClientParameter(DownloadClientConsts.USER_AGENT, USER_AGENT);
         checkUrl();
         logger.info("Starting download in TASK " + fileURL);
         addCookie(new Cookie(".vimeo.com", "language", "en", "/", 86400, false));
@@ -90,21 +95,12 @@ class VimeoFileRunner extends AbstractRunner {
             checkNameAndSize();
             setConfig();
             fileURL = method.getURI().toString();
-            if (fileURL.contains("/ondemand/") && getContentAsString().contains("Watch Trailer")) {
-                method = getMethodBuilder()
-                        .setReferer(fileURL)
-                        .setActionFromAHrefWhereATagContains("Watch Trailer")
-                        .toGetMethod();
-                if (!makeRedirectedRequest(method)) {
-                    checkProblems();
-                    throw new ServiceConnectionProblemException();
-                }
-                checkProblems();
-            }
-            VimeoVideo vimeoVideo = getSelectedVideo();
+            VimeoVideo vimeoVideo = getSelectedVideo(getContentAsString());
             logger.info("Config settings : " + config);
             logger.info("Downloading video : " + vimeoVideo);
-            if (!tryDownloadAndSaveFile(getGetMethod(vimeoVideo.url))) {
+            httpFile.setFileName(httpFile.getFileName().replaceFirst("\\..{2,4}$", vimeoVideo.extension));
+            HttpMethod httpMethod = getMethodBuilder().setReferer(fileURL).setAction(vimeoVideo.url).toGetMethod();
+            if (!tryDownloadAndSaveFile(httpMethod)) {
                 checkProblems();
                 throw new ServiceConnectionProblemException("Error starting download");
             }
@@ -114,12 +110,13 @@ class VimeoFileRunner extends AbstractRunner {
         }
     }
 
-    private VimeoVideo getSelectedVideo() throws ErrorDuringDownloadingException, IOException {
-        if (getContentAsString().contains("\"config_url\":\"")) {
+    private VimeoVideo getSelectedVideo(String content) throws ErrorDuringDownloadingException, IOException {
+        if (content.contains("\"config_url\":\"") || content.contains("data-config-url=\"")) {
             String configUrl;
             try {
-                configUrl = URLDecoder.decode(PlugUtils.replaceEntities(PlugUtils.getStringBetween(getContentAsString(), "\"config_url\":\"", "\"")), "UTF-8")
-                        .replace("\\/", "/");
+                configUrl = (content.contains("data-config-url=\"") ?
+                        PlugUtils.replaceEntities(PlugUtils.getStringBetween(content, "data-config-url=\"", "\"")) :
+                        PlugUtils.replaceEntities(PlugUtils.getStringBetween(content, "\"config_url\":\"", "\"")).replace("\\/", "/"));
             } catch (Exception e) {
                 throw new PluginImplementationException("Error getting config URL");
             }
@@ -136,14 +133,15 @@ class VimeoFileRunner extends AbstractRunner {
             throw new PluginImplementationException("Data config URL not found");
         }
 
+        ObjectMapper mapper = new JsonMapper().getObjectMapper();
         JsonNode rootNode;
         try {
-            rootNode = new JsonMapper().getObjectMapper().readTree(getContentAsString());
+            rootNode = mapper.readTree(getContentAsString());
         } catch (IOException e) {
-            throw new PluginImplementationException("Error parsing video config");
+            throw new PluginImplementationException("Error parsing video config", e);
         }
 
-        final List<VimeoVideo> videoList = new LinkedList<VimeoVideo>();
+        final List<VimeoVideo> videoList = new ArrayList<VimeoVideo>();
         JsonNode progressiveNodes = rootNode.findPath("progressive");
         if (progressiveNodes == null) {
             throw new PluginImplementationException("Error parsing video config (2)");
@@ -154,7 +152,7 @@ class VimeoFileRunner extends AbstractRunner {
             if (strQuality != null && url != null) {
                 try {
                     int quality = Integer.parseInt(strQuality.replace("p", "").trim());
-                    VimeoVideo vimeoVideo = new VimeoVideo(quality, url);
+                    VimeoVideo vimeoVideo = new VimeoVideo(quality, url, ".mp4");
                     videoList.add(vimeoVideo);
                     logger.info("Found video: " + vimeoVideo);
                 } catch (NumberFormatException e) {
@@ -162,10 +160,66 @@ class VimeoFileRunner extends AbstractRunner {
                 }
             }
         }
+
+        if (content.contains("\"download_config\"")) {
+            VimeoVideo originalVideo = getOriginalVideo(mapper);
+            if (originalVideo != null) {
+                logger.info("Found video: " + originalVideo);
+                videoList.add(originalVideo);
+            }
+        }
+
         if (videoList.isEmpty()) {
             throw new PluginImplementationException("Quality list is empty");
         }
         return Collections.min(videoList);
+    }
+
+    private VimeoVideo getOriginalVideo(ObjectMapper mapper) {
+        logger.info("Getting original video");
+        try {
+            HttpMethod method = getMethodBuilder()
+                    .setReferer(fileURL)
+                    .setAction("https://vimeo.com/" + getVideoId())
+                    .setParameter("action", "load_download_config")
+                    .setAjax()
+                    .setHeader("origin", "https://vimeo.com")
+                    .toGetMethod();
+            if (!makeRedirectedRequest(method)) {
+                checkProblems();
+                throw new ServiceConnectionProblemException("Error getting 'download config'");
+            }
+            checkProblems();
+
+            JsonNode rootNode;
+            try {
+                rootNode = mapper.readTree(getContentAsString());
+            } catch (IOException e) {
+                throw new PluginImplementationException("Error parsing 'download config' content", e);
+            }
+            JsonNode sourceFileNode = rootNode.findPath("source_file");
+            if (sourceFileNode == null) {
+                throw new PluginImplementationException("Error parsing 'download config' content (2)");
+            }
+            String extension = sourceFileNode.findPath("extension").getTextValue();
+            String downloadUrl = sourceFileNode.findPath("download_url").getTextValue();
+            if (downloadUrl == null) {
+                throw new PluginImplementationException("Error parsing 'download config' content (3)");
+            }
+            return new VimeoVideo(VideoQuality.Original.getQuality(), downloadUrl, extension == null ? ".mp4" : "." + extension.toLowerCase(Locale.ENGLISH));
+        } catch (Exception e) {
+            logger.warning("Error getting original video");
+            LogUtils.processException(logger, e);
+        }
+        return null;
+    }
+
+    private String getVideoId() throws PluginImplementationException {
+        Matcher matcher = PlugUtils.matcher("https?://(?:(?:www|player)\\.)?vimeo\\.com/(?:.+?/)?(\\d+)", fileURL);
+        if (!matcher.find()) {
+            throw new PluginImplementationException("Video ID not found");
+        }
+        return matcher.group(1);
     }
 
     private boolean isPasswordProtected() {
@@ -194,11 +248,13 @@ class VimeoFileRunner extends AbstractRunner {
         private final static int LOWER_QUALITY_PENALTY = 10;
         private final int quality;
         private final String url;
+        private final String extension;
         private final int weight;
 
-        public VimeoVideo(final int quality, final String url) {
+        public VimeoVideo(final int quality, final String url, final String extension) {
             this.quality = quality;
             this.url = url;
+            this.extension = extension;
             this.weight = calcWeight();
         }
 
@@ -219,6 +275,7 @@ class VimeoFileRunner extends AbstractRunner {
             return "VimeoVideo{" +
                     "quality=" + quality +
                     ", url='" + url + '\'' +
+                    ", extension='" + extension + '\'' +
                     ", weight=" + weight +
                     '}';
         }
