@@ -23,7 +23,7 @@ public class TestApp extends PluginDevApplication {
             //httpFile.setNewURL(new URL("http://www.ceskatelevize.cz/ivysilani/10084897100-kluci-v-akci/211562221900012/obsah/155251-pastiera-napoletana/"));
             //httpFile.setNewURL(new URL("http://www.ceskatelevize.cz/ivysilani/1126672097-otazky-vaclava-moravce/213411030510609-otazky-vaclava-moravce-2-cast/"));
             //httpFile.setNewURL(new URL("http://www.ceskatelevize.cz/ivysilani/1126672097-otazky-vaclava-moravce/213411030510609-otazky-vaclava-moravce-2-cast/obsah/265416-pokracovani-debaty-z-1-hodiny-poradu/"));
-            httpFile.setNewURL(new URL("http://www.ceskatelevize.cz/porady/1104873554-nadmerne-malickosti/video/"));
+            //httpFile.setNewURL(new URL("http://www.ceskatelevize.cz/porady/1104873554-nadmerne-malickosti/video/"));
             //httpFile.setNewURL(new URL("http://www.ceskatelevize.cz/ivysilani/1183909575-tyden-v-regionech-ostrava/413231100212014-tyden-v-regionech/obsah/252368-majiteli-reznictvi-v-centru-ostravy-hrozi-az-milionova-pokuta/"));
             //httpFile.setNewURL(new URL("http://www.ceskatelevize.cz/porady/10306517828-mala-farma/313292320310028/video/"));
             //httpFile.setNewURL(new URL("http://www.ceskatelevize.cz/porady/10361564316-sanitka-2/210512120330009/"));
@@ -37,12 +37,16 @@ public class TestApp extends PluginDevApplication {
             //httpFile.setNewURL(new URL("http://www.ceskatelevize.cz/porady/10639901181-trabantem-jizni-amerikou/213562260150012/bonus/16881"));
             //httpFile.setNewURL(new URL("http://www.ceskatelevize.cz/zpravodajstvi-brno/zpravy/237520-vosy-se-premnozily-utoku-jejich-zihadel-pribyva/"));
             //httpFile.setNewURL(new URL("http://www.ceskatelevize.cz/porady/878516-willy-fog-na-ceste-za-dobrodruzstvim/298381420460002-cesta-na-island/"));
+            //httpFile.setNewURL(new URL("http://www.ceskatelevize.cz/porady/10090925908-vsechnoparty/215522161600033"));
+            //httpFile.setNewURL(new URL("http://decko.ceskatelevize.cz/video/316%20294%2034001_0001"));
+            httpFile.setNewURL(new URL("http://decko.ceskatelevize.cz/player?width=560&IDEC=316+294+34001%2F0001&fname=Pir%C3%A1tsk%C3%A9+vys%C3%ADl%C3%A1n%C3%AD+-+11.+4.+2016"));
             final ConnectionSettings connectionSettings = new ConnectionSettings();
             //connectionSettings.setProxy("213.192.26.6", 8080); //eg we can use local proxy to sniff HTTP communication
             final CeskaTelevizeServiceImpl service = new CeskaTelevizeServiceImpl();
             CeskaTelevizeSettingsConfig config = new CeskaTelevizeSettingsConfig();
             config.setVideoQuality(VideoQuality.Highest);
             service.setConfig(config);
+            //setUseTempFiles(true);
             testRun(service, httpFile, connectionSettings);
         } catch (Exception e) {
             e.printStackTrace();

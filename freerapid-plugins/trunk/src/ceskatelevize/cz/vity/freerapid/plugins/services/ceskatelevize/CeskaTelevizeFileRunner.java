@@ -134,7 +134,7 @@ class CeskaTelevizeFileRunner extends AbstractRunner {
             throw new PluginImplementationException("Error getting programme title (5)");
         }
 
-        filename = filename.replaceAll("[\\t\\n]", "");
+        filename = filename.replaceAll("[\\t\\n]", "").trim();
         filename += DEFAULT_EXT;
         httpFile.setFileName(filename);
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
@@ -382,7 +382,7 @@ class CeskaTelevizeFileRunner extends AbstractRunner {
     }
 
     private boolean isArchiveProgramme(String fileUrl) {
-        return fileUrl.matches("http://decko\\.ceskatelevize\\.cz/[^_#/?]+/?");
+        return fileUrl.matches("http://decko\\.ceskatelevize\\.cz/.+");
     }
 
     private void parseArchiveProgramme(String content) throws Exception {
