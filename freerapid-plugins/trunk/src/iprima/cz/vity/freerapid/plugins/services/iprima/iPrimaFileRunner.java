@@ -1,9 +1,6 @@
 package cz.vity.freerapid.plugins.services.iprima;
 
-import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
-import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;
-import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
-import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
+import cz.vity.freerapid.plugins.exceptions.*;
 import cz.vity.freerapid.plugins.services.applehls.AdjustableBitrateHlsDownloader;
 import cz.vity.freerapid.plugins.services.applehls.HlsDownloader;
 import cz.vity.freerapid.plugins.services.tor.TorProxyClient;
@@ -51,7 +48,7 @@ class iPrimaFileRunner extends AbstractRunner {
 
     private void checkNameAndSize() throws Exception {
         final String name = PlugUtils.getStringBetween(getContentAsString(), "<meta property=\"og:title\" content=\"", "\"")
-                .replace("| Prima PLAY", "").trim();
+                .replaceFirst("\\|[^\\|]+$", "").trim();
         httpFile.setFileName(name + DEFAULT_EXT);
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
@@ -73,20 +70,16 @@ class iPrimaFileRunner extends AbstractRunner {
                     throw new ServiceConnectionProblemException("Error starting download");
                 }
             } else {
+                boolean iPrimaPlay = isIPrimaPlay();
                 String productId;
                 try {
-                    productId = PlugUtils.getStringBetween(getContentAsString(), "data-product=\"", "\"");
+                    productId = (iPrimaPlay ? PlugUtils.getStringBetween(getContentAsString(), "data-product=\"", "\"") :
+                            PlugUtils.getStringBetween(getContentAsString(), "prehravac/embedded?id=", "\""));
                 } catch (PluginImplementationException e) {
                     throw new PluginImplementationException("Video ID not found");
                 }
 
-                method = getMethodBuilder()
-                        .setReferer(fileURL)
-                        .setAction("http://play.iprima.cz/prehravac/init")
-                        .setParameter("_infuse", "1")
-                        .setParameter("_ts", String.valueOf(System.currentTimeMillis()))
-                        .setParameter("productId", productId)
-                        .toGetMethod();
+                method = getMediaSelectorMethod(productId, iPrimaPlay);
                 try {
                     if (!makeRedirectedRequest(method)) {
                         checkLocationProblems();
@@ -111,6 +104,29 @@ class iPrimaFileRunner extends AbstractRunner {
             checkProblems();
             throw new ServiceConnectionProblemException();
         }
+    }
+
+    private HttpMethod getMediaSelectorMethod(String productId, boolean iPrimaPlay) throws BuildMethodException {
+        return (iPrimaPlay ? getMethodBuilder()
+                .setReferer(fileURL)
+                .setAction("http://play.iprima.cz/prehravac/init")
+                .setParameter("_infuse", "1")
+                .setParameter("_ts", String.valueOf(System.currentTimeMillis()))
+                .setParameter("productId", productId)
+                .toGetMethod()
+
+                : getMethodBuilder()
+                .setReferer(fileURL)
+                .setAction("http://api.play-backend.iprima.cz/prehravac/init")
+                .setParameter("_infuse", "1")
+                .setParameter("_ts", String.valueOf(System.currentTimeMillis()))
+                .setParameter("embed", "true")
+                .setParameter("productId", productId)
+                .toGetMethod());
+    }
+
+    private boolean isIPrimaPlay() {
+        return fileURL.contains("://play.iprima.cz");
     }
 
     private IPrimaVideo getSelectedVideo(String videoPlayerContent) throws ErrorDuringDownloadingException {

@@ -55,11 +55,11 @@ class UlozToRunner extends AbstractRunner {
     }
 
     private boolean isPasswordProtected() {
-        return getContentAsString().contains("passwordProtectedFile");
+        return getContentAsString().contains("passwordProtected");
     }
 
     private void passwordProtectedCheck() throws Exception {
-        while (getContentAsString().contains("passwordProtectedFile")) {
+        while (getContentAsString().contains("passwordProtected")) {
             final String password = getDialogSupport().askForPassword("Ulozto password protected file");
             if (password == null) {
                 throw new PluginImplementationException("This file is secured with a password");

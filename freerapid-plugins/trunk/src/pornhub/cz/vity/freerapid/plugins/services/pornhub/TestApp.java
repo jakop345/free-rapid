@@ -5,7 +5,6 @@ import cz.vity.freerapid.plugins.webclient.ConnectionSettings;
 import cz.vity.freerapid.plugins.webclient.interfaces.HttpFile;
 import org.jdesktop.application.Application;
 
-import java.net.Proxy;
 import java.net.URL;
 
 /**
@@ -24,7 +23,7 @@ public class TestApp extends PluginDevApplication {
             //httpFile.setNewURL(new URL("http://www.pornhub.com/view_video.php?viewkey=ph56e128a099ea8")); //HD
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
-            connectionSettings.setProxy("localhost", 9040, Proxy.Type.SOCKS); //eg we can use local proxy to sniff HTTP communication
+            //connectionSettings.setProxy("localhost", 9040, Proxy.Type.SOCKS); //eg we can use local proxy to sniff HTTP communication
             //then we tries to download
             final PornHubServiceImpl service = new PornHubServiceImpl(); //instance of service - of our plugin
             //runcheck makes the validation
