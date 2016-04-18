@@ -18,7 +18,7 @@ public class TestApp extends PluginDevApplication {
             //we set file URL
             //httpFile.setNewURL(new URL("http://instagram.com/p/Zt7r7rLjqV/"));
             httpFile.setNewURL(new URL("http://instagram.com/p/owU_nPlPwu/")); //video
-            //httpFile.setNewURL(new URL("https://instagram.com/kinoyoga/"));    //user
+            httpFile.setNewURL(new URL("https://instagram.com/FitnessFAQs/"));    //user
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication

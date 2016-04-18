@@ -73,6 +73,13 @@ class FileJokerFileRunner extends XFileSharingRunner {
     }
 
     @Override
+    protected void doDownload(final HttpMethod method) throws Exception {
+        final String link = method.getURI().getURI();
+        httpFile.setFileName(link.substring(1 + link.lastIndexOf("/")));
+        super.doDownload(method);
+    }
+
+    @Override
     protected void doLogin(final PremiumAccount pa) throws Exception {
         HttpMethod method = getMethodBuilder().setAjax()
                 .setReferer(getBaseURL())

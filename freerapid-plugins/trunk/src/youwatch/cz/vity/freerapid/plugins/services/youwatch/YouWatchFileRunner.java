@@ -10,7 +10,6 @@ import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.HttpMethod;
 
 import java.util.List;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 
 /**
@@ -19,6 +18,11 @@ import java.util.regex.Matcher;
  * @author birchie
  */
 class YouWatchFileRunner extends XFilePlayerRunner {
+
+    @Override
+    protected void correctURL() throws Exception {
+        fileURL = fileURL.replaceFirst("(www\\.)?youwatch\\.org/", "chouhaa.info/");
+    }
 
     @Override
     protected List<FileNameHandler> getFileNameHandlers() {
@@ -63,7 +67,6 @@ class YouWatchFileRunner extends XFilePlayerRunner {
                 throw new ServiceConnectionProblemException();
             }
         } while (getContentAsString().contains("<iframe"));
-Logger.getLogger(YouWatchFileRunner.class.getName()).info("@@@@@@@@@@@@@@" + getContentAsString() + "@@@@@@@@@@@@@");
         if (checkDownloadPageMarker()) {
             //page containing download link
             final String downloadLink = getDownloadLinkFromRegexes();

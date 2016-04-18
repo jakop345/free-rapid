@@ -74,6 +74,7 @@ class InstagramFileRunner extends AbstractRunner {
                     throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
                 }
             } else {  // user
+                fileURL = method.getURI().getURI();
                 List<URI> list = new LinkedList<URI>();
                 final String userID = PlugUtils.getStringBetween(getContentAsString(), "owner\":{\"id\":\"", "\"");
                 final String csrfToken = PlugUtils.getStringBetween(getContentAsString(), "\"csrf_token\":\"", "\"");
@@ -89,8 +90,8 @@ class InstagramFileRunner extends AbstractRunner {
                         nextPage = true;
                         final String lastPost = PlugUtils.getStringBetween(content, "end_cursor\":\"", "\"");
                         final HttpMethod nextPageMethod = getMethodBuilder(content).setReferer(fileURL)
-                                .setAction("https://instagram.com/query/")
-                                .setParameter("q", "ig_user(" + userID + ") { media.after(" + lastPost + ", 24) {\n  count,\n  nodes {\n    caption,\n    code,\n    comments {\n      count\n    },\n    date,\n    display_src,\n    id,\n    is_video,\n    likes {\n      count\n    },\n    owner {\n      id\n    }\n  },\n  page_info\n}\n }")
+                                .setAction("https://www.instagram.com/query/")
+                                .setParameter("q", "ig_user(" + userID + ") { media.after(" + lastPost + ", 24) {\n  count,\n  nodes {\n    caption,\n    code,\n    comments {\n      count\n    },\n    date,\n    dimensions {\n      height,\n      width\n    },\n    display_src,\n    id,\n    is_video,\n    likes {\n      count\n    },\n    owner {\n      id\n    },\n    thumbnail_src\n  },\n  page_info\n}\n }")
                                 .setParameter("ref", "users::show")
                                 .setAjax().toPostMethod();
                         nextPageMethod.setRequestHeader("X-CSRFToken", csrfToken);
