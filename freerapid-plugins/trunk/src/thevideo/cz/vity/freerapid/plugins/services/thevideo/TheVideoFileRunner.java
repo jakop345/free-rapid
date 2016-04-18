@@ -4,6 +4,7 @@ import cz.vity.freerapid.plugins.services.xfileplayer.XFilePlayerRunner;
 import cz.vity.freerapid.plugins.webclient.MethodBuilder;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 
+import java.util.List;
 import java.util.regex.Matcher;
 
 /**
@@ -12,6 +13,11 @@ import java.util.regex.Matcher;
  * @author birchie
  */
 class TheVideoFileRunner extends XFilePlayerRunner {
+
+    @Override
+    protected void correctURL() throws Exception {
+        fileURL = fileURL.replaceFirst("(www\\.)?thevideo\\.me/", "thevideo.me/");
+    }
 
     @Override
     protected MethodBuilder getXFSMethodBuilder() throws Exception {
@@ -23,4 +29,10 @@ class TheVideoFileRunner extends XFilePlayerRunner {
         return builder;
     }
 
+    @Override
+    protected List<String> getDownloadLinkRegexes() {
+        final List<String> downloadLinkRegexes = super.getDownloadLinkRegexes();
+        downloadLinkRegexes.add(0, ", ['\"]?file['\"]?\\s*?:\\s*?['\"](http[^'\"]+?)['\"]");
+        return downloadLinkRegexes;
+    }
 }

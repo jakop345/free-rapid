@@ -88,7 +88,7 @@ class YouPornFileRunner extends AbstractRunner {
     }
 
     private void extractVideoURLs(final String content) throws Exception {
-        final Matcher match = PlugUtils.matcher("\\d+:\\s*['\"]([^'\">]*_(\\d+p)[^'\">]*)['\"]", content);
+        final Matcher match = PlugUtils.matcher("\\d+:\\s*['\"]([^'\">]*[_/](\\d+p)[^'\">]*)['\"]", content);
         while (match.find()) {
             videoUrls.put(match.group(2), match.group(1));
             logger.info("Found Video : " + match.group(2) + " >> " + match.group(1));
