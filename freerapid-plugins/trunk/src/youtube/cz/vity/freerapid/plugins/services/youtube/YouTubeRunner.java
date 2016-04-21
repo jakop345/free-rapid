@@ -343,6 +343,9 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
                 boolean cipherSig = false;
                 for (String fmtStreamComponent : fmtStreamComponents) {
                     String fmtStreamComponentParts[] = fmtStreamComponent.split("=");
+                    if ((fmtStreamComponentParts.length < 2)) {
+                        continue;
+                    }
                     String key = fmtStreamComponentParts[0];
                     String value = fmtStreamComponentParts[1];
                     if (key.equals("itag")) {

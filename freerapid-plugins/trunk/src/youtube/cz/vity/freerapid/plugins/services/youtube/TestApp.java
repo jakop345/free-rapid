@@ -68,7 +68,10 @@ public class TestApp extends PluginDevApplication {
             //httpFile.setNewURL(new URL("https://www.youtube.com/playlist?list=FLWYfHW4VtXNcycoPQcsBUCg"));
             //httpFile.setNewURL(new URL("https://www.youtube.com/watch?v=JMla5Ua6bHw")); //18+ embedding failed
             //httpFile.setNewURL(new URL("https://www.youtube.com/channel/UC-AJ211gH31kz1A01y8ls9Q"));
-            httpFile.setNewURL(new URL("https://www.youtube.com/watch?v=FOnBM0QeJNc"));
+            //httpFile.setNewURL(new URL("https://www.youtube.com/watch?v=FOnBM0QeJNc"));
+            //httpFile.setNewURL(new URL("https://www.youtube.com/watch?v=RsYQeoz_EQY"));
+            //httpFile.setNewURL(new URL("https://www.youtube.com/watch?v=RsYQeoz_EQY&dashaudioitag=140"));
+            httpFile.setNewURL(new URL("https://www.youtube.com/watch?v=SrU9YDoXE88"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 8118); //eg we can use local proxy to sniff HTTP communication
@@ -77,7 +80,7 @@ public class TestApp extends PluginDevApplication {
 
             YouTubeSettingsConfig config = new YouTubeSettingsConfig();
             config.setEnableDash(true);
-            config.setVideoQuality(VideoQuality._1080);
+            config.setVideoQuality(VideoQuality.Highest);
             config.setContainer(Container.flv);
             config.setReversePlaylistOrder(false);
             config.setDownloadSubtitles(true);
