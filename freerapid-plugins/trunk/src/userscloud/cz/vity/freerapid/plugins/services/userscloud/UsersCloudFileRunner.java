@@ -11,6 +11,7 @@ import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 
 import java.util.List;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Class which contains main code
@@ -55,5 +56,19 @@ class UsersCloudFileRunner extends XFileSharingRunner {
             }
         });
         return fileSizeHandlers;
+    }
+
+    @Override
+    protected List<String> getDownloadPageMarkers() {
+        final List<String> downloadPageMarkers = super.getDownloadPageMarkers();
+        downloadPageMarkers.add("dl_manager = new DownloadManager(");
+        return downloadPageMarkers;
+    }
+
+    @Override
+    protected List<String> getDownloadLinkRegexes() {
+        final List<String> downloadLinkRegexes = super.getDownloadLinkRegexes();
+        downloadLinkRegexes.add("url\\s*[=:]\\s*[\"'](http.+?" + Pattern.quote(httpFile.getFileName()) + ")[\"']");
+        return downloadLinkRegexes;
     }
 }
