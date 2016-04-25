@@ -1,19 +1,14 @@
 package cz.vity.freerapid.plugins.services.openload;
 
-import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
-import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;
-import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
-import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
+import cz.vity.freerapid.plugins.exceptions.*;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
-import javax.script.*;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Class which contains main code
@@ -22,6 +17,9 @@ import java.util.regex.Pattern;
  */
 class OpenLoadFileRunner extends AbstractRunner {
     private final static Logger logger = Logger.getLogger(OpenLoadFileRunner.class.getName());
+    private final static String OPENLOAD_API_URL = "https://api.openload.co/1";
+    private final static String OPENLOAD_API_TICKET = "/file/dlticket?file=";
+    private final static String OPENLOAD_API_DOWNLOAD = "/file/dl?file=%s&ticket=%s"; //&captcha_response=
 
     @Override
     public void runCheck() throws Exception { //this method validates file
@@ -61,38 +59,34 @@ class OpenLoadFileRunner extends AbstractRunner {
             checkProblems();//check problems
             checkNameAndSize(contentAsString);//extract file name and size from the page
 
-            final int wait = PlugUtils.getNumberBetween(contentAsString, "secondsdl = ", ";");
+            final Matcher match = PlugUtils.matcher("/f/([^/]+)", fileURL);
+            if (!match.find()) throw new InvalidURLOrServiceProblemException("Unable to find fileID in url");
+            final String fileID = match.group(1);
+
+            HttpMethod httpMethod = getMethodBuilder().setReferer(fileURL)
+                    .setAction(OPENLOAD_API_URL + OPENLOAD_API_TICKET + fileID)
+                    .setAjax().toGetMethod();
+            if (!makeRedirectedRequest(httpMethod)) {
+                checkAPIProblems();
+                throw new ServiceConnectionProblemException();
+            }
+            checkAPIProblems();
+
+            final String ticket = PlugUtils.getStringBetween(getContentAsString(), "\"ticket\":\"", "\",");
+            final int wait = PlugUtils.getNumberBetween(getContentAsString(), "\"wait_time\":", ",");
             if (wait > 0)
                 downloadTask.sleep(1 + wait);
-            String decodedText="";
-            int loop = 1;
-            do {
-                try {
-                    if (!makeRedirectedRequest(getGetMethod(method.getURI().getURI()))) {
-                        checkProblems();
-                        throw new ServiceConnectionProblemException();
-                    }
-                    checkProblems();
-                    final Matcher match = PlugUtils.matcher("(?s)Download.+?\\s*<script type=\"text/javascript\">([^<]+?)<", getContentAsString());
-                    if (!match.find())
-                        throw new PluginImplementationException("Script not found");
-                    String srcScript = match.group(1);
-                    logger.info("Src script: " + srcScript);
-                    decodedText = DecodeSmileyScript(srcScript);
-                    loop = -1;
-                } catch (ScriptException e) {
-                    if (loop++ > 10) throw new PluginImplementationException("JavaScript eval failed");
-                }
-            } while (loop > 0);
-            logger.info("Decoded text: " + decodedText);
-            try {
-                decodedText = decodeNewScript(decodedText);
-            } catch (ScriptException e) {
-                throw new PluginImplementationException("JavaScript eval-2 failed");
+            httpMethod = getMethodBuilder().setReferer(fileURL)
+                    .setAction(OPENLOAD_API_URL + String.format(OPENLOAD_API_DOWNLOAD, fileID, ticket))
+                    .setAjax().toGetMethod();
+            if (!makeRedirectedRequest(httpMethod)) {
+                checkAPIProblems();
+                throw new ServiceConnectionProblemException();
             }
-            logger.info("Decoded-2 text: " + decodedText);
-            final String dlUrl = decodedText;
-            HttpMethod httpMethod = getGetMethod(dlUrl);
+            checkAPIProblems();
+
+            final String dlUrl = PlugUtils.getStringBetween(getContentAsString(), "\"url\":\"", "\",").replace("\\/", "/");
+            httpMethod = getGetMethod(dlUrl);
             if (!tryDownloadAndSaveFile(httpMethod)) {
                 checkProblems();//if downloading failed
                 throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
@@ -111,36 +105,11 @@ class OpenLoadFileRunner extends AbstractRunner {
         }
     }
 
-    private String DecodeSmileyScript(final String encoded) throws Exception {
-        String findStart = "(\uFF9F\u0414\uFF9F) ['_'] ( (\uFF9F\u0414\uFF9F) ['_'] (";
-        String replaceStart = "( (\uFF9F\u0414\uFF9F) ['_'] (";
-        String findEnd = ") (\uFF9F\u0398\uFF9F)) ('_');";
-        String replaceEnd = ") ());";
-        String removeStart = "(ﾟДﾟ)[ﾟεﾟ]+(-~3)+ (-~3)+ (ﾟДﾟ)[ﾟεﾟ]+((ﾟｰﾟ)";
-        String removeEnd = "(ﾟДﾟ)[ﾟεﾟ]+((ﾟｰﾟ) + (ﾟΘﾟ))+ ((o^_^o) +(o^_^o) +(c^_^o))+";
-
-        if (!encoded.contains(findStart) || !encoded.contains(findEnd)) {
-            throw new PluginImplementationException("Unrecognised smiley script");
+    private void checkAPIProblems() throws ErrorDuringDownloadingException {
+        final String content = getContentAsString();
+        if (!content.contains("\"status\":200,")) {
+            final String msg = PlugUtils.getStringBetween(content, "\"msg\":\"", "\",");
+            throw new ServiceConnectionProblemException(msg);
         }
-        final String toDecode = encoded.trim().replace(findStart, replaceStart).replace(findEnd, replaceEnd)
-                .replaceFirst(Pattern.quote(removeStart) + ".+?" + Pattern.quote(removeEnd), "");
-
-        final ScriptEngineManager manager = new ScriptEngineManager();
-        final ScriptEngine engine = manager.getEngineByName("javascript");
-        return (String) engine.eval(toDecode);
-    }
-
-    private String decodeNewScript(final String encoded) throws Exception {
-        final String functMatch = "\\{function ([^\\(]+?)([^\\}]+?\\})";
-        Matcher match = PlugUtils.matcher(functMatch, encoded);
-        if (!match.find()) throw new PluginImplementationException("Script Err 1");
-        final String functScr = match.group(1) + " = function" + match.group(2) + ";";
-        final String dataMatch = "}return (.+?)}";
-        match = PlugUtils.matcher(dataMatch, encoded);
-        if (!match.find()) throw new PluginImplementationException("Script Err 2");
-        final String dataScr = match.group(1);
-        final ScriptEngineManager manager = new ScriptEngineManager();
-        final ScriptEngine engine = manager.getEngineByName("javascript");
-        return (String) engine.eval(functScr + dataScr);
     }
 }
