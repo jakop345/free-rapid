@@ -132,10 +132,10 @@ public class ToolbarDialog extends AppDialog {
             int index = toolbarList.getSelectedIndex();
             if (index >= 0) {
                 toolbarModel.add(index, btn);
-                toolbarList.setSelectedIndex(index);
+                toolbarList.setSelectedIndex(index+1);
             } else {
                 toolbarModel.add(toolbarModel.size()-1, btn);
-                toolbarList.setSelectedIndex(toolbarModel.size()-2);
+                toolbarList.setSelectedIndex(-1);
             }
         }
     }

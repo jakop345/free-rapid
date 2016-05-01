@@ -53,6 +53,7 @@ public class ViewsTab extends UserPreferencesTab {
         bind(checkZoomCaptchaImage, UserProp.ZOOM_CAPTCHA_IMAGE, UserProp.ZOOM_CAPTCHA_IMAGE_DEFAULT);
         bind(checkCloseToTray, FWProp.MINIMIZE_ON_CLOSE, FWProp.MINIMIZE_ON_CLOSE_DEFAULT);
         bind(checkShowToolbarText, UserProp.SHOW_TEXT_TOOLBAR, UserProp.SHOW_TEXT_TOOLBAR_DEFAULT);
+        bind(checkShowProgressBarProgress, UserProp.SHOW_PROGRESS_IN_PROGRESSBAR, UserProp.SHOW_PROGRESS_IN_PROGRESSBAR_DEFAULT);
 
         ValueModel valueModel = bind(checkShowIconInSystemTray, FWProp.SHOW_TRAY, true);
         PropertyConnector.connectAndUpdate(valueModel, checkAnimateIcon, "enabled");
@@ -144,6 +145,8 @@ public class ViewsTab extends UserPreferencesTab {
         checkBringToFrontWhenPasted.setName("checkBringToFrontWhenPasted");
         checkZoomCaptchaImage = new JCheckBox();
         checkZoomCaptchaImage.setName("checkZoomCaptchaImage");
+        checkShowProgressBarProgress = new JCheckBox();
+        checkShowProgressBarProgress.setName("checkShowProgressBarProgress");
 
         checkShowIconInSystemTray = new JCheckBox();
         checkShowIconInSystemTray.setName("checkShowIconInSystemTray");
@@ -189,6 +192,7 @@ public class ViewsTab extends UserPreferencesTab {
                             FormSpecs.DEFAULT_ROWSPEC,
                             FormSpecs.DEFAULT_ROWSPEC,
                             FormSpecs.DEFAULT_ROWSPEC,
+                            FormSpecs.DEFAULT_ROWSPEC,
                     }), panelAppearance);
 
             panelAppearanceBuilder.add(labelLaF, cc.xy(3, 1));
@@ -204,6 +208,7 @@ public class ViewsTab extends UserPreferencesTab {
             panelAppearanceBuilder.add(checkSlimLinesInHistory, cc.xywh(3, 10, 7, 1));
             panelAppearanceBuilder.add(checkBringToFrontWhenPasted, cc.xywh(3, 11, 7, 1));
             panelAppearanceBuilder.add(checkZoomCaptchaImage, cc.xywh(3, 12, 7, 1));
+            panelAppearanceBuilder.add(checkShowProgressBarProgress, cc.xywh(3, 13, 7, 1));
         }
 
         //======== panel System tray ========
@@ -271,5 +276,6 @@ public class ViewsTab extends UserPreferencesTab {
     private JCheckBox checkAnimateIcon;
     private JCheckBox checkCloseToTray;
     private JCheckBox checkHideWhenMinimized;
+    private JCheckBox checkShowProgressBarProgress;
 
 }
