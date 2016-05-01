@@ -870,7 +870,7 @@ public class ContentPanel extends JPanel implements ListSelectionListener, ListD
         colName.setComparator(new NameColumnComparator());
         colName.setWidth(150);
         colName.setMinWidth(50);
-        tableColumnModel.getColumn(COLUMN_PROGRESSBAR).setCellRenderer(new ProgressBarCellRenderer(context));
+        initColumn(COLUMN_PROGRESSBAR, new ProgressBarCellRenderer(context), new ProgressBarColumnComparator());
         final TableColumnExt column = (TableColumnExt) tableColumnModel.getColumn(COLUMN_CHECKED);
         column.setComparator(new CheckedColumnComparator());
         column.setMaxWidth(30);
