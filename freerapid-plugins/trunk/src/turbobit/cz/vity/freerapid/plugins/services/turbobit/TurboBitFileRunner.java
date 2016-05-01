@@ -92,7 +92,7 @@ public class TurboBitFileRunner extends AbstractRunner {
                     .toGetMethod();
             method.addRequestHeader("X-Requested-With", "XMLHttpRequest");
 
-            downloadTask.sleep(61);
+            downloadTask.sleep(1 + getWaitTime());
 
             if (!makeRedirectedRequest(method)) {
                 checkProblems();
@@ -115,6 +115,13 @@ public class TurboBitFileRunner extends AbstractRunner {
             checkProblems();
             throw new ServiceConnectionProblemException();
         }
+    }
+
+    protected int getWaitTime() {
+        Matcher match = PlugUtils.matcher("[Ll]imit\\s*:\\s*(\\d+)", getContentAsString());
+        if (match.find())
+            return Integer.parseInt(match.group(1));
+        return 60;
     }
 
     protected void checkFileProblems() throws ErrorDuringDownloadingException {

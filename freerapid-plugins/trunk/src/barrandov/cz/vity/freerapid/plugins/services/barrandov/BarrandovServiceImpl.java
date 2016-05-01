@@ -41,7 +41,7 @@ public class BarrandovServiceImpl extends AbstractFileShareService {
         if (config == null) {
             if (!storage.configFileExists(CONFIG_FILE)) {
                 config = new BarrandovSettingsConfig();
-                config.setQualitySetting(2);
+                config.setQualitySetting(1);
             } else {
                 config = storage.loadConfigFromFile(CONFIG_FILE, BarrandovSettingsConfig.class);
             }

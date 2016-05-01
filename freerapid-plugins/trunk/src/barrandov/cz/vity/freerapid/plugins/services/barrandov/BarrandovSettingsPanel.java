@@ -18,7 +18,7 @@ public class BarrandovSettingsPanel extends JPanel {
     }
 
     private void initPanel() {
-        final String[] qualityStrings = {"Low","Medium","HD"};
+        final String[] qualityStrings = {"360p SD","720p HD"};
 
         final JLabel qualityLabel = new JLabel("Preferred quality level:");
         final JComboBox qualityList = new JComboBox(qualityStrings);
