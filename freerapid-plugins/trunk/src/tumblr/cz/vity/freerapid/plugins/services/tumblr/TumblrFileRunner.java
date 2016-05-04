@@ -1,9 +1,6 @@
 package cz.vity.freerapid.plugins.services.tumblr;
 
-import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
-import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;
-import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
-import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
+import cz.vity.freerapid.plugins.exceptions.*;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.DownloadState;
 import cz.vity.freerapid.plugins.webclient.FileState;
@@ -38,10 +35,11 @@ class TumblrFileRunner extends AbstractRunner {
         }
     }
 
-    private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
+    private void checkNameAndSize(String content) throws Exception {
         if (!fileURL.contains("/post/")) {
             PlugUtils.checkName(httpFile, content, "<title>", "</title>");
             httpFile.setFileName("Tumblr: " + httpFile.getFileName());
+            httpFile.setFileSize(apiGetPostCount());
         }
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
@@ -56,15 +54,15 @@ class TumblrFileRunner extends AbstractRunner {
             checkProblems();//check problems
             checkNameAndSize(content);
             if (!fileURL.contains("/post/")) {
-                fileURL = fileURL.replaceFirst("tumblr\\.com/.*", "tumblr\\.com/");
+                fileURL = fileURL.replaceFirst("tumblr\\.com/?.*", "tumblr\\.com/");
                 List<URI> list = new LinkedList<URI>();
                 int page = 1;
-                while (getContentAsString().contains("\"@type\":\"ListItem\"") && httpFile.getState() == DownloadState.GETTING) {
+                while (getContentAsString().contains("\"@type\":\"ListItem\"") ){//&& httpFile.getState() == DownloadState.GETTING) {
                     final Matcher match = PlugUtils.matcher("\"@type\":\"ListItem\",\"position\":\\d+,\"url\":\"(.+?)\"", getContentAsString());
                     while (match.find()) {
                         list.add(new URI(getMethodBuilder().setAction(match.group(1).replace("\\/", "/")).getEscapedURI()));
                     }
-                    httpFile.setFileSize(list.size());  //links found
+                    httpFile.setDownloaded(list.size());  //links found
                     page = page + 1;
                     final HttpMethod nextPageMethod = getMethodBuilder().setReferer(fileURL).setAction(fileURL + "page/" + page).toGetMethod();
                     if (!makeRedirectedRequest(nextPageMethod)) {
@@ -73,7 +71,7 @@ class TumblrFileRunner extends AbstractRunner {
                     }
                 }
                 if (httpFile.getState() != DownloadState.GETTING) {
-                    httpFile.setFileSize(-1);
+                    httpFile.setDownloaded(0);
                     return;
                 }
                 if (list.isEmpty()) throw new PluginImplementationException("No posts found");
@@ -83,7 +81,13 @@ class TumblrFileRunner extends AbstractRunner {
                 httpFile.getProperties().put("removeCompleted", true);
 
             } else {
-                String dlUrl = PlugUtils.getStringBetween(content, "\"image\":\"", "\",\"").replace("\\/", "/");
+                String dlUrl;
+                try {
+                    dlUrl = PlugUtils.getStringBetween(content, "\"image\":\"", "\",\"").replace("\\/", "/");
+                } catch (Exception x) {
+                    String type = PlugUtils.getStringBetween(content, "@type\":\"", "\"");
+                    throw new NotRecoverableDownloadException("Post is a " + type + " (not an image)");
+                }
                 httpFile.setFileName(dlUrl.substring(1 + dlUrl.lastIndexOf("/")));
                 //here is the download link extraction
                 if (!tryDownloadAndSaveFile(getGetMethod(dlUrl))) {
@@ -103,6 +107,29 @@ class TumblrFileRunner extends AbstractRunner {
                 contentAsString.contains("Not Found</title>")) {
             throw new URLNotAvailableAnymoreException("File not found"); //let to know user in FRD
         }
+    }
+
+    long apiGetPostCount() throws Exception{
+        final String apiUrl = "https://api.tumblr.com/v2/blog/%s/info?api_key=%s";
+        final String apiKey = "fuiKNFp9vQFvjLNvx4sUwti4Yb5yGutBN4Xh10LXZhhRKjWlV4";
+        Matcher match = PlugUtils.matcher("https?://*(\\w+\\.tumblr\\.com)/?", fileURL);
+        if (!match.find())
+            return -1;
+        final String tumblr = match.group(1);
+        if (!makeRedirectedRequest(getGetMethod(String.format(apiUrl, tumblr, apiKey)))) {
+            checkProblems();
+            throw new ServiceConnectionProblemException();
+        }
+        long posts = -1;
+        match = PlugUtils.matcher("\"posts\":(\\d+?),", getContentAsString());
+        if (match.find()) {
+            posts =  Integer.parseInt(match.group(1));
+        }
+        if (!makeRedirectedRequest(getGetMethod(fileURL))) {
+            checkProblems();
+            throw new ServiceConnectionProblemException();
+        }
+        return posts;
     }
 
 }
