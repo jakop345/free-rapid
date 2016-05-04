@@ -57,7 +57,11 @@ class TumblrFileRunner extends AbstractRunner {
                 fileURL = fileURL.replaceFirst("tumblr\\.com/?.*", "tumblr\\.com/");
                 List<URI> list = new LinkedList<URI>();
                 int page = 1;
-                while (getContentAsString().contains("\"@type\":\"ListItem\"") ){//&& httpFile.getState() == DownloadState.GETTING) {
+                while (getContentAsString().contains("\"@type\":\"ListItem\"")) {
+                    if (httpFile.getState() != DownloadState.GETTING) {
+                        httpFile.setDownloaded(0);
+                        return;
+                    }
                     final Matcher match = PlugUtils.matcher("\"@type\":\"ListItem\",\"position\":\\d+,\"url\":\"(.+?)\"", getContentAsString());
                     while (match.find()) {
                         list.add(new URI(getMethodBuilder().setAction(match.group(1).replace("\\/", "/")).getEscapedURI()));
@@ -69,10 +73,6 @@ class TumblrFileRunner extends AbstractRunner {
                         checkProblems();
                         throw new ServiceConnectionProblemException();
                     }
-                }
-                if (httpFile.getState() != DownloadState.GETTING) {
-                    httpFile.setDownloaded(0);
-                    return;
                 }
                 if (list.isEmpty()) throw new PluginImplementationException("No posts found");
                 getPluginService().getPluginContext().getQueueSupport().addLinksToQueue(httpFile, list);
