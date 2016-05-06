@@ -42,19 +42,12 @@ class EuroShareFileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        Matcher match = PlugUtils.matcher("<h1.*?>(.+)</h1>", content);
+        Matcher match = PlugUtils.matcher("fileName\\s*:\\s*'(.+?)'", content);
         if (!match.find())
             throw new PluginImplementationException("File name not found");
         httpFile.setFileName(match.group(1).trim());
         if (fileURL.contains("/folder/")) {
             httpFile.setFileName("Folder > " + httpFile.getFileName());
-        }
-        else {
-            match = PlugUtils.matcher("posledni vpravo\">.+?\\| (.+?)</p>", content);
-            if (match.find())
-                httpFile.setFileSize(PlugUtils.getFileSizeFromString(match.group(1).trim()));
-            else
-                PlugUtils.checkFileSize(httpFile, content, "Veľkosť súboru:", "</p>");
         }
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
@@ -84,10 +77,17 @@ class EuroShareFileRunner extends AbstractRunner {
                 httpFile.getProperties().put("removeCompleted", true);
             }
             else {
+                HttpMethod getMethod = getMethodBuilder().setReferer(fileURL)
+                        .setAction(fileURL + "?download=true").toGetMethod();
+                if (!makeRedirectedRequest(getMethod)) {
+                    checkProblems();
+                    throw new ServiceConnectionProblemException();
+                }
+                checkProblems();
                 HttpMethod httpMethod;
                 try {
                     httpMethod = getMethodBuilder().setReferer(fileURL)
-                            .setActionFromAHrefWhereATagContains("DOWNLOAD FOR FREE").toHttpMethod();
+                            .setActionFromAHrefWhereATagContains("DOWNLOAD WITHOUT REGISTRATION").toHttpMethod();
                 } catch (Exception x) {
                     httpMethod = getMethodBuilder().setReferer(fileURL)
                             .setActionFromAHrefWhereATagContains("STIAHNUŤ BEZ REGISTRACIE").toHttpMethod();
@@ -106,6 +106,7 @@ class EuroShareFileRunner extends AbstractRunner {
     private void checkProblems() throws ErrorDuringDownloadingException {
         final String contentAsString = getContentAsString();
         if (contentAsString.contains("Požadovaný súbor sa na serveri nenachádza alebo bol odstránený") ||
+                contentAsString.contains(";File has been removed") ||
                 contentAsString.contains("súbor bol odstránený") ||
                 contentAsString.contains("Súbor neexistuje")) {
             throw new URLNotAvailableAnymoreException("File not found"); //let to know user in FRD
