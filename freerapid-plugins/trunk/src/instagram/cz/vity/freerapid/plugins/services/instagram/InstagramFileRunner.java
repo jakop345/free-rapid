@@ -82,13 +82,15 @@ class InstagramFileRunner extends AbstractRunner {
                 do {
                     nextPage = false;
                     String content = getContentAsString();
-                    final Matcher match = PlugUtils.matcher("\"code\":\"(.+?)\"", content);
+                    final Matcher match = PlugUtils.matcher("\"code\":\\s*\"(.+?)\"", content);
                     while (match.find()) {
                         list.add(new URI("https://instagram.com/p/" + match.group(1)));
                     }
-                    if (content.contains("\"has_next_page\":true")) {
+                    if (content.contains("\"has_next_page\":true") || content.contains("\"has_next_page\": true")) {
                         nextPage = true;
-                        final String lastPost = PlugUtils.getStringBetween(content, "end_cursor\":\"", "\"");
+                        final Matcher lastMatch = PlugUtils.matcher("end_cursor\":\\s*\"(.+?)\"", content);
+                        if (!lastMatch.find()) throw new PluginImplementationException("Error getting next page details");
+                        final String lastPost = lastMatch.group(1);
                         final HttpMethod nextPageMethod = getMethodBuilder(content).setReferer(fileURL)
                                 .setAction("https://www.instagram.com/query/")
                                 .setParameter("q", "ig_user(" + userID + ") { media.after(" + lastPost + ", 24) {\n  count,\n  nodes {\n    caption,\n    code,\n    comments {\n      count\n    },\n    date,\n    dimensions {\n      height,\n      width\n    },\n    display_src,\n    id,\n    is_video,\n    likes {\n      count\n    },\n    owner {\n      id\n    },\n    thumbnail_src\n  },\n  page_info\n}\n }")
@@ -101,7 +103,7 @@ class InstagramFileRunner extends AbstractRunner {
                             throw new ServiceConnectionProblemException();
                         }
                     }
-                    logger.info(list.size() + " Links found");
+                    httpFile.setDownloaded(list.size());  //links found
                 } while (nextPage);
                 if (list.isEmpty()) throw new PluginImplementationException("No posts found");
                 getPluginService().getPluginContext().getQueueSupport().addLinksToQueue(httpFile, list);

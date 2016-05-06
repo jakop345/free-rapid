@@ -43,7 +43,7 @@ class RelinkFileRunner extends AbstractRunner {
         if (!makeRedirectedRequest(method)) {
             throw new ServiceConnectionProblemException();
         }
-        if (!method.getURI().toString().contains("relink.us")) {
+        if (!(method.getURI().toString().contains("relink.us") || method.getURI().toString().contains("relink.to"))) {
             throw new URLNotAvailableAnymoreException("File not found");
         }
         fileURL = method.getURI().toString();

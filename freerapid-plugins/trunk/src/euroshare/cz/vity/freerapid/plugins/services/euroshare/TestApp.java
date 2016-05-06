@@ -17,7 +17,7 @@ public class TestApp extends PluginDevApplication {
         try {
             //we set file URL
             //httpFile.setNewURL(new URL("http://euroshare.eu/file/4FI5PNq9l8/d-yoprvi.part2.rar"));
-            httpFile.setNewURL(new URL("http://euroshare.eu/file/Ax03x2tvmN/far1.avi"));
+            httpFile.setNewURL(new URL("http://euroshare.eu/file/72gHb0d1n2/Marvels.Agents.of.S.H.I.E.L.D.S03E16.Paradise.Lost.1080p.WEB-DL.DD5.1.H.264-MAoS.mkv"));
             //httpFile.setNewURL(new URL("http://euroshare.eu/folder/2512/bon10sk"));
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection

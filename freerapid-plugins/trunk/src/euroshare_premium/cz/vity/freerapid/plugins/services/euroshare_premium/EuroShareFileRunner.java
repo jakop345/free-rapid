@@ -39,15 +39,10 @@ class EuroShareFileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        Matcher match = PlugUtils.matcher("<h1.*?>(.+)</h1>", content);
+        Matcher match = PlugUtils.matcher("fileName\\s*:\\s*'(.+?)'", content);
         if (!match.find())
             throw new PluginImplementationException("File name not found");
         httpFile.setFileName(match.group(1).trim());
-        match = PlugUtils.matcher("posledni vpravo\">.+?\\| (.+?)</p>", content);
-        if (match.find())
-            httpFile.setFileSize(PlugUtils.getFileSizeFromString(match.group(1).trim()));
-        else
-            PlugUtils.checkFileSize(httpFile, content, "Veľkosť súboru:", "</p>");
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
 
