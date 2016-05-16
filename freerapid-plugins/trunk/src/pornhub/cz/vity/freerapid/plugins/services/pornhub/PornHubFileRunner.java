@@ -167,7 +167,7 @@ class PornHubFileRunner extends AbstractRunner {
         for (PornHubVideoPattern videoPattern : videoPatterns) {
             matcher = PlugUtils.matcher(videoPattern.pattern, content);
             if (matcher.find()) {
-                PornHubVideo video = new PornHubVideo(videoPattern.videoQuality, matcher.group(1));
+                PornHubVideo video = new PornHubVideo(videoPattern.videoQuality, matcher.group(1).replaceFirst("^//", "http://"));
                 videos.add(video);
             }
         }

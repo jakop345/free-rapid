@@ -278,8 +278,7 @@ class CeskaTelevizeFileRunner extends AbstractRunner {
 
     private void checkProblems() throws ErrorDuringDownloadingException {
         final String contentAsString = getContentAsString();
-        if (contentAsString.contains("Neexistuj")
-                || contentAsString.contains("Stránka nenalezena")
+        if (contentAsString.contains("Stránka nenalezena")
                 || contentAsString.contains("Video není k dispozici")
                 || contentAsString.contains("Stránka nebyla nalezena")) {
             throw new URLNotAvailableAnymoreException("File not found"); //let to know user in FRD
