@@ -76,13 +76,20 @@ class OpenLoadFileRunner extends AbstractRunner {
             final int wait = PlugUtils.getNumberBetween(getContentAsString(), "\"wait_time\":", ",");
             if (wait > 0)
                 downloadTask.sleep(1 + wait);
-            httpMethod = getMethodBuilder().setReferer(fileURL)
-                    .setAction(OPENLOAD_API_URL + String.format(OPENLOAD_API_DOWNLOAD, fileID, ticket))
-                    .setAjax().toGetMethod();
-            if (!makeRedirectedRequest(httpMethod)) {
-                checkAPIProblems();
-                throw new ServiceConnectionProblemException();
+            String captchaImg = "";
+            if (getContentAsString().contains("\"captcha_url\":\"")) {
+                captchaImg = PlugUtils.getStringBetween(getContentAsString(), "\"captcha_url\":\"", "\",").replace("\\/", "/");
             }
+            do {
+                httpMethod = getMethodBuilder().setReferer(fileURL)
+                        .setAction(OPENLOAD_API_URL + String.format(OPENLOAD_API_DOWNLOAD, fileID, ticket))
+                        .setParameter("captcha_response", doCaptcha(captchaImg))
+                        .setAjax().toGetMethod();
+                if (!makeRedirectedRequest(httpMethod)) {
+                    checkAPIProblems();
+                    throw new ServiceConnectionProblemException();
+                }
+            } while (getContentAsString().contains("Captcha not solved correctly"));
             checkAPIProblems();
 
             final String dlUrl = PlugUtils.getStringBetween(getContentAsString(), "\"url\":\"", "\",").replace("\\/", "/");
@@ -111,5 +118,13 @@ class OpenLoadFileRunner extends AbstractRunner {
             final String msg = PlugUtils.getStringBetween(content, "\"msg\":\"", "\",");
             throw new ServiceConnectionProblemException(msg);
         }
+    }
+
+    private String doCaptcha(final String img) throws Exception {
+        if (img.equals(""))  return img;
+        final String captchaTxt = getCaptchaSupport().getCaptcha(img);
+        if (captchaTxt == null)
+            throw new CaptchaEntryInputMismatchException();
+        return captchaTxt;
     }
 }

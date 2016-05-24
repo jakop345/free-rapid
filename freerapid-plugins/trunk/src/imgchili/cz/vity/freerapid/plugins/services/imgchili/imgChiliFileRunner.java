@@ -33,7 +33,7 @@ class imgChiliFileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        PlugUtils.checkName(httpFile, content, "<title>imgChili &raquo; ", "</title>");
+        PlugUtils.checkName(httpFile, content, "<title>", "</title>");
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
 
