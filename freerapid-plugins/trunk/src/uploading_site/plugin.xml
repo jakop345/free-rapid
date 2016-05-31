@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
-<plugin class="cz.vity.freerapid.plugins.services.uploadboy.UploadBoyServiceImpl"
-        id="uploadboy.com" vendor="birchie" version="1.0.2">
+<plugin class="cz.vity.freerapid.plugins.services.uploading_site.Uploading_siteServiceImpl"
+        id="uploading.site" vendor="birchie" version="1.0.0">
     <attributes>
-        <attribute id="urlRegex" value="https?://(www\.)?uploadboy\.com/.+"/>
+        <attribute id="urlRegex" value="https?://(www\.)?uploading\.site/.+"/>
         <attribute id="minver" value="0.855"/>
         <attribute id="maxver" value="0.899"/>
-        <attribute id="services" value="uploadboy.com"/>
+        <attribute id="services" value="uploading.site"/>
         <attribute id="maxDownloads" value="100"/>
         <attribute id="defaultDownloads" value="1"/>
         <attribute id="premium" value="false"/>
@@ -15,9 +15,9 @@
     </attributes>
     <requires>
         <import exported="false" match="greater-or-equal" optional="false" plugin-id="xfilesharing"
-                plugin-version="1.0.8" reverse-lookup="false"/>
+                plugin-version="1.0.18" reverse-lookup="false"/>
     </requires>
     <runtime>
-        <library id="uploadboy.com" path="/" type="code"/>
+        <library id="uploading.site" path="/" type="code"/>
     </runtime>
 </plugin>
