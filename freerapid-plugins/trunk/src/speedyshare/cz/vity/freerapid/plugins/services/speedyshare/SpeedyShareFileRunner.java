@@ -5,6 +5,7 @@ import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import cz.vity.freerapid.utilities.LogUtils;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -62,7 +63,7 @@ class SpeedyShareFileRunner extends AbstractRunner {
             if (fileURL.contains("speedyshare.com/files/")) {
                 matcher = getMatcherAgainstContent("href=[\"'](/files/(\\d+?)/download/([^/<>\"']+?))[\"']>");
             } else {
-                matcher = getMatcherAgainstContent("href=[\"'](/([^<>\"']+?)/download/([^/<>\"']+?))[\"']>");
+                matcher = getMatcherAgainstContent("<a href.+?id=dlink.+?data-href=['\"](.+?)['\"]");
             }
 
             if (!matcher.find()) throw new PluginImplementationException("Download link not found");
@@ -77,7 +78,7 @@ class SpeedyShareFileRunner extends AbstractRunner {
                     if (fileURL.contains("speedyshare.com/files/")) {
                         link = "http://www.speedyshare.com/files/" + matcher.group(2) + "/" + matcher.group(3);
                     } else {
-                        link = "http://www.speedyshare.com/" + matcher.group(2) + "/" + matcher.group(3);
+                        link = "http://www.speedyshare.com" + new String(Base64.decodeBase64(matcher.group(1))).replaceFirst("/download/", "/");
                     }
                     try {
                         uriList.add(new URI(link));
@@ -90,7 +91,7 @@ class SpeedyShareFileRunner extends AbstractRunner {
 
             } else { //single file
                 matcher.find(0);
-                final HttpMethod httpMethod = getMethodBuilder().setReferer(fileURL).setAction("http://www.speedyshare.com" + matcher.group(1)).toGetMethod();
+                final HttpMethod httpMethod = getMethodBuilder().setReferer(fileURL).setAction("http://www.speedyshare.com" + new String(Base64.decodeBase64(matcher.group(1)))).toGetMethod();
 
                 if (!tryDownloadAndSaveFile(httpMethod)) {
                     checkProblems();

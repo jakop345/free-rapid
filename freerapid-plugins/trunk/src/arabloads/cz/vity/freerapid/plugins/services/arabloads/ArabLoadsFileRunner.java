@@ -8,6 +8,7 @@ import cz.vity.freerapid.plugins.webclient.interfaces.HttpFile;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -33,6 +34,15 @@ class ArabLoadsFileRunner extends XFileSharingRunner {
         });
         fileSizeHandlers.add(new FileSizeHandlerNoSize());
         return fileSizeHandlers;
+    }
+
+    @Override
+    protected int getWaitTime() throws Exception {
+        final Matcher matcher = getMatcherAgainstContent("id=\"countdown.+?<span[^<>]*>.*?(\\d+).*?</span");
+        if (matcher.find()) {
+            return Integer.parseInt(matcher.group(1)) + 1;
+        }
+        return 0;
     }
 
     @Override
