@@ -138,6 +138,7 @@ public class DownloadHistoryDialog extends AppFrame implements ClipboardOwner, L
         table.setEditable(false);
         table.setColumnControlVisible(true);
         table.setSortable(true);
+        table.setSortOrderCycle(SortOrder.ASCENDING, SortOrder.DESCENDING, SortOrder.UNSORTED);
         table.setColumnMargin(10);
         table.setRolloverEnabled(true);
 
