@@ -415,7 +415,7 @@ public class LocalStorage extends AbstractBean {
             try {
                 File file = getFile(name);
                 File dir = file.getParentFile();
-                if (!dir.isDirectory() && !dir.mkdirs()) {
+                if (!dir.exists() && !dir.isDirectory() && !dir.mkdirs()) {
                     throw new IOException("couldn't create directory " + dir);
                 }
                 return new BufferedOutputStream(new FileOutputStream(file, append));

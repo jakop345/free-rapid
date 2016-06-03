@@ -223,7 +223,7 @@ public final class AppPrefs {
                 removeProperty(FWProp.PROXY_PASSWORD);
             final LocalStorage localStorage = context.getLocalStorage();
             final File outDir = localStorage.getDirectory();
-            if (!outDir.isDirectory() && !outDir.mkdirs()) {
+            if (!outDir.exists() && !outDir.isDirectory() && !outDir.mkdirs()) {
                 logger.warning("Couldn't create dir " + outDir);
             }
             //outputStream = localStorage.openOutputFile(DEFAULT_PROPERTIES);
