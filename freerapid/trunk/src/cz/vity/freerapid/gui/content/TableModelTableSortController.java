@@ -10,7 +10,7 @@ import java.util.Comparator;
 /**
 * @author VitasekL
 */
-class TableModelTableSortController extends TableSortController<TableModel> {
+public class TableModelTableSortController extends TableSortController<TableModel> {
     private JXTable parentTable;
 
     public TableModelTableSortController(final JXTable parentTable) {
