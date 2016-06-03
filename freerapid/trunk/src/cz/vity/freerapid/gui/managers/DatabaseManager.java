@@ -21,7 +21,22 @@ public class DatabaseManager {
     private final EntityManagerFactory factory;
 
     public EntityManager getEntityManager() {
-        return factory.createEntityManager();
+        try {
+            return factory.createEntityManager();
+        } catch (Exception e) {
+            //fix for this kind of exceptions: Caused by: com.objectdb.o.UserException: Recovery file 'C:\Users\STROJ\AppData\Roaming\VitySoft\FRD\frd.odb$' does not match db file 'C:\Users\STROJ\AppData\Roaming\VitySoft\FRD\frd.odb'
+            //when frd.odb$ is broken
+            if (e.getCause() instanceof com.objectdb.o.UserException) {
+                logger.warning(e.getCause().getMessage());
+                final File file = new File(director.getContext().getLocalStorage().getDirectory(), "frd.odb$");
+                if (!file.delete()) {
+                    logger.warning("Failed to delete file " + file.getAbsolutePath());
+                } else {
+                    return factory.createEntityManager();//second attempt
+                }
+            }
+            throw new RuntimeException(e);
+        }
     }
 
     public DatabaseManager(ManagerDirector director) {
