@@ -17,7 +17,9 @@ public class TestApp extends PluginDevApplication {
         try {
             //httpFile.setNewURL(new URL("http://www.myzuka.ru/Song/217112/The-Buzzcocks-Fast-Cars"));
             //httpFile.setNewURL(new URL("http://www.myzuka.ru/Album/377274/The-Cranberries-Bualadh-Bos-The-Cranberries-Live"));
-            httpFile.setNewURL(new URL("http://www.myzuka.ru/Song/3178096/The-Cranberries-Waltzing-Back"));
+            //httpFile.setNewURL(new URL("http://www.myzuka.ru/Song/3178096/The-Cranberries-Waltzing-Back"));
+            //httpFile.setNewURL(new URL("https://myzuka.fm/Album/564697/Numb-Death-On-The-Installment-Plan-1993"));
+            httpFile.setNewURL(new URL("http://www.myzuka.org/Song/4721463/Numb-Shithammer"));
             final ConnectionSettings connectionSettings = new ConnectionSettings();
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
             final MyZukaRuServiceImpl service = new MyZukaRuServiceImpl();

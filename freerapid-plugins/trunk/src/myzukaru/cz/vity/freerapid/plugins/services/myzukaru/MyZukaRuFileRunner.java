@@ -4,13 +4,9 @@ import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
 import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;
 import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
 import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
-import cz.vity.freerapid.plugins.webclient.AbstractRunner;
-import cz.vity.freerapid.plugins.webclient.DownloadClientConsts;
-import cz.vity.freerapid.plugins.webclient.DownloadState;
-import cz.vity.freerapid.plugins.webclient.FileState;
+import cz.vity.freerapid.plugins.webclient.*;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import cz.vity.freerapid.utilities.LogUtils;
-import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
 import java.net.URI;
@@ -28,7 +24,7 @@ import java.util.regex.Matcher;
  */
 class MyZukaRuFileRunner extends AbstractRunner {
     private final static Logger logger = Logger.getLogger(MyZukaRuFileRunner.class.getName());
-    private final static String SERVICE_BASE_URL = "http://www.myzuka.org";
+    private final static String SERVICE_BASE_URL = "http://www.myzuka.fm";
 
     @Override
     public void runCheck() throws Exception {
@@ -70,12 +66,12 @@ class MyZukaRuFileRunner extends AbstractRunner {
             if (isAlbum()) {
                 parseAlbum();
             } else if (isSongUrl(fileURL)) {
-                final HttpMethod httpMethod = getMethodBuilder()
+                final MethodBuilder methodBuilder = getMethodBuilder()
                         .setReferer(fileURL)
-                        .setActionFromAHrefWhereATagContains("Скачать")
-                        .toHttpMethod();
+                        .setActionFromAHrefWhereATagContains("Скачать");
+                methodBuilder.setAction(methodBuilder.getAction().replaceFirst("myzuka\\.ru", "myzuka.fm").replaceFirst("myzuka\\.org", "myzuka.fm"));
                 setClientParameter(DownloadClientConsts.DONT_USE_HEADER_FILENAME, true);
-                if (!tryDownloadAndSaveFile(httpMethod)) {
+                if (!tryDownloadAndSaveFile(methodBuilder.toHttpMethod())) {
                     checkProblems();
                     throw new ServiceConnectionProblemException("Error starting download");
                 }
@@ -97,11 +93,16 @@ class MyZukaRuFileRunner extends AbstractRunner {
     }
 
     private void checkUrl() {
-        fileURL = fileURL.replaceFirst("myzuka\\.ru", "myzuka.org");
+        fileURL = fileURL.replaceFirst("myzuka\\.ru", "myzuka.fm").replaceFirst("myzuka\\.org", "myzuka.fm");
+    }
+
+    @Override
+    protected String getBaseURL() {
+        return SERVICE_BASE_URL;
     }
 
     private boolean isSongUrl(final String url) {
-        return url.matches("http://(?:www\\.)?myzuka\\.org/Song/.+");
+        return url.matches("http://(?:www\\.)?myzuka\\.fm/Song/.+");
     }
 
     private boolean isAlbum() {
