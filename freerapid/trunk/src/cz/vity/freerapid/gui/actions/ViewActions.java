@@ -8,10 +8,12 @@ import cz.vity.freerapid.gui.dialogs.DownloadHistoryDialog;
 import cz.vity.freerapid.gui.dialogs.SpeedMeterDialog;
 import cz.vity.freerapid.gui.dialogs.ToolbarDialog;
 import cz.vity.freerapid.gui.managers.ManagerDirector;
+import cz.vity.freerapid.utilities.LogUtils;
 import org.jdesktop.application.AbstractBean;
 import org.jdesktop.application.Action;
 
 import javax.swing.*;
+import java.util.logging.Logger;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 
@@ -21,6 +23,7 @@ import java.util.prefs.PreferenceChangeListener;
 public class ViewActions extends AbstractBean {
 
     private final MainApp app;
+    private final static Logger logger = Logger.getLogger(ViewActions.class.getName());
 
     public ViewActions() {
         app = MainApp.getInstance(MainApp.class);
@@ -60,7 +63,9 @@ public class ViewActions extends AbstractBean {
         try {
             final ToolbarDialog toolbarDialog = new ToolbarDialog(app.getMainFrame());
             app.show(toolbarDialog);
-        } catch(Exception x) {/**/}
+        } catch(Exception x) {
+            LogUtils.processException(logger, x);
+        }
     }
 
     @Action

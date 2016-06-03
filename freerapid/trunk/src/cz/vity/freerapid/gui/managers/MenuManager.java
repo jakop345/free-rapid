@@ -138,6 +138,8 @@ public class MenuManager {
         final Object[] viewMenuActionNames = {
                 "showDownloadHistoryAction",
                 MENU_SEPARATOR,
+                "showToolbarEditorAction",
+                MENU_SEPARATOR,
                 CHECKED + "showCompletedAction",
                 MENU_SEPARATOR,
                 CHECKED + "showToolbar",
