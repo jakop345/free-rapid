@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
  */
 class UlozToRunner extends AbstractRunner {
     private final static Logger logger = Logger.getLogger(UlozToRunner.class.getName());
-    public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:33.0) Gecko/20100101 Firefox/33.0";
+    public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0";
     private int captchaCount = 0;
     private final Random random = new Random();
 
@@ -50,7 +50,7 @@ class UlozToRunner extends AbstractRunner {
             if (getContentAsString().contains("confirmContent")) {
                 throw new PluginImplementationException("Cannot confirm age");
             }
-            fileURL = fileURL.replaceFirst("^http://uloz\\.to", "http://pornfile.cz"); //porn redirected to pornfile, explicit because of POST
+            fileURL = fileURL.replaceFirst("://uloz\\.to", "://pornfile.cz"); //porn redirected to pornfile, explicit because of POST
         }
     }
 
@@ -145,12 +145,13 @@ class UlozToRunner extends AbstractRunner {
     }
 
     private void checkURL() {
-        fileURL = fileURL.replaceFirst("(ulozto\\.net|ulozto\\.cz|ulozto\\.sk)", "uloz.to").replaceFirst("http://(m|www)\\.uloz\\.to", "http://uloz.to");
+        fileURL = fileURL.replaceFirst("(ulozto\\.net|ulozto\\.cz|ulozto\\.sk)", "uloz.to").replaceFirst("://(m|www)\\.uloz\\.to", "://uloz.to");
     }
 
     @Override
     protected String getBaseURL() {
-        return !isPornFile() ? "http://uloz.to" : "http://pornfile.cz";
+        String protocol = (fileURL.startsWith("https") ? "https" : "http");
+        return protocol + (!isPornFile() ? "://uloz.to" : "://pornfile.cz");
     }
 
     private void checkNameAndSize(String content) throws Exception {
@@ -213,7 +214,8 @@ class UlozToRunner extends AbstractRunner {
             String salt;
             String hash;
             try {
-                captchaImg = PlugUtils.getStringBetween(getContentAsString(), "\"image\":\"", "\"").replace("\\/", "/").replaceFirst("^//", "http://");
+                captchaImg = PlugUtils.getStringBetween(getContentAsString(), "\"image\":\"", "\"").replace("\\/", "/")
+                        .replaceFirst("^//", fileURL.startsWith("https") ? "https://" : "http://");
             } catch (PluginImplementationException e) {
                 throw new PluginImplementationException("Captcha image not found");
             }
