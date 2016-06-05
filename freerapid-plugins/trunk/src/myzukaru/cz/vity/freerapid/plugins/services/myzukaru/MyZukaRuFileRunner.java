@@ -23,8 +23,7 @@ import java.util.regex.Matcher;
  * @since 0.9u2
  */
 class MyZukaRuFileRunner extends AbstractRunner {
-    private final static Logger logger = Logger.getLogger(MyZukaRuFileRunner.class.getName());
-    private final static String SERVICE_BASE_URL = "http://www.myzuka.fm";
+    private final static Logger logger = Logger.getLogger(MyZukaRuFileRunner.class.getName());    
 
     @Override
     public void runCheck() throws Exception {
@@ -69,7 +68,7 @@ class MyZukaRuFileRunner extends AbstractRunner {
                 final MethodBuilder methodBuilder = getMethodBuilder()
                         .setReferer(fileURL)
                         .setActionFromAHrefWhereATagContains("Скачать");
-                methodBuilder.setAction(methodBuilder.getAction().replaceFirst("myzuka\\.ru", "myzuka.fm").replaceFirst("myzuka\\.org", "myzuka.fm"));
+                methodBuilder.setAction(methodBuilder.getAction().replaceFirst("myzuka\\.(ru|org)", "myzuka.fm"));
                 setClientParameter(DownloadClientConsts.DONT_USE_HEADER_FILENAME, true);
                 if (!tryDownloadAndSaveFile(methodBuilder.toHttpMethod())) {
                     checkProblems();
@@ -93,16 +92,17 @@ class MyZukaRuFileRunner extends AbstractRunner {
     }
 
     private void checkUrl() {
-        fileURL = fileURL.replaceFirst("myzuka\\.ru", "myzuka.fm").replaceFirst("myzuka\\.org", "myzuka.fm");
+        fileURL = fileURL.replaceFirst("myzuka\\.(ru|org)", "myzuka.fm");
     }
 
     @Override
     protected String getBaseURL() {
-        return SERVICE_BASE_URL;
+        String protocol = (fileURL.startsWith("https") ? "https" : "http");
+        return protocol + "://myzuka.fm";
     }
 
     private boolean isSongUrl(final String url) {
-        return url.matches("http://(?:www\\.)?myzuka\\.fm/Song/.+");
+        return url.matches("https?://(?:www\\.)?myzuka\\.fm/Song/.+");
     }
 
     private boolean isAlbum() {
@@ -113,7 +113,7 @@ class MyZukaRuFileRunner extends AbstractRunner {
         final List<URI> uriList = new LinkedList<URI>();
         final Matcher urlMatcher = getMatcherAgainstContent("<a href=[\"'](.+?)[\"'][^>]*?>Скачать</a>");
         while (urlMatcher.find()) {
-            final String url = SERVICE_BASE_URL + urlMatcher.group(1);
+            final String url = getBaseURL() + urlMatcher.group(1);
             if (!isSongUrl(url)) {
                 throw new PluginImplementationException("Unrecognized song URL pattern"); //to prevent original link disappear when song url pattern unrecognized
             }

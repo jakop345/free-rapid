@@ -60,9 +60,15 @@ class FaceBookFileRunner extends AbstractRunner {
                 }
                 //the unicode directional formatting codes confuse Matcher, so remove them
                 final String content = getContentAsString().replaceAll("[\\u202A\\u202B\\u202C]", "");
-                final String name = PlugUtils.getStringBetween(content, "<title id=\"pageTitle\">", "| Facebook</title>");
+                Matcher matcher = PlugUtils.matcher("<title id=\"pageTitle\">([^<>\\|]+)(?:\\| Facebook)?</title>", content);
+                if (!matcher.find()) {
+                    throw new PluginImplementationException("File name not found");
+                }
+                final String name = matcher.group(1).trim();
                 httpFile.setFileName(name + ".mp4");
-                final String videoData = PlugUtils.unescapeUnicode(URLDecoder.decode(PlugUtils.unescapeUnicode(PlugUtils.getStringBetween(getContentAsString(), "\"params\",\"", "\"")), "UTF-8"));
+                String videoData = (getContentAsString().contains("\"params\",\"") ? PlugUtils.getStringBetween(getContentAsString(), "\"params\",\"", "\"") :
+                        PlugUtils.getStringBetween(getContentAsString(), "\\\"params\\\",\\\"", "\\\"").replace("\\\\", "\\"));
+                videoData = PlugUtils.unescapeUnicode(URLDecoder.decode(PlugUtils.unescapeUnicode(videoData), "UTF-8"));
                 final String videoUrl;
                 if (!videoData.contains("\"hd_src\":null")) {  //high quality as default
                     videoUrl = PlugUtils.getStringBetween(videoData, "\"hd_src\":\"", "\"");
