@@ -145,6 +145,8 @@ class UlozToRunner extends AbstractRunner {
     }
 
     private void checkURL() {
+        if (isPornFile())
+            fileURL = fileURL.replaceFirst("http:", "https:");
         fileURL = fileURL.replaceFirst("(ulozto\\.net|ulozto\\.cz|ulozto\\.sk)", "uloz.to").replaceFirst("://(m|www)\\.uloz\\.to", "://uloz.to");
     }
 

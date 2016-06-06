@@ -7,8 +7,12 @@ import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Class which contains main code
@@ -59,41 +63,46 @@ class OpenLoadFileRunner extends AbstractRunner {
             checkProblems();//check problems
             checkNameAndSize(contentAsString);//extract file name and size from the page
 
-            final Matcher match = PlugUtils.matcher("/f/([^/]+)", fileURL);
-            if (!match.find()) throw new InvalidURLOrServiceProblemException("Unable to find fileID in url");
-            final String fileID = match.group(1);
-
-            HttpMethod httpMethod = getMethodBuilder().setReferer(fileURL)
-                    .setAction(OPENLOAD_API_URL + OPENLOAD_API_TICKET + fileID)
-                    .setAjax().toGetMethod();
-            if (!makeRedirectedRequest(httpMethod)) {
-                checkAPIProblems();
-                throw new ServiceConnectionProblemException();
-            }
-            checkAPIProblems();
-
-            final String ticket = PlugUtils.getStringBetween(getContentAsString(), "\"ticket\":\"", "\",");
-            final int wait = PlugUtils.getNumberBetween(getContentAsString(), "\"wait_time\":", ",");
+            final int wait = PlugUtils.getNumberBetween(contentAsString, "secondsdl = ", ";");
             if (wait > 0)
                 downloadTask.sleep(1 + wait);
-            String captchaImg = "";
-            if (getContentAsString().contains("\"captcha_url\":\"")) {
-                captchaImg = PlugUtils.getStringBetween(getContentAsString(), "\"captcha_url\":\"", "\",").replace("\\/", "/");
-            }
+            String decodedText="";
+            int loop = 1;
             do {
-                httpMethod = getMethodBuilder().setReferer(fileURL)
-                        .setAction(OPENLOAD_API_URL + String.format(OPENLOAD_API_DOWNLOAD, fileID, ticket))
-                        .setParameter("captcha_response", doCaptcha(captchaImg))
-                        .setAjax().toGetMethod();
-                if (!makeRedirectedRequest(httpMethod)) {
-                    checkAPIProblems();
-                    throw new ServiceConnectionProblemException();
+                try {
+                    if (!makeRedirectedRequest(getGetMethod(method.getURI().getURI()))) {
+                        checkProblems();
+                        throw new ServiceConnectionProblemException();
+                    }
+                    checkProblems();
+                    final Matcher match = PlugUtils.matcher("(?s)Download.+?\\s*<script type=\"text/javascript\">([^<]+?)<", getContentAsString());
+                    if (!match.find())
+                        throw new PluginImplementationException("Script not found");
+                    String srcScript = match.group(1);
+                    logger.info("Src script: " + srcScript);
+                    decodedText = DecodeSmileyScript(srcScript);
+                    loop = -1;
+                } catch (ScriptException e) {
+                    if (loop++ > 10) {
+                        //throw new PluginImplementationException("JavaScript eval failed");
+                        logger.warning("JavaScript eval failed - HTML Source : " + getContentAsString());
+                        downloadWithAPI();
+                        return;
+                    }
                 }
-            } while (getContentAsString().contains("Captcha not solved correctly"));
-            checkAPIProblems();
-
-            final String dlUrl = PlugUtils.getStringBetween(getContentAsString(), "\"url\":\"", "\",").replace("\\/", "/");
-            httpMethod = getGetMethod(dlUrl);
+            } while (loop > 0);
+            logger.info("Decoded text: " + decodedText);
+            try {
+                decodedText = decodeNewScript(decodedText);
+            } catch (ScriptException e) {
+                //throw new PluginImplementationException("JavaScript eval-2 failed");
+                logger.warning("JavaScript eval-2 failed - HTML Source : " + getContentAsString());
+                downloadWithAPI();
+                return;
+            }
+            logger.info("Decoded-2 text: " + decodedText);
+            final String dlUrl = decodedText;
+            HttpMethod httpMethod = getGetMethod(dlUrl);
             if (!tryDownloadAndSaveFile(httpMethod)) {
                 checkProblems();//if downloading failed
                 throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
@@ -101,6 +110,49 @@ class OpenLoadFileRunner extends AbstractRunner {
         } else {
             checkProblems();
             throw new ServiceConnectionProblemException();
+        }
+    }
+
+    private void downloadWithAPI() throws Exception {
+        logger.info("Downloading using API");
+        final Matcher match = PlugUtils.matcher("/f/([^/]+)", fileURL);
+        if (!match.find()) throw new InvalidURLOrServiceProblemException("Unable to find fileID in url");
+        final String fileID = match.group(1);
+
+        HttpMethod httpMethod = getMethodBuilder().setReferer(fileURL)
+                .setAction(OPENLOAD_API_URL + OPENLOAD_API_TICKET + fileID)
+                .setAjax().toGetMethod();
+        if (!makeRedirectedRequest(httpMethod)) {
+            checkAPIProblems();
+            throw new ServiceConnectionProblemException();
+        }
+        checkAPIProblems();
+
+        final String ticket = PlugUtils.getStringBetween(getContentAsString(), "\"ticket\":\"", "\",");
+        final int wait = PlugUtils.getNumberBetween(getContentAsString(), "\"wait_time\":", ",");
+        if (wait > 0)
+            downloadTask.sleep(1 + wait);
+        String captchaImg = "";
+        if (getContentAsString().contains("\"captcha_url\":\"")) {
+            captchaImg = PlugUtils.getStringBetween(getContentAsString(), "\"captcha_url\":\"", "\",").replace("\\/", "/");
+        }
+        do {
+            httpMethod = getMethodBuilder().setReferer(fileURL)
+                    .setAction(OPENLOAD_API_URL + String.format(OPENLOAD_API_DOWNLOAD, fileID, ticket))
+                    .setParameter("captcha_response", doCaptcha(captchaImg))
+                    .setAjax().toGetMethod();
+            if (!makeRedirectedRequest(httpMethod)) {
+                checkAPIProblems();
+                throw new ServiceConnectionProblemException();
+            }
+        } while (getContentAsString().contains("Captcha not solved correctly"));
+        checkAPIProblems();
+
+        final String dlUrl = PlugUtils.getStringBetween(getContentAsString(), "\"url\":\"", "\",").replace("\\/", "/");
+        httpMethod = getGetMethod(dlUrl);
+        if (!tryDownloadAndSaveFile(httpMethod)) {
+            checkProblems();//if downloading failed
+            throw new ServiceConnectionProblemException("Error starting download");//some unknown problem
         }
     }
 
@@ -126,5 +178,39 @@ class OpenLoadFileRunner extends AbstractRunner {
         if (captchaTxt == null)
             throw new CaptchaEntryInputMismatchException();
         return captchaTxt;
+    }
+
+
+    private String DecodeSmileyScript(final String encoded) throws Exception {
+        String findStart = "(\uFF9F\u0414\uFF9F) ['_'] ( (\uFF9F\u0414\uFF9F) ['_'] (";
+        String replaceStart = "( (\uFF9F\u0414\uFF9F) ['_'] (";
+        String findEnd = ") (\uFF9F\u0398\uFF9F)) ('_');";
+        String replaceEnd = ") ());";
+        String removeStart = "(ﾟДﾟ)[ﾟεﾟ]+(-~3)+ (-~3)+ (ﾟДﾟ)[ﾟεﾟ]+((ﾟｰﾟ)";              // 2remove  "$('#realdl a')."  from script
+        String removeEnd = "(ﾟДﾟ)[ﾟεﾟ]+((ﾟｰﾟ) + (ﾟΘﾟ))+ ((o^_^o) +(o^_^o) +(c^_^o))+";
+
+        if (!encoded.contains(findStart) || !encoded.contains(findEnd)) {
+            throw new PluginImplementationException("Unrecognised smiley script");
+        }
+        final String toDecode = encoded.trim().replace(findStart, replaceStart).replace(findEnd, replaceEnd)
+                .replaceFirst(Pattern.quote(removeStart) + ".+?" + Pattern.quote(removeEnd), "");
+
+        final ScriptEngineManager manager = new ScriptEngineManager();
+        final ScriptEngine engine = manager.getEngineByName("javascript");
+        return (String) engine.eval(toDecode);
+    }
+
+    private String decodeNewScript(final String encoded) throws Exception {
+        final String functMatch = "\\{function ([^\\(]+?)([^\\}]+?\\})";
+        Matcher match = PlugUtils.matcher(functMatch, encoded);
+        if (!match.find()) throw new PluginImplementationException("Script Err 1");
+        final String functScr = match.group(1) + " = function" + match.group(2) + ";";
+        final String dataMatch = "}return (.+?)}";
+        match = PlugUtils.matcher(dataMatch, encoded);
+        if (!match.find()) throw new PluginImplementationException("Script Err 2");
+        final String dataScr = match.group(1);
+        final ScriptEngineManager manager = new ScriptEngineManager();
+        final ScriptEngine engine = manager.getEngineByName("javascript");
+        return (String) engine.eval(functScr + dataScr);
     }
 }
