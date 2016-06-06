@@ -5,6 +5,7 @@ import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;
 import cz.vity.freerapid.plugins.exceptions.ServiceConnectionProblemException;
 import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
+import cz.vity.freerapid.plugins.webclient.DownloadClientConsts;
 import cz.vity.freerapid.plugins.webclient.DownloadState;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
@@ -105,6 +106,7 @@ class ImageFapFileRunner extends AbstractRunner {
                         .setActionFromImgSrcWhereTagContains("mainPhoto")
                         .toHttpMethod();
 
+                setClientParameter(DownloadClientConsts.NO_CONTENT_LENGTH_AVAILABLE, true);
                 //here is the download link extraction
                 if (!tryDownloadAndSaveFile(httpMethod)) {
                     checkProblems();//if downloading failed

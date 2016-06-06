@@ -79,7 +79,8 @@ class MediafireRunner extends AbstractRunner {
             PlugUtils.checkName(httpFile, getContentAsString(), "<meta property=\"og:title\" content=\"", "\" />");
             final Matcher matcher = getMatcherAgainstContent("oFileSharePopup\\.ald\\('.+?','.+?','(\\d+?)'");
             if (!matcher.find()) {
-                PlugUtils.checkFileSize(httpFile, getContentAsString(), "File size: <span>", "</span");
+                if (getContentAsString().contains("File size:"))
+                    PlugUtils.checkFileSize(httpFile, getContentAsString(), "File size: <span>", "</span");
             } else {
                 httpFile.setFileSize(Long.parseLong(matcher.group(1)));
             }

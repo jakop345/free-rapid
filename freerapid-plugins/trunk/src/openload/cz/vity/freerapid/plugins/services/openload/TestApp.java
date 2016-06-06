@@ -16,7 +16,7 @@ public class TestApp extends PluginDevApplication {
         final HttpFile httpFile = getHttpFile(); //creates new test instance of HttpFile
         try {
             //we set file URL
-            httpFile.setNewURL(new URL("https://openload.co/f/MpnmO2F4D_o"));
+            httpFile.setNewURL(new URL("https://openload.co/f/4iGzLXwsp4k/Vela_-_MFSA_Directors_Certificate.pdf"));
             //httpFile.setNewURL(new URL("https://openload.co/f/z-vS-Xs0XG8"));   // captcha
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection

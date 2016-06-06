@@ -4,6 +4,8 @@ import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
 import cz.vity.freerapid.plugins.exceptions.PluginImplementationException;
 import cz.vity.freerapid.plugins.services.xfilesharing.XFileSharingRunner;
 import cz.vity.freerapid.plugins.services.xfilesharing.nameandsize.FileNameHandler;
+import cz.vity.freerapid.plugins.services.xfilesharing.nameandsize.FileSizeHandler;
+import cz.vity.freerapid.plugins.services.xfilesharing.nameandsize.FileSizeHandlerNoSize;
 import cz.vity.freerapid.plugins.webclient.interfaces.HttpFile;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 
@@ -37,6 +39,13 @@ class ClicknUploadFileRunner extends XFileSharingRunner {
             }
         });
         return fileNameHandlers;
+    }
+
+    @Override
+    protected List<FileSizeHandler> getFileSizeHandlers() {
+        final List<FileSizeHandler> fileSizeHandlers = super.getFileSizeHandlers();
+        fileSizeHandlers.add(new FileSizeHandlerNoSize());
+        return fileSizeHandlers;
     }
 
     @Override
