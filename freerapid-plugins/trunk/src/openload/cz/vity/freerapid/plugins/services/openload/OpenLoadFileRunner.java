@@ -70,7 +70,9 @@ class OpenLoadFileRunner extends AbstractRunner {
             int loop = 1;
             do {
                 try {
-                    if (!makeRedirectedRequest(getGetMethod(method.getURI().getURI()))) {
+                    HttpMethod httpMethod = getGetMethod(method.getURI().getURI());
+                    httpMethod.removeRequestHeader("Accept-Encoding");
+                    if (!makeRedirectedRequest(httpMethod)) {
                         checkProblems();
                         throw new ServiceConnectionProblemException();
                     }
