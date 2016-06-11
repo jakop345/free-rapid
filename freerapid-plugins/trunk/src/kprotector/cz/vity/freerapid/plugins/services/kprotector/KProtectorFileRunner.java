@@ -1,9 +1,11 @@
-package cz.vity.freerapid.plugins.services.exoshare;
+package cz.vity.freerapid.plugins.services.kprotector;
 
 import cz.vity.freerapid.plugins.exceptions.*;
+import cz.vity.freerapid.plugins.services.recaptcha.ReCaptcha;
 import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.DownloadState;
 import cz.vity.freerapid.plugins.webclient.FileState;
+import cz.vity.freerapid.plugins.webclient.MethodBuilder;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -19,8 +21,8 @@ import java.util.regex.Matcher;
  *
  * @author birchie
  */
-class ExoShareFileRunner extends AbstractRunner {
-    private final static Logger logger = Logger.getLogger(ExoShareFileRunner.class.getName());
+class KProtectorFileRunner extends AbstractRunner {
+    private final static Logger logger = Logger.getLogger(KProtectorFileRunner.class.getName());
 
     @Override
     public void runCheck() throws Exception { //this method validates file
@@ -28,19 +30,15 @@ class ExoShareFileRunner extends AbstractRunner {
         final GetMethod getMethod = getGetMethod(fileURL);//make first request
         if (makeRedirectedRequest(getMethod)) {
             checkProblems();
-            checkNameAndSize(getContentAsString());//ok let's extract file name and size from the page
+            checkNameAndSize();//ok let's extract file name and size from the page
         } else {
             checkProblems();
             throw new ServiceConnectionProblemException();
         }
     }
 
-    private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        final Matcher match = PlugUtils.matcher("<h1>([^<>]+?)\\((\\d[^<>]+?)\\)</h1>", content);
-        if (!match.find())
-            throw new PluginImplementationException("File name/size not found");
-        httpFile.setFileName("Get Link(s) : " + match.group(1).trim());
-        httpFile.setFileSize(PlugUtils.getFileSizeFromString(match.group(2).trim()));
+    private void checkNameAndSize() throws ErrorDuringDownloadingException {
+        httpFile.setFileName("Get Link(s) : ");
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
 
@@ -50,23 +48,26 @@ class ExoShareFileRunner extends AbstractRunner {
         logger.info("Starting download in TASK " + fileURL);
         final GetMethod method = getGetMethod(fileURL); //create GET request
         if (makeRedirectedRequest(method)) { //we make the main request
-            final String content = getContentAsString();//check for response
             checkProblems();//check problems
-            checkNameAndSize(content);//extract file name and size from the page
+            checkNameAndSize();//extract file name and size from the page
+            int loop = 0;
+            do {
+                if (loop++ > 10) {
+                    throw new CaptchaEntryInputMismatchException("Excessive incorrect captcha attempts");
+                }
+                HttpMethod httpMethod = doCaptcha(getMethodBuilder()
+                        .setActionFromFormByName("frmprotect", true)
+                        .setReferer(fileURL)).toPostMethod();
+                if (!makeRedirectedRequest(httpMethod)) {
+                    checkProblems();
+                    throw new ServiceConnectionProblemException();
+                }
+                checkProblems();
+            } while (getContentAsString().contains("Prove you are human"));
 
-            final HttpMethod httpMethod = getMethodBuilder()
-                    .setActionFromTextBetween("ajaxRequest.open(\"GET\", \"", "\",")
-                    .setAjax()
-                    .setReferer(fileURL)
-                    .toGetMethod();
-            if (!makeRedirectedRequest(httpMethod)) {
-                throw new PluginImplementationException();
-            }
-            checkProblems();
-            final Matcher match = PlugUtils.matcher("<a href=\"(.+?)\" target=\"_blank\">", getContentAsString());
+            final Matcher match = PlugUtils.matcher("<a href=\"(.+?)\" target=\"_blank\" id=", getContentAsString());
             List<URI> list = new LinkedList<URI>();
             while (match.find()) {
-                if (!match.group(1).contains("exoshare.com"))
                     list.add(new URI(match.group(1).trim()));
             }
             if (list.isEmpty()) throw new PluginImplementationException("No link(s) found");
@@ -82,9 +83,21 @@ class ExoShareFileRunner extends AbstractRunner {
 
     private void checkProblems() throws ErrorDuringDownloadingException {
         final String contentAsString = getContentAsString();
-        if (contentAsString.contains("Error File not found")) {
+        if (contentAsString.contains("link does not exist")) {
             throw new URLNotAvailableAnymoreException("File not found"); //let to know user in FRD
         }
     }
 
+    private MethodBuilder doCaptcha(MethodBuilder builder) throws Exception {
+        if (getContentAsString().contains("recaptcha/api/")) {
+            String key = PlugUtils.getStringBetween(getContentAsString(), "recaptcha/api/noscript?k=", "\"");
+            final ReCaptcha reCaptcha = new ReCaptcha(key, client);
+            final String captcha = getCaptchaSupport().getCaptcha(reCaptcha.getImageURL());
+            if (captcha == null)
+                throw new CaptchaEntryInputMismatchException();
+            reCaptcha.setRecognized(captcha);
+            return reCaptcha.modifyResponseMethod(builder);
+        }
+        return builder;
+    }
 }
