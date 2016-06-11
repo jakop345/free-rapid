@@ -35,7 +35,7 @@ class PrimeShareFileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        final Matcher matchN = PlugUtils.matcher("<h1>Watch&nbsp;\\s*?\\((.+?)\\)", content);
+        final Matcher matchN = PlugUtils.matcher("<h1>([^<&>]+)", content);
         if (!matchN.find()) throw new PluginImplementationException("File name not found");
         final Matcher matchS = PlugUtils.matcher(">\\((.+?)\\)<", content);
         if (!matchS.find()) throw new PluginImplementationException("File size not found");
@@ -80,7 +80,8 @@ class PrimeShareFileRunner extends AbstractRunner {
 
     private void checkProblems() throws ErrorDuringDownloadingException {
         final String contentAsString = getContentAsString();
-        if (contentAsString.contains("File not exist")) {
+        if (contentAsString.contains("file you have requested does not exist") ||
+                contentAsString.contains("File not found")) {
             throw new URLNotAvailableAnymoreException("File not found"); //let to know user in FRD
         }
     }
