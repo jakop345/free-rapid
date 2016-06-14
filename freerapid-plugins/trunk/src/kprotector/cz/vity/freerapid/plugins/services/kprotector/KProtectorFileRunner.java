@@ -6,6 +6,7 @@ import cz.vity.freerapid.plugins.webclient.AbstractRunner;
 import cz.vity.freerapid.plugins.webclient.DownloadState;
 import cz.vity.freerapid.plugins.webclient.FileState;
 import cz.vity.freerapid.plugins.webclient.MethodBuilder;
+import cz.vity.freerapid.plugins.webclient.hoster.CaptchaSupport;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -55,9 +56,9 @@ class KProtectorFileRunner extends AbstractRunner {
                 if (loop++ > 10) {
                     throw new CaptchaEntryInputMismatchException("Excessive incorrect captcha attempts");
                 }
-                HttpMethod httpMethod = doCaptcha(getMethodBuilder()
+                HttpMethod httpMethod = doCaptcha(doPassword(getMethodBuilder()
                         .setActionFromFormByName("frmprotect", true)
-                        .setReferer(fileURL)).toPostMethod();
+                        .setReferer(fileURL))).toPostMethod();
                 if (!makeRedirectedRequest(httpMethod)) {
                     checkProblems();
                     throw new ServiceConnectionProblemException();
@@ -89,14 +90,53 @@ class KProtectorFileRunner extends AbstractRunner {
     }
 
     private MethodBuilder doCaptcha(MethodBuilder builder) throws Exception {
-        if (getContentAsString().contains("recaptcha/api/")) {
-            String key = PlugUtils.getStringBetween(getContentAsString(), "recaptcha/api/noscript?k=", "\"");
+        String content = getContentAsString().replaceFirst("function reloadCaptcha\\(\\)\\s*\\{\\s*.+\\s*\\}", "");
+        if (content.contains("recaptcha/api/")) {
+            String key = PlugUtils.getStringBetween(content, "recaptcha/api/noscript?k=", "\"");
             final ReCaptcha reCaptcha = new ReCaptcha(key, client);
             final String captcha = getCaptchaSupport().getCaptcha(reCaptcha.getImageURL());
             if (captcha == null)
                 throw new CaptchaEntryInputMismatchException();
             reCaptcha.setRecognized(captcha);
             return reCaptcha.modifyResponseMethod(builder);
+        }
+        else if (content.contains("kprotector.com/basiccaptcha/")) {
+            final CaptchaSupport captchaSupport = getCaptchaSupport();
+            final String captchaSrc = getMethodBuilder().setActionFromImgSrcWhereTagContains("CAPTCHA Image").getEscapedURI();
+            final String captcha = captchaSupport.getCaptcha(captchaSrc);
+            if (captcha == null)
+                throw new CaptchaEntryInputMismatchException();
+            return builder.setParameter("ct_captcha", captcha);
+        }
+        else if (content.contains("kprotector.com/fancycaptcha/")) {
+            throw new PluginImplementationException("Captcha type not supported in FreeRapid");
+        }
+        else if (content.contains("kprotector.com/simplecaptcha/")) {
+            final CaptchaSupport captchaSupport = getCaptchaSupport();
+            final String captchaSrc = getMethodBuilder().setActionFromImgSrcWhereTagContains("simple PHP captcha").getEscapedURI();
+            final String captcha = captchaSupport.getCaptcha(captchaSrc);
+            if (captcha == null)
+                throw new CaptchaEntryInputMismatchException();
+            return builder.setParameter("norobot", captcha);
+        }
+        else if (content.contains("kprotector.com/coolcaptcha/")) {
+            final CaptchaSupport captchaSupport = getCaptchaSupport();
+            final String captchaSrc = getMethodBuilder().setActionFromImgSrcWhereTagContains("captcha.php").getEscapedURI();
+            final String captcha = captchaSupport.getCaptcha(captchaSrc);
+            if (captcha == null)
+                throw new CaptchaEntryInputMismatchException();
+            return builder.setParameter("captcha_cool", captcha);
+        }
+        return builder;
+    }
+
+    private MethodBuilder doPassword(MethodBuilder builder) throws Exception {
+        if (getContentAsString().contains("Link Password")) {
+            final String password = getDialogSupport().askForPassword("KProtector");
+            if (password == null) {
+                throw new PluginImplementationException("This link is protected with a password");
+            }
+            return builder.setParameter("password", password);
         }
         return builder;
     }

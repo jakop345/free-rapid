@@ -36,7 +36,7 @@ class ExoShareFileRunner extends AbstractRunner {
     }
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        final Matcher match = PlugUtils.matcher("<h1>([^<>]+?)\\((\\d[^<>]+?)\\)</h1>", content);
+        final Matcher match = PlugUtils.matcher("<h1>([^<>]+?)\\((\\d[^()<>]+?)\\)</h1>", content);
         if (!match.find())
             throw new PluginImplementationException("File name/size not found");
         httpFile.setFileName("Get Link(s) : " + match.group(1).trim());
@@ -67,7 +67,7 @@ class ExoShareFileRunner extends AbstractRunner {
             List<URI> list = new LinkedList<URI>();
             while (match.find()) {
                 if (!match.group(1).contains("exoshare.com"))
-                    list.add(new URI(match.group(1).trim()));
+                    list.add(new URI(getMethodBuilder().setAction(match.group(1).trim()).getEscapedURI()));
             }
             if (list.isEmpty()) throw new PluginImplementationException("No link(s) found");
             getPluginService().getPluginContext().getQueueSupport().addLinksToQueue(this.httpFile, list);
