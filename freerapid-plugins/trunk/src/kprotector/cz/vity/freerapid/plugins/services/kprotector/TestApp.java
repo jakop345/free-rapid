@@ -16,7 +16,12 @@ public class TestApp extends PluginDevApplication {
         final HttpFile httpFile = getHttpFile(); //creates new test instance of HttpFile
         try {
             //we set file URL
-            httpFile.setNewURL(new URL("http://www.kprotector.com/p0/5757bbd288ada"));
+            httpFile.setNewURL(new URL("http://www.kprotector.com/p0/5757bbd288ada"));     //recaptcha
+            //httpFile.setNewURL(new URL("http://www.kprotector.com/p100/576052e6c7967"));   //basic captcha
+            //httpFile.setNewURL(new URL("http://www.kprotector.com/p100/5760526cb2e07"));   //fancy captcha ##
+            //httpFile.setNewURL(new URL("http://www.kprotector.com/p100/57605333ce95e"));   //simple captcha
+            //httpFile.setNewURL(new URL("http://www.kprotector.com/p100/5760535e6085f"));   //cool captcha
+            //httpFile.setNewURL(new URL("http://www.kprotector.com/p100/5760538b562ad"));   //pass=FreeRapid
             //the way we connect to the internet
             final ConnectionSettings connectionSettings = new ConnectionSettings();// creates default connection
             //connectionSettings.setProxy("localhost", 8081); //eg we can use local proxy to sniff HTTP communication
