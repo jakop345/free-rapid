@@ -50,11 +50,14 @@ class InstagramFileRunner extends AbstractRunner {
             httpFile.setFileName(filename);
         } else {
             final String content = getContentAsString();
-            final Matcher match = PlugUtils.matcher("content=\"(.+?)\\s.\\sInstagram", content);
+            Matcher match = PlugUtils.matcher("content=\"(.+?)\\s.\\sInstagram", content);
             if (!match.find())
                 throw new PluginImplementationException("User's name not found");
             httpFile.setFileName("User: " + match.group(1));
-            PlugUtils.checkFileSize(httpFile, content, "media\":{\"count\":", ",");
+            match = PlugUtils.matcher("\"media\"\\s*:\\s*\\{\\s*\"count\"\\s*:\\s*(\\d+)", content);
+            if (!match.find())
+                throw new PluginImplementationException("Media count not found");
+            httpFile.setFileSize(Long.parseLong(match.group(1)));
         }
         httpFile.setFileState(FileState.CHECKED_AND_EXISTING);
     }
@@ -76,19 +79,23 @@ class InstagramFileRunner extends AbstractRunner {
             } else {  // user
                 fileURL = method.getURI().getURI();
                 List<URI> list = new LinkedList<URI>();
-                final String userID = PlugUtils.getStringBetween(getContentAsString(), "owner\":{\"id\":\"", "\"");
-                final String csrfToken = PlugUtils.getStringBetween(getContentAsString(), "\"csrf_token\":\"", "\"");
+                Matcher matcher = PlugUtils.matcher("owner\"\\s*:\\s*\\{\\s*\"id\"\\s*:\\s*\"([^\"]+?)\"", getContentAsString());
+                if (!matcher.find())  throw new PluginImplementationException("Owner ID not found");
+                final String userID = matcher.group(1);
+                matcher = PlugUtils.matcher("\"csrf_token\"\\s*:\\s*\"([^\"]+?)\"", getContentAsString());
+                if (!matcher.find())  throw new PluginImplementationException("Csrf token not found");
+                final String csrfToken = matcher.group(1);
                 boolean nextPage;
                 do {
                     nextPage = false;
                     String content = getContentAsString();
-                    final Matcher match = PlugUtils.matcher("\"code\":\\s*\"(.+?)\"", content);
+                    final Matcher match = PlugUtils.matcher("\"code\"\\s*:\\s*\"(.+?)\"", content);
                     while (match.find()) {
                         list.add(new URI("https://instagram.com/p/" + match.group(1)));
                     }
                     if (content.contains("\"has_next_page\":true") || content.contains("\"has_next_page\": true")) {
                         nextPage = true;
-                        final Matcher lastMatch = PlugUtils.matcher("end_cursor\":\\s*\"(.+?)\"", content);
+                        final Matcher lastMatch = PlugUtils.matcher("end_cursor\"\\s*:\\s*\"(.+?)\"", content);
                         if (!lastMatch.find()) throw new PluginImplementationException("Error getting next page details");
                         final String lastPost = lastMatch.group(1);
                         final HttpMethod nextPageMethod = getMethodBuilder(content).setReferer(fileURL)
@@ -125,13 +132,10 @@ class InstagramFileRunner extends AbstractRunner {
     }
 
     private String getDownloadLink(String content) throws PluginImplementationException {
-        if (content.contains("\"video_url\"")) {
-            return PlugUtils.getStringBetween(content, "\"video_url\":\"", "\"").replace("\\/", "/");
-        } else if (content.contains("\"display_src\"")) {
-            return PlugUtils.getStringBetween(content, "\"display_src\":\"", "\"").replace("\\/", "/");
-        } else {
+        final Matcher match = PlugUtils.matcher("\"(?:display_src|video_url)\"\\s*:\\s*\"([^\"]+?)\"", content);
+        if (!match.find())
             throw new PluginImplementationException("Download link not found");
-        }
+        return match.group(1);
     }
 
 }
