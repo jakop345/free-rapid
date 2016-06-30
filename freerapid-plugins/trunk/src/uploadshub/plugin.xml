@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE plugin PUBLIC "-//JPF//Java Plug-in Manifest 1.0" "http://jpf.sourceforge.net/plugin_1_0.dtd">
 <plugin class="cz.vity.freerapid.plugins.services.uploadshub.UploadsHubServiceImpl"
-        id="uploadshub.com" vendor="birchie" version="1.0.0">
+        id="uploadshub.com" vendor="birchie" version="1.0.1">
     <attributes>
-        <attribute id="urlRegex" value="https?://(www\.)?uploadshub\.com/.+"/>
+        <attribute id="urlRegex" value="https?://(www\.)?(uploadshub\.com|upload\.so)/.+"/>
         <attribute id="minver" value="0.855"/>
         <attribute id="maxver" value="0.899"/>
-        <attribute id="services" value="uploadshub.com"/>
+        <attribute id="services" value="uploadshub.com upload.so"/>
         <attribute id="maxDownloads" value="100"/>
         <attribute id="defaultDownloads" value="1"/>
         <attribute id="premium" value="false"/>

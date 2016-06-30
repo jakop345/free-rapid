@@ -19,6 +19,11 @@ import java.util.regex.Matcher;
 class UploadsHubFileRunner extends XFileSharingRunner {
 
     @Override
+    protected void correctURL() throws Exception {
+        fileURL = fileURL.replaceFirst("https?://(www\\.)?uploadshub\\.com", "https://upload.so");
+    }
+
+    @Override
     protected List<FileNameHandler> getFileNameHandlers() {
         final List<FileNameHandler> fileNameHandlers = super.getFileNameHandlers();
         fileNameHandlers.add(0, new FileNameHandler() {

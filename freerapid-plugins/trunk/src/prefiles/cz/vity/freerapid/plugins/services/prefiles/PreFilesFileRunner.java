@@ -1,9 +1,6 @@
 package cz.vity.freerapid.plugins.services.prefiles;
 
-import cz.vity.freerapid.plugins.exceptions.ErrorDuringDownloadingException;
-import cz.vity.freerapid.plugins.exceptions.NotRecoverableDownloadException;
-import cz.vity.freerapid.plugins.exceptions.NotSupportedDownloadByServiceException;
-import cz.vity.freerapid.plugins.exceptions.URLNotAvailableAnymoreException;
+import cz.vity.freerapid.plugins.exceptions.*;
 import cz.vity.freerapid.plugins.services.xfilesharing.XFileSharingRunner;
 import cz.vity.freerapid.plugins.services.xfilesharing.nameandsize.FileNameHandler;
 import cz.vity.freerapid.plugins.services.xfilesharing.nameandsize.FileSizeHandler;
@@ -12,6 +9,8 @@ import cz.vity.freerapid.plugins.webclient.interfaces.HttpFile;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Class which contains main code
@@ -37,10 +36,19 @@ class PreFilesFileRunner extends XFileSharingRunner {
         fileSizeHandlers.add(new FileSizeHandler() {
             @Override
             public void checkFileSize(HttpFile httpFile, String content) throws ErrorDuringDownloadingException {
-                httpFile.setFileSize(PlugUtils.getFileSizeFromString(PlugUtils.getStringBetween(content, "<small>(", ")</small></h2></div>")));
+                httpFile.setFileSize(PlugUtils.getFileSizeFromString(PlugUtils.getStringBetween(content, "<sup>", "</sup>")));
             }
         });
         return fileSizeHandlers;
+    }
+
+    @Override
+    protected int getWaitTime() throws Exception {
+        final Matcher matcher = getMatcherAgainstContent("duration\\s*\\:\\s*\\{\\s*hours\\s*\\:\\s*(.+?),\\s*minutes\\s*\\:\\s*(.+?),\\s*seconds\\s*:\\s*(.+?)\\s*\\}");
+        if (matcher.find()) {
+            return  (60 * (60 * Integer.parseInt(matcher.group(1))) + Integer.parseInt(matcher.group(2))) + Integer.parseInt(matcher.group(3)) + 6;
+        }
+        return 0;
     }
 
     @Override
@@ -51,13 +59,16 @@ class PreFilesFileRunner extends XFileSharingRunner {
     }
 
     @Override
-    protected MethodBuilder getXFSMethodBuilder() throws Exception {
-        checkFileProblems();
-        return getMethodBuilder()
-                .setReferer(fileURL)
-                .setActionFromFormWhereTagContains("method_free", true)
-                .setParameter("method_free", "method_free")
-                .setAction(fileURL);
+    protected MethodBuilder getXFSMethodBuilder(final String content) throws Exception {
+        return super.getXFSMethodBuilder(content, "method_free").setAction(fileURL)
+                .setParameter("method_free", "method_free").removeParameter("method_premium");
+    }
+
+    @Override
+    protected List<String> getDownloadLinkRegexes() {
+        final List<String> downloadLinkRegexes = super.getDownloadLinkRegexes();
+        downloadLinkRegexes.add(0, "<a[^>]+href\\s*=\\s*['\"](?:.+)?(http[^=]+?" + Pattern.quote(httpFile.getFileName()) + ")['\"][^>]*>.+?Download.*<");
+        return downloadLinkRegexes;
     }
 
     @Override
