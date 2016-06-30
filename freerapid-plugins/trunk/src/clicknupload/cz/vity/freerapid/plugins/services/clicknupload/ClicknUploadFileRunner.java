@@ -24,6 +24,7 @@ class ClicknUploadFileRunner extends XFileSharingRunner {
     protected void correctURL() throws Exception {
         fileURL = fileURL.replaceFirst("clicknupload.com", "clicknupload.me");
         fileURL = fileURL.replaceFirst("clicknupload.me", "clicknupload.link");
+        fileURL = fileURL.replaceFirst("http://", "https://");
     }
 
     @Override
