@@ -126,7 +126,7 @@ class VkFileRunner extends AbstractRunner {
     }
 
     private VkVideo getSelectedVkVideo() throws Exception {
-        Matcher matcher = getMatcherAgainstContent("\"url(\\d{3})\":\"(http.+?)\"");
+        Matcher matcher = getMatcherAgainstContent("\"url(\\d{3,4})\":\"(http.+?)\"");
         List<VkVideo> vkVideos = new ArrayList<VkVideo>();
         logger.info("Available videos :");
         while (matcher.find()) {
@@ -137,7 +137,7 @@ class VkFileRunner extends AbstractRunner {
                 vkVideos.add(vkVideo);
                 logger.info(vkVideo.toString());
             } catch (Exception e) {
-                throw new PluginImplementationException("Unknown video quality : " + quality);
+                logger.warning("Unknown video quality : " + quality);
             }
         }
         if (vkVideos.isEmpty()) {
