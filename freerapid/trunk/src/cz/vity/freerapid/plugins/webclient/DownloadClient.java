@@ -5,6 +5,7 @@ import cz.vity.freerapid.plugins.webclient.interfaces.HttpDownloadClient;
 import cz.vity.freerapid.plugins.webclient.interfaces.HttpFile;
 import cz.vity.freerapid.plugins.webclient.utils.HttpUtils;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
+import cz.vity.freerapid.utilities.LogUtils;
 import org.apache.commons.httpclient.*;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
@@ -440,35 +441,33 @@ public class DownloadClient implements HttpDownloadClient {
     }
 
     private void updateAsString(HttpMethod method) throws IOException {
-        Header hce = method.getResponseHeader("Content-Encoding");
         asString = "";
-        if (null != hce && !hce.getValue().isEmpty()) {
-            if ("gzip".equalsIgnoreCase(hce.getValue())) {
-                logger.info("Extracting GZIP");
-                asString = inflate(method.getResponseBodyAsStream());
-            } else {
-                logger.warning("Unknown Content-Encoding: " + hce.getValue());
+        InputStream stream = method.getResponseBodyAsStream();
+        if (stream != null) {
+            final Header hce = method.getResponseHeader("Content-Encoding");
+            if (hce != null && !hce.getValue().isEmpty()) {
+                if ("gzip".equalsIgnoreCase(hce.getValue())) {
+                    logger.info("Extracting GZIP");
+                    stream = new GZIPInputStream(stream);
+                } else {
+                    logger.warning("Unknown Content-Encoding: " + hce.getValue());
+                }
             }
-        } else {
-            final InputStream bodyAsStream = method.getResponseBodyAsStream();
-            if (bodyAsStream == null)
-                this.asString = "";
-            else
-                this.asString = streamToString(bodyAsStream);
+            asString = streamToString(stream);
         }
     }
 
     private String streamToString(final InputStream in) {
-        BufferedReader in2 = null;
-        StringWriter sw = new StringWriter();
-        char[] buffer = new char[4000];
+        Reader in2 = null;
+        StringBuilder sb = new StringBuilder(8192);
+        char[] buffer = new char[8192];
         try {
-            in2 = new BufferedReader(new InputStreamReader(in, getContentPageCharset()));
+            in2 = new InputStreamReader(in, getContentPageCharset());
             int x;
             while ((x = in2.read(buffer)) != -1) {
-                sw.write(buffer, 0, x);
+                sb.append(buffer, 0, x);
             }
-            return sw.toString();
+            return sb.toString();
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Error during reading content of page", e);
         } finally {
@@ -476,7 +475,7 @@ public class DownloadClient implements HttpDownloadClient {
                 try {
                     in2.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LogUtils.processException(logger, e);
                 }
             }
         }
@@ -541,29 +540,6 @@ public class DownloadClient implements HttpDownloadClient {
         logger.info("post parameters: \n" + builder.toString().trim());
         logger.info("query string = " + method.getQueryString());
         logger.info("=========================================");
-    }
-
-    /**
-     * Converts given GZIPed input stream into string. <br>
-     * UTF-8 encoding is used as default.<br>
-     * Shouldn't be called to file input streams.<br>
-     *
-     * @param in input stream which should be converted
-     * @return input stream as string
-     * @throws IOException when there was an error during reading from the stream
-     */
-    protected String inflate(InputStream in) throws IOException {
-        byte[] buffer = new byte[4000];
-        int b;
-        GZIPInputStream gin = new GZIPInputStream(in);
-        StringBuilder builder = new StringBuilder();
-        while (true) {
-            b = gin.read(buffer);
-            if (b == -1)
-                break;
-            builder.append(new String(buffer, 0, b, getContentPageCharset()));
-        }
-        return builder.toString();
     }
 
     protected String getContentPageCharset() {
