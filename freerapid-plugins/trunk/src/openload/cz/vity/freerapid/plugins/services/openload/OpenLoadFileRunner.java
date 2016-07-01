@@ -12,7 +12,6 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Class which contains main code
@@ -66,11 +65,12 @@ class OpenLoadFileRunner extends AbstractRunner {
             final int wait = PlugUtils.getNumberBetween(contentAsString, "secondsdl = ", ";");
             if (wait > 0)
                 downloadTask.sleep(1 + wait);
-            String decodedText="";
+            String decodedText = "";
             int loop = 1;
             do {
                 try {
                     HttpMethod httpMethod = getGetMethod(method.getURI().getURI());
+                    // Workaround for 0.9u4 bug, can be removed when next version is released
                     httpMethod.removeRequestHeader("Accept-Encoding");
                     if (!makeRedirectedRequest(httpMethod)) {
                         checkProblems();
@@ -82,9 +82,9 @@ class OpenLoadFileRunner extends AbstractRunner {
                         throw new PluginImplementationException("Script not found");
                     String srcScript = match.group(1);
                     logger.info("Src script: " + srcScript);
-                    decodedText = DecodeSmileyScript(srcScript);
+                    decodedText = new AADecoder().decode(srcScript);
                     loop = -1;
-                } catch (ScriptException e) {
+                } catch (PluginImplementationException e) {
                     if (loop++ > 10) {
                         //throw new PluginImplementationException("JavaScript eval failed");
                         logger.warning("JavaScript eval failed - HTML Source : " + getContentAsString());
@@ -175,31 +175,11 @@ class OpenLoadFileRunner extends AbstractRunner {
     }
 
     private String doCaptcha(final String img) throws Exception {
-        if (img.equals(""))  return img;
+        if (img.equals("")) return img;
         final String captchaTxt = getCaptchaSupport().getCaptcha(img);
         if (captchaTxt == null)
             throw new CaptchaEntryInputMismatchException();
         return captchaTxt;
-    }
-
-
-    private String DecodeSmileyScript(final String encoded) throws Exception {
-        String findStart = "(\uFF9F\u0414\uFF9F) ['_'] ( (\uFF9F\u0414\uFF9F) ['_'] (";
-        String replaceStart = "( (\uFF9F\u0414\uFF9F) ['_'] (";
-        String findEnd = ") (\uFF9F\u0398\uFF9F)) ('_');";
-        String replaceEnd = ") ());";
-        String removeStart = "(ﾟДﾟ)[ﾟεﾟ]+(-~3)+ (-~3)+ (ﾟДﾟ)[ﾟεﾟ]+((ﾟｰﾟ)";              // 2remove  "$('#realdl a')."  from script
-        String removeEnd = "(ﾟДﾟ)[ﾟεﾟ]+((ﾟｰﾟ) + (ﾟΘﾟ))+ ((o^_^o) +(o^_^o) +(c^_^o))+";
-
-        if (!encoded.contains(findStart) || !encoded.contains(findEnd)) {
-            throw new PluginImplementationException("Unrecognised smiley script");
-        }
-        final String toDecode = encoded.trim().replace(findStart, replaceStart).replace(findEnd, replaceEnd)
-                .replaceFirst(Pattern.quote(removeStart) + ".+?" + Pattern.quote(removeEnd), "");
-
-        final ScriptEngineManager manager = new ScriptEngineManager();
-        final ScriptEngine engine = manager.getEngineByName("javascript");
-        return (String) engine.eval(toDecode);
     }
 
     private String decodeNewScript(final String encoded) throws Exception {
@@ -215,4 +195,5 @@ class OpenLoadFileRunner extends AbstractRunner {
         final ScriptEngine engine = manager.getEngineByName("javascript");
         return (String) engine.eval(functScr + dataScr);
     }
+
 }
