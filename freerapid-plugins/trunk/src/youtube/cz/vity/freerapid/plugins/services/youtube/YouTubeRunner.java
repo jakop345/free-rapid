@@ -39,7 +39,7 @@ import java.util.regex.Pattern;
  */
 class YouTubeRunner extends AbstractVideo2AudioRunner {
     private static final Logger logger = Logger.getLogger(YouTubeRunner.class.getName());
-    private static final String DEFAULT_FILE_EXT = ".flv";
+    private static final String DEFAULT_FILE_EXT = ".mp4";
     private static final String AUDIO_FILE_EXT = ".m4a";
     private static final String DASH_AUDIO_ITAG = "dashaudioitag";
     private static final String SECONDARY_DASH_AUDIO_ITAG = "secondarydashaudioitag"; //as backup, in case the primary fails
@@ -343,7 +343,7 @@ class YouTubeRunner extends AbstractVideo2AudioRunner {
                 boolean cipherSig = false;
                 for (String fmtStreamComponent : fmtStreamComponents) {
                     String fmtStreamComponentParts[] = fmtStreamComponent.split("=");
-                    if ((fmtStreamComponentParts.length < 2)) {
+                    if (fmtStreamComponentParts.length < 2) {
                         continue;
                     }
                     String key = fmtStreamComponentParts[0];

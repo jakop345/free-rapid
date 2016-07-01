@@ -36,7 +36,7 @@ class ImageTwistFileRunner extends AbstractRunner {
 
 
     private void checkNameAndSize(String content) throws ErrorDuringDownloadingException {
-        final Matcher filenameMatcher = PlugUtils.matcher("class=\"pic\" alt=\"([^\"]+?)\"", content);
+        final Matcher filenameMatcher = PlugUtils.matcher("class=\"pic[^\"]*\" alt=\"([^\"]+?)\"", content);
         if (!filenameMatcher.find()) {
             throw new PluginImplementationException("File name not found");
         }
