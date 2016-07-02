@@ -2,11 +2,14 @@ package cz.vity.freerapid.plugins.services.prefiles;
 
 import cz.vity.freerapid.plugins.exceptions.*;
 import cz.vity.freerapid.plugins.services.xfilesharing.XFileSharingRunner;
+import cz.vity.freerapid.plugins.services.xfilesharing.XFileSharingServiceImpl;
 import cz.vity.freerapid.plugins.services.xfilesharing.nameandsize.FileNameHandler;
 import cz.vity.freerapid.plugins.services.xfilesharing.nameandsize.FileSizeHandler;
 import cz.vity.freerapid.plugins.webclient.MethodBuilder;
+import cz.vity.freerapid.plugins.webclient.hoster.PremiumAccount;
 import cz.vity.freerapid.plugins.webclient.interfaces.HttpFile;
 import cz.vity.freerapid.plugins.webclient.utils.PlugUtils;
+import org.apache.commons.httpclient.HttpMethod;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -60,8 +63,38 @@ class PreFilesFileRunner extends XFileSharingRunner {
 
     @Override
     protected MethodBuilder getXFSMethodBuilder(final String content) throws Exception {
-        return super.getXFSMethodBuilder(content, "method_free").setAction(fileURL)
-                .setParameter("method_free", "method_free").removeParameter("method_premium");
+        synchronized (getClass()) {
+            final PremiumAccount pa = ((XFileSharingServiceImpl) getPluginService()).getConfig();
+            if (pa == null || !pa.isSet())
+                return super.getXFSMethodBuilder(content, "method_free").setAction(fileURL)
+                        .setParameter("method_free", "method_free").removeParameter("method_premium");
+            return super.getXFSMethodBuilder(content, "method_premium").setAction(fileURL)
+                    .setParameter("method_premium", "method_premium").removeParameter("method_free");
+        }
+    }
+
+    @Override
+    protected void doLogin(final PremiumAccount pa) throws Exception {
+        HttpMethod method = getMethodBuilder()
+                .setReferer(getBaseURL())
+                .setAction(getBaseURL() + "/login.html")
+                .toGetMethod();
+        if (!makeRedirectedRequest(method)) {
+            throw new ServiceConnectionProblemException();
+        }
+        method = getMethodBuilder()
+                .setReferer(getBaseURL() + "/login.html")
+                .setAction(getBaseURL())
+                .setActionFromFormWhereActionContains("login", true)            // line changed
+                .setParameter("login", pa.getUsername())
+                .setParameter("password", pa.getPassword())
+                .toPostMethod();
+        if (!makeRedirectedRequest(method)) {
+            throw new ServiceConnectionProblemException();
+        }
+        if (getContentAsString().contains("Incorrect Username or password")) {  // line changed
+            throw new BadLoginException("Invalid account login information");
+        }
     }
 
     @Override

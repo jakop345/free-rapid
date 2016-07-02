@@ -18,6 +18,13 @@ public class TestApp extends PluginDevApplication {
             httpFile.setNewURL(new URL("http://prefiles.com/4i74dbu89scv/AWP.Data.Just.Right.Dec.2013.rar"));
             final ConnectionSettings connectionSettings = new ConnectionSettings();
             final PreFilesServiceImpl service = new PreFilesServiceImpl();
+            /*
+            //we set premium account details
+            final PremiumAccount config = new PremiumAccount();
+            config.setUsername("****");
+            config.setPassword("****");
+            service.setConfig(config);
+            //*/
             testRun(service, httpFile, connectionSettings);
         } catch (Exception e) {
             e.printStackTrace();
