@@ -113,9 +113,8 @@ class AADecoder {
     // public domain
     private static double eval(final String str) {
         return new Object() {
-            int pos = -1
-                    ,
-                    ch;
+            int pos = -1;
+            int ch;
 
             void nextChar() {
                 ch = (++pos < str.length()) ? str.charAt(pos) : -1;
@@ -140,7 +139,7 @@ class AADecoder {
             // Grammar:
             // expression = term | expression `+` term | expression `-` term
             // term = factor | term `*` factor | term `/` factor
-            // factor = `+` factor | `-` factor | `(` expression `)`
+            // factor = `+` factor | `-` factor | `~` factor | `(` expression `)`
             //        | number | functionName factor | factor `^` factor
 
             double parseExpression() {
@@ -164,6 +163,7 @@ class AADecoder {
             double parseFactor() {
                 if (eat('+')) return parseFactor(); // unary plus
                 if (eat('-')) return -parseFactor(); // unary minus
+                if (eat('~')) return ~(int) Math.floor(parseFactor());
 
                 double x;
                 int startPos = this.pos;
